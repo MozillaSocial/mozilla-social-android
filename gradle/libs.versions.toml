@@ -1,4 +1,5 @@
 [versions]
+androidGradlePlugin = "8.0.2"
 androidxActivity = "1.7.2"
 androidxAppcompat = "1.6.1"
 androidxComposeBom = "2022.10.00"
@@ -8,6 +9,7 @@ androidxTestEspresso = "3.5.1"
 androidxTestExt = "1.1.5"
 googleAndroidMaterial = "1.9.0"
 junit = "4.13.2"
+kotlin = "1.8.22"
 
 [libraries]
 #= { group = "", name = "", version.ref = "" }
@@ -29,3 +31,6 @@ google-material = { group = "com.google.android.material", name = "material", ve
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 
 [plugins]
+android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }
+android-library = { id = "com.android.library", version.ref = "androidGradlePlugin" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
