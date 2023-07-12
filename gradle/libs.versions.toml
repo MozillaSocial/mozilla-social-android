@@ -1,8 +1,31 @@
 [versions]
+androidxActivity = "1.7.2"
+androidxAppcompat = "1.6.1"
+androidxComposeBom = "2022.10.00"
 androidxCore = "1.10.1"
+androidxLifecycle = "2.6.1"
+androidxTestEspresso = "3.5.1"
+androidxTestExt = "1.1.5"
+googleAndroidMaterial = "1.9.0"
+junit = "4.13.2"
 
 [libraries]
+#= { group = "", name = "", version.ref = "" }
+androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "androidxActivity" }
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "androidxAppcompat" }
+androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "androidxComposeBom" }
 androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3" }
+androidx-compose-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
+androidx-compose-ui-test-junit = { group = "androidx.compose.ui", name = "ui-test-junit4" }
+androidx-compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
+androidx-compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
+androidx-compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
+androidx-compose-ui-ui = { group = "androidx.compose.ui", name = "ui" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "androidxCore" }
+androidx-lifecycle-runtimeKtx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "androidxLifecycle" }
+androidx-test-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "androidxTestEspresso" }
+androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidxTestExt" }
+google-material = { group = "com.google.android.material", name = "material", version.ref = "googleAndroidMaterial" }
+junit = { group = "junit", name = "junit", version.ref = "junit" }
 
 [plugins]
