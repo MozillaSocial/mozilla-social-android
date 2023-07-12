@@ -1,0 +1,8 @@
+[versions]
+androidxCore = "1.10.1"
+
+[libraries]
+androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3" }
+androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "androidxCore" }
+
+[plugins]
