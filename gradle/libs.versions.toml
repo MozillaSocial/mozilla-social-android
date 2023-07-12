@@ -12,7 +12,6 @@ junit = "4.13.2"
 kotlin = "1.8.22"
 
 [libraries]
-#= { group = "", name = "", version.ref = "" }
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "androidxActivity" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "androidxAppcompat" }
 androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "androidxComposeBom" }
