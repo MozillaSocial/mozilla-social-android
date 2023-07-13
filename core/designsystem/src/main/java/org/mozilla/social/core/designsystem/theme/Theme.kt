@@ -1,4 +1,4 @@
-package org.mozilla.social.core.designsystem
+package org.mozilla.social.core.designsystem.theme
 
 import android.app.Activity
 import android.os.Build
