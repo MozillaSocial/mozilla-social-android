@@ -12,6 +12,8 @@
           <set>
             <option value="/ssd/home/workspace/MozillaSocialAndroid" />
             <option value="/ssd/home/workspace/MozillaSocialAndroid/app" />
+            <option value="/ssd/home/workspace/MozillaSocialAndroid/core" />
+            <option value="/ssd/home/workspace/MozillaSocialAndroid/core/designsystem" />
           </set>
         </option>
       </GradleProjectSettings>
