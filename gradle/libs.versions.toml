@@ -9,6 +9,7 @@ androidxLifecycle = "2.6.1"
 androidxTestEspresso = "3.5.1"
 androidxTestExt = "1.1.5"
 googleAndroidMaterial = "1.9.0"
+koin = "3.4.0"
 junit = "4.13.2"
 kotlin = "1.8.22"
 
@@ -28,6 +29,8 @@ androidx-lifecycle-runtimeKtx = { group = "androidx.lifecycle", name = "lifecycl
 androidx-test-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "androidxTestEspresso" }
 androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidxTestExt" }
 google-material = { group = "com.google.android.material", name = "material", version.ref = "googleAndroidMaterial" }
+koin = { group = "io.insert-koin", name = "koin-androidx-compose", version.ref = "koin" }
+koin-junit = { group = "io.insert-koin", name = "koin-test-junit4", version.ref = "koin" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 
 [plugins]
