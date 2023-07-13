@@ -1,4 +1,4 @@
-package org.mozilla.social.ui.theme
+package org.mozilla.social.core.designsystem
 
 import androidx.compose.ui.graphics.Color
 
