@@ -16,3 +16,4 @@ dependencyResolutionManagement {
 rootProject.name = "Mozilla Social"
 include(":app")
 include(":core:designsystem")
+include(":core:common")
