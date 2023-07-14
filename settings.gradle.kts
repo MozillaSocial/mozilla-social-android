@@ -1,4 +1,5 @@
 pluginManagement {
+    includeBuild("build-logic")
     repositories {
         google()
         mavenCentral()
@@ -13,6 +14,7 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "Mozilla Social"
-include ':app'
-include ':core:designsystem'
-include ':core:network'
+include(":app")
+include(":core:designsystem")
+include(":core:common")
+include(":core:network")

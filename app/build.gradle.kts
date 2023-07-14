@@ -1,17 +1,13 @@
-@Suppress("DSL_SCOPE_VIOLATION")
 plugins {
-    alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
+    id("org.mozilla.social.android.application")
+    id("org.mozilla.social.android.application.compose")
 }
 
 android {
     namespace = "org.mozilla.social"
-    compileSdk = 33
 
     defaultConfig {
         applicationId = "org.mozilla.social"
-        minSdk = 27
-        targetSdk = 33
         versionCode = 1
         versionName = "1.0"
 
@@ -30,19 +26,6 @@ android {
             )
         }
     }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
-    }
-    kotlinOptions {
-        jvmTarget = "1.8"
-    }
-    buildFeatures {
-        compose = true
-    }
-    composeOptions {
-        kotlinCompilerExtensionVersion = libs.versions.androidxComposeCompiler.get()
-    }
     packaging {
         resources {
             excludes.add("/META-INF/{AL2.0,LGPL2.1}")
@@ -52,6 +35,7 @@ android {
 
 dependencies {
     implementation(project(":core:designsystem"))
+    implementation(project(":core:common"))
 
     // android
     implementation(libs.androidx.core.ktx)
