@@ -11,6 +11,7 @@ androidxTestExt = "1.1.5"
 googleAndroidMaterial = "1.9.0"
 junit = "4.13.2"
 kotlin = "1.8.22"
+retrofit = "2.9.0"
 timber = "5.0.1"
 
 [libraries]
@@ -30,6 +31,7 @@ androidx-test-espresso-core = { group = "androidx.test.espresso", name = "espres
 androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidxTestExt" }
 google-material = { group = "com.google.android.material", name = "material", version.ref = "googleAndroidMaterial" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
+retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
 jakewharton-timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
 
 # Dependencies of build-logic
