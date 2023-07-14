@@ -36,12 +36,15 @@ android {
 dependencies {
     implementation(project(":core:designsystem"))
     implementation(project(":core:common"))
+    implementation(project(":feature:auth"))
 
     // android
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.lifecycle.runtimeKtx)
     implementation(libs.google.material)
+
+    implementation(libs.koin)
 
     //compose
     implementation(libs.androidx.activity.compose)

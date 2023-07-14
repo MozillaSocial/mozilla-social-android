@@ -23,10 +23,22 @@ android {
 }
 
 dependencies {
+    implementation(project(":core:designsystem"))
+    implementation(project(":core:common"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.google.material)
+
+    implementation(libs.androidx.browser)
+
+    implementation(libs.androidx.lifecycle.viewmodel)
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+
+    implementation(libs.koin)
+
+    implementation(libs.square.okhttp)
 
     // compose
     implementation(platform(libs.androidx.compose.bom))
