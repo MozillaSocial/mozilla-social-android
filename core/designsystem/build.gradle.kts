@@ -1,21 +1,15 @@
 @Suppress("DSL_SCOPE_VIOLATION")
 plugins {
-    id("org.mozilla.social.android.application")
-    id("org.mozilla.social.android.application.compose")
+    id("org.mozilla.social.android.library")
+    id("org.mozilla.social.android.library.compose")
 }
 
 android {
-    namespace = "org.mozilla.social"
+    namespace = "org.mozilla.social.core.designsystem"
 
     defaultConfig {
-        applicationId = "org.mozilla.social"
-        versionCode = 1
-        versionName = "1.0"
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        vectorDrawables {
-            useSupportLibrary = true
-        }
+        consumerProguardFiles("consumer-rules.pro")
     }
 
     buildTypes {
@@ -27,27 +21,15 @@ android {
             )
         }
     }
-    packaging {
-        resources {
-            excludes.add("/META-INF/{AL2.0,LGPL2.1}")
-        }
-    }
 }
 
 dependencies {
-    implementation(project(":core:designsystem"))
 
-    // android
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
-    implementation(libs.androidx.lifecycle.runtimeKtx)
     implementation(libs.google.material)
 
-    // koin
-    implementation(libs.koin)
-
-    //compose
-    implementation(libs.androidx.activity.compose)
+    // compose
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.compose.ui.ui)
@@ -59,8 +41,6 @@ dependencies {
 
     // testing
     testImplementation(libs.junit)
-    testImplementation(libs.koin.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.androidx.test.espresso.core)
-
 }
