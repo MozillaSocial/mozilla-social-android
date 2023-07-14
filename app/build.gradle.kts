@@ -1,4 +1,3 @@
-@Suppress("DSL_SCOPE_VIOLATION")
 plugins {
     id("org.mozilla.social.android.application")
     id("org.mozilla.social.android.application.compose")
@@ -36,6 +35,7 @@ android {
 
 dependencies {
     implementation(project(":core:designsystem"))
+    implementation(project(":core:common"))
 
     // android
     implementation(libs.androidx.core.ktx)

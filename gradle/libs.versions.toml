@@ -12,6 +12,8 @@ googleAndroidMaterial = "1.9.0"
 koin = "3.4.0"
 junit = "4.13.2"
 kotlin = "1.8.22"
+retrofit = "2.9.0"
+timber = "5.0.1"
 
 [libraries]
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "androidxActivity" }
@@ -32,6 +34,8 @@ google-material = { group = "com.google.android.material", name = "material", ve
 koin = { group = "io.insert-koin", name = "koin-androidx-compose", version.ref = "koin" }
 koin-junit = { group = "io.insert-koin", name = "koin-test-junit4", version.ref = "koin" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
+retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
+jakewharton-timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
 
 # Dependencies of build-logic
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "androidGradlePlugin" }
