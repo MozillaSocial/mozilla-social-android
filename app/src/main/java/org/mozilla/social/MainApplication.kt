@@ -15,7 +15,8 @@ class MainApplication : Application() {
             androidLogger()
             androidContext(this@MainApplication)
             modules(
-                authModule
+                authModule,
+                mainModule,
             )
         }
     }

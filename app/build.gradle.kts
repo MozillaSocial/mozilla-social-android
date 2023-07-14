@@ -44,7 +44,16 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtimeKtx)
     implementation(libs.google.material)
 
+    implementation(libs.androidx.lifecycle.viewmodel)
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+
     implementation(libs.koin)
+    implementation(libs.koin.android)
+
+    implementation(libs.androidx.browser)
+
+    implementation(libs.square.okhttp)
 
     //compose
     implementation(libs.androidx.activity.compose)

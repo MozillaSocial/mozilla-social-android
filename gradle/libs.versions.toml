@@ -42,6 +42,7 @@ google-material = { group = "com.google.android.material", name = "material", ve
 jakewharton-timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 koin = { group = "io.insert-koin", name = "koin-androidx-compose", version.ref = "koin" }
+koin-android = { group = "io.insert-koin", name = "koin-android", version.ref = "koin" }
 koin-junit = { group = "io.insert-koin", name = "koin-test-junit4", version.ref = "koin" }
 retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
 square-okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
