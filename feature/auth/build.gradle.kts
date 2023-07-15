@@ -25,6 +25,7 @@ android {
 dependencies {
     implementation(project(":core:designsystem"))
     implementation(project(":core:common"))
+    implementation(project(":core:datastore"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
@@ -39,6 +40,9 @@ dependencies {
     implementation(libs.koin)
 
     implementation(libs.square.okhttp)
+
+    implementation(libs.androidx.datastore)
+    implementation(libs.protobuf.kotlin.lite)
 
     // compose
     implementation(platform(libs.androidx.compose.bom))

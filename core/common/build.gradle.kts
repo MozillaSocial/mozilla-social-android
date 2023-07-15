@@ -29,6 +29,8 @@ dependencies {
 
     implementation(libs.jakewharton.timber)
 
+    implementation(libs.koin)
+
     // testing
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)

@@ -24,7 +24,9 @@ fun MainActivityScreen() {
     NavHost(navController = navController, startDestination = AUTH_ROUTE) {
         composable("main") { MainScreen(onLoginButtonClicked = { navController.navigate("timeline") }) }
         composable("timeline") { TimelineScreen() }
-        authScreen()
+        authScreen(
+            onSignedIn = { navController.navigate("timeline") }
+        )
     }
 }
 
