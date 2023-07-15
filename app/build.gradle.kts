@@ -37,6 +37,7 @@ dependencies {
     implementation(project(":core:designsystem"))
     implementation(project(":core:common"))
     implementation(project(":feature:auth"))
+    implementation(project(":core:datastore"))
 
     // android
     implementation(libs.androidx.core.ktx)
@@ -47,6 +48,8 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
+
+    implementation(libs.protobuf.kotlin.lite)
 
     implementation(libs.koin)
     implementation(libs.koin.android)

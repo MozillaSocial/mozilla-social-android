@@ -17,7 +17,7 @@ import org.mozilla.social.feature.auth.AuthViewModel
 
 class MainActivity : ComponentActivity() {
 
-    val viewModel: MainActivityViewModel = getViewModel()
+//    val viewModel: MainActivityViewModel = getViewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,7 +60,7 @@ class MainActivity : ComponentActivity() {
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         if (intent?.data.toString().startsWith(AuthViewModel.AUTH_SCHEME)) {
-            viewModel.onTokenReceived(intent?.data.toString())
+//            viewModel.onTokenReceived(intent?.data.toString())
 //            val viewModel: AuthViewModel = koinViewModel()
             //TODO save token somewhere and navigate
         }
