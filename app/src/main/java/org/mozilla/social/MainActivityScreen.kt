@@ -20,7 +20,6 @@ fun MainActivityScreen() {
     NavHost(navController = navController, startDestination = AUTH_ROUTE) {
         authScreen(
             onSignedIn = {
-                //TODO something is broken with the backstack due to custom chrome tabs I think
                 navController.navigate(
                     "timeline",
                     navOptions = NavOptions.Builder()
