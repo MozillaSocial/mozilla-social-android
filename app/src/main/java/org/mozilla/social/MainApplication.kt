@@ -18,9 +18,8 @@ class MainApplication : Application() {
             androidContext(this@MainApplication)
             modules(
                 authModule,
-                mainModule,
                 dataStoreModule,
-                commonModule,
+                commonModule(BuildConfig.DEBUG),
             )
         }
     }

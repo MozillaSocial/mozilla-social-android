@@ -1,7 +1,6 @@
 package org.mozilla.social.feature.auth
 
 import android.content.Context
-import android.content.Intent
 import android.net.Uri
 import androidx.activity.ComponentActivity
 import androidx.browser.customtabs.CustomTabsIntent
@@ -9,16 +8,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.core.util.Consumer
 import okhttp3.HttpUrl
-import org.koin.androidx.compose.get
 import org.koin.androidx.compose.koinViewModel
-import org.mozilla.social.common.logging.Log
 import org.mozilla.social.core.designsystem.theme.MozillaSocialTheme
 
 @Composable
@@ -27,7 +23,6 @@ internal fun AuthRoute(
     viewModel: AuthViewModel = koinViewModel(),
 ) {
     val activity = LocalContext.current as ComponentActivity
-    val log: Log = get()
 
     when (viewModel.uiState.collectAsState().value) {
         is UiState.SignedIn -> onSignedIn()
@@ -35,23 +30,14 @@ internal fun AuthRoute(
     }
 
     AuthScreen()
-    if (activity.intent?.data.toString().startsWith(AuthViewModel.AUTH_SCHEME)) {
-        log.d("intent with data")
-        viewModel.onTokenReceived(activity.intent?.data.toString())
+
+    LaunchedEffect(activity.intent) {
+        if (activity.intent?.data.toString().startsWith(AuthViewModel.AUTH_SCHEME)) {
+            activity.intent?.data?.let {
+                viewModel.onTokenReceived(it.toString())
+            }
+        }
     }
-//    DisposableEffect(Unit) {
-//
-//        log.d("intent disposable")
-//        val listener = Consumer<Intent> { intent ->
-//            log.d("intent consumer")
-//            if (intent?.data.toString().startsWith(AuthViewModel.AUTH_SCHEME)) {
-//                log.d("intent with data")
-//                viewModel.onTokenReceived(intent?.data.toString())
-//            }
-//        }
-//        activity.addOnNewIntentListener(listener)
-//        onDispose { activity.removeOnNewIntentListener(listener) }
-//    }
 }
 
 @Composable

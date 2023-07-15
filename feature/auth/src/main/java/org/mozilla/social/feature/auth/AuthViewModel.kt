@@ -4,24 +4,27 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
+import org.mozilla.social.common.logging.Log
 import org.mozilla.social.core.datastore.UserPreferencesDatastore
 import java.net.URL
 
 internal class AuthViewModel(
     private val userPreferencesDatastore: UserPreferencesDatastore,
+    private val log: Log,
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(UiState.Default)
+    private val _uiState = MutableStateFlow<UiState>(UiState.Default)
     val uiState: StateFlow<UiState> = _uiState
 
     fun onTokenReceived(authUri: String) {
         val httpUrl: HttpUrl? = URL(
             authUri.replace("mozsoc://", "http://")
         ).toHttpUrlOrNull()
-        val accessToken = httpUrl?.queryParameter("access_token")
+        val accessToken = httpUrl?.queryParameter("code")
 
         viewModelScope.launch {
             userPreferencesDatastore.dataStore.updateData {
@@ -29,6 +32,7 @@ internal class AuthViewModel(
                     .setAccessToken(accessToken)
                     .build()
             }
+            _uiState.update { UiState.SignedIn }
         }
     }
 

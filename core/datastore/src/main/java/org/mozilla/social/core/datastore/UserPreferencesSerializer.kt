@@ -7,7 +7,7 @@ import androidx.datastore.dataStore
 import java.io.InputStream
 import java.io.OutputStream
 
-object UserPreferencesSerializer : Serializer<UserPreferences> {
+internal object UserPreferencesSerializer : Serializer<UserPreferences> {
     override val defaultValue: UserPreferences = UserPreferences.getDefaultInstance()
 
     override suspend fun readFrom(input: InputStream): UserPreferences =
@@ -17,7 +17,7 @@ object UserPreferencesSerializer : Serializer<UserPreferences> {
         t.writeTo(output)
 }
 
-val Context.userPreferencesDataStore: DataStore<UserPreferences> by dataStore(
+internal val Context.userPreferencesDataStore: DataStore<UserPreferences> by dataStore(
     fileName = "userPreferences.pb",
     serializer = UserPreferencesSerializer
 )
