@@ -1,6 +1,7 @@
 package org.mozilla.social.feature.auth
 
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import androidx.activity.ComponentActivity
 import androidx.browser.customtabs.CustomTabsIntent
@@ -8,11 +9,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.core.util.Consumer
 import okhttp3.HttpUrl
 import org.koin.androidx.compose.koinViewModel
 import org.mozilla.social.core.designsystem.theme.MozillaSocialTheme
@@ -31,12 +33,16 @@ internal fun AuthRoute(
 
     AuthScreen()
 
-    LaunchedEffect(activity.intent) {
-        if (activity.intent?.data.toString().startsWith(AuthViewModel.AUTH_SCHEME)) {
-            activity.intent?.data?.let {
-                viewModel.onTokenReceived(it.toString())
+    DisposableEffect(Unit) {
+        val listener = Consumer<Intent> { intent ->
+            if (intent?.data.toString().startsWith(AuthViewModel.AUTH_SCHEME)) {
+                intent?.data?.let {
+                    viewModel.onTokenReceived(it.toString())
+                }
             }
         }
+        activity.addOnNewIntentListener(listener)
+        onDispose { activity.removeOnNewIntentListener(listener) }
     }
 }
 
