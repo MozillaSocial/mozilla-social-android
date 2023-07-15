@@ -5,16 +5,14 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 
-const val authRoute = "auth"
+const val AUTH_ROUTE = "auth"
 
-fun NavController.navigateToFeed(navOptions: NavOptions? = null) {
-    this.navigate(authRoute, navOptions)
+fun NavController.navigateToAuth(navOptions: NavOptions? = null) {
+    this.navigate(AUTH_ROUTE, navOptions)
 }
 
-fun NavGraphBuilder.authScreen(
-    onLoginClicked: () -> Unit,
-) {
-    composable(route = authRoute) {
-        AuthRoute(onLoginClicked)
+fun NavGraphBuilder.authScreen() {
+    composable(route = AUTH_ROUTE) {
+        AuthRoute()
     }
 }

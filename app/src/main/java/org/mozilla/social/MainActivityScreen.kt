@@ -14,18 +14,17 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import org.mozilla.social.core.designsystem.theme.MozillaSocialTheme
+import org.mozilla.social.feature.auth.AUTH_ROUTE
 import org.mozilla.social.feature.auth.authScreen
 
 @Composable
-fun MainActivityScreen(
-    onLoginClicked: () -> Unit = {},
-) {
+fun MainActivityScreen() {
     val navController: NavHostController = rememberNavController()
 
-    NavHost(navController = navController, startDestination = "auth") {
+    NavHost(navController = navController, startDestination = AUTH_ROUTE) {
         composable("main") { MainScreen(onLoginButtonClicked = { navController.navigate("timeline") }) }
         composable("timeline") { TimelineScreen() }
-        authScreen(onLoginClicked)
+        authScreen()
     }
 }
 
