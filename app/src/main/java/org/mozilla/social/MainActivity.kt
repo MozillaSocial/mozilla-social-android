@@ -11,13 +11,13 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import okhttp3.HttpUrl
-import org.koin.androidx.viewmodel.ext.android.getViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.mozilla.social.core.designsystem.theme.MozillaSocialTheme
 import org.mozilla.social.feature.auth.AuthViewModel
 
 class MainActivity : ComponentActivity() {
 
-//    val viewModel: MainActivityViewModel = getViewModel()
+    private val viewModel: MainActivityViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,9 +60,7 @@ class MainActivity : ComponentActivity() {
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         if (intent?.data.toString().startsWith(AuthViewModel.AUTH_SCHEME)) {
-//            viewModel.onTokenReceived(intent?.data.toString())
-//            val viewModel: AuthViewModel = koinViewModel()
-            //TODO save token somewhere and navigate
+            viewModel.onTokenReceived(intent?.data.toString())
         }
     }
 }

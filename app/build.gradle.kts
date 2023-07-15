@@ -49,6 +49,7 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
 
+    implementation(libs.androidx.datastore)
     implementation(libs.protobuf.kotlin.lite)
 
     implementation(libs.koin)
