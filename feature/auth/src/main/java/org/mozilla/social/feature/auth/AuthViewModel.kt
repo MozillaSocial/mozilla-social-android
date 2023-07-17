@@ -18,26 +18,9 @@ import java.net.URL
     private val log: Log,
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow<UiState>(UiState.Default)
-    val uiState: StateFlow<UiState> = _uiState
-
-     val isSignedIn = userPreferencesDatastore.dataStore.data.map { it.accessToken != null }
-
-    fun onTokenReceived(authUri: String) {
-        val httpUrl: HttpUrl? = URL(
-            authUri.replace("mozsoc://", "http://")
-        ).toHttpUrlOrNull()
-        val accessToken = httpUrl?.queryParameter("code")
-
-        viewModelScope.launch {
-            userPreferencesDatastore.dataStore.updateData {
-                it.toBuilder()
-                    .setAccessToken(accessToken)
-                    .build()
-            }
-            _uiState.update { UiState.SignedIn }
-        }
-    }
+     val isSignedIn = userPreferencesDatastore.dataStore.data.map {
+         it.accessToken != null
+     }
 
     companion object {
         const val AUTH_SCHEME = "mozsoc://auth"

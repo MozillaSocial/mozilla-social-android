@@ -6,6 +6,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
+import androidx.navigation.NavOptions
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -17,7 +18,13 @@ fun MainActivityScreen() {
     val navController: NavHostController = rememberNavController()
 
     NavHost(navController = navController, startDestination = AUTH_ROUTE) {
-        authScreen(onAuthenticated = { navController.navigate("timeline") })
+        authScreen(onAuthenticated = {
+            navController.navigate("timeline",
+                navOptions = NavOptions.Builder()
+//                .setLaunchSingleTop(true)
+                .setPopUpTo(AUTH_ROUTE, true)
+                .build())
+        })
         composable("timeline") { TimelineScreen() }
     }
 }

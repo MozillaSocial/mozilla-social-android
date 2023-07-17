@@ -14,7 +14,7 @@ import org.mozilla.social.feature.auth.AuthViewModel
 
 class MainActivity : ComponentActivity() {
 
-    private val viewModel: AuthViewModel by viewModel<AuthViewModel>()
+    private val viewModel: MainViewModel by viewModel<MainViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
