@@ -1,4 +1,4 @@
-package org.mozilla.social
+package org.mozilla.social.core.data
 
 import org.junit.Test
 import org.koin.test.KoinTest
