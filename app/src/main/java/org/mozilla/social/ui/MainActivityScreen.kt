@@ -27,7 +27,6 @@ fun MainActivityScreen() {
         bottomBar = {
             if (appState.shouldShowBottomBar) {
                 BottomBar(
-                    destinations = AppState.topLevelDestinations,
                     currentDestination = appState.currentTopLevelDestination,
                     onNavigationToDestination = appState::navigateToTopLevelDestination
                 )
@@ -42,12 +41,11 @@ fun MainActivityScreen() {
 
 @Composable
 private fun BottomBar(
-    destinations: List<TopLevelDestination>,
     currentDestination: TopLevelDestination?,
     onNavigationToDestination: (TopLevelDestination) -> Unit,
 ) {
     NavigationBar {
-        destinations.forEach { destination ->
+        AppState.topLevelDestinations.forEach { destination ->
             val isSelected = currentDestination == destination
             NavigationBarItem(
                 selected = isSelected,
@@ -76,7 +74,6 @@ private fun BottomBar(
 private fun DashboardPreview() {
     MozillaSocialTheme {
         BottomBar(
-            AppState.topLevelDestinations,
             TopLevelDestination.FEED
         ) {}
     }
