@@ -18,10 +18,10 @@ fun MainActivityScreen() {
     val navController: NavHostController = rememberNavController()
 
     NavHost(navController = navController, startDestination = AUTH_ROUTE) {
+        composable(SPLASH_ROUTE) { }
         authScreen(onAuthenticated = {
             navController.navigate("timeline",
                 navOptions = NavOptions.Builder()
-//                .setLaunchSingleTop(true)
                 .setPopUpTo(AUTH_ROUTE, true)
                 .build())
         })
@@ -35,3 +35,5 @@ fun TimelineScreen(modifier: Modifier = Modifier) {
         Text(text = "TimelineScreen")
     }
 }
+
+const val SPLASH_ROUTE = "splash"

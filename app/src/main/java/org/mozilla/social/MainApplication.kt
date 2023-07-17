@@ -21,6 +21,7 @@ class MainApplication : Application() {
                 authModule,
                 dataStoreModule,
                 commonModule(BuildConfig.DEBUG),
+                mainModule,
             )
         }
     }

@@ -1,9 +1,7 @@
 package org.mozilla.social.feature.auth
 
 import android.content.Context
-import android.content.Intent
 import android.net.Uri
-import androidx.activity.ComponentActivity
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -14,7 +12,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -22,8 +19,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.util.Consumer
-import androidx.navigation.NavOptions
 import okhttp3.HttpUrl
 import org.koin.androidx.compose.koinViewModel
 import org.mozilla.social.core.designsystem.theme.MozillaSocialTheme
@@ -33,10 +28,13 @@ internal fun AuthRoute(
     viewModel: AuthViewModel = koinViewModel(),
     onAuthenticated: () -> Unit,
 ) {
-    val isAuthenticated = viewModel.isSignedIn.collectAsState(initial = false).value
-    if (isAuthenticated) onAuthenticated()
-
-    AuthScreen()
+    when (viewModel.isSignedIn.collectAsState(initial = null).value) {
+        true -> onAuthenticated()
+        false -> AuthScreen()
+        else -> {
+            // Splash screen
+        }
+    }
 }
 
 @Composable
