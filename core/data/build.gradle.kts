@@ -3,7 +3,7 @@ plugins {
 }
 
 android {
-    namespace = "org.mozilla.social.core.common"
+    namespace = "social.mozilla.core.network"
 
     defaultConfig {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -12,7 +12,7 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = true
+            isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -22,19 +22,12 @@ android {
 }
 
 dependencies {
+    implementation(project(":core:common"))
+    implementation(project(":core:network"))
 
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.appcompat)
-    implementation(libs.google.material)
-
-    implementation(libs.jakewharton.timber)
+    implementation(libs.retrofit)
 
     // koin
     implementation(libs.koin)
     testImplementation(libs.koin.junit)
-
-    // testing
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.test.ext.junit)
-    androidTestImplementation(libs.androidx.test.espresso.core)
 }
