@@ -15,33 +15,75 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
-private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Pink80
+private val LightColorScheme = lightColorScheme(
+    primary = FirefoxColor.Violet70,
+    onPrimary = FirefoxColor.LightGrey10,
+    primaryContainer = FirefoxColor.LightGrey10,
+    onPrimaryContainer = FirefoxColor.DarkGrey90,
+    inversePrimary = FirefoxColor.DarkGrey90,
+    secondary = FirefoxColor.LightGrey40,
+    onSecondary = FirefoxColor.DarkGrey05,
+    secondaryContainer = FirefoxColor.LightGrey40,
+    onSecondaryContainer = FirefoxColor.DarkGrey05,
+    tertiary = FirefoxColor.Violet60,
+    onTertiary = FirefoxColor.LightGrey05,
+    tertiaryContainer = FirefoxColor.Violet60,
+    onTertiaryContainer = FirefoxColor.LightGrey05,
+    background = FirefoxColor.LightGrey10,
+    onBackground = FirefoxColor.DarkGrey90,
+    surface = FirefoxColor.LightGrey10,
+    onSurface = FirefoxColor.DarkGrey90,
+    surfaceVariant = FirefoxColor.LightGrey20,
+    onSurfaceVariant = FirefoxColor.Ink20,
+    surfaceTint = FirefoxColor.Violet05,
+    inverseSurface = FirefoxColor.DarkGrey05,
+    inverseOnSurface = FirefoxColor.LightGrey05,
+    error = FirefoxColor.Red70,
+    onError = FirefoxColor.LightGrey05,
+    errorContainer = FirefoxColor.Red70,
+    onErrorContainer = FirefoxColor.LightGrey05,
+    outline = FirefoxColor.Violet60,
+    outlineVariant = FirefoxColor.Blue60,
+    scrim = FirefoxColor.DarkGrey30,
 )
 
-private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
-    tertiary = Pink40
-
-    /* Other default colors to override
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
-    onPrimary = Color.White,
-    onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-    */
+private val DarkColorScheme = darkColorScheme(
+    primary = FirefoxColor.Violet80,
+    onPrimary = FirefoxColor.LightGrey05,
+    primaryContainer = FirefoxColor.DarkGrey60,
+    onPrimaryContainer = FirefoxColor.LightGrey05,
+    inversePrimary = FirefoxColor.LightGrey05,
+    secondary = FirefoxColor.DarkGrey80,
+    onSecondary = FirefoxColor.LightGrey30,
+    secondaryContainer = FirefoxColor.DarkGrey80,
+    onSecondaryContainer = FirefoxColor.LightGrey30,
+    tertiary = FirefoxColor.Violet60,
+    onTertiary = FirefoxColor.LightGrey30,
+    tertiaryContainer = FirefoxColor.Violet60,
+    onTertiaryContainer = FirefoxColor.LightGrey30,
+    background = FirefoxColor.DarkGrey80,
+    onBackground = FirefoxColor.LightGrey30,
+    surface = FirefoxColor.DarkGrey60,
+    onSurface = FirefoxColor.LightGrey30,
+    surfaceVariant = FirefoxColor.DarkGrey80,
+    onSurfaceVariant = FirefoxColor.Violet60,
+    surfaceTint = FirefoxColor.Violet80,
+    inverseSurface = FirefoxColor.LightGrey10,
+    inverseOnSurface = FirefoxColor.DarkGrey60,
+    error = FirefoxColor.Red70,
+    onError = FirefoxColor.LightGrey10,
+    errorContainer = FirefoxColor.Red70,
+    onErrorContainer = FirefoxColor.LightGrey10,
+    outline = FirefoxColor.Violet60,
+    outlineVariant = FirefoxColor.Blue60,
+    scrim = FirefoxColor.DarkGrey90,
 )
 
 @Composable
 fun MozillaSocialTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
+    dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
