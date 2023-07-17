@@ -18,17 +18,13 @@ fun MainActivityScreen() {
     val navController: NavHostController = rememberNavController()
 
     NavHost(navController = navController, startDestination = AUTH_ROUTE) {
-        authScreen(
-            onSignedIn = {
-                navController.navigate(
-                    "timeline",
-                    navOptions = NavOptions.Builder()
-                        .setLaunchSingleTop(true)
-                        .setPopUpTo(AUTH_ROUTE, true)
-                        .build()
-                )
-            }
-        )
+        authScreen(onAuthenticated = {
+            navController.navigate("timeline",
+                navOptions = NavOptions.Builder()
+//                .setLaunchSingleTop(true)
+                .setPopUpTo(AUTH_ROUTE, true)
+                .build())
+        })
         composable("timeline") { TimelineScreen() }
     }
 }

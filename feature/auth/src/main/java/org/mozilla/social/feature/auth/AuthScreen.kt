@@ -23,35 +23,20 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.util.Consumer
+import androidx.navigation.NavOptions
 import okhttp3.HttpUrl
 import org.koin.androidx.compose.koinViewModel
 import org.mozilla.social.core.designsystem.theme.MozillaSocialTheme
 
 @Composable
 internal fun AuthRoute(
-    onSignedIn: () -> Unit,
     viewModel: AuthViewModel = koinViewModel(),
+    onAuthenticated: () -> Unit,
 ) {
-    val activity = LocalContext.current as ComponentActivity
-
-    when (viewModel.uiState.collectAsState().value) {
-        is UiState.SignedIn -> onSignedIn()
-        else -> {}
-    }
+    val isAuthenticated = viewModel.isSignedIn.collectAsState(initial = false).value
+    if (isAuthenticated) onAuthenticated()
 
     AuthScreen()
-
-    DisposableEffect(Unit) {
-        val listener = Consumer<Intent> { intent ->
-            if (intent?.data.toString().startsWith(AuthViewModel.AUTH_SCHEME)) {
-                intent?.data?.let {
-                    viewModel.onTokenReceived(it.toString())
-                }
-            }
-        }
-        activity.addOnNewIntentListener(listener)
-        onDispose { activity.removeOnNewIntentListener(listener) }
-    }
 }
 
 @Composable

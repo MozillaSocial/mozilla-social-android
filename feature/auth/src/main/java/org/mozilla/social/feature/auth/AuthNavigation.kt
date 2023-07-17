@@ -11,10 +11,8 @@ fun NavController.navigateToAuth(navOptions: NavOptions? = null) {
     this.navigate(AUTH_ROUTE, navOptions)
 }
 
-fun NavGraphBuilder.authScreen(
-    onSignedIn: () -> Unit,
-) {
+fun NavGraphBuilder.authScreen(onAuthenticated: () -> Unit) {
     composable(route = AUTH_ROUTE) {
-        AuthRoute(onSignedIn)
+        AuthRoute(onAuthenticated = onAuthenticated)
     }
 }
