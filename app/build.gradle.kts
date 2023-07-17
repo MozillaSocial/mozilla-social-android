@@ -44,9 +44,6 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtimeKtx)
     implementation(libs.google.material)
 
-    // koin
-    implementation(libs.koin)
-
     //compose
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))
@@ -60,7 +57,6 @@ dependencies {
 
     // testing
     testImplementation(libs.junit)
-    testImplementation(libs.koin.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.androidx.test.espresso.core)
 
