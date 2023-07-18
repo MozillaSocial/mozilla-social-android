@@ -14,6 +14,7 @@ googleAndroidMaterial = "1.9.0"
 koin = "3.4.0"
 junit = "4.13.2"
 kotlin = "1.8.22"
+kotlinDateTime = "0.4.0"
 okhttp = "4.10.0"
 protobuf = "3.23.0"
 protobufPlugin = "0.9.3"
@@ -45,6 +46,7 @@ androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version
 google-material = { group = "com.google.android.material", name = "material", version.ref = "googleAndroidMaterial" }
 koin = { group = "io.insert-koin", name = "koin-androidx-compose", version.ref = "koin" }
 koin-junit = { group = "io.insert-koin", name = "koin-test-junit4", version.ref = "koin" }
+kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version.ref = "kotlinDateTime" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
 jakewharton-timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
