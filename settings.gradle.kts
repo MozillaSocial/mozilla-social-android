@@ -11,6 +11,7 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        maven { url = uri("https://nexus.outadoc.fr/repository/public") }
     }
 }
 rootProject.name = "Mozilla Social"
@@ -22,3 +23,5 @@ include(":core:data")
 include(":feature:auth")
 include(":core:datastore")
 include(":feature:settings")
+include(":feature:feed")
+include(":core:model")
