@@ -10,6 +10,7 @@ import org.mozilla.social.core.data.repository.StatusRepository
 
 class NewPostViewModel(
     private val statusRepository: StatusRepository,
+    private val onStatusPosted: () -> Unit,
 ) : ViewModel() {
 
     private val _statusText = MutableStateFlow("")
@@ -24,6 +25,7 @@ class NewPostViewModel(
             statusRepository.sendPost(
                 statusText = statusText.value
             )
+            onStatusPosted()
         }
     }
 }

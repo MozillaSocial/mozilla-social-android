@@ -1,9 +1,12 @@
-@file:OptIn(ExperimentalMaterial3Api::class)
+@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 
 package org.mozilla.social.post
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.isImeVisible
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
@@ -22,15 +25,18 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.parametersOf
 import org.mozilla.social.core.designsystem.theme.MozillaSocialTheme
 
 @Composable
 internal fun NewPostRoute(
-    viewModel: NewPostViewModel = koinViewModel()
+    onStatusPosted: () -> Unit,
+    viewModel: NewPostViewModel = koinViewModel(parameters = { parametersOf(onStatusPosted) })
 ) {
     NewPostScreen(
         statusText = viewModel.statusText.collectAsState().value,
         onStatusTextChanged = viewModel::onStatusTextUpdated,
+        onPostClicked = viewModel::onPostClicked
     )
 }
 
@@ -38,9 +44,13 @@ internal fun NewPostRoute(
 private fun NewPostScreen(
     statusText: String,
     onStatusTextChanged: (String) -> Unit,
+    onPostClicked: () -> Unit,
 ) {
+    WindowInsets.Companion.isImeVisible
     Scaffold(
-        topBar = { TopBar() },
+        topBar = { TopBar(
+            onPostClicked = onPostClicked
+        ) },
         bottomBar = { BottomBar() },
     ) {
         Box(modifier = Modifier.padding(it)) {
@@ -71,7 +81,9 @@ private fun MainBox(
 }
 
 @Composable
-private fun TopBar() {
+private fun TopBar(
+    onPostClicked: () -> Unit,
+) {
     TopAppBar(
         title = {},
         navigationIcon = {
@@ -83,7 +95,7 @@ private fun TopBar() {
         },
         actions = {
             IconButton(
-                onClick = {  },
+                onClick = { onPostClicked() },
             ) {
                 Icon(Icons.Default.Send, "post")
             }
@@ -106,7 +118,8 @@ private fun NewPostScreenPreview() {
     MozillaSocialTheme {
         NewPostScreen(
             statusText = "",
-            onStatusTextChanged = {}
+            onStatusTextChanged = {},
+            onPostClicked = {}
         )
     }
 }

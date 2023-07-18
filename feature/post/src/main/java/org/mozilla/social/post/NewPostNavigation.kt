@@ -11,8 +11,10 @@ fun NavController.navigateToNewPost(navOptions: NavOptions? = null) {
     this.navigate(NEW_POST_ROUTE, navOptions)
 }
 
-fun NavGraphBuilder.newPostScreen() {
+fun NavGraphBuilder.newPostScreen(
+    onStatusPosted: () -> Unit,
+) {
     composable(route = NEW_POST_ROUTE) {
-        NewPostRoute()
+        NewPostRoute(onStatusPosted)
     }
 }
