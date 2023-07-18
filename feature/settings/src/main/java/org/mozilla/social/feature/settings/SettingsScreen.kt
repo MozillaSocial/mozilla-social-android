@@ -41,14 +41,17 @@ import org.koin.androidx.compose.koinViewModel
 import org.mozilla.social.core.designsystem.theme.MozillaSocialTheme
 
 @Composable
-internal fun SettingsRoute(
+fun SettingsRoute(
     viewModel: SettingsViewModel = koinViewModel(),
     onLogout: () -> Unit
 ) {
     val isToggled = viewModel.isToggled.collectAsState()
 
-    if (!viewModel.isSignedIn.collectAsState(initial = true).value) { onLogout() }
-    SettingsScreen(isToggled = isToggled.value, viewModel::toggleSwitch, viewModel::logoutUser)
+    when (viewModel.isSignedIn.collectAsState(initial = true).value) {
+        true ->
+            SettingsScreen(isToggled = isToggled.value, viewModel::toggleSwitch, viewModel::logoutUser)
+        else -> onLogout()
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
