@@ -1,4 +1,4 @@
-package org.mozilla.social.core.data.repository.repository
+package org.mozilla.social.core.data.repository
 
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.SharingStarted
@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.stateIn
 import org.mozilla.social.core.datastore.UserPreferencesDatastore
-import social.mozilla.core.network.MastodonService
+import org.mozilla.social.core.network.MastodonService
 
 /**
  * This class serves a MastodonService in a flow, once it's initialized with a valid access token

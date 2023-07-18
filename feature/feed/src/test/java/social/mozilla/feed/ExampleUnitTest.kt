@@ -1,4 +1,4 @@
-package social.mozilla.feed
+package org.mozilla.social.feed
 
 import org.junit.Test
 

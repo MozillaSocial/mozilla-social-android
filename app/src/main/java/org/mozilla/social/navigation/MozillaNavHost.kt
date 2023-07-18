@@ -12,7 +12,7 @@ import androidx.navigation.navigation
 import org.mozilla.social.feature.auth.AUTH_ROUTE
 import org.mozilla.social.feature.auth.authScreen
 import org.mozilla.social.feature.settings.SettingsRoute
-import social.mozilla.feed.FeedScreen
+import org.mozilla.social.feed.FeedScreen
 
 @Composable
 fun MozillaNavHost(navController: NavHostController) {

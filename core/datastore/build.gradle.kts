@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "social.mozilla.core.datastore"
+    namespace = "org.mozilla.social.core.datastore"
 
     defaultConfig {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
