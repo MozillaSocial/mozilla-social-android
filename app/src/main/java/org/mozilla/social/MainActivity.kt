@@ -11,10 +11,11 @@ import androidx.compose.ui.Modifier
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.mozilla.social.core.designsystem.theme.MozillaSocialTheme
 import org.mozilla.social.feature.auth.AuthViewModel
+import org.mozilla.social.ui.MainActivityScreen
 
 class MainActivity : ComponentActivity() {
 
-    private val viewModel: MainViewModel by viewModel<MainViewModel>()
+    private val viewModel: MainViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
