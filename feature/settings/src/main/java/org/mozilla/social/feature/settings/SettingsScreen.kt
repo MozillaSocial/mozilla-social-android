@@ -41,19 +41,22 @@ import org.koin.androidx.compose.koinViewModel
 import org.mozilla.social.core.designsystem.theme.MozillaSocialTheme
 
 @Composable
-internal fun SettingsRoute(
+fun SettingsRoute(
     viewModel: SettingsViewModel = koinViewModel(),
+    onLogout: () -> Unit
 ) {
     val isToggled = viewModel.isToggled.collectAsState()
 
-    SettingsScreen(isToggled = isToggled.value, viewModel::toggleSwitch)
+    if (!viewModel.isSignedIn.collectAsState(initial = true).value) { onLogout() }
+    SettingsScreen(isToggled = isToggled.value, viewModel::toggleSwitch, viewModel::logoutUser)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun SettingsScreen(
     isToggled: Boolean,
-    onSwitchToggled: () -> Unit
+    onSwitchToggled: () -> Unit,
+    logUserOut: () -> Unit
 ) {
     val localContext = LocalContext.current
     Scaffold(
@@ -95,6 +98,11 @@ internal fun SettingsScreen(
                     localContext.startActivity(intent)
                 }
             }
+            SettingsGroup(name = R.string.logout) {
+                LogoutText(name = R.string.logout) {
+                    logUserOut()
+                }
+            }
         }
     }
 }
@@ -107,7 +115,6 @@ fun SettingsGroup(
         Text(stringResource(id = name))
         Spacer(modifier = Modifier.height(8.dp))
         Surface(
-            color = MaterialTheme.colorScheme.surfaceTint,
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(8),
         ) {
@@ -206,10 +213,42 @@ private fun SettingsTextLink(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun LogoutText(
+    @StringRes name: Int,
+    onClick: () -> Unit
+) {
+
+    Surface(
+        color = MaterialTheme.colorScheme.error,
+        modifier = Modifier
+            .fillMaxWidth(),
+        shape = RoundedCornerShape(8.dp),
+        onClick = onClick,
+    ) {
+        Column {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        text = stringResource(id = name),
+                        style = MaterialTheme.typography.bodyLarge,
+                        modifier = Modifier.padding(start = 4.dp, top = 8.dp, bottom = 8.dp),
+                        textAlign = TextAlign.Center,
+                    )
+                }
+            }
+        }
+    }
+}
+
 @Preview
 @Composable
 internal fun SettingsScreenPreview() {
     MozillaSocialTheme {
-        SettingsScreen(false, {})
+        SettingsScreen(false, {}, {})
     }
 }

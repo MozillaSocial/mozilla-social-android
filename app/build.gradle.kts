@@ -43,9 +43,10 @@ dependencies {
     implementation(project(":core:designsystem"))
     implementation(project(":core:common"))
     implementation(project(":core:data"))
+    implementation(project(":core:datastore"))
     implementation(project(":feature:auth"))
     implementation(project(":feature:feed"))
-    implementation(project(":core:datastore"))
+    implementation(project(":feature:settings"))
 
     // android
     implementation(libs.androidx.core.ktx)
