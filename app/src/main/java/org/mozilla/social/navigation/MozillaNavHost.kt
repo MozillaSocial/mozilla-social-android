@@ -11,6 +11,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import org.mozilla.social.feature.auth.AUTH_ROUTE
 import org.mozilla.social.feature.auth.authScreen
+import social.mozilla.feed.FeedScreen
 
 @Composable
 fun MozillaNavHost(navController: NavHostController) {
@@ -27,7 +28,7 @@ fun MozillaNavHost(navController: NavHostController) {
 
 private fun NavGraphBuilder.mainGraph(navController: NavController) {
     navigation(startDestination = "feed", MAIN_ROUTE) {
-        composable("feed") { Text(text = "feed") }
+        composable("feed") { FeedScreen() }
         composable("settings") { Text(text = "settings") }
     }
 }

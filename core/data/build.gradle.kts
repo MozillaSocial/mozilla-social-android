@@ -24,10 +24,15 @@ android {
 dependencies {
     implementation(project(":core:common"))
     implementation(project(":core:network"))
+    implementation(project(":core:datastore"))
+    implementation(project(":core:model"))
 
     implementation(libs.retrofit)
 
     // koin
     implementation(libs.koin)
     testImplementation(libs.koin.junit)
+
+    implementation(libs.androidx.datastore)
+    implementation(libs.protobuf.kotlin.lite)
 }
