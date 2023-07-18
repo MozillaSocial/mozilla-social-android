@@ -1,0 +1,9 @@
+org.mozilla.social.feature.settings
+drawable ic_placeholder_android
+string group_1
+string group_2
+string ic_switch_explanation
+string logout
+string profile_title
+string settings_title
+string switch_text

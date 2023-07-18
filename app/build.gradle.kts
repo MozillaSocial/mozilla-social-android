@@ -46,6 +46,7 @@ dependencies {
     implementation(project(":feature:auth"))
     implementation(project(":feature:feed"))
     implementation(project(":core:datastore"))
+    implementation(project(":feature:post"))
 
     // android
     implementation(libs.androidx.core.ktx)
