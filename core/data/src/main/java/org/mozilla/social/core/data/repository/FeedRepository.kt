@@ -1,4 +1,4 @@
-package org.mozilla.social.core.data.repository.repository
+package org.mozilla.social.core.data.repository
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map

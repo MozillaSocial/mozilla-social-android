@@ -1,4 +1,4 @@
-package social.mozilla.core.network
+package org.mozilla.social.core.network
 
 import fr.outadoc.mastodonk.api.entity.Account
 import fr.outadoc.mastodonk.auth.AuthToken

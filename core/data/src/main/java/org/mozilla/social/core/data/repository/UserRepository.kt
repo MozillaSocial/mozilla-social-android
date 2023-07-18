@@ -1,4 +1,4 @@
-package org.mozilla.social.core.data.repository.repository
+package org.mozilla.social.core.data.repository
 
 data class User(val name : String)
 
