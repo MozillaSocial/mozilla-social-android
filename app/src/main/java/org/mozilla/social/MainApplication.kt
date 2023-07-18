@@ -9,6 +9,7 @@ import org.mozilla.social.common.commonModule
 import org.mozilla.social.core.data.repository.repositoryModule
 import org.mozilla.social.core.datastore.dataStoreModule
 import org.mozilla.social.feature.auth.authModule
+import org.mozilla.social.feature.settings.settingsModule
 import org.mozilla.social.feed.feedModule
 import org.mozilla.social.post.newPostModule
 
@@ -28,6 +29,7 @@ class MainApplication : Application() {
                 feedModule,
                 repositoryModule,
                 newPostModule,
+                settingsModule,
             )
         }
     }

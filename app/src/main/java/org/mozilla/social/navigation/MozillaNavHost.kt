@@ -1,6 +1,5 @@
 package org.mozilla.social.navigation
 
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
@@ -11,16 +10,20 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import org.mozilla.social.feature.auth.AUTH_ROUTE
 import org.mozilla.social.feature.auth.authScreen
+import org.mozilla.social.feature.auth.navigateToAuth
+import org.mozilla.social.feature.settings.SettingsRoute
 import org.mozilla.social.feed.FeedScreen
 
 @Composable
 fun MozillaNavHost(navController: NavHostController) {
     NavHost(navController = navController, startDestination = AUTH_ROUTE) {
         authScreen(onAuthenticated = {
-            navController.navigate(MAIN_ROUTE,
+            navController.navigate(
+                MAIN_ROUTE,
                 navOptions = NavOptions.Builder()
                     .setPopUpTo(AUTH_ROUTE, true)
-                    .build())
+                    .build()
+            )
         })
         mainGraph(navController)
     }
@@ -29,7 +32,15 @@ fun MozillaNavHost(navController: NavHostController) {
 private fun NavGraphBuilder.mainGraph(navController: NavController) {
     navigation(startDestination = "feed", MAIN_ROUTE) {
         composable("feed") { FeedScreen() }
-        composable("settings") { Text(text = "settings") }
+        composable("settings") {
+            SettingsRoute(
+                onLogout = {
+                    while (navController.currentBackStack.value.isNotEmpty()) {
+                        navController.popBackStack()
+                    }
+                    navController.navigateToAuth()
+                })
+        }
     }
 }
 
