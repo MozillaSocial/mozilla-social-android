@@ -43,9 +43,9 @@ import org.mozilla.social.core.designsystem.theme.MozillaSocialTheme
 
 @Composable
 fun SettingsRoute(
-    onLogout: () -> Unit
+    onLogout: () -> Unit,
+    viewModel: SettingsViewModel = koinViewModel(parameters = { parametersOf(onLogout) })
 ) {
-    val viewModel: SettingsViewModel = koinViewModel(parameters = { parametersOf(onLogout) })
     val isToggled = viewModel.isToggled.collectAsState()
 
     SettingsScreen(
