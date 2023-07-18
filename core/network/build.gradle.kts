@@ -3,7 +3,7 @@ plugins {
 }
 
 android {
-    namespace = "social.mozilla.core.network"
+    namespace = "org.mozilla.social.core.network"
 
     defaultConfig {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
