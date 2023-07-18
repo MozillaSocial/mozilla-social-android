@@ -11,7 +11,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import org.mozilla.social.feature.auth.AUTH_ROUTE
 import org.mozilla.social.feature.auth.authScreen
-import org.mozilla.social.feature.settings.SettingsRoute
+import org.mozilla.social.feature.settings.settingsScreen
 import org.mozilla.social.feed.FeedScreen
 
 @Composable
@@ -30,7 +30,7 @@ fun MozillaNavHost(navController: NavHostController) {
 private fun NavGraphBuilder.mainGraph(navController: NavController) {
     navigation(startDestination = "feed", MAIN_ROUTE) {
         composable("feed") { FeedScreen() }
-        composable("settings") { SettingsRoute(onLogout = {
+        composable("settings") { settingsScreen(onLogout = {
             navController.popBackStack()
         }) }
     }

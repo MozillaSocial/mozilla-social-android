@@ -41,7 +41,7 @@ import org.koin.androidx.compose.koinViewModel
 import org.mozilla.social.core.designsystem.theme.MozillaSocialTheme
 
 @Composable
-fun SettingsRoute(
+internal fun SettingsRoute(
     viewModel: SettingsViewModel = koinViewModel(),
     onLogout: () -> Unit
 ) {
