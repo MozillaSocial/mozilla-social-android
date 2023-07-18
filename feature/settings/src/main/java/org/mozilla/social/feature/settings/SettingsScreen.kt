@@ -38,20 +38,21 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.parametersOf
 import org.mozilla.social.core.designsystem.theme.MozillaSocialTheme
 
 @Composable
 fun SettingsRoute(
-    viewModel: SettingsViewModel = koinViewModel(),
-    onLogout: () -> Unit
+    onLogout: () -> Unit,
+    viewModel: SettingsViewModel = koinViewModel(parameters = { parametersOf(onLogout) })
 ) {
     val isToggled = viewModel.isToggled.collectAsState()
 
-    when (viewModel.isSignedIn.collectAsState(initial = true).value) {
-        true ->
-            SettingsScreen(isToggled = isToggled.value, viewModel::toggleSwitch, viewModel::logoutUser)
-        else -> onLogout()
-    }
+    SettingsScreen(
+        isToggled = isToggled.value,
+        viewModel::toggleSwitch,
+        viewModel::logoutUser
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
