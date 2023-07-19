@@ -21,7 +21,7 @@ class MastodonService(accessToken: String) {
     }
 
     suspend fun getPublicTimeline(): Page<List<Status>> =
-        client.timelines.getPublicTimeline().toDomain()
+        client.timelines.getHomeTimeline().toDomain()
 
     private fun fr.outadoc.mastodonk.api.entity.paging.Page<List<fr.outadoc.mastodonk.api.entity.Status>>.toDomain(): Page<List<Status>> {
         return Page(

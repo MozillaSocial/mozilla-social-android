@@ -36,7 +36,7 @@ class MainActivity : ComponentActivity() {
         super.onNewIntent(intent)
         if (intent?.data.toString().startsWith(AuthViewModel.AUTH_SCHEME)) {
             intent?.data?.let {
-                viewModel.onTokenReceived(it.toString())
+                viewModel.onUserCodeReceived(it.toString())
             }
         }
     }
