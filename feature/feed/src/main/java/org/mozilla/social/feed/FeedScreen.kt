@@ -1,5 +1,8 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
+
 package org.mozilla.social.feed
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -7,7 +10,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material3.Card
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -24,21 +33,39 @@ import org.mozilla.social.model.Page
 import org.mozilla.social.model.Status
 
 @Composable
-fun FeedScreen(viewModel: FeedViewModel = koinViewModel<FeedViewModel>()) {
-    FeedScreen(publicTimeline = viewModel.feed.collectAsState(null).value)
+fun FeedScreen(
+    onNewPostClicked: () -> Unit,
+    viewModel: FeedViewModel = koinViewModel()
+) {
+    FeedScreen(
+        publicTimeline = viewModel.feed.collectAsState(null).value,
+        onNewPostClicked = onNewPostClicked,
+    )
 }
 
 @Composable
-fun FeedScreen(publicTimeline: Page<List<Status>>?) {
-
-    Column(
-        Modifier
-            .fillMaxSize()
-            .padding(4.dp)
-            .verticalScroll(rememberScrollState())
+fun FeedScreen(
+    publicTimeline: Page<List<Status>>?,
+    onNewPostClicked: () -> Unit,
+) {
+    Scaffold(
+        floatingActionButton = {
+            FloatingActionButton(onClick = { onNewPostClicked() }) {
+                Icon(Icons.Rounded.Add, "new post")
+            }
+        }
     ) {
-        publicTimeline?.contents?.forEach { status ->
-            StatusCard(status = status)
+        Box(modifier = Modifier.padding(it)) {
+            Column(
+                Modifier
+                    .fillMaxSize()
+                    .padding(4.dp)
+                    .verticalScroll(rememberScrollState())
+            ) {
+                publicTimeline?.contents?.forEach { status ->
+                    StatusCard(status = status)
+                }
+            }
         }
     }
 }
@@ -53,7 +80,10 @@ fun StatusCard(status: Status) {
     ) {
         val spannedText = HtmlCompat.fromHtml(status.content, 0)
 
-        Column(Modifier.padding(4.dp).fillMaxSize()) {
+        Column(
+            Modifier
+                .padding(4.dp)
+                .fillMaxSize()) {
             Text(text = status.account.username)
             AndroidView(
                 modifier = Modifier
@@ -81,7 +111,8 @@ fun FeedScreenPreview() {
                         content = "here's a post"
                     )
                 )
-            )
+            ),
+            onNewPostClicked = {}
         )
     }
 }

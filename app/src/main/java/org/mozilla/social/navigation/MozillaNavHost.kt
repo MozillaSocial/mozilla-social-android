@@ -12,8 +12,9 @@ import org.mozilla.social.feature.auth.AUTH_ROUTE
 import org.mozilla.social.feature.auth.authScreen
 import org.mozilla.social.feature.auth.navigateToAuth
 import org.mozilla.social.feature.settings.SettingsRoute
-import org.mozilla.social.feed.FeedScreen
-import org.mozilla.social.post.NEW_POST_ROUTE
+import org.mozilla.social.feed.FEED_ROUTE
+import org.mozilla.social.feed.feedScreen
+import org.mozilla.social.post.navigateToNewPost
 import org.mozilla.social.post.newPostScreen
 
 @Composable
@@ -32,8 +33,10 @@ fun MozillaNavHost(navController: NavHostController) {
 }
 
 private fun NavGraphBuilder.mainGraph(navController: NavController) {
-    navigation(startDestination = NEW_POST_ROUTE, MAIN_ROUTE) {
-        composable("feed") { FeedScreen() }
+    navigation(startDestination = FEED_ROUTE, MAIN_ROUTE) {
+        feedScreen(
+            onNewPostClicked = { navController.navigateToNewPost() },
+        )
         composable("settings") {
             SettingsRoute(
                 onLogout = {
@@ -44,9 +47,8 @@ private fun NavGraphBuilder.mainGraph(navController: NavController) {
                 })
         }
         newPostScreen(
-            onStatusPosted = {
-                navController.popBackStack()
-            }
+            onStatusPosted = { navController.popBackStack() },
+            onCloseClicked = { navController.popBackStack() },
         )
     }
 }

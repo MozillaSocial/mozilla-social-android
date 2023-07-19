@@ -31,12 +31,14 @@ import org.mozilla.social.core.designsystem.theme.MozillaSocialTheme
 @Composable
 internal fun NewPostRoute(
     onStatusPosted: () -> Unit,
+    onCloseClicked: () -> Unit,
     viewModel: NewPostViewModel = koinViewModel(parameters = { parametersOf(onStatusPosted) })
 ) {
     NewPostScreen(
         statusText = viewModel.statusText.collectAsState().value,
         onStatusTextChanged = viewModel::onStatusTextUpdated,
-        onPostClicked = viewModel::onPostClicked
+        onPostClicked = viewModel::onPostClicked,
+        onCloseClicked = onCloseClicked,
     )
 }
 
@@ -45,11 +47,13 @@ private fun NewPostScreen(
     statusText: String,
     onStatusTextChanged: (String) -> Unit,
     onPostClicked: () -> Unit,
+    onCloseClicked: () -> Unit,
 ) {
     WindowInsets.Companion.isImeVisible
     Scaffold(
         topBar = { TopBar(
-            onPostClicked = onPostClicked
+            onPostClicked = onPostClicked,
+            onCloseClicked = onCloseClicked,
         ) },
         bottomBar = { BottomBar() },
     ) {
@@ -83,12 +87,13 @@ private fun MainBox(
 @Composable
 private fun TopBar(
     onPostClicked: () -> Unit,
+    onCloseClicked: () -> Unit,
 ) {
     TopAppBar(
         title = {},
         navigationIcon = {
             IconButton(
-                onClick = {  },
+                onClick = { onCloseClicked() },
             ) {
                 Icon(Icons.Default.Close, "close")
             }
@@ -119,7 +124,8 @@ private fun NewPostScreenPreview() {
         NewPostScreen(
             statusText = "",
             onStatusTextChanged = {},
-            onPostClicked = {}
+            onPostClicked = {},
+            onCloseClicked = {},
         )
     }
 }
