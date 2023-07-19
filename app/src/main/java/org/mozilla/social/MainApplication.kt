@@ -5,6 +5,7 @@ import org.koin.android.BuildConfig
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
+import org.koin.dsl.module
 import org.mozilla.social.common.commonModule
 import org.mozilla.social.core.data.repository.repositoryModule
 import org.mozilla.social.core.datastore.dataStoreModule
@@ -22,15 +23,21 @@ class MainApplication : Application() {
             androidLogger()
             androidContext(this@MainApplication)
             modules(
-                authModule,
-                dataStoreModule,
-                commonModule(BuildConfig.DEBUG),
-                mainModule,
-                feedModule,
-                repositoryModule,
-                newPostModule,
-                settingsModule,
+                appModules,
             )
         }
     }
+}
+
+val appModules = module {
+    includes(
+        authModule,
+        dataStoreModule,
+        commonModule(BuildConfig.DEBUG),
+        mainModule,
+        feedModule,
+        repositoryModule,
+        newPostModule,
+        settingsModule,
+    )
 }

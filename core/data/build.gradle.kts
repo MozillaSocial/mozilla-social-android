@@ -3,7 +3,7 @@ plugins {
 }
 
 android {
-    namespace = "org.mozilla.social.core.network"
+    namespace = "org.mozilla.social.core.data"
 
     defaultConfig {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -29,9 +29,7 @@ dependencies {
 
     implementation(libs.retrofit)
 
-    // koin
     implementation(libs.koin)
-    testImplementation(libs.koin.junit)
 
     implementation(libs.androidx.datastore)
     implementation(libs.protobuf.kotlin.lite)

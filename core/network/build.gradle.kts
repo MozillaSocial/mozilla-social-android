@@ -27,7 +27,7 @@ dependencies {
     implementation(libs.retrofit)
 
     // Core library
-    implementation("fr.outadoc.mastodonk:mastodonk-core:+")
+    implementation(libs.mastodonk)
 
     // Paging library, use with androidx.paging v3 on JVM
 //    implementation("fr.outadoc.mastodonk:mastodonk-paging:+")
