@@ -1,5 +1,9 @@
-package org.mozilla.social.core.data.repository
+@file:OptIn(ExperimentalCoroutinesApi::class, DelicateCoroutinesApi::class)
 
+package org.mozilla.social.core.data
+
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow

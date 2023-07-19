@@ -32,6 +32,7 @@ dependencies {
 
     // Core library
     implementation(libs.mastodonk)
+    implementation(libs.ktor.core)
 
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.kotlinx.serialization.converter)

@@ -23,4 +23,5 @@ android {
 
 dependencies {
     implementation(libs.kotlinx.datetime)
+    implementation(libs.ktor.core)
 }

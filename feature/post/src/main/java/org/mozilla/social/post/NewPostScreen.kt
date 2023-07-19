@@ -76,6 +76,7 @@ import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 import org.mozilla.social.core.designsystem.theme.MozillaSocialTheme
 import org.mozilla.social.core.designsystem.utils.NoIndication
+import java.io.InputStream
 
 @Composable
 internal fun NewPostRoute(
@@ -88,6 +89,8 @@ internal fun NewPostRoute(
         onStatusTextChanged = viewModel::onStatusTextUpdated,
         onPostClicked = viewModel::onPostClicked,
         onCloseClicked = onCloseClicked,
+        sendButtonEnabled = viewModel.sendButtonEnabled.collectAsState().value,
+        onImageInserted = viewModel::onImageInserted
     )
 }
 
@@ -97,15 +100,24 @@ private fun NewPostScreen(
     onStatusTextChanged: (String) -> Unit,
     onPostClicked: () -> Unit,
     onCloseClicked: () -> Unit,
+    sendButtonEnabled: Boolean,
+    onImageInserted: (InputStream) -> Unit,
 ) {
+    val context = LocalContext.current
     val imageData = remember { mutableStateOf<Uri?>(null) }
-    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) {
-        imageData.value = it
+    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+        imageData.value = uri
+        uri?.let {
+            context.contentResolver.openInputStream(it)?.let { inputStream ->
+                onImageInserted(inputStream)
+            }
+        }
     }
     Scaffold(
         topBar = { TopBar(
             onPostClicked = onPostClicked,
             onCloseClicked = onCloseClicked,
+            sendButtonEnabled = sendButtonEnabled,
         ) },
         bottomBar = { BottomBar(
             onUploadImageClicked = { launcher.launch("image/*") }
@@ -181,6 +193,7 @@ private fun MainBox(
 private fun TopBar(
     onPostClicked: () -> Unit,
     onCloseClicked: () -> Unit,
+    sendButtonEnabled: Boolean,
 ) {
     Column {
         TopAppBar(
@@ -194,6 +207,7 @@ private fun TopBar(
             },
             actions = {
                 IconButton(
+                    enabled = sendButtonEnabled,
                     onClick = { onPostClicked() },
                 ) {
                     Icon(Icons.Default.Send, "post")
@@ -270,6 +284,8 @@ private fun NewPostScreenPreview() {
             onStatusTextChanged = {},
             onPostClicked = {},
             onCloseClicked = {},
+            sendButtonEnabled = false,
+            onImageInserted = {},
         )
     }
 }
