@@ -22,19 +22,6 @@ android {
 }
 
 dependencies {
-
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.appcompat)
-    implementation(libs.google.material)
-
     implementation(libs.jakewharton.timber)
-
-    // koin
     implementation(libs.koin)
-    testImplementation(libs.koin.junit)
-
-    // testing
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.test.ext.junit)
-    androidTestImplementation(libs.androidx.test.espresso.core)
 }

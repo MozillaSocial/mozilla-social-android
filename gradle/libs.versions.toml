@@ -15,12 +15,12 @@ koin = "3.4.0"
 junit = "4.13.2"
 kotlin = "1.8.22"
 kotlinDateTime = "0.4.0"
+navigation-compose = "2.6.0"
 okhttp = "4.10.0"
 protobuf = "3.23.0"
 protobufPlugin = "0.9.3"
 retrofit = "2.9.0"
 timber = "5.0.1"
-navigation-compose = "2.6.0"
 
 [libraries]
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "androidxActivity" }
@@ -45,14 +45,15 @@ androidx-test-espresso-core = { group = "androidx.test.espresso", name = "espres
 androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidxTestExt" }
 google-material = { group = "com.google.android.material", name = "material", version.ref = "googleAndroidMaterial" }
 koin = { group = "io.insert-koin", name = "koin-androidx-compose", version.ref = "koin" }
-koin-junit = { group = "io.insert-koin", name = "koin-test-junit4", version.ref = "koin" }
+koin-junit = { group = "io.insert-koin", name = "koin-test-junit5", version.ref = "koin" }
 kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version.ref = "kotlinDateTime" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
-retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
 jakewharton-timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
 koin-android = { group = "io.insert-koin", name = "koin-android", version.ref = "koin" }
+mastodonk = { group = "fr.outadoc.mastodonk", name = "mastodonk-core", version = "+" }
 protobuf-kotlin-lite = { group = "com.google.protobuf", name = "protobuf-kotlin-lite", version.ref = "protobuf" }
 protobuf-protoc = { group = "com.google.protobuf", name = "protoc", version.ref = "protobuf" }
+retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
 square-okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
 
 # Dependencies of build-logic
