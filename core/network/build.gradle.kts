@@ -1,5 +1,6 @@
 plugins {
     id("org.mozilla.social.android.library")
+    kotlin("plugin.serialization") version "1.8.21"
 }
 
 android {
@@ -24,12 +25,14 @@ android {
 dependencies {
     implementation(project(":core:model"))
 
-    implementation(libs.retrofit)
+    api(libs.retrofit)
+
+    implementation(libs.koin)
+    implementation(libs.koin.android)
 
     // Core library
     implementation(libs.mastodonk)
 
-    // Paging library, use with androidx.paging v3 on JVM
-//    implementation("fr.outadoc.mastodonk:mastodonk-paging:+")
-
+    implementation("com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:1.0.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
 }

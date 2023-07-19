@@ -96,6 +96,7 @@ private fun openCustomTabs(context: Context) {
                     .addQueryParameter("redirect_uri", AuthViewModel.AUTH_SCHEME)
                     .addQueryParameter("client_id", "MoJ_c0aOfXE-8RllOBvAKIeHUpr3usA5u3vS5HJEJ0M")
                     .addQueryParameter("client_secret", "1rg6NsrXDuR81UM_ljyv_FNDj8TaInk6pbRok2eqmiM")
+                    .addQueryParameter("scope", "read write push")
                     .build()
                     .toString()
             )
