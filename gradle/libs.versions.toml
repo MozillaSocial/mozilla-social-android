@@ -21,6 +21,9 @@ protobuf = "3.23.0"
 protobufPlugin = "0.9.3"
 retrofit = "2.9.0"
 timber = "5.0.1"
+kotlinx-serialization-converter = "1.0.0"
+kotlinx-serialization-json = "1.5.1"
+kotlinxSerializationPlugin = "1.8.21"
 
 [libraries]
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "androidxActivity" }
@@ -55,6 +58,9 @@ protobuf-kotlin-lite = { group = "com.google.protobuf", name = "protobuf-kotlin-
 protobuf-protoc = { group = "com.google.protobuf", name = "protoc", version.ref = "protobuf" }
 retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
 square-okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
+kotlinx-serialization-converter = { group = "com.jakewharton.retrofit", name = "retrofit2-kotlinx-serialization-converter", version.ref = "kotlinx-serialization-converter" }
+kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinx-serialization-json" }
+
 
 # Dependencies of build-logic
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "androidGradlePlugin" }
@@ -65,3 +71,4 @@ android-application = { id = "com.android.application", version.ref = "androidGr
 android-library = { id = "com.android.library", version.ref = "androidGradlePlugin" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 protobuf = { id = "com.google.protobuf", version.ref = "protobufPlugin" }
+kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlinxSerializationPlugin"}
