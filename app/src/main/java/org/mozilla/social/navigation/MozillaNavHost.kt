@@ -33,7 +33,8 @@ fun MozillaNavHost(navController: NavHostController) {
 }
 
 private fun NavGraphBuilder.mainGraph(navController: NavController) {
-    navigation(startDestination = FEED_ROUTE, MAIN_ROUTE) {
+    navigation(startDestination = FEED_ROUTE, route = MAIN_ROUTE) {
+
         feedScreen(
             onNewPostClicked = { navController.navigateToNewPost() },
         )
