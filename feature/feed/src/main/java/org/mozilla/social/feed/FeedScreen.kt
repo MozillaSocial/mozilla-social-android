@@ -5,9 +5,7 @@ package org.mozilla.social.feed
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -31,11 +29,9 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.viewinterop.AndroidView
-import androidx.core.text.HtmlCompat
-import com.google.android.material.textview.MaterialTextView
 import org.koin.androidx.compose.koinViewModel
 import org.mozilla.social.core.designsystem.theme.MozillaSocialTheme
+import org.mozilla.social.core.ui.PostCard
 import org.mozilla.social.model.Account
 import org.mozilla.social.model.Page
 import org.mozilla.social.model.Status
@@ -78,7 +74,7 @@ fun FeedScreen(
                     .verticalScroll(rememberScrollState())
             ) {
                 publicTimeline?.contents?.forEach { status ->
-                    StatusCard(status = status)
+                    PostCard(status = status)
                 }
             }
         }
@@ -124,35 +120,6 @@ fun MozillaAppBar(
     )
 
 }
-
-
-@Composable
-fun StatusCard(status: Status) {
-    Card(
-        Modifier
-            .padding(4.dp)
-            .fillMaxWidth()
-            .wrapContentHeight(),
-    ) {
-        val spannedText = HtmlCompat.fromHtml(status.content, 0)
-
-        Column(
-            Modifier
-                .padding(4.dp)
-                .fillMaxSize()
-        ) {
-            Text(text = status.account.username)
-            AndroidView(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .wrapContentHeight(),
-                factory = { MaterialTextView(it) },
-                update = { it.text = spannedText }
-            )
-        }
-    }
-}
-
 
 @Preview
 @Composable

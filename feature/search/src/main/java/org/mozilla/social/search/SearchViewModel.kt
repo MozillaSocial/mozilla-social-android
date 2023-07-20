@@ -1,4 +1,4 @@
-package org.mozilla.social.feed
+package org.mozilla.social.search
 
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.Flow
@@ -7,9 +7,6 @@ import org.mozilla.social.core.data.repository.FeedRepository
 import org.mozilla.social.model.Page
 import org.mozilla.social.model.Status
 
-/**
- * Produces a flow of pages of statuses for a feed
- */
-class FeedViewModel(feedRepository: FeedRepository) : ViewModel() {
-    val feed: Flow<Page<List<Status>>> = feedRepository.getLocalTimeline().filterNotNull()
+class SearchViewModel(feedRepository: FeedRepository) : ViewModel() {
+    val publicFeed: Flow<Page<List<Status>>> = feedRepository.getPublicTimeline().filterNotNull()
 }
