@@ -13,6 +13,7 @@ import org.mozilla.social.feature.auth.authModule
 import org.mozilla.social.feature.settings.settingsModule
 import org.mozilla.social.feed.feedModule
 import org.mozilla.social.post.newPostModule
+import org.mozilla.social.search.searchModule
 
 class MainApplication : Application() {
 
@@ -36,6 +37,7 @@ val appModules = module {
         commonModule(BuildConfig.DEBUG),
         mainModule,
         feedModule,
+        searchModule,
         repositoryModule,
         newPostModule,
         settingsModule,

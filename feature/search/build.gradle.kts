@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "org.mozilla.social.feature.feed"
+    namespace = "org.mozilla.social.feature.search"
 
     defaultConfig {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
