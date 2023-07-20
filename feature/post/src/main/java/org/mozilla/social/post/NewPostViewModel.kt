@@ -3,8 +3,10 @@ package org.mozilla.social.post
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.mozilla.social.common.logging.Log
@@ -22,33 +24,48 @@ class NewPostViewModel(
     private val _statusText = MutableStateFlow("")
     val statusText: StateFlow<String> = _statusText
 
-    private val _attachmentId = MutableStateFlow<String?>(null)
-    val attachmentId: StateFlow<String?> = _attachmentId
+    private val attachmentId = MutableStateFlow<String?>(null)
 
-    private val _sendButtonEnabled = MutableStateFlow(false).apply {
-        viewModelScope.launch {
-            combine(statusText, attachmentId) { statusText, attachmentId ->
-                statusText.isNotBlank() || !attachmentId.isNullOrBlank()
-            }.collect {
-                value = it
-            }
-        }
-    }
-    val sendButtonEnabled: StateFlow<Boolean> = _sendButtonEnabled
+    val sendButtonEnabled: StateFlow<Boolean> =
+        combine(statusText, attachmentId) { statusText, attachmentId ->
+            statusText.isNotBlank() || !attachmentId.isNullOrBlank()
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.Lazily,
+            initialValue = false,
+        )
+
+    private val _imageState = MutableStateFlow<ImageState>(ImageState.LOADING)
+    val imageState: StateFlow<ImageState> = _imageState
+
+    private val _imageDescription = MutableStateFlow("")
+    val imageDescription: StateFlow<String> = _imageDescription
 
     fun onStatusTextUpdated(text: String) {
         _statusText.update { text }
     }
 
+    fun onImageDescriptionTextUpdated(text: String) {
+        _imageDescription.update { text }
+    }
+
+    fun onImageRemoved() {
+        attachmentId.update { null }
+    }
+
     fun onImageInserted(file: File) {
+        _imageState.update { ImageState.LOADING }
         viewModelScope.launch {
             try {
                 val imageId = mediaRepository.uploadImage(
-                    file
+                    file,
+                    imageDescription.value.ifBlank { null }
                 ).attachmentId
-                _attachmentId.update { imageId }
+                attachmentId.update { imageId }
+                _imageState.update { ImageState.LOADED }
             } catch (e: Exception) {
                 log.e(e)
+                _imageState.update { ImageState.ERROR }
             }
         }
     }
@@ -62,4 +79,10 @@ class NewPostViewModel(
             onStatusPosted()
         }
     }
+}
+
+sealed class ImageState {
+    object LOADING : ImageState()
+    object LOADED : ImageState()
+    object ERROR : ImageState()
 }
