@@ -24,6 +24,7 @@ android {
 
 dependencies {
     implementation(project(":core:model"))
+    implementation(project(":core:designsystem"))
     implementation("com.google.android.material:material:1.9.0")
 
     // compose

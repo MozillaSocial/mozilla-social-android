@@ -121,34 +121,6 @@ fun MozillaAppBar(
 
 }
 
-
-@Composable
-fun StatusCard(status: Status) {
-    Card(
-        Modifier
-            .padding(4.dp)
-            .fillMaxWidth()
-            .wrapContentHeight(),
-    ) {
-        val spannedText = HtmlCompat.fromHtml(status.content, 0)
-
-        Column(
-            Modifier
-                .padding(4.dp)
-                .fillMaxSize()
-        ) {
-            Text(text = status.account.username)
-            AndroidView(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .wrapContentHeight(),
-                factory = { MaterialTextView(it) },
-                update = { it.text = spannedText }
-            )
-        }
-    }
-}
-
 @Preview
 @Composable
 fun FeedScreenPreview() {

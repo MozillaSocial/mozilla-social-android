@@ -44,7 +44,6 @@ val appModules = module {
         mainModule,
         feedModule,
         searchModule,
-        repositoryModule,
         repositoryModule(BuildConfig.DEBUG),
         newPostModule,
         settingsModule,
