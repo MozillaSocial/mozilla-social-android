@@ -145,5 +145,4 @@ object FirefoxColor {
 
     val White = Color(0xFFFFFFFF)
     val Black = Color(0xFF000000)
-    val TranspartentOverlay = Color(0x99000000)
 }
