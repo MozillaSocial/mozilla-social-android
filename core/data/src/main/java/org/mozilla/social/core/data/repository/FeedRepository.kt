@@ -9,4 +9,7 @@ import org.mozilla.social.model.Status
 class FeedRepository internal constructor(private val serviceWrapper: MastodonServiceWrapper) {
     fun getPublicTimeline(): Flow<Page<List<Status>>?> =
         serviceWrapper.service.map { it?.getPublicTimeline() }
+
+    fun getLocalTimeline(): Flow<Page<List<Status>>?> =
+        serviceWrapper.service.map { it?.getLocalTimeline() }
 }

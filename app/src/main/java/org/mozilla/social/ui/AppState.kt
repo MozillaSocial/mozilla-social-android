@@ -25,6 +25,7 @@ class AppState(
     val currentTopLevelDestination: TopLevelDestination?
         @Composable get() = when (currentDestination?.route) {
             "feed" -> TopLevelDestination.FEED
+            "search" -> TopLevelDestination.SEARCH
             "settings" -> TopLevelDestination.SETTINGS
             else -> null
         }
@@ -45,6 +46,7 @@ class AppState(
 
         when (destination) {
             TopLevelDestination.FEED -> navController.navigate("feed", navOptions)
+            TopLevelDestination.SEARCH -> navController.navigate("search", navOptions)
             TopLevelDestination.SETTINGS -> navController.navigate("settings", navOptions)
         }
     }
