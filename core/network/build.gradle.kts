@@ -24,14 +24,19 @@ android {
 
 dependencies {
     implementation(project(":core:model"))
+    implementation(project(":core:common"))
 
     api(libs.retrofit)
+
+    implementation(libs.square.okhttp)
+    implementation(libs.square.okhttp.logging)
 
     implementation(libs.koin)
     implementation(libs.koin.android)
 
     // Core library
     implementation(libs.mastodonk)
+    implementation(libs.ktor.core)
 
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.kotlinx.serialization.converter)
