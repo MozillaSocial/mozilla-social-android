@@ -4,13 +4,9 @@ import fr.outadoc.mastodonk.api.entity.Account
 import fr.outadoc.mastodonk.auth.AuthToken
 import fr.outadoc.mastodonk.auth.AuthTokenProvider
 import fr.outadoc.mastodonk.client.MastodonClient
-import org.mozilla.social.core.network.media.toDomain
-import org.mozilla.social.core.network.media.toMastodonk
 import org.mozilla.social.model.Page
 import org.mozilla.social.model.PageInfo
 import org.mozilla.social.model.Status
-import org.mozilla.social.model.entity.Attachment
-import org.mozilla.social.model.entity.request.File
 
 class MastodonService(accessToken: String) {
 
@@ -32,18 +28,6 @@ class MastodonService(accessToken: String) {
                 previousPage = previousPage.toDomain()
             )
         }
-
-    suspend fun uploadImage(
-        file: File,
-        description: String?
-    ): Attachment {
-        return client.media.uploadMediaAttachment(
-            file = file.toMastodonk(),
-            thumbnail = null,
-            description = description,
-            focus = "0.0,0.0",
-        ).toDomain()
-    }
 }
 
 private fun fr.outadoc.mastodonk.api.entity.Status.toDomain(): Status {

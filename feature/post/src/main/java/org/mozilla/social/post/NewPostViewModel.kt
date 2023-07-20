@@ -7,15 +7,15 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.mozilla.social.common.logging.Log
 import org.mozilla.social.core.data.repository.MediaRepository
 import org.mozilla.social.core.data.repository.StatusRepository
-import java.io.ByteArrayOutputStream
-import java.io.InputStream
-import java.nio.ByteBuffer
+import java.io.File
 
 class NewPostViewModel(
     private val statusRepository: StatusRepository,
     private val mediaRepository: MediaRepository,
+    private val log: Log,
     private val onStatusPosted: () -> Unit,
 ) : ViewModel() {
 
@@ -40,29 +40,15 @@ class NewPostViewModel(
         _statusText.update { text }
     }
 
-    fun onImageInserted(inputStream: InputStream) {
-        val out = ByteArrayOutputStream()
-        val buffer = ByteArray(1024)
-        var len = 0
-        while (true) {
-            len = inputStream.read(buffer)
-            if (len == -1) {
-                break
-            }
-            out.write(buffer, 0, len)
-        }
-        val byteBuffer = ByteBuffer.wrap(out.toByteArray())
-        inputStream.close()
-        out.close()
+    fun onImageInserted(file: File) {
         viewModelScope.launch {
             try {
                 val imageId = mediaRepository.uploadImage(
-                    "test",
-                    byteBuffer
+                    file
                 ).attachmentId
                 _attachmentId.update { imageId }
             } catch (e: Exception) {
-                println(e.message)
+                log.e(e)
             }
         }
     }
