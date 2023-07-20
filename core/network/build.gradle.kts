@@ -24,8 +24,12 @@ android {
 
 dependencies {
     implementation(project(":core:model"))
+    implementation(project(":core:common"))
 
     api(libs.retrofit)
+
+    implementation(libs.square.okhttp)
+    implementation(libs.square.okhttp.logging)
 
     implementation(libs.koin)
     implementation(libs.koin.android)

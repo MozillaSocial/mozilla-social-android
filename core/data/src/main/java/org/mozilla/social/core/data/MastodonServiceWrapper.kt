@@ -15,7 +15,9 @@ import org.mozilla.social.core.network.MastodonService
 /**
  * This class serves a MastodonService in a flow, once it's initialized with a valid access token
  */
-class MastodonServiceWrapper(userPreferencesDatastore: UserPreferencesDatastore) {
+class MastodonServiceWrapper(
+    userPreferencesDatastore: UserPreferencesDatastore,
+) {
 
     val service: StateFlow<MastodonService?> = userPreferencesDatastore.dataStore.data.mapLatest {
         if (it.accessToken != null) {
