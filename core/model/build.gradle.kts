@@ -1,5 +1,6 @@
 plugins {
     id("org.mozilla.social.android.library")
+    kotlin("plugin.serialization") version "1.8.21"
 }
 
 android {
@@ -23,4 +24,7 @@ android {
 
 dependencies {
     implementation(libs.kotlinx.datetime)
+    implementation(libs.ktor.core)
+
+    implementation(libs.kotlinx.serialization.json)
 }
