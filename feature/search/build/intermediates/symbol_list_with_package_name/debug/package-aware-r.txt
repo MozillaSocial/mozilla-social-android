@@ -1,2 +1,0 @@
-org.mozilla.social.feature.search
-string local_feed
