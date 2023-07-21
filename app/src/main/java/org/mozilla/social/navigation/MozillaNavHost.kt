@@ -16,6 +16,7 @@ import org.mozilla.social.feed.FEED_ROUTE
 import org.mozilla.social.feed.feedScreen
 import org.mozilla.social.post.navigateToNewPost
 import org.mozilla.social.post.newPostScreen
+import org.mozilla.social.search.searchScreen
 
 @Composable
 fun MozillaNavHost(navController: NavHostController) {
@@ -38,6 +39,7 @@ private fun NavGraphBuilder.mainGraph(navController: NavController) {
         feedScreen(
             onNewPostClicked = { navController.navigateToNewPost() },
         )
+        searchScreen()
         composable("settings") {
             SettingsRoute(
                 onLogout = {

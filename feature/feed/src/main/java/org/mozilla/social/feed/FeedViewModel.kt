@@ -11,5 +11,5 @@ import org.mozilla.social.model.Status
  * Produces a flow of pages of statuses for a feed
  */
 class FeedViewModel(feedRepository: FeedRepository) : ViewModel() {
-    val feed: Flow<Page<List<Status>>> = feedRepository.getPublicTimeline().filterNotNull()
+    val feed: Flow<Page<List<Status>>> = feedRepository.getLocalTimeline().filterNotNull()
 }

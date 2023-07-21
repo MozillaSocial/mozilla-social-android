@@ -19,13 +19,5 @@ class StatusRepository(
                 }
             )
         )
-//        mastodonServiceWrapper.service.value?.postStatus(
-//            StatusCreate(
-//                status = statusText,
-//                mediaIds = buildList {
-//                    attachmentId?.let { add(it) }
-//                }
-//            )
-//        )
     }
 }

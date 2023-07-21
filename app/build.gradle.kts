@@ -46,6 +46,7 @@ dependencies {
     implementation(project(":core:datastore"))
     implementation(project(":feature:auth"))
     implementation(project(":feature:feed"))
+    implementation(project(":feature:search"))
     implementation(project(":core:datastore"))
     implementation(project(":feature:post"))
     implementation(project(":feature:settings"))

@@ -3,66 +3,69 @@ package org.mozilla.social.post
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.mozilla.social.common.logging.Log
 import org.mozilla.social.core.data.repository.MediaRepository
 import org.mozilla.social.core.data.repository.StatusRepository
-import java.io.ByteArrayOutputStream
-import java.io.InputStream
-import java.nio.ByteBuffer
+import java.io.File
 
 class NewPostViewModel(
     private val statusRepository: StatusRepository,
     private val mediaRepository: MediaRepository,
+    private val log: Log,
     private val onStatusPosted: () -> Unit,
 ) : ViewModel() {
 
     private val _statusText = MutableStateFlow("")
     val statusText: StateFlow<String> = _statusText
 
-    private val _attachmentId = MutableStateFlow<String?>(null)
-    val attachmentId: StateFlow<String?> = _attachmentId
+    private val attachmentId = MutableStateFlow<String?>(null)
 
-    private val _sendButtonEnabled = MutableStateFlow(false).apply {
-        viewModelScope.launch {
-            combine(statusText, attachmentId) { statusText, attachmentId ->
-                statusText.isNotBlank() || !attachmentId.isNullOrBlank()
-            }.collect {
-                value = it
-            }
-        }
-    }
-    val sendButtonEnabled: StateFlow<Boolean> = _sendButtonEnabled
+    val sendButtonEnabled: StateFlow<Boolean> =
+        combine(statusText, attachmentId) { statusText, attachmentId ->
+            statusText.isNotBlank() || !attachmentId.isNullOrBlank()
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.Lazily,
+            initialValue = false,
+        )
+
+    private val _imageState = MutableStateFlow<ImageState>(ImageState.LOADING)
+    val imageState: StateFlow<ImageState> = _imageState
+
+    private val _imageDescription = MutableStateFlow("")
+    val imageDescription: StateFlow<String> = _imageDescription
 
     fun onStatusTextUpdated(text: String) {
         _statusText.update { text }
     }
 
-    fun onImageInserted(inputStream: InputStream) {
-        val out = ByteArrayOutputStream()
-        val buffer = ByteArray(1024)
-        var len = 0
-        while (true) {
-            len = inputStream.read(buffer)
-            if (len == -1) {
-                break
-            }
-            out.write(buffer, 0, len)
-        }
-        val byteBuffer = ByteBuffer.wrap(out.toByteArray())
-        inputStream.close()
-        out.close()
+    fun onImageDescriptionTextUpdated(text: String) {
+        _imageDescription.update { text }
+    }
+
+    fun onImageRemoved() {
+        attachmentId.update { null }
+    }
+
+    fun onImageInserted(file: File) {
+        _imageState.update { ImageState.LOADING }
         viewModelScope.launch {
             try {
                 val imageId = mediaRepository.uploadImage(
-                    "test",
-                    byteBuffer
+                    file,
+                    imageDescription.value.ifBlank { null }
                 ).attachmentId
-                _attachmentId.update { imageId }
+                attachmentId.update { imageId }
+                _imageState.update { ImageState.LOADED }
             } catch (e: Exception) {
-                println(e.message)
+                log.e(e)
+                _imageState.update { ImageState.ERROR }
             }
         }
     }
@@ -76,4 +79,10 @@ class NewPostViewModel(
             onStatusPosted()
         }
     }
+}
+
+sealed class ImageState {
+    object LOADING : ImageState()
+    object LOADED : ImageState()
+    object ERROR : ImageState()
 }
