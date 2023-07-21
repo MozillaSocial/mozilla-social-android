@@ -34,7 +34,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Send
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
@@ -48,7 +47,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -63,7 +61,6 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -75,6 +72,10 @@ import org.mozilla.social.common.utils.toFile
 import org.mozilla.social.core.designsystem.theme.FirefoxColor
 import org.mozilla.social.core.designsystem.theme.MozillaSocialTheme
 import org.mozilla.social.core.designsystem.utils.NoIndication
+import org.mozilla.social.core.ui.images.UploadImageError
+import org.mozilla.social.core.ui.images.UploadImageLoading
+import org.mozilla.social.core.ui.images.rememberImageBitmap
+import org.mozilla.social.core.ui.transparentTextFieldColors
 import java.io.File
 
 @Composable
@@ -188,12 +189,7 @@ private fun MainBox(
                                 text = "What's happening?"
                             )
                         },
-                        colors = TextFieldDefaults.textFieldColors(
-                            containerColor = Color.Transparent,
-                            focusedIndicatorColor = Color.Transparent,
-                            unfocusedIndicatorColor = Color.Transparent,
-                            disabledIndicatorColor = Color.Transparent,
-                        )
+                        colors = transparentTextFieldColors()
                     )
                     ImageUploadBox(
                         imageData = imageData,
@@ -282,9 +278,9 @@ private fun ImageUploadBox(
             ),
     ) {
         ImageToUpload(
-            imageData = imageData,
+            imageUri = imageData.value!!,
             imageState = imageState,
-            onImageInserted = onImageInserted,
+            onRetryClicked = onImageInserted,
         )
         if (imageState == ImageState.LOADED || imageState == ImageState.ERROR) {
             Row(
@@ -300,12 +296,7 @@ private fun ImageUploadBox(
                                 text = "Add a description"
                             )
                         },
-                        colors = TextFieldDefaults.textFieldColors(
-                            containerColor = Color.Transparent,
-                            focusedIndicatorColor = Color.Transparent,
-                            unfocusedIndicatorColor = Color.Transparent,
-                            disabledIndicatorColor = Color.Transparent,
-                        ),
+                        colors = transparentTextFieldColors(),
                     )
                 }
                 IconButton(
@@ -323,79 +314,22 @@ private fun ImageUploadBox(
 
 @Composable
 private fun ImageToUpload(
-    imageData: MutableState<Uri?>,
+    imageUri: Uri,
     imageState: ImageState,
-    onImageInserted: (File) -> Unit,
+    onRetryClicked: (File) -> Unit,
 ) {
-    val context = LocalContext.current
-    val bitmap = remember { mutableStateOf<Bitmap?>(null) }
-    imageData.value?.let { uri ->
-        if (Build.VERSION.SDK_INT < 28) {
-            bitmap.value = MediaStore.Images.Media.getBitmap(context.contentResolver, uri)
-        } else {
-            val source = ImageDecoder.createSource(context.contentResolver, uri)
-            bitmap.value = ImageDecoder.decodeBitmap(source)
-        }
-        bitmap.value?.let { bitmap ->
-            when (imageState) {
-                ImageState.LOADING -> {
-                    Box(
-                        modifier = Modifier
-                            .background(FirefoxColor.Black)
-                    ) {
-                        Image(
-                            modifier = Modifier.alpha(.3f),
-                            bitmap = bitmap.asImageBitmap(),
-                            contentDescription = null,
-                        )
-                        CircularProgressIndicator(
-                            modifier = Modifier.align(Alignment.Center)
-                        )
-                    }
-                }
-                ImageState.LOADED -> {
-                    Image(
-                        bitmap = bitmap.asImageBitmap(),
-                        contentDescription = null,
-                    )
-                }
-                ImageState.ERROR -> {
-                    Box(
-                        modifier = Modifier
-                            .background(FirefoxColor.Black)
-                    ) {
-                        Image(
-                            modifier = Modifier.alpha(.3f),
-                            bitmap = bitmap.asImageBitmap(),
-                            contentDescription = null,
-                        )
-                        Column(
-                            modifier = Modifier.align(Alignment.Center),
-                        ) {
-                            Text(
-                                text = "Failed to upload image",
-                                color = FirefoxColor.White,
-                            )
-                            Button(
-                                modifier = Modifier
-                                    .align(Alignment.CenterHorizontally)
-                                    .padding(16.dp),
-                                onClick = {
-                                    imageData.value?.let {
-                                        onImageInserted(uri.toFile(context))
-                                    }
-                                }
-                            ) {
-                                Text(
-                                    text = "Retry",
-                                    color = FirefoxColor.White,
-                                )
-                            }
-                        }
-                    }
-                }
-            }
-        }
+    val realBitmap = rememberImageBitmap(imageUri = imageUri)
+    when (imageState) {
+        ImageState.LOADING -> UploadImageLoading(bitmap = realBitmap)
+        ImageState.ERROR -> UploadImageError(
+            bitmap = realBitmap,
+            imageUri = imageUri,
+            onRetryClicked = onRetryClicked
+        )
+        ImageState.LOADED -> Image(
+            bitmap = realBitmap,
+            contentDescription = null,
+        )
     }
 }
 
