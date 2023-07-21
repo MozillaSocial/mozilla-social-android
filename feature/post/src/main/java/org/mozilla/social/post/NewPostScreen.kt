@@ -1,26 +1,17 @@
 @file:OptIn(
     ExperimentalMaterial3Api::class,
-    ExperimentalLayoutApi::class,
     ExperimentalComposeUiApi::class,
 )
 
 package org.mozilla.social.post
 
-import android.graphics.Bitmap
-import android.graphics.ImageDecoder
 import android.net.Uri
-import android.os.Build
-import android.provider.MediaStore
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.LocalIndication
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -36,8 +27,6 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Send
 import androidx.compose.material3.BottomAppBar
-import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -54,27 +43,22 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
+import org.mozilla.social.common.LoadState
 import org.mozilla.social.common.utils.toFile
-import org.mozilla.social.core.designsystem.theme.FirefoxColor
 import org.mozilla.social.core.designsystem.theme.MozillaSocialTheme
 import org.mozilla.social.core.designsystem.utils.NoIndication
-import org.mozilla.social.core.ui.images.UploadImageError
-import org.mozilla.social.core.ui.images.UploadImageLoading
-import org.mozilla.social.core.ui.images.rememberImageBitmap
+import org.mozilla.social.core.ui.images.ImageToUpload
 import org.mozilla.social.core.ui.transparentTextFieldColors
 import java.io.File
 
@@ -106,7 +90,7 @@ private fun NewPostScreen(
     onCloseClicked: () -> Unit,
     sendButtonEnabled: Boolean,
     onImageInserted: (File) -> Unit,
-    imageState: ImageState,
+    imageState: LoadState,
     imageDescriptionText: String,
     onImageDescriptionTextChanged: (String) -> Unit,
     onImageRemoved: () -> Unit,
@@ -148,7 +132,7 @@ private fun MainBox(
     statusText: String,
     onStatusTextChanged: (String) -> Unit,
     imageData: MutableState<Uri?>,
-    imageState: ImageState,
+    imageState: LoadState,
     onImageInserted: (File) -> Unit,
     imageDescriptionText: String,
     onImageDescriptionTextChanged: (String) -> Unit,
@@ -257,7 +241,7 @@ private fun BottomBar(
 @Composable
 private fun ImageUploadBox(
     imageData: MutableState<Uri?>,
-    imageState: ImageState,
+    imageState: LoadState,
     onImageInserted: (File) -> Unit,
     imageDescriptionText: String,
     onImageDescriptionTextChanged: (String) -> Unit,
@@ -275,18 +259,19 @@ private fun ImageUploadBox(
             )
             .clip(
                 outlineShape
-            ),
+            )
+            .fillMaxWidth(),
     ) {
         ImageToUpload(
             imageUri = imageData.value!!,
             imageState = imageState,
             onRetryClicked = onImageInserted,
         )
-        if (imageState == ImageState.LOADED || imageState == ImageState.ERROR) {
+        if (imageState == LoadState.LOADED || imageState == LoadState.ERROR) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
             ) {
-                if (imageState == ImageState.LOADED) {
+                if (imageState == LoadState.LOADED) {
                     TextField(
                         modifier = Modifier.weight(1f),
                         value = imageDescriptionText,
@@ -312,27 +297,6 @@ private fun ImageUploadBox(
     }
 }
 
-@Composable
-private fun ImageToUpload(
-    imageUri: Uri,
-    imageState: ImageState,
-    onRetryClicked: (File) -> Unit,
-) {
-    val realBitmap = rememberImageBitmap(imageUri = imageUri)
-    when (imageState) {
-        ImageState.LOADING -> UploadImageLoading(bitmap = realBitmap)
-        ImageState.ERROR -> UploadImageError(
-            bitmap = realBitmap,
-            imageUri = imageUri,
-            onRetryClicked = onRetryClicked
-        )
-        ImageState.LOADED -> Image(
-            bitmap = realBitmap,
-            contentDescription = null,
-        )
-    }
-}
-
 @Preview
 @Composable
 private fun NewPostScreenPreview() {
@@ -344,7 +308,7 @@ private fun NewPostScreenPreview() {
             onCloseClicked = {},
             sendButtonEnabled = false,
             onImageInserted = {},
-            imageState = ImageState.LOADED,
+            imageState = LoadState.LOADED,
             imageDescriptionText = "",
             onImageDescriptionTextChanged = {},
             onImageRemoved = {}

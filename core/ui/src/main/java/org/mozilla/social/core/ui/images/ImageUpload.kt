@@ -1,6 +1,5 @@
 package org.mozilla.social.core.ui.images
 
-import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
 import android.net.Uri
@@ -10,6 +9,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
@@ -21,8 +21,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import org.mozilla.social.common.LoadState
 import org.mozilla.social.common.utils.toFile
 import org.mozilla.social.core.designsystem.theme.FirefoxColor
 import java.io.File
@@ -45,6 +47,30 @@ fun rememberImageBitmap(
 }
 
 @Composable
+fun ImageToUpload(
+    imageUri: Uri,
+    imageState: LoadState,
+    onRetryClicked: (File) -> Unit,
+) {
+    val realBitmap = rememberImageBitmap(imageUri = imageUri)
+    when (imageState) {
+        LoadState.LOADING -> UploadImageLoading(bitmap = realBitmap)
+        LoadState.ERROR -> UploadImageError(
+            bitmap = realBitmap,
+            imageUri = imageUri,
+            onRetryClicked = onRetryClicked
+        )
+        LoadState.LOADED -> Image(
+            modifier = Modifier
+                .fillMaxWidth(),
+            contentScale = ContentScale.FillWidth,
+            bitmap = realBitmap,
+            contentDescription = null,
+        )
+    }
+}
+
+@Composable
 fun UploadImageLoading(
     bitmap: ImageBitmap,
 ) {
@@ -53,7 +79,10 @@ fun UploadImageLoading(
             .background(FirefoxColor.Black)
     ) {
         Image(
-            modifier = Modifier.alpha(.3f),
+            modifier = Modifier
+                .alpha(.3f)
+                .fillMaxWidth(),
+            contentScale = ContentScale.FillWidth,
             bitmap = bitmap,
             contentDescription = null,
         )
@@ -75,7 +104,10 @@ fun UploadImageError(
             .background(FirefoxColor.Black)
     ) {
         Image(
-            modifier = Modifier.alpha(.3f),
+            modifier = Modifier
+                .alpha(.3f)
+                .fillMaxWidth(),
+            contentScale = ContentScale.FillWidth,
             bitmap = bitmap,
             contentDescription = null,
         )
