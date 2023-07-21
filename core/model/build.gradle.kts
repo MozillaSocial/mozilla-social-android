@@ -24,7 +24,6 @@ android {
 
 dependencies {
     implementation(libs.kotlinx.datetime)
-    implementation(libs.ktor.core)
 
     implementation(libs.kotlinx.serialization.json)
 }
