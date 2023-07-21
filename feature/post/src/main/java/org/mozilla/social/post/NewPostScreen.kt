@@ -248,33 +248,6 @@ private fun MainBox(
     }
 }
 
-//@Composable
-//private fun ImagesGrid(
-//    imageListData: MutableState<List<Uri>>,
-//    imageStates: Map<Uri, LoadState>,
-//    onImageInserted: (Uri, File) -> Unit,
-//    imageDescriptionTexts: Map<Uri, String>,
-//    onImageDescriptionTextChanged: (Uri, String) -> Unit,
-//    onImageRemoved: (Uri) -> Unit,
-//) {
-//    LazyVerticalGrid(
-//        columns = GridCells.Adaptive(120.dp)
-//    ) {
-//        items(imageListData.value.size) { index ->
-//            val imageUri = imageListData.value[index]
-//            ImageUploadBox(
-//                imageListData = imageListData,
-//                imageUri = imageUri,
-//                imageState = imageStates[imageUri] ?: LoadState.LOADING,
-//                onImageInserted = onImageInserted,
-//                imageDescriptionText = imageDescriptionTexts[imageUri] ?: "",
-//                onImageDescriptionTextChanged = onImageDescriptionTextChanged,
-//                onImageRemoved = onImageRemoved,
-//            )
-//        }
-//    }
-//}
-
 @Composable
 private fun ImageUploadBox(
     imageListData: MutableState<List<Uri>>,

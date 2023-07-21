@@ -3,6 +3,7 @@ package org.mozilla.social.post
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -98,7 +99,12 @@ class NewPostViewModel(
         viewModelScope.launch {
             statusRepository.sendPost(
                 statusText = statusText.value,
-                attachmentIds = attachmentIds.value.values.toList()
+                attachmentIds = attachmentIds.value.values.toList(),
+                descriptions = buildMap {
+                    imageDescriptions.value.filter { it.value.isNotBlank() }.forEach { imageDescription ->
+                        attachmentIds.value[imageDescription.key]?.let { put(it, imageDescription.value) }
+                    }
+                }
             )
             onStatusPosted()
         }

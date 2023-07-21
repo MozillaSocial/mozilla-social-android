@@ -27,6 +27,8 @@ dependencies {
     implementation(project(":core:datastore"))
     implementation(project(":core:model"))
 
+    implementation(libs.kotlinx.coroutines.android)
+
     implementation(libs.retrofit)
 
     implementation(libs.koin)
