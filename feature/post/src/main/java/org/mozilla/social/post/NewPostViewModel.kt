@@ -1,5 +1,6 @@
 package org.mozilla.social.post
 
+import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -25,48 +26,70 @@ class NewPostViewModel(
     private val _statusText = MutableStateFlow("")
     val statusText: StateFlow<String> = _statusText
 
-    private val attachmentId = MutableStateFlow<String?>(null)
+    private val attachmentIds = MutableStateFlow<Map<Uri, String>>(emptyMap())
 
     val sendButtonEnabled: StateFlow<Boolean> =
-        combine(statusText, attachmentId) { statusText, attachmentId ->
-            statusText.isNotBlank() || !attachmentId.isNullOrBlank()
+        combine(statusText, attachmentIds) { statusText, attachmentIds ->
+            statusText.isNotBlank() || attachmentIds.isNotEmpty()
         }.stateIn(
             scope = viewModelScope,
             started = SharingStarted.Lazily,
             initialValue = false,
         )
 
-    private val _imageState = MutableStateFlow<LoadState>(LoadState.LOADING)
-    val imageState: StateFlow<LoadState> = _imageState
+    private val _imageState = MutableStateFlow<Map<Uri, LoadState>>(emptyMap())
+    val imageState: StateFlow<Map<Uri, LoadState>> = _imageState
 
-    private val _imageDescription = MutableStateFlow("")
-    val imageDescription: StateFlow<String> = _imageDescription
+    private val _imageDescriptions = MutableStateFlow<Map<Uri, String>>(emptyMap())
+    val imageDescriptions: StateFlow<Map<Uri, String>> = _imageDescriptions
 
     fun onStatusTextUpdated(text: String) {
         _statusText.update { text }
     }
 
-    fun onImageDescriptionTextUpdated(text: String) {
-        _imageDescription.update { text }
+    fun onImageDescriptionTextUpdated(
+        uri: Uri,
+        text: String,
+    ) {
+        _imageDescriptions.update {
+            _imageDescriptions.value.toMutableMap().apply { put(uri, text) }
+        }
     }
 
-    fun onImageRemoved() {
-        attachmentId.update { null }
+    fun onImageRemoved(uri: Uri) {
+        attachmentIds.update {
+            attachmentIds.value.toMutableMap().apply { remove(uri) }
+        }
     }
 
-    fun onImageInserted(file: File) {
-        _imageState.update { LoadState.LOADING }
+    /**
+     * When an image is inserted, we need to upload it and hold onto the attachment id we get
+     * from the server.
+     */
+    fun onImageInserted(
+        uri: Uri,
+        file: File,
+    ) {
+        _imageState.update {
+            _imageState.value.toMutableMap().apply { put(uri, LoadState.LOADING) }
+        }
         viewModelScope.launch {
             try {
                 val imageId = mediaRepository.uploadImage(
                     file,
-                    imageDescription.value.ifBlank { null }
+                    imageDescriptions.value[uri]?.ifBlank { null }
                 ).attachmentId
-                attachmentId.update { imageId }
-                _imageState.update { LoadState.LOADED }
+                attachmentIds.update {
+                    attachmentIds.value.toMutableMap().apply { put(uri, imageId) }
+                }
+                _imageState.update {
+                    _imageState.value.toMutableMap().apply { put(uri, LoadState.LOADED) }
+                }
             } catch (e: Exception) {
                 log.e(e)
-                _imageState.update { LoadState.ERROR }
+                _imageState.update {
+                    _imageState.value.toMutableMap().apply { put(uri, LoadState.ERROR) }
+                }
             }
         }
     }
@@ -75,7 +98,7 @@ class NewPostViewModel(
         viewModelScope.launch {
             statusRepository.sendPost(
                 statusText = statusText.value,
-                attachmentId = attachmentId.value
+                attachmentIds = attachmentIds.value.values.toList()
             )
             onStatusPosted()
         }

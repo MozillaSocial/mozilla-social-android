@@ -7,6 +7,7 @@ package org.mozilla.social.post
 
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.border
@@ -18,6 +19,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -75,8 +80,8 @@ internal fun NewPostRoute(
         onCloseClicked = onCloseClicked,
         sendButtonEnabled = viewModel.sendButtonEnabled.collectAsState().value,
         onImageInserted = viewModel::onImageInserted,
-        imageState = viewModel.imageState.collectAsState().value,
-        imageDescriptionText = viewModel.imageDescription.collectAsState().value,
+        imageStates = viewModel.imageState.collectAsState().value,
+        imageDescriptionTexts = viewModel.imageDescriptions.collectAsState().value,
         onImageDescriptionTextChanged = viewModel::onImageDescriptionTextUpdated,
         onImageRemoved = viewModel::onImageRemoved
     )
@@ -89,17 +94,19 @@ private fun NewPostScreen(
     onPostClicked: () -> Unit,
     onCloseClicked: () -> Unit,
     sendButtonEnabled: Boolean,
-    onImageInserted: (File) -> Unit,
-    imageState: LoadState,
-    imageDescriptionText: String,
-    onImageDescriptionTextChanged: (String) -> Unit,
-    onImageRemoved: () -> Unit,
+    onImageInserted: (Uri, File) -> Unit,
+    imageStates: Map<Uri, LoadState>,
+    imageDescriptionTexts: Map<Uri, String>,
+    onImageDescriptionTextChanged: (Uri, String) -> Unit,
+    onImageRemoved: (Uri) -> Unit,
 ) {
     val context = LocalContext.current
-    val imageData = remember { mutableStateOf<Uri?>(null) }
-    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
-        imageData.value = uri
-        uri?.let { onImageInserted(uri.toFile(context)) }
+    val imageData = remember { mutableStateOf<List<Uri>>(emptyList()) }
+    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.PickMultipleVisualMedia()) { uris ->
+        imageData.value = uris
+        uris.forEach {
+            onImageInserted(it, it.toFile(context))
+        }
     }
     Scaffold(
         topBar = { TopBar(
@@ -108,84 +115,20 @@ private fun NewPostScreen(
             sendButtonEnabled = sendButtonEnabled,
         ) },
         bottomBar = { BottomBar(
-            onUploadImageClicked = { launcher.launch("image/*") }
+            onUploadImageClicked = { launcher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)) }
         ) },
     ) {
         MainBox(
             paddingValues = it,
             statusText = statusText,
             onStatusTextChanged = onStatusTextChanged,
-            imageData = imageData,
-            imageState = imageState,
+            imageListData = imageData,
+            imageStates = imageStates,
             onImageInserted = onImageInserted,
-            imageDescriptionText = imageDescriptionText,
+            imageDescriptionTexts = imageDescriptionTexts,
             onImageDescriptionTextChanged = onImageDescriptionTextChanged,
             onImageRemoved = onImageRemoved,
         )
-    }
-}
-
-@OptIn(ExperimentalComposeUiApi::class)
-@Composable
-private fun MainBox(
-    paddingValues: PaddingValues,
-    statusText: String,
-    onStatusTextChanged: (String) -> Unit,
-    imageData: MutableState<Uri?>,
-    imageState: LoadState,
-    onImageInserted: (File) -> Unit,
-    imageDescriptionText: String,
-    onImageDescriptionTextChanged: (String) -> Unit,
-    onImageRemoved: () -> Unit,
-) {
-    val localIndication = LocalIndication.current
-    // disable ripple on click for the background
-    CompositionLocalProvider(
-        LocalIndication provides NoIndication
-    ) {
-        val keyboard = LocalSoftwareKeyboardController.current
-        val textFieldFocusRequester = remember { FocusRequester() }
-        Surface(
-            modifier = Modifier
-                .padding(paddingValues)
-                .fillMaxSize()
-                .clickable {
-                    textFieldFocusRequester.requestFocus()
-                    keyboard?.show()
-                }
-        ) {
-            // re-enable ripple
-            CompositionLocalProvider(
-                LocalIndication provides localIndication
-            ) {
-                Column(
-                    modifier = Modifier
-                        .verticalScroll(rememberScrollState())
-                ) {
-                    TextField(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .focusRequester(textFieldFocusRequester),
-                        value = statusText,
-                        onValueChange = onStatusTextChanged,
-                        label = {
-                            Text(
-                                text = "What's happening?"
-                            )
-                        },
-                        colors = transparentTextFieldColors()
-                    )
-                    ImageUploadBox(
-                        imageData = imageData,
-                        imageState = imageState,
-                        onImageInserted = onImageInserted,
-                        imageDescriptionText = imageDescriptionText,
-                        onImageDescriptionTextChanged = onImageDescriptionTextChanged,
-                        onImageRemoved = onImageRemoved,
-                    )
-                }
-            }
-        }
     }
 }
 
@@ -238,16 +181,110 @@ private fun BottomBar(
     }
 }
 
+@OptIn(ExperimentalComposeUiApi::class)
+@Composable
+private fun MainBox(
+    paddingValues: PaddingValues,
+    statusText: String,
+    onStatusTextChanged: (String) -> Unit,
+    imageListData: MutableState<List<Uri>>,
+    imageStates: Map<Uri, LoadState>,
+    onImageInserted: (Uri, File) -> Unit,
+    imageDescriptionTexts: Map<Uri, String>,
+    onImageDescriptionTextChanged: (Uri, String) -> Unit,
+    onImageRemoved: (Uri) -> Unit,
+) {
+    val localIndication = LocalIndication.current
+    // disable ripple on click for the background
+    CompositionLocalProvider(
+        LocalIndication provides NoIndication
+    ) {
+        val keyboard = LocalSoftwareKeyboardController.current
+        val textFieldFocusRequester = remember { FocusRequester() }
+        Surface(
+            modifier = Modifier
+                .padding(paddingValues)
+                .fillMaxSize()
+                .clickable {
+                    textFieldFocusRequester.requestFocus()
+                    keyboard?.show()
+                }
+        ) {
+            // re-enable ripple
+            CompositionLocalProvider(
+                LocalIndication provides localIndication
+            ) {
+                LazyColumn {
+                    item {
+                        TextField(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .focusRequester(textFieldFocusRequester),
+                            value = statusText,
+                            onValueChange = onStatusTextChanged,
+                            label = {
+                                Text(
+                                    text = "What's happening?"
+                                )
+                            },
+                            colors = transparentTextFieldColors()
+                        )
+                    }
+                    items(imageListData.value.size) { index ->
+                        val imageUri = imageListData.value[index]
+                        ImageUploadBox(
+                            imageListData = imageListData,
+                            imageUri = imageUri,
+                            imageState = imageStates[imageUri] ?: LoadState.LOADING,
+                            onImageInserted = onImageInserted,
+                            imageDescriptionText = imageDescriptionTexts[imageUri] ?: "",
+                            onImageDescriptionTextChanged = onImageDescriptionTextChanged,
+                            onImageRemoved = onImageRemoved,
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+//@Composable
+//private fun ImagesGrid(
+//    imageListData: MutableState<List<Uri>>,
+//    imageStates: Map<Uri, LoadState>,
+//    onImageInserted: (Uri, File) -> Unit,
+//    imageDescriptionTexts: Map<Uri, String>,
+//    onImageDescriptionTextChanged: (Uri, String) -> Unit,
+//    onImageRemoved: (Uri) -> Unit,
+//) {
+//    LazyVerticalGrid(
+//        columns = GridCells.Adaptive(120.dp)
+//    ) {
+//        items(imageListData.value.size) { index ->
+//            val imageUri = imageListData.value[index]
+//            ImageUploadBox(
+//                imageListData = imageListData,
+//                imageUri = imageUri,
+//                imageState = imageStates[imageUri] ?: LoadState.LOADING,
+//                onImageInserted = onImageInserted,
+//                imageDescriptionText = imageDescriptionTexts[imageUri] ?: "",
+//                onImageDescriptionTextChanged = onImageDescriptionTextChanged,
+//                onImageRemoved = onImageRemoved,
+//            )
+//        }
+//    }
+//}
+
 @Composable
 private fun ImageUploadBox(
-    imageData: MutableState<Uri?>,
+    imageListData: MutableState<List<Uri>>,
+    imageUri: Uri,
     imageState: LoadState,
-    onImageInserted: (File) -> Unit,
+    onImageInserted: (Uri, File) -> Unit,
     imageDescriptionText: String,
-    onImageDescriptionTextChanged: (String) -> Unit,
-    onImageRemoved: () -> Unit,
+    onImageDescriptionTextChanged: (Uri, String) -> Unit,
+    onImageRemoved: (Uri) -> Unit,
 ) {
-    if (imageData.value == null) return
     val outlineShape = RoundedCornerShape(12.dp)
     Column(
         modifier = Modifier
@@ -263,7 +300,7 @@ private fun ImageUploadBox(
             .fillMaxWidth(),
     ) {
         ImageToUpload(
-            imageUri = imageData.value!!,
+            imageUri = imageUri,
             imageState = imageState,
             onRetryClicked = onImageInserted,
         )
@@ -275,7 +312,7 @@ private fun ImageUploadBox(
                     TextField(
                         modifier = Modifier.weight(1f),
                         value = imageDescriptionText,
-                        onValueChange = { onImageDescriptionTextChanged(it) },
+                        onValueChange = { onImageDescriptionTextChanged(imageUri, it) },
                         label = {
                             Text(
                                 text = "Add a description"
@@ -286,8 +323,10 @@ private fun ImageUploadBox(
                 }
                 IconButton(
                     onClick = {
-                        imageData.value = null
-                        onImageRemoved()
+                        imageListData.value = imageListData.value.toMutableList().apply {
+                            remove(imageUri)
+                        }
+                        onImageRemoved(imageUri)
                     }
                 ) {
                     Icon(Icons.Default.Delete, "delete")
@@ -297,21 +336,21 @@ private fun ImageUploadBox(
     }
 }
 
-@Preview
-@Composable
-private fun NewPostScreenPreview() {
-    MozillaSocialTheme {
-        NewPostScreen(
-            statusText = "",
-            onStatusTextChanged = {},
-            onPostClicked = {},
-            onCloseClicked = {},
-            sendButtonEnabled = false,
-            onImageInserted = {},
-            imageState = LoadState.LOADED,
-            imageDescriptionText = "",
-            onImageDescriptionTextChanged = {},
-            onImageRemoved = {}
-        )
-    }
-}
+//@Preview
+//@Composable
+//private fun NewPostScreenPreview() {
+//    MozillaSocialTheme {
+//        NewPostScreen(
+//            statusText = "",
+//            onStatusTextChanged = {},
+//            onPostClicked = {},
+//            onCloseClicked = {},
+//            sendButtonEnabled = false,
+//            onImageInserted = {},
+//            imageState = LoadState.LOADED,
+//            imageDescriptionText = "",
+//            onImageDescriptionTextChanged = {},
+//            onImageRemoved = {}
+//        )
+//    }
+//}

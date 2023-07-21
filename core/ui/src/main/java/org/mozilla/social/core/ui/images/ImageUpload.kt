@@ -50,7 +50,7 @@ fun rememberImageBitmap(
 fun ImageToUpload(
     imageUri: Uri,
     imageState: LoadState,
-    onRetryClicked: (File) -> Unit,
+    onRetryClicked: (Uri, File) -> Unit,
 ) {
     val realBitmap = rememberImageBitmap(imageUri = imageUri)
     when (imageState) {
@@ -96,7 +96,7 @@ fun UploadImageLoading(
 fun UploadImageError(
     bitmap: ImageBitmap,
     imageUri: Uri,
-    onRetryClicked: (File) -> Unit
+    onRetryClicked: (Uri, File) -> Unit
 ) {
     val context = LocalContext.current
     Box(
@@ -123,7 +123,7 @@ fun UploadImageError(
                     .align(Alignment.CenterHorizontally)
                     .padding(16.dp),
                 onClick = {
-                    onRetryClicked(imageUri.toFile(context))
+                    onRetryClicked(imageUri, imageUri.toFile(context))
                 }
             ) {
                 Text(

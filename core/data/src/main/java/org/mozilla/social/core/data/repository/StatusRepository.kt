@@ -9,14 +9,12 @@ class StatusRepository(
 
     suspend fun sendPost(
         statusText: String,
-        attachmentId: String?,
+        attachmentIds: List<String>,
     ) {
         mastodonApi.postStatus(
             StatusCreate(
                 status = statusText,
-                mediaIds = buildList {
-                    attachmentId?.let { add(it) }
-                }
+                mediaIds = attachmentIds
             )
         )
     }
