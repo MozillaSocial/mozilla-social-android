@@ -151,7 +151,7 @@ private fun TopBar(
             }
         )
         Divider(
-            color = MaterialTheme.colorScheme.primary
+            color = MaterialTheme.colorScheme.outlineVariant
         )
     }
 }
@@ -162,7 +162,7 @@ private fun BottomBar(
 ) {
     Column {
         Divider(
-            color = MaterialTheme.colorScheme.primary
+            color = MaterialTheme.colorScheme.outlineVariant
         )
         BottomAppBar(
             modifier = Modifier.height(60.dp)
@@ -257,7 +257,7 @@ private fun ImageUploadBox(
             .padding(16.dp)
             .border(
                 width = 2.dp,
-                color = MaterialTheme.colorScheme.primary,
+                color = MaterialTheme.colorScheme.outlineVariant,
                 shape = outlineShape
             )
             .clip(
