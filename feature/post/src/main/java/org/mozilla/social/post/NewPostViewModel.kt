@@ -18,6 +18,7 @@ import org.mozilla.social.common.logging.Log
 import org.mozilla.social.core.data.repository.MediaRepository
 import org.mozilla.social.core.data.repository.StatusRepository
 import org.mozilla.social.model.ImageState
+import org.mozilla.social.post.interactions.ImageInteractions
 import java.io.File
 
 class NewPostViewModel(
@@ -25,7 +26,7 @@ class NewPostViewModel(
     private val mediaRepository: MediaRepository,
     private val log: Log,
     private val onStatusPosted: () -> Unit,
-) : ViewModel() {
+) : ViewModel(), ImageInteractions {
 
     private val _statusText = MutableStateFlow("")
     val statusText: StateFlow<String> = _statusText
@@ -57,14 +58,14 @@ class NewPostViewModel(
         _statusText.update { text }
     }
 
-    fun onImageDescriptionTextUpdated(
+    override fun onImageDescriptionTextUpdated(
         uri: Uri,
         text: String,
     ) {
         updateImageState(uri, description = text)
     }
 
-    fun onImageRemoved(uri: Uri) {
+    override fun onImageRemoved(uri: Uri) {
         _imageStates.update {
             _imageStates.value.toMutableMap().apply { remove(uri) }
         }
@@ -74,7 +75,7 @@ class NewPostViewModel(
      * When an image is inserted, we need to upload it and hold onto the attachment id we get
      * from the server.
      */
-    fun onImageInserted(
+    override fun onImageInserted(
         uri: Uri,
         file: File,
     ) {

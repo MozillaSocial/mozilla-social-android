@@ -15,6 +15,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -48,16 +49,18 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 import org.mozilla.social.common.LoadState
 import org.mozilla.social.common.utils.toFile
+import org.mozilla.social.core.designsystem.theme.MozillaSocialTheme
 import org.mozilla.social.core.designsystem.utils.NoIndication
 import org.mozilla.social.core.ui.images.ImageToUpload
 import org.mozilla.social.core.ui.transparentTextFieldColors
 import org.mozilla.social.model.ImageState
-import java.io.File
+import org.mozilla.social.post.interactions.ImageInteractions
 
 @Composable
 internal fun NewPostRoute(
@@ -71,11 +74,9 @@ internal fun NewPostRoute(
         onPostClicked = viewModel::onPostClicked,
         onCloseClicked = onCloseClicked,
         sendButtonEnabled = viewModel.sendButtonEnabled.collectAsState().value,
-        onImageInserted = viewModel::onImageInserted,
         imageStates = viewModel.imageStates.collectAsState().value,
-        onImageDescriptionTextChanged = viewModel::onImageDescriptionTextUpdated,
-        onImageRemoved = viewModel::onImageRemoved,
         addImageButtonEnabled = viewModel.addImageButtonEnabled.collectAsState().value,
+        imageInteractions = viewModel
     )
 }
 
@@ -86,11 +87,9 @@ private fun NewPostScreen(
     onPostClicked: () -> Unit,
     onCloseClicked: () -> Unit,
     sendButtonEnabled: Boolean,
-    onImageInserted: (Uri, File) -> Unit,
     imageStates: Map<Uri, ImageState>,
-    onImageDescriptionTextChanged: (Uri, String) -> Unit,
-    onImageRemoved: (Uri) -> Unit,
     addImageButtonEnabled: Boolean,
+    imageInteractions: ImageInteractions,
 ) {
     val context = LocalContext.current
     val multipleMediaLauncher = rememberLauncherForActivityResult(
@@ -99,13 +98,13 @@ private fun NewPostScreen(
         )
     ) { uris ->
         uris.forEach {
-            onImageInserted(it, it.toFile(context))
+            imageInteractions.onImageInserted(it, it.toFile(context))
         }
     }
     val singleMediaLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.PickVisualMedia()
     ) { uri ->
-        uri?.let { onImageInserted(it, it.toFile(context)) }
+        uri?.let { imageInteractions.onImageInserted(it, it.toFile(context)) }
     }
 
     Scaffold(
@@ -131,9 +130,7 @@ private fun NewPostScreen(
             statusText = statusText,
             onStatusTextChanged = onStatusTextChanged,
             imageStates = imageStates,
-            onImageInserted = onImageInserted,
-            onImageDescriptionTextChanged = onImageDescriptionTextChanged,
-            onImageRemoved = onImageRemoved,
+            imageInteractions = imageInteractions,
         )
     }
 }
@@ -198,9 +195,7 @@ private fun MainBox(
     statusText: String,
     onStatusTextChanged: (String) -> Unit,
     imageStates: Map<Uri, ImageState>,
-    onImageInserted: (Uri, File) -> Unit,
-    onImageDescriptionTextChanged: (Uri, String) -> Unit,
-    onImageRemoved: (Uri) -> Unit,
+    imageInteractions: ImageInteractions,
 ) {
     val localIndication = LocalIndication.current
     // disable ripple on click for the background
@@ -241,9 +236,7 @@ private fun MainBox(
                     items(imageStates.size) { index ->
                         ImageUploadBox(
                             imageState = imageStates.entries.elementAt(index),
-                            onImageInserted = onImageInserted,
-                            onImageDescriptionTextChanged = onImageDescriptionTextChanged,
-                            onImageRemoved = onImageRemoved,
+                            imageInteractions = imageInteractions,
                         )
                     }
                 }
@@ -255,9 +248,7 @@ private fun MainBox(
 @Composable
 private fun ImageUploadBox(
     imageState: Map.Entry<Uri, ImageState>,
-    onImageInserted: (Uri, File) -> Unit,
-    onImageDescriptionTextChanged: (Uri, String) -> Unit,
-    onImageRemoved: (Uri) -> Unit,
+    imageInteractions: ImageInteractions,
 ) {
     val outlineShape = RoundedCornerShape(12.dp)
     Column(
@@ -276,7 +267,7 @@ private fun ImageUploadBox(
         ImageToUpload(
             imageUri = imageState.key,
             loadState = imageState.value.loadState,
-            onRetryClicked = onImageInserted,
+            onRetryClicked = imageInteractions::onImageInserted,
         )
         if (imageState.value.loadState == LoadState.LOADED || imageState.value.loadState == LoadState.ERROR) {
             Row(
@@ -286,7 +277,7 @@ private fun ImageUploadBox(
                     TextField(
                         modifier = Modifier.weight(1f),
                         value = imageState.value.description,
-                        onValueChange = { onImageDescriptionTextChanged(imageState.key, it) },
+                        onValueChange = { imageInteractions.onImageDescriptionTextUpdated(imageState.key, it) },
                         label = {
                             Text(
                                 text = "Add a description"
@@ -294,10 +285,12 @@ private fun ImageUploadBox(
                         },
                         colors = transparentTextFieldColors(),
                     )
+                } else {
+                    Spacer(modifier = Modifier.weight(1f))
                 }
                 IconButton(
                     onClick = {
-                        onImageRemoved(imageState.key)
+                        imageInteractions.onImageRemoved(imageState.key)
                     }
                 ) {
                     Icon(Icons.Default.Delete, "delete")
@@ -307,21 +300,19 @@ private fun ImageUploadBox(
     }
 }
 
-//@Preview
-//@Composable
-//private fun NewPostScreenPreview() {
-//    MozillaSocialTheme {
-//        NewPostScreen(
-//            statusText = "",
-//            onStatusTextChanged = {},
-//            onPostClicked = {},
-//            onCloseClicked = {},
-//            sendButtonEnabled = false,
-//            onImageInserted = {},
-//            imageState = LoadState.LOADED,
-//            imageDescriptionText = "",
-//            onImageDescriptionTextChanged = {},
-//            onImageRemoved = {}
-//        )
-//    }
-//}
+@Preview
+@Composable
+private fun NewPostScreenPreview() {
+    MozillaSocialTheme {
+        NewPostScreen(
+            statusText = "",
+            onStatusTextChanged = {},
+            onPostClicked = {},
+            onCloseClicked = {},
+            sendButtonEnabled = true,
+            imageStates = mapOf(),
+            addImageButtonEnabled = true,
+            imageInteractions = object : ImageInteractions {}
+        )
+    }
+}
