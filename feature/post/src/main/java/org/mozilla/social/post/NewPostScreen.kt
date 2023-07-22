@@ -95,7 +95,7 @@ private fun NewPostScreen(
     val context = LocalContext.current
     val multipleMediaLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.PickMultipleVisualMedia(
-            maxItems = (4 - imageStates.size).coerceAtLeast(2)
+            maxItems = (NewPostViewModel.MAX_IMAGES - imageStates.size).coerceAtLeast(2)
         )
     ) { uris ->
         uris.forEach {
@@ -117,7 +117,7 @@ private fun NewPostScreen(
         bottomBar = { BottomBar(
             onUploadImageClicked = {
                 val mediaRequest = PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
-                if (4 - imageStates.size < 2) {
+                if (NewPostViewModel.MAX_IMAGES - imageStates.size <= 1) {
                     singleMediaLauncher.launch(mediaRequest)
                 } else {
                     multipleMediaLauncher.launch(mediaRequest)

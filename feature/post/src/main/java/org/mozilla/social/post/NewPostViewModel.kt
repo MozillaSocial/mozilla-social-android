@@ -35,7 +35,9 @@ class NewPostViewModel(
 
     val sendButtonEnabled: StateFlow<Boolean> =
         combine(statusText, imageStates) { statusText, imageStates ->
-            statusText.isNotBlank() || imageStates.isNotEmpty()
+            (statusText.isNotBlank() || imageStates.isNotEmpty())
+                    // all images are loaded
+                    && imageStates.values.find { it.loadState != LoadState.LOADED } == null
         }.stateIn(
             scope = viewModelScope,
             started = SharingStarted.Lazily,
@@ -44,7 +46,7 @@ class NewPostViewModel(
 
     val addImageButtonEnabled : StateFlow<Boolean> =
         imageStates.map {
-            it.size < 4
+            it.size < MAX_IMAGES
         }.stateIn(
             scope = viewModelScope,
             started = SharingStarted.Lazily,
@@ -53,26 +55,6 @@ class NewPostViewModel(
 
     fun onStatusTextUpdated(text: String) {
         _statusText.update { text }
-    }
-
-    private fun updateImageState(
-        uri: Uri,
-        loadState: LoadState? = null,
-        attachmentId: String? = null,
-        description: String? = null,
-    ) {
-        val oldState = _imageStates.value[uri]
-        val newState = ImageState(
-            loadState = loadState ?: oldState?.loadState ?: LoadState.LOADING,
-            attachmentId = attachmentId ?: oldState?.attachmentId,
-            description = description ?: oldState?.description ?: "",
-        )
-
-        _imageStates.update {
-            _imageStates.value.toMutableMap().apply {
-                put(uri, newState)
-            }
-        }
     }
 
     fun onImageDescriptionTextUpdated(
@@ -96,6 +78,12 @@ class NewPostViewModel(
         uri: Uri,
         file: File,
     ) {
+        // if the image was already uploaded, just return
+        imageStates.value[uri]?.let {
+            if (it.loadState == LoadState.LOADED) {
+                return
+            }
+        }
         updateImageState(uri, loadState = LoadState.LOADING)
         viewModelScope.launch {
             try {
@@ -123,5 +111,33 @@ class NewPostViewModel(
             )
             onStatusPosted()
         }
+    }
+
+    private fun updateImageState(
+        uri: Uri,
+        loadState: LoadState? = null,
+        attachmentId: String? = null,
+        description: String? = null,
+    ) {
+        val oldState = _imageStates.value[uri]
+        val newState = ImageState(
+            loadState = loadState ?: oldState?.loadState ?: LoadState.LOADING,
+            attachmentId = attachmentId ?: oldState?.attachmentId,
+            description = description ?: oldState?.description ?: "",
+        )
+
+        _imageStates.update {
+            _imageStates.value.toMutableMap().apply {
+                put(uri, newState)
+            }
+        }
+    }
+
+    companion object {
+        /**
+         * The maximum number of images allowed to be attached to a single post.
+         * This number is defined by the mastodon API
+         */
+        const val MAX_IMAGES = 4
     }
 }
