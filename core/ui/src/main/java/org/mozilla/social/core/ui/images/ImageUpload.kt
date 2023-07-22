@@ -34,7 +34,7 @@ fun rememberImageBitmap(
     imageUri: Uri,
 ) : ImageBitmap {
     val context = LocalContext.current
-    return remember {
+    return remember(imageUri) {
         val bitmap: Bitmap = if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
             MediaStore.Images.Media.getBitmap(context.contentResolver, imageUri)
         } else {
@@ -43,17 +43,16 @@ fun rememberImageBitmap(
         }
         bitmap.asImageBitmap()
     }
-
 }
 
 @Composable
 fun ImageToUpload(
     imageUri: Uri,
-    imageState: LoadState,
+    loadState: LoadState,
     onRetryClicked: (Uri, File) -> Unit,
 ) {
     val realBitmap = rememberImageBitmap(imageUri = imageUri)
-    when (imageState) {
+    when (loadState) {
         LoadState.LOADING -> UploadImageLoading(bitmap = realBitmap)
         LoadState.ERROR -> UploadImageError(
             bitmap = realBitmap,

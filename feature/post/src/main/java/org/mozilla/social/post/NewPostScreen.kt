@@ -39,9 +39,7 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -58,6 +56,7 @@ import org.mozilla.social.common.utils.toFile
 import org.mozilla.social.core.designsystem.utils.NoIndication
 import org.mozilla.social.core.ui.images.ImageToUpload
 import org.mozilla.social.core.ui.transparentTextFieldColors
+import org.mozilla.social.model.ImageState
 import java.io.File
 
 @Composable
@@ -73,10 +72,10 @@ internal fun NewPostRoute(
         onCloseClicked = onCloseClicked,
         sendButtonEnabled = viewModel.sendButtonEnabled.collectAsState().value,
         onImageInserted = viewModel::onImageInserted,
-        imageStates = viewModel.imageState.collectAsState().value,
-        imageDescriptionTexts = viewModel.imageDescriptions.collectAsState().value,
+        imageStates = viewModel.imageStates.collectAsState().value,
         onImageDescriptionTextChanged = viewModel::onImageDescriptionTextUpdated,
-        onImageRemoved = viewModel::onImageRemoved
+        onImageRemoved = viewModel::onImageRemoved,
+        addImageButtonEnabled = viewModel.addImageButtonEnabled.collectAsState().value,
     )
 }
 
@@ -88,19 +87,27 @@ private fun NewPostScreen(
     onCloseClicked: () -> Unit,
     sendButtonEnabled: Boolean,
     onImageInserted: (Uri, File) -> Unit,
-    imageStates: Map<Uri, LoadState>,
-    imageDescriptionTexts: Map<Uri, String>,
+    imageStates: Map<Uri, ImageState>,
     onImageDescriptionTextChanged: (Uri, String) -> Unit,
     onImageRemoved: (Uri) -> Unit,
+    addImageButtonEnabled: Boolean,
 ) {
     val context = LocalContext.current
-    val imageData = remember { mutableStateOf<List<Uri>>(emptyList()) }
-    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.PickMultipleVisualMedia()) { uris ->
-        imageData.value = uris
+    val multipleMediaLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.PickMultipleVisualMedia(
+            maxItems = (4 - imageStates.size).coerceAtLeast(2)
+        )
+    ) { uris ->
         uris.forEach {
             onImageInserted(it, it.toFile(context))
         }
     }
+    val singleMediaLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.PickVisualMedia()
+    ) { uri ->
+        uri?.let { onImageInserted(it, it.toFile(context)) }
+    }
+
     Scaffold(
         topBar = { TopBar(
             onPostClicked = onPostClicked,
@@ -108,17 +115,23 @@ private fun NewPostScreen(
             sendButtonEnabled = sendButtonEnabled,
         ) },
         bottomBar = { BottomBar(
-            onUploadImageClicked = { launcher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)) }
+            onUploadImageClicked = {
+                val mediaRequest = PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                if (4 - imageStates.size < 2) {
+                    singleMediaLauncher.launch(mediaRequest)
+                } else {
+                    multipleMediaLauncher.launch(mediaRequest)
+                }
+            },
+            addImageButtonEnabled = addImageButtonEnabled,
         ) },
     ) {
         MainBox(
             paddingValues = it,
             statusText = statusText,
             onStatusTextChanged = onStatusTextChanged,
-            imageListData = imageData,
             imageStates = imageStates,
             onImageInserted = onImageInserted,
-            imageDescriptionTexts = imageDescriptionTexts,
             onImageDescriptionTextChanged = onImageDescriptionTextChanged,
             onImageRemoved = onImageRemoved,
         )
@@ -159,6 +172,7 @@ private fun TopBar(
 @Composable
 private fun BottomBar(
     onUploadImageClicked: () -> Unit,
+    addImageButtonEnabled: Boolean,
 ) {
     Column {
         Divider(
@@ -167,7 +181,10 @@ private fun BottomBar(
         BottomAppBar(
             modifier = Modifier.height(60.dp)
         ) {
-            IconButton(onClick = { onUploadImageClicked() }) {
+            IconButton(
+                onClick = { onUploadImageClicked() },
+                enabled = addImageButtonEnabled,
+            ) {
                 Icon(Icons.Default.Add, "attach image")
             }
         }
@@ -180,10 +197,8 @@ private fun MainBox(
     paddingValues: PaddingValues,
     statusText: String,
     onStatusTextChanged: (String) -> Unit,
-    imageListData: MutableState<List<Uri>>,
-    imageStates: Map<Uri, LoadState>,
+    imageStates: Map<Uri, ImageState>,
     onImageInserted: (Uri, File) -> Unit,
-    imageDescriptionTexts: Map<Uri, String>,
     onImageDescriptionTextChanged: (Uri, String) -> Unit,
     onImageRemoved: (Uri) -> Unit,
 ) {
@@ -223,14 +238,10 @@ private fun MainBox(
                             colors = transparentTextFieldColors()
                         )
                     }
-                    items(imageListData.value.size) { index ->
-                        val imageUri = imageListData.value[index]
+                    items(imageStates.size) { index ->
                         ImageUploadBox(
-                            imageListData = imageListData,
-                            imageUri = imageUri,
-                            imageState = imageStates[imageUri] ?: LoadState.LOADING,
+                            imageState = imageStates.entries.elementAt(index),
                             onImageInserted = onImageInserted,
-                            imageDescriptionText = imageDescriptionTexts[imageUri] ?: "",
                             onImageDescriptionTextChanged = onImageDescriptionTextChanged,
                             onImageRemoved = onImageRemoved,
                         )
@@ -243,11 +254,8 @@ private fun MainBox(
 
 @Composable
 private fun ImageUploadBox(
-    imageListData: MutableState<List<Uri>>,
-    imageUri: Uri,
-    imageState: LoadState,
+    imageState: Map.Entry<Uri, ImageState>,
     onImageInserted: (Uri, File) -> Unit,
-    imageDescriptionText: String,
     onImageDescriptionTextChanged: (Uri, String) -> Unit,
     onImageRemoved: (Uri) -> Unit,
 ) {
@@ -266,19 +274,19 @@ private fun ImageUploadBox(
             .fillMaxWidth(),
     ) {
         ImageToUpload(
-            imageUri = imageUri,
-            imageState = imageState,
+            imageUri = imageState.key,
+            loadState = imageState.value.loadState,
             onRetryClicked = onImageInserted,
         )
-        if (imageState == LoadState.LOADED || imageState == LoadState.ERROR) {
+        if (imageState.value.loadState == LoadState.LOADED || imageState.value.loadState == LoadState.ERROR) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
             ) {
-                if (imageState == LoadState.LOADED) {
+                if (imageState.value.loadState == LoadState.LOADED) {
                     TextField(
                         modifier = Modifier.weight(1f),
-                        value = imageDescriptionText,
-                        onValueChange = { onImageDescriptionTextChanged(imageUri, it) },
+                        value = imageState.value.description,
+                        onValueChange = { onImageDescriptionTextChanged(imageState.key, it) },
                         label = {
                             Text(
                                 text = "Add a description"
@@ -289,10 +297,7 @@ private fun ImageUploadBox(
                 }
                 IconButton(
                     onClick = {
-                        imageListData.value = imageListData.value.toMutableList().apply {
-                            remove(imageUri)
-                        }
-                        onImageRemoved(imageUri)
+                        onImageRemoved(imageState.key)
                     }
                 ) {
                     Icon(Icons.Default.Delete, "delete")

@@ -8,13 +8,16 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.mozilla.social.common.LoadState
 import org.mozilla.social.common.logging.Log
 import org.mozilla.social.core.data.repository.MediaRepository
 import org.mozilla.social.core.data.repository.StatusRepository
+import org.mozilla.social.model.ImageState
 import java.io.File
 
 class NewPostViewModel(
@@ -27,39 +30,61 @@ class NewPostViewModel(
     private val _statusText = MutableStateFlow("")
     val statusText: StateFlow<String> = _statusText
 
-    private val attachmentIds = MutableStateFlow<Map<Uri, String>>(emptyMap())
+    private val _imageStates = MutableStateFlow<Map<Uri, ImageState>>(emptyMap())
+    val imageStates: StateFlow<Map<Uri, ImageState>> = _imageStates
 
     val sendButtonEnabled: StateFlow<Boolean> =
-        combine(statusText, attachmentIds) { statusText, attachmentIds ->
-            statusText.isNotBlank() || attachmentIds.isNotEmpty()
+        combine(statusText, imageStates) { statusText, imageStates ->
+            statusText.isNotBlank() || imageStates.isNotEmpty()
         }.stateIn(
             scope = viewModelScope,
             started = SharingStarted.Lazily,
             initialValue = false,
         )
 
-    private val _imageState = MutableStateFlow<Map<Uri, LoadState>>(emptyMap())
-    val imageState: StateFlow<Map<Uri, LoadState>> = _imageState
-
-    private val _imageDescriptions = MutableStateFlow<Map<Uri, String>>(emptyMap())
-    val imageDescriptions: StateFlow<Map<Uri, String>> = _imageDescriptions
+    val addImageButtonEnabled : StateFlow<Boolean> =
+        imageStates.map {
+            it.size < 4
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.Lazily,
+            initialValue = true
+        )
 
     fun onStatusTextUpdated(text: String) {
         _statusText.update { text }
+    }
+
+    private fun updateImageState(
+        uri: Uri,
+        loadState: LoadState? = null,
+        attachmentId: String? = null,
+        description: String? = null,
+    ) {
+        val oldState = _imageStates.value[uri]
+        val newState = ImageState(
+            loadState = loadState ?: oldState?.loadState ?: LoadState.LOADING,
+            attachmentId = attachmentId ?: oldState?.attachmentId,
+            description = description ?: oldState?.description ?: "",
+        )
+
+        _imageStates.update {
+            _imageStates.value.toMutableMap().apply {
+                put(uri, newState)
+            }
+        }
     }
 
     fun onImageDescriptionTextUpdated(
         uri: Uri,
         text: String,
     ) {
-        _imageDescriptions.update {
-            _imageDescriptions.value.toMutableMap().apply { put(uri, text) }
-        }
+        updateImageState(uri, description = text)
     }
 
     fun onImageRemoved(uri: Uri) {
-        attachmentIds.update {
-            attachmentIds.value.toMutableMap().apply { remove(uri) }
+        _imageStates.update {
+            _imageStates.value.toMutableMap().apply { remove(uri) }
         }
     }
 
@@ -71,26 +96,21 @@ class NewPostViewModel(
         uri: Uri,
         file: File,
     ) {
-        _imageState.update {
-            _imageState.value.toMutableMap().apply { put(uri, LoadState.LOADING) }
-        }
+        updateImageState(uri, loadState = LoadState.LOADING)
         viewModelScope.launch {
             try {
                 val imageId = mediaRepository.uploadImage(
                     file,
-                    imageDescriptions.value[uri]?.ifBlank { null }
+                    imageStates.value[uri]?.description?.ifBlank { null }
                 ).attachmentId
-                attachmentIds.update {
-                    attachmentIds.value.toMutableMap().apply { put(uri, imageId) }
-                }
-                _imageState.update {
-                    _imageState.value.toMutableMap().apply { put(uri, LoadState.LOADED) }
-                }
+                updateImageState(
+                    uri,
+                    loadState = LoadState.LOADED,
+                    attachmentId = imageId
+                )
             } catch (e: Exception) {
                 log.e(e)
-                _imageState.update {
-                    _imageState.value.toMutableMap().apply { put(uri, LoadState.ERROR) }
-                }
+                updateImageState(uri, loadState = LoadState.ERROR)
             }
         }
     }
@@ -99,12 +119,7 @@ class NewPostViewModel(
         viewModelScope.launch {
             statusRepository.sendPost(
                 statusText = statusText.value,
-                attachmentIds = attachmentIds.value.values.toList(),
-                descriptions = buildMap {
-                    imageDescriptions.value.filter { it.value.isNotBlank() }.forEach { imageDescription ->
-                        attachmentIds.value[imageDescription.key]?.let { put(it, imageDescription.value) }
-                    }
-                }
+                imageStates = imageStates.value.values.toList()
             )
             onStatusPosted()
         }
