@@ -36,4 +36,7 @@ interface MastodonApi {
 
     @GET("/api/v1/timelines/home")
     suspend fun getHomeTimeline(): Response<List<Status>>
+
+    @GET("/api/v1/timelines/public")
+    suspend fun getPublicTimeline(): Response<List<Status>>
 }

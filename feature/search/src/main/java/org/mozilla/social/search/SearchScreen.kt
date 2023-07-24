@@ -23,22 +23,20 @@ import org.koin.androidx.compose.koinViewModel
 import org.mozilla.social.core.designsystem.theme.MozillaSocialTheme
 import org.mozilla.social.core.ui.PostCard
 import org.mozilla.social.feature.search.R
-import org.mozilla.social.model.Account
-import org.mozilla.social.model.Page
-import org.mozilla.social.model.Status
+import org.mozilla.social.model.entity.Status
 
 @Composable
 fun SearchScreen(
     viewModel: SearchViewModel = koinViewModel()
 ) {
-//    LocalFeedScreen(
-//        localTimeline = viewModel.publicFeed.collectAsState(null).value,
-//    )
+    LocalFeedScreen(
+        localTimeline = viewModel.feed.collectAsState(initial = null).value,
+    )
 }
 
 @Composable
 fun LocalFeedScreen(
-    localTimeline: Page<List<Status>>?,
+    localTimeline: List<Status>?,
 ) {
     Scaffold(
         topBar = {
@@ -59,8 +57,8 @@ fun LocalFeedScreen(
                     .padding(4.dp)
                     .verticalScroll(rememberScrollState())
             ) {
-                localTimeline?.contents?.forEach { status ->
-//                    PostCard(status = status)
+                localTimeline?.forEach { status ->
+                    PostCard(status = status)
                 }
             }
         }

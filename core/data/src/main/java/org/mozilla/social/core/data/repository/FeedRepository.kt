@@ -12,13 +12,11 @@ class FeedRepository internal constructor(
     private val serviceWrapper: MastodonServiceWrapper,
     private val mastodonApi: MastodonApi
 ) {
-    fun getPublicTimeline(): Flow<Page<List<Status>>?> =
-        serviceWrapper.service.map { it?.getPublicTimeline() }
-
-    fun getLocalTimeline(): Flow<Page<List<Status>>?> =
-        serviceWrapper.service.map { it?.getLocalTimeline() }
-
     suspend fun retrieveHomeTimeline(): Response<List<org.mozilla.social.model.entity.Status>> {
         return mastodonApi.getHomeTimeline()
+    }
+
+    suspend fun retrievePublicTimeline(): Response<List<org.mozilla.social.model.entity.Status>> {
+        return mastodonApi.getPublicTimeline()
     }
 }
