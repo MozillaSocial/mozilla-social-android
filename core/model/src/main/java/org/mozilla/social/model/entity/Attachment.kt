@@ -14,7 +14,7 @@ sealed class Attachment {
     /**
      * URL of the original full-size attachment.
      */
-    abstract val url: String
+    abstract val url: String?
 
     /**
      * URL of a scaled-down preview of the attachment.
@@ -55,7 +55,7 @@ sealed class Attachment {
         @SerialName("id")
         override val attachmentId: String,
         @SerialName("url")
-        override val url: String,
+        override val url: String? = null,
         @SerialName("preview_url")
         override val previewUrl: String? = null,
         @SerialName("remote_url")
@@ -94,7 +94,7 @@ sealed class Attachment {
         @SerialName("id")
         override val attachmentId: String,
         @SerialName("url")
-        override val url: String,
+        override val url: String? = null,
         @SerialName("preview_url")
         override val previewUrl: String? = null,
         @SerialName("remote_url")
@@ -143,7 +143,7 @@ sealed class Attachment {
         @SerialName("id")
         override val attachmentId: String,
         @SerialName("url")
-        override val url: String,
+        override val url: String? = null,
         @SerialName("preview_url")
         override val previewUrl: String? = null,
         @SerialName("remote_url")
@@ -186,7 +186,7 @@ sealed class Attachment {
         @SerialName("id")
         override val attachmentId: String,
         @SerialName("url")
-        override val url: String,
+        override val url: String? = null,
         @SerialName("preview_url")
         override val previewUrl: String? = null,
         @SerialName("remote_url")
@@ -225,7 +225,7 @@ sealed class Attachment {
         @SerialName("id")
         override val attachmentId: String,
         @SerialName("url")
-        override val url: String,
+        override val url: String? = null,
         @SerialName("preview_url")
         override val previewUrl: String? = null,
         @SerialName("remote_url")

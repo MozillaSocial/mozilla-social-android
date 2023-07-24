@@ -115,7 +115,7 @@ private fun NewPostScreen(
         ) },
         bottomBar = { BottomBar(
             onUploadImageClicked = {
-                val mediaRequest = PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                val mediaRequest = PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageAndVideo)
                 if (NewPostViewModel.MAX_IMAGES - imageStates.size <= 1) {
                     singleMediaLauncher.launch(mediaRequest)
                 } else {
