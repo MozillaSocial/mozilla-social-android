@@ -1,57 +1,35 @@
 package org.mozilla.social.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NavHostController
-import androidx.navigation.NavOptions
 import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import org.mozilla.social.feature.auth.AUTH_ROUTE
 import org.mozilla.social.feature.auth.authScreen
-import org.mozilla.social.feature.auth.navigateToAuth
-import org.mozilla.social.feature.settings.SettingsRoute
+import org.mozilla.social.feature.settings.settingsScreen
 import org.mozilla.social.feed.FEED_ROUTE
 import org.mozilla.social.feed.feedScreen
-import org.mozilla.social.post.navigateToNewPost
 import org.mozilla.social.post.newPostScreen
 import org.mozilla.social.search.searchScreen
+import org.mozilla.social.ui.AppState
 
 @Composable
-fun MozillaNavHost(navController: NavHostController) {
-    NavHost(navController = navController, startDestination = AUTH_ROUTE) {
-        authScreen(onAuthenticated = {
-            navController.navigate(
-                MAIN_ROUTE,
-                navOptions = NavOptions.Builder()
-                    .setPopUpTo(AUTH_ROUTE, true)
-                    .build()
-            )
-        })
-        mainGraph(navController)
+fun MozillaNavHost(appState: AppState) {
+    NavHost(navController = appState.navController, startDestination = AUTH_ROUTE) {
+        authScreen(onAuthenticated = appState::navigateToMainGraph)
+        mainGraph(appState = appState)
     }
 }
 
-private fun NavGraphBuilder.mainGraph(navController: NavController) {
+private fun NavGraphBuilder.mainGraph(appState: AppState) {
     navigation(startDestination = FEED_ROUTE, route = MAIN_ROUTE) {
 
-        feedScreen(
-            onNewPostClicked = { navController.navigateToNewPost() },
-        )
+        feedScreen()
         searchScreen()
-        composable("settings") {
-            SettingsRoute(
-                onLogout = {
-                    while (navController.currentBackStack.value.isNotEmpty()) {
-                        navController.popBackStack()
-                    }
-                    navController.navigateToAuth()
-                })
-        }
+        settingsScreen(onLogout = appState::onLogout)
         newPostScreen(
-            onStatusPosted = { navController.popBackStack() },
-            onCloseClicked = { navController.popBackStack() },
+            onStatusPosted = { appState.popBackStack() },
+            onCloseClicked = { appState.popBackStack() },
         )
     }
 }

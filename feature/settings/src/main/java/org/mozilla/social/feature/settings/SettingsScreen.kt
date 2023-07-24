@@ -42,7 +42,7 @@ import org.koin.core.parameter.parametersOf
 import org.mozilla.social.core.designsystem.theme.MozillaSocialTheme
 
 @Composable
-fun SettingsRoute(
+fun SettingsScreen(
     onLogout: () -> Unit,
     viewModel: SettingsViewModel = koinViewModel(parameters = { parametersOf(onLogout) })
 ) {
