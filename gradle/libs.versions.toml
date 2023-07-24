@@ -22,6 +22,7 @@ protobuf = "3.23.0"
 protobufPlugin = "0.9.3"
 retrofit = "2.9.0"
 timber = "5.0.1"
+coil = "2.4.0"
 kotlinx-serialization-converter = "1.0.0"
 kotlinx-serialization-json = "1.5.1"
 
@@ -50,11 +51,12 @@ androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version
 google-material = { group = "com.google.android.material", name = "material", version.ref = "googleAndroidMaterial" }
 koin = { group = "io.insert-koin", name = "koin-androidx-compose", version.ref = "koin" }
 koin-junit = { group = "io.insert-koin", name = "koin-test-junit5", version.ref = "koin" }
+koin-android = { group = "io.insert-koin", name = "koin-android", version.ref = "koin" }
 kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version.ref = "kotlinDateTime" }
 ktor-core = { group = "io.ktor", name = "ktor-client-core", version.ref = "ktor" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 jakewharton-timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
-koin-android = { group = "io.insert-koin", name = "koin-android", version.ref = "koin" }
+coil = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
 mastodonk = { group = "fr.outadoc.mastodonk", name = "mastodonk-core", version = "+" }
 protobuf-kotlin-lite = { group = "com.google.protobuf", name = "protobuf-kotlin-lite", version.ref = "protobuf" }
 protobuf-protoc = { group = "com.google.protobuf", name = "protoc", version.ref = "protobuf" }
