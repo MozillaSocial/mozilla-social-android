@@ -7,6 +7,8 @@ import org.mozilla.social.core.data.repository.FeedRepository
 import org.mozilla.social.model.Page
 import org.mozilla.social.model.Status
 
-class SearchViewModel(feedRepository: FeedRepository) : ViewModel() {
+class SearchViewModel(
+    private val feedRepository: FeedRepository
+) : ViewModel() {
     val publicFeed: Flow<Page<List<Status>>> = feedRepository.getPublicTimeline().filterNotNull()
 }

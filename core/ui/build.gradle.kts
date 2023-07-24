@@ -28,6 +28,8 @@ dependencies {
     implementation(project(":core:common"))
     implementation("com.google.android.material:material:1.9.0")
 
+    implementation(libs.coil)
+
     // compose
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.compose.material3)

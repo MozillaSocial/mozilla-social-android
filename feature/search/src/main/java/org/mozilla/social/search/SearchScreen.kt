@@ -31,9 +31,9 @@ import org.mozilla.social.model.Status
 fun SearchScreen(
     viewModel: SearchViewModel = koinViewModel()
 ) {
-    LocalFeedScreen(
-        localTimeline = viewModel.publicFeed.collectAsState(null).value,
-    )
+//    LocalFeedScreen(
+//        localTimeline = viewModel.publicFeed.collectAsState(null).value,
+//    )
 }
 
 @Composable
@@ -60,7 +60,7 @@ fun LocalFeedScreen(
                     .verticalScroll(rememberScrollState())
             ) {
                 localTimeline?.contents?.forEach { status ->
-                    PostCard(status = status)
+//                    PostCard(status = status)
                 }
             }
         }
@@ -71,17 +71,19 @@ fun LocalFeedScreen(
 @Composable
 fun FeedScreenPreview() {
     MozillaSocialTheme {
-        LocalFeedScreen(
-            localTimeline = Page(
-                contents = listOf(
-                    Status(
-                        "1",
-                        "asdf",
-                        account = Account("1", username = "username"),
-                        content = "here's a post"
-                    )
-                )
-            )
-        )
+//        LocalFeedScreen(
+//            localTimeline = Page(
+//                contents = listOf(
+//                    Status(
+//                        "1",
+//                        "asdf",
+//                        account = Account("1", username = "username"),
+//                        content = "here's a post",
+//                        isSensitive = false,
+//                        mediaAttachments = listOf()
+//                    )
+//                )
+//            )
+//        )
     }
 }

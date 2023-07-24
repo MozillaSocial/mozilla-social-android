@@ -1,65 +1,69 @@
 package org.mozilla.social.model.entity
 
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+
 /**
  * Represents a rich preview card that is generated
  * using OpenGraph tags from a URL.
  */
-sealed class Card {
+@Serializable
+public sealed class Card {
 
     /**
      * URL of linked resource.
      */
-    abstract val url: String
+    public abstract val url: String
 
     /**
      * Title of linked resource.
      */
-    abstract val title: String
+    public abstract val title: String
 
     /**
      * Description of preview.
      */
-    abstract val description: String
+    public abstract val description: String
 
     /**
      * The author of the original resource.
      */
-    abstract val authorName: String?
+    public abstract val authorName: String?
 
     /**
      * URL to the author of the original resource.
      */
-    abstract val authorUrl: String?
+    public abstract val authorUrl: String?
 
     /**
      * The provider of the original resource.
      */
-    abstract val providerName: String?
+    public abstract val providerName: String?
 
     /**
      * URL to the provider of the original resource.
      */
-    abstract val providerUrl: String?
+    public abstract val providerUrl: String?
 
     /**
      * Width of preview, in pixels.
      */
-    abstract val width: Long?
+    public abstract val width: Long?
 
     /**
      * Height of preview, in pixels.
      */
-    abstract val height: Long?
+    public abstract val height: Long?
 
     /**
      * URL of a preview thumbnail.
      */
-    abstract val image: String?
+    public abstract val image: String?
 
     /**
      * URL used for photo embeds, instead of custom HTML.
      */
-    abstract val embedUrl: String?
+    public abstract val embedUrl: String?
 
     /**
      * A hash computed by the BlurHash algorithm.
@@ -67,74 +71,191 @@ sealed class Card {
      * For generating colorful preview thumbnails when media
      * has not been downloaded yet.
      */
-    abstract val blurHash: String?
+    public abstract val blurHash: String?
 
     /**
      * HTML to be used for generating the preview card.
      */
-    abstract val html: String?
+    public abstract val html: String?
 
-    data class Video(
+    @Serializable
+    @SerialName("video")
+    public data class Video(
+
+        @SerialName("url")
         override val url: String,
+
+        @SerialName("title")
         override val title: String,
+
+        @SerialName("description")
         override val description: String,
+
+        @SerialName("author_name")
         override val authorName: String? = null,
+
+        @SerialName("author_url")
         override val authorUrl: String? = null,
+
+        @SerialName("provider_name")
         override val providerName: String? = null,
+
+        @SerialName("provider_url")
         override val providerUrl: String? = null,
+
+        @SerialName("html")
         override val html: String? = null,
+
+        @SerialName("width")
         override val width: Long? = null,
+
+        @SerialName("height")
         override val height: Long? = null,
+
+        @SerialName("image")
         override val image: String? = null,
+
+        @SerialName("embed_url")
         override val embedUrl: String? = null,
+
+        @SerialName("blurhash")
         override val blurHash: String? = null
+
     ) : Card()
 
-    data class Photo(
+
+    @Serializable
+    @SerialName("photo")
+    public data class Photo(
+
+        @SerialName("url")
         override val url: String,
+
+        @SerialName("title")
         override val title: String,
+
+        @SerialName("description")
         override val description: String,
+
+        @SerialName("author_name")
         override val authorName: String? = null,
+
+        @SerialName("author_url")
         override val authorUrl: String? = null,
+
+        @SerialName("provider_name")
         override val providerName: String? = null,
+
+        @SerialName("provider_url")
         override val providerUrl: String? = null,
+
+        @SerialName("html")
         override val html: String? = null,
+
+        @SerialName("width")
         override val width: Long? = null,
+
+        @SerialName("height")
         override val height: Long? = null,
+
+        @SerialName("image")
         override val image: String? = null,
+
+        @SerialName("embed_url")
         override val embedUrl: String? = null,
+
+        @SerialName("blurhash")
         override val blurHash: String? = null
+
     ) : Card()
 
-    data class Link(
+    @Serializable
+    @SerialName("link")
+    public data class Link(
+
+        @SerialName("url")
         override val url: String,
+
+        @SerialName("title")
         override val title: String,
+
+        @SerialName("description")
         override val description: String,
+
+        @SerialName("author_name")
         override val authorName: String? = null,
+
+        @SerialName("author_url")
         override val authorUrl: String? = null,
+
+        @SerialName("provider_name")
         override val providerName: String? = null,
+
+        @SerialName("provider_url")
         override val providerUrl: String? = null,
+
+        @SerialName("html")
         override val html: String? = null,
+
+        @SerialName("width")
         override val width: Long? = null,
+
+        @SerialName("height")
         override val height: Long? = null,
+
+        @SerialName("image")
         override val image: String? = null,
+
+        @SerialName("embed_url")
         override val embedUrl: String? = null,
+
+        @SerialName("blurhash")
         override val blurHash: String? = null
+
     ) : Card()
 
-    data class Rich(
+    @Serializable
+    @SerialName("rich")
+    public data class Rich(
+
+        @SerialName("url")
         override val url: String,
+
+        @SerialName("title")
         override val title: String,
+
+        @SerialName("description")
         override val description: String,
+
+        @SerialName("author_name")
         override val authorName: String? = null,
+
+        @SerialName("author_url")
         override val authorUrl: String? = null,
+
+        @SerialName("provider_name")
         override val providerName: String? = null,
+
+        @SerialName("provider_url")
         override val providerUrl: String? = null,
+
+        @SerialName("html")
         override val html: String? = null,
+
+        @SerialName("width")
         override val width: Long? = null,
+
+        @SerialName("height")
         override val height: Long? = null,
+
+        @SerialName("image")
         override val image: String? = null,
+
+        @SerialName("embed_url")
         override val embedUrl: String? = null,
+
+        @SerialName("blurhash")
         override val blurHash: String? = null
+
     ) : Card()
 }

@@ -35,7 +35,12 @@ class MastodonService(accessToken: String) {
 }
 
 private fun fr.outadoc.mastodonk.api.entity.Status.toDomain(): Status {
-    return Status(statusId, uri, account.toDomain(), content)
+    return Status(
+        statusId,
+        uri,
+        account.toDomain(),
+        content,
+    )
 }
 
 private fun Account.toDomain(): org.mozilla.social.model.Account =
