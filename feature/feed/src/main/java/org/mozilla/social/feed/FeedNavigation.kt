@@ -1,5 +1,6 @@
 package org.mozilla.social.feed
 
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
@@ -11,10 +12,8 @@ fun NavController.navigateToFeed(navOptions: NavOptions? = null) {
     this.navigate(FEED_ROUTE, navOptions)
 }
 
-fun NavGraphBuilder.feedScreen(
-    onNewPostClicked: () -> Unit,
-) {
+fun NavGraphBuilder.feedScreen() {
     composable(route = FEED_ROUTE) {
-        FeedScreen(onNewPostClicked)
+         FeedScreen()
     }
 }
