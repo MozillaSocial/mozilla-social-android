@@ -1,4 +1,4 @@
-package org.mozilla.social.core.ui
+package org.mozilla.social.core.designsystem.component
 
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
@@ -13,6 +13,7 @@ fun MoSoNavigationBar(
     navBarDestinations: List<NavBarDestination>,
     navigateTo: (NavBarDestination) -> Unit
 ) {
+
     NavigationBar {
         navBarDestinations.forEach { destination ->
             val isSelected = currentDestination == destination
@@ -38,7 +39,6 @@ fun MoSoNavigationBar(
     }
 }
 
-
 /**
  * Corresponds with the navigation destinations in the main (logged in) graph
  */
@@ -49,7 +49,7 @@ interface NavDestination {
 /**
  * The navigation destinations which correspond to the bottom navigation tabs
  */
-interface NavBarDestination: NavDestination {
+interface NavBarDestination : NavDestination {
     val selectedIcon: ImageVector
     val unselectedIcon: ImageVector
     val tabText: String

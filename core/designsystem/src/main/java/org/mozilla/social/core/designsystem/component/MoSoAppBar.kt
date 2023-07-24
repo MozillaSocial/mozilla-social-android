@@ -15,7 +15,7 @@ import androidx.compose.ui.platform.testTag
 @Composable
 fun MoSoAppBar(
     modifier: Modifier = Modifier,
-    colors: TopAppBarColors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = MaterialTheme.colorScheme.inverseSurface),
+    colors: TopAppBarColors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = MaterialTheme.colorScheme.primary),
     scrollBehavior: TopAppBarScrollBehavior? = null,
 ) {
 
@@ -24,7 +24,7 @@ fun MoSoAppBar(
         title = {
             Text(
                 text = "Mozilla Social",
-                color = MaterialTheme.colorScheme.inverseOnSurface
+                color = MaterialTheme.colorScheme.onPrimary
             )
         },
         colors = colors,
