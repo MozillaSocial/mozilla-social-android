@@ -1,6 +1,6 @@
 plugins {
     id("org.mozilla.social.android.library")
-    kotlin("plugin.serialization") version "1.8.21"
+    alias(libs.plugins.kotlinx.serialization)
 }
 
 android {
