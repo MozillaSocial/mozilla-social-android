@@ -23,10 +23,10 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.stateIn
-import org.mozilla.social.core.ui.MoSoAppBar
-import org.mozilla.social.core.ui.MoSoNavigationBar
-import org.mozilla.social.core.ui.NavBarDestination
-import org.mozilla.social.core.ui.NavDestination
+import org.mozilla.social.core.designsystem.component.MoSoAppBar
+import org.mozilla.social.core.designsystem.component.MoSoBottomNavigationBar
+import org.mozilla.social.core.designsystem.component.NavBarDestination
+import org.mozilla.social.core.designsystem.component.NavDestination
 import org.mozilla.social.feature.auth.AUTH_ROUTE
 import org.mozilla.social.feature.auth.navigateToAuth
 import org.mozilla.social.navigation.Feed
@@ -105,7 +105,7 @@ class AppState(
         val currentDestination =
             currentDestination.collectAsState().value as? NavBarDestination ?: return
 
-        MoSoNavigationBar(
+        MoSoBottomNavigationBar(
             currentDestination = currentDestination,
             navBarDestinations = navBarDestinations,
             navigateTo = { navigateToTopLevelDestination(it) }

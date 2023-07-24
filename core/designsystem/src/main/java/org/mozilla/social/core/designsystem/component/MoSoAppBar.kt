@@ -1,4 +1,4 @@
-package org.mozilla.social.core.ui
+package org.mozilla.social.core.designsystem.component
 
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -18,7 +18,6 @@ fun MoSoAppBar(
     colors: TopAppBarColors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = MaterialTheme.colorScheme.primary),
     scrollBehavior: TopAppBarScrollBehavior? = null,
 ) {
-
     CenterAlignedTopAppBar(
         modifier = modifier.testTag("moSoAppBar"),
         title = {
@@ -30,5 +29,4 @@ fun MoSoAppBar(
         colors = colors,
         scrollBehavior = scrollBehavior,
     )
-
 }
