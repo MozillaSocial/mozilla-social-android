@@ -43,7 +43,7 @@ private val LightColorScheme = lightColorScheme(
     errorContainer = FirefoxColor.Red70,
     onErrorContainer = FirefoxColor.LightGrey05,
     outline = FirefoxColor.Violet60,
-    outlineVariant = FirefoxColor.Blue60,
+    outlineVariant = FirefoxColor.LightGrey30,
     scrim = FirefoxColor.DarkGrey30,
 )
 
@@ -75,7 +75,7 @@ private val DarkColorScheme = darkColorScheme(
     errorContainer = FirefoxColor.Red70,
     onErrorContainer = FirefoxColor.LightGrey10,
     outline = FirefoxColor.Violet60,
-    outlineVariant = FirefoxColor.Blue60,
+    outlineVariant = FirefoxColor.DarkGrey80,
     scrim = FirefoxColor.DarkGrey90,
 )
 

@@ -1,6 +1,6 @@
 plugins {
     id("org.mozilla.social.android.library")
-    kotlin("plugin.serialization") version "1.8.21"
+    alias(libs.plugins.kotlinx.serialization)
 }
 
 android {
@@ -36,7 +36,6 @@ dependencies {
 
     // Core library
     implementation(libs.mastodonk)
-    implementation(libs.ktor.core)
 
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.kotlinx.serialization.converter)

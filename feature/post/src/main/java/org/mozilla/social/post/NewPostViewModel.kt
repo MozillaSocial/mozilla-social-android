@@ -1,17 +1,24 @@
 package org.mozilla.social.post
 
+import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.mozilla.social.common.LoadState
 import org.mozilla.social.common.logging.Log
 import org.mozilla.social.core.data.repository.MediaRepository
 import org.mozilla.social.core.data.repository.StatusRepository
+import org.mozilla.social.model.ImageState
+import org.mozilla.social.post.interactions.ImageInteractions
 import java.io.File
 
 class NewPostViewModel(
@@ -19,53 +26,80 @@ class NewPostViewModel(
     private val mediaRepository: MediaRepository,
     private val log: Log,
     private val onStatusPosted: () -> Unit,
-) : ViewModel() {
+) : ViewModel(), ImageInteractions {
 
     private val _statusText = MutableStateFlow("")
     val statusText: StateFlow<String> = _statusText
 
-    private val attachmentId = MutableStateFlow<String?>(null)
+    private val _imageStates = MutableStateFlow<Map<Uri, ImageState>>(emptyMap())
+    val imageStates: StateFlow<Map<Uri, ImageState>> = _imageStates
 
     val sendButtonEnabled: StateFlow<Boolean> =
-        combine(statusText, attachmentId) { statusText, attachmentId ->
-            statusText.isNotBlank() || !attachmentId.isNullOrBlank()
+        combine(statusText, imageStates) { statusText, imageStates ->
+            (statusText.isNotBlank() || imageStates.isNotEmpty())
+                    // all images are loaded
+                    && imageStates.values.find { it.loadState != LoadState.LOADED } == null
         }.stateIn(
             scope = viewModelScope,
             started = SharingStarted.Lazily,
             initialValue = false,
         )
 
-    private val _imageState = MutableStateFlow<ImageState>(ImageState.LOADING)
-    val imageState: StateFlow<ImageState> = _imageState
-
-    private val _imageDescription = MutableStateFlow("")
-    val imageDescription: StateFlow<String> = _imageDescription
+    val addImageButtonEnabled : StateFlow<Boolean> =
+        imageStates.map {
+            it.size < MAX_IMAGES
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.Lazily,
+            initialValue = true
+        )
 
     fun onStatusTextUpdated(text: String) {
         _statusText.update { text }
     }
 
-    fun onImageDescriptionTextUpdated(text: String) {
-        _imageDescription.update { text }
+    override fun onImageDescriptionTextUpdated(
+        uri: Uri,
+        text: String,
+    ) {
+        updateImageState(uri, description = text)
     }
 
-    fun onImageRemoved() {
-        attachmentId.update { null }
+    override fun onImageRemoved(uri: Uri) {
+        _imageStates.update {
+            _imageStates.value.toMutableMap().apply { remove(uri) }
+        }
     }
 
-    fun onImageInserted(file: File) {
-        _imageState.update { ImageState.LOADING }
+    /**
+     * When an image is inserted, we need to upload it and hold onto the attachment id we get
+     * from the server.
+     */
+    override fun onImageInserted(
+        uri: Uri,
+        file: File,
+    ) {
+        // if the image was already uploaded, just return
+        imageStates.value[uri]?.let {
+            if (it.loadState == LoadState.LOADED) {
+                return
+            }
+        }
+        updateImageState(uri, loadState = LoadState.LOADING)
         viewModelScope.launch {
             try {
                 val imageId = mediaRepository.uploadImage(
                     file,
-                    imageDescription.value.ifBlank { null }
+                    imageStates.value[uri]?.description?.ifBlank { null }
                 ).attachmentId
-                attachmentId.update { imageId }
-                _imageState.update { ImageState.LOADED }
+                updateImageState(
+                    uri,
+                    loadState = LoadState.LOADED,
+                    attachmentId = imageId
+                )
             } catch (e: Exception) {
                 log.e(e)
-                _imageState.update { ImageState.ERROR }
+                updateImageState(uri, loadState = LoadState.ERROR)
             }
         }
     }
@@ -74,15 +108,37 @@ class NewPostViewModel(
         viewModelScope.launch {
             statusRepository.sendPost(
                 statusText = statusText.value,
-                attachmentId = attachmentId.value
+                imageStates = imageStates.value.values.toList()
             )
             onStatusPosted()
         }
     }
-}
 
-sealed class ImageState {
-    object LOADING : ImageState()
-    object LOADED : ImageState()
-    object ERROR : ImageState()
+    private fun updateImageState(
+        uri: Uri,
+        loadState: LoadState? = null,
+        attachmentId: String? = null,
+        description: String? = null,
+    ) {
+        val oldState = _imageStates.value[uri]
+        val newState = ImageState(
+            loadState = loadState ?: oldState?.loadState ?: LoadState.LOADING,
+            attachmentId = attachmentId ?: oldState?.attachmentId,
+            description = description ?: oldState?.description ?: "",
+        )
+
+        _imageStates.update {
+            _imageStates.value.toMutableMap().apply {
+                put(uri, newState)
+            }
+        }
+    }
+
+    companion object {
+        /**
+         * The maximum number of images allowed to be attached to a single post.
+         * This number is defined by the mastodon API
+         */
+        const val MAX_IMAGES = 4
+    }
 }

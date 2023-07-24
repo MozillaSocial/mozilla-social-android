@@ -12,7 +12,7 @@ import java.io.OutputStream
 fun Uri.toFile(context: Context): File {
     // Preparing Temp file name
     val fileExtension = getFileExtension(context, this)
-    val fileName = "temp_file" + if (fileExtension != null) ".$fileExtension" else ""
+    val fileName = fileName() + if (fileExtension != null) ".$fileExtension" else ""
 
     // Creating Temp file
     val tempFile = File(context.cacheDir, fileName)
@@ -46,4 +46,15 @@ private fun copy(source: InputStream, target: OutputStream) {
     while (source.read(buf).also { length = it } > 0) {
         target.write(buf, 0, length)
     }
+}
+
+private fun Uri.fileName(): String {
+    val path = toString()
+    val fileName = path.substring(path.lastIndexOf('/') + 1, path.length)
+    return if (fileName.lastIndexOf('.') != -1) {
+        fileName.substring(0, fileName.lastIndexOf('.'))
+    } else {
+        fileName
+    }
+
 }

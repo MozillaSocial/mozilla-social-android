@@ -1,13 +1,16 @@
 package org.mozilla.social.core.network
 
 import okhttp3.MultipartBody
+import org.mozilla.social.model.MediaUpdateRequestBody
 import org.mozilla.social.model.entity.Attachment
 import org.mozilla.social.model.entity.request.StatusCreate
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.Multipart
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Part
+import retrofit2.http.Path
 
 interface MastodonApi {
 
@@ -22,4 +25,10 @@ interface MastodonApi {
         @Part file: MultipartBody.Part,
         @Part("description") description: String? = null,
     ): Attachment
+
+    @PUT("api/v1/media/{mediaId}")
+    suspend fun updateMedia(
+        @Path("mediaId") mediaId: String,
+        @Body requestBody: MediaUpdateRequestBody,
+    )
 }
