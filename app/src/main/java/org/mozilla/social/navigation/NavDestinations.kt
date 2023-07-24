@@ -7,8 +7,8 @@ import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material.icons.rounded.Settings
-import org.mozilla.social.core.ui.NavBarDestination
-import org.mozilla.social.core.ui.NavDestination
+import org.mozilla.social.core.designsystem.component.NavBarDestination
+import org.mozilla.social.core.designsystem.component.NavDestination
 import org.mozilla.social.feature.settings.SETTINGS_ROUTE
 import org.mozilla.social.feed.FEED_ROUTE
 import org.mozilla.social.post.NEW_POST_ROUTE

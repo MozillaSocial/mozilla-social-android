@@ -1,4 +1,4 @@
-package org.mozilla.social.core.ui
+package org.mozilla.social.core.designsystem.component
 
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -15,20 +15,18 @@ import androidx.compose.ui.platform.testTag
 @Composable
 fun MoSoAppBar(
     modifier: Modifier = Modifier,
-    colors: TopAppBarColors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = MaterialTheme.colorScheme.inverseSurface),
+    colors: TopAppBarColors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = MaterialTheme.colorScheme.primary),
     scrollBehavior: TopAppBarScrollBehavior? = null,
 ) {
-
     CenterAlignedTopAppBar(
         modifier = modifier.testTag("moSoAppBar"),
         title = {
             Text(
                 text = "Mozilla Social",
-                color = MaterialTheme.colorScheme.inverseOnSurface
+                color = MaterialTheme.colorScheme.onPrimary
             )
         },
         colors = colors,
         scrollBehavior = scrollBehavior,
     )
-
 }
