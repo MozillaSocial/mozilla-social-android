@@ -4,7 +4,7 @@ androidxActivity = "1.7.2"
 androidxAppcompat = "1.6.1"
 androidxBrowser = "1.5.0"
 androidxComposeBom = "2023.06.01"
-androidxComposeCompiler = "1.4.8"
+androidxComposeCompiler = "1.5.0"
 androidxCore = "1.10.1"
 androidxDatastorePreferences = "1.0.0"
 androidxLifecycle = "2.6.1"
@@ -13,7 +13,7 @@ androidxTestExt = "1.1.5"
 googleAndroidMaterial = "1.9.0"
 koin = "3.4.0"
 junit = "4.13.2"
-kotlin = "1.8.22"
+kotlin = "1.9.0"
 kotlinDateTime = "0.4.0"
 ktor = "2.3.2"
 navigation-compose = "2.6.0"
@@ -24,7 +24,6 @@ retrofit = "2.9.0"
 timber = "5.0.1"
 kotlinx-serialization-converter = "1.0.0"
 kotlinx-serialization-json = "1.5.1"
-kotlinxSerializationPlugin = "1.8.21"
 
 [libraries]
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "androidxActivity" }
@@ -74,5 +73,5 @@ kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-pl
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }
 android-library = { id = "com.android.library", version.ref = "androidGradlePlugin" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin"}
 protobuf = { id = "com.google.protobuf", version.ref = "protobufPlugin" }
-kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlinxSerializationPlugin"}
