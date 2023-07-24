@@ -4,21 +4,21 @@ androidxActivity = "1.7.2"
 androidxAppcompat = "1.6.1"
 androidxBrowser = "1.5.0"
 androidxComposeBom = "2023.06.01"
-androidxComposeCompiler = "1.4.8"
+androidxComposeCompiler = "1.5.0"
 androidxCore = "1.10.1"
 androidxDatastorePreferences = "1.0.0"
 androidxLifecycle = "2.6.1"
 androidxTestEspresso = "3.5.1"
 androidxTestExt = "1.1.5"
+coil = "2.4.0"
 googleAndroidMaterial = "1.9.0"
 koin = "3.4.0"
 junit = "4.13.2"
-kotlin = "1.8.22"
+kotlin = "1.9.0"
 kotlinxCoroutines = "1.7.2"
 kotlinDateTime = "0.4.0"
 kotlinxSerializationConverter = "1.0.0"
 kotlinxSerializationJson = "1.5.1"
-kotlinxSerializationPlugin = "1.8.21"
 navigation-compose = "2.6.0"
 okhttp = "4.10.0"
 protobuf = "3.23.0"
@@ -31,6 +31,7 @@ androidx-activity-compose = { group = "androidx.activity", name = "activity-comp
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "androidxAppcompat" }
 androidx-browser = { group = "androidx.browser", name = "browser", version.ref = "androidxBrowser" }
 androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "androidxComposeBom" }
+androidx-compose-compiler = { module = "androidx.compose.compiler:compiler", version.ref = "androidxComposeCompiler" } # Not used anywhere, but lets tools like Renovate or IDE warnings work by understanding what we use this version for.
 androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3" }
 androidx-compose-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
 androidx-compose-ui-test-junit = { group = "androidx.compose.ui", name = "ui-test-junit4" }
@@ -47,16 +48,17 @@ androidx-lifecycle-viewmodel-compose = { group = "androidx.lifecycle", name = "l
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigation-compose"}
 androidx-test-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "androidxTestEspresso" }
 androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidxTestExt" }
+coil = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
 google-material = { group = "com.google.android.material", name = "material", version.ref = "googleAndroidMaterial" }
+jakewharton-timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
+junit = { group = "junit", name = "junit", version.ref = "junit" }
 koin = { group = "io.insert-koin", name = "koin-androidx-compose", version.ref = "koin" }
+koin-android = { group = "io.insert-koin", name = "koin-android", version.ref = "koin" }
 koin-junit = { group = "io.insert-koin", name = "koin-test-junit5", version.ref = "koin" }
 kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "kotlinxCoroutines" }
 kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version.ref = "kotlinDateTime" }
 kotlinx-serialization-converter = { group = "com.jakewharton.retrofit", name = "retrofit2-kotlinx-serialization-converter", version.ref = "kotlinxSerializationConverter" }
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
-junit = { group = "junit", name = "junit", version.ref = "junit" }
-jakewharton-timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
-koin-android = { group = "io.insert-koin", name = "koin-android", version.ref = "koin" }
 mastodonk = { group = "fr.outadoc.mastodonk", name = "mastodonk-core", version = "+" }
 protobuf-kotlin-lite = { group = "com.google.protobuf", name = "protobuf-kotlin-lite", version.ref = "protobuf" }
 protobuf-protoc = { group = "com.google.protobuf", name = "protoc", version.ref = "protobuf" }
@@ -73,5 +75,5 @@ kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-pl
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }
 android-library = { id = "com.android.library", version.ref = "androidGradlePlugin" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
-kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlinxSerializationPlugin"}
+kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin"}
 protobuf = { id = "com.google.protobuf", version.ref = "protobufPlugin" }
