@@ -3,9 +3,11 @@ package org.mozilla.social.core.network
 import okhttp3.MultipartBody
 import org.mozilla.social.model.MediaUpdateRequestBody
 import org.mozilla.social.model.entity.Attachment
+import org.mozilla.social.model.entity.Status
 import org.mozilla.social.model.entity.request.StatusCreate
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.GET
 import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.PUT
@@ -31,4 +33,10 @@ interface MastodonApi {
         @Path("mediaId") mediaId: String,
         @Body requestBody: MediaUpdateRequestBody,
     )
+
+    @GET("/api/v1/timelines/home")
+    suspend fun getHomeTimeline(): Response<List<Status>>
+
+    @GET("/api/v1/timelines/public")
+    suspend fun getPublicTimeline(): Response<List<Status>>
 }

@@ -10,7 +10,7 @@ import org.mozilla.social.core.network.networkModule
 fun repositoryModule(isDebug: Boolean) = module {
     single { MastodonServiceWrapper(get()) }
     single { AuthTokenObserver(get(), get()) }
-    single { FeedRepository(get()) }
+    single { FeedRepository(get(), get()) }
     single { StatusRepository(get()) }
     single { AuthRepository(get()) }
     single { MediaRepository(get()) }

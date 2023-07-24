@@ -10,7 +10,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
-import androidx.compose.material3.Card
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
@@ -32,9 +31,8 @@ import androidx.compose.ui.unit.dp
 import org.koin.androidx.compose.koinViewModel
 import org.mozilla.social.core.designsystem.theme.MozillaSocialTheme
 import org.mozilla.social.core.ui.PostCard
-import org.mozilla.social.model.Account
 import org.mozilla.social.model.Page
-import org.mozilla.social.model.Status
+import org.mozilla.social.model.entity.Status
 
 @Composable
 fun FeedScreen(
@@ -42,14 +40,14 @@ fun FeedScreen(
     viewModel: FeedViewModel = koinViewModel()
 ) {
     FeedScreen(
-        publicTimeline = viewModel.feed.collectAsState(null).value,
+        publicTimeline = viewModel.feed.collectAsState(initial = null).value,
         onNewPostClicked = onNewPostClicked,
     )
 }
 
 @Composable
 fun FeedScreen(
-    publicTimeline: Page<List<Status>>?,
+    publicTimeline: List<Status>?,
     onNewPostClicked: () -> Unit,
 ) {
     val scrollBehavior =
@@ -73,7 +71,7 @@ fun FeedScreen(
                     .padding(4.dp)
                     .verticalScroll(rememberScrollState())
             ) {
-                publicTimeline?.contents?.forEach { status ->
+                publicTimeline?.forEach { status ->
                     PostCard(status = status)
                 }
             }
@@ -125,18 +123,20 @@ fun MozillaAppBar(
 @Composable
 fun FeedScreenPreview() {
     MozillaSocialTheme {
-        FeedScreen(
-            publicTimeline = Page(
-                contents = listOf(
-                    Status(
-                        "1",
-                        "asdf",
-                        account = Account("1", username = "username"),
-                        content = "here's a post"
-                    )
-                )
-            ),
-            onNewPostClicked = {}
-        )
+//        FeedScreen(
+//            publicTimeline = Page(
+//                contents = listOf(
+//                    Status(
+//                        "1",
+//                        "asdf",
+//                        account = Account("1", username = "username"),
+//                        content = "here's a post",
+//                        isSensitive = false,
+//                        mediaAttachments = listOf()
+//                    )
+//                )
+//            ),
+//            onNewPostClicked = {}
+//        )
     }
 }
