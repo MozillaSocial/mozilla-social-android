@@ -1,6 +1,11 @@
 package org.mozilla.social
 
 import android.app.Application
+import android.os.Build
+import coil.ImageLoader
+import coil.ImageLoaderFactory
+import coil.decode.GifDecoder
+import coil.decode.ImageDecoderDecoder
 import org.koin.android.ext.android.get
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -16,7 +21,7 @@ import org.mozilla.social.feed.feedModule
 import org.mozilla.social.post.newPostModule
 import org.mozilla.social.search.searchModule
 
-class MainApplication : Application() {
+class MainApplication : Application(), ImageLoaderFactory {
 
     private lateinit var authTokenObserver: AuthTokenObserver
 
@@ -33,6 +38,18 @@ class MainApplication : Application() {
 
         authTokenObserver = get()
     }
+
+    // setup coil
+    override fun newImageLoader(): ImageLoader =
+        ImageLoader.Builder(this)
+            .components {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                    add(ImageDecoderDecoder.Factory())
+                } else {
+                    add(GifDecoder.Factory())
+                }
+            }
+            .build()
 }
 
 val appModules = module {

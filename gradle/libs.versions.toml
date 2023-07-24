@@ -49,6 +49,7 @@ androidx-navigation-compose = { group = "androidx.navigation", name = "navigatio
 androidx-test-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "androidxTestEspresso" }
 androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidxTestExt" }
 coil = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
+coil-gif = { group = "io.coil-kt", name = "coil-gif", version.ref = "coil" }
 google-material = { group = "com.google.android.material", name = "material", version.ref = "googleAndroidMaterial" }
 jakewharton-timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
