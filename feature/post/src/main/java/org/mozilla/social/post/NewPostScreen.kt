@@ -63,6 +63,7 @@ import org.mozilla.social.core.designsystem.utils.NoIndication
 import org.mozilla.social.core.ui.media.MediaUpload
 import org.mozilla.social.core.ui.transparentTextFieldColors
 import org.mozilla.social.model.ImageState
+import org.mozilla.social.post.NewPostViewModel.Companion.MAX_POST_LENGTH
 import org.mozilla.social.post.interactions.ImageInteractions
 
 @Composable
@@ -138,6 +139,7 @@ private fun NewPostScreen(
                 }
             },
             addImageButtonEnabled = addImageButtonEnabled,
+            characterCount = statusText.count(),
         )
     }
 }
@@ -175,19 +177,36 @@ private fun TopBar(
 private fun BottomBar(
     onUploadImageClicked: () -> Unit,
     addImageButtonEnabled: Boolean,
+    characterCount: Int,
 ) {
+    val characterCountText = remember(characterCount) { "${MAX_POST_LENGTH - characterCount}" }
     Column {
         Divider(
             color = MaterialTheme.colorScheme.outlineVariant
         )
-        Row(
-            modifier = Modifier.height(60.dp)
+        Box(
+            modifier = Modifier
+                .height(60.dp)
+                .fillMaxWidth()
         ) {
-            IconButton(
-                onClick = { onUploadImageClicked() },
-                enabled = addImageButtonEnabled,
+            // left row
+            Row(
+                modifier = Modifier.align(Alignment.CenterStart)
             ) {
-                Icon(Icons.Default.Add, "attach image")
+                IconButton(
+                    onClick = { onUploadImageClicked() },
+                    enabled = addImageButtonEnabled,
+                ) {
+                    Icon(Icons.Default.Add, "attach image")
+                }
+            }
+            // right row
+            Row(
+                modifier = Modifier
+                    .align(Alignment.CenterEnd)
+                    .padding(end = 16.dp)
+            ) {
+                Text(text = characterCountText)
             }
         }
     }

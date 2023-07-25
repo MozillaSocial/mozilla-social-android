@@ -58,6 +58,7 @@ class NewPostViewModel(
     private val uploadJobs = mutableMapOf<Uri, Job>()
 
     fun onStatusTextUpdated(text: String) {
+        if (text.length > MAX_POST_LENGTH) return
         _statusText.update { text }
     }
 
@@ -148,5 +149,6 @@ class NewPostViewModel(
          * This number is defined by the mastodon API
          */
         const val MAX_IMAGES = 4
+        const val MAX_POST_LENGTH = 500
     }
 }
