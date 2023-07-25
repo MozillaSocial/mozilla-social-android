@@ -12,6 +12,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -22,7 +23,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
-import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.AspectRatioFrameLayout
 import androidx.media3.ui.PlayerView
@@ -36,8 +36,7 @@ import org.mozilla.social.common.utils.toFile
 import org.mozilla.social.core.designsystem.theme.FirefoxColor
 import java.io.File
 
-//TODO transition from loading image to playing video is off.  fix double black boxes.  Video needs
-// to start when loading is finished.
+//TODO fix loading video black box.
 @Composable
 fun MediaUpload(
     uri: Uri,
@@ -54,16 +53,15 @@ fun MediaUpload(
             uri.getFileType(context)
         }
         when (fileType) {
-            FileType.VIDEO -> VideoPlayer(uri = uri)
+            FileType.VIDEO -> {
+                VideoPlayer(uri = uri, loadState = loadState)
+            }
             FileType.IMAGE -> Image(imageUri = uri, loadState = loadState)
             FileType.UNKNOWN -> {}
         }
 
         when (loadState) {
             LoadState.LOADING -> {
-                if (fileType == FileType.VIDEO) {
-                    Image(imageUri = uri, loadState = loadState)
-                }
                 Column(
                     modifier = Modifier.align(Alignment.Center),
                 ) {
@@ -79,9 +77,6 @@ fun MediaUpload(
                 }
             }
             LoadState.ERROR -> {
-                if (fileType == FileType.VIDEO) {
-                    Image(imageUri = uri, loadState = loadState)
-                }
                 Column(
                     modifier = Modifier.align(Alignment.Center),
                 ) {
@@ -113,6 +108,7 @@ fun MediaUpload(
 @Composable
 fun VideoPlayer(
     uri: Uri,
+    loadState: LoadState,
 ) {
     val log: Log = get()
     val context = LocalContext.current
@@ -126,6 +122,12 @@ fun VideoPlayer(
         }
     }
 
+    if (loadState == LoadState.LOADED) {
+        LaunchedEffect(Unit) {
+            exoPlayer.play()
+        }
+    }
+
     DisposableEffect(
         AndroidView(
             modifier = Modifier.fillMaxWidth(),
@@ -136,7 +138,6 @@ fun VideoPlayer(
                     controllerAutoShow = false
                     hideController()
                     player = exoPlayer
-                    player?.play()
                 }
             },
         )
@@ -153,23 +154,18 @@ private fun Image(
     imageUri: Uri,
     loadState: LoadState,
 ) {
-    Box(
+    AsyncImage(
         modifier = Modifier
-            .background(FirefoxColor.Black)
-    ) {
-        AsyncImage(
-            modifier = Modifier
-                .fillMaxWidth()
-                .alpha(
-                    if (loadState == LoadState.LOADING) {
-                        0.3f
-                    } else {
-                        1f
-                    }
-                ),
-            model = imageUri,
-            contentDescription = "",
-            contentScale = ContentScale.FillWidth,
-        )
-    }
+            .fillMaxWidth()
+            .alpha(
+                if (loadState == LoadState.LOADING) {
+                    0.3f
+                } else {
+                    1f
+                }
+            ),
+        model = imageUri,
+        contentDescription = "",
+        contentScale = ContentScale.FillWidth,
+    )
 }
