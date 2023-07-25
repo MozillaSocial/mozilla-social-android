@@ -17,10 +17,12 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.exclude
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.ime
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.union
@@ -109,8 +111,9 @@ private fun NewPostScreen(
     ) { uri ->
         uri?.let { imageInteractions.onImageInserted(it, it.toFile(context)) }
     }
+    val insets = WindowInsets.systemBars.union(WindowInsets.ime)
     Column(
-        modifier = Modifier.windowInsetsPadding(WindowInsets.ime)
+        modifier = Modifier.windowInsetsPadding(WindowInsets.ime.exclude(WindowInsets.navigationBars))
     ) {
         TopBar(
             onPostClicked = onPostClicked,
