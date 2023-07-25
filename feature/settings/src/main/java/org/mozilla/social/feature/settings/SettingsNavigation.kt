@@ -13,6 +13,6 @@ fun NavController.navigateToSettings(navOptions: NavOptions? = null) {
 
 fun NavGraphBuilder.settingsScreen(onLogout: () -> Unit) {
     composable(route = SETTINGS_ROUTE) {
-        SettingsRoute(onLogout = onLogout)
+        SettingsScreen(onLogout = onLogout)
     }
 }
