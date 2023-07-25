@@ -57,7 +57,7 @@ import org.mozilla.social.common.LoadState
 import org.mozilla.social.common.utils.toFile
 import org.mozilla.social.core.designsystem.theme.MozillaSocialTheme
 import org.mozilla.social.core.designsystem.utils.NoIndication
-import org.mozilla.social.core.ui.images.ImageToUpload
+import org.mozilla.social.core.ui.media.MediaUpload
 import org.mozilla.social.core.ui.transparentTextFieldColors
 import org.mozilla.social.model.ImageState
 import org.mozilla.social.post.interactions.ImageInteractions
@@ -264,8 +264,8 @@ private fun ImageUploadBox(
             )
             .fillMaxWidth(),
     ) {
-        ImageToUpload(
-            imageUri = imageState.key,
+        MediaUpload(
+            uri = imageState.key,
             loadState = imageState.value.loadState,
             onRetryClicked = imageInteractions::onImageInserted,
         )

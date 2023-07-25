@@ -28,7 +28,11 @@ dependencies {
     implementation(project(":core:common"))
     implementation("com.google.android.material:material:1.9.0")
 
+    implementation(libs.koin)
+
     implementation(libs.coil)
+    implementation(libs.androidx.media3.exoplayer)
+    implementation(libs.androidx.media3.ui)
 
     // compose
     implementation(platform(libs.androidx.compose.bom))

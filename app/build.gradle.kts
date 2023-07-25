@@ -73,6 +73,7 @@ dependencies {
 
     implementation(libs.coil)
     implementation(libs.coil.gif)
+    implementation(libs.coil.video)
 
     //compose
     implementation(libs.androidx.activity.compose)

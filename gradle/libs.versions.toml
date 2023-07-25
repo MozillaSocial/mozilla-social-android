@@ -8,6 +8,7 @@ androidxComposeCompiler = "1.5.0"
 androidxCore = "1.10.1"
 androidxDatastorePreferences = "1.0.0"
 androidxLifecycle = "2.6.1"
+androidxMedia3 = "1.1.0"
 androidxTestEspresso = "3.5.1"
 androidxTestExt = "1.1.5"
 coil = "2.4.0"
@@ -33,6 +34,8 @@ androidx-browser = { group = "androidx.browser", name = "browser", version.ref =
 androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "androidxComposeBom" }
 androidx-compose-compiler = { module = "androidx.compose.compiler:compiler", version.ref = "androidxComposeCompiler" } # Not used anywhere, but lets tools like Renovate or IDE warnings work by understanding what we use this version for.
 androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3" }
+androidx-media3-exoplayer = { group = "androidx.media3", name = "media3-exoplayer", version.ref = "androidxMedia3" }
+androidx-media3-ui = { group = "androidx.media3", name = "media3-ui", version.ref = "androidxMedia3" }
 androidx-compose-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
 androidx-compose-ui-test-junit = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
@@ -50,6 +53,7 @@ androidx-test-espresso-core = { group = "androidx.test.espresso", name = "espres
 androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidxTestExt" }
 coil = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
 coil-gif = { group = "io.coil-kt", name = "coil-gif", version.ref = "coil" }
+coil-video = { group = "io.coil-kt", name = "coil-video", version.ref = "coil" }
 google-material = { group = "com.google.android.material", name = "material", version.ref = "googleAndroidMaterial" }
 jakewharton-timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
