@@ -12,14 +12,21 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.exclude
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.ime
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.union
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -27,21 +34,19 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Send
-import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -57,7 +62,7 @@ import org.mozilla.social.common.LoadState
 import org.mozilla.social.common.utils.toFile
 import org.mozilla.social.core.designsystem.theme.MozillaSocialTheme
 import org.mozilla.social.core.designsystem.utils.NoIndication
-import org.mozilla.social.core.ui.images.ImageToUpload
+import org.mozilla.social.core.ui.media.MediaUpload
 import org.mozilla.social.core.ui.transparentTextFieldColors
 import org.mozilla.social.model.ImageState
 import org.mozilla.social.post.interactions.ImageInteractions
@@ -106,16 +111,28 @@ private fun NewPostScreen(
     ) { uri ->
         uri?.let { imageInteractions.onImageInserted(it, it.toFile(context)) }
     }
-
-    Scaffold(
-        topBar = { TopBar(
+    Column(
+        modifier = Modifier.windowInsetsPadding(WindowInsets.ime.exclude(WindowInsets.navigationBars))
+    ) {
+        TopBar(
             onPostClicked = onPostClicked,
             onCloseClicked = onCloseClicked,
             sendButtonEnabled = sendButtonEnabled,
-        ) },
-        bottomBar = { BottomBar(
+        )
+        Box(
+            modifier = Modifier
+                .weight(1f)
+        ) {
+            MainBox(
+                statusText = statusText,
+                onStatusTextChanged = onStatusTextChanged,
+                imageStates = imageStates,
+                imageInteractions = imageInteractions,
+            )
+        }
+        BottomBar(
             onUploadImageClicked = {
-                val mediaRequest = PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                val mediaRequest = PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageAndVideo)
                 if (NewPostViewModel.MAX_IMAGES - imageStates.size <= 1) {
                     singleMediaLauncher.launch(mediaRequest)
                 } else {
@@ -123,14 +140,6 @@ private fun NewPostScreen(
                 }
             },
             addImageButtonEnabled = addImageButtonEnabled,
-        ) },
-    ) {
-        MainBox(
-            paddingValues = it,
-            statusText = statusText,
-            onStatusTextChanged = onStatusTextChanged,
-            imageStates = imageStates,
-            imageInteractions = imageInteractions,
         )
     }
 }
@@ -142,24 +151,22 @@ private fun TopBar(
     sendButtonEnabled: Boolean,
 ) {
     Column {
-        TopAppBar(
-            title = {},
-            navigationIcon = {
-                IconButton(
-                    onClick = { onCloseClicked() },
-                ) {
-                    Icon(Icons.Default.Close, "close")
-                }
-            },
-            actions = {
-                IconButton(
-                    enabled = sendButtonEnabled,
-                    onClick = { onPostClicked() },
-                ) {
-                    Icon(Icons.Default.Send, "post")
-                }
+        Box(
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            IconButton(
+                onClick = { onCloseClicked() },
+            ) {
+                Icon(Icons.Default.Close, "close")
             }
-        )
+            IconButton(
+                modifier = Modifier.align(Alignment.CenterEnd),
+                enabled = sendButtonEnabled,
+                onClick = { onPostClicked() },
+            ) {
+                Icon(Icons.Default.Send, "post")
+            }
+        }
         Divider(
             color = MaterialTheme.colorScheme.outlineVariant
         )
@@ -175,7 +182,7 @@ private fun BottomBar(
         Divider(
             color = MaterialTheme.colorScheme.outlineVariant
         )
-        BottomAppBar(
+        Row(
             modifier = Modifier.height(60.dp)
         ) {
             IconButton(
@@ -191,7 +198,6 @@ private fun BottomBar(
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 private fun MainBox(
-    paddingValues: PaddingValues,
     statusText: String,
     onStatusTextChanged: (String) -> Unit,
     imageStates: Map<Uri, ImageState>,
@@ -206,7 +212,6 @@ private fun MainBox(
         val textFieldFocusRequester = remember { FocusRequester() }
         Surface(
             modifier = Modifier
-                .padding(paddingValues)
                 .fillMaxSize()
                 .clickable {
                     textFieldFocusRequester.requestFocus()
@@ -264,8 +269,8 @@ private fun ImageUploadBox(
             )
             .fillMaxWidth(),
     ) {
-        ImageToUpload(
-            imageUri = imageState.key,
+        MediaUpload(
+            uri = imageState.key,
             loadState = imageState.value.loadState,
             onRetryClicked = imageInteractions::onImageInserted,
         )

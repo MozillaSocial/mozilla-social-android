@@ -72,6 +72,10 @@ dependencies {
 
     implementation(libs.square.okhttp)
 
+    implementation(libs.coil)
+    implementation(libs.coil.gif)
+    implementation(libs.coil.video)
+
     //compose
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))
