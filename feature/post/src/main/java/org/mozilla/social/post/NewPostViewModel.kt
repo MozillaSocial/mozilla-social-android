@@ -5,9 +5,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
@@ -30,10 +33,10 @@ class NewPostViewModel(
 ) : ViewModel(), ImageInteractions {
 
     private val _statusText = MutableStateFlow("")
-    val statusText: StateFlow<String> = _statusText
+    val statusText = _statusText.asStateFlow()
 
     private val _imageStates = MutableStateFlow<Map<Uri, ImageState>>(emptyMap())
-    val imageStates: StateFlow<Map<Uri, ImageState>> = _imageStates
+    val imageStates = _imageStates.asStateFlow()
 
     val sendButtonEnabled: StateFlow<Boolean> =
         combine(statusText, imageStates) { statusText, imageStates ->
@@ -54,6 +57,9 @@ class NewPostViewModel(
             started = SharingStarted.Lazily,
             initialValue = true
         )
+
+    private val _errorToastMessage = MutableSharedFlow<String>(extraBufferCapacity = 1)
+    val errorToastMessage = _errorToastMessage.asSharedFlow()
 
     private val uploadJobs = mutableMapOf<Uri, Job>()
 
@@ -116,11 +122,16 @@ class NewPostViewModel(
 
     fun onPostClicked() {
         viewModelScope.launch {
-            statusRepository.sendPost(
-                statusText = statusText.value,
-                imageStates = imageStates.value.values.toList()
-            )
-            onStatusPosted()
+            try {
+                statusRepository.sendPost(
+                    statusText = statusText.value,
+                    imageStates = imageStates.value.values.toList()
+                )
+                onStatusPosted()
+            } catch (e: Exception) {
+                log.e(e)
+                _errorToastMessage.emit("Error Sending Post")
+            }
         }
     }
 

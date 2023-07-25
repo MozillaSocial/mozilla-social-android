@@ -6,6 +6,7 @@
 package org.mozilla.social.post
 
 import android.net.Uri
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -42,6 +43,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -82,6 +84,14 @@ internal fun NewPostRoute(
         addImageButtonEnabled = viewModel.addImageButtonEnabled.collectAsState().value,
         imageInteractions = viewModel
     )
+
+    val context = LocalContext.current
+
+    LaunchedEffect(Unit) {
+        viewModel.errorToastMessage.collect {
+            Toast.makeText(context, it, Toast.LENGTH_LONG).show()
+        }
+    }
 }
 
 @Composable
@@ -159,10 +169,14 @@ private fun TopBar(
             ) {
                 Icon(Icons.Default.Close, "close")
             }
+            val keyboard = LocalSoftwareKeyboardController.current
             IconButton(
                 modifier = Modifier.align(Alignment.CenterEnd),
                 enabled = sendButtonEnabled,
-                onClick = { onPostClicked() },
+                onClick = {
+                    onPostClicked()
+                    keyboard?.hide()
+                },
             ) {
                 Icon(Icons.Default.Send, "post")
             }
