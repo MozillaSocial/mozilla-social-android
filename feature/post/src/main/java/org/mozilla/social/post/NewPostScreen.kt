@@ -111,7 +111,6 @@ private fun NewPostScreen(
     ) { uri ->
         uri?.let { imageInteractions.onImageInserted(it, it.toFile(context)) }
     }
-    val insets = WindowInsets.systemBars.union(WindowInsets.ime)
     Column(
         modifier = Modifier.windowInsetsPadding(WindowInsets.ime.exclude(WindowInsets.navigationBars))
     ) {
