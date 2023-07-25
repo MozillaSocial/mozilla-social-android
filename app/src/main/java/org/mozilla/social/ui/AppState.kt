@@ -1,18 +1,28 @@
 package org.mozilla.social.ui
 
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
+import androidx.compose.material3.Divider
+import androidx.compose.material3.DrawerState
+import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.NavOptions
@@ -23,12 +33,16 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import org.mozilla.social.core.designsystem.component.MoSoAppBar
 import org.mozilla.social.core.designsystem.component.MoSoBottomNavigationBar
+import org.mozilla.social.core.designsystem.component.MoSoModalDrawerSheet
+import org.mozilla.social.core.designsystem.component.MoSoNavigationDrawerItem
 import org.mozilla.social.core.designsystem.component.NavBarDestination
 import org.mozilla.social.core.designsystem.component.NavDestination
 import org.mozilla.social.feature.auth.AUTH_ROUTE
 import org.mozilla.social.feature.auth.navigateToAuth
+import org.mozilla.social.feature.settings.navigateToSettings
 import org.mozilla.social.navigation.Feed
 import org.mozilla.social.navigation.MAIN_ROUTE
 import org.mozilla.social.navigation.NewPost
@@ -45,12 +59,16 @@ fun rememberAppState(
     topAppBarScrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
         rememberTopAppBarState()
     ),
+    navigationDrawerState: DrawerState = rememberDrawerState(DrawerValue.Closed),
+    bottomSheetVisible: MutableState<Boolean> = remember { mutableStateOf(false) }
 ): AppState = remember(navController) {
     AppState(
         navController = navController,
-        coroutineScope = coroutineScope,
-        snackbarHostState = snackbarHostState,
         topAppBarScrollBehavior = topAppBarScrollBehavior,
+        navigationDrawerState = navigationDrawerState,
+        coroutineScope = coroutineScope,
+        bottomSheetVisible = bottomSheetVisible,
+        snackbarHostState = snackbarHostState,
     )
 }
 
@@ -62,10 +80,13 @@ fun rememberAppState(
 class AppState(
     initialTopLevelDestination: NavDestination = Feed,
     val navController: NavHostController,
-    val snackbarHostState: SnackbarHostState,
     val topAppBarScrollBehavior: TopAppBarScrollBehavior,
-    coroutineScope: CoroutineScope,
+    val navigationDrawerState: DrawerState,
+    val coroutineScope: CoroutineScope,
+    val bottomSheetVisible: MutableState<Boolean>,
+    val snackbarHostState: SnackbarHostState,
 ) {
+
 
     private val currentDestination: StateFlow<NavDestination?> =
         navController.currentBackStackEntryFlow.mapLatest { backStackEntry ->
@@ -96,7 +117,19 @@ class AppState(
     @Composable
     fun topBar() {
         if (currentDestination.collectAsState().value == Feed) {
-            MoSoAppBar(scrollBehavior = topAppBarScrollBehavior)
+            MoSoAppBar(
+                scrollBehavior = topAppBarScrollBehavior,
+                onMenuClicked = {
+                    coroutineScope.launch {
+                        navigationDrawerState.open()
+                    }
+                },
+                onFeedSelectionClicked = {
+//                    coroutineScope.launch {
+                        bottomSheetVisible.value = !bottomSheetVisible.value
+//                    }
+                }
+            )
         }
     }
 
@@ -135,6 +168,11 @@ class AppState(
         )
     }
 
+    fun navigateToSettings() {
+        coroutineScope.launch { navigationDrawerState.close() }
+        navController.navigateToSettings()
+    }
+
     private fun navigateToTopLevelDestination(destination: NavDestination) {
         val navOptions = navOptions {
             popUpTo(navController.graph.findStartDestination().id) {
@@ -150,6 +188,26 @@ class AppState(
     fun onLogout() {
         clearBackstack()
         navigateToAuth()
+    }
+
+    @Composable
+    fun navigationDrawerContent(onSettingsClicked: () -> Unit) {
+        MoSoModalDrawerSheet {
+            Text("mozilla.social", modifier = Modifier.padding(16.dp))
+
+            Divider()
+            // TODO
+//                MoSoNavigationDrawerItem("Profile")
+//                MoSoNavigationDrawerItem("Favorites")
+//                MoSoNavigationDrawerItem("Bookmarks")
+//            MoSoNavigationDrawerItem("Settings", onClick = onSettingsClicked)
+        }
+
+    }
+
+    @Composable
+    fun bottomSheetContent() {
+        Text(text = "feed options coming")
     }
 
     companion object {

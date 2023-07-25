@@ -1,6 +1,7 @@
 package org.mozilla.social.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.NavHost
 import androidx.navigation.navigation
@@ -23,7 +24,6 @@ fun MozillaNavHost(appState: AppState) {
 
 private fun NavGraphBuilder.mainGraph(appState: AppState) {
     navigation(startDestination = FEED_ROUTE, route = MAIN_ROUTE) {
-
         feedScreen()
         searchScreen()
         settingsScreen(onLogout = appState::onLogout)
