@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -16,7 +17,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
@@ -36,17 +37,13 @@ import org.mozilla.social.common.utils.toFile
 import org.mozilla.social.core.designsystem.theme.FirefoxColor
 import java.io.File
 
-//TODO fix loading video black box.
 @Composable
 fun MediaUpload(
     uri: Uri,
     loadState: LoadState,
     onRetryClicked: (Uri, File) -> Unit,
 ) {
-    Box(
-        modifier = Modifier
-            .background(FirefoxColor.Black)
-    ) {
+    Box {
         val context = LocalContext.current
 
         val fileType = remember(uri) {
@@ -56,14 +53,16 @@ fun MediaUpload(
             FileType.VIDEO -> {
                 VideoPlayer(uri = uri, loadState = loadState)
             }
-            FileType.IMAGE -> Image(imageUri = uri, loadState = loadState)
+            FileType.IMAGE -> Image(imageUri = uri)
             FileType.UNKNOWN -> {}
         }
 
         when (loadState) {
             LoadState.LOADING -> {
+                TransparentOverlay()
                 Column(
-                    modifier = Modifier.align(Alignment.Center),
+                    modifier = Modifier
+                        .align(Alignment.Center),
                 ) {
                     Text(
                         text = "Uploading...",
@@ -77,6 +76,7 @@ fun MediaUpload(
                 }
             }
             LoadState.ERROR -> {
+                TransparentOverlay()
                 Column(
                     modifier = Modifier.align(Alignment.Center),
                 ) {
@@ -99,7 +99,7 @@ fun MediaUpload(
                     }
                 }
             }
-            LoadState.LOADED -> {}
+            else -> {}
         }
     }
 }
@@ -152,20 +152,21 @@ fun VideoPlayer(
 @Composable
 private fun Image(
     imageUri: Uri,
-    loadState: LoadState,
 ) {
     AsyncImage(
         modifier = Modifier
-            .fillMaxWidth()
-            .alpha(
-                if (loadState == LoadState.LOADING) {
-                    0.3f
-                } else {
-                    1f
-                }
-            ),
+            .fillMaxWidth(),
         model = imageUri,
         contentDescription = "",
         contentScale = ContentScale.FillWidth,
+    )
+}
+
+@Composable
+private fun BoxScope.TransparentOverlay() {
+    Box(
+        modifier = Modifier
+            .matchParentSize()
+            .background(Color(0xAA000000)),
     )
 }
