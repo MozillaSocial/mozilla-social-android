@@ -5,15 +5,18 @@ import android.net.Uri
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -21,11 +24,9 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
@@ -62,50 +63,15 @@ internal fun SettingsScreen(
     onSwitchToggled: () -> Unit,
     logUserOut: () -> Unit
 ) {
-    val localContext = LocalContext.current
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        text = stringResource(id = R.string.profile_title),
-                        style = MaterialTheme.typography.titleMedium
-                    )
-                },
-            )
-        }
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        contentAlignment = Alignment.Center,
     ) {
-        Column(
-            modifier = Modifier
-                .verticalScroll(rememberScrollState())
-                .padding(it)
-                .padding(16.dp)
-        ) {
-            SettingsGroup(name = R.string.group_1) {
-                SettingsSwitch(
-                    name = R.string.switch_text,
-                    icon = R.drawable.ic_placeholder_android,
-                    iconDesc = R.string.ic_switch_explanation,
-                    state = isToggled,
-                    onClick = onSwitchToggled
-                )
-            }
-            SettingsGroup(name = R.string.group_2) {
-                SettingsTextLink(
-                    icon = R.drawable.ic_placeholder_android,
-                    iconDesc = R.string.ic_switch_explanation,
-                    name = R.string.switch_text
-                ) {
-                    val intent = Intent(Intent.ACTION_VIEW).apply {
-                        data = Uri.parse("https://mozilla.social/explore")
-                    }
-                    localContext.startActivity(intent)
-                }
-            }
-            SettingsGroup(name = R.string.logout) {
-                LogoutText(name = R.string.logout) {
-                    logUserOut()
-                }
+        SettingsGroup(name = R.string.account_options) {
+            LogoutText(name = R.string.logout) {
+                logUserOut()
             }
         }
     }
@@ -114,7 +80,8 @@ internal fun SettingsScreen(
 @Composable
 fun SettingsGroup(
     @StringRes name: Int,
-    content: @Composable ColumnScope.() -> Unit ){
+    content: @Composable ColumnScope.() -> Unit
+) {
     Column(modifier = Modifier.padding(vertical = 8.dp)) {
         Text(stringResource(id = name))
         Spacer(modifier = Modifier.height(8.dp))

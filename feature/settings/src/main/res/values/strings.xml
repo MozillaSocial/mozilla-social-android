@@ -7,5 +7,6 @@
 
     <string name="group_1">Group 1</string>
     <string name="group_2">Group 2</string>
+    <string name="account_options">Account Options</string>
     <string name="logout">Logout</string>
 </resources>

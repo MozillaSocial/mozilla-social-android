@@ -47,7 +47,7 @@ fun MoSoScaffold(
         drawerContent = navigationDrawerContent,
         content = {
             Scaffold(
-                modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
+                modifier = modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
                 snackbarHost = snackbarHost,
                 floatingActionButton = { floatingActionButton() },
                 bottomBar = bottomBar,

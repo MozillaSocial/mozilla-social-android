@@ -9,6 +9,8 @@ import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
@@ -40,6 +42,7 @@ import org.mozilla.social.core.designsystem.component.MoSoModalDrawerSheet
 import org.mozilla.social.core.designsystem.component.MoSoNavigationDrawerItem
 import org.mozilla.social.core.designsystem.component.NavBarDestination
 import org.mozilla.social.core.designsystem.component.NavDestination
+import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.feature.auth.AUTH_ROUTE
 import org.mozilla.social.feature.auth.navigateToAuth
 import org.mozilla.social.feature.settings.navigateToSettings
@@ -116,20 +119,76 @@ class AppState(
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     fun topBar() {
-        if (currentDestination.collectAsState().value == Feed) {
-            MoSoAppBar(
-                scrollBehavior = topAppBarScrollBehavior,
-                onMenuClicked = {
-                    coroutineScope.launch {
-                        navigationDrawerState.open()
+        val currentDestination = currentDestination.collectAsState().value
+
+        val titleText = when (currentDestination) {
+            Feed -> {
+                "Mozilla Social"
+            }
+
+            Search -> {
+                "Search"
+            }
+
+            Settings -> {
+                "Settings"
+            }
+
+            else -> {
+                null
+            }
+        }
+
+        when (currentDestination) {
+            Feed, Search, Settings -> {
+                MoSoAppBar(
+                    scrollBehavior = topAppBarScrollBehavior,
+                    title = {
+                        if (titleText != null) {
+                            Text(
+                                text = titleText,
+                                color = MaterialTheme.colorScheme.onPrimary
+                            )
+                        }
+                    },
+                    navigationIcon = {
+                        when (currentDestination) {
+                            Feed, Search, Settings -> {
+                                IconButton(onClick = {
+                                    coroutineScope.launch {
+                                        navigationDrawerState.open()
+                                    }
+                                }) {
+                                    Icon(
+                                        imageVector = MoSoIcons.Menu,
+                                        contentDescription = "navigation menu",
+                                        tint = MaterialTheme.colorScheme.onPrimary,
+                                    )
+                                }
+                            }
+
+                            else -> {}
+                        }
+                    },
+                    actions = {
+                        if (currentDestination == Feed) {
+                            IconButton(onClick = {
+                                bottomSheetVisible.value = !bottomSheetVisible.value
+                            }) {
+                                Icon(
+                                    imageVector = MoSoIcons.Feed,
+                                    contentDescription = "feed selection",
+                                    tint = MaterialTheme.colorScheme.onPrimary,
+                                )
+                            }
+                        }
                     }
-                },
-                onFeedSelectionClicked = {
-//                    coroutineScope.launch {
-                        bottomSheetVisible.value = !bottomSheetVisible.value
-//                    }
-                }
-            )
+                )
+            }
+
+            else -> {
+
+            }
         }
     }
 
@@ -200,7 +259,7 @@ class AppState(
 //                MoSoNavigationDrawerItem("Profile")
 //                MoSoNavigationDrawerItem("Favorites")
 //                MoSoNavigationDrawerItem("Bookmarks")
-//            MoSoNavigationDrawerItem("Settings", onClick = onSettingsClicked)
+            MoSoNavigationDrawerItem("Settings", onClick = onSettingsClicked)
         }
 
     }
@@ -209,6 +268,63 @@ class AppState(
     fun bottomSheetContent() {
         Text(text = "feed options coming")
     }
+
+//    @Composable
+//    fun CustomRadioGroup() {
+//        val options = listOf(
+//            "Option 1",
+//            "Option 2",
+//            "Option 3",
+//            "Option 4",
+//        )
+//        var selectedOption by remember {
+//            mutableStateOf("")
+//        }
+//        val onSelectionChange = { text: String ->
+//            selectedOption = text
+//        }
+//
+//        Column(
+//            verticalArrangement = Arrangement.Center,
+//            horizontalAlignment = Alignment.CenterHorizontally,
+//            modifier = Modifier.fillMaxSize(),
+//        ) {
+//            options.forEach { text ->
+//                Row(
+//                    modifier = Modifier
+//                        .padding(
+//                            all = 8.dp,
+//                        ),
+//                ) {
+//                    Text(
+//                        text = text,
+//                        style = MaterialTheme.typography.labelMedium,
+//                        color = Color.White,
+//                        modifier = Modifier
+//                            .clip(
+//                                shape = RoundedCornerShape(
+//                                    size = 12.dp,
+//                                ),
+//                            )
+//                            .clickable {
+//                                onSelectionChange(text)
+//                            }
+//                            .background(
+//                                if (text == selectedOption) {
+//                                    Color.Magenta
+//                                } else {
+//                                    Color.LightGray
+//                                }
+//                            )
+//                            .padding(
+//                                vertical = 12.dp,
+//                                horizontal = 16.dp,
+//                            ),
+//                    )
+//                }
+//            }
+//        }
+//    }
 
     companion object {
         /**
