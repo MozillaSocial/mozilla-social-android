@@ -269,63 +269,6 @@ class AppState(
         Text(text = "feed options coming")
     }
 
-//    @Composable
-//    fun CustomRadioGroup() {
-//        val options = listOf(
-//            "Option 1",
-//            "Option 2",
-//            "Option 3",
-//            "Option 4",
-//        )
-//        var selectedOption by remember {
-//            mutableStateOf("")
-//        }
-//        val onSelectionChange = { text: String ->
-//            selectedOption = text
-//        }
-//
-//        Column(
-//            verticalArrangement = Arrangement.Center,
-//            horizontalAlignment = Alignment.CenterHorizontally,
-//            modifier = Modifier.fillMaxSize(),
-//        ) {
-//            options.forEach { text ->
-//                Row(
-//                    modifier = Modifier
-//                        .padding(
-//                            all = 8.dp,
-//                        ),
-//                ) {
-//                    Text(
-//                        text = text,
-//                        style = MaterialTheme.typography.labelMedium,
-//                        color = Color.White,
-//                        modifier = Modifier
-//                            .clip(
-//                                shape = RoundedCornerShape(
-//                                    size = 12.dp,
-//                                ),
-//                            )
-//                            .clickable {
-//                                onSelectionChange(text)
-//                            }
-//                            .background(
-//                                if (text == selectedOption) {
-//                                    Color.Magenta
-//                                } else {
-//                                    Color.LightGray
-//                                }
-//                            )
-//                            .padding(
-//                                vertical = 12.dp,
-//                                horizontal = 16.dp,
-//                            ),
-//                    )
-//                }
-//            }
-//        }
-//    }
-
     companion object {
         /**
          * All navigation destinations corresponding to nav bar tabs
