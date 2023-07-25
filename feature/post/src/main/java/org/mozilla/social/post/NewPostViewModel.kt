@@ -66,6 +66,7 @@ class NewPostViewModel(
         uri: Uri,
         text: String,
     ) {
+        if (text.length > MAX_POST_LENGTH) return
         updateImageState(uri, description = text)
     }
 
