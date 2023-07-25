@@ -24,8 +24,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBars
-import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -274,32 +272,30 @@ private fun ImageUploadBox(
             loadState = imageState.value.loadState,
             onRetryClicked = imageInteractions::onImageInserted,
         )
-        if (imageState.value.loadState == LoadState.LOADED || imageState.value.loadState == LoadState.ERROR) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+        ) {
+            if (imageState.value.loadState == LoadState.LOADED) {
+                TextField(
+                    modifier = Modifier.weight(1f),
+                    value = imageState.value.description,
+                    onValueChange = { imageInteractions.onImageDescriptionTextUpdated(imageState.key, it) },
+                    label = {
+                        Text(
+                            text = "Add a description"
+                        )
+                    },
+                    colors = transparentTextFieldColors(),
+                )
+            } else {
+                Spacer(modifier = Modifier.weight(1f))
+            }
+            IconButton(
+                onClick = {
+                    imageInteractions.onDeleteImageClicked(imageState.key)
+                }
             ) {
-                if (imageState.value.loadState == LoadState.LOADED) {
-                    TextField(
-                        modifier = Modifier.weight(1f),
-                        value = imageState.value.description,
-                        onValueChange = { imageInteractions.onImageDescriptionTextUpdated(imageState.key, it) },
-                        label = {
-                            Text(
-                                text = "Add a description"
-                            )
-                        },
-                        colors = transparentTextFieldColors(),
-                    )
-                } else {
-                    Spacer(modifier = Modifier.weight(1f))
-                }
-                IconButton(
-                    onClick = {
-                        imageInteractions.onImageRemoved(imageState.key)
-                    }
-                ) {
-                    Icon(Icons.Default.Delete, "delete")
-                }
+                Icon(Icons.Default.Delete, "delete")
             }
         }
     }

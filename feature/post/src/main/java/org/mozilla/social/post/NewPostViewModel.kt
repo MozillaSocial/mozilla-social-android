@@ -3,6 +3,7 @@ package org.mozilla.social.post
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -54,6 +55,8 @@ class NewPostViewModel(
             initialValue = true
         )
 
+    private val uploadJobs = mutableMapOf<Uri, Job>()
+
     fun onStatusTextUpdated(text: String) {
         _statusText.update { text }
     }
@@ -65,7 +68,8 @@ class NewPostViewModel(
         updateImageState(uri, description = text)
     }
 
-    override fun onImageRemoved(uri: Uri) {
+    override fun onDeleteImageClicked(uri: Uri) {
+        uploadJobs[uri]?.cancel()
         _imageStates.update {
             _imageStates.value.toMutableMap().apply { remove(uri) }
         }
@@ -86,7 +90,7 @@ class NewPostViewModel(
             }
         }
         updateImageState(uri, loadState = LoadState.LOADING)
-        viewModelScope.launch {
+        uploadJobs[uri] = viewModelScope.launch {
             try {
                 val imageId = mediaRepository.uploadImage(
                     file,
@@ -101,6 +105,10 @@ class NewPostViewModel(
                 log.e(e)
                 updateImageState(uri, loadState = LoadState.ERROR)
             }
+        }
+        uploadJobs[uri]?.invokeOnCompletion {
+            log.d("removed")
+            uploadJobs.remove(uri)
         }
     }
 
