@@ -61,6 +61,9 @@ class NewPostViewModel(
     private val _errorToastMessage = MutableSharedFlow<String>(extraBufferCapacity = 1)
     val errorToastMessage = _errorToastMessage.asSharedFlow()
 
+    private val _isSendingPost = MutableStateFlow(false)
+    val isSendingPost = _isSendingPost.asStateFlow()
+
     private val uploadJobs = mutableMapOf<Uri, Job>()
 
     fun onStatusTextUpdated(text: String) {
@@ -122,6 +125,7 @@ class NewPostViewModel(
 
     fun onPostClicked() {
         viewModelScope.launch {
+            _isSendingPost.update { true }
             try {
                 statusRepository.sendPost(
                     statusText = statusText.value,
@@ -131,6 +135,7 @@ class NewPostViewModel(
             } catch (e: Exception) {
                 log.e(e)
                 _errorToastMessage.emit("Error Sending Post")
+                _isSendingPost.update { false }
             }
         }
     }

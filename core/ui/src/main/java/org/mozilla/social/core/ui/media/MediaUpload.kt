@@ -2,10 +2,7 @@ package org.mozilla.social.core.ui.media
 
 import android.annotation.SuppressLint
 import android.net.Uri
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -24,7 +21,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
@@ -42,6 +38,8 @@ import org.mozilla.social.common.utils.FileType
 import org.mozilla.social.common.utils.getFileType
 import org.mozilla.social.common.utils.toFile
 import org.mozilla.social.core.designsystem.theme.FirefoxColor
+import org.mozilla.social.core.ui.NoTouchOverlay
+import org.mozilla.social.core.ui.TransparentOverlay
 import java.io.File
 
 @Composable
@@ -202,23 +200,5 @@ private fun Image(
         model = imageUri,
         contentDescription = "",
         contentScale = ContentScale.FillWidth,
-    )
-}
-
-@Composable
-private fun BoxScope.TransparentOverlay() {
-    Box(
-        modifier = Modifier
-            .matchParentSize()
-            .background(Color(0xAA000000)),
-    )
-}
-
-@Composable
-private fun BoxScope.NoTouchOverlay() {
-    Box(
-        modifier = Modifier
-            .matchParentSize()
-            .clickable { },
     )
 }

@@ -33,6 +33,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Send
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -62,6 +63,7 @@ import org.mozilla.social.common.LoadState
 import org.mozilla.social.common.utils.toFile
 import org.mozilla.social.core.designsystem.theme.MozillaSocialTheme
 import org.mozilla.social.core.designsystem.utils.NoIndication
+import org.mozilla.social.core.ui.TransparentNoTouchOverlay
 import org.mozilla.social.core.ui.media.MediaUpload
 import org.mozilla.social.core.ui.transparentTextFieldColors
 import org.mozilla.social.model.ImageState
@@ -82,7 +84,8 @@ internal fun NewPostRoute(
         sendButtonEnabled = viewModel.sendButtonEnabled.collectAsState().value,
         imageStates = viewModel.imageStates.collectAsState().value,
         addImageButtonEnabled = viewModel.addImageButtonEnabled.collectAsState().value,
-        imageInteractions = viewModel
+        imageInteractions = viewModel,
+        isSendingPost = viewModel.isSendingPost.collectAsState().value
     )
 
     val context = LocalContext.current
@@ -104,6 +107,7 @@ private fun NewPostScreen(
     imageStates: Map<Uri, ImageState>,
     addImageButtonEnabled: Boolean,
     imageInteractions: ImageInteractions,
+    isSendingPost: Boolean,
 ) {
     val context = LocalContext.current
     val multipleMediaLauncher = rememberLauncherForActivityResult(
@@ -120,37 +124,47 @@ private fun NewPostScreen(
     ) { uri ->
         uri?.let { imageInteractions.onImageInserted(it, it.toFile(context)) }
     }
-    Column(
-        modifier = Modifier.windowInsetsPadding(WindowInsets.ime.exclude(WindowInsets.navigationBars))
+    Box(
+        modifier = Modifier
+            .windowInsetsPadding(WindowInsets.ime.exclude(WindowInsets.navigationBars))
     ) {
-        TopBar(
-            onPostClicked = onPostClicked,
-            onCloseClicked = onCloseClicked,
-            sendButtonEnabled = sendButtonEnabled,
-        )
-        Box(
-            modifier = Modifier
-                .weight(1f)
-        ) {
-            MainBox(
-                statusText = statusText,
-                onStatusTextChanged = onStatusTextChanged,
-                imageStates = imageStates,
-                imageInteractions = imageInteractions,
+        Column {
+            TopBar(
+                onPostClicked = onPostClicked,
+                onCloseClicked = onCloseClicked,
+                sendButtonEnabled = sendButtonEnabled,
+            )
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+            ) {
+                MainBox(
+                    statusText = statusText,
+                    onStatusTextChanged = onStatusTextChanged,
+                    imageStates = imageStates,
+                    imageInteractions = imageInteractions,
+                )
+            }
+            BottomBar(
+                onUploadImageClicked = {
+                    val mediaRequest =
+                        PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageAndVideo)
+                    if (NewPostViewModel.MAX_IMAGES - imageStates.size <= 1) {
+                        singleMediaLauncher.launch(mediaRequest)
+                    } else {
+                        multipleMediaLauncher.launch(mediaRequest)
+                    }
+                },
+                addImageButtonEnabled = addImageButtonEnabled,
+                characterCount = statusText.count(),
             )
         }
-        BottomBar(
-            onUploadImageClicked = {
-                val mediaRequest = PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageAndVideo)
-                if (NewPostViewModel.MAX_IMAGES - imageStates.size <= 1) {
-                    singleMediaLauncher.launch(mediaRequest)
-                } else {
-                    multipleMediaLauncher.launch(mediaRequest)
-                }
-            },
-            addImageButtonEnabled = addImageButtonEnabled,
-            characterCount = statusText.count(),
-        )
+        if (isSendingPost) {
+            TransparentNoTouchOverlay()
+            CircularProgressIndicator(
+                modifier = Modifier.align(Alignment.Center)
+            )
+        }
     }
 }
 
@@ -346,7 +360,8 @@ private fun NewPostScreenPreview() {
             sendButtonEnabled = true,
             imageStates = mapOf(),
             addImageButtonEnabled = true,
-            imageInteractions = object : ImageInteractions {}
+            imageInteractions = object : ImageInteractions {},
+            isSendingPost = true,
         )
     }
 }
