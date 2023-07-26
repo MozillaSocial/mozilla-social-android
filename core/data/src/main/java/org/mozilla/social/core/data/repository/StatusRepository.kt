@@ -6,6 +6,7 @@ import org.mozilla.social.core.network.MastodonApi
 import org.mozilla.social.model.ImageState
 import org.mozilla.social.model.MediaUpdateRequestBody
 import org.mozilla.social.model.entity.StatusVisibility
+import org.mozilla.social.model.entity.request.PollCreate
 import org.mozilla.social.model.entity.request.StatusCreate
 
 class StatusRepository(
@@ -16,6 +17,7 @@ class StatusRepository(
         statusText: String,
         imageStates: List<ImageState>,
         visibility: StatusVisibility,
+        pollCreate: PollCreate?,
     ) {
         coroutineScope {
             // asynchronously update all attachment descriptions before sending post
@@ -36,8 +38,13 @@ class StatusRepository(
             mastodonApi.postStatus(
                 StatusCreate(
                     status = statusText,
-                    mediaIds = imageStates.mapNotNull { it.attachmentId },
+                    mediaIds = if (imageStates.isEmpty()) {
+                        null
+                    } else {
+                        imageStates.mapNotNull { it.attachmentId }
+                    },
                     visibility = visibility,
+                    poll = pollCreate
                 )
             )
         }

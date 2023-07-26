@@ -55,9 +55,9 @@ class PollDelegate : PollInteractions {
         ) }
     }
 
-    override fun onHideCountUntilEndClicked(enabled: Boolean) {
+    override fun onHideCountUntilEndClicked() {
         _poll.edit { this?.copy(
-            hideTotals = enabled
+            hideTotals = !hideTotals
         ) }
     }
 

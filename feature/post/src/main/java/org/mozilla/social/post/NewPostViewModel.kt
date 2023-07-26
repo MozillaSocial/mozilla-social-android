@@ -20,10 +20,13 @@ import org.mozilla.social.common.logging.Log
 import org.mozilla.social.core.data.repository.MediaRepository
 import org.mozilla.social.core.data.repository.StatusRepository
 import org.mozilla.social.model.ImageState
+import org.mozilla.social.model.entity.PollOption
 import org.mozilla.social.model.entity.StatusVisibility
+import org.mozilla.social.model.entity.request.PollCreate
 import org.mozilla.social.post.interactions.ImageInteractions
 import org.mozilla.social.post.interactions.PollInteractions
 import org.mozilla.social.post.poll.PollDelegate
+import org.mozilla.social.post.poll.PollStyle
 import java.io.File
 
 class NewPostViewModel(
@@ -153,6 +156,14 @@ class NewPostViewModel(
                     statusText = statusText.value,
                     imageStates = imageStates.value.values.toList(),
                     visibility = visibility.value,
+                    pollCreate = poll.value?.let { poll ->
+                        PollCreate(
+                            options = poll.options.map { PollOption(it) },
+                            expiresInSec = poll.pollDuration.inSeconds,
+                            allowMultipleChoices = poll.style == PollStyle.MULTIPLE_CHOICE,
+                            hideTotals = poll.hideTotals
+                        )
+                    }
                 )
                 onStatusPosted()
             } catch (e: Exception) {

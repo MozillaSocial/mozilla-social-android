@@ -38,6 +38,7 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Poll
 import androidx.compose.material.icons.filled.Send
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -63,6 +64,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 import org.mozilla.social.common.LoadState
@@ -458,6 +460,23 @@ private fun LazyListScope.Poll(
                 )
                 PollStyleDropDown(poll = poll, pollInteractions = pollInteractions)
             }
+        }
+        Row(
+            modifier = Modifier
+                .padding(start = 8.dp, top = 8.dp, end = 8.dp)
+                .clickable { pollInteractions.onHideCountUntilEndClicked() }
+        ) {
+            Checkbox(
+                modifier = Modifier.align(Alignment.CenterVertically),
+                checked = poll.hideTotals,
+                onCheckedChange = { pollInteractions.onHideCountUntilEndClicked() },
+            )
+            Text(
+                modifier = Modifier.align(Alignment.CenterVertically),
+                text = "Hide results until complete",
+                fontSize = 16.sp
+            )
+            Spacer(modifier = Modifier.width(8.dp))
         }
     }
 }

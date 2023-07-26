@@ -10,5 +10,5 @@ interface PollInteractions {
     fun onAddPollOptionClicked() = Unit
     fun onPollDurationChanged(pollDuration: PollDuration) = Unit
     fun onPollStyleChanged(style: PollStyle) = Unit
-    fun onHideCountUntilEndClicked(enabled: Boolean) = Unit
+    fun onHideCountUntilEndClicked() = Unit
 }

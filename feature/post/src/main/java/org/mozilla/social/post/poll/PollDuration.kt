@@ -1,7 +1,7 @@
 package org.mozilla.social.post.poll
 
 enum class PollDuration(
-    val inSeconds: Int,
+    val inSeconds: Long,
     val label: String
 ) {
     FIVE_MINUTES(300, "5 minutes"),
