@@ -173,7 +173,6 @@ fun VideoPlayer(
                     }
                 }
             ) {
-                //TODO get real mute / sound icons
                 if (muted.value) {
                     Icon(
                         imageVector = Icons.Default.VolumeMute,
