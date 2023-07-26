@@ -27,7 +27,7 @@ class PollDelegate : PollInteractions {
         ) }
     }
 
-    override fun onPollOptionDeleted(optionIndex: Int) {
+    override fun onPollOptionDeleteClicked(optionIndex: Int) {
         _poll.edit { this?.copy(
             options = options.toMutableList().apply {
                 removeAt(optionIndex)
@@ -43,13 +43,13 @@ class PollDelegate : PollInteractions {
         ) }
     }
 
-    override fun onPollDurationChanged(pollDuration: PollDuration) {
+    override fun onPollDurationSelected(pollDuration: PollDuration) {
         _poll.edit { this?.copy(
             pollDuration = pollDuration
         ) }
     }
 
-    override fun onPollStyleChanged(style: PollStyle) {
+    override fun onPollStyleSelected(style: PollStyle) {
         _poll.edit { this?.copy(
             style = style
         ) }

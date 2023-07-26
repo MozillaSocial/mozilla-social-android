@@ -48,10 +48,12 @@ class NewPostViewModel(
     val imageStates = _imageStates.asStateFlow()
 
     val sendButtonEnabled: StateFlow<Boolean> =
-        combine(statusText, imageStates) { statusText, imageStates ->
+        combine(statusText, imageStates, poll) { statusText, imageStates, poll ->
             (statusText.isNotBlank() || imageStates.isNotEmpty())
                     // all images are loaded
                     && imageStates.values.find { it.loadState != LoadState.LOADED } == null
+                    // poll options have text if they exist
+                    && poll?.options?.find { it.isBlank() } == null
         }.stateIn(
             scope = viewModelScope,
             started = SharingStarted.Lazily,

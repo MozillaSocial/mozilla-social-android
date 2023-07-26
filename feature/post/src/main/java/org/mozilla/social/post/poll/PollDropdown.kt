@@ -49,7 +49,7 @@ fun PollDurationDropDown(
                     Text(text = pollDuration.label)
                 },
                 onClick = {
-                    pollInteractions.onPollDurationChanged(pollDuration)
+                    pollInteractions.onPollDurationSelected(pollDuration)
                     expanded.value = false
                 }
             )

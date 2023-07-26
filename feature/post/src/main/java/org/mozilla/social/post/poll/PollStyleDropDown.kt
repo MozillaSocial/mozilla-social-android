@@ -49,7 +49,7 @@ fun PollStyleDropDown(
                     Text(text = pollStyle.label)
                 },
                 onClick = {
-                    pollInteractions.onPollStyleChanged(pollStyle)
+                    pollInteractions.onPollStyleSelected(pollStyle)
                     expanded.value = false
                 }
             )

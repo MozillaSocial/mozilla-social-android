@@ -36,6 +36,8 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.AddCircleOutline
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.DeleteForever
+import androidx.compose.material.icons.filled.DeleteOutline
 import androidx.compose.material.icons.filled.Poll
 import androidx.compose.material.icons.filled.Send
 import androidx.compose.material3.Checkbox
@@ -413,17 +415,40 @@ private fun LazyListScope.Poll(
     pollInteractions: PollInteractions,
 ) {
     items(poll.options.size) {index ->
-        OutlinedTextField(
+        val deleteEnabled = remember(poll) { poll.options.size > 2 }
+        Row(
             modifier = Modifier
-                .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 0.dp),
-            value = poll.options[index],
-            onValueChange = { pollInteractions.onPollOptionTextChanged(index, it) },
-            label = {
-                Text(
-                    text = "Choice ${index + 1}"
+                .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 0.dp)
+        ) {
+            OutlinedTextField(
+                modifier = Modifier
+                    .weight(1f)
+                    .align(Alignment.CenterVertically),
+                value = poll.options[index],
+                onValueChange = { pollInteractions.onPollOptionTextChanged(index, it) },
+                label = {
+                    Text(
+                        text = "Choice ${index + 1}"
+                    )
+                }
+            )
+            IconButton(
+                modifier = Modifier
+                    .align(Alignment.CenterVertically),
+                onClick = {
+                    pollInteractions.onPollOptionDeleteClicked(index)
+                },
+                enabled = deleteEnabled
+            ) {
+                Icon(
+                    modifier = Modifier
+                        .width(40.dp)
+                        .height(40.dp),
+                    imageVector = Icons.Default.DeleteOutline,
+                    contentDescription = "add poll option",
                 )
             }
-        )
+        }
     }
     item {
         Row(
