@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "org.mozilla.social.core.designsystem"
+    namespace = "org.mozilla.social.core.ui"
 
     defaultConfig {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -26,7 +26,8 @@ dependencies {
     implementation(project(":core:model"))
     implementation(project(":core:designsystem"))
     implementation(project(":core:common"))
-    implementation("com.google.android.material:material:1.9.0")
+
+    implementation(libs.google.material)
 
     implementation(libs.koin)
 
@@ -37,6 +38,7 @@ dependencies {
     // compose
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.compose.material3)
+    implementation(libs.androidx.compose.material.iconsExtended)
     implementation(libs.androidx.compose.ui.ui)
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)

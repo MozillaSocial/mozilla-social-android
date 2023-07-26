@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.VolumeMute
+import androidx.compose.material.icons.filled.VolumeUp
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
@@ -174,13 +176,13 @@ fun VideoPlayer(
                 //TODO get real mute / sound icons
                 if (muted.value) {
                     Icon(
-                        imageVector = Icons.Default.Check,
+                        imageVector = Icons.Default.VolumeMute,
                         contentDescription = null,
                         tint = FirefoxColor.White,
                     )
                 } else {
                     Icon(
-                        imageVector = Icons.Default.CheckCircle,
+                        imageVector = Icons.Default.VolumeUp,
                         contentDescription = null,
                         tint = FirefoxColor.White,
                     )
