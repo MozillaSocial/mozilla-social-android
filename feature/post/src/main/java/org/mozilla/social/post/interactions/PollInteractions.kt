@@ -1,13 +1,14 @@
 package org.mozilla.social.post.interactions
 
 import org.mozilla.social.post.poll.PollDuration
+import org.mozilla.social.post.poll.PollStyle
 
 interface PollInteractions {
-    fun onNewPollClicked()
-    fun onPollOptionTextChanged(optionIndex: Int, text: String)
-    fun onPollOptionDeleted(optionIndex: Int)
-    fun onAddPollOptionClicked()
-    fun onPollDurationChanged(pollDuration: PollDuration)
-    fun onPollStyleChanged(multipleChoice: Boolean)
-    fun onHideCountUntilEndClicked(enabled: Boolean)
+    fun onNewPollClicked() = Unit
+    fun onPollOptionTextChanged(optionIndex: Int, text: String) = Unit
+    fun onPollOptionDeleted(optionIndex: Int) = Unit
+    fun onAddPollOptionClicked() = Unit
+    fun onPollDurationChanged(pollDuration: PollDuration) = Unit
+    fun onPollStyleChanged(style: PollStyle) = Unit
+    fun onHideCountUntilEndClicked(enabled: Boolean) = Unit
 }

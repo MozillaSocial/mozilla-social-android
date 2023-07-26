@@ -36,6 +36,7 @@ class NewPostViewModel(
     ImageInteractions,
     PollInteractions by pollDelegate
 {
+    val poll = pollDelegate.poll
 
     private val _statusText = MutableStateFlow("")
     val statusText = _statusText.asStateFlow()
@@ -55,8 +56,17 @@ class NewPostViewModel(
         )
 
     val addImageButtonEnabled : StateFlow<Boolean> =
+        combine(imageStates, poll) { imageStates, poll ->
+            imageStates.size < MAX_IMAGES && poll == null
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.Lazily,
+            initialValue = true
+        )
+
+    val pollButtonEnabled : StateFlow<Boolean> =
         imageStates.map {
-            it.size < MAX_IMAGES
+            it.isEmpty()
         }.stateIn(
             scope = viewModelScope,
             started = SharingStarted.Lazily,

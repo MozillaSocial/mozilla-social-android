@@ -49,9 +49,9 @@ class PollDelegate : PollInteractions {
         ) }
     }
 
-    override fun onPollStyleChanged(multipleChoice: Boolean) {
+    override fun onPollStyleChanged(style: PollStyle) {
         _poll.edit { this?.copy(
-            multipleChoice = multipleChoice
+            style = style
         ) }
     }
 
@@ -67,7 +67,7 @@ class PollDelegate : PollInteractions {
             ""
         ),
         pollDuration = PollDuration.ONE_DAY,
-        multipleChoice = false,
+        style = PollStyle.SINGLE_CHOICE,
         hideTotals = false
     )
 }

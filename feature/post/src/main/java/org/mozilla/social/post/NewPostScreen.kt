@@ -11,6 +11,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.LocalIndication
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -25,32 +26,25 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.AddCircleOutline
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material.icons.filled.LockOpen
-import androidx.compose.material.icons.filled.Message
-import androidx.compose.material.icons.filled.Public
+import androidx.compose.material.icons.filled.Poll
 import androidx.compose.material.icons.filled.Send
-import androidx.compose.material.icons.filled.Web
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
-import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -76,6 +70,7 @@ import org.mozilla.social.common.utils.toFile
 import org.mozilla.social.core.designsystem.theme.MozillaSocialTheme
 import org.mozilla.social.core.designsystem.utils.NoIndication
 import org.mozilla.social.core.ui.TransparentNoTouchOverlay
+import org.mozilla.social.core.ui.VerticalDivider
 import org.mozilla.social.core.ui.VisibilityDropDownButton
 import org.mozilla.social.core.ui.media.MediaUpload
 import org.mozilla.social.core.ui.transparentTextFieldColors
@@ -83,6 +78,12 @@ import org.mozilla.social.model.ImageState
 import org.mozilla.social.model.entity.StatusVisibility
 import org.mozilla.social.post.NewPostViewModel.Companion.MAX_POST_LENGTH
 import org.mozilla.social.post.interactions.ImageInteractions
+import org.mozilla.social.post.interactions.PollInteractions
+import org.mozilla.social.post.poll.Poll
+import org.mozilla.social.post.poll.PollDuration
+import org.mozilla.social.post.poll.PollDurationDropDown
+import org.mozilla.social.post.poll.PollStyle
+import org.mozilla.social.post.poll.PollStyleDropDown
 
 @Composable
 internal fun NewPostRoute(
@@ -102,6 +103,9 @@ internal fun NewPostRoute(
         isSendingPost = viewModel.isSendingPost.collectAsState().value,
         visibility = viewModel.visibility.collectAsState().value,
         onVisibilitySelected = viewModel::onVisibilitySelected,
+        poll = viewModel.poll.collectAsState().value,
+        pollInteractions = viewModel,
+        pollButtonEnabled = viewModel.pollButtonEnabled.collectAsState().value,
     )
 
     val context = LocalContext.current
@@ -126,6 +130,9 @@ private fun NewPostScreen(
     isSendingPost: Boolean,
     visibility: StatusVisibility,
     onVisibilitySelected: (StatusVisibility) -> Unit,
+    poll: Poll?,
+    pollInteractions: PollInteractions,
+    pollButtonEnabled: Boolean,
 ) {
     val context = LocalContext.current
     val multipleMediaLauncher = rememberLauncherForActivityResult(
@@ -145,6 +152,7 @@ private fun NewPostScreen(
     Box(
         modifier = Modifier
             .windowInsetsPadding(WindowInsets.ime.exclude(WindowInsets.navigationBars))
+            .background(MaterialTheme.colorScheme.background)
     ) {
         Column {
             TopBar(
@@ -163,6 +171,8 @@ private fun NewPostScreen(
                     onStatusTextChanged = onStatusTextChanged,
                     imageStates = imageStates,
                     imageInteractions = imageInteractions,
+                    poll = poll,
+                    pollInteractions = pollInteractions,
                 )
             }
             BottomBar(
@@ -177,6 +187,8 @@ private fun NewPostScreen(
                 },
                 addImageButtonEnabled = addImageButtonEnabled,
                 characterCount = statusText.count(),
+                pollInteractions = pollInteractions,
+                pollButtonEnabled = pollButtonEnabled,
             )
         }
         if (isSendingPost) {
@@ -239,6 +251,8 @@ private fun BottomBar(
     onUploadImageClicked: () -> Unit,
     addImageButtonEnabled: Boolean,
     characterCount: Int,
+    pollInteractions: PollInteractions,
+    pollButtonEnabled: Boolean,
 ) {
     val characterCountText = remember(characterCount) { "${MAX_POST_LENGTH - characterCount}" }
     Column {
@@ -260,6 +274,12 @@ private fun BottomBar(
                 ) {
                     Icon(Icons.Default.Add, "attach image")
                 }
+                IconButton(
+                    onClick = { pollInteractions.onNewPollClicked() },
+                    enabled = pollButtonEnabled,
+                ) {
+                    Icon(Icons.Default.Poll, "attach image")
+                }
             }
             // right row
             Row(
@@ -280,6 +300,8 @@ private fun MainBox(
     onStatusTextChanged: (String) -> Unit,
     imageStates: Map<Uri, ImageState>,
     imageInteractions: ImageInteractions,
+    poll: Poll?,
+    pollInteractions: PollInteractions,
 ) {
     val localIndication = LocalIndication.current
     // disable ripple on click for the background
@@ -316,6 +338,9 @@ private fun MainBox(
                             colors = transparentTextFieldColors()
                         )
                     }
+
+                    poll?.let { Poll(poll = poll, pollInteractions = pollInteractions) }
+
                     items(imageStates.size) { index ->
                         ImageUploadBox(
                             imageState = imageStates.entries.elementAt(index),
@@ -381,6 +406,62 @@ private fun ImageUploadBox(
     }
 }
 
+private fun LazyListScope.Poll(
+    poll: Poll,
+    pollInteractions: PollInteractions,
+) {
+    items(poll.options.size) {index ->
+        OutlinedTextField(
+            modifier = Modifier
+                .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 0.dp),
+            value = poll.options[index],
+            onValueChange = { pollInteractions.onPollOptionTextChanged(index, it) },
+            label = {
+                Text(
+                    text = "Choice ${index + 1}"
+                )
+            }
+        )
+    }
+    item {
+        Row(
+            modifier = Modifier
+                .padding(start = 8.dp, end = 16.dp, top = 16.dp, bottom = 0.dp),
+        ) {
+            IconButton(
+                onClick = {
+                    pollInteractions.onAddPollOptionClicked()
+                }
+            ) {
+                Icon(
+                    modifier = Modifier
+                        .width(40.dp)
+                        .height(40.dp),
+                    imageVector = Icons.Default.AddCircleOutline,
+                    contentDescription = "add poll option",
+                )
+            }
+
+            Row(
+                modifier = Modifier.padding(top = 4.dp)
+            ) {
+                VerticalDivider(
+                    modifier = Modifier
+                        .padding(start = 8.dp, end = 8.dp)
+                        .height(40.dp)
+                )
+                PollDurationDropDown(poll = poll, pollInteractions = pollInteractions)
+                VerticalDivider(
+                    modifier = Modifier
+                        .padding(start = 8.dp, end = 8.dp)
+                        .height(40.dp)
+                )
+                PollStyleDropDown(poll = poll, pollInteractions = pollInteractions)
+            }
+        }
+    }
+}
+
 @Preview
 @Composable
 private fun NewPostScreenPreview() {
@@ -396,7 +477,15 @@ private fun NewPostScreenPreview() {
             imageInteractions = object : ImageInteractions {},
             isSendingPost = false,
             visibility = StatusVisibility.Private,
-            onVisibilitySelected = {}
+            onVisibilitySelected = {},
+            poll = Poll(
+                options = listOf("option 1", "option 2"),
+                style = PollStyle.SINGLE_CHOICE,
+                pollDuration = PollDuration.ONE_DAY,
+                hideTotals = false
+            ),
+            pollInteractions = object : PollInteractions {},
+            pollButtonEnabled = true
         )
     }
 }
