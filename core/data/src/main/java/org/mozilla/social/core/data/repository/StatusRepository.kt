@@ -5,6 +5,7 @@ import kotlinx.coroutines.coroutineScope
 import org.mozilla.social.core.network.MastodonApi
 import org.mozilla.social.model.ImageState
 import org.mozilla.social.model.MediaUpdateRequestBody
+import org.mozilla.social.model.entity.StatusVisibility
 import org.mozilla.social.model.entity.request.StatusCreate
 
 class StatusRepository(
@@ -14,6 +15,7 @@ class StatusRepository(
     suspend fun sendPost(
         statusText: String,
         imageStates: List<ImageState>,
+        visibility: StatusVisibility,
     ) {
         coroutineScope {
             // asynchronously update all attachment descriptions before sending post
@@ -34,7 +36,8 @@ class StatusRepository(
             mastodonApi.postStatus(
                 StatusCreate(
                     status = statusText,
-                    mediaIds = imageStates.mapNotNull { it.attachmentId }
+                    mediaIds = imageStates.mapNotNull { it.attachmentId },
+                    visibility = visibility,
                 )
             )
         }

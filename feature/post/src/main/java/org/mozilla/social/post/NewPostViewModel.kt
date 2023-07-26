@@ -3,10 +3,14 @@ package org.mozilla.social.post
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
@@ -18,6 +22,7 @@ import org.mozilla.social.common.logging.Log
 import org.mozilla.social.core.data.repository.MediaRepository
 import org.mozilla.social.core.data.repository.StatusRepository
 import org.mozilla.social.model.ImageState
+import org.mozilla.social.model.entity.StatusVisibility
 import org.mozilla.social.post.interactions.ImageInteractions
 import java.io.File
 
@@ -29,10 +34,10 @@ class NewPostViewModel(
 ) : ViewModel(), ImageInteractions {
 
     private val _statusText = MutableStateFlow("")
-    val statusText: StateFlow<String> = _statusText
+    val statusText = _statusText.asStateFlow()
 
     private val _imageStates = MutableStateFlow<Map<Uri, ImageState>>(emptyMap())
-    val imageStates: StateFlow<Map<Uri, ImageState>> = _imageStates
+    val imageStates = _imageStates.asStateFlow()
 
     val sendButtonEnabled: StateFlow<Boolean> =
         combine(statusText, imageStates) { statusText, imageStates ->
@@ -54,7 +59,19 @@ class NewPostViewModel(
             initialValue = true
         )
 
+    private val _errorToastMessage = MutableSharedFlow<String>(extraBufferCapacity = 1)
+    val errorToastMessage = _errorToastMessage.asSharedFlow()
+
+    private val _isSendingPost = MutableStateFlow(false)
+    val isSendingPost = _isSendingPost.asStateFlow()
+
+    private val _visibility = MutableStateFlow(StatusVisibility.Public)
+    val visibility = _visibility.asStateFlow()
+
+    private val uploadJobs = mutableMapOf<Uri, Job>()
+
     fun onStatusTextUpdated(text: String) {
+        if (text.length > MAX_POST_LENGTH) return
         _statusText.update { text }
     }
 
@@ -62,10 +79,12 @@ class NewPostViewModel(
         uri: Uri,
         text: String,
     ) {
+        if (text.length > MAX_POST_LENGTH) return
         updateImageState(uri, description = text)
     }
 
-    override fun onImageRemoved(uri: Uri) {
+    override fun onDeleteImageClicked(uri: Uri) {
+        uploadJobs[uri]?.cancel()
         _imageStates.update {
             _imageStates.value.toMutableMap().apply { remove(uri) }
         }
@@ -86,7 +105,7 @@ class NewPostViewModel(
             }
         }
         updateImageState(uri, loadState = LoadState.LOADING)
-        viewModelScope.launch {
+        uploadJobs[uri] = viewModelScope.launch {
             try {
                 val imageId = mediaRepository.uploadImage(
                     file,
@@ -102,15 +121,31 @@ class NewPostViewModel(
                 updateImageState(uri, loadState = LoadState.ERROR)
             }
         }
+        uploadJobs[uri]?.invokeOnCompletion {
+            log.d("removed")
+            uploadJobs.remove(uri)
+        }
+    }
+
+    fun onVisibilitySelected(statusVisibility: StatusVisibility) {
+        _visibility.update { statusVisibility }
     }
 
     fun onPostClicked() {
         viewModelScope.launch {
-            statusRepository.sendPost(
-                statusText = statusText.value,
-                imageStates = imageStates.value.values.toList()
-            )
-            onStatusPosted()
+            _isSendingPost.update { true }
+            try {
+                statusRepository.sendPost(
+                    statusText = statusText.value,
+                    imageStates = imageStates.value.values.toList(),
+                    visibility = visibility.value,
+                )
+                onStatusPosted()
+            } catch (e: Exception) {
+                log.e(e)
+                _errorToastMessage.emit("Error Sending Post")
+                _isSendingPost.update { false }
+            }
         }
     }
 
@@ -140,5 +175,6 @@ class NewPostViewModel(
          * This number is defined by the mastodon API
          */
         const val MAX_IMAGES = 4
+        const val MAX_POST_LENGTH = 500
     }
 }

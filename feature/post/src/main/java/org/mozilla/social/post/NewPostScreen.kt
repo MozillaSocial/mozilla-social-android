@@ -6,6 +6,7 @@
 package org.mozilla.social.post
 
 import android.net.Uri
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -24,26 +25,38 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBars
-import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.LockOpen
+import androidx.compose.material.icons.filled.Message
+import androidx.compose.material.icons.filled.Public
 import androidx.compose.material.icons.filled.Send
+import androidx.compose.material.icons.filled.Web
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
+import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -62,9 +75,13 @@ import org.mozilla.social.common.LoadState
 import org.mozilla.social.common.utils.toFile
 import org.mozilla.social.core.designsystem.theme.MozillaSocialTheme
 import org.mozilla.social.core.designsystem.utils.NoIndication
+import org.mozilla.social.core.ui.TransparentNoTouchOverlay
+import org.mozilla.social.core.ui.VisibilityDropDownButton
 import org.mozilla.social.core.ui.media.MediaUpload
 import org.mozilla.social.core.ui.transparentTextFieldColors
 import org.mozilla.social.model.ImageState
+import org.mozilla.social.model.entity.StatusVisibility
+import org.mozilla.social.post.NewPostViewModel.Companion.MAX_POST_LENGTH
 import org.mozilla.social.post.interactions.ImageInteractions
 
 @Composable
@@ -81,8 +98,19 @@ internal fun NewPostRoute(
         sendButtonEnabled = viewModel.sendButtonEnabled.collectAsState().value,
         imageStates = viewModel.imageStates.collectAsState().value,
         addImageButtonEnabled = viewModel.addImageButtonEnabled.collectAsState().value,
-        imageInteractions = viewModel
+        imageInteractions = viewModel,
+        isSendingPost = viewModel.isSendingPost.collectAsState().value,
+        visibility = viewModel.visibility.collectAsState().value,
+        onVisibilitySelected = viewModel::onVisibilitySelected,
     )
+
+    val context = LocalContext.current
+
+    LaunchedEffect(Unit) {
+        viewModel.errorToastMessage.collect {
+            Toast.makeText(context, it, Toast.LENGTH_LONG).show()
+        }
+    }
 }
 
 @Composable
@@ -95,6 +123,9 @@ private fun NewPostScreen(
     imageStates: Map<Uri, ImageState>,
     addImageButtonEnabled: Boolean,
     imageInteractions: ImageInteractions,
+    isSendingPost: Boolean,
+    visibility: StatusVisibility,
+    onVisibilitySelected: (StatusVisibility) -> Unit,
 ) {
     val context = LocalContext.current
     val multipleMediaLauncher = rememberLauncherForActivityResult(
@@ -111,36 +142,49 @@ private fun NewPostScreen(
     ) { uri ->
         uri?.let { imageInteractions.onImageInserted(it, it.toFile(context)) }
     }
-    Column(
-        modifier = Modifier.windowInsetsPadding(WindowInsets.ime.exclude(WindowInsets.navigationBars))
+    Box(
+        modifier = Modifier
+            .windowInsetsPadding(WindowInsets.ime.exclude(WindowInsets.navigationBars))
     ) {
-        TopBar(
-            onPostClicked = onPostClicked,
-            onCloseClicked = onCloseClicked,
-            sendButtonEnabled = sendButtonEnabled,
-        )
-        Box(
-            modifier = Modifier
-                .weight(1f)
-        ) {
-            MainBox(
-                statusText = statusText,
-                onStatusTextChanged = onStatusTextChanged,
-                imageStates = imageStates,
-                imageInteractions = imageInteractions,
+        Column {
+            TopBar(
+                onPostClicked = onPostClicked,
+                onCloseClicked = onCloseClicked,
+                sendButtonEnabled = sendButtonEnabled,
+                visibility = visibility,
+                onVisibilitySelected = onVisibilitySelected,
+            )
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+            ) {
+                MainBox(
+                    statusText = statusText,
+                    onStatusTextChanged = onStatusTextChanged,
+                    imageStates = imageStates,
+                    imageInteractions = imageInteractions,
+                )
+            }
+            BottomBar(
+                onUploadImageClicked = {
+                    val mediaRequest =
+                        PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageAndVideo)
+                    if (NewPostViewModel.MAX_IMAGES - imageStates.size <= 1) {
+                        singleMediaLauncher.launch(mediaRequest)
+                    } else {
+                        multipleMediaLauncher.launch(mediaRequest)
+                    }
+                },
+                addImageButtonEnabled = addImageButtonEnabled,
+                characterCount = statusText.count(),
             )
         }
-        BottomBar(
-            onUploadImageClicked = {
-                val mediaRequest = PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageAndVideo)
-                if (NewPostViewModel.MAX_IMAGES - imageStates.size <= 1) {
-                    singleMediaLauncher.launch(mediaRequest)
-                } else {
-                    multipleMediaLauncher.launch(mediaRequest)
-                }
-            },
-            addImageButtonEnabled = addImageButtonEnabled,
-        )
+        if (isSendingPost) {
+            TransparentNoTouchOverlay()
+            CircularProgressIndicator(
+                modifier = Modifier.align(Alignment.Center)
+            )
+        }
     }
 }
 
@@ -149,22 +193,39 @@ private fun TopBar(
     onPostClicked: () -> Unit,
     onCloseClicked: () -> Unit,
     sendButtonEnabled: Boolean,
+    visibility: StatusVisibility,
+    onVisibilitySelected: (StatusVisibility) -> Unit,
 ) {
     Column {
         Box(
             modifier = Modifier.fillMaxWidth()
         ) {
+            // left side
             IconButton(
                 onClick = { onCloseClicked() },
             ) {
                 Icon(Icons.Default.Close, "close")
             }
-            IconButton(
+
+            // right side
+            Row(
                 modifier = Modifier.align(Alignment.CenterEnd),
-                enabled = sendButtonEnabled,
-                onClick = { onPostClicked() },
             ) {
-                Icon(Icons.Default.Send, "post")
+                VisibilityDropDownButton(
+                    visibility = visibility,
+                    onVisibilitySelected = onVisibilitySelected,
+                )
+                Spacer(modifier = Modifier.padding(start = 16.dp))
+                val keyboard = LocalSoftwareKeyboardController.current
+                IconButton(
+                    enabled = sendButtonEnabled,
+                    onClick = {
+                        onPostClicked()
+                        keyboard?.hide()
+                    },
+                ) {
+                    Icon(Icons.Default.Send, "post")
+                }
             }
         }
         Divider(
@@ -177,19 +238,36 @@ private fun TopBar(
 private fun BottomBar(
     onUploadImageClicked: () -> Unit,
     addImageButtonEnabled: Boolean,
+    characterCount: Int,
 ) {
+    val characterCountText = remember(characterCount) { "${MAX_POST_LENGTH - characterCount}" }
     Column {
         Divider(
             color = MaterialTheme.colorScheme.outlineVariant
         )
-        Row(
-            modifier = Modifier.height(60.dp)
+        Box(
+            modifier = Modifier
+                .height(60.dp)
+                .fillMaxWidth()
         ) {
-            IconButton(
-                onClick = { onUploadImageClicked() },
-                enabled = addImageButtonEnabled,
+            // left row
+            Row(
+                modifier = Modifier.align(Alignment.CenterStart)
             ) {
-                Icon(Icons.Default.Add, "attach image")
+                IconButton(
+                    onClick = { onUploadImageClicked() },
+                    enabled = addImageButtonEnabled,
+                ) {
+                    Icon(Icons.Default.Add, "attach image")
+                }
+            }
+            // right row
+            Row(
+                modifier = Modifier
+                    .align(Alignment.CenterEnd)
+                    .padding(end = 16.dp)
+            ) {
+                Text(text = characterCountText)
             }
         }
     }
@@ -274,32 +352,30 @@ private fun ImageUploadBox(
             loadState = imageState.value.loadState,
             onRetryClicked = imageInteractions::onImageInserted,
         )
-        if (imageState.value.loadState == LoadState.LOADED || imageState.value.loadState == LoadState.ERROR) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+        ) {
+            if (imageState.value.loadState == LoadState.LOADED) {
+                TextField(
+                    modifier = Modifier.weight(1f),
+                    value = imageState.value.description,
+                    onValueChange = { imageInteractions.onImageDescriptionTextUpdated(imageState.key, it) },
+                    label = {
+                        Text(
+                            text = "Add a description"
+                        )
+                    },
+                    colors = transparentTextFieldColors(),
+                )
+            } else {
+                Spacer(modifier = Modifier.weight(1f))
+            }
+            IconButton(
+                onClick = {
+                    imageInteractions.onDeleteImageClicked(imageState.key)
+                }
             ) {
-                if (imageState.value.loadState == LoadState.LOADED) {
-                    TextField(
-                        modifier = Modifier.weight(1f),
-                        value = imageState.value.description,
-                        onValueChange = { imageInteractions.onImageDescriptionTextUpdated(imageState.key, it) },
-                        label = {
-                            Text(
-                                text = "Add a description"
-                            )
-                        },
-                        colors = transparentTextFieldColors(),
-                    )
-                } else {
-                    Spacer(modifier = Modifier.weight(1f))
-                }
-                IconButton(
-                    onClick = {
-                        imageInteractions.onImageRemoved(imageState.key)
-                    }
-                ) {
-                    Icon(Icons.Default.Delete, "delete")
-                }
+                Icon(Icons.Default.Delete, "delete")
             }
         }
     }
@@ -317,7 +393,10 @@ private fun NewPostScreenPreview() {
             sendButtonEnabled = true,
             imageStates = mapOf(),
             addImageButtonEnabled = true,
-            imageInteractions = object : ImageInteractions {}
+            imageInteractions = object : ImageInteractions {},
+            isSendingPost = false,
+            visibility = StatusVisibility.Private,
+            onVisibilitySelected = {}
         )
     }
 }
