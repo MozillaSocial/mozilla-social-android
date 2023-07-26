@@ -36,3 +36,6 @@ To update Kotlin/Compose compiler:
 * Manually push a commit to renovate's branch to also update Kotlin to
   [a matching version](https://developer.android.com/jetpack/androidx/releases/compose-kotlin).
 * Then the branch should compile. Review, test and verify as normal and then merge.
+
+Here's an example PR upgrading Compose compiler to 1.5.0 and Kotlin to 1.9.0:
+https://github.com/Pocket/MozillaSocialAndroid/pull/59
