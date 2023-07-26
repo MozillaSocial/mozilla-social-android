@@ -30,15 +30,27 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.LockOpen
+import androidx.compose.material.icons.filled.Message
+import androidx.compose.material.icons.filled.Public
 import androidx.compose.material.icons.filled.Send
+import androidx.compose.material.icons.filled.Web
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
+import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -64,9 +76,11 @@ import org.mozilla.social.common.utils.toFile
 import org.mozilla.social.core.designsystem.theme.MozillaSocialTheme
 import org.mozilla.social.core.designsystem.utils.NoIndication
 import org.mozilla.social.core.ui.TransparentNoTouchOverlay
+import org.mozilla.social.core.ui.VisibilityDropDownButton
 import org.mozilla.social.core.ui.media.MediaUpload
 import org.mozilla.social.core.ui.transparentTextFieldColors
 import org.mozilla.social.model.ImageState
+import org.mozilla.social.model.entity.StatusVisibility
 import org.mozilla.social.post.NewPostViewModel.Companion.MAX_POST_LENGTH
 import org.mozilla.social.post.interactions.ImageInteractions
 
@@ -85,7 +99,9 @@ internal fun NewPostRoute(
         imageStates = viewModel.imageStates.collectAsState().value,
         addImageButtonEnabled = viewModel.addImageButtonEnabled.collectAsState().value,
         imageInteractions = viewModel,
-        isSendingPost = viewModel.isSendingPost.collectAsState().value
+        isSendingPost = viewModel.isSendingPost.collectAsState().value,
+        visibility = viewModel.visibility.collectAsState().value,
+        onVisibilitySelected = viewModel::onVisibilitySelected,
     )
 
     val context = LocalContext.current
@@ -108,6 +124,8 @@ private fun NewPostScreen(
     addImageButtonEnabled: Boolean,
     imageInteractions: ImageInteractions,
     isSendingPost: Boolean,
+    visibility: StatusVisibility,
+    onVisibilitySelected: (StatusVisibility) -> Unit,
 ) {
     val context = LocalContext.current
     val multipleMediaLauncher = rememberLauncherForActivityResult(
@@ -133,6 +151,8 @@ private fun NewPostScreen(
                 onPostClicked = onPostClicked,
                 onCloseClicked = onCloseClicked,
                 sendButtonEnabled = sendButtonEnabled,
+                visibility = visibility,
+                onVisibilitySelected = onVisibilitySelected,
             )
             Box(
                 modifier = Modifier
@@ -173,26 +193,39 @@ private fun TopBar(
     onPostClicked: () -> Unit,
     onCloseClicked: () -> Unit,
     sendButtonEnabled: Boolean,
+    visibility: StatusVisibility,
+    onVisibilitySelected: (StatusVisibility) -> Unit,
 ) {
     Column {
         Box(
             modifier = Modifier.fillMaxWidth()
         ) {
+            // left side
             IconButton(
                 onClick = { onCloseClicked() },
             ) {
                 Icon(Icons.Default.Close, "close")
             }
-            val keyboard = LocalSoftwareKeyboardController.current
-            IconButton(
+
+            // right side
+            Row(
                 modifier = Modifier.align(Alignment.CenterEnd),
-                enabled = sendButtonEnabled,
-                onClick = {
-                    onPostClicked()
-                    keyboard?.hide()
-                },
             ) {
-                Icon(Icons.Default.Send, "post")
+                VisibilityDropDownButton(
+                    visibility = visibility,
+                    onVisibilitySelected = onVisibilitySelected,
+                )
+                Spacer(modifier = Modifier.padding(start = 16.dp))
+                val keyboard = LocalSoftwareKeyboardController.current
+                IconButton(
+                    enabled = sendButtonEnabled,
+                    onClick = {
+                        onPostClicked()
+                        keyboard?.hide()
+                    },
+                ) {
+                    Icon(Icons.Default.Send, "post")
+                }
             }
         }
         Divider(
@@ -361,7 +394,9 @@ private fun NewPostScreenPreview() {
             imageStates = mapOf(),
             addImageButtonEnabled = true,
             imageInteractions = object : ImageInteractions {},
-            isSendingPost = true,
+            isSendingPost = false,
+            visibility = StatusVisibility.Private,
+            onVisibilitySelected = {}
         )
     }
 }

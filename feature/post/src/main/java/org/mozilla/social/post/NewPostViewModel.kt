@@ -22,6 +22,7 @@ import org.mozilla.social.common.logging.Log
 import org.mozilla.social.core.data.repository.MediaRepository
 import org.mozilla.social.core.data.repository.StatusRepository
 import org.mozilla.social.model.ImageState
+import org.mozilla.social.model.entity.StatusVisibility
 import org.mozilla.social.post.interactions.ImageInteractions
 import java.io.File
 
@@ -63,6 +64,9 @@ class NewPostViewModel(
 
     private val _isSendingPost = MutableStateFlow(false)
     val isSendingPost = _isSendingPost.asStateFlow()
+
+    private val _visibility = MutableStateFlow(StatusVisibility.Public)
+    val visibility = _visibility.asStateFlow()
 
     private val uploadJobs = mutableMapOf<Uri, Job>()
 
@@ -123,13 +127,18 @@ class NewPostViewModel(
         }
     }
 
+    fun onVisibilitySelected(statusVisibility: StatusVisibility) {
+        _visibility.update { statusVisibility }
+    }
+
     fun onPostClicked() {
         viewModelScope.launch {
             _isSendingPost.update { true }
             try {
                 statusRepository.sendPost(
                     statusText = statusText.value,
-                    imageStates = imageStates.value.values.toList()
+                    imageStates = imageStates.value.values.toList(),
+                    visibility = visibility.value,
                 )
                 onStatusPosted()
             } catch (e: Exception) {
