@@ -4,7 +4,6 @@ import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -14,7 +13,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.mozilla.social.common.LoadState
@@ -24,6 +22,8 @@ import org.mozilla.social.core.data.repository.StatusRepository
 import org.mozilla.social.model.ImageState
 import org.mozilla.social.model.entity.StatusVisibility
 import org.mozilla.social.post.interactions.ImageInteractions
+import org.mozilla.social.post.interactions.PollInteractions
+import org.mozilla.social.post.poll.PollDelegate
 import java.io.File
 
 class NewPostViewModel(
@@ -31,7 +31,11 @@ class NewPostViewModel(
     private val mediaRepository: MediaRepository,
     private val log: Log,
     private val onStatusPosted: () -> Unit,
-) : ViewModel(), ImageInteractions {
+    private val pollDelegate: PollDelegate = PollDelegate()
+) : ViewModel(),
+    ImageInteractions,
+    PollInteractions by pollDelegate
+{
 
     private val _statusText = MutableStateFlow("")
     val statusText = _statusText.asStateFlow()
