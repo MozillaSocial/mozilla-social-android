@@ -160,7 +160,7 @@ class NewPostViewModel(
                     visibility = visibility.value,
                     pollCreate = poll.value?.let { poll ->
                         PollCreate(
-                            options = poll.options.map { PollOption(it) },
+                            options = poll.options,
                             expiresInSec = poll.pollDuration.inSeconds,
                             allowMultipleChoices = poll.style == PollStyle.MULTIPLE_CHOICE,
                             hideTotals = poll.hideTotals
@@ -203,5 +203,7 @@ class NewPostViewModel(
          */
         const val MAX_IMAGES = 4
         const val MAX_POST_LENGTH = 500
+        const val MAX_POLL_COUNT = 4
+        const val MIN_POLL_COUNT = 2
     }
 }

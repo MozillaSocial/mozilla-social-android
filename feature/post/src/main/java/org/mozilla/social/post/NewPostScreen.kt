@@ -80,7 +80,9 @@ import org.mozilla.social.core.ui.media.MediaUpload
 import org.mozilla.social.core.ui.transparentTextFieldColors
 import org.mozilla.social.model.ImageState
 import org.mozilla.social.model.entity.StatusVisibility
+import org.mozilla.social.post.NewPostViewModel.Companion.MAX_POLL_COUNT
 import org.mozilla.social.post.NewPostViewModel.Companion.MAX_POST_LENGTH
+import org.mozilla.social.post.NewPostViewModel.Companion.MIN_POLL_COUNT
 import org.mozilla.social.post.interactions.ImageInteractions
 import org.mozilla.social.post.interactions.PollInteractions
 import org.mozilla.social.post.poll.Poll
@@ -415,7 +417,7 @@ private fun LazyListScope.Poll(
     pollInteractions: PollInteractions,
 ) {
     items(poll.options.size) {index ->
-        val deleteEnabled = remember(poll) { poll.options.size > 2 }
+        val deleteEnabled = remember(poll) { poll.options.size > MIN_POLL_COUNT }
         Row(
             modifier = Modifier
                 .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 0.dp)
@@ -455,10 +457,12 @@ private fun LazyListScope.Poll(
             modifier = Modifier
                 .padding(start = 8.dp, end = 16.dp, top = 16.dp, bottom = 0.dp),
         ) {
+            val addNewOptionEnabled = remember(poll) { poll.options.size < MAX_POLL_COUNT }
             IconButton(
                 onClick = {
                     pollInteractions.onAddPollOptionClicked()
-                }
+                },
+                enabled = addNewOptionEnabled,
             ) {
                 Icon(
                     modifier = Modifier
