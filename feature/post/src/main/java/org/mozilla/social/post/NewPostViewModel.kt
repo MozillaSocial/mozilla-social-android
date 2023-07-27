@@ -1,5 +1,6 @@
 package org.mozilla.social.post
 
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -51,12 +52,12 @@ class NewPostViewModel(
     val contentWarningText = contentWarningDelegate.contentWarningText
     val imageStates = mediaDelegate.imageStates
 
-    private val _statusText = MutableStateFlow("")
+    private val _statusText = MutableStateFlow(TextFieldValue(""))
     val statusText = _statusText.asStateFlow()
 
     val sendButtonEnabled: StateFlow<Boolean> =
         combine(statusText, imageStates, poll) { statusText, imageStates, poll ->
-            (statusText.isNotBlank() || imageStates.isNotEmpty())
+            (statusText.text.isNotBlank() || imageStates.isNotEmpty())
                     // all images are loaded
                     && imageStates.values.find { it.loadState != LoadState.LOADED } == null
                     // poll options have text if they exist
@@ -94,13 +95,14 @@ class NewPostViewModel(
     private val _visibility = MutableStateFlow(StatusVisibility.Public)
     val visibility = _visibility.asStateFlow()
 
-    fun onStatusTextUpdated(text: String) {
-        if (text.length + (contentWarningText.value?.length ?: 0) > MAX_POST_LENGTH) return
-        _statusText.update { text }
+    fun onStatusTextUpdated(textFieldValue: TextFieldValue) {
+        if (textFieldValue.text.length + (contentWarningText.value?.length ?: 0) > MAX_POST_LENGTH) return
+        _statusText.update { textFieldValue }
+        
     }
 
     override fun onContentWarningTextChanged(text: String) {
-        if (text.length + statusText.value.length > MAX_POST_LENGTH) return
+        if (text.length + statusText.value.text.length > MAX_POST_LENGTH) return
         contentWarningDelegate.onContentWarningTextChanged(text)
     }
 
@@ -113,7 +115,7 @@ class NewPostViewModel(
             _isSendingPost.update { true }
             try {
                 statusRepository.sendPost(
-                    statusText = statusText.value,
+                    statusText = statusText.value.text,
                     imageStates = imageStates.value.values.toList(),
                     visibility = visibility.value,
                     pollCreate = poll.value?.let { poll ->

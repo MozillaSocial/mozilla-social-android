@@ -65,6 +65,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -129,8 +130,8 @@ internal fun NewPostRoute(
 
 @Composable
 private fun NewPostScreen(
-    statusText: String,
-    onStatusTextChanged: (String) -> Unit,
+    statusText: TextFieldValue,
+    onStatusTextChanged: (TextFieldValue) -> Unit,
     onPostClicked: () -> Unit,
     onCloseClicked: () -> Unit,
     sendButtonEnabled: Boolean,
@@ -200,7 +201,7 @@ private fun NewPostScreen(
                     }
                 },
                 addImageButtonEnabled = addImageButtonEnabled,
-                statusText = statusText,
+                statusText = statusText.text,
                 contentWarningText = contentWarningText,
                 pollInteractions = pollInteractions,
                 pollButtonEnabled = pollButtonEnabled,
@@ -329,8 +330,8 @@ private fun BottomBar(
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 private fun MainBox(
-    statusText: String,
-    onStatusTextChanged: (String) -> Unit,
+    statusText: TextFieldValue,
+    onStatusTextChanged: (TextFieldValue) -> Unit,
     imageStates: Map<Uri, ImageState>,
     mediaInteractions: MediaInteractions,
     poll: Poll?,
@@ -586,8 +587,8 @@ private fun PollSettings(
 private fun NewPostScreenPreview() {
     MozillaSocialTheme {
         NewPostScreen(
-            statusText = "",
-            onStatusTextChanged = {},
+            statusText = TextFieldValue(),
+            onStatusTextChanged = { },
             onPostClicked = {},
             onCloseClicked = {},
             sendButtonEnabled = true,
