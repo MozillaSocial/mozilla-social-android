@@ -5,7 +5,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import org.mozilla.social.post.interactions.ContentWarningInteractions
 
-class ContentWarningDelegate : ContentWarningInteractions {
+class ContentWarningDelegate(
+
+) : ContentWarningInteractions {
 
     private val _contentWarningText = MutableStateFlow<String?>(null)
     val contentWarningText = _contentWarningText.asStateFlow()
@@ -19,6 +21,11 @@ class ContentWarningDelegate : ContentWarningInteractions {
     }
 
     override fun onContentWarningTextChanged(text: String) {
+        if (text.length > MAX_CONTENT_WARNING_TEXT) return
         _contentWarningText.update { text }
+    }
+
+    companion object {
+        const val MAX_CONTENT_WARNING_TEXT = 500
     }
 }

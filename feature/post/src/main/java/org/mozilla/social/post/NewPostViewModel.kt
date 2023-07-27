@@ -95,8 +95,13 @@ class NewPostViewModel(
     private val uploadJobs = mutableMapOf<Uri, Job>()
 
     fun onStatusTextUpdated(text: String) {
-        if (text.length > MAX_POST_LENGTH) return
+        if (text.length + (contentWarningText.value?.length ?: 0) > MAX_POST_LENGTH) return
         _statusText.update { text }
+    }
+
+    override fun onContentWarningTextChanged(text: String) {
+        if (text.length + statusText.value.length > MAX_POST_LENGTH) return
+        contentWarningDelegate.onContentWarningTextChanged(text)
     }
 
     override fun onImageDescriptionTextUpdated(

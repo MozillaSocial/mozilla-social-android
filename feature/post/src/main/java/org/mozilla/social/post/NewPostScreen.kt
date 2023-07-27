@@ -29,18 +29,17 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.AddCircleOutline
 import androidx.compose.material.icons.filled.AddPhotoAlternate
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.DeleteForever
 import androidx.compose.material.icons.filled.DeleteOutline
 import androidx.compose.material.icons.filled.Poll
 import androidx.compose.material.icons.filled.Send
+import androidx.compose.material.icons.filled.Warning
+import androidx.compose.material.icons.filled.WarningAmber
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
@@ -49,6 +48,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -84,6 +84,7 @@ import org.mozilla.social.model.entity.StatusVisibility
 import org.mozilla.social.post.NewPostViewModel.Companion.MAX_POLL_COUNT
 import org.mozilla.social.post.NewPostViewModel.Companion.MAX_POST_LENGTH
 import org.mozilla.social.post.NewPostViewModel.Companion.MIN_POLL_COUNT
+import org.mozilla.social.post.interactions.ContentWarningInteractions
 import org.mozilla.social.post.interactions.ImageInteractions
 import org.mozilla.social.post.interactions.PollInteractions
 import org.mozilla.social.post.poll.Poll
@@ -113,6 +114,8 @@ internal fun NewPostRoute(
         poll = viewModel.poll.collectAsState().value,
         pollInteractions = viewModel,
         pollButtonEnabled = viewModel.pollButtonEnabled.collectAsState().value,
+        contentWarningText = viewModel.contentWarningText.collectAsState().value,
+        contentWarningInteractions = viewModel,
     )
 
     val context = LocalContext.current
@@ -140,6 +143,8 @@ private fun NewPostScreen(
     poll: Poll?,
     pollInteractions: PollInteractions,
     pollButtonEnabled: Boolean,
+    contentWarningText: String?,
+    contentWarningInteractions: ContentWarningInteractions,
 ) {
     val context = LocalContext.current
     val multipleMediaLauncher = rememberLauncherForActivityResult(
@@ -180,6 +185,8 @@ private fun NewPostScreen(
                     imageInteractions = imageInteractions,
                     poll = poll,
                     pollInteractions = pollInteractions,
+                    contentWarningText = contentWarningText,
+                    contentWarningInteractions = contentWarningInteractions,
                 )
             }
             BottomBar(
@@ -193,9 +200,11 @@ private fun NewPostScreen(
                     }
                 },
                 addImageButtonEnabled = addImageButtonEnabled,
-                characterCount = statusText.count(),
+                statusText = statusText,
+                contentWarningText = contentWarningText,
                 pollInteractions = pollInteractions,
                 pollButtonEnabled = pollButtonEnabled,
+                contentWarningInteractions = contentWarningInteractions,
             )
         }
         if (isSendingPost) {
@@ -257,11 +266,15 @@ private fun TopBar(
 private fun BottomBar(
     onUploadImageClicked: () -> Unit,
     addImageButtonEnabled: Boolean,
-    characterCount: Int,
+    statusText: String,
+    contentWarningText: String?,
     pollInteractions: PollInteractions,
     pollButtonEnabled: Boolean,
+    contentWarningInteractions: ContentWarningInteractions,
 ) {
-    val characterCountText = remember(characterCount) { "${MAX_POST_LENGTH - characterCount}" }
+    val characterCountText = remember(statusText, contentWarningText) {
+        "${MAX_POST_LENGTH - statusText.length - (contentWarningText?.length ?: 0)}"
+    }
     Column {
         Divider(
             color = MaterialTheme.colorScheme.outlineVariant
@@ -285,7 +298,16 @@ private fun BottomBar(
                     onClick = { pollInteractions.onNewPollClicked() },
                     enabled = pollButtonEnabled,
                 ) {
-                    Icon(Icons.Default.Poll, "attach image")
+                    Icon(Icons.Default.Poll, "add poll")
+                }
+                IconButton(
+                    onClick = { contentWarningInteractions.onContentWarningClicked() },
+                ) {
+                    if (contentWarningText == null) {
+                        Icon(Icons.Default.WarningAmber, "content warning")
+                    } else {
+                        Icon(Icons.Default.Warning, "content warning")
+                    }
                 }
             }
             // right row
@@ -309,6 +331,8 @@ private fun MainBox(
     imageInteractions: ImageInteractions,
     poll: Poll?,
     pollInteractions: PollInteractions,
+    contentWarningText: String?,
+    contentWarningInteractions: ContentWarningInteractions,
 ) {
     val localIndication = LocalIndication.current
     // disable ripple on click for the background
@@ -330,6 +354,12 @@ private fun MainBox(
                 LocalIndication provides localIndication
             ) {
                 LazyColumn {
+                    contentWarningText?.let {
+                        item {
+                            ContentWarningEntry(contentWarningText, contentWarningInteractions)
+                        }
+                    }
+
                     item {
                         TextField(
                             modifier = Modifier
@@ -346,7 +376,16 @@ private fun MainBox(
                         )
                     }
 
-                    poll?.let { Poll(poll = poll, pollInteractions = pollInteractions) }
+                    poll?.let {
+                        items(poll.options.size) { index ->
+                            PollChoice(
+                                index = index,
+                                poll = poll,
+                                pollInteractions = pollInteractions
+                            )
+                        }
+                        item { PollSettings(poll = poll, pollInteractions = pollInteractions) }
+                    }
 
                     items(imageStates.size) { index ->
                         ImageUploadBox(
@@ -358,6 +397,28 @@ private fun MainBox(
             }
         }
     }
+}
+
+@Composable
+private fun ContentWarningEntry(
+    contentWarningText: String,
+    contentWarningInteractions: ContentWarningInteractions,
+) {
+    OutlinedTextField(
+        modifier = Modifier
+            .padding(16.dp)
+            .fillMaxWidth(),
+        value = contentWarningText,
+        onValueChange = { contentWarningInteractions.onContentWarningTextChanged(it) },
+        label = { Text(text = "Content Warning") },
+        colors = OutlinedTextFieldDefaults.colors(
+            unfocusedBorderColor = MaterialTheme.colorScheme.error,
+            focusedBorderColor = MaterialTheme.colorScheme.error,
+            focusedLabelColor = MaterialTheme.colorScheme.error,
+            unfocusedLabelColor = MaterialTheme.colorScheme.error,
+            cursorColor = MaterialTheme.colorScheme.error,
+        )
+    )
 }
 
 @Composable
@@ -413,101 +474,106 @@ private fun ImageUploadBox(
     }
 }
 
-private fun LazyListScope.Poll(
+@Composable
+private fun PollChoice(
+    index: Int,
     poll: Poll,
     pollInteractions: PollInteractions,
 ) {
-    items(poll.options.size) {index ->
-        val deleteEnabled = remember(poll) { poll.options.size > MIN_POLL_COUNT }
-        Row(
+    val deleteEnabled = remember(poll) { poll.options.size > MIN_POLL_COUNT }
+    Row(
+        modifier = Modifier
+            .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 0.dp)
+    ) {
+        OutlinedTextField(
             modifier = Modifier
-                .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 0.dp)
-        ) {
-            OutlinedTextField(
-                modifier = Modifier
-                    .weight(1f)
-                    .align(Alignment.CenterVertically),
-                value = poll.options[index],
-                onValueChange = { pollInteractions.onPollOptionTextChanged(index, it) },
-                label = {
-                    Text(
-                        text = "Choice ${index + 1}"
-                    )
-                }
-            )
-            IconButton(
-                modifier = Modifier
-                    .align(Alignment.CenterVertically),
-                onClick = {
-                    pollInteractions.onPollOptionDeleteClicked(index)
-                },
-                enabled = deleteEnabled
-            ) {
-                Icon(
-                    modifier = Modifier
-                        .width(40.dp)
-                        .height(40.dp),
-                    imageVector = Icons.Default.DeleteOutline,
-                    contentDescription = "add poll option",
+                .weight(1f)
+                .align(Alignment.CenterVertically),
+            value = poll.options[index],
+            onValueChange = { pollInteractions.onPollOptionTextChanged(index, it) },
+            label = {
+                Text(
+                    text = "Choice ${index + 1}"
                 )
             }
+        )
+        IconButton(
+            modifier = Modifier
+                .align(Alignment.CenterVertically),
+            onClick = {
+                pollInteractions.onPollOptionDeleteClicked(index)
+            },
+            enabled = deleteEnabled
+        ) {
+            Icon(
+                modifier = Modifier
+                    .width(40.dp)
+                    .height(40.dp),
+                imageVector = Icons.Default.DeleteOutline,
+                contentDescription = "add poll option",
+            )
         }
     }
-    item {
-        Row(
-            modifier = Modifier
-                .padding(start = 8.dp, end = 16.dp, top = 16.dp, bottom = 0.dp),
-        ) {
-            val addNewOptionEnabled = remember(poll) { poll.options.size < MAX_POLL_COUNT }
-            IconButton(
-                onClick = {
-                    pollInteractions.onAddPollOptionClicked()
-                },
-                enabled = addNewOptionEnabled,
-            ) {
-                Icon(
-                    modifier = Modifier
-                        .width(40.dp)
-                        .height(40.dp),
-                    imageVector = Icons.Default.AddCircleOutline,
-                    contentDescription = "add poll option",
-                )
-            }
+}
 
-            Row(
-                modifier = Modifier.padding(top = 4.dp)
-            ) {
-                VerticalDivider(
-                    modifier = Modifier
-                        .padding(start = 8.dp, end = 8.dp)
-                        .height(40.dp)
-                )
-                PollDurationDropDown(poll = poll, pollInteractions = pollInteractions)
-                VerticalDivider(
-                    modifier = Modifier
-                        .padding(start = 8.dp, end = 8.dp)
-                        .height(40.dp)
-                )
-                PollStyleDropDown(poll = poll, pollInteractions = pollInteractions)
-            }
-        }
-        Row(
-            modifier = Modifier
-                .padding(start = 8.dp, top = 8.dp, end = 8.dp)
-                .clickable { pollInteractions.onHideCountUntilEndClicked() }
+@Composable
+private fun PollSettings(
+    poll: Poll,
+    pollInteractions: PollInteractions,
+) {
+    Row(
+        modifier = Modifier
+            .padding(start = 8.dp, end = 16.dp, top = 16.dp, bottom = 0.dp),
+    ) {
+        val addNewOptionEnabled = remember(poll) { poll.options.size < MAX_POLL_COUNT }
+        IconButton(
+            onClick = {
+                pollInteractions.onAddPollOptionClicked()
+            },
+            enabled = addNewOptionEnabled,
         ) {
-            Checkbox(
-                modifier = Modifier.align(Alignment.CenterVertically),
-                checked = poll.hideTotals,
-                onCheckedChange = { pollInteractions.onHideCountUntilEndClicked() },
+            Icon(
+                modifier = Modifier
+                    .width(40.dp)
+                    .height(40.dp),
+                imageVector = Icons.Default.AddCircleOutline,
+                contentDescription = "add poll option",
             )
-            Text(
-                modifier = Modifier.align(Alignment.CenterVertically),
-                text = "Hide results until complete",
-                fontSize = 16.sp
-            )
-            Spacer(modifier = Modifier.width(8.dp))
         }
+
+        Row(
+            modifier = Modifier.padding(top = 4.dp)
+        ) {
+            VerticalDivider(
+                modifier = Modifier
+                    .padding(start = 8.dp, end = 8.dp)
+                    .height(40.dp)
+            )
+            PollDurationDropDown(poll = poll, pollInteractions = pollInteractions)
+            VerticalDivider(
+                modifier = Modifier
+                    .padding(start = 8.dp, end = 8.dp)
+                    .height(40.dp)
+            )
+            PollStyleDropDown(poll = poll, pollInteractions = pollInteractions)
+        }
+    }
+    Row(
+        modifier = Modifier
+            .padding(start = 8.dp, top = 8.dp, end = 8.dp)
+            .clickable { pollInteractions.onHideCountUntilEndClicked() }
+    ) {
+        Checkbox(
+            modifier = Modifier.align(Alignment.CenterVertically),
+            checked = poll.hideTotals,
+            onCheckedChange = { pollInteractions.onHideCountUntilEndClicked() },
+        )
+        Text(
+            modifier = Modifier.align(Alignment.CenterVertically),
+            text = "Hide results until complete",
+            fontSize = 16.sp
+        )
+        Spacer(modifier = Modifier.width(8.dp))
     }
 }
 
@@ -534,7 +600,9 @@ private fun NewPostScreenPreview() {
                 hideTotals = false
             ),
             pollInteractions = object : PollInteractions {},
-            pollButtonEnabled = true
+            pollButtonEnabled = true,
+            contentWarningText = "Content is bad",
+            contentWarningInteractions = object : ContentWarningInteractions {}
         )
     }
 }

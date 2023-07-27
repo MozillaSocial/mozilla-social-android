@@ -1,6 +1,6 @@
 package org.mozilla.social.post.interactions
 
 interface ContentWarningInteractions {
-    fun onContentWarningClicked()
-    fun onContentWarningTextChanged(text: String)
+    fun onContentWarningClicked() = Unit
+    fun onContentWarningTextChanged(text: String) = Unit
 }
