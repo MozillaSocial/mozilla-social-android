@@ -23,6 +23,8 @@ import org.mozilla.social.model.ImageState
 import org.mozilla.social.model.entity.PollOption
 import org.mozilla.social.model.entity.StatusVisibility
 import org.mozilla.social.model.entity.request.PollCreate
+import org.mozilla.social.post.contentwarning.ContentWarningDelegate
+import org.mozilla.social.post.interactions.ContentWarningInteractions
 import org.mozilla.social.post.interactions.ImageInteractions
 import org.mozilla.social.post.interactions.PollInteractions
 import org.mozilla.social.post.poll.PollDelegate
@@ -34,12 +36,15 @@ class NewPostViewModel(
     private val mediaRepository: MediaRepository,
     private val log: Log,
     private val onStatusPosted: () -> Unit,
-    private val pollDelegate: PollDelegate = PollDelegate()
+    private val pollDelegate: PollDelegate = PollDelegate(),
+    private val contentWarningDelegate: ContentWarningDelegate = ContentWarningDelegate(),
 ) : ViewModel(),
     ImageInteractions,
-    PollInteractions by pollDelegate
+    PollInteractions by pollDelegate,
+    ContentWarningInteractions by contentWarningDelegate
 {
     val poll = pollDelegate.poll
+    val contentWarningText = contentWarningDelegate.contentWarningText
 
     private val _statusText = MutableStateFlow("")
     val statusText = _statusText.asStateFlow()
@@ -165,7 +170,8 @@ class NewPostViewModel(
                             allowMultipleChoices = poll.style == PollStyle.MULTIPLE_CHOICE,
                             hideTotals = poll.hideTotals
                         )
-                    }
+                    },
+                    contentWarningText = contentWarningText.value,
                 )
                 onStatusPosted()
             } catch (e: Exception) {

@@ -34,6 +34,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.AddCircleOutline
+import androidx.compose.material.icons.filled.AddPhotoAlternate
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.DeleteForever
@@ -278,7 +279,7 @@ private fun BottomBar(
                     onClick = { onUploadImageClicked() },
                     enabled = addImageButtonEnabled,
                 ) {
-                    Icon(Icons.Default.Add, "attach image")
+                    Icon(Icons.Default.AddPhotoAlternate, "attach image")
                 }
                 IconButton(
                     onClick = { pollInteractions.onNewPollClicked() },
