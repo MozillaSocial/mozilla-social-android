@@ -3,7 +3,6 @@ package org.mozilla.social.post.poll
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import org.mozilla.social.common.utils.edit
-import org.mozilla.social.post.interactions.PollInteractions
 
 class PollDelegate : PollInteractions {
 
@@ -19,6 +18,7 @@ class PollDelegate : PollInteractions {
     }
 
     override fun onPollOptionTextChanged(optionIndex: Int, text: String) {
+        if (text.length > MAX_POLL_CHOICE_CHARACTERS) return
         _poll.edit { this?.copy(
             options = options.toMutableList().apply {
                 removeAt(optionIndex)
@@ -70,4 +70,8 @@ class PollDelegate : PollInteractions {
         style = PollStyle.SINGLE_CHOICE,
         hideTotals = false
     )
+
+    companion object {
+        const val MAX_POLL_CHOICE_CHARACTERS = 50
+    }
 }

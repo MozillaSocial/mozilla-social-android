@@ -18,6 +18,7 @@ class StatusRepository(
         imageStates: List<ImageState>,
         visibility: StatusVisibility,
         pollCreate: PollCreate?,
+        contentWarningText: String?,
     ) {
         coroutineScope {
             // asynchronously update all attachment descriptions before sending post
@@ -44,7 +45,12 @@ class StatusRepository(
                         imageStates.mapNotNull { it.attachmentId }
                     },
                     visibility = visibility,
-                    poll = pollCreate
+                    poll = pollCreate,
+                    contentWarningText = if (contentWarningText.isNullOrBlank()) {
+                        null
+                    } else {
+                        contentWarningText
+                    }
                 )
             )
         }

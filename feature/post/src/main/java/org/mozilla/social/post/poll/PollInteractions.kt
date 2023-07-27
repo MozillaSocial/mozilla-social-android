@@ -1,4 +1,4 @@
-package org.mozilla.social.post.interactions
+package org.mozilla.social.post.poll
 
 import org.mozilla.social.post.poll.PollDuration
 import org.mozilla.social.post.poll.PollStyle

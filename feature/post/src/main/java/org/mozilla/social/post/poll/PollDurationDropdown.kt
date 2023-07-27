@@ -13,7 +13,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import org.mozilla.social.core.designsystem.theme.MozillaSocialTheme
-import org.mozilla.social.post.interactions.PollInteractions
 
 @Composable
 fun PollDurationDropDown(
