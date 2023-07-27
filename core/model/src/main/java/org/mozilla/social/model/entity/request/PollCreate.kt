@@ -15,7 +15,7 @@ data class PollCreate(
      * Array of possible answers.
      */
     @SerialName("options")
-    val options: List<PollOption>,
+    val options: List<String>,
 
     /**
      * Duration the poll should be open, in seconds.
@@ -26,7 +26,7 @@ data class PollCreate(
     /**
      * Allow multiple choices in the poll?
      */
-    @SerialName("allow_multiple_choices")
+    @SerialName("multiple")
     val allowMultipleChoices: Boolean?,
 
     /**

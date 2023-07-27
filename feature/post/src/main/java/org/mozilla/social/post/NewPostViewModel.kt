@@ -4,7 +4,6 @@ import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -14,7 +13,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.mozilla.social.common.LoadState
@@ -22,8 +20,13 @@ import org.mozilla.social.common.logging.Log
 import org.mozilla.social.core.data.repository.MediaRepository
 import org.mozilla.social.core.data.repository.StatusRepository
 import org.mozilla.social.model.ImageState
+import org.mozilla.social.model.entity.PollOption
 import org.mozilla.social.model.entity.StatusVisibility
+import org.mozilla.social.model.entity.request.PollCreate
 import org.mozilla.social.post.interactions.ImageInteractions
+import org.mozilla.social.post.interactions.PollInteractions
+import org.mozilla.social.post.poll.PollDelegate
+import org.mozilla.social.post.poll.PollStyle
 import java.io.File
 
 class NewPostViewModel(
@@ -31,7 +34,12 @@ class NewPostViewModel(
     private val mediaRepository: MediaRepository,
     private val log: Log,
     private val onStatusPosted: () -> Unit,
-) : ViewModel(), ImageInteractions {
+    private val pollDelegate: PollDelegate = PollDelegate()
+) : ViewModel(),
+    ImageInteractions,
+    PollInteractions by pollDelegate
+{
+    val poll = pollDelegate.poll
 
     private val _statusText = MutableStateFlow("")
     val statusText = _statusText.asStateFlow()
@@ -40,10 +48,12 @@ class NewPostViewModel(
     val imageStates = _imageStates.asStateFlow()
 
     val sendButtonEnabled: StateFlow<Boolean> =
-        combine(statusText, imageStates) { statusText, imageStates ->
+        combine(statusText, imageStates, poll) { statusText, imageStates, poll ->
             (statusText.isNotBlank() || imageStates.isNotEmpty())
                     // all images are loaded
                     && imageStates.values.find { it.loadState != LoadState.LOADED } == null
+                    // poll options have text if they exist
+                    && poll?.options?.find { it.isBlank() } == null
         }.stateIn(
             scope = viewModelScope,
             started = SharingStarted.Lazily,
@@ -51,8 +61,17 @@ class NewPostViewModel(
         )
 
     val addImageButtonEnabled : StateFlow<Boolean> =
+        combine(imageStates, poll) { imageStates, poll ->
+            imageStates.size < MAX_IMAGES && poll == null
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.Lazily,
+            initialValue = true
+        )
+
+    val pollButtonEnabled : StateFlow<Boolean> =
         imageStates.map {
-            it.size < MAX_IMAGES
+            it.isEmpty()
         }.stateIn(
             scope = viewModelScope,
             started = SharingStarted.Lazily,
@@ -139,6 +158,14 @@ class NewPostViewModel(
                     statusText = statusText.value,
                     imageStates = imageStates.value.values.toList(),
                     visibility = visibility.value,
+                    pollCreate = poll.value?.let { poll ->
+                        PollCreate(
+                            options = poll.options,
+                            expiresInSec = poll.pollDuration.inSeconds,
+                            allowMultipleChoices = poll.style == PollStyle.MULTIPLE_CHOICE,
+                            hideTotals = poll.hideTotals
+                        )
+                    }
                 )
                 onStatusPosted()
             } catch (e: Exception) {
@@ -176,5 +203,7 @@ class NewPostViewModel(
          */
         const val MAX_IMAGES = 4
         const val MAX_POST_LENGTH = 500
+        const val MAX_POLL_COUNT = 4
+        const val MIN_POLL_COUNT = 2
     }
 }
