@@ -84,9 +84,9 @@ import org.mozilla.social.model.entity.StatusVisibility
 import org.mozilla.social.post.NewPostViewModel.Companion.MAX_POLL_COUNT
 import org.mozilla.social.post.NewPostViewModel.Companion.MAX_POST_LENGTH
 import org.mozilla.social.post.NewPostViewModel.Companion.MIN_POLL_COUNT
-import org.mozilla.social.post.interactions.ContentWarningInteractions
-import org.mozilla.social.post.interactions.ImageInteractions
-import org.mozilla.social.post.interactions.PollInteractions
+import org.mozilla.social.post.contentwarning.ContentWarningInteractions
+import org.mozilla.social.post.media.MediaInteractions
+import org.mozilla.social.post.poll.PollInteractions
 import org.mozilla.social.post.poll.Poll
 import org.mozilla.social.post.poll.PollDuration
 import org.mozilla.social.post.poll.PollDurationDropDown
@@ -107,7 +107,7 @@ internal fun NewPostRoute(
         sendButtonEnabled = viewModel.sendButtonEnabled.collectAsState().value,
         imageStates = viewModel.imageStates.collectAsState().value,
         addImageButtonEnabled = viewModel.addImageButtonEnabled.collectAsState().value,
-        imageInteractions = viewModel,
+        mediaInteractions = viewModel,
         isSendingPost = viewModel.isSendingPost.collectAsState().value,
         visibility = viewModel.visibility.collectAsState().value,
         onVisibilitySelected = viewModel::onVisibilitySelected,
@@ -136,7 +136,7 @@ private fun NewPostScreen(
     sendButtonEnabled: Boolean,
     imageStates: Map<Uri, ImageState>,
     addImageButtonEnabled: Boolean,
-    imageInteractions: ImageInteractions,
+    mediaInteractions: MediaInteractions,
     isSendingPost: Boolean,
     visibility: StatusVisibility,
     onVisibilitySelected: (StatusVisibility) -> Unit,
@@ -153,13 +153,13 @@ private fun NewPostScreen(
         )
     ) { uris ->
         uris.forEach {
-            imageInteractions.onImageInserted(it, it.toFile(context))
+            mediaInteractions.onMediaInserted(it, it.toFile(context))
         }
     }
     val singleMediaLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.PickVisualMedia()
     ) { uri ->
-        uri?.let { imageInteractions.onImageInserted(it, it.toFile(context)) }
+        uri?.let { mediaInteractions.onMediaInserted(it, it.toFile(context)) }
     }
     Box(
         modifier = Modifier
@@ -182,7 +182,7 @@ private fun NewPostScreen(
                     statusText = statusText,
                     onStatusTextChanged = onStatusTextChanged,
                     imageStates = imageStates,
-                    imageInteractions = imageInteractions,
+                    mediaInteractions = mediaInteractions,
                     poll = poll,
                     pollInteractions = pollInteractions,
                     contentWarningText = contentWarningText,
@@ -332,7 +332,7 @@ private fun MainBox(
     statusText: String,
     onStatusTextChanged: (String) -> Unit,
     imageStates: Map<Uri, ImageState>,
-    imageInteractions: ImageInteractions,
+    mediaInteractions: MediaInteractions,
     poll: Poll?,
     pollInteractions: PollInteractions,
     contentWarningText: String?,
@@ -394,7 +394,7 @@ private fun MainBox(
                     items(imageStates.size) { index ->
                         ImageUploadBox(
                             imageState = imageStates.entries.elementAt(index),
-                            imageInteractions = imageInteractions,
+                            mediaInteractions = mediaInteractions,
                         )
                     }
                 }
@@ -428,7 +428,7 @@ private fun ContentWarningEntry(
 @Composable
 private fun ImageUploadBox(
     imageState: Map.Entry<Uri, ImageState>,
-    imageInteractions: ImageInteractions,
+    mediaInteractions: MediaInteractions,
 ) {
     val outlineShape = RoundedCornerShape(12.dp)
     Column(
@@ -447,7 +447,7 @@ private fun ImageUploadBox(
         MediaUpload(
             uri = imageState.key,
             loadState = imageState.value.loadState,
-            onRetryClicked = imageInteractions::onImageInserted,
+            onRetryClicked = mediaInteractions::onMediaInserted,
         )
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -456,7 +456,7 @@ private fun ImageUploadBox(
                 TextField(
                     modifier = Modifier.weight(1f),
                     value = imageState.value.description,
-                    onValueChange = { imageInteractions.onImageDescriptionTextUpdated(imageState.key, it) },
+                    onValueChange = { mediaInteractions.onMediaDescriptionTextUpdated(imageState.key, it) },
                     label = {
                         Text(
                             text = "Add a description"
@@ -469,7 +469,7 @@ private fun ImageUploadBox(
             }
             IconButton(
                 onClick = {
-                    imageInteractions.onDeleteImageClicked(imageState.key)
+                    mediaInteractions.onDeleteMediaClicked(imageState.key)
                 }
             ) {
                 Icon(Icons.Default.Delete, "delete")
@@ -593,7 +593,7 @@ private fun NewPostScreenPreview() {
             sendButtonEnabled = true,
             imageStates = mapOf(),
             addImageButtonEnabled = true,
-            imageInteractions = object : ImageInteractions {},
+            mediaInteractions = object : MediaInteractions {},
             isSendingPost = false,
             visibility = StatusVisibility.Private,
             onVisibilitySelected = {},

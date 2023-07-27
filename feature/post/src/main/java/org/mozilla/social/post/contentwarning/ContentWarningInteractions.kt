@@ -1,4 +1,4 @@
-package org.mozilla.social.post.interactions
+package org.mozilla.social.post.contentwarning
 
 interface ContentWarningInteractions {
     fun onContentWarningClicked() = Unit

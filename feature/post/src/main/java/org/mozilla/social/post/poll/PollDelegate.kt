@@ -3,7 +3,6 @@ package org.mozilla.social.post.poll
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import org.mozilla.social.common.utils.edit
-import org.mozilla.social.post.interactions.PollInteractions
 
 class PollDelegate : PollInteractions {
 

@@ -3,7 +3,6 @@ package org.mozilla.social.post.contentwarning
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import org.mozilla.social.post.interactions.ContentWarningInteractions
 
 class ContentWarningDelegate(
 
