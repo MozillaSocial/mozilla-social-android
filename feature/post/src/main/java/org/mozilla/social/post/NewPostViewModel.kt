@@ -98,7 +98,7 @@ class NewPostViewModel(
     fun onStatusTextUpdated(textFieldValue: TextFieldValue) {
         if (textFieldValue.text.length + (contentWarningText.value?.length ?: 0) > MAX_POST_LENGTH) return
         _statusText.update { textFieldValue }
-        
+
     }
 
     override fun onContentWarningTextChanged(text: String) {
@@ -134,6 +134,20 @@ class NewPostViewModel(
                 _errorToastMessage.emit("Error Sending Post")
                 _isSendingPost.update { false }
             }
+        }
+    }
+
+    /**
+     * @return the account string a user is typing if they are typing one, otherwise null
+     */
+    private fun accountText(textFieldValue: TextFieldValue): String? {
+        if (!textFieldValue.text.contains("@")) return null
+        val textBeforeCursor = textFieldValue.text.substring(0, textFieldValue.selection.end)
+        val textBetweenSymbolAndCursor = textBeforeCursor.substringAfterLast('@')
+        return if (!textBetweenSymbolAndCursor.contains(" ")) {
+            textBetweenSymbolAndCursor
+        } else {
+            null
         }
     }
 
