@@ -306,7 +306,11 @@ private fun BottomBar(
                     if (contentWarningText == null) {
                         Icon(Icons.Default.WarningAmber, "content warning")
                     } else {
-                        Icon(Icons.Default.Warning, "content warning")
+                        Icon(
+                            Icons.Default.Warning,
+                            "content warning",
+                            tint = MaterialTheme.colorScheme.error,
+                        )
                     }
                 }
             }
