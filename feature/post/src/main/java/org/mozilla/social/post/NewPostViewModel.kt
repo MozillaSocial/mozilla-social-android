@@ -107,9 +107,9 @@ class NewPostViewModel(
     private val _visibility = MutableStateFlow(StatusVisibility.Public)
     val visibility = _visibility.asStateFlow()
 
-    override fun onStatusTextUpdated(textFieldValue: TextFieldValue, spanStyle: SpanStyle) {
+    override fun onStatusTextUpdated(textFieldValue: TextFieldValue) {
         if (textFieldValue.text.length + (contentWarningText.value?.length ?: 0) > MAX_POST_LENGTH) return
-        statusDelegate.onStatusTextUpdated(textFieldValue, spanStyle)
+        statusDelegate.onStatusTextUpdated(textFieldValue)
     }
 
     override fun onContentWarningTextChanged(text: String) {

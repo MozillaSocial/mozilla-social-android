@@ -73,7 +73,9 @@ import androidx.compose.ui.unit.sp
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 import org.mozilla.social.common.LoadState
+import org.mozilla.social.common.utils.buildAnnotatedStringForAccountsAndHashtags
 import org.mozilla.social.common.utils.toFile
+import org.mozilla.social.core.designsystem.theme.FirefoxColor
 import org.mozilla.social.core.designsystem.theme.MozillaSocialTheme
 import org.mozilla.social.core.designsystem.utils.NoIndication
 import org.mozilla.social.core.ui.TransparentNoTouchOverlay
@@ -381,20 +383,24 @@ private fun MainBox(
                     }
 
                     item {
-                        val highlightedSpanStyle = SpanStyle(
-                            color = MaterialTheme.colorScheme.primary
-                        )
+                        val highlightColor = FirefoxColor.Blue60
+                        val realText = remember(statusText.text) {
+                            TextFieldValue(
+                                annotatedString = buildAnnotatedStringForAccountsAndHashtags(
+                                    statusText.text,
+                                    SpanStyle(
+                                        color = highlightColor
+                                    )
+                                ),
+                                selection = statusText.selection
+                            )
+                        }
                         TextField(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .focusRequester(textFieldFocusRequester),
-                            value = statusText,
-                            onValueChange = {
-                                statusInteractions.onStatusTextUpdated(
-                                    it,
-                                    highlightedSpanStyle,
-                                )
-                            },
+                            value = realText,
+                            onValueChange = { statusInteractions.onStatusTextUpdated(it) },
                             label = {
                                 Text(
                                     text = "What's happening?"

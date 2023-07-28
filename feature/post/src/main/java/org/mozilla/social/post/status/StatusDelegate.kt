@@ -36,15 +36,10 @@ class StatusDelegate(
 
     private var searchJob: Job? = null
 
-    override fun onStatusTextUpdated(
-        textFieldValue: TextFieldValue,
-        spanStyle: SpanStyle,
-    ) {
+    override fun onStatusTextUpdated(textFieldValue: TextFieldValue, ) {
         _statusText.update {
             log.d("updating onStatusTextUpdated")
-            textFieldValue.copy(
-                annotatedString = buildAnnotatedStringForAccountsAndHashtags(textFieldValue.text)
-            )
+            textFieldValue
         }
 
         searchForAccountsAndHashtags(textFieldValue)

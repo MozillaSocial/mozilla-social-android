@@ -68,12 +68,10 @@ fun TextFieldValue.replaceSymbolText(symbol: Char, newText: String): TextFieldVa
     )
 }
 
-fun buildAnnotatedStringForAccountsAndHashtags(baseText: String): AnnotatedString =
-    buildAnnotatedStringWithSymbols(listOf('@', '#'), baseText)
+fun buildAnnotatedStringForAccountsAndHashtags(baseText: String, style: SpanStyle): AnnotatedString =
+    buildAnnotatedStringWithSymbols(listOf('@', '#'), baseText, style)
 
-fun buildAnnotatedStringWithSymbols(symbols: List<Char>, text: String): AnnotatedString {
-    //TODO get material color
-    val style = SpanStyle(color = Color.Blue)
+fun buildAnnotatedStringWithSymbols(symbols: List<Char>, text: String, style: SpanStyle): AnnotatedString {
     return buildAnnotatedString {
         var searchingForSymbol = true // if false then we are searching for a space
         var start = -1
