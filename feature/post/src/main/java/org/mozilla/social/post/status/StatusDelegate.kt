@@ -86,9 +86,11 @@ class StatusDelegate(
 
     override fun onAccountClicked(accountName: String) {
         _statusText.update { it.replaceAccount(accountName) }
+        _accountList.update { null }
     }
 
     override fun onHashtagClicked(hashtag: String) {
         _statusText.update { it.replaceHashtag(hashtag) }
+        _hashtagList.update { null }
     }
 }

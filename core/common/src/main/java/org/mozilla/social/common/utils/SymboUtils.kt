@@ -24,6 +24,7 @@ fun TextFieldValue.findSymbolText(symbol: Char): String? {
     } else {
         text
     }
+    if (!textBeforeSpaceOrEnd.contains(symbol)) return null
     val textBetweenSymbolAndCursor = textBeforeSpaceOrEnd.substringAfterLast(symbol)
     return if (!textBetweenSymbolAndCursor.contains(" ")) {
         textBetweenSymbolAndCursor
