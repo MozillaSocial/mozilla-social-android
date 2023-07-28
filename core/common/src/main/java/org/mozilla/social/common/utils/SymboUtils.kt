@@ -45,6 +45,8 @@ fun TextFieldValue.replaceSymbolText(symbol: Char, newText: String): TextFieldVa
     } else {
         text
     }
+    if (!textBeforeSpaceOrEnd.contains(symbol)
+        || textBeforeSpaceOrEnd.substringAfterLast(symbol).contains(" ")) return this
     val rangeStart = textBeforeSpaceOrEnd.lastIndexOf(symbol) + 1
     val rangeEnd = if (firstSpaceIndexAfterCursor != -1) {
         firstSpaceIndexAfterCursor
