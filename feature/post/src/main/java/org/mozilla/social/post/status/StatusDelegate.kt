@@ -49,12 +49,12 @@ class StatusDelegate(
         searchJob?.cancel()
 
         val accountText = textFieldValue.accountText()
-        if (accountText == null) {
+        if (accountText.isNullOrBlank()) {
             _accountList.update { null }
         }
 
         val hashtagText = textFieldValue.hashtagText()
-        if (hashtagText == null) {
+        if (hashtagText.isNullOrBlank()) {
             _hashtagList.update { null }
         }
 
@@ -62,7 +62,7 @@ class StatusDelegate(
             // let the user stop typing before trying to search
             delay(500)
 
-            if (accountText != null) {
+            if (!accountText.isNullOrBlank()) {
                 try {
                     _accountList.update {
                         searchRepository.searchForAccounts(accountText).map {
@@ -77,7 +77,7 @@ class StatusDelegate(
                 }
             }
 
-            if (hashtagText != null) {
+            if (!hashtagText.isNullOrBlank()) {
                 try {
                     _hashtagList.update {
                         searchRepository.searchForHashtags(hashtagText).map { it.name }
