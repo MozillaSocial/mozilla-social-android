@@ -386,12 +386,14 @@ private fun MainBox(
                         val highlightColor = FirefoxColor.Blue60
                         val realText = remember(statusText) {
                             statusText.copy(
-                                annotatedString = buildAnnotatedStringForAccountsAndHashtags(
-                                    statusText.text,
-                                    SpanStyle(
-                                        color = highlightColor
-                                    )
-                                ),
+                                // TODO uncomment code after figuring out bug
+                                // TODO I posed this to stack overflow https://stackoverflow.com/questions/76791285/jetpack-compose-why-is-onvaluechange-getting-called-over-and-over
+//                                annotatedString = buildAnnotatedStringForAccountsAndHashtags(
+//                                    statusText.text,
+//                                    SpanStyle(
+//                                        color = highlightColor
+//                                    )
+//                                ),
                             )
                         }
                         TextField(
