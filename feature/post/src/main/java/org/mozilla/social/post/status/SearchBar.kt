@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -56,7 +57,13 @@ fun AccountSearchBar(
                         AsyncImage(
                             modifier = Modifier
                                 .height(32.dp)
+                                .width(32.dp)
                                 .align(Alignment.CenterVertically)
+                                .border(
+                                    width = 1.dp,
+                                    color = MaterialTheme.colorScheme.outlineVariant,
+                                    shape = CircleShape
+                                )
                                 .clip(CircleShape),
                             model = account.profilePicUrl,
                             contentDescription = "",
