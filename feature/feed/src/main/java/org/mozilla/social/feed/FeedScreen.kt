@@ -17,6 +17,7 @@ import org.koin.androidx.compose.koinViewModel
 import org.mozilla.social.core.designsystem.theme.MozillaSocialTheme
 import org.mozilla.social.core.ui.PostCard
 import org.mozilla.social.model.entity.Status
+import org.mozilla.social.model.entity.StatusVisibility
 
 @Composable
 fun FeedScreen(viewModel: FeedViewModel = koinViewModel()) {
@@ -34,7 +35,8 @@ fun FeedScreen(publicTimeline: List<Status>?) {
             .verticalScroll(rememberScrollState())
     ) {
         publicTimeline?.forEach { status ->
-            PostCard(status = status)
+            if (status.visibility == StatusVisibility.Public)
+                PostCard(status = status)
         }
     }
 }
