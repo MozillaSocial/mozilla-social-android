@@ -384,15 +384,14 @@ private fun MainBox(
 
                     item {
                         val highlightColor = FirefoxColor.Blue60
-                        val realText = remember(statusText.text) {
-                            TextFieldValue(
+                        val realText = remember(statusText) {
+                            statusText.copy(
                                 annotatedString = buildAnnotatedStringForAccountsAndHashtags(
                                     statusText.text,
                                     SpanStyle(
                                         color = highlightColor
                                     )
                                 ),
-                                selection = statusText.selection
                             )
                         }
                         TextField(
