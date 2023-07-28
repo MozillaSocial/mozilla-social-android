@@ -11,6 +11,9 @@ import kotlinx.coroutines.launch
 import org.mozilla.social.common.logging.Log
 import org.mozilla.social.common.utils.accountText
 import org.mozilla.social.common.utils.hashtagText
+import org.mozilla.social.common.utils.replaceAccount
+import org.mozilla.social.common.utils.replaceHashtag
+import org.mozilla.social.common.utils.replaceSymbolText
 import org.mozilla.social.core.data.repository.SearchRepository
 
 class StatusDelegate(
@@ -34,6 +37,10 @@ class StatusDelegate(
     override fun onStatusTextUpdated(textFieldValue: TextFieldValue) {
         _statusText.update { textFieldValue }
 
+        searchForAccountsAndHashtags(textFieldValue)
+    }
+
+    private fun searchForAccountsAndHashtags(textFieldValue: TextFieldValue) {
         searchJob?.cancel()
 
         val accountText = textFieldValue.accountText()
@@ -75,5 +82,13 @@ class StatusDelegate(
                 }
             }
         }
+    }
+
+    override fun onAccountClicked(accountName: String) {
+        _statusText.update { it.replaceAccount(accountName) }
+    }
+
+    override fun onHashtagClicked(hashtag: String) {
+        _statusText.update { it.replaceHashtag(hashtag) }
     }
 }

@@ -93,6 +93,10 @@ import org.mozilla.social.post.poll.PollDuration
 import org.mozilla.social.post.poll.PollDurationDropDown
 import org.mozilla.social.post.poll.PollStyle
 import org.mozilla.social.post.poll.PollStyleDropDown
+import org.mozilla.social.post.status.Account
+import org.mozilla.social.post.status.AccountSearchBar
+import org.mozilla.social.post.status.HashtagSearchBar
+import org.mozilla.social.post.status.StatusInteractions
 
 @Composable
 internal fun NewPostRoute(
@@ -102,7 +106,7 @@ internal fun NewPostRoute(
 ) {
     NewPostScreen(
         statusText = viewModel.statusText.collectAsState().value,
-        onStatusTextChanged = viewModel::onStatusTextUpdated,
+        statusInteractions = viewModel,
         onPostClicked = viewModel::onPostClicked,
         onCloseClicked = onCloseClicked,
         sendButtonEnabled = viewModel.sendButtonEnabled.collectAsState().value,
@@ -117,6 +121,8 @@ internal fun NewPostRoute(
         pollButtonEnabled = viewModel.pollButtonEnabled.collectAsState().value,
         contentWarningText = viewModel.contentWarningText.collectAsState().value,
         contentWarningInteractions = viewModel,
+        accounts = viewModel.accountList.collectAsState().value,
+        hashTags = viewModel.hashtagList.collectAsState().value,
     )
 
     val context = LocalContext.current
@@ -131,7 +137,7 @@ internal fun NewPostRoute(
 @Composable
 private fun NewPostScreen(
     statusText: TextFieldValue,
-    onStatusTextChanged: (TextFieldValue) -> Unit,
+    statusInteractions: StatusInteractions,
     onPostClicked: () -> Unit,
     onCloseClicked: () -> Unit,
     sendButtonEnabled: Boolean,
@@ -146,6 +152,8 @@ private fun NewPostScreen(
     pollButtonEnabled: Boolean,
     contentWarningText: String?,
     contentWarningInteractions: ContentWarningInteractions,
+    accounts: List<Account>?,
+    hashTags: List<String>?,
 ) {
     val context = LocalContext.current
     val multipleMediaLauncher = rememberLauncherForActivityResult(
@@ -181,7 +189,7 @@ private fun NewPostScreen(
             ) {
                 MainBox(
                     statusText = statusText,
-                    onStatusTextChanged = onStatusTextChanged,
+                    statusInteractions = statusInteractions,
                     imageStates = imageStates,
                     mediaInteractions = mediaInteractions,
                     poll = poll,
@@ -189,6 +197,12 @@ private fun NewPostScreen(
                     contentWarningText = contentWarningText,
                     contentWarningInteractions = contentWarningInteractions,
                 )
+            }
+            accounts?.let {
+                AccountSearchBar(accounts = accounts, statusInteractions = statusInteractions)
+            }
+            hashTags?.let {
+                HashtagSearchBar(hashTags = hashTags, statusInteractions = statusInteractions)
             }
             BottomBar(
                 onUploadImageClicked = {
@@ -331,7 +345,7 @@ private fun BottomBar(
 @Composable
 private fun MainBox(
     statusText: TextFieldValue,
-    onStatusTextChanged: (TextFieldValue) -> Unit,
+    statusInteractions: StatusInteractions,
     imageStates: Map<Uri, ImageState>,
     mediaInteractions: MediaInteractions,
     poll: Poll?,
@@ -371,7 +385,7 @@ private fun MainBox(
                                 .fillMaxWidth()
                                 .focusRequester(textFieldFocusRequester),
                             value = statusText,
-                            onValueChange = onStatusTextChanged,
+                            onValueChange = { statusInteractions.onStatusTextUpdated(it) },
                             label = {
                                 Text(
                                     text = "What's happening?"
@@ -588,7 +602,7 @@ private fun NewPostScreenPreview() {
     MozillaSocialTheme {
         NewPostScreen(
             statusText = TextFieldValue(),
-            onStatusTextChanged = { },
+            statusInteractions = object : StatusInteractions {},
             onPostClicked = {},
             onCloseClicked = {},
             sendButtonEnabled = true,
@@ -607,7 +621,9 @@ private fun NewPostScreenPreview() {
             pollInteractions = object : PollInteractions {},
             pollButtonEnabled = true,
             contentWarningText = "Content is bad",
-            contentWarningInteractions = object : ContentWarningInteractions {}
+            contentWarningInteractions = object : ContentWarningInteractions {},
+            accounts = null,
+            hashTags = null,
         )
     }
 }

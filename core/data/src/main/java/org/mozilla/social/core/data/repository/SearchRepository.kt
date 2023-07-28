@@ -1,7 +1,6 @@
 package org.mozilla.social.core.data.repository
 
 import org.mozilla.social.core.network.MastodonApi
-import org.mozilla.social.model.SearchRequestBody
 import org.mozilla.social.model.entity.Account
 import org.mozilla.social.model.entity.HashTag
 
@@ -13,10 +12,8 @@ class SearchRepository internal constructor(
         query: String,
     ): List<Account> {
         return mastodonApi.search(
-            SearchRequestBody(
-                query = query,
-                type = ACCOUNTS,
-            )
+            query,
+            ACCOUNTS
         ).accounts
     }
 
@@ -24,10 +21,8 @@ class SearchRepository internal constructor(
         query: String,
     ): List<HashTag> {
         return mastodonApi.search(
-            SearchRequestBody(
-                query = query,
-                type = HASHTAGS,
-            )
+            query,
+            HASHTAGS,
         ).hashtags
     }
 

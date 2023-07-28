@@ -1,5 +1,6 @@
 package org.mozilla.social.common.utils
 
+import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 
 /**
@@ -17,11 +18,44 @@ fun TextFieldValue.hashtagText(): String? = findSymbolText('#')
  */
 fun TextFieldValue.findSymbolText(symbol: Char): String? {
     if (!text.contains(symbol) || selection.start != selection.end) return null
-    val textBeforeCursor = text.substring(0, selection.end)
-    val textBetweenSymbolAndCursor = textBeforeCursor.substringAfterLast(symbol)
+    val firstSpaceIndexAfterCursor = text.indexOf(' ', startIndex = selection.end)
+    val textBeforeSpaceOrEnd = if (firstSpaceIndexAfterCursor != -1) {
+        text.substring(0, firstSpaceIndexAfterCursor)
+    } else {
+        text
+    }
+    val textBetweenSymbolAndCursor = textBeforeSpaceOrEnd.substringAfterLast(symbol)
     return if (!textBetweenSymbolAndCursor.contains(" ")) {
         textBetweenSymbolAndCursor
     } else {
         null
     }
+}
+
+fun TextFieldValue.replaceAccount(newText: String): TextFieldValue = replaceSymbolText('@', newText)
+
+fun TextFieldValue.replaceHashtag(newText: String): TextFieldValue = replaceSymbolText('#', newText)
+
+fun TextFieldValue.replaceSymbolText(symbol: Char, newText: String): TextFieldValue {
+    if (!text.contains(symbol)) return this
+    val firstSpaceIndexAfterCursor = text.indexOf(' ', startIndex = selection.end)
+    val textBeforeSpaceOrEnd = if (firstSpaceIndexAfterCursor != -1) {
+        text.substring(0, firstSpaceIndexAfterCursor)
+    } else {
+        text
+    }
+    val rangeStart = textBeforeSpaceOrEnd.lastIndexOf(symbol) + 1
+    val rangeEnd = if (firstSpaceIndexAfterCursor != -1) {
+        firstSpaceIndexAfterCursor
+    } else {
+        text.length - 1
+    }
+    val finalText = text.replaceRange(
+        rangeStart..rangeEnd,
+        "$newText ",
+    )
+    return copy(
+        text = finalText,
+        selection = TextRange(rangeStart + newText.length + 1)
+    )
 }
