@@ -1,6 +1,5 @@
 package org.mozilla.social.common.utils
 
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextRange
@@ -74,74 +73,24 @@ fun buildAnnotatedStringForAccountsAndHashtags(baseText: String, style: SpanStyl
 fun buildAnnotatedStringWithSymbols(symbols: List<Char>, text: String, style: SpanStyle): AnnotatedString {
     return buildAnnotatedString {
         var searchingForSymbol = true // if false then we are searching for a space
-        var start = -1
-        var end = -1
         text.forEachIndexed { index, character ->
             if (searchingForSymbol) {
                 if ((index == 0 || text[index - 1] == ' ') && symbols.contains(character)) {
-                    start = index
+                    withStyle(style) {
+                        append(character)
+                    }
                     searchingForSymbol = false
                 } else {
                     append(character)
                 }
             } else {
+                withStyle(style) {
+                    append(character)
+                }
                 if (character == ' ') {
-                    end = index
                     searchingForSymbol = true
                 }
             }
-
-            if (start != -1 && end != -1) {
-                withStyle(style) {
-                    append(text.substring(start, end))
-                    append(character)
-                }
-                start = -1
-                end = -1
-            }
-        }
-        if (start != -1) {
-            withStyle(style) {
-                append(text.substring(start, text.length))
-            }
         }
     }
-}
-
-fun TextFieldValue.getAccountTextRanges(spanStyle: SpanStyle): List<AnnotatedString.Range<SpanStyle>> =
-    getSymbolTextRanges('@', spanStyle)
-
-fun TextFieldValue.getHashtagTextRanges(spanStyle: SpanStyle): List<AnnotatedString.Range<SpanStyle>> =
-    getSymbolTextRanges('#', spanStyle)
-
-fun TextFieldValue.getSymbolTextRanges(symbol: Char, spanStyle: SpanStyle): List<AnnotatedString.Range<SpanStyle>> {
-    val ranges = mutableListOf<AnnotatedString.Range<SpanStyle>>()
-
-    var searchingForSymbol = true // if false then we are searching for a space
-    var start = -1
-    var end = -1
-    text.forEachIndexed { index, character ->
-        if (searchingForSymbol) {
-            if ((index == 0 || text[index - 1] == ' ') && character == symbol) {
-                start = index
-                searchingForSymbol = false
-            }
-        } else {
-            if (character == ' ') {
-                end = index
-                searchingForSymbol = true
-            }
-        }
-
-        if (start != -1 && end != -1) {
-            start = -1
-            end = -1
-            ranges.add(AnnotatedString.Range(spanStyle, start, end))
-        }
-    }
-    if (start != -1) {
-        ranges.add(AnnotatedString.Range(spanStyle, start, text.length))
-    }
-
-    return ranges
 }
