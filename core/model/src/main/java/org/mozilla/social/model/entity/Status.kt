@@ -10,7 +10,7 @@ import kotlinx.serialization.Serializable
  * Represents a status posted by an account.
  */
 @Serializable
-public data class Status(
+data class Status(
 
     @SerialName("id")
     val statusId: String,
@@ -73,7 +73,7 @@ public data class Status(
      * Hashtags used within the status content.
      */
     @SerialName("tags")
-    val tags: List<Tag>,
+    val hashTags: List<HashTag>,
 
     /**
      * Custom emoji to be used when rendering status content.

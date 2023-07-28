@@ -2,7 +2,9 @@ package org.mozilla.social.core.network
 
 import okhttp3.MultipartBody
 import org.mozilla.social.model.MediaUpdateRequestBody
+import org.mozilla.social.model.SearchRequestBody
 import org.mozilla.social.model.entity.Attachment
+import org.mozilla.social.model.entity.SearchResult
 import org.mozilla.social.model.entity.Status
 import org.mozilla.social.model.entity.request.StatusCreate
 import retrofit2.Response
@@ -39,4 +41,9 @@ interface MastodonApi {
 
     @GET("/api/v1/timelines/public")
     suspend fun getPublicTimeline(): Response<List<Status>>
+
+    @GET("/api/v2/search")
+    suspend fun search(
+        @Body requestBody: SearchRequestBody,
+    ) : SearchResult
 }

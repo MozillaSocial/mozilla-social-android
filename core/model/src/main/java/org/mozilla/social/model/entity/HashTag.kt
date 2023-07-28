@@ -8,7 +8,7 @@ import org.mozilla.social.model.entity.paging.Pageable
  * Represents a hashtag used within the content of a status.
  */
 @Serializable
-public data class Tag(
+data class HashTag(
 
     /**
      * The value of the hashtag after the # sign.

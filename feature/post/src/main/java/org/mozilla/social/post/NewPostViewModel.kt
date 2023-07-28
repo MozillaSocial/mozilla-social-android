@@ -16,7 +16,10 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.mozilla.social.common.LoadState
 import org.mozilla.social.common.logging.Log
+import org.mozilla.social.common.utils.accountText
+import org.mozilla.social.common.utils.hashtagText
 import org.mozilla.social.core.data.repository.MediaRepository
+import org.mozilla.social.core.data.repository.SearchRepository
 import org.mozilla.social.core.data.repository.StatusRepository
 import org.mozilla.social.model.entity.StatusVisibility
 import org.mozilla.social.model.entity.request.PollCreate
@@ -27,10 +30,14 @@ import org.mozilla.social.post.poll.PollInteractions
 import org.mozilla.social.post.media.MediaDelegate
 import org.mozilla.social.post.poll.PollDelegate
 import org.mozilla.social.post.poll.PollStyle
+import org.mozilla.social.post.status.Account
+import org.mozilla.social.post.status.StatusDelegate
+import org.mozilla.social.post.status.StatusInteractions
 
 class NewPostViewModel(
     private val statusRepository: StatusRepository,
     private val mediaRepository: MediaRepository,
+    private val searchRepository: SearchRepository,
     private val log: Log,
     private val onStatusPosted: () -> Unit,
     private val pollDelegate: PollDelegate = PollDelegate(),
@@ -39,21 +46,28 @@ class NewPostViewModel(
         mediaRepository,
         log,
     ),
+    private val statusDelegate: StatusDelegate = StatusDelegate(
+        searchRepository,
+        log,
+    ),
 ) : ViewModel(),
     MediaInteractions by mediaDelegate,
     PollInteractions by pollDelegate,
-    ContentWarningInteractions by contentWarningDelegate
+    ContentWarningInteractions by contentWarningDelegate,
+    StatusInteractions by statusDelegate
 {
     init {
         mediaDelegate.coroutineScope = viewModelScope
+        statusDelegate.coroutineScope = viewModelScope
     }
 
     val poll = pollDelegate.poll
     val contentWarningText = contentWarningDelegate.contentWarningText
     val imageStates = mediaDelegate.imageStates
 
-    private val _statusText = MutableStateFlow(TextFieldValue(""))
-    val statusText = _statusText.asStateFlow()
+    val statusText = statusDelegate.statusText
+    val accountList = statusDelegate.accountList
+    val hashtagList = statusDelegate.hashtagList
 
     val sendButtonEnabled: StateFlow<Boolean> =
         combine(statusText, imageStates, poll) { statusText, imageStates, poll ->
@@ -95,10 +109,9 @@ class NewPostViewModel(
     private val _visibility = MutableStateFlow(StatusVisibility.Public)
     val visibility = _visibility.asStateFlow()
 
-    fun onStatusTextUpdated(textFieldValue: TextFieldValue) {
+    override fun onStatusTextUpdated(textFieldValue: TextFieldValue) {
         if (textFieldValue.text.length + (contentWarningText.value?.length ?: 0) > MAX_POST_LENGTH) return
-        _statusText.update { textFieldValue }
-
+        statusDelegate.onStatusTextUpdated(textFieldValue)
     }
 
     override fun onContentWarningTextChanged(text: String) {
@@ -134,20 +147,6 @@ class NewPostViewModel(
                 _errorToastMessage.emit("Error Sending Post")
                 _isSendingPost.update { false }
             }
-        }
-    }
-
-    /**
-     * @return the account string a user is typing if they are typing one, otherwise null
-     */
-    private fun accountText(textFieldValue: TextFieldValue): String? {
-        if (!textFieldValue.text.contains("@")) return null
-        val textBeforeCursor = textFieldValue.text.substring(0, textFieldValue.selection.end)
-        val textBetweenSymbolAndCursor = textBeforeCursor.substringAfterLast('@')
-        return if (!textBetweenSymbolAndCursor.contains(" ")) {
-            textBetweenSymbolAndCursor
-        } else {
-            null
         }
     }
 
