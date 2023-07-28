@@ -4,7 +4,7 @@ import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import kotlin.test.Test
 
-class SymbolUtilsTest {
+class TextFieldValueExtensionsTest {
 
     @Test
     fun findAccountNameTests() {

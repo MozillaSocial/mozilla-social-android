@@ -1,5 +1,6 @@
 package org.mozilla.social.post
 
+import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -16,8 +17,6 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.mozilla.social.common.LoadState
 import org.mozilla.social.common.logging.Log
-import org.mozilla.social.common.utils.accountText
-import org.mozilla.social.common.utils.hashtagText
 import org.mozilla.social.core.data.repository.MediaRepository
 import org.mozilla.social.core.data.repository.SearchRepository
 import org.mozilla.social.core.data.repository.StatusRepository
@@ -30,7 +29,6 @@ import org.mozilla.social.post.poll.PollInteractions
 import org.mozilla.social.post.media.MediaDelegate
 import org.mozilla.social.post.poll.PollDelegate
 import org.mozilla.social.post.poll.PollStyle
-import org.mozilla.social.post.status.Account
 import org.mozilla.social.post.status.StatusDelegate
 import org.mozilla.social.post.status.StatusInteractions
 
@@ -109,9 +107,9 @@ class NewPostViewModel(
     private val _visibility = MutableStateFlow(StatusVisibility.Public)
     val visibility = _visibility.asStateFlow()
 
-    override fun onStatusTextUpdated(textFieldValue: TextFieldValue) {
+    override fun onStatusTextUpdated(textFieldValue: TextFieldValue, spanStyle: SpanStyle) {
         if (textFieldValue.text.length + (contentWarningText.value?.length ?: 0) > MAX_POST_LENGTH) return
-        statusDelegate.onStatusTextUpdated(textFieldValue)
+        statusDelegate.onStatusTextUpdated(textFieldValue, spanStyle)
     }
 
     override fun onContentWarningTextChanged(text: String) {

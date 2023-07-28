@@ -1,5 +1,6 @@
 package org.mozilla.social.post.status
 
+import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.input.TextFieldValue
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -10,10 +11,11 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.mozilla.social.common.logging.Log
 import org.mozilla.social.common.utils.accountText
+import org.mozilla.social.common.utils.buildAnnotatedStringForAccountsAndHashtags
+import org.mozilla.social.common.utils.buildAnnotatedStringWithSymbols
 import org.mozilla.social.common.utils.hashtagText
 import org.mozilla.social.common.utils.replaceAccount
 import org.mozilla.social.common.utils.replaceHashtag
-import org.mozilla.social.common.utils.replaceSymbolText
 import org.mozilla.social.core.data.repository.SearchRepository
 
 class StatusDelegate(
@@ -34,8 +36,16 @@ class StatusDelegate(
 
     private var searchJob: Job? = null
 
-    override fun onStatusTextUpdated(textFieldValue: TextFieldValue) {
-        _statusText.update { textFieldValue }
+    override fun onStatusTextUpdated(
+        textFieldValue: TextFieldValue,
+        spanStyle: SpanStyle,
+    ) {
+        _statusText.update {
+            log.d("updating onStatusTextUpdated")
+            textFieldValue.copy(
+                annotatedString = buildAnnotatedStringForAccountsAndHashtags(textFieldValue.text)
+            )
+        }
 
         searchForAccountsAndHashtags(textFieldValue)
     }
