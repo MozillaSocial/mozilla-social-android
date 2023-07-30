@@ -66,7 +66,9 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.input.OffsetMapping
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.input.TransformedText
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -384,30 +386,29 @@ private fun MainBox(
 
                     item {
                         val highlightColor = FirefoxColor.Blue60
-                        val realText = remember(statusText) {
-                            statusText.copy(
-                                // TODO uncomment code after figuring out bug
-                                // TODO I posed this to stack overflow https://stackoverflow.com/questions/76791285/jetpack-compose-why-is-onvaluechange-getting-called-over-and-over
-//                                annotatedString = buildAnnotatedStringForAccountsAndHashtags(
-//                                    statusText.text,
-//                                    SpanStyle(
-//                                        color = highlightColor
-//                                    )
-//                                ),
-                            )
-                        }
                         TextField(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .focusRequester(textFieldFocusRequester),
-                            value = realText,
+                            value = statusText,
                             onValueChange = { statusInteractions.onStatusTextUpdated(it) },
                             label = {
                                 Text(
                                     text = "What's happening?"
                                 )
                             },
-                            colors = transparentTextFieldColors()
+                            colors = transparentTextFieldColors(),
+                            visualTransformation = {
+                                TransformedText(
+                                    buildAnnotatedStringForAccountsAndHashtags(
+                                        it.text,
+                                        SpanStyle(
+                                            color = highlightColor
+                                        )
+                                    ),
+                                    OffsetMapping.Identity
+                                )
+                            }
                         )
                     }
 
