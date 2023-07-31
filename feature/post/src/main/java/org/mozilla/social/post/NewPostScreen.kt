@@ -178,7 +178,7 @@ private fun NewPostScreen(
     Box(
         modifier = Modifier
             .windowInsetsPadding(WindowInsets.ime.exclude(WindowInsets.navigationBars))
-            .background(MaterialTheme.colorScheme.background)
+            .background(MaterialTheme.colorScheme.surface)
     ) {
         Column {
             TopBar(
@@ -252,7 +252,11 @@ private fun TopBar(
             IconButton(
                 onClick = { onCloseClicked() },
             ) {
-                Icon(Icons.Default.Close, "close")
+                Icon(
+                    Icons.Default.Close,
+                    "close",
+                    tint = MaterialTheme.colorScheme.onSurface,
+                )
             }
 
             // right side
@@ -272,13 +276,14 @@ private fun TopBar(
                         keyboard?.hide()
                     },
                 ) {
-                    Icon(Icons.Default.Send, "post")
+                    Icon(
+                        Icons.Default.Send,
+                        "post",
+                        tint = MaterialTheme.colorScheme.onSurface,
+                    )
                 }
             }
         }
-        Divider(
-            color = MaterialTheme.colorScheme.outlineVariant
-        )
     }
 }
 
@@ -303,6 +308,7 @@ private fun BottomBar(
             modifier = Modifier
                 .height(60.dp)
                 .fillMaxWidth()
+                .background(MaterialTheme.colorScheme.background)
         ) {
             // left row
             Row(
@@ -312,13 +318,21 @@ private fun BottomBar(
                     onClick = { onUploadImageClicked() },
                     enabled = addImageButtonEnabled,
                 ) {
-                    Icon(Icons.Default.AddPhotoAlternate, "attach image")
+                    Icon(
+                        Icons.Default.AddPhotoAlternate,
+                        "attach image",
+                        tint = MaterialTheme.colorScheme.onSurface,
+                    )
                 }
                 IconButton(
                     onClick = { pollInteractions.onNewPollClicked() },
                     enabled = pollButtonEnabled,
                 ) {
-                    Icon(Icons.Default.Poll, "add poll")
+                    Icon(
+                        Icons.Default.Poll,
+                        "add poll",
+                        tint = MaterialTheme.colorScheme.onSurface,
+                    )
                 }
                 IconButton(
                     onClick = { contentWarningInteractions.onContentWarningClicked() },
@@ -340,7 +354,10 @@ private fun BottomBar(
                     .align(Alignment.CenterEnd)
                     .padding(end = 16.dp)
             ) {
-                Text(text = characterCountText)
+                Text(
+                    text = characterCountText,
+                    color = MaterialTheme.colorScheme.onSurface,
+                )
             }
         }
     }
@@ -616,7 +633,9 @@ private fun PollSettings(
 @Preview
 @Composable
 private fun NewPostScreenPreview() {
-    MozillaSocialTheme {
+    MozillaSocialTheme(
+        false
+    ) {
         NewPostScreen(
             statusText = TextFieldValue(),
             statusInteractions = object : StatusInteractions {},
