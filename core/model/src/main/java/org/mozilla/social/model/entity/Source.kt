@@ -9,7 +9,7 @@ import kotlinx.serialization.Serializable
  * Returned as an additional entity when verifying and updated credentials.
  */
 @Serializable
-public data class Source(
+data class Source(
 
     /**
      * The account's bio.

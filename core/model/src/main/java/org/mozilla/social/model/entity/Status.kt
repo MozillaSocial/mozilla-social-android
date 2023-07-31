@@ -191,11 +191,6 @@ data class Status(
      */
     @SerialName("pinned")
     val isPinned: Boolean? = null,
-
-    /**
-     * Not in the official mastodon API.  Could add in the future
-     */
-    val inReplyToAccountName: String? = null,
 ) : Pageable {
 
     override val id: String
