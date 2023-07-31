@@ -4,5 +4,5 @@ import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 val feedModule = module {
-    viewModel { FeedViewModel(get()) }
+    viewModel { FeedViewModel(get(), get()) }
 }

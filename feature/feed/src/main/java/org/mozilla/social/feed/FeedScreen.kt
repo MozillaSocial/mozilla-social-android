@@ -2,11 +2,10 @@
 
 package org.mozilla.social.feed
 
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -17,26 +16,28 @@ import org.koin.androidx.compose.koinViewModel
 import org.mozilla.social.core.designsystem.theme.MozillaSocialTheme
 import org.mozilla.social.core.ui.PostCard
 import org.mozilla.social.model.entity.Status
-import org.mozilla.social.model.entity.StatusVisibility
 
 @Composable
 fun FeedScreen(viewModel: FeedViewModel = koinViewModel()) {
     FeedScreen(
-        publicTimeline = viewModel.feed.collectAsState(initial = null).value,
+        publicTimeline = viewModel.statusFeed.collectAsState(initial = null).value,
     )
 }
 
 @Composable
 fun FeedScreen(publicTimeline: List<Status>?) {
-    Column(
+    LazyColumn(
         Modifier
             .fillMaxSize()
             .padding(4.dp)
-            .verticalScroll(rememberScrollState())
     ) {
-        publicTimeline?.forEach { status ->
-            if (status.visibility == StatusVisibility.Public)
-                PostCard(status = status)
+        publicTimeline?.let { statuses ->
+            items(statuses.size) { index ->
+                PostCard(status = statuses[index])
+                if (index < statuses.lastIndex) {
+                    Divider()
+                }
+            }
         }
     }
 }
