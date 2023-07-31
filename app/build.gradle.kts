@@ -89,8 +89,7 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.test.manifest)
 
     // testing
-    testImplementation(libs.koin.junit)
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.test.ext.junit)
-    androidTestImplementation(libs.androidx.test.espresso.core)
+    testImplementation(libs.kotlin.test)
+    testImplementation(libs.kotlin.test.junit)
+    testImplementation(libs.koin.test)
 }

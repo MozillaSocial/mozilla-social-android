@@ -24,4 +24,7 @@ android {
 dependencies {
     implementation(libs.jakewharton.timber)
     implementation(libs.koin)
+
+    testImplementation(libs.kotlin.test)
+    testImplementation(libs.kotlin.test.junit)
 }

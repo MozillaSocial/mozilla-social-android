@@ -1,22 +1,29 @@
 package org.mozilla.social.model.entity
 
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+
 /**
  * Represents the results of a search.
  */
-data class Results(
+@Serializable
+data class SearchResult(
 
     /**
      * Accounts which matched the query.
      */
+    @SerialName("accounts")
     val accounts: List<Account>,
 
     /**
      * Statuses which matched the query.
      */
+    @SerialName("statuses")
     val statuses: List<Status>,
 
     /**
      * Hashtags which matched the query.
      */
-    val hashtags: List<Tag>
+    @SerialName("hashtags")
+    val hashtags: List<HashTag>
 )

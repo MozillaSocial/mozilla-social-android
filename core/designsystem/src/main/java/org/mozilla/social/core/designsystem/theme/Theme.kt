@@ -66,7 +66,9 @@ private fun RowScope.DarkPalette() {
 
 @Composable
 private fun ColorSchemePalette(colorScheme: ColorScheme) {
-    Column {
+    Column(
+        modifier = Modifier.background(colorScheme.background)
+    ) {
         TestBox(
             text = "primary",
             textColor = colorScheme.onPrimary,
@@ -191,7 +193,7 @@ private val DarkColorScheme = darkColorScheme(
     surfaceTint = FirefoxColor.Violet80,
     inverseSurface = FirefoxColor.LightGrey10,
     inverseOnSurface = FirefoxColor.DarkGrey60,
-    error = FirefoxColor.Red70,
+    error = FirefoxColor.Red50,
     onError = FirefoxColor.LightGrey10,
     errorContainer = FirefoxColor.Red70,
     onErrorContainer = FirefoxColor.LightGrey10,

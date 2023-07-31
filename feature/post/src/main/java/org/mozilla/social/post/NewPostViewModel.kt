@@ -1,5 +1,7 @@
 package org.mozilla.social.post
 
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -16,6 +18,7 @@ import kotlinx.coroutines.launch
 import org.mozilla.social.common.LoadState
 import org.mozilla.social.common.logging.Log
 import org.mozilla.social.core.data.repository.MediaRepository
+import org.mozilla.social.core.data.repository.SearchRepository
 import org.mozilla.social.core.data.repository.StatusRepository
 import org.mozilla.social.model.entity.StatusVisibility
 import org.mozilla.social.model.entity.request.PollCreate
@@ -26,10 +29,13 @@ import org.mozilla.social.post.poll.PollInteractions
 import org.mozilla.social.post.media.MediaDelegate
 import org.mozilla.social.post.poll.PollDelegate
 import org.mozilla.social.post.poll.PollStyle
+import org.mozilla.social.post.status.StatusDelegate
+import org.mozilla.social.post.status.StatusInteractions
 
 class NewPostViewModel(
     private val statusRepository: StatusRepository,
     private val mediaRepository: MediaRepository,
+    private val searchRepository: SearchRepository,
     private val log: Log,
     private val onStatusPosted: () -> Unit,
     private val pollDelegate: PollDelegate = PollDelegate(),
@@ -38,25 +44,32 @@ class NewPostViewModel(
         mediaRepository,
         log,
     ),
+    private val statusDelegate: StatusDelegate = StatusDelegate(
+        searchRepository,
+        log,
+    ),
 ) : ViewModel(),
     MediaInteractions by mediaDelegate,
     PollInteractions by pollDelegate,
-    ContentWarningInteractions by contentWarningDelegate
+    ContentWarningInteractions by contentWarningDelegate,
+    StatusInteractions by statusDelegate
 {
     init {
         mediaDelegate.coroutineScope = viewModelScope
+        statusDelegate.coroutineScope = viewModelScope
     }
 
     val poll = pollDelegate.poll
     val contentWarningText = contentWarningDelegate.contentWarningText
     val imageStates = mediaDelegate.imageStates
 
-    private val _statusText = MutableStateFlow("")
-    val statusText = _statusText.asStateFlow()
+    val statusText = statusDelegate.statusText
+    val accountList = statusDelegate.accountList
+    val hashtagList = statusDelegate.hashtagList
 
     val sendButtonEnabled: StateFlow<Boolean> =
         combine(statusText, imageStates, poll) { statusText, imageStates, poll ->
-            (statusText.isNotBlank() || imageStates.isNotEmpty())
+            (statusText.text.isNotBlank() || imageStates.isNotEmpty())
                     // all images are loaded
                     && imageStates.values.find { it.loadState != LoadState.LOADED } == null
                     // poll options have text if they exist
@@ -94,13 +107,13 @@ class NewPostViewModel(
     private val _visibility = MutableStateFlow(StatusVisibility.Public)
     val visibility = _visibility.asStateFlow()
 
-    fun onStatusTextUpdated(text: String) {
-        if (text.length + (contentWarningText.value?.length ?: 0) > MAX_POST_LENGTH) return
-        _statusText.update { text }
+    override fun onStatusTextUpdated(textFieldValue: TextFieldValue) {
+        if (textFieldValue.text.length + (contentWarningText.value?.length ?: 0) > MAX_POST_LENGTH) return
+        statusDelegate.onStatusTextUpdated(textFieldValue)
     }
 
     override fun onContentWarningTextChanged(text: String) {
-        if (text.length + statusText.value.length > MAX_POST_LENGTH) return
+        if (text.length + statusText.value.text.length > MAX_POST_LENGTH) return
         contentWarningDelegate.onContentWarningTextChanged(text)
     }
 
@@ -113,7 +126,7 @@ class NewPostViewModel(
             _isSendingPost.update { true }
             try {
                 statusRepository.sendPost(
-                    statusText = statusText.value,
+                    statusText = statusText.value.text,
                     imageStates = imageStates.value.values.toList(),
                     visibility = visibility.value,
                     pollCreate = poll.value?.let { poll ->

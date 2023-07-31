@@ -1,5 +1,6 @@
 package org.mozilla.social.core.ui
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
@@ -9,9 +10,11 @@ import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.LockOpen
 import androidx.compose.material.icons.filled.Message
 import androidx.compose.material.icons.filled.Public
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -33,7 +36,11 @@ fun VisibilityDropDownButton(
     val expanded = remember { mutableStateOf(false) }
 
     OutlinedButton(
-        onClick = { expanded.value = true }
+        onClick = { expanded.value = true },
+        border = BorderStroke(
+            1.dp,
+            color = MaterialTheme.colorScheme.onSurface
+        )
     ) {
         when (visibility) {
             StatusVisibility.Public -> ButtonContent(icon = Icons.Default.Public, text = "Public")
@@ -42,7 +49,11 @@ fun VisibilityDropDownButton(
             StatusVisibility.Direct -> ButtonContent(icon = Icons.Default.Message, text = "Direct")
         }
         Spacer(modifier = Modifier.padding(start = 8.dp))
-        Icon(Icons.Default.ArrowDropDown, "")
+        Icon(
+            Icons.Default.ArrowDropDown,
+            "",
+            tint = MaterialTheme.colorScheme.onSurface,
+        )
     }
 
     DropdownMenu(
@@ -87,9 +98,16 @@ private fun ButtonContent(
     icon: ImageVector,
     text: String,
 ) {
-    Icon(icon, "")
+    Icon(
+        icon,
+        "",
+        tint = MaterialTheme.colorScheme.onSurface,
+    )
     Spacer(modifier = Modifier.padding(start = 8.dp))
-    Text(text = text)
+    Text(
+        text = text,
+        color = MaterialTheme.colorScheme.onSurface,
+    )
 }
 
 @Composable
@@ -119,7 +137,9 @@ private fun DropDownItem(
 @Preview
 @Composable
 private fun VisibilityDropDownPreview() {
-    MozillaSocialTheme {
+    MozillaSocialTheme(
+        true
+    ) {
         VisibilityDropDownButton(
             visibility = StatusVisibility.Private,
             onVisibilitySelected = {}

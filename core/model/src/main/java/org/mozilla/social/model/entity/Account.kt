@@ -10,7 +10,7 @@ import kotlinx.serialization.Serializable
  * Represents a user of Mastodon and their associated profile.
  */
 @Serializable
-public data class Account(
+data class Account(
 
     @SerialName("id")
     val accountId: String,
