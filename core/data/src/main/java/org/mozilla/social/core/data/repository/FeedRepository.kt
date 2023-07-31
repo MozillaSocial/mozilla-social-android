@@ -1,19 +1,32 @@
 package org.mozilla.social.core.data.repository
 
-import org.mozilla.social.core.data.MastodonServiceWrapper
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import org.mozilla.social.core.network.MastodonApi
 import org.mozilla.social.model.entity.Status
-import retrofit2.Response
 
 class FeedRepository internal constructor(
-    private val serviceWrapper: MastodonServiceWrapper,
     private val mastodonApi: MastodonApi
 ) {
-    suspend fun retrieveHomeTimeline(): Response<List<Status>> {
-        return mastodonApi.getHomeTimeline()
-    }
+    suspend fun retrieveHomeTimeline(): List<Status> =
+        mastodonApi.getHomeTimeline().getInReplyToAccountNames()
 
-    suspend fun retrievePublicTimeline(): Response<List<Status>> {
-        return mastodonApi.getPublicTimeline()
-    }
+    suspend fun retrievePublicTimeline(): List<Status> =
+        mastodonApi.getPublicTimeline().getInReplyToAccountNames()
+
+    private suspend fun List<Status>.getInReplyToAccountNames(): List<Status> =
+        coroutineScope {
+            map { status ->
+                // get in reply to account names
+                async {
+                    status.inReplyToAccountId?.let { accountId ->
+                        status.copy(
+                            inReplyToAccountName = mastodonApi.getAccount(accountId).displayName
+                        )
+                    } ?: status
+                }
+            }.map {
+                it.await()
+            }
+        }
 }

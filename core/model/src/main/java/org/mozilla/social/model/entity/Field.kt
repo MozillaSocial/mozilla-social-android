@@ -10,7 +10,7 @@ import kotlinx.serialization.Serializable
  * By default, max 4 fields and 255 characters per property/value.
  */
 @Serializable
-public data class Field(
+data class Field(
 
     @SerialName("name")
     val name: String,

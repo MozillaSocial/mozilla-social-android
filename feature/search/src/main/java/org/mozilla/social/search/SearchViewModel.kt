@@ -13,14 +13,6 @@ class SearchViewModel(
     val feed: Flow<List<Status>> = retrievePublicTimeline()
 
     private fun retrievePublicTimeline(): Flow<List<Status>> {
-        return flow {
-            val response = feedRepository.retrievePublicTimeline()
-            if (response.isSuccessful) {
-                emit(response.body() ?: emptyList())
-            } else {
-                val errorMsg = response.errorBody()?.string()
-                emit(emptyList())
-            }
-        }
+        return flow {}
     }
 }

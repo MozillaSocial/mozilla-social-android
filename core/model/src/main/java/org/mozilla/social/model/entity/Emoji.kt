@@ -7,7 +7,7 @@ import kotlinx.serialization.Serializable
  * Represents a custom emoji.
  */
 @Serializable
-public data class Emoji(
+data class Emoji(
 
     /**
      * The name of the custom emoji.

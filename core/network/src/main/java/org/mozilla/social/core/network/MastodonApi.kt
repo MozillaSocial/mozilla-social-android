@@ -2,6 +2,7 @@ package org.mozilla.social.core.network
 
 import okhttp3.MultipartBody
 import org.mozilla.social.model.MediaUpdateRequestBody
+import org.mozilla.social.model.entity.Account
 import org.mozilla.social.model.entity.Attachment
 import org.mozilla.social.model.entity.SearchResult
 import org.mozilla.social.model.entity.Status
@@ -9,7 +10,6 @@ import org.mozilla.social.model.entity.request.StatusCreate
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
-import retrofit2.http.HTTP
 import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.PUT
@@ -38,14 +38,19 @@ interface MastodonApi {
     )
 
     @GET("/api/v1/timelines/home")
-    suspend fun getHomeTimeline(): Response<List<Status>>
+    suspend fun getHomeTimeline(): List<Status>
 
     @GET("/api/v1/timelines/public")
-    suspend fun getPublicTimeline(): Response<List<Status>>
+    suspend fun getPublicTimeline(): List<Status>
 
     @GET("/api/v2/search")
     suspend fun search(
         @Query("q") query: String,
         @Query("type") type: String,
     ) : SearchResult
+
+    @GET("/api/v1/accounts/{id}")
+    suspend fun getAccount(
+        @Path("id") accountId: String
+    ): Account
 }

@@ -31,11 +31,10 @@ dependencies {
     implementation(libs.square.okhttp)
     implementation(libs.square.okhttp.logging)
 
+    implementation(libs.kotlinx.datetime)
+
     implementation(libs.koin)
     implementation(libs.koin.android)
-
-    // Core library
-    implementation(libs.mastodonk)
 
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.kotlinx.serialization.converter)
