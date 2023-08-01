@@ -9,7 +9,7 @@ import kotlinx.coroutines.launch
 import org.mozilla.social.common.logging.Log
 import org.mozilla.social.core.data.repository.FeedRepository
 import org.mozilla.social.core.ui.postcard.PostCardInteractions
-import org.mozilla.social.model.entity.Status
+import org.mozilla.social.model.Status
 
 /**
  * Produces a flow of pages of statuses for a feed

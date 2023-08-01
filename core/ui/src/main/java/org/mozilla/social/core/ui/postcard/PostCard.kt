@@ -15,7 +15,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Repeat
 import androidx.compose.material.icons.filled.Reply
-import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.filled.StarBorder
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -35,7 +34,7 @@ import coil.compose.AsyncImage
 import com.google.android.material.textview.MaterialTextView
 import org.mozilla.social.common.utils.timeSinceNow
 import org.mozilla.social.core.designsystem.theme.MozillaSocialTheme
-import org.mozilla.social.model.entity.Status
+import org.mozilla.social.model.Status
 
 @Composable
 fun PostCard(

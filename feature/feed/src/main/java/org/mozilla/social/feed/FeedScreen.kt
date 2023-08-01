@@ -1,12 +1,9 @@
-@file:OptIn(ExperimentalMaterial3Api::class)
-
 package org.mozilla.social.feed
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Divider
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
@@ -17,7 +14,7 @@ import org.koin.core.parameter.parametersOf
 import org.mozilla.social.core.designsystem.theme.MozillaSocialTheme
 import org.mozilla.social.core.ui.postcard.PostCard
 import org.mozilla.social.core.ui.postcard.PostCardInteractions
-import org.mozilla.social.model.entity.Status
+import org.mozilla.social.model.Status
 
 @Composable
 fun FeedScreen(

@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import org.mozilla.social.core.data.repository.FeedRepository
-import org.mozilla.social.model.entity.Status
+import org.mozilla.social.model.Status
 
 class SearchViewModel(
     private val feedRepository: FeedRepository

@@ -86,7 +86,7 @@ import org.mozilla.social.core.ui.VisibilityDropDownButton
 import org.mozilla.social.core.ui.media.MediaUpload
 import org.mozilla.social.core.ui.transparentTextFieldColors
 import org.mozilla.social.model.ImageState
-import org.mozilla.social.model.entity.StatusVisibility
+import org.mozilla.social.model.StatusVisibility
 import org.mozilla.social.post.NewPostViewModel.Companion.MAX_POLL_COUNT
 import org.mozilla.social.post.NewPostViewModel.Companion.MAX_POST_LENGTH
 import org.mozilla.social.post.NewPostViewModel.Companion.MIN_POLL_COUNT
