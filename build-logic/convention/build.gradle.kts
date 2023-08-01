@@ -31,7 +31,8 @@ tasks.withType<KotlinCompile>().configureEach {
 }
 
 dependencies {
-    compileOnly(libs.android.gradlePlugin)
+    implementation(libs.android.gradlePlugin)
+    implementation(libs.android.secrets)
     compileOnly(libs.kotlin.gradlePlugin)
 }
 
