@@ -3,6 +3,9 @@ package org.mozilla.social.navigation
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavOptions
+import androidx.navigation.NavOptionsBuilder
+import androidx.navigation.Navigator
 import androidx.navigation.compose.NavHost
 import androidx.navigation.navigation
 import org.mozilla.social.feature.auth.AUTH_ROUTE
@@ -10,6 +13,7 @@ import org.mozilla.social.feature.auth.authScreen
 import org.mozilla.social.feature.settings.settingsScreen
 import org.mozilla.social.feed.FEED_ROUTE
 import org.mozilla.social.feed.feedScreen
+import org.mozilla.social.post.navigateToNewPost
 import org.mozilla.social.post.newPostScreen
 import org.mozilla.social.search.searchScreen
 import org.mozilla.social.ui.AppState
@@ -24,7 +28,11 @@ fun MozillaNavHost(appState: AppState) {
 
 private fun NavGraphBuilder.mainGraph(appState: AppState) {
     navigation(startDestination = FEED_ROUTE, route = MAIN_ROUTE) {
-        feedScreen()
+        feedScreen(
+            onReplyClicked = { replyId ->
+                appState.navController.navigateToNewPost(replyId = replyId)
+            }
+        )
         searchScreen()
         settingsScreen(onLogout = appState::onLogout)
         newPostScreen(
