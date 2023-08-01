@@ -38,6 +38,7 @@ class NewPostViewModel(
     private val searchRepository: SearchRepository,
     private val log: Log,
     private val onStatusPosted: () -> Unit,
+    private val replyId: String?,
     private val pollDelegate: PollDelegate = PollDelegate(),
     private val contentWarningDelegate: ContentWarningDelegate = ContentWarningDelegate(),
     private val mediaDelegate: MediaDelegate = MediaDelegate(

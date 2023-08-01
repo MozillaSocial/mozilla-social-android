@@ -107,7 +107,11 @@ import org.mozilla.social.post.status.StatusInteractions
 internal fun NewPostRoute(
     onStatusPosted: () -> Unit,
     onCloseClicked: () -> Unit,
-    viewModel: NewPostViewModel = koinViewModel(parameters = { parametersOf(onStatusPosted) })
+    replyId: String?,
+    viewModel: NewPostViewModel = koinViewModel(parameters = { parametersOf(
+        onStatusPosted,
+        replyId,
+    ) })
 ) {
     NewPostScreen(
         statusText = viewModel.statusText.collectAsState().value,

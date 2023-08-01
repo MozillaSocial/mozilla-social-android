@@ -1,4 +1,4 @@
-package org.mozilla.social.core.ui
+package org.mozilla.social.core.ui.postcard
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -9,11 +9,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Repeat
@@ -41,7 +38,10 @@ import org.mozilla.social.core.designsystem.theme.MozillaSocialTheme
 import org.mozilla.social.model.entity.Status
 
 @Composable
-fun PostCard(status: Status) {
+fun PostCard(
+    status: Status,
+    postCardInteractions: PostCardInteractions,
+) {
     Column(
         Modifier
             .padding(8.dp)
@@ -49,12 +49,12 @@ fun PostCard(status: Status) {
     ) {
         if (status.boostedStatus != null) {
             TopRowMetaData(text = "${status.account.username} boosted", imageVector = Icons.Default.Repeat)
-            MainPost(status = status.boostedStatus!!)
+            MainPost(status.boostedStatus!!, postCardInteractions)
         } else {
             status.inReplyToAccountName?.let { replyAccountName ->
                 TopRowMetaData(text = "In reply to $replyAccountName", imageVector = Icons.Default.Reply)
             }
-            MainPost(status = status)
+            MainPost(status, postCardInteractions)
         }
     }
 }
@@ -84,7 +84,10 @@ private fun TopRowMetaData(
 }
 
 @Composable
-private fun MainPost(status: Status) {
+private fun MainPost(
+    status: Status,
+    postCardInteractions: PostCardInteractions,
+) {
     MetaData(status = status)
     val spannedText = HtmlCompat.fromHtml(status.content, 0)
     AndroidView(
@@ -103,7 +106,7 @@ private fun MainPost(status: Status) {
         Spacer(modifier = Modifier.height(4.dp))
     }
 
-    BottomRow(status)
+    BottomRow(status, postCardInteractions)
 }
 
 @Composable
@@ -137,31 +140,34 @@ private fun MetaData(status: Status) {
 }
 
 @Composable
-private fun BottomRow(status: Status) {
+private fun BottomRow(
+    status: Status,
+    postCardInteractions: PostCardInteractions,
+) {
     Row(
         modifier = Modifier.fillMaxWidth()
     ) {
         BottomIconButton(
-            onClick = { /*TODO*/ },
+            onClick = { postCardInteractions.onReplyClicked(status.statusId) },
             imageVector = Icons.Default.Reply,
             count = status.repliesCount,
         )
         Spacer(modifier = Modifier.weight(1f))
         BottomIconButton(
-            onClick = { /*TODO*/ },
+            onClick = { postCardInteractions.onBoostClicked() },
             imageVector = Icons.Default.Repeat,
             count = status.boostsCount,
         )
         Spacer(modifier = Modifier.weight(1f))
         BottomIconButton(
-            onClick = { /*TODO*/ },
+            onClick = { postCardInteractions.onFavoriteClicked() },
             imageVector = Icons.Default.StarBorder,
             count = status.favouritesCount,
         )
         Spacer(modifier = Modifier.weight(1f))
         BottomIconButton(
-            onClick = { /*TODO*/ },
-            imageVector = Icons.Default.Reply,
+            onClick = { postCardInteractions.onShareClicked() },
+            imageVector = Icons.Default.Share,
             count = 0,
         )
     }

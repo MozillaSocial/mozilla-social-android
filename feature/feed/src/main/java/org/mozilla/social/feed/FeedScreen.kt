@@ -13,19 +13,28 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.parametersOf
 import org.mozilla.social.core.designsystem.theme.MozillaSocialTheme
-import org.mozilla.social.core.ui.PostCard
+import org.mozilla.social.core.ui.postcard.PostCard
+import org.mozilla.social.core.ui.postcard.PostCardInteractions
 import org.mozilla.social.model.entity.Status
 
 @Composable
-fun FeedScreen(viewModel: FeedViewModel = koinViewModel()) {
+fun FeedScreen(
+    onReplyClicked: (String) -> Unit,
+    viewModel: FeedViewModel = koinViewModel(parameters = { parametersOf(onReplyClicked) })
+) {
     FeedScreen(
         publicTimeline = viewModel.statusFeed.collectAsState(initial = null).value,
+        postCardInteractions = viewModel,
     )
 }
 
 @Composable
-fun FeedScreen(publicTimeline: List<Status>?) {
+fun FeedScreen(
+    publicTimeline: List<Status>?,
+    postCardInteractions: PostCardInteractions,
+) {
     LazyColumn(
         Modifier
             .fillMaxSize()
@@ -33,7 +42,7 @@ fun FeedScreen(publicTimeline: List<Status>?) {
     ) {
         publicTimeline?.let { statuses ->
             items(statuses.size) { index ->
-                PostCard(status = statuses[index])
+                PostCard(status = statuses[index], postCardInteractions)
                 if (index < statuses.lastIndex) {
                     Divider()
                 }

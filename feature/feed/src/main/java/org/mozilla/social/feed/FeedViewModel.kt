@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.mozilla.social.common.logging.Log
 import org.mozilla.social.core.data.repository.FeedRepository
+import org.mozilla.social.core.ui.postcard.PostCardInteractions
 import org.mozilla.social.model.entity.Status
 
 /**
@@ -15,8 +16,9 @@ import org.mozilla.social.model.entity.Status
  */
 class FeedViewModel(
     private val feedRepository: FeedRepository,
-    private val log: Log
-) : ViewModel() {
+    private val log: Log,
+    private val onReplyClicked: (String) -> Unit,
+) : ViewModel(), PostCardInteractions {
 
     private val _statusFeed = MutableStateFlow<List<Status>>(emptyList())
     val statusFeed = _statusFeed.asStateFlow()
@@ -30,6 +32,22 @@ class FeedViewModel(
                 }
             }
         }
+    }
+
+    override fun onReplyClicked(statusId: String) {
+        onReplyClicked.invoke(statusId)
+    }
+
+    override fun onBoostClicked() {
+        super.onBoostClicked()
+    }
+
+    override fun onFavoriteClicked() {
+        super.onFavoriteClicked()
+    }
+
+    override fun onShareClicked() {
+        super.onShareClicked()
     }
 
     fun showHomeTimeline() {
