@@ -2,7 +2,9 @@ package org.mozilla.social.core.data.repository
 
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
+import org.mozilla.social.core.data.repository.model.toExternalModel
 import org.mozilla.social.core.network.MastodonApi
+import org.mozilla.social.core.network.model.NetworkStatus
 import org.mozilla.social.model.Status
 
 class FeedRepository internal constructor(
@@ -14,16 +16,16 @@ class FeedRepository internal constructor(
     suspend fun retrievePublicTimeline(): List<Status> =
         mastodonApi.getPublicTimeline().getInReplyToAccountNames()
 
-    private suspend fun List<Status>.getInReplyToAccountNames(): List<Status> =
+    private suspend fun List<NetworkStatus>.getInReplyToAccountNames(): List<Status> =
         coroutineScope {
             map { status ->
                 // get in reply to account names
                 async {
                     status.inReplyToAccountId?.let { accountId ->
-                        status.copy(
+                        status.toExternalModel(
                             inReplyToAccountName = mastodonApi.getAccount(accountId).displayName
                         )
-                    } ?: status
+                    } ?: status.toExternalModel()
                 }
             }.map {
                 it.await()

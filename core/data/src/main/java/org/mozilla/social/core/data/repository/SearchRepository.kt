@@ -1,5 +1,6 @@
 package org.mozilla.social.core.data.repository
 
+import org.mozilla.social.core.data.repository.model.toExternalModel
 import org.mozilla.social.core.network.MastodonApi
 import org.mozilla.social.model.Account
 import org.mozilla.social.model.HashTag
@@ -14,7 +15,7 @@ class SearchRepository internal constructor(
         return mastodonApi.search(
             query,
             ACCOUNTS
-        ).accounts
+        ).accounts.map { it.toExternalModel() }
     }
 
     suspend fun searchForHashtags(
@@ -23,7 +24,7 @@ class SearchRepository internal constructor(
         return mastodonApi.search(
             query,
             HASHTAGS,
-        ).hashtags
+        ).hashtags.map { it.toExternalModel() }
     }
 
     companion object {
