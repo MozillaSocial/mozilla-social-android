@@ -191,6 +191,8 @@ data class Status(
      */
     @SerialName("pinned")
     val isPinned: Boolean? = null,
+
+    val inReplyToAccountName: String? = null,
 ) : Pageable {
 
     override val id: String
