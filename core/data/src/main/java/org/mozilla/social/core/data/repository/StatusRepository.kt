@@ -21,6 +21,7 @@ class StatusRepository(
         visibility: StatusVisibility,
         pollCreate: PollCreate?,
         contentWarningText: String?,
+        inReplyToId: String?,
     ) {
         coroutineScope {
             // asynchronously update all attachment descriptions before sending post
@@ -52,7 +53,8 @@ class StatusRepository(
                         null
                     } else {
                         contentWarningText
-                    }
+                    },
+                    inReplyToId = inReplyToId,
                 )
             )
         }

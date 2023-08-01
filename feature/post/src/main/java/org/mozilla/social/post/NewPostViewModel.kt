@@ -138,6 +138,7 @@ class NewPostViewModel(
                         )
                     },
                     contentWarningText = contentWarningText.value,
+                    inReplyToId = replyId,
                 )
                 onStatusPosted()
             } catch (e: Exception) {
