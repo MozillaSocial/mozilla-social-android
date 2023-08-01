@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.dp
 import org.koin.androidx.compose.koinViewModel
 import org.mozilla.social.core.designsystem.theme.MozillaSocialTheme
 import org.mozilla.social.core.ui.PostCard
-import org.mozilla.social.model.entity.Status
+import org.mozilla.social.model.Status
 
 @Composable
 fun FeedScreen(viewModel: FeedViewModel = koinViewModel()) {

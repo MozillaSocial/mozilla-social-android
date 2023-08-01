@@ -1,8 +1,8 @@
 package org.mozilla.social.core.data.repository
 
 import org.mozilla.social.core.network.MastodonApi
-import org.mozilla.social.model.entity.Account
-import org.mozilla.social.model.entity.HashTag
+import org.mozilla.social.model.Account
+import org.mozilla.social.model.HashTag
 
 class SearchRepository internal constructor(
     private val mastodonApi: MastodonApi,

@@ -1,6 +1,5 @@
 package org.mozilla.social.post
 
-import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -20,8 +19,8 @@ import org.mozilla.social.common.logging.Log
 import org.mozilla.social.core.data.repository.MediaRepository
 import org.mozilla.social.core.data.repository.SearchRepository
 import org.mozilla.social.core.data.repository.StatusRepository
-import org.mozilla.social.model.entity.StatusVisibility
-import org.mozilla.social.model.entity.request.PollCreate
+import org.mozilla.social.model.StatusVisibility
+import org.mozilla.social.model.request.PollCreate
 import org.mozilla.social.post.contentwarning.ContentWarningDelegate
 import org.mozilla.social.post.contentwarning.ContentWarningInteractions
 import org.mozilla.social.post.media.MediaInteractions

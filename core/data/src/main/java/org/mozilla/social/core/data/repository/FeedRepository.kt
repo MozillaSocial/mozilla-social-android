@@ -3,7 +3,7 @@ package org.mozilla.social.core.data.repository
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import org.mozilla.social.core.network.MastodonApi
-import org.mozilla.social.model.entity.Status
+import org.mozilla.social.model.Status
 
 class FeedRepository internal constructor(
     private val mastodonApi: MastodonApi

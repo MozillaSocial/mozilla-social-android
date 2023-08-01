@@ -4,10 +4,10 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import org.mozilla.social.core.network.MastodonApi
 import org.mozilla.social.model.ImageState
-import org.mozilla.social.model.MediaUpdateRequestBody
-import org.mozilla.social.model.entity.StatusVisibility
-import org.mozilla.social.model.entity.request.PollCreate
-import org.mozilla.social.model.entity.request.StatusCreate
+import org.mozilla.social.core.network.model.request.NetworkMediaUpdate
+import org.mozilla.social.model.StatusVisibility
+import org.mozilla.social.model.request.PollCreate
+import org.mozilla.social.model.request.StatusCreate
 
 class StatusRepository(
     private val mastodonApi: MastodonApi,
@@ -27,7 +27,7 @@ class StatusRepository(
                     async {
                         mastodonApi.updateMedia(
                             imageState.attachmentId!!,
-                            MediaUpdateRequestBody(imageState.description)
+                            NetworkMediaUpdate(imageState.description)
                         )
                     }
                 } else {
