@@ -115,7 +115,7 @@ fun MediaUpload(
 @Composable
 fun VideoPlayer(
     uri: Uri,
-    loadState: LoadState,
+    loadState: LoadState = LoadState.LOADED,
 ) {
     Box {
         val log: Log = get()

@@ -11,6 +11,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Repeat
@@ -25,6 +28,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -35,6 +40,8 @@ import coil.compose.AsyncImage
 import com.google.android.material.textview.MaterialTextView
 import org.mozilla.social.common.utils.timeSinceNow
 import org.mozilla.social.core.designsystem.theme.MozillaSocialTheme
+import org.mozilla.social.core.ui.media.MediaDisplay
+import org.mozilla.social.model.Attachment
 import org.mozilla.social.model.Status
 
 @Composable
@@ -98,13 +105,7 @@ private fun MainPost(
         factory = { MaterialTextView(it) },
         update = { it.text = spannedText }
     )
-    status.mediaAttachments.forEach {
-        AsyncImage(
-            model = it.previewUrl,
-            contentDescription = it.description
-        )
-        Spacer(modifier = Modifier.height(4.dp))
-    }
+    MediaDisplay(attachments = status.mediaAttachments)
 
     BottomRow(status, postCardInteractions)
 }

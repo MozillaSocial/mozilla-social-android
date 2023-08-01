@@ -17,3 +17,12 @@ fun Uri.getFileType(context: Context) : FileType {
         else -> FileType.UNKNOWN
     }
 }
+
+fun Uri.getFileType() : FileType {
+    val extension = toString().substring(toString().lastIndexOf('.') + 1)
+    return when (extension) {
+        "png", "webp", "jpg", "jpeg", "gif", "gifv" -> FileType.IMAGE
+        "mp4", "webm" -> FileType.VIDEO
+        else -> FileType.UNKNOWN
+    }
+}
