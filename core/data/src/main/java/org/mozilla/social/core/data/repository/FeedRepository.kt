@@ -2,6 +2,7 @@ package org.mozilla.social.core.data.repository
 
 import org.mozilla.social.core.data.MastodonServiceWrapper
 import org.mozilla.social.core.network.MastodonApi
+import org.mozilla.social.model.entity.Account
 import retrofit2.Response
 
 class FeedRepository internal constructor(

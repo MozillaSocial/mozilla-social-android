@@ -2,6 +2,7 @@ package org.mozilla.social.core.network
 
 import okhttp3.MultipartBody
 import org.mozilla.social.model.MediaUpdateRequestBody
+import org.mozilla.social.model.entity.Account
 import org.mozilla.social.model.entity.Attachment
 import org.mozilla.social.model.entity.Status
 import org.mozilla.social.model.entity.request.StatusCreate
@@ -15,6 +16,9 @@ import retrofit2.http.Part
 import retrofit2.http.Path
 
 interface MastodonApi {
+
+    @GET("/api/v1/accounts/verify_credentials")
+    suspend fun verifyAccount() : Account
 
     @POST("api/v1/statuses")
     suspend fun postStatus(
@@ -39,4 +43,9 @@ interface MastodonApi {
 
     @GET("/api/v1/timelines/public")
     suspend fun getPublicTimeline(): Response<List<Status>>
+
+    @GET("/api/v1/accounts/{accountId}")
+    suspend fun getAccount(
+        @Path("accountId") accountId: String
+    ) : Response<Account>
 }

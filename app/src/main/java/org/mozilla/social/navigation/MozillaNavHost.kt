@@ -5,6 +5,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.NavHost
 import androidx.navigation.navigation
+import org.mozilla.social.feature.account.accountScreen
 import org.mozilla.social.feature.auth.AUTH_ROUTE
 import org.mozilla.social.feature.auth.authScreen
 import org.mozilla.social.feature.settings.settingsScreen
@@ -27,6 +28,7 @@ private fun NavGraphBuilder.mainGraph(appState: AppState) {
         feedScreen()
         searchScreen()
         settingsScreen(onLogout = appState::onLogout)
+        accountScreen(onLogout = appState::onLogout)
         newPostScreen(
             onStatusPosted = { appState.popBackStack() },
             onCloseClicked = { appState.popBackStack() },
