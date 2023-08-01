@@ -10,7 +10,7 @@ import org.mozilla.social.model.Status
 import org.mozilla.social.model.StatusVisibility
 
 fun NetworkStatus.toExternalModel(
-    inReplyToUsername: String? = null
+    inReplyToAccountName: String? = null
 ): Status =
     Status(
         statusId = statusId,
@@ -42,7 +42,7 @@ fun NetworkStatus.toExternalModel(
         isMuted = isMuted,
         isBookmarked = isBookmarked,
         isPinned = isPinned,
-        inReplyToUsername = inReplyToUsername,
+        inReplyToAccountName = inReplyToAccountName,
     )
 
 fun NetworkAccount.toExternalModel() = Account(
