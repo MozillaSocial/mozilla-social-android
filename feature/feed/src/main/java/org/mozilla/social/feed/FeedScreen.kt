@@ -14,6 +14,7 @@ import org.koin.core.parameter.parametersOf
 import org.mozilla.social.core.designsystem.theme.MozillaSocialTheme
 import org.mozilla.social.core.ui.postcard.PostCard
 import org.mozilla.social.core.ui.postcard.PostCardInteractions
+import org.mozilla.social.model.Post
 import org.mozilla.social.model.Status
 
 @Composable
@@ -29,7 +30,7 @@ fun FeedScreen(
 
 @Composable
 fun FeedScreen(
-    publicTimeline: List<Status>?,
+    publicTimeline: List<Post>?,
     postCardInteractions: PostCardInteractions,
 ) {
     LazyColumn(
@@ -39,7 +40,7 @@ fun FeedScreen(
     ) {
         publicTimeline?.let { statuses ->
             items(statuses.size) { index ->
-                PostCard(status = statuses[index], postCardInteractions)
+                PostCard(post = statuses[index], postCardInteractions)
                 if (index < statuses.lastIndex) {
                     Divider()
                 }
