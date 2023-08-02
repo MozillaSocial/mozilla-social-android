@@ -3,7 +3,6 @@
 package org.mozilla.social.feature.account
 
 import androidx.annotation.StringRes
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -11,7 +10,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
@@ -20,9 +18,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -31,9 +27,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -47,7 +41,7 @@ import com.google.android.material.textview.MaterialTextView
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 import org.mozilla.social.core.designsystem.theme.MozillaSocialTheme
-import org.mozilla.social.model.entity.Account
+import org.mozilla.social.core.network.model.NetworkAccount
 
 @Composable
 internal fun AccountRoute(
@@ -66,7 +60,7 @@ internal fun AccountRoute(
 
 @Composable
 internal fun AccountScreen(
-    account: Account,
+    account: NetworkAccount,
     logUserOut: () -> Unit
 ) {
     Surface(
@@ -109,12 +103,15 @@ internal fun AccountScreen(
                         .align(Alignment.TopCenter)
                 )
             }
+            Row {
+                userFields(account = account)
+            }
         }
     }
 }
 
 @Composable
-private fun userImages(account: Account) {
+private fun userImages(account: NetworkAccount) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -129,7 +126,7 @@ private fun userImages(account: Account) {
 }
 
 @Composable
-private fun userInfo(account: Account, modifier: Modifier) {
+private fun userInfo(account: NetworkAccount, modifier: Modifier) {
     val url = account.url.split("/")
     val handle = url.last()
     val instance = "@" + url[url.lastIndex - 1]
@@ -158,7 +155,7 @@ private fun userInfo(account: Account, modifier: Modifier) {
 
 @Composable
 private fun userFollow(
-    account: Account,
+    account: NetworkAccount,
     modifier: Modifier,
     followersOnClick: () -> Unit,
     followingOnClock: () -> Unit
@@ -204,7 +201,7 @@ private fun userFollow(
 }
 
 @Composable
-private fun userBio(account: Account, modifier: Modifier) {
+private fun userBio(account: NetworkAccount, modifier: Modifier) {
     Box(modifier = modifier) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -227,16 +224,53 @@ private fun userBio(account: Account, modifier: Modifier) {
 }
 
 @Composable
-private fun userFields(account: Account) {
-    Column {
+private fun userFields(account: NetworkAccount) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 16.dp, end = 16.dp)
+    ) {
         account.fields?.forEach { field ->
             Row(
-                verticalAlignment = Alignment.Top,
                 horizontalArrangement = Arrangement.Center
             ) {
-                Text(text = field.name)
-                Text(text = field.value)
+                Text(
+                    text = field.name,
+                    style = MaterialTheme.typography.bodyMedium
+                )
             }
+            Row(
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text = field.value,
+                    style = MaterialTheme.typography.headlineSmall
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun QuickFunctions(
+    @StringRes name: Int,
+    modifier: Modifier,
+    onClick: () -> Unit,
+) {
+    Surface(
+        color = MaterialTheme.colorScheme.background,
+        modifier = modifier,
+        shape = RoundedCornerShape(8.dp),
+        onClick = onClick
+    ) {
+        Box {
+            Text(
+                text = stringResource(id = name),
+                style = MaterialTheme.typography.bodyLarge,
+                modifier = Modifier
+                    .padding(start = 4.dp, top = 8.dp, bottom = 8.dp)
+                    .align(Alignment.CenterStart)
+            )
         }
     }
 }
@@ -267,30 +301,6 @@ private fun LogoutText(
                     )
                 }
             }
-        }
-    }
-}
-
-@Composable
-private fun QuickFunctions(
-    @StringRes name: Int,
-    modifier: Modifier,
-    onClick: () -> Unit,
-) {
-    Surface(
-        color = MaterialTheme.colorScheme.background,
-        modifier = modifier,
-        shape = RoundedCornerShape(8.dp),
-        onClick = onClick
-    ) {
-        Box {
-            Text(
-                text = stringResource(id = name),
-                style = MaterialTheme.typography.bodyLarge,
-                modifier = Modifier
-                    .padding(start = 4.dp, top = 8.dp, bottom = 8.dp)
-                    .align(Alignment.CenterStart)
-            )
         }
     }
 }

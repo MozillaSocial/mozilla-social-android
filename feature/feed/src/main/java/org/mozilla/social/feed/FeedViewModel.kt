@@ -6,7 +6,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import org.mozilla.social.common.logging.Log
 import org.mozilla.social.core.data.repository.FeedRepository
 import org.mozilla.social.core.ui.postcard.PostCardInteractions
 import org.mozilla.social.model.Status
@@ -16,7 +15,6 @@ import org.mozilla.social.model.Status
  */
 class FeedViewModel(
     private val feedRepository: FeedRepository,
-    private val log: Log,
     private val onReplyClicked: (String) -> Unit,
 ) : ViewModel(), PostCardInteractions {
 
@@ -63,7 +61,6 @@ class FeedViewModel(
             try {
                 _statusFeed.update { feedRepository.retrieveHomeTimeline() }
             } catch (e: Exception) {
-                log.e(e)
             }
         }
     }

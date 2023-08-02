@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import org.mozilla.social.core.data.repository.AccountRepository
 import org.mozilla.social.core.datastore.UserPreferencesDatastore
-import org.mozilla.social.model.entity.Account
+import org.mozilla.social.core.network.model.NetworkAccount
 
 class AccountViewModel(
     private val userPreferencesDatastore: UserPreferencesDatastore,
@@ -27,7 +27,7 @@ class AccountViewModel(
             it.accountId
         }.stateIn(viewModelScope, SharingStarted.Eagerly, null)
 
-    val account: Flow<Account> =
+    val account: Flow<NetworkAccount> =
         accountId.flatMapLatest {
             if (it != null) {
                 getAccountForUser(it)
@@ -55,13 +55,13 @@ class AccountViewModel(
         }
     }
 
-    private fun getAccountForUser(accountId: String): Flow<Account> {
+    private fun getAccountForUser(accountId: String): Flow<NetworkAccount> {
         return flow {
             val response = accountRepository.getAccount(accountId)
-            if (response.isSuccessful) {
-                response.body()?.let { emit(it) }
-            } else {
-                val errorMsg = response.errorBody()?.string()
+            try {
+                emit(response)
+            } catch(e: Exception) {
+
             }
         }
     }
