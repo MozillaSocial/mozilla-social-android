@@ -1,5 +1,6 @@
 [versions]
 androidGradlePlugin = "8.1.0"
+androidSecretsPlugin = "2.0.1"
 androidxActivity = "1.7.2"
 androidxAppcompat = "1.6.1"
 androidxBrowser = "1.5.0"
@@ -9,8 +10,6 @@ androidxCore = "1.10.1"
 androidxDatastorePreferences = "1.0.0"
 androidxLifecycle = "2.6.1"
 androidxMedia3 = "1.1.0"
-androidxTestEspresso = "3.5.1"
-androidxTestExt = "1.1.5"
 coil = "2.4.0"
 composeMaterial3 = "1.1.1"
 googleAndroidMaterial = "1.9.0"
@@ -21,6 +20,7 @@ kotlinxCoroutines = "1.7.3"
 kotlinDateTime = "0.4.0"
 kotlinxSerializationConverter = "1.0.0"
 kotlinxSerializationJson = "1.5.1"
+mockk = "1.13.5"
 navigation-compose = "2.6.0"
 okhttp = "4.10.0"
 protobuf = "3.23.0"
@@ -51,22 +51,22 @@ androidx-lifecycle-viewmodel-compose = { group = "androidx.lifecycle", name = "l
 androidx-media3-exoplayer = { group = "androidx.media3", name = "media3-exoplayer", version.ref = "androidxMedia3" }
 androidx-media3-ui = { group = "androidx.media3", name = "media3-ui", version.ref = "androidxMedia3" }
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigation-compose"}
-androidx-test-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "androidxTestEspresso" }
-androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidxTestExt" }
 coil = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
 coil-gif = { group = "io.coil-kt", name = "coil-gif", version.ref = "coil" }
 coil-video = { group = "io.coil-kt", name = "coil-video", version.ref = "coil" }
 google-material = { group = "com.google.android.material", name = "material", version.ref = "googleAndroidMaterial" }
 jakewharton-timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
-junit = { group = "junit", name = "junit", version.ref = "junit" }
 koin = { group = "io.insert-koin", name = "koin-androidx-compose", version.ref = "koin" }
 koin-android = { group = "io.insert-koin", name = "koin-android", version.ref = "koin" }
-koin-junit = { group = "io.insert-koin", name = "koin-test-junit5", version.ref = "koin" }
+koin-test = { group = "io.insert-koin", name = "koin-test", version.ref = "koin" }
+kotlin-test = { group = "org.jetbrains.kotlin", name = "kotlin-test-common", version.ref = "kotlin" }
+kotlin-test-junit = { group = "org.jetbrains.kotlin", name = "kotlin-test-junit", version.ref = "kotlin" }
 kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "kotlinxCoroutines" }
 kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version.ref = "kotlinDateTime" }
 kotlinx-serialization-converter = { group = "com.jakewharton.retrofit", name = "retrofit2-kotlinx-serialization-converter", version.ref = "kotlinxSerializationConverter" }
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 mastodonk = { group = "fr.outadoc.mastodonk", name = "mastodonk-core", version = "+" }
+mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
 protobuf-kotlin-lite = { group = "com.google.protobuf", name = "protobuf-kotlin-lite", version.ref = "protobuf" }
 protobuf-protoc = { group = "com.google.protobuf", name = "protoc", version.ref = "protobuf" }
 retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
@@ -76,11 +76,13 @@ square-okhttp-logging = { group = "com.squareup.okhttp3", name = "logging-interc
 
 # Dependencies of build-logic
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "androidGradlePlugin" }
+android-secrets = { module = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin:secrets-gradle-plugin", version.ref = "androidSecretsPlugin" }
 kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }
 android-library = { id = "com.android.library", version.ref = "androidGradlePlugin" }
+android-secrets = { id = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin", version.ref = "androidSecretsPlugin" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin"}
 protobuf = { id = "com.google.protobuf", version.ref = "protobufPlugin" }

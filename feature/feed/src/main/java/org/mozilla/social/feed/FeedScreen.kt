@@ -1,40 +1,49 @@
-@file:OptIn(ExperimentalMaterial3Api::class)
-
 package org.mozilla.social.feed
 
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.Divider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.parametersOf
 import org.mozilla.social.core.designsystem.theme.MozillaSocialTheme
-import org.mozilla.social.core.ui.PostCard
-import org.mozilla.social.model.entity.Status
+import org.mozilla.social.core.ui.postcard.PostCard
+import org.mozilla.social.core.ui.postcard.PostCardInteractions
+import org.mozilla.social.model.Status
 
 @Composable
-fun FeedScreen(viewModel: FeedViewModel = koinViewModel()) {
+fun FeedScreen(
+    onReplyClicked: (String) -> Unit,
+    viewModel: FeedViewModel = koinViewModel(parameters = { parametersOf(onReplyClicked) })
+) {
     FeedScreen(
-        publicTimeline = viewModel.feed.collectAsState(initial = null).value,
+        publicTimeline = viewModel.statusFeed.collectAsState(initial = null).value,
+        postCardInteractions = viewModel,
     )
 }
 
 @Composable
-fun FeedScreen(publicTimeline: List<Status>?) {
-    Column(
+fun FeedScreen(
+    publicTimeline: List<Status>?,
+    postCardInteractions: PostCardInteractions,
+) {
+    LazyColumn(
         Modifier
             .fillMaxSize()
             .padding(4.dp)
-            .verticalScroll(rememberScrollState())
     ) {
-        publicTimeline?.forEach { status ->
-            PostCard(status = status)
+        publicTimeline?.let { statuses ->
+            items(statuses.size) { index ->
+                PostCard(status = statuses[index], postCardInteractions)
+                if (index < statuses.lastIndex) {
+                    Divider()
+                }
+            }
         }
     }
 }

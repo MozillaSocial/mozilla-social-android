@@ -1,8 +1,5 @@
 package org.mozilla.social.post.poll
 
-import org.mozilla.social.post.poll.PollDuration
-import org.mozilla.social.post.poll.PollStyle
-
 interface PollInteractions {
     fun onNewPollClicked() = Unit
     fun onPollOptionTextChanged(optionIndex: Int, text: String) = Unit

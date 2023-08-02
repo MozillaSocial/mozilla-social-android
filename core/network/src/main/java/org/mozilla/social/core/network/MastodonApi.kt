@@ -1,11 +1,12 @@
 package org.mozilla.social.core.network
 
 import okhttp3.MultipartBody
-import org.mozilla.social.model.MediaUpdateRequestBody
-import org.mozilla.social.model.entity.Account
-import org.mozilla.social.model.entity.Attachment
-import org.mozilla.social.model.entity.Status
-import org.mozilla.social.model.entity.request.StatusCreate
+import org.mozilla.social.core.network.model.NetworkAccount
+import org.mozilla.social.core.network.model.NetworkAttachment
+import org.mozilla.social.core.network.model.NetworkSearchResult
+import org.mozilla.social.core.network.model.NetworkStatus
+import org.mozilla.social.core.network.model.request.NetworkMediaUpdate
+import org.mozilla.social.core.network.model.request.NetworkStatusCreate
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -14,15 +15,16 @@ import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Part
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface MastodonApi {
 
     @GET("/api/v1/accounts/verify_credentials")
-    suspend fun verifyAccount() : Account
+    suspend fun verifyAccount() : NetworkAccount
 
     @POST("api/v1/statuses")
     suspend fun postStatus(
-        @Body status: StatusCreate
+        @Body status: NetworkStatusCreate
     ): Response<Unit>
 
     @Multipart
@@ -30,22 +32,28 @@ interface MastodonApi {
     suspend fun uploadMedia(
         @Part file: MultipartBody.Part,
         @Part("description") description: String? = null,
-    ): Attachment
+    ): NetworkAttachment
 
     @PUT("api/v1/media/{mediaId}")
     suspend fun updateMedia(
         @Path("mediaId") mediaId: String,
-        @Body requestBody: MediaUpdateRequestBody,
+        @Body requestBody: NetworkMediaUpdate,
     )
 
     @GET("/api/v1/timelines/home")
-    suspend fun getHomeTimeline(): Response<List<Status>>
+    suspend fun getHomeTimeline(): List<NetworkStatus>
 
     @GET("/api/v1/timelines/public")
-    suspend fun getPublicTimeline(): Response<List<Status>>
+    suspend fun getPublicTimeline(): List<NetworkStatus>
 
-    @GET("/api/v1/accounts/{accountId}")
+    @GET("/api/v2/search")
+    suspend fun search(
+        @Query("q") query: String,
+        @Query("type") type: String,
+    ) : NetworkSearchResult
+
+    @GET("/api/v1/accounts/{id}")
     suspend fun getAccount(
-        @Path("accountId") accountId: String
-    ) : Response<Account>
+        @Path("id") accountId: String
+    ): NetworkAccount
 }

@@ -1,6 +1,7 @@
 plugins {
     id("org.mozilla.social.android.library")
     id("org.mozilla.social.android.library.compose")
+    id("org.mozilla.social.android.library.secrets")
 }
 
 android {
@@ -52,9 +53,4 @@ dependencies {
     implementation(libs.androidx.compose.ui.tooling.preview)
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
-
-    // testing
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.test.ext.junit)
-    androidTestImplementation(libs.androidx.test.espresso.core)
 }

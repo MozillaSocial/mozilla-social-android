@@ -1,7 +1,6 @@
 package org.mozilla.social.core.network
 
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
+import org.mozilla.social.core.network.model.NetworkAccessToken
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.Header
@@ -18,11 +17,5 @@ interface AuthService {
         @Field("redirect_uri") redirectUri: String,
         @Field("code") code: String,
         @Field("grant_type") grantType: String
-    ): AccessToken
+    ): NetworkAccessToken
 }
-
-@Serializable
-data class AccessToken(
-    @SerialName("access_token") val accessToken: String,
-    @SerialName("token_type") val tokenType: String,
-)

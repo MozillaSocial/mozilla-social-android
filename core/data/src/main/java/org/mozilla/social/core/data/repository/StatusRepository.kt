@@ -2,12 +2,14 @@ package org.mozilla.social.core.data.repository
 
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
+import org.mozilla.social.core.data.repository.model.toNetworkModel
 import org.mozilla.social.core.network.MastodonApi
 import org.mozilla.social.model.ImageState
-import org.mozilla.social.model.MediaUpdateRequestBody
-import org.mozilla.social.model.entity.StatusVisibility
-import org.mozilla.social.model.entity.request.PollCreate
-import org.mozilla.social.model.entity.request.StatusCreate
+import org.mozilla.social.core.network.model.request.NetworkMediaUpdate
+import org.mozilla.social.core.network.model.request.NetworkStatusCreate
+import org.mozilla.social.model.StatusVisibility
+import org.mozilla.social.model.request.PollCreate
+import org.mozilla.social.model.request.StatusCreate
 
 class StatusRepository(
     private val mastodonApi: MastodonApi,
@@ -19,6 +21,7 @@ class StatusRepository(
         visibility: StatusVisibility,
         pollCreate: PollCreate?,
         contentWarningText: String?,
+        inReplyToId: String?,
     ) {
         coroutineScope {
             // asynchronously update all attachment descriptions before sending post
@@ -27,7 +30,7 @@ class StatusRepository(
                     async {
                         mastodonApi.updateMedia(
                             imageState.attachmentId!!,
-                            MediaUpdateRequestBody(imageState.description)
+                            NetworkMediaUpdate(imageState.description)
                         )
                     }
                 } else {
@@ -37,20 +40,21 @@ class StatusRepository(
                 it?.await()
             }
             mastodonApi.postStatus(
-                StatusCreate(
+                NetworkStatusCreate(
                     status = statusText,
                     mediaIds = if (imageStates.isEmpty()) {
                         null
                     } else {
                         imageStates.mapNotNull { it.attachmentId }
                     },
-                    visibility = visibility,
-                    poll = pollCreate,
+                    visibility = visibility.toNetworkModel(),
+                    poll = pollCreate?.toNetworkModel(),
                     contentWarningText = if (contentWarningText.isNullOrBlank()) {
                         null
                     } else {
                         contentWarningText
-                    }
+                    },
+                    inReplyToId = inReplyToId,
                 )
             )
         }

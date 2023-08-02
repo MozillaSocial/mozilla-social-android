@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import org.mozilla.social.core.data.repository.FeedRepository
-import org.mozilla.social.model.entity.Status
+import org.mozilla.social.model.Status
 
 class SearchViewModel(
     private val feedRepository: FeedRepository
@@ -13,14 +13,6 @@ class SearchViewModel(
     val feed: Flow<List<Status>> = retrievePublicTimeline()
 
     private fun retrievePublicTimeline(): Flow<List<Status>> {
-        return flow {
-            val response = feedRepository.retrievePublicTimeline()
-            if (response.isSuccessful) {
-                emit(response.body() ?: emptyList())
-            } else {
-                val errorMsg = response.errorBody()?.string()
-                emit(emptyList())
-            }
-        }
+        return flow {}
     }
 }

@@ -1,63 +1,77 @@
 package org.mozilla.social.feed
 
 import androidx.lifecycle.ViewModel
-import kotlinx.coroutines.flow.Flow
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import org.mozilla.social.common.logging.Log
 import org.mozilla.social.core.data.repository.FeedRepository
-import org.mozilla.social.model.entity.Status
+import org.mozilla.social.core.ui.postcard.PostCardInteractions
+import org.mozilla.social.model.Status
 
 /**
  * Produces a flow of pages of statuses for a feed
  */
 class FeedViewModel(
     private val feedRepository: FeedRepository,
-) : ViewModel() {
+    private val log: Log,
+    private val onReplyClicked: (String) -> Unit,
+) : ViewModel(), PostCardInteractions {
 
-    private val _currentFeedType = MutableStateFlow(INITIAL_FEED)
+    private val _statusFeed = MutableStateFlow<List<Status>>(emptyList())
+    val statusFeed = _statusFeed.asStateFlow()
 
-    val feed: Flow<List<Status>> = _currentFeedType.flatMapLatest { feedType ->
-        when (feedType) {
-            FeedType.HOME -> retrieveHomeTimeline()
-            FeedType.LOCAL -> retrievePublicTimeline()
+    private val currentFeedType = MutableStateFlow(INITIAL_FEED).also {
+        viewModelScope.launch {
+            it.collect { feedType ->
+                when (feedType) {
+                    FeedType.HOME -> getHomeTimeline()
+                    FeedType.LOCAL -> {}
+                }
+            }
         }
+    }
+
+    override fun onReplyClicked(statusId: String) {
+        onReplyClicked.invoke(statusId)
+    }
+
+    override fun onBoostClicked() {
+        super.onBoostClicked()
+    }
+
+    override fun onFavoriteClicked() {
+        super.onFavoriteClicked()
+    }
+
+    override fun onShareClicked() {
+        super.onShareClicked()
     }
 
     fun showHomeTimeline() {
-        _currentFeedType.value = FeedType.HOME
+        currentFeedType.value = FeedType.HOME
     }
 
     fun showLocalTimeline() {
-        _currentFeedType.value = FeedType.LOCAL
+        currentFeedType.value = FeedType.LOCAL
     }
 
-    private fun retrieveHomeTimeline(): Flow<List<Status>> {
-        return flow {
-            val response = feedRepository.retrieveHomeTimeline()
-            if (response.isSuccessful) {
-                emit(response.body() ?: emptyList())
-            } else {
-                val errorMsg = response.errorBody()?.string()
-                emit(emptyList())
+    private fun getHomeTimeline() {
+        viewModelScope.launch {
+            try {
+                _statusFeed.update { feedRepository.retrieveHomeTimeline() }
+            } catch (e: Exception) {
+                log.e(e)
             }
         }
     }
 
-    private fun retrievePublicTimeline(): Flow<List<Status>> {
-        return flow {
-            val response = feedRepository.retrievePublicTimeline()
-            if (response.isSuccessful) {
-                emit(response.body() ?: emptyList())
-            } else {
-                val errorMsg = response.errorBody()?.string()
-                emit(emptyList())
-            }
-        }
+    companion object {
+        private val INITIAL_FEED = FeedType.HOME
     }
 }
-
-private val INITIAL_FEED = FeedType.HOME
 
 enum class FeedType {
     HOME, LOCAL,
