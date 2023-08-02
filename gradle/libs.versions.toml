@@ -1,5 +1,6 @@
 [versions]
 androidGradlePlugin = "8.1.0"
+androidSecretsPlugin = "2.0.1"
 androidxActivity = "1.7.2"
 androidxAppcompat = "1.6.1"
 androidxBrowser = "1.5.0"
@@ -75,11 +76,13 @@ square-okhttp-logging = { group = "com.squareup.okhttp3", name = "logging-interc
 
 # Dependencies of build-logic
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "androidGradlePlugin" }
+android-secrets = { module = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin:secrets-gradle-plugin", version.ref = "androidSecretsPlugin" }
 kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }
 android-library = { id = "com.android.library", version.ref = "androidGradlePlugin" }
+android-secrets = { id = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin", version.ref = "androidSecretsPlugin" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin"}
 protobuf = { id = "com.google.protobuf", version.ref = "protobufPlugin" }
