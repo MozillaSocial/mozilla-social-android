@@ -36,6 +36,7 @@ import com.google.android.material.textview.MaterialTextView
 import org.mozilla.social.common.utils.timeSinceNow
 import org.mozilla.social.core.designsystem.theme.MozillaSocialTheme
 import org.mozilla.social.core.ui.media.MediaDisplay
+import org.mozilla.social.core.ui.poll.Poll
 import org.mozilla.social.model.Status
 
 @Composable
@@ -102,6 +103,13 @@ private fun MainPost(
         update = { it.text = spannedText }
     )
     MediaDisplay(attachments = status.mediaAttachments)
+    status.poll?.let {
+        Poll(
+            isUserCreatedPoll = false, //TODO check if status.account is my account
+            it,
+            postCardInteractions,
+        )
+    }
 
     BottomRow(status, postCardInteractions)
 }
