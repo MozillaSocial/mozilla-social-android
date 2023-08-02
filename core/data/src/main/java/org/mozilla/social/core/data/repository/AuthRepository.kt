@@ -1,8 +1,8 @@
 package org.mozilla.social.core.data.repository
 
-import org.mozilla.social.core.network.AuthService
+import org.mozilla.social.core.network.OauthApi
 
-class AuthRepository(private val service: AuthService) {
+class AuthRepository(private val oauthApi: OauthApi) {
 
     suspend fun fetchOAuthToken(
         domain: String,
@@ -12,7 +12,7 @@ class AuthRepository(private val service: AuthService) {
         code: String,
         grantType: String
     ): String {
-        return service.fetchOAuthToken(
+        return oauthApi.fetchOAuthToken(
             domain = domain,
             clientId = clientId,
             clientSecret = clientSecret,

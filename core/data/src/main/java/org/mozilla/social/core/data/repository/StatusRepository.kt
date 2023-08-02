@@ -3,16 +3,17 @@ package org.mozilla.social.core.data.repository
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import org.mozilla.social.core.data.repository.model.toNetworkModel
-import org.mozilla.social.core.network.MastodonApi
-import org.mozilla.social.model.ImageState
+import org.mozilla.social.core.network.MediaApi
+import org.mozilla.social.core.network.StatusApi
 import org.mozilla.social.core.network.model.request.NetworkMediaUpdate
 import org.mozilla.social.core.network.model.request.NetworkStatusCreate
+import org.mozilla.social.model.ImageState
 import org.mozilla.social.model.StatusVisibility
 import org.mozilla.social.model.request.PollCreate
-import org.mozilla.social.model.request.StatusCreate
 
 class StatusRepository(
-    private val mastodonApi: MastodonApi,
+    private val statusApi: StatusApi,
+    private val mediaApi: MediaApi,
 ) {
 
     suspend fun sendPost(
@@ -28,7 +29,7 @@ class StatusRepository(
             imageStates.map { imageState ->
                 if (imageState.attachmentId != null && imageState.description.isNotBlank()) {
                     async {
-                        mastodonApi.updateMedia(
+                        mediaApi.updateMedia(
                             imageState.attachmentId!!,
                             NetworkMediaUpdate(imageState.description)
                         )
@@ -39,7 +40,7 @@ class StatusRepository(
             }.forEach {
                 it?.await()
             }
-            mastodonApi.postStatus(
+            statusApi.postStatus(
                 NetworkStatusCreate(
                     status = statusText,
                     mediaIds = if (imageStates.isEmpty()) {

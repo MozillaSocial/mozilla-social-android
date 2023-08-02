@@ -2,7 +2,6 @@ package org.mozilla.social.core.network
 
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import kotlinx.serialization.json.Json
-import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -13,15 +12,6 @@ import retrofit2.Retrofit
 import java.util.concurrent.TimeUnit
 
 fun networkModule(isDebug: Boolean) = module {
-    single {
-        val contentType: MediaType = "application/json".toMediaType()
-
-        Retrofit.Builder()
-            .baseUrl("https://mozilla.social")
-            .addConverterFactory(json.asConverterFactory(contentType = contentType))
-            .build()
-    }
-    single { get<Retrofit>().create(AuthService::class.java) }
     single { AuthInterceptor() }
     single(
         named(AUTHORIZED_CLIENT)
@@ -41,12 +31,18 @@ fun networkModule(isDebug: Boolean) = module {
     }
     single {
         Retrofit.Builder()
-            .baseUrl("https://mozilla.social")
+            .baseUrl("https://mozilla.social/")
             .client(get(qualifier = named(AUTHORIZED_CLIENT)))
             .addConverterFactory(json.asConverterFactory(contentType = "application/json".toMediaType()))
             .build()
-            .create(MastodonApi::class.java)
     }
+
+    single { get<Retrofit>().create(AccountApi::class.java) }
+    single { get<Retrofit>().create(MediaApi::class.java) }
+    single { get<Retrofit>().create(OauthApi::class.java) }
+    single { get<Retrofit>().create(SearchApi::class.java) }
+    single { get<Retrofit>().create(StatusApi::class.java) }
+    single { get<Retrofit>().create(TimelineApi::class.java) }
 }
 
 private var json: Json = Json { ignoreUnknownKeys = true }
