@@ -1,7 +1,5 @@
 package org.mozilla.social.core.ui.postcard
 
-import android.view.ViewGroup.LayoutParams
-import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
