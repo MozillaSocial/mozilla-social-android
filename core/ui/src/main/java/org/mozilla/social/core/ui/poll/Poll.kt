@@ -21,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import org.mozilla.social.common.utils.timeLeft
 import org.mozilla.social.core.designsystem.theme.MozillaSocialTheme
 import org.mozilla.social.model.Poll
 import org.mozilla.social.model.PollOption
@@ -41,6 +42,7 @@ fun Poll(
             )
             Spacer(modifier = Modifier.padding(top = 4.dp))
         }
+        Text(text = "${poll.votesCount} votes - ${poll.expiresAt?.timeLeft() ?: "poll closed"}")
     }
 }
 
@@ -59,6 +61,14 @@ private fun PollOption(
     }
     val votePercent = remember(voteFraction) {
         (voteFraction * 100).toInt()
+    }
+    val voteCountText = remember(pollOption.votesCount) {
+        val voteText = if (pollOption.votesCount == 1L) {
+            "vote"
+        } else {
+            "votes"
+        }
+        "${pollOption.votesCount ?: 0} $voteText"
     }
     val height = 40.dp
     Box(
@@ -101,7 +111,7 @@ private fun PollOption(
                     modifier = Modifier
                         .padding(8.dp)
                         .align(Alignment.CenterVertically),
-                    text = "$votePercent%"
+                    text = "$voteCountText - $votePercent%"
                 )
             }
         }
