@@ -14,8 +14,7 @@ import org.koin.core.parameter.parametersOf
 import org.mozilla.social.core.designsystem.theme.MozillaSocialTheme
 import org.mozilla.social.core.ui.postcard.PostCard
 import org.mozilla.social.core.ui.postcard.PostCardInteractions
-import org.mozilla.social.model.Post
-import org.mozilla.social.model.Status
+import org.mozilla.social.core.ui.postcard.PostCardUiState
 
 @Composable
 fun FeedScreen(
@@ -23,14 +22,14 @@ fun FeedScreen(
     viewModel: FeedViewModel = koinViewModel(parameters = { parametersOf(onReplyClicked) })
 ) {
     FeedScreen(
-        publicTimeline = viewModel.statusFeed.collectAsState(initial = null).value,
+        timeline = viewModel.statusFeed.collectAsState(initial = null).value,
         postCardInteractions = viewModel,
     )
 }
 
 @Composable
 fun FeedScreen(
-    publicTimeline: List<Post>?,
+    timeline: List<PostCardUiState>?,
     postCardInteractions: PostCardInteractions,
 ) {
     LazyColumn(
@@ -38,7 +37,7 @@ fun FeedScreen(
             .fillMaxSize()
             .padding(4.dp)
     ) {
-        publicTimeline?.let { statuses ->
+        timeline?.let { statuses ->
             items(statuses.size) { index ->
                 PostCard(post = statuses[index], postCardInteractions)
                 if (index < statuses.lastIndex) {

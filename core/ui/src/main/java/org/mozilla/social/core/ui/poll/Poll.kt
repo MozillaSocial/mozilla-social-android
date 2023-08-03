@@ -15,61 +15,39 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import org.mozilla.social.common.utils.timeLeft
 import org.mozilla.social.core.designsystem.theme.MozillaSocialTheme
-import org.mozilla.social.model.Poll
-import org.mozilla.social.model.PollOption
 
 @Composable
 fun Poll(
-    isUserCreatedPoll: Boolean,
-    poll: Poll,
+    pollUiState: PollUiState,
     pollInteractions: PollInteractions,
 ) {
     Column {
-        poll.options.forEach {
+        pollUiState.pollOptions.forEachIndexed { index, pollOptionUiState ->
             PollOption(
-                poll.hasVoted ?: false,
-                poll.votesCount,
-                it,
-                pollInteractions,
+                showResults = pollUiState.showResults,
+                optionIndex = index,
+                pollOptionUiState = pollOptionUiState,
+                pollInteractions = pollInteractions,
             )
             Spacer(modifier = Modifier.padding(top = 4.dp))
         }
-        Text(text = "${poll.votesCount} votes - ${poll.expiresAt?.timeLeft() ?: "poll closed"}")
+        Text(text = pollUiState.pollInfoText)
     }
 }
 
 @Composable
 private fun PollOption(
-    hasVoted: Boolean,
-    votes: Long,
-    pollOption: PollOption,
+    showResults: Boolean,
+    optionIndex: Int,
+    pollOptionUiState: PollOptionUiState,
     pollInteractions: PollInteractions,
 ) {
-    val voteFraction = remember(votes, pollOption) {
-        if (votes == 0L) return@remember 0f
-        pollOption.votesCount?.let {
-            it.toFloat() / votes
-        } ?: 0f
-    }
-    val votePercent = remember(voteFraction) {
-        (voteFraction * 100).toInt()
-    }
-    val voteCountText = remember(pollOption.votesCount) {
-        val voteText = if (pollOption.votesCount == 1L) {
-            "vote"
-        } else {
-            "votes"
-        }
-        "${pollOption.votesCount ?: 0} $voteText"
-    }
     val height = 40.dp
     Box(
         modifier = Modifier
@@ -85,7 +63,7 @@ private fun PollOption(
         Box(
             modifier = Modifier
                 .height(height)
-                .fillMaxWidth(fraction = voteFraction)
+                .fillMaxWidth(fraction = pollOptionUiState.fillFraction)
                 .clip(RoundedCornerShape(90.dp)),
         ) {
             Box(modifier = Modifier
@@ -97,21 +75,21 @@ private fun PollOption(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(height)
-                .clickable { pollInteractions.onOptionClicked(pollOption) },
+                .clickable { pollInteractions.onOptionClicked(optionIndex) },
         ) {
             Text(
                 modifier = Modifier
                     .weight(1f)
                     .padding(start = 12.dp)
                     .align(Alignment.CenterVertically),
-                text = pollOption.title
+                text = pollOptionUiState.title
             )
-            if (hasVoted) {
+            if (showResults) {
                 Text(
                     modifier = Modifier
                         .padding(8.dp)
                         .align(Alignment.CenterVertically),
-                    text = "$voteCountText - $votePercent%"
+                    text = pollOptionUiState.voteInfo
                 )
             }
         }
@@ -123,27 +101,27 @@ private fun PollOption(
 @Composable
 private fun PollPreview() {
     MozillaSocialTheme {
-        Poll(
-            isUserCreatedPoll = false,
-            poll = Poll(
-                pollId = "1",
-                isExpired = false,
-                allowsMultipleChoices = false,
-                votesCount = 4,
-                options = listOf(
-                    PollOption(
-                        title = "option 1",
-                        votesCount = 1L
-                    ),
-                    PollOption(
-                        title = "option 2",
-                        votesCount = 3L
-                    )
-                ),
-                emojis = listOf(),
-                hasVoted = true,
-            ),
-            pollInteractions = object : PollInteractions {},
-        )
+//        Poll(
+//            isUserCreatedPoll = false,
+//            poll = Poll(
+//                pollId = "1",
+//                isExpired = false,
+//                allowsMultipleChoices = false,
+//                votesCount = 4,
+//                options = listOf(
+//                    PollOption(
+//                        title = "option 1",
+//                        votesCount = 1L
+//                    ),
+//                    PollOption(
+//                        title = "option 2",
+//                        votesCount = 3L
+//                    )
+//                ),
+//                emojis = listOf(),
+//                hasVoted = true,
+//            ),
+//            pollInteractions = object : PollInteractions {},
+//        )
     }
 }

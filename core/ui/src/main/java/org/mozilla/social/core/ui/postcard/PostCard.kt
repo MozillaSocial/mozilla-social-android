@@ -20,7 +20,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -31,42 +30,29 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
-import androidx.core.text.HtmlCompat
 import coil.compose.AsyncImage
 import org.mozilla.social.common.utils.DimenUtil
-import org.mozilla.social.common.utils.timeSinceNow
 import org.mozilla.social.core.designsystem.theme.MozillaSocialTheme
 import org.mozilla.social.core.ui.media.MediaDisplay
 import org.mozilla.social.core.ui.poll.Poll
-import org.mozilla.social.model.Post
-import org.mozilla.social.model.Status
 
 @Composable
 fun PostCard(
-    post: Post,
+    post: PostCardUiState,
     postCardInteractions: PostCardInteractions,
 ) {
-    val (status, inReplyToAccountName) = post
     Column(
         Modifier
             .padding(8.dp)
             .fillMaxSize()
     ) {
-        if (status.boostedStatus != null) {
+        post.topRowMetaDataUiState?.let { topRowMetaData ->
             TopRowMetaData(
-                text = "${status.account.username} boosted",
-                imageVector = Icons.Default.Repeat
+                text = topRowMetaData.text,
+                imageVector = topRowMetaData.icon
             )
-            MainPost(status.boostedStatus!!, postCardInteractions)
-        } else {
-            inReplyToAccountName?.let { replyAccountName ->
-                TopRowMetaData(
-                    text = "In reply to $replyAccountName",
-                    imageVector = Icons.Default.Reply
-                )
-            }
-            MainPost(status, postCardInteractions)
         }
+        MainPost(post.mainPostCardUiState, postCardInteractions)
     }
 }
 
@@ -96,13 +82,10 @@ private fun TopRowMetaData(
 
 @Composable
 private fun MainPost(
-    status: Status,
+    post: MainPostCardUiState,
     postCardInteractions: PostCardInteractions,
 ) {
-    MetaData(status = status)
-    val spannedText = remember(status.content) {
-        HtmlCompat.fromHtml(status.content, 0)
-    }
+    MetaData(post = post)
     val context = LocalContext.current
     AndroidView(
         modifier = Modifier
@@ -114,29 +97,30 @@ private fun MainPost(
                 setPadding(0, 0, 0, DimenUtil.dpToPxInt(context, -20f))
             }
         },
-        update = { it.text = spannedText }
+        update = { it.text = post.statusText }
     )
-    MediaDisplay(attachments = status.mediaAttachments)
-    status.poll?.let {
+    MediaDisplay(attachments = post.mediaAttachments)
+    post.pollUiState?.let {
         Poll(
-            isUserCreatedPoll = false, //TODO check if status.account is my account
             it,
             postCardInteractions,
         )
     }
 
-    BottomRow(status, postCardInteractions)
+    BottomRow(post, postCardInteractions)
 }
 
 @Composable
-private fun MetaData(status: Status) {
+private fun MetaData(
+    post: MainPostCardUiState,
+) {
     Row {
         AsyncImage(
             modifier = Modifier
                 .size(36.dp)
                 .clip(RoundedCornerShape(4.dp))
                 .align(Alignment.CenterVertically),
-            model = status.account.avatarStaticUrl,
+            model = post.profilePictureUrl,
             contentDescription = "",
         )
         Spacer(modifier = Modifier.padding(start = 8.dp))
@@ -144,12 +128,12 @@ private fun MetaData(status: Status) {
             modifier = Modifier.align(Alignment.CenterVertically),
         ) {
             Text(
-                text = status.account.username,
+                text = post.username,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Medium
             )
             Text(
-                text = "${status.createdAt.timeSinceNow()} - @${status.account.acct}",
+                text = post.postMetaDataText,
                 fontSize = 12.sp
             )
         }
@@ -160,28 +144,28 @@ private fun MetaData(status: Status) {
 
 @Composable
 private fun BottomRow(
-    status: Status,
+    post: MainPostCardUiState,
     postCardInteractions: PostCardInteractions,
 ) {
     Row(
         modifier = Modifier.fillMaxWidth()
     ) {
         BottomIconButton(
-            onClick = { postCardInteractions.onReplyClicked(status.statusId) },
+            onClick = { postCardInteractions.onReplyClicked(post.statusId) },
             imageVector = Icons.Default.Reply,
-            count = status.repliesCount,
+            count = post.replyCount,
         )
         Spacer(modifier = Modifier.weight(1f))
         BottomIconButton(
             onClick = { postCardInteractions.onBoostClicked() },
             imageVector = Icons.Default.Repeat,
-            count = status.boostsCount,
+            count = post.boostCount,
         )
         Spacer(modifier = Modifier.weight(1f))
         BottomIconButton(
             onClick = { postCardInteractions.onFavoriteClicked() },
             imageVector = Icons.Default.StarBorder,
-            count = status.favouritesCount,
+            count = post.favoriteCount,
         )
         Spacer(modifier = Modifier.weight(1f))
         BottomIconButton(
