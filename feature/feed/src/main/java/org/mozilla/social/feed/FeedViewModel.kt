@@ -7,21 +7,21 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.mozilla.social.common.logging.Log
-import org.mozilla.social.core.data.repository.TimelineRepository
+import org.mozilla.social.core.domain.TimelineUseCase
 import org.mozilla.social.core.ui.postcard.PostCardInteractions
-import org.mozilla.social.model.Status
+import org.mozilla.social.model.Post
 
 
 /**
  * Produces a flow of pages of statuses for a feed
  */
 class FeedViewModel(
-    private val timelineRepository: TimelineRepository,
+    private val timelineUseCase: TimelineUseCase,
     private val log: Log,
     private val onReplyClicked: (String) -> Unit,
 ) : ViewModel(), PostCardInteractions {
 
-    private val _statusFeed = MutableStateFlow<List<Status>>(emptyList())
+    private val _statusFeed = MutableStateFlow<List<Post>>(emptyList())
     val statusFeed = _statusFeed.asStateFlow()
 
     private val currentFeedType = MutableStateFlow(INITIAL_FEED).also {
@@ -62,7 +62,7 @@ class FeedViewModel(
     private fun getHomeTimeline() {
         viewModelScope.launch {
             try {
-                _statusFeed.update { timelineRepository.retrieveHomeTimeline() }
+                _statusFeed.update { timelineUseCase.getHomeTimeline() }
             } catch (e: Exception) {
                 log.e(e)
             }
