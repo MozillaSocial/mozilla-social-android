@@ -31,9 +31,7 @@ import org.mozilla.social.model.Status
 import org.mozilla.social.model.StatusVisibility
 import org.mozilla.social.model.request.PollCreate
 
-fun NetworkStatus.toExternalModel(
-    inReplyToAccountName: String? = null
-): Status =
+fun NetworkStatus.toExternalModel(): Status =
     Status(
         statusId = statusId,
         uri = uri,
@@ -65,7 +63,6 @@ fun NetworkStatus.toExternalModel(
         isMuted = isMuted,
         isBookmarked = isBookmarked,
         isPinned = isPinned,
-        inReplyToAccountName = inReplyToAccountName,
     )
 
 fun NetworkAccount.toExternalModel(): Account = Account(

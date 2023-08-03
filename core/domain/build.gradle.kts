@@ -25,6 +25,8 @@ dependencies {
     implementation(libs.jakewharton.timber)
     implementation(libs.koin)
     implementation(libs.kotlinx.datetime)
+    implementation(project(":core:data"))
+    implementation(project(":core:model"))
 
     testImplementation(libs.kotlin.test)
     testImplementation(libs.kotlin.test.junit)
