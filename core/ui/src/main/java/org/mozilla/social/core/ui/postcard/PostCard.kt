@@ -46,20 +46,14 @@ fun PostCard(
             .padding(8.dp)
             .fillMaxSize()
     ) {
-        post.topRowMetaDataUiState?.let { topRowMetaData ->
-            TopRowMetaData(
-                text = topRowMetaData.text,
-                imageVector = topRowMetaData.icon
-            )
-        }
+        post.topRowMetaDataUiState?.let { TopRowMetaData(it) }
         MainPost(post.mainPostCardUiState, postCardInteractions)
     }
 }
 
 @Composable
 private fun TopRowMetaData(
-    text: String,
-    imageVector: ImageVector,
+    topRowMetaDataUiState: TopRowMetaDataUiState,
 ) {
     Row(
         modifier = Modifier.padding(bottom = 8.dp)
@@ -68,13 +62,13 @@ private fun TopRowMetaData(
             modifier = Modifier
                 .size(20.dp)
                 .align(Alignment.CenterVertically),
-            imageVector = imageVector,
+            imageVector = topRowMetaDataUiState.icon,
             contentDescription = ""
         )
         Spacer(modifier = Modifier.padding(start = 8.dp))
         Text(
             modifier = Modifier.align(Alignment.CenterVertically),
-            text = text,
+            text = topRowMetaDataUiState.text,
             fontSize = 14.sp
         )
     }

@@ -29,16 +29,15 @@ private fun Status.toMainPostCardUiState(): MainPostCardUiState =
         statusId = statusId,
     )
 
-private fun Post.toTopRowMetaDataUiState(): TopRowMetaDataUiState =
-    TopRowMetaDataUiState(
-        text = if (status.boostedStatus != null) {
-            "${status.account.username} boosted"
-        } else if (inReplyToAccountName != null) {
-            "In reply to $inReplyToAccountName"
-        } else "",
-        icon = if (status.boostedStatus != null) {
-            Icons.Default.Repeat
-        } else if (inReplyToAccountName != null) {
-            Icons.Default.Reply
-        } else Icons.Default.Reply,
-    )
+private fun Post.toTopRowMetaDataUiState(): TopRowMetaDataUiState? =
+    if (status.boostedStatus != null) {
+        TopRowMetaDataUiState(
+            text = "${status.account.username} boosted",
+            icon = Icons.Default.Repeat
+        )
+    } else if (inReplyToAccountName != null) {
+        TopRowMetaDataUiState(
+            text = "In reply to $inReplyToAccountName",
+            icon = Icons.Default.Reply
+        )
+    } else null
