@@ -1,5 +1,6 @@
 package org.mozilla.social.core.ui.postcard
 
+import android.widget.TextView
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
@@ -9,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Repeat
@@ -20,58 +20,40 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
-import androidx.core.text.HtmlCompat
 import coil.compose.AsyncImage
-import com.google.android.material.textview.MaterialTextView
-import org.mozilla.social.common.utils.timeSinceNow
+import org.mozilla.social.common.utils.DimenUtil
 import org.mozilla.social.core.designsystem.theme.MozillaSocialTheme
 import org.mozilla.social.core.ui.media.MediaDisplay
-import org.mozilla.social.model.Post
-import org.mozilla.social.model.Status
+import org.mozilla.social.core.ui.poll.Poll
 
 @Composable
 fun PostCard(
-    post: Post,
+    post: PostCardUiState,
     postCardInteractions: PostCardInteractions,
 ) {
-    val (status, inReplyToAccountName) = post
     Column(
         Modifier
             .padding(8.dp)
             .fillMaxSize()
     ) {
-        if (status.boostedStatus != null) {
-            TopRowMetaData(
-                text = "${status.account.username} boosted",
-                imageVector = Icons.Default.Repeat
-            )
-            MainPost(status.boostedStatus!!, postCardInteractions)
-        } else {
-            inReplyToAccountName?.let { replyAccountName ->
-                TopRowMetaData(
-                    text = "In reply to $replyAccountName",
-                    imageVector = Icons.Default.Reply
-                )
-            }
-            MainPost(status, postCardInteractions)
-        }
+        post.topRowMetaDataUiState?.let { TopRowMetaData(it) }
+        MainPost(post.mainPostCardUiState, postCardInteractions)
     }
 }
 
 @Composable
 private fun TopRowMetaData(
-    text: String,
-    imageVector: ImageVector,
+    topRowMetaDataUiState: TopRowMetaDataUiState,
 ) {
     Row(
         modifier = Modifier.padding(bottom = 8.dp)
@@ -80,13 +62,13 @@ private fun TopRowMetaData(
             modifier = Modifier
                 .size(20.dp)
                 .align(Alignment.CenterVertically),
-            imageVector = imageVector,
+            imageVector = topRowMetaDataUiState.icon,
             contentDescription = ""
         )
         Spacer(modifier = Modifier.padding(start = 8.dp))
         Text(
             modifier = Modifier.align(Alignment.CenterVertically),
-            text = text,
+            text = topRowMetaDataUiState.text,
             fontSize = 14.sp
         )
     }
@@ -94,35 +76,40 @@ private fun TopRowMetaData(
 
 @Composable
 private fun MainPost(
-    status: Status,
+    post: MainPostCardUiState,
     postCardInteractions: PostCardInteractions,
 ) {
-    MetaData(status = status)
-    val spannedText = remember(status.content) {
-        HtmlCompat.fromHtml(status.content, 0)
-    }
+    MetaData(post = post)
+    val context = LocalContext.current
     AndroidView(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 4.dp, top = 4.dp)
-            .wrapContentHeight(),
-        factory = { MaterialTextView(it) },
-        update = { it.text = spannedText }
+            .padding(start = 4.dp, top = 4.dp),
+        factory = {
+            TextView(it).apply {
+                // there is an extra chunk of padding added, so lets remove some of that
+                setPadding(0, 0, 0, DimenUtil.dpToPxInt(context, -20f))
+            }
+        },
+        update = { it.text = post.statusText }
     )
-    MediaDisplay(attachments = status.mediaAttachments)
+    MediaDisplay(attachments = post.mediaAttachments)
+    post.pollUiState?.let { Poll(it, postCardInteractions) }
 
-    BottomRow(status, postCardInteractions)
+    BottomRow(post, postCardInteractions)
 }
 
 @Composable
-private fun MetaData(status: Status) {
+private fun MetaData(
+    post: MainPostCardUiState,
+) {
     Row {
         AsyncImage(
             modifier = Modifier
                 .size(36.dp)
                 .clip(RoundedCornerShape(4.dp))
                 .align(Alignment.CenterVertically),
-            model = status.account.avatarStaticUrl,
+            model = post.profilePictureUrl,
             contentDescription = "",
         )
         Spacer(modifier = Modifier.padding(start = 8.dp))
@@ -130,12 +117,12 @@ private fun MetaData(status: Status) {
             modifier = Modifier.align(Alignment.CenterVertically),
         ) {
             Text(
-                text = status.account.username,
+                text = post.username,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Medium
             )
             Text(
-                text = "${status.createdAt.timeSinceNow()} - @${status.account.acct}",
+                text = post.postMetaDataText,
                 fontSize = 12.sp
             )
         }
@@ -146,28 +133,28 @@ private fun MetaData(status: Status) {
 
 @Composable
 private fun BottomRow(
-    status: Status,
+    post: MainPostCardUiState,
     postCardInteractions: PostCardInteractions,
 ) {
     Row(
         modifier = Modifier.fillMaxWidth()
     ) {
         BottomIconButton(
-            onClick = { postCardInteractions.onReplyClicked(status.statusId) },
+            onClick = { postCardInteractions.onReplyClicked(post.statusId) },
             imageVector = Icons.Default.Reply,
-            count = status.repliesCount,
+            count = post.replyCount,
         )
         Spacer(modifier = Modifier.weight(1f))
         BottomIconButton(
             onClick = { postCardInteractions.onBoostClicked() },
             imageVector = Icons.Default.Repeat,
-            count = status.boostsCount,
+            count = post.boostCount,
         )
         Spacer(modifier = Modifier.weight(1f))
         BottomIconButton(
             onClick = { postCardInteractions.onFavoriteClicked() },
             imageVector = Icons.Default.StarBorder,
-            count = status.favouritesCount,
+            count = post.favoriteCount,
         )
         Spacer(modifier = Modifier.weight(1f))
         BottomIconButton(

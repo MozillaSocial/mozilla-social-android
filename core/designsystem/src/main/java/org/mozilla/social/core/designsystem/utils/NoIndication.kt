@@ -2,8 +2,10 @@ package org.mozilla.social.core.designsystem.utils
 
 import androidx.compose.foundation.Indication
 import androidx.compose.foundation.IndicationInstance
+import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.interaction.InteractionSource
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.graphics.drawscope.ContentDrawScope
 
 /**
@@ -25,5 +27,16 @@ object NoIndication : Indication {
     @Composable
     override fun rememberUpdatedInstance(interactionSource: InteractionSource): IndicationInstance {
         return NoIndicationInstance
+    }
+}
+
+@Composable
+fun NoRipple(
+    content: @Composable () -> Unit
+) {
+    CompositionLocalProvider(
+        LocalIndication provides NoIndication
+    ) {
+        content()
     }
 }
