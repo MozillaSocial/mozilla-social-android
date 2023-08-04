@@ -43,14 +43,17 @@ import org.mozilla.social.core.designsystem.component.MoSoNavigationDrawerItem
 import org.mozilla.social.core.designsystem.component.NavBarDestination
 import org.mozilla.social.core.designsystem.component.NavDestination
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
+import org.mozilla.social.feature.account.follows.navigateToAccountFollowers
+import org.mozilla.social.feature.account.follows.navigateToAccountFollowing
+import org.mozilla.social.feature.account.navigateToAccount
 import org.mozilla.social.feature.auth.AUTH_ROUTE
 import org.mozilla.social.feature.auth.navigateToAuth
 import org.mozilla.social.feature.settings.navigateToSettings
+import org.mozilla.social.navigation.Account
 import org.mozilla.social.navigation.Feed
 import org.mozilla.social.navigation.MAIN_ROUTE
 import org.mozilla.social.navigation.NewPost
 import org.mozilla.social.navigation.Search
-import org.mozilla.social.navigation.Settings
 import org.mozilla.social.post.navigateToNewPost
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -112,7 +115,7 @@ class AppState(
                 }
             }
 
-            NewPost, Search, Settings, null -> {}
+            NewPost, Search, Account, null -> {}
         }
     }
 
@@ -130,8 +133,8 @@ class AppState(
                 "Search"
             }
 
-            Settings -> {
-                "Settings"
+            Account -> {
+                "Account"
             }
 
             else -> {
@@ -140,7 +143,7 @@ class AppState(
         }
 
         when (currentDestination) {
-            Feed, Search, Settings -> {
+            Feed, Search, Account -> {
                 MoSoAppBar(
                     scrollBehavior = topAppBarScrollBehavior,
                     title = {
@@ -153,7 +156,7 @@ class AppState(
                     },
                     navigationIcon = {
                         when (currentDestination) {
-                            Feed, Search, Settings -> {
+                            Feed, Search, Account -> {
                                 IconButton(onClick = {
                                     coroutineScope.launch {
                                         navigationDrawerState.open()
@@ -232,6 +235,21 @@ class AppState(
         navController.navigateToSettings()
     }
 
+    fun navigateToAccount() {
+        coroutineScope.launch { navigationDrawerState.close() }
+        navController.navigateToAccount()
+    }
+
+    fun navigateToAccountFollowing() {
+        coroutineScope.launch { navigationDrawerState.close() }
+        navController.navigateToAccountFollowing()
+    }
+
+    fun navigateToAccountFollowers() {
+        coroutineScope.launch { navigationDrawerState.close() }
+        navController.navigateToAccountFollowers()
+    }
+
     private fun navigateToTopLevelDestination(destination: NavDestination) {
         val navOptions = navOptions {
             popUpTo(navController.graph.findStartDestination().id) {
@@ -273,11 +291,11 @@ class AppState(
         /**
          * All navigation destinations corresponding to nav bar tabs
          */
-        val navBarDestinations: List<NavBarDestination> = listOf(Feed, Search, Settings)
+        val navBarDestinations: List<NavBarDestination> = listOf(Feed, Search, Account)
 
         /**
          * All navigation destinations in the graph
          */
-        val navDestinations: List<NavDestination> = listOf(Feed, Search, Settings, NewPost)
+        val navDestinations: List<NavDestination> = listOf(Feed, Search, Account, NewPost)
     }
 }

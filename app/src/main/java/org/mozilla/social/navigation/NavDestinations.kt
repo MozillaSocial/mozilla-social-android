@@ -1,14 +1,17 @@
 package org.mozilla.social.navigation
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.outlined.Settings
+import androidx.compose.material.icons.rounded.AccountCircle
 import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material.icons.rounded.Settings
 import org.mozilla.social.core.designsystem.component.NavBarDestination
 import org.mozilla.social.core.designsystem.component.NavDestination
+import org.mozilla.social.feature.account.ACCOUNT_ROUTE
 import org.mozilla.social.feature.settings.SETTINGS_ROUTE
 import org.mozilla.social.feed.FEED_ROUTE
 import org.mozilla.social.post.NEW_POST_ROUTE
@@ -33,6 +36,13 @@ object Settings : NavBarDestination {
     override val selectedIcon = Icons.Rounded.Settings
     override val unselectedIcon = Icons.Outlined.Settings
     override val tabText = "Settings"
+}
+
+object Account : NavBarDestination {
+    override val route: String = ACCOUNT_ROUTE
+    override val selectedIcon = Icons.Rounded.AccountCircle
+    override val unselectedIcon = Icons.Outlined.AccountCircle
+    override val tabText = "Account"
 }
 
 object NewPost : NavDestination {

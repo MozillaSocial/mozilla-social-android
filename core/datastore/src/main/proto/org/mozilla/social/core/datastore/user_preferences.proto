@@ -5,4 +5,5 @@ option java_multiple_files = true;
 
 message UserPreferences {
   string access_token = 1;
+  string account_id = 2;
 }

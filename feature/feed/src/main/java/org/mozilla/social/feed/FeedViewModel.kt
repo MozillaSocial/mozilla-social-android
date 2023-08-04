@@ -9,6 +9,7 @@ import kotlinx.coroutines.launch
 import org.mozilla.social.common.logging.Log
 import org.mozilla.social.core.domain.TimelineUseCase
 import org.mozilla.social.core.ui.postcard.PostCardInteractions
+import org.mozilla.social.model.Post
 import org.mozilla.social.core.ui.postcard.PostCardUiState
 import org.mozilla.social.core.ui.postcard.toPostCardUiState
 
@@ -69,7 +70,6 @@ class FeedViewModel(
                     }
                 }
             } catch (e: Exception) {
-                log.e(e)
             }
         }
     }

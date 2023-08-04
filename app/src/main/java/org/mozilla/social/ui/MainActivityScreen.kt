@@ -22,7 +22,7 @@ fun MainActivityScreen() {
         topBar = { appState.topBar() },
         topAppBarScrollBehavior = appState.topAppBarScrollBehavior,
         navigationDrawerState = appState.navigationDrawerState,
-        navigationDrawerContent = { appState.navigationDrawerContent(onSettingsClicked = appState::navigateToSettings) },
+        navigationDrawerContent = { appState.navigationDrawerContent(onSettingsClicked = appState::navigateToAccount) },
         bottomSheetContent = { appState.bottomSheetContent() },
         bottomSheetVisible = appState.bottomSheetVisible.value,
         content = {
