@@ -5,8 +5,12 @@ import org.mozilla.social.core.network.TimelineApi
 import org.mozilla.social.model.Status
 
 class TimelineRepository internal constructor(private val timelineApi: TimelineApi) {
-    suspend fun getHomeTimeline(): List<Status> =
-        timelineApi.getHomeTimeline().map { it.toExternalModel() }
+    suspend fun getHomeTimeline(
+        olderThanId: String? = null,
+    ): List<Status> =
+        timelineApi.getHomeTimeline(
+            olderThanId = olderThanId,
+        ).map { it.toExternalModel() }
 
     suspend fun getPublicTimeline(): List<Status> =
         timelineApi.getPublicTimeline().map { it.toExternalModel() }
