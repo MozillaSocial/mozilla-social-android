@@ -32,7 +32,7 @@ class AccountViewModel(
 
     val account: Flow<Account> =
         accountId.flatMapLatest {
-            if (it != null) {
+            if (!it.isNullOrBlank()) {
                 getAccountForUser(it)
             } else flowOf()
         }
@@ -103,8 +103,8 @@ class AccountViewModel(
         viewModelScope.launch {
             userPreferencesDatastore.dataStore.updateData {
                 it.toBuilder()
-                    .setAccessToken(null)
-                    .setAccountId(null)
+                    .setAccessToken("")
+                    .setAccountId("")
                     .build()
             }
         }
