@@ -16,6 +16,7 @@ import org.mozilla.social.common.commonModule
 import org.mozilla.social.core.data.AuthTokenObserver
 import org.mozilla.social.core.data.repositoryModule
 import org.mozilla.social.core.datastore.dataStoreModule
+import org.mozilla.social.core.ui.uiModule
 import org.mozilla.social.feature.auth.authModule
 import org.mozilla.social.feature.settings.settingsModule
 import org.mozilla.social.feed.feedModule
@@ -68,6 +69,7 @@ val appModules = module {
         newPostModule,
         settingsModule,
         accountModule,
-        accountFollowUsersModule
+        accountFollowUsersModule,
+        uiModule,
     )
 }
