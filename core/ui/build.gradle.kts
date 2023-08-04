@@ -30,6 +30,8 @@ dependencies {
 
     implementation(libs.google.material)
 
+    implementation(libs.androidx.paging.compose)
+
     implementation(libs.koin)
 
     implementation(libs.kotlinx.datetime)
