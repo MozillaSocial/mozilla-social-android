@@ -94,12 +94,7 @@ private fun MainPost(
         update = { it.text = post.statusText }
     )
     MediaDisplay(attachments = post.mediaAttachments)
-    post.pollUiState?.let {
-        Poll(
-            it,
-            postCardInteractions,
-        )
-    }
+    post.pollUiState?.let { Poll(it) }
 
     BottomRow(post, postCardInteractions)
 }

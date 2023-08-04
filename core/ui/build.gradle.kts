@@ -26,6 +26,7 @@ dependencies {
     implementation(project(":core:model"))
     implementation(project(":core:designsystem"))
     implementation(project(":core:common"))
+    implementation(project(":core:data"))
 
     implementation(libs.google.material)
 

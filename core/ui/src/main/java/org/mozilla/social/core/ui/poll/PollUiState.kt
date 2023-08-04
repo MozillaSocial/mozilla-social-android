@@ -8,11 +8,13 @@ data class PollUiState(
     val pollId: String,
     val isMultipleChoice: Boolean,
     val usersVotes: List<Int>,
+    val voteButtonEnabled: Boolean,
 )
 
 data class PollOptionUiState(
-    val clickToVoteEnabled: Boolean,
+    val enabled: Boolean,
     val fillFraction: Float,
     val title: String,
     val voteInfo: String,
+    val selected: Boolean,
 )

@@ -2,6 +2,7 @@ package org.mozilla.social.core.data.repository
 
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
+import org.mozilla.social.core.data.repository.model.toExternalModel
 import org.mozilla.social.core.data.repository.model.toNetworkModel
 import org.mozilla.social.core.network.MediaApi
 import org.mozilla.social.core.network.StatusApi
@@ -10,6 +11,7 @@ import org.mozilla.social.core.network.model.request.NetworkMediaUpdate
 import org.mozilla.social.core.network.model.request.NetworkPollCreate
 import org.mozilla.social.core.network.model.request.NetworkStatusCreate
 import org.mozilla.social.model.ImageState
+import org.mozilla.social.model.Poll
 import org.mozilla.social.model.StatusVisibility
 import org.mozilla.social.model.request.PollCreate
 
@@ -84,10 +86,8 @@ class StatusRepository(
     suspend fun voteOnPoll(
         pollId: String,
         pollChoices: List<Int>,
-    ) {
-        statusApi.voteOnPoll(
-            pollId,
-            pollChoices,
-        )
-    }
+    ): Poll = statusApi.voteOnPoll(
+        pollId,
+        pollChoices,
+    ).toExternalModel()
 }

@@ -8,7 +8,6 @@ val feedModule = module {
     viewModel { parametersHolder -> FeedViewModel(
         get(),
         get(),
-        get(),
         parametersHolder.get()
     ) }
     includes(domainModule)
