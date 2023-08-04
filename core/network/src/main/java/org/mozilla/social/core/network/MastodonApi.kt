@@ -56,4 +56,25 @@ interface MastodonApi {
     suspend fun getAccount(
         @Path("id") accountId: String
     ): NetworkAccount
+
+    @GET("/api/v1/accounts/{id}/followers")
+    suspend fun getAccountFollowers(
+        @Path("id") accountId: String
+    ): List<NetworkAccount>
+
+    @GET("/api/v1/accounts/{id}/following")
+    suspend fun getAccountFollowing(
+        @Path("id") accountId: String
+    ): List<NetworkAccount>
+
+    @GET("/api/v1/accounts/{id}/statuses")
+    suspend fun getAccountStatuses(
+        @Path("id") accountId: String
+    ): List<NetworkStatus>
+
+    @GET("/api/v1/bookmarks")
+    suspend fun getAccountBookmarks(): List<NetworkStatus>
+
+    @GET("/api/v1/favourites")
+    suspend fun getAccountFavourites(): List<NetworkStatus>
 }

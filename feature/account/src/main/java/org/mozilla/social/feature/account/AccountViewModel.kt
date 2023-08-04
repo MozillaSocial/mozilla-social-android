@@ -15,10 +15,13 @@ import kotlinx.coroutines.launch
 import org.mozilla.social.core.data.repository.AccountRepository
 import org.mozilla.social.core.datastore.UserPreferencesDatastore
 import org.mozilla.social.core.network.model.NetworkAccount
+import org.mozilla.social.core.network.model.NetworkStatus
 
 class AccountViewModel(
     private val userPreferencesDatastore: UserPreferencesDatastore,
     private val accountRepository: AccountRepository,
+    private val userFollowers: () -> Unit,
+    private val userFollowing: () -> Unit,
     private val onLogout: () -> Unit
 ) : ViewModel() {
 
@@ -33,6 +36,28 @@ class AccountViewModel(
                 getAccountForUser(it)
             } else flowOf()
         }
+
+
+    val accountStatuses: Flow<List<NetworkStatus>> =
+        accountId.flatMapLatest {
+            if (it != null) {
+                getAccountStatuses(it)
+            } else flowOf()
+        }
+
+//    val accountBookmarks: Flow<List<NetworkStatus>> =
+//        accountId.flatMapLatest {
+//            if (it != null) {
+//                getAccountBookmarks()
+//            } else flowOf()
+//        }
+//
+//    val accountFavourites: Flow<List<NetworkStatus>> =
+//        accountId.flatMapLatest {
+//            if (it != null) {
+//                getAccountFavourites()
+//            } else flowOf()
+//        }
 
     init {
         viewModelScope.launch {
@@ -66,6 +91,14 @@ class AccountViewModel(
         }
     }
 
+    fun showUsersFollowing() {
+        userFollowing()
+    }
+
+    fun showUsersFollowers() {
+        userFollowers()
+    }
+
     fun logoutUser() {
         viewModelScope.launch {
             userPreferencesDatastore.dataStore.updateData {
@@ -73,6 +106,39 @@ class AccountViewModel(
                     .setAccessToken(null)
                     .setAccountId(null)
                     .build()
+            }
+        }
+    }
+
+    private fun getAccountStatuses(accountId: String): Flow<List<NetworkStatus>> {
+        return flow {
+            val response = accountRepository.getAccountStatuses(accountId)
+            try {
+                emit(response)
+            } catch(e: Exception) {
+
+            }
+        }
+    }
+
+    private fun getAccountBookmarks(): Flow<List<NetworkStatus>> {
+        return flow {
+            val response = accountRepository.getAccountBookmarks()
+            try {
+                emit(response)
+            } catch(e: Exception) {
+
+            }
+        }
+    }
+
+    private fun getAccountFavourites(): Flow<List<NetworkStatus>> {
+        return flow {
+            val response = accountRepository.getAccountFavourites()
+            try {
+                emit(response)
+            } catch(e: Exception) {
+
             }
         }
     }

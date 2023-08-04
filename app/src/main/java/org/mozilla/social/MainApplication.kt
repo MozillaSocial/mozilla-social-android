@@ -22,6 +22,7 @@ import org.mozilla.social.feed.feedModule
 import org.mozilla.social.post.newPostModule
 import org.mozilla.social.search.searchModule
 import org.mozilla.social.feature.account.accountModule
+import org.mozilla.social.feature.account.follows.accountFollowUsersModule
 
 class MainApplication : Application(), ImageLoaderFactory {
 
@@ -67,5 +68,6 @@ val appModules = module {
         newPostModule,
         settingsModule,
         accountModule,
+        accountFollowUsersModule
     )
 }

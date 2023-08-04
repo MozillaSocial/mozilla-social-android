@@ -43,6 +43,8 @@ import org.mozilla.social.core.designsystem.component.MoSoNavigationDrawerItem
 import org.mozilla.social.core.designsystem.component.NavBarDestination
 import org.mozilla.social.core.designsystem.component.NavDestination
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
+import org.mozilla.social.feature.account.follows.navigateToAccountFollowers
+import org.mozilla.social.feature.account.follows.navigateToAccountFollowing
 import org.mozilla.social.feature.account.navigateToAccount
 import org.mozilla.social.feature.auth.AUTH_ROUTE
 import org.mozilla.social.feature.auth.navigateToAuth
@@ -52,7 +54,6 @@ import org.mozilla.social.navigation.Feed
 import org.mozilla.social.navigation.MAIN_ROUTE
 import org.mozilla.social.navigation.NewPost
 import org.mozilla.social.navigation.Search
-import org.mozilla.social.navigation.Settings
 import org.mozilla.social.post.navigateToNewPost
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -237,6 +238,16 @@ class AppState(
     fun navigateToAccount() {
         coroutineScope.launch { navigationDrawerState.close() }
         navController.navigateToAccount()
+    }
+
+    fun navigateToAccountFollowing() {
+        coroutineScope.launch { navigationDrawerState.close() }
+        navController.navigateToAccountFollowing()
+    }
+
+    fun navigateToAccountFollowers() {
+        coroutineScope.launch { navigationDrawerState.close() }
+        navController.navigateToAccountFollowers()
     }
 
     private fun navigateToTopLevelDestination(destination: NavDestination) {

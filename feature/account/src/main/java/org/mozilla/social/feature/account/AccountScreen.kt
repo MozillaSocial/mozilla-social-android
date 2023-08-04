@@ -36,6 +36,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -53,15 +54,24 @@ import org.mozilla.social.core.network.model.NetworkAccount
 
 @Composable
 internal fun AccountRoute(
+    onUserFollowings: () -> Unit,
+    onUserFollowers: () -> Unit,
     onLogout: () -> Unit,
-    viewModel: AccountViewModel = koinViewModel(parameters = { parametersOf(onLogout) }),
+    viewModel: AccountViewModel = koinViewModel(parameters = {
+        parametersOf(
+            onUserFollowers,
+            onUserFollowings,
+            onLogout
+        )}),
 ) {
     val account = viewModel.account.collectAsState(initial = null).value
 
     account?.let {
         AccountScreen(
             account = it,
-            viewModel::logoutUser
+            userFollowing = viewModel::showUsersFollowing,
+            userFollowers = viewModel::showUsersFollowers,
+            logUserOut = viewModel::logoutUser
         )
     }
 }
@@ -69,6 +79,8 @@ internal fun AccountRoute(
 @Composable
 internal fun AccountScreen(
     account: NetworkAccount,
+    userFollowing: () -> Unit,
+    userFollowers: () -> Unit,
     logUserOut: () -> Unit
 ) {
     MozillaSocialTheme {
@@ -104,8 +116,8 @@ internal fun AccountScreen(
                                 border = BorderStroke(2.dp, Color.Gray),
                                 shape = RoundedCornerShape(8.dp)
                             ),
-                        followersOnClick = { /*TODO*/ },
-                        followingOnClock = { /*TODO*/ }
+                        followingOnClick = userFollowing,
+                        followersOnClick = userFollowers
                     )
                 }
                 Box(
@@ -189,7 +201,7 @@ private fun userFollow(
     account: NetworkAccount,
     modifier: Modifier,
     followersOnClick: () -> Unit,
-    followingOnClock: () -> Unit
+    followingOnClick: () -> Unit
 ) {
     Box(modifier = modifier) {
         Row(
@@ -197,13 +209,18 @@ private fun userFollow(
                 .height(IntrinsicSize.Min)
                 .padding(8.dp)
         ) {
-            Row {
-                Text(
-                    text = "Followers: ${account.followersCount}",
+                Row(
                     modifier = Modifier
-                        .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 8.dp)
-                )
-            }
+                        .clickable {
+                            followersOnClick()
+                        }
+                ) {
+                    Text(
+                        text = "Followers: ${account.followersCount}",
+                        modifier = Modifier
+                            .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 8.dp)
+                    )
+                }
 
             Divider(
                 color = Color.Gray,
@@ -212,13 +229,18 @@ private fun userFollow(
                     .width(1.dp)
             )
 
-            Row {
-                Text(
-                    text = "Following: ${account.followingCount}",
+                Row(
                     modifier = Modifier
-                        .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 8.dp)
-                )
-            }
+                        .clickable {
+                            followingOnClick()
+                        }
+                ) {
+                    Text(
+                        text = "Following: ${account.followingCount}",
+                        modifier = Modifier
+                            .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 8.dp)
+                    )
+                }
         }
     }
 }
@@ -305,7 +327,10 @@ private fun quickFunctions(
     ) {
         Box(
             modifier = Modifier
-                .border(border = BorderStroke(2.dp, Color.Gray), shape = RoundedCornerShape(8.dp))
+                .border(
+                    border = BorderStroke(2.dp, Color.Gray),
+                    shape = RoundedCornerShape(8.dp)
+                )
                 .padding(8.dp)
         ) {
             Text(
@@ -405,8 +430,10 @@ private fun headerAndProfileImages(
             AsyncImage(
                 model = headerImage,
                 contentDescription = headerStaticUrl,
+                contentScale = ContentScale.Crop,
                 modifier = Modifier
-                    .fillMaxSize()
+                    .fillMaxWidth()
+                    .height(120.dp)
             )
         }
         Box(

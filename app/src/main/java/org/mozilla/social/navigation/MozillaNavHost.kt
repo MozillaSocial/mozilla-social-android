@@ -1,14 +1,13 @@
 package org.mozilla.social.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NavOptions
-import androidx.navigation.NavOptionsBuilder
-import androidx.navigation.Navigator
 import androidx.navigation.compose.NavHost
 import androidx.navigation.navigation
+import org.mozilla.social.feature.account.follows.FollowType
 import org.mozilla.social.feature.account.accountScreen
+import org.mozilla.social.feature.account.follows.accountFollowersScreen
+import org.mozilla.social.feature.account.follows.accountFollowingScreen
 import org.mozilla.social.feature.auth.AUTH_ROUTE
 import org.mozilla.social.feature.auth.authScreen
 import org.mozilla.social.feature.settings.settingsScreen
@@ -36,7 +35,13 @@ private fun NavGraphBuilder.mainGraph(appState: AppState) {
         )
         searchScreen()
         settingsScreen(onLogout = appState::onLogout)
-        accountScreen(onLogout = appState::onLogout)
+        accountScreen(
+            userFollowing = appState::navigateToAccountFollowing,
+            userFollowers = appState::navigateToAccountFollowers,
+            onLogout = appState::onLogout,
+        )
+        accountFollowingScreen()
+        accountFollowersScreen()
         newPostScreen(
             onStatusPosted = { appState.popBackStack() },
             onCloseClicked = { appState.popBackStack() },

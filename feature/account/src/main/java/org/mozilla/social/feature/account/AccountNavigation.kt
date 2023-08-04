@@ -11,8 +11,16 @@ fun NavController.navigateToAccount(navOptions: NavOptions? = null) {
     this.navigate(ACCOUNT_ROUTE, navOptions)
 }
 
-fun NavGraphBuilder.accountScreen(onLogout: () -> Unit) {
+fun NavGraphBuilder.accountScreen(
+    userFollowing: () -> Unit,
+    userFollowers: () -> Unit,
+    onLogout: () -> Unit
+) {
     composable(route = ACCOUNT_ROUTE) {
-        AccountRoute(onLogout = onLogout)
+        AccountRoute(
+            onUserFollowings = userFollowing,
+            onUserFollowers = userFollowers,
+            onLogout = onLogout
+        )
     }
 }
