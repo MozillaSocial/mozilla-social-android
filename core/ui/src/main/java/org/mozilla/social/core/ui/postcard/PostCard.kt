@@ -36,24 +36,32 @@ import com.google.android.material.textview.MaterialTextView
 import org.mozilla.social.common.utils.timeSinceNow
 import org.mozilla.social.core.designsystem.theme.MozillaSocialTheme
 import org.mozilla.social.core.ui.media.MediaDisplay
+import org.mozilla.social.model.Post
 import org.mozilla.social.model.Status
 
 @Composable
 fun PostCard(
-    status: Status,
+    post: Post,
     postCardInteractions: PostCardInteractions,
 ) {
+    val (status, inReplyToAccountName) = post
     Column(
         Modifier
             .padding(8.dp)
             .fillMaxSize()
     ) {
         if (status.boostedStatus != null) {
-            TopRowMetaData(text = "${status.account.username} boosted", imageVector = Icons.Default.Repeat)
+            TopRowMetaData(
+                text = "${status.account.username} boosted",
+                imageVector = Icons.Default.Repeat
+            )
             MainPost(status.boostedStatus!!, postCardInteractions)
         } else {
-            status.inReplyToAccountName?.let { replyAccountName ->
-                TopRowMetaData(text = "In reply to $replyAccountName", imageVector = Icons.Default.Reply)
+            inReplyToAccountName?.let { replyAccountName ->
+                TopRowMetaData(
+                    text = "In reply to $replyAccountName",
+                    imageVector = Icons.Default.Reply
+                )
             }
             MainPost(status, postCardInteractions)
         }

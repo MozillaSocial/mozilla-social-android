@@ -159,7 +159,6 @@ data class Status(
      */
     val isPinned: Boolean? = null,
 
-    val inReplyToAccountName: String? = null,
 ) : Pageable {
 
     override val id: String

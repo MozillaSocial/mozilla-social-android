@@ -1,18 +1,18 @@
 package org.mozilla.social.core.data.repository
 
 import org.mozilla.social.core.data.repository.model.toExternalModel
-import org.mozilla.social.core.network.MastodonApi
 import org.mozilla.social.model.Account
 import org.mozilla.social.model.HashTag
+import org.mozilla.social.core.network.SearchApi
 
 class SearchRepository internal constructor(
-    private val mastodonApi: MastodonApi,
+    private val searchApi: SearchApi,
 ) {
 
     suspend fun searchForAccounts(
         query: String,
     ): List<Account> {
-        return mastodonApi.search(
+        return searchApi.search(
             query,
             ACCOUNTS
         ).accounts.map { it.toExternalModel() }
@@ -21,7 +21,7 @@ class SearchRepository internal constructor(
     suspend fun searchForHashtags(
         query: String,
     ): List<HashTag> {
-        return mastodonApi.search(
+        return searchApi.search(
             query,
             HASHTAGS,
         ).hashtags.map { it.toExternalModel() }

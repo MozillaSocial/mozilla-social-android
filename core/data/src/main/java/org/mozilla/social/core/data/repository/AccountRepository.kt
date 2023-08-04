@@ -4,7 +4,6 @@ import kotlinx.coroutines.coroutineScope
 import org.mozilla.social.core.network.MastodonApi
 import org.mozilla.social.core.network.model.NetworkAccount
 import org.mozilla.social.core.network.model.NetworkStatus
-import retrofit2.Response
 
 class AccountRepository internal constructor(
     private val mastodonApi: MastodonApi
