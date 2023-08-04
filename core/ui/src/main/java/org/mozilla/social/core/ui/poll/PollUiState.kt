@@ -5,6 +5,9 @@ data class PollUiState(
     val pollInfoText: String,
     val isUserCreatedPoll: Boolean,
     val showResults: Boolean,
+    val pollId: String,
+    val isMultipleChoice: Boolean,
+    val usersVotes: List<Int>,
 )
 
 data class PollOptionUiState(

@@ -80,4 +80,14 @@ class StatusRepository(
             )
         )
     }
+
+    suspend fun voteOnPoll(
+        pollId: String,
+        pollChoices: List<Int>,
+    ) {
+        statusApi.voteOnPoll(
+            pollId,
+            pollChoices,
+        )
+    }
 }

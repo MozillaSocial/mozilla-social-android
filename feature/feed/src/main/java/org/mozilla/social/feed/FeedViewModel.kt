@@ -7,10 +7,13 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.mozilla.social.common.logging.Log
+import org.mozilla.social.core.data.repository.StatusRepository
 import org.mozilla.social.core.domain.TimelineUseCase
+import org.mozilla.social.core.ui.poll.PollInteractions
 import org.mozilla.social.core.ui.postcard.PostCardInteractions
 import org.mozilla.social.core.ui.postcard.PostCardUiState
 import org.mozilla.social.core.ui.postcard.toPostCardUiState
+import org.mozilla.social.feed.poll.PollDelegate
 
 
 /**
@@ -18,9 +21,19 @@ import org.mozilla.social.core.ui.postcard.toPostCardUiState
  */
 class FeedViewModel(
     private val timelineUseCase: TimelineUseCase,
+    private val statusRepository: StatusRepository,
     private val log: Log,
     private val onReplyClicked: (String) -> Unit,
-) : ViewModel(), PostCardInteractions {
+    private val pollDelegate: PollDelegate = PollDelegate(
+        statusRepository
+    )
+) : ViewModel(),
+    PostCardInteractions,
+    PollInteractions by pollDelegate {
+
+    init {
+        pollDelegate.coroutineScope = viewModelScope
+    }
 
     private val _statusFeed = MutableStateFlow<List<PostCardUiState>>(emptyList())
     val statusFeed = _statusFeed.asStateFlow()

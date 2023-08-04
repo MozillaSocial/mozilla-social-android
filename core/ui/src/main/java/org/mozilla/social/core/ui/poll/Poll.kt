@@ -30,8 +30,8 @@ fun Poll(
     Column {
         pollUiState.pollOptions.forEachIndexed { index, pollOptionUiState ->
             PollOption(
-                showResults = pollUiState.showResults,
                 optionIndex = index,
+                pollUiState = pollUiState,
                 pollOptionUiState = pollOptionUiState,
                 pollInteractions = pollInteractions,
             )
@@ -43,8 +43,8 @@ fun Poll(
 
 @Composable
 private fun PollOption(
-    showResults: Boolean,
     optionIndex: Int,
+    pollUiState: PollUiState,
     pollOptionUiState: PollOptionUiState,
     pollInteractions: PollInteractions,
 ) {
@@ -75,7 +75,10 @@ private fun PollOption(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(height)
-                .clickable { pollInteractions.onOptionClicked(optionIndex) },
+                .clickable { pollInteractions.onOptionClicked(
+                    pollUiState,
+                    optionIndex,
+                ) },
         ) {
             Text(
                 modifier = Modifier
@@ -84,7 +87,7 @@ private fun PollOption(
                     .align(Alignment.CenterVertically),
                 text = pollOptionUiState.title
             )
-            if (showResults) {
+            if (pollUiState.showResults) {
                 Text(
                     modifier = Modifier
                         .padding(8.dp)

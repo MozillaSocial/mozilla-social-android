@@ -16,8 +16,14 @@ fun Poll.toPollUiState(): PollUiState =
             )
         },
         isUserCreatedPoll = false,
-        pollInfoText = "$votesCount votes - ${expiresAt?.timeLeft() ?: "poll closed"}",
+        pollInfoText = "$votesCount votes - ${expiresAt?.timeLeft() ?: "poll closed"}" +
+                if (allowsMultipleChoices) {
+                    " - Choose one or more"
+                } else "",
         showResults = hasVoted ?: false,
+        pollId = pollId,
+        isMultipleChoice = allowsMultipleChoices,
+        usersVotes = ownVotes ?: emptyList(),
     )
 
 private fun getVoteCountText(
