@@ -14,7 +14,7 @@ class HomeTimelinePagingSource(
     private val accountRepository: AccountRepository
 ) : PagingSource<String, Post>() {
 
-    //TODO I don't understand this...
+    //TODO I don't fully understand this...
     // trying to get the previous page's last item's status ID
     override fun getRefreshKey(state: PagingState<String, Post>): String? {
         return state.anchorPosition?.let { anchorPosition ->
