@@ -50,7 +50,7 @@ import com.google.android.material.textview.MaterialTextView
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 import org.mozilla.social.core.designsystem.theme.MozillaSocialTheme
-import org.mozilla.social.core.network.model.NetworkAccount
+import org.mozilla.social.model.Account
 
 @Composable
 internal fun AccountRoute(
@@ -78,7 +78,7 @@ internal fun AccountRoute(
 
 @Composable
 internal fun AccountScreen(
-    account: NetworkAccount,
+    account: Account,
     userFollowing: () -> Unit,
     userFollowers: () -> Unit,
     logUserOut: () -> Unit
@@ -154,7 +154,7 @@ internal fun AccountScreen(
 }
 
 @Composable
-private fun userImages(account: NetworkAccount) {
+private fun userImages(account: Account) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -169,7 +169,7 @@ private fun userImages(account: NetworkAccount) {
 }
 
 @Composable
-private fun userInfo(account: NetworkAccount, modifier: Modifier) {
+private fun userInfo(account: Account, modifier: Modifier) {
     val url = account.url.split("/")
     val handle = url.last()
     val instance = "@" + url[url.lastIndex - 1]
@@ -198,7 +198,7 @@ private fun userInfo(account: NetworkAccount, modifier: Modifier) {
 
 @Composable
 private fun userFollow(
-    account: NetworkAccount,
+    account: Account,
     modifier: Modifier,
     followersOnClick: () -> Unit,
     followingOnClick: () -> Unit
@@ -246,7 +246,7 @@ private fun userFollow(
 }
 
 @Composable
-private fun userBio(account: NetworkAccount, modifier: Modifier) {
+private fun userBio(account: Account, modifier: Modifier) {
     Box(modifier = modifier) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -268,7 +268,7 @@ private fun userBio(account: NetworkAccount, modifier: Modifier) {
 }
 
 @Composable
-private fun userFields(account: NetworkAccount) {
+private fun userFields(account: Account) {
     Column(
         verticalArrangement = Arrangement.SpaceEvenly,
         modifier = Modifier

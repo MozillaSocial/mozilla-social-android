@@ -14,8 +14,8 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import org.mozilla.social.core.data.repository.AccountRepository
 import org.mozilla.social.core.datastore.UserPreferencesDatastore
-import org.mozilla.social.core.network.model.NetworkAccount
-import org.mozilla.social.core.network.model.NetworkStatus
+import org.mozilla.social.model.Account
+import org.mozilla.social.model.Status
 
 class AccountViewModel(
     private val userPreferencesDatastore: UserPreferencesDatastore,
@@ -30,7 +30,7 @@ class AccountViewModel(
             it.accountId
         }.stateIn(viewModelScope, SharingStarted.Eagerly, null)
 
-    val account: Flow<NetworkAccount> =
+    val account: Flow<Account> =
         accountId.flatMapLatest {
             if (it != null) {
                 getAccountForUser(it)
@@ -38,7 +38,7 @@ class AccountViewModel(
         }
 
 
-    val accountStatuses: Flow<List<NetworkStatus>> =
+    val accountStatuses: Flow<List<Status>> =
         accountId.flatMapLatest {
             if (it != null) {
                 getAccountStatuses(it)
@@ -80,7 +80,7 @@ class AccountViewModel(
         }
     }
 
-    private fun getAccountForUser(accountId: String): Flow<NetworkAccount> {
+    private fun getAccountForUser(accountId: String): Flow<Account> {
         return flow {
             val response = accountRepository.getAccount(accountId)
             try {
@@ -110,7 +110,7 @@ class AccountViewModel(
         }
     }
 
-    private fun getAccountStatuses(accountId: String): Flow<List<NetworkStatus>> {
+    private fun getAccountStatuses(accountId: String): Flow<List<Status>> {
         return flow {
             val response = accountRepository.getAccountStatuses(accountId)
             try {
@@ -121,7 +121,7 @@ class AccountViewModel(
         }
     }
 
-    private fun getAccountBookmarks(): Flow<List<NetworkStatus>> {
+    private fun getAccountBookmarks(): Flow<List<Status>> {
         return flow {
             val response = accountRepository.getAccountBookmarks()
             try {
@@ -132,7 +132,7 @@ class AccountViewModel(
         }
     }
 
-    private fun getAccountFavourites(): Flow<List<NetworkStatus>> {
+    private fun getAccountFavourites(): Flow<List<Status>> {
         return flow {
             val response = accountRepository.getAccountFavourites()
             try {

@@ -14,6 +14,7 @@ import org.mozilla.social.core.data.repository.AccountRepository
 import org.mozilla.social.core.datastore.UserPreferencesDatastore
 import org.mozilla.social.core.network.model.NetworkAccount
 import org.mozilla.social.core.network.model.NetworkStatus
+import org.mozilla.social.model.Account
 
 class AccountFollowUsersViewModel(
     private val userPreferencesDatastore: UserPreferencesDatastore,
@@ -24,21 +25,21 @@ class AccountFollowUsersViewModel(
             it.accountId
         }.stateIn(viewModelScope, SharingStarted.Eagerly, null)
 
-    val accountFollowers: Flow<List<NetworkAccount>> =
+    val accountFollowers: Flow<List<Account>> =
         accountId.flatMapLatest {
             if (it != null) {
                 getAccountFollowers(it)
             } else flowOf()
         }
 
-    val accountFollowing: Flow<List<NetworkAccount>> =
+    val accountFollowing: Flow<List<Account>> =
         accountId.flatMapLatest {
             if (it != null) {
                 getAccountFollowing(it)
             } else flowOf()
         }
 
-    private fun getAccountFollowers(accountId: String): Flow<List<NetworkAccount>> {
+    private fun getAccountFollowers(accountId: String): Flow<List<Account>> {
         return flow {
             val response = accountRepository.getAccountFollowers(accountId)
             try {
@@ -49,7 +50,7 @@ class AccountFollowUsersViewModel(
         }
     }
 
-    private fun getAccountFollowing(accountId: String): Flow<List<NetworkAccount>> {
+    private fun getAccountFollowing(accountId: String): Flow<List<Account>> {
         return flow {
             val response = accountRepository.getAccountFollowing(accountId)
             try {

@@ -26,7 +26,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import org.koin.androidx.compose.koinViewModel
 import org.mozilla.social.core.designsystem.theme.MozillaSocialTheme
-import org.mozilla.social.core.network.model.NetworkAccount
+import org.mozilla.social.model.Account
 
 @Composable
 internal fun AccountFollowUsersScreen(
@@ -44,7 +44,7 @@ internal fun AccountFollowUsersScreen(
 }
 
 @Composable
-internal fun AccountFollowScreen(accounts: List<NetworkAccount>) {
+internal fun AccountFollowScreen(accounts: List<Account>) {
     MozillaSocialTheme {
         Column(
             modifier = Modifier
@@ -52,7 +52,7 @@ internal fun AccountFollowScreen(accounts: List<NetworkAccount>) {
                 .verticalScroll(rememberScrollState())
                 .padding(16.dp)
         ) {
-            accounts.forEachIndexed { index, account -> 
+            accounts.forEach { account ->
                 AccountQuickView(account)
             }
         }
@@ -60,7 +60,7 @@ internal fun AccountFollowScreen(accounts: List<NetworkAccount>) {
 }
 
 @Composable
-internal fun AccountQuickView(account: NetworkAccount) {
+internal fun AccountQuickView(account: Account) {
     val url = account.url.split("/")
     val handle = url.last()
     val instance = "@" + url[url.lastIndex - 1]

@@ -1,45 +1,46 @@
 package org.mozilla.social.core.data.repository
 
 import kotlinx.coroutines.coroutineScope
-import org.mozilla.social.core.network.MastodonApi
-import org.mozilla.social.core.network.model.NetworkAccount
-import org.mozilla.social.core.network.model.NetworkStatus
+import org.mozilla.social.core.data.repository.model.toExternalModel
+import org.mozilla.social.core.network.AccountApi
+import org.mozilla.social.model.Account
+import org.mozilla.social.model.Status
 
 class AccountRepository internal constructor(
-    private val mastodonApi: MastodonApi
+    private val accountApi: AccountApi
 ) {
 
-    suspend fun getUserAccount(): NetworkAccount {
-        return mastodonApi.verifyAccount()
+    suspend fun getUserAccount(): Account {
+        return accountApi.verifyAccount().toExternalModel()
     }
 
-    suspend fun getAccount(accountId: String): NetworkAccount =
+    suspend fun getAccount(accountId: String): Account =
         coroutineScope {
-            mastodonApi.getAccount(accountId)
+            accountApi.getAccount(accountId).toExternalModel()
         }
 
-    suspend fun getAccountFollowers(accountId: String): List<NetworkAccount> =
+    suspend fun getAccountFollowers(accountId: String): List<Account> =
         coroutineScope {
-            mastodonApi.getAccountFollowers(accountId)
+            accountApi.getAccountFollowers(accountId).map { it.toExternalModel() }
         }
 
-    suspend fun getAccountFollowing(accountId: String): List<NetworkAccount> =
+    suspend fun getAccountFollowing(accountId: String): List<Account> =
         coroutineScope {
-            mastodonApi.getAccountFollowing(accountId)
+            accountApi.getAccountFollowing(accountId).map { it.toExternalModel() }
         }
 
-    suspend fun getAccountStatuses(accountId: String): List<NetworkStatus> =
+    suspend fun getAccountStatuses(accountId: String): List<Status> =
         coroutineScope {
-            mastodonApi.getAccountStatuses(accountId)
+            accountApi.getAccountStatuses(accountId).map { it.toExternalModel() }
         }
 
-    suspend fun getAccountBookmarks(): List<NetworkStatus> =
+    suspend fun getAccountBookmarks(): List<Status> =
         coroutineScope {
-            mastodonApi.getAccountBookmarks()
+            accountApi.getAccountBookmarks().map { it.toExternalModel() }
         }
 
-    suspend fun getAccountFavourites(): List<NetworkStatus> =
+    suspend fun getAccountFavourites(): List<Status> =
         coroutineScope {
-            mastodonApi.getAccountFavourites()
+            accountApi.getAccountFavourites().map { it.toExternalModel() }
         }
 }
