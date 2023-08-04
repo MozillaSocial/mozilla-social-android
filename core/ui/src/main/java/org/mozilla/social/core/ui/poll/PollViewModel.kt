@@ -9,6 +9,7 @@ import kotlinx.coroutines.launch
 import org.mozilla.social.common.utils.edit
 import org.mozilla.social.core.data.repository.StatusRepository
 
+//TODO delete this class and move logic to a better place
 class PollViewModel(
     private val statusRepository: StatusRepository,
     initialState: PollUiState,

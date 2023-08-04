@@ -16,33 +16,16 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import org.koin.androidx.compose.koinViewModel
-import org.koin.core.parameter.parametersOf
 import org.mozilla.social.core.designsystem.theme.MozillaSocialTheme
 import org.mozilla.social.core.designsystem.utils.NoRipple
-import org.mozilla.social.core.ui.ProvideListItemViewModel
 
 @Composable
 fun Poll(
-    initialUiState: PollUiState,
-) {
-    ProvideListItemViewModel {
-        val pollViewModel: PollViewModel = koinViewModel(parameters = { parametersOf(initialUiState) })
-        MainPoll(
-            pollUiState = pollViewModel.pollUiState.collectAsState().value,
-            pollInteractions = pollViewModel
-        )
-    }
-}
-
-@Composable
-private fun MainPoll(
     pollUiState: PollUiState,
     pollInteractions: PollInteractions,
 ) {
