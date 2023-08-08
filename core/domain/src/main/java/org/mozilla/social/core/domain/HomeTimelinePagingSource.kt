@@ -9,36 +9,36 @@ import org.mozilla.social.core.data.repository.TimelineRepository
 import org.mozilla.social.model.Post
 import org.mozilla.social.model.Status
 
+/**
+ * The key Pair<String, String> the first string is the older than ID, the second is the newer than ID
+ */
 class HomeTimelinePagingSource(
     private val timelineRepository: TimelineRepository,
     private val accountRepository: AccountRepository
-) : PagingSource<String, Post>() {
+) : PagingSource<Pair<String?, String?>, Post>() {
 
-    //TODO I don't fully understand this...
-    // trying to get the previous page's last item's status ID
-    override fun getRefreshKey(state: PagingState<String, Post>): String? {
-        return state.anchorPosition?.let { anchorPosition ->
-            val currentPage = state.closestPageToPosition(anchorPosition)
-            val currentPageIndex = state.pages.indexOf(currentPage)
-            if (currentPageIndex > 0) {
-                val previousPage = state.pages[currentPageIndex - 1]
-                previousPage.data.last().status.id
-            } else {
-                null
-            }
-        }
+    /**
+     * Set the key to the status ID of 10 posts above the current anchor.
+     * This should load 10 posts on either side of it
+     */
+    override fun getRefreshKey(state: PagingState<Pair<String?, String?>, Post>): Pair<String?, String?> {
+        val indexOfNewKey = ((state.anchorPosition ?: 0) - state.config.initialLoadSize / 2).coerceAtLeast(0)
+        val post = state.closestItemToPosition(indexOfNewKey)
+        return Pair(post?.status?.id, null)
     }
 
-    override suspend fun load(params: LoadParams<String>): LoadResult<String, Post> {
+    override suspend fun load(params: LoadParams<Pair<String?, String?>>): LoadResult<Pair<String?, String?>, Post> {
         return try {
-            val nextOlderThanId = params.key
+            val nextOlderThanId = params.key?.first
+            val previousNewerThanId = params.key?.second
             val response = timelineRepository.getHomeTimeline(
                 nextOlderThanId,
+                previousNewerThanId,
             ).getInReplyToAccountNames()
             LoadResult.Page(
                 data = response,
-                prevKey = null,
-                nextKey = response.last().status.id
+                prevKey = Pair(null, response.first().status.id),
+                nextKey = Pair(response.last().status.id, null)
             )
         } catch (e: Exception) {
             LoadResult.Error(e)

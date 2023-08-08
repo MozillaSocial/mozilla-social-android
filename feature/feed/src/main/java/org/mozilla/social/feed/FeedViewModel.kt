@@ -72,6 +72,7 @@ class FeedViewModel(
     }
 
     override fun onBoostClicked() {
+        currentSource.invalidate()
         super.onBoostClicked()
     }
 
