@@ -23,6 +23,9 @@ class HomeTimelinePagingSource(
      */
     override fun getRefreshKey(state: PagingState<Pair<String?, String?>, Post>): Pair<String?, String?> {
         val indexOfNewKey = ((state.anchorPosition ?: 0) - state.config.initialLoadSize / 2).coerceAtLeast(0)
+        if (indexOfNewKey == 0) {
+            return Pair(null, null)
+        }
         val post = state.closestItemToPosition(indexOfNewKey)
         return Pair(post?.status?.id, null)
     }
