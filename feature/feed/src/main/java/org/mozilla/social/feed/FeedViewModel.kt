@@ -10,6 +10,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import org.mozilla.social.common.logging.Log
+import org.mozilla.social.core.data.repository.AccountRepository
+import org.mozilla.social.core.data.repository.StatusRepository
+import org.mozilla.social.core.data.repository.TimelineRepository
 import org.mozilla.social.core.domain.HomeTimelinePagingSource
 import org.mozilla.social.core.ui.postcard.PostCardInteractions
 import org.mozilla.social.core.ui.postcard.toPostCardUiState
@@ -19,15 +22,23 @@ import org.mozilla.social.core.ui.postcard.toPostCardUiState
  * Produces a flow of pages of statuses for a feed
  */
 class FeedViewModel(
-    private val homeTimelinePagingSource: HomeTimelinePagingSource,
+    private val timelineRepository: TimelineRepository,
+    private val accountRepository: AccountRepository,
+    private val statusRepository: StatusRepository,
     private val log: Log,
     private val onReplyClicked: (String) -> Unit,
 ) : ViewModel(), PostCardInteractions {
 
+    private lateinit var currentSource: HomeTimelinePagingSource
+
     val feed = Pager(
         PagingConfig(pageSize = 20)
     ) {
-        homeTimelinePagingSource
+        currentSource = HomeTimelinePagingSource(
+            timelineRepository = timelineRepository,
+            accountRepository = accountRepository,
+        )
+        currentSource
     }.flow.map { pagingData ->
         pagingData.map {
             it.toPostCardUiState()
@@ -41,6 +52,17 @@ class FeedViewModel(
                     FeedType.HOME -> {}
                     FeedType.LOCAL -> {}
                 }
+            }
+        }
+    }
+
+    override fun onVoteClicked(pollId: String, choices: List<Int>) {
+        viewModelScope.launch {
+            try {
+                statusRepository.voteOnPoll(pollId, choices)
+                currentSource.invalidate()
+            } catch (e: Exception) {
+
             }
         }
     }

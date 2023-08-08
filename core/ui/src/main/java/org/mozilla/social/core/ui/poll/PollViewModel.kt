@@ -18,48 +18,48 @@ class PollViewModel(
     private val _pollUiState = MutableStateFlow(initialState)
     val pollUiState = _pollUiState.asStateFlow()
 
-    override fun onOptionClicked(optionIndex: Int) {
-        val newPollOptions = pollUiState.value.pollOptions.mapIndexed { index, pollOptionUiState ->
-            pollOptionUiState.copy(
-                selected = if (optionIndex == index) {
-                    !pollOptionUiState.selected
-                } else if (pollUiState.value.isMultipleChoice) {
-                    pollOptionUiState.selected
-                } else {
-                    false
-                }
-            )
-        }
-        _pollUiState.edit { copy(
-            pollOptions = newPollOptions,
-            voteButtonEnabled = newPollOptions.any { it.selected }
-        ) }
-    }
-
-    override fun onVoteClicked() {
-        _pollUiState.edit { copy(
-            voteButtonEnabled = false
-        ) }
-        viewModelScope.launch {
-            try {
-                val selectedOptions = mutableListOf<Int>()
-                pollUiState.value.pollOptions.forEachIndexed { index, pollOptionUiState ->
-                    if (pollOptionUiState.selected) {
-                        selectedOptions.add(index)
-                    }
-                }
-                _pollUiState.update {
-                    statusRepository.voteOnPoll(
-                        pollUiState.value.pollId,
-                        selectedOptions,
-                    ).toPollUiState()
-                }
-            } catch (e: Exception) {
-                //TODO show error toast
-                _pollUiState.edit { copy(
-                    voteButtonEnabled = true
-                ) }
-            }
-        }
-    }
+//    override fun onOptionClicked(optionIndex: Int) {
+//        val newPollOptions = pollUiState.value.pollOptions.mapIndexed { index, pollOptionUiState ->
+//            pollOptionUiState.copy(
+//                selected = if (optionIndex == index) {
+//                    !pollOptionUiState.selected
+//                } else if (pollUiState.value.isMultipleChoice) {
+//                    pollOptionUiState.selected
+//                } else {
+//                    false
+//                }
+//            )
+//        }
+//        _pollUiState.edit { copy(
+//            pollOptions = newPollOptions,
+//            voteButtonEnabled = newPollOptions.any { it.selected }
+//        ) }
+//    }
+//
+//    override fun onVoteClicked() {
+//        _pollUiState.edit { copy(
+//            voteButtonEnabled = false
+//        ) }
+//        viewModelScope.launch {
+//            try {
+//                val selectedOptions = mutableListOf<Int>()
+//                pollUiState.value.pollOptions.forEachIndexed { index, pollOptionUiState ->
+//                    if (pollOptionUiState.selected) {
+//                        selectedOptions.add(index)
+//                    }
+//                }
+//                _pollUiState.update {
+//                    statusRepository.voteOnPoll(
+//                        pollUiState.value.pollId,
+//                        selectedOptions,
+//                    ).toPollUiState()
+//                }
+//            } catch (e: Exception) {
+//                //TODO show error toast
+//                _pollUiState.edit { copy(
+//                    voteButtonEnabled = true
+//                ) }
+//            }
+//        }
+//    }
 }
