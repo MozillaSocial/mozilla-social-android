@@ -15,33 +15,41 @@ import org.mozilla.social.model.Status
 class HomeTimelinePagingSource(
     private val timelineRepository: TimelineRepository,
     private val accountRepository: AccountRepository
-) : PagingSource<Pair<String?, String?>, Post>() {
+) : PagingSource<String, Post>() {
 
     /**
      * Set the key to the status ID of 10 posts above the current anchor.
      * This should load 10 posts on either side of it
      */
-    override fun getRefreshKey(state: PagingState<Pair<String?, String?>, Post>): Pair<String?, String?> {
+    override fun getRefreshKey(state: PagingState<String, Post>): String? {
         val indexOfNewKey = ((state.anchorPosition ?: 0) - state.config.initialLoadSize / 2).coerceAtLeast(0)
         if (indexOfNewKey == 0) {
-            return Pair(null, null)
+            return null
         }
         val post = state.closestItemToPosition(indexOfNewKey)
-        return Pair(post?.status?.id, null)
+        return post?.status?.id
     }
 
-    override suspend fun load(params: LoadParams<Pair<String?, String?>>): LoadResult<Pair<String?, String?>, Post> {
+    override suspend fun load(params: LoadParams<String>): LoadResult<String, Post> {
         return try {
-            val nextOlderThanId = params.key?.first
-            val previousNewerThanId = params.key?.second
-            val response = timelineRepository.getHomeTimeline(
-                nextOlderThanId,
-                previousNewerThanId,
-            ).getInReplyToAccountNames()
+            val response = when (params) {
+                is LoadParams.Append -> timelineRepository.getHomeTimeline(
+                    params.key,
+                    null,
+                )
+                is LoadParams.Prepend -> timelineRepository.getHomeTimeline(
+                    null,
+                    params.key,
+                )
+                is LoadParams.Refresh -> timelineRepository.getHomeTimeline(
+                    params.key,
+                    null,
+                )
+            }.getInReplyToAccountNames()
             LoadResult.Page(
                 data = response,
-                prevKey = Pair(null, response.first().status.id),
-                nextKey = Pair(response.last().status.id, null)
+                prevKey = response.first().status.id,
+                nextKey = response.last().status.id
             )
         } catch (e: Exception) {
             LoadResult.Error(e)
