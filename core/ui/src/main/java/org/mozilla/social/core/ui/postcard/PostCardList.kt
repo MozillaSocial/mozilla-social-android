@@ -30,7 +30,7 @@ fun PostCardList(
     ) {
         items(
             count = lazyingPagingItems.itemCount,
-            key = lazyingPagingItems.itemKey { it.mainPostCardUiState.statusId }
+            key = lazyingPagingItems.itemKey { it.statusId }
         ) { index ->
             lazyingPagingItems[index]?.let { item ->
                 Text(text = "$index")

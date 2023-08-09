@@ -11,6 +11,7 @@ import org.mozilla.social.model.Status
 
 fun Post.toPostCardUiState(): PostCardUiState =
     PostCardUiState(
+        statusId = status.id,
         topRowMetaDataUiState = toTopRowMetaDataUiState(),
         mainPostCardUiState = status.boostedStatus?.toMainPostCardUiState() ?: status.toMainPostCardUiState()
     )
