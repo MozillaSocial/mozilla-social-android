@@ -2,6 +2,7 @@ package org.mozilla.social.feed
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
@@ -13,7 +14,9 @@ import org.mozilla.social.common.logging.Log
 import org.mozilla.social.core.data.repository.AccountRepository
 import org.mozilla.social.core.data.repository.StatusRepository
 import org.mozilla.social.core.data.repository.TimelineRepository
+import org.mozilla.social.core.domain.HomeTimelineListHolder
 import org.mozilla.social.core.domain.HomeTimelinePagingSource
+import org.mozilla.social.core.domain.HomeTimelineRemoteMediator
 import org.mozilla.social.core.ui.postcard.PostCardInteractions
 import org.mozilla.social.core.ui.postcard.toPostCardUiState
 
@@ -30,13 +33,22 @@ class FeedViewModel(
 ) : ViewModel(), PostCardInteractions {
 
     private lateinit var currentSource: HomeTimelinePagingSource
+    private val homeTimelineListHolder = HomeTimelineListHolder()
 
+    @OptIn(ExperimentalPagingApi::class)
     val feed = Pager(
-        PagingConfig(pageSize = 20)
-    ) {
-        currentSource = HomeTimelinePagingSource(
+        config = PagingConfig(pageSize = 20),
+        remoteMediator = HomeTimelineRemoteMediator(
             timelineRepository = timelineRepository,
             accountRepository = accountRepository,
+            homeTimelineListHolder = homeTimelineListHolder,
+            invalidate = { currentSource.invalidate() }
+        ),
+    ) {
+        currentSource = HomeTimelinePagingSource(
+//            timelineRepository = timelineRepository,
+//            accountRepository = accountRepository,
+            homeTimelineListHolder = homeTimelineListHolder,
         )
         currentSource
     }.flow.map { pagingData ->
