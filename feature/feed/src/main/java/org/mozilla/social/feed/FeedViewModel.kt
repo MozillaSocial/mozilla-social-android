@@ -32,7 +32,10 @@ class FeedViewModel(
     private lateinit var currentSource: HomeTimelinePagingSource
 
     val feed = Pager(
-        PagingConfig(pageSize = 20)
+        PagingConfig(
+            pageSize = 20,
+            initialLoadSize = 40
+        )
     ) {
         currentSource = HomeTimelinePagingSource(
             timelineRepository = timelineRepository,

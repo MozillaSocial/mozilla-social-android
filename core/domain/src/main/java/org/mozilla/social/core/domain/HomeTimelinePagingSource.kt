@@ -34,16 +34,19 @@ class HomeTimelinePagingSource(
         return try {
             val response = when (params) {
                 is LoadParams.Append -> timelineRepository.getHomeTimeline(
-                    params.key,
-                    null,
+                    olderThanId = params.key,
+                    immediatelyNewerThanId = null,
+                    loadSize = params.loadSize,
                 )
                 is LoadParams.Prepend -> timelineRepository.getHomeTimeline(
-                    null,
-                    params.key,
+                    olderThanId = null,
+                    immediatelyNewerThanId = params.key,
+                    loadSize = params.loadSize,
                 )
                 is LoadParams.Refresh -> timelineRepository.getHomeTimeline(
-                    params.key,
-                    null,
+                    olderThanId = params.key,
+                    immediatelyNewerThanId = null,
+                    loadSize = params.loadSize,
                 )
             }.getInReplyToAccountNames()
             LoadResult.Page(

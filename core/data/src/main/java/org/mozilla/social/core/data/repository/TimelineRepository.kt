@@ -8,10 +8,12 @@ class TimelineRepository internal constructor(private val timelineApi: TimelineA
     suspend fun getHomeTimeline(
         olderThanId: String? = null,
         immediatelyNewerThanId: String? = null,
+        loadSize: Int? = null,
     ): List<Status> =
         timelineApi.getHomeTimeline(
             olderThanId = olderThanId,
             immediatelyNewerThanId = immediatelyNewerThanId,
+            limit = loadSize,
         ).map { it.toExternalModel() }
 
     suspend fun getPublicTimeline(): List<Status> =
