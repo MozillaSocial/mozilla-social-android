@@ -18,8 +18,8 @@ class HomeTimelinePagingSource(
 ) : PagingSource<String, Post>() {
 
     /**
-     * Set the key to the status ID of 10 posts above the current anchor.
-     * This should load 10 posts on either side of it
+     * Set the key to the status ID of x posts above the current anchor where x is half the initial load size.
+     * This should load x posts on either side of it.
      */
     override fun getRefreshKey(state: PagingState<String, Post>): String? {
         val indexOfNewKey = ((state.anchorPosition ?: 0) - state.config.initialLoadSize / 2).coerceAtLeast(0)

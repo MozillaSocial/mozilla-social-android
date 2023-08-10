@@ -30,7 +30,6 @@ fun PostCardList(
             key = lazyingPagingItems.itemKey { it.statusId }
         ) { index ->
             lazyingPagingItems[index]?.let { item ->
-                Text(text = "$index")
                 PostCard(post = item, postCardInteractions)
                 if (index < lazyingPagingItems.itemCount) {
                     Divider()
