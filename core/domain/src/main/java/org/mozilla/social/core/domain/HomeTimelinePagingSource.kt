@@ -9,35 +9,49 @@ import org.mozilla.social.core.data.repository.TimelineRepository
 import org.mozilla.social.model.Post
 import org.mozilla.social.model.Status
 
+/**
+ * The key Pair<String, String> the first string is the older than ID, the second is the newer than ID
+ */
 class HomeTimelinePagingSource(
     private val timelineRepository: TimelineRepository,
     private val accountRepository: AccountRepository
 ) : PagingSource<String, Post>() {
 
-    //TODO I don't fully understand this...
-    // trying to get the previous page's last item's status ID
+    /**
+     * Set the key to the status ID of x posts above the current anchor where x is half the initial load size.
+     * This should load x posts on either side of it.
+     */
     override fun getRefreshKey(state: PagingState<String, Post>): String? {
-        return state.anchorPosition?.let { anchorPosition ->
-            val currentPage = state.closestPageToPosition(anchorPosition)
-            val currentPageIndex = state.pages.indexOf(currentPage)
-            if (currentPageIndex > 0) {
-                val previousPage = state.pages[currentPageIndex - 1]
-                previousPage.data.last().status.id
-            } else {
-                null
-            }
+        val indexOfNewKey = ((state.anchorPosition ?: 0) - state.config.initialLoadSize / 2).coerceAtLeast(0)
+        if (indexOfNewKey == 0) {
+            return null
         }
+        val post = state.closestItemToPosition(indexOfNewKey)
+        return post?.status?.id
     }
 
     override suspend fun load(params: LoadParams<String>): LoadResult<String, Post> {
         return try {
-            val nextOlderThanId = params.key
-            val response = timelineRepository.getHomeTimeline(
-                nextOlderThanId,
-            ).getInReplyToAccountNames()
+            val response = when (params) {
+                is LoadParams.Append -> timelineRepository.getHomeTimeline(
+                    olderThanId = params.key,
+                    immediatelyNewerThanId = null,
+                    loadSize = params.loadSize,
+                )
+                is LoadParams.Prepend -> timelineRepository.getHomeTimeline(
+                    olderThanId = null,
+                    immediatelyNewerThanId = params.key,
+                    loadSize = params.loadSize,
+                )
+                is LoadParams.Refresh -> timelineRepository.getHomeTimeline(
+                    olderThanId = params.key,
+                    immediatelyNewerThanId = null,
+                    loadSize = params.loadSize,
+                )
+            }.getInReplyToAccountNames()
             LoadResult.Page(
                 data = response,
-                prevKey = null,
+                prevKey = response.first().status.id,
                 nextKey = response.last().status.id
             )
         } catch (e: Exception) {

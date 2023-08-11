@@ -6,6 +6,7 @@ import org.mozilla.social.core.ui.poll.PollUiState
 import org.mozilla.social.model.Attachment
 
 data class PostCardUiState(
+    val statusId: String,
     val topRowMetaDataUiState: TopRowMetaDataUiState?,
     val mainPostCardUiState: MainPostCardUiState,
 )

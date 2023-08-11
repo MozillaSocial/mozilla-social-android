@@ -16,6 +16,10 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -30,12 +34,24 @@ fun Poll(
     pollInteractions: PollInteractions,
 ) {
     Column {
+        val userVotes = rememberSaveable(pollUiState) { mutableStateOf(pollUiState.usersVotes) }
         pollUiState.pollOptions.forEachIndexed { index, pollOptionUiState ->
             PollOption(
+                userVotes = userVotes,
                 optionIndex = index,
                 pollUiState = pollUiState,
                 pollOptionUiState = pollOptionUiState,
-                pollInteractions = pollInteractions,
+                onOptionSelected = { optionIndex ->
+                    userVotes.value = if (pollUiState.isMultipleChoice) {
+                        if (userVotes.value.contains(optionIndex)) {
+                            userVotes.value.toMutableList().apply { remove(optionIndex) }
+                        } else {
+                            userVotes.value.toMutableList().apply { add(optionIndex) }
+                        }
+                    } else {
+                        listOf(optionIndex)
+                    }
+                }
             )
             Spacer(modifier = Modifier.padding(top = 4.dp))
         }
@@ -43,8 +59,8 @@ fun Poll(
         Button(
             modifier = Modifier
                 .fillMaxWidth(),
-            onClick = { pollInteractions.onVoteClicked() },
-            enabled = pollUiState.voteButtonEnabled,
+            onClick = { pollInteractions.onVoteClicked(pollUiState.pollId, userVotes.value) },
+            enabled = userVotes.value.isNotEmpty(),
         ) {
             Text(text = "Vote")
         }
@@ -53,10 +69,11 @@ fun Poll(
 
 @Composable
 private fun PollOption(
+    userVotes: MutableState<List<Int>>,
     optionIndex: Int,
     pollUiState: PollUiState,
     pollOptionUiState: PollOptionUiState,
-    pollInteractions: PollInteractions,
+    onOptionSelected: (index: Int) -> Unit,
 ) {
     val height = 40.dp
     Box(
@@ -66,7 +83,7 @@ private fun PollOption(
             .clip(RoundedCornerShape(90.dp))
             .border(
                 width = 1.dp,
-                color = if (pollOptionUiState.selected) {
+                color = if (userVotes.value.contains(optionIndex)) {
                     MaterialTheme.colorScheme.primary
                 } else {
                     MaterialTheme.colorScheme.outlineVariant
@@ -94,9 +111,9 @@ private fun PollOption(
                     .fillMaxWidth()
                     .height(height)
                     .clickable(
-                        enabled = pollOptionUiState.enabled
+                        enabled = !pollUiState.showResults && !pollUiState.isExpired
                     ) {
-                        pollInteractions.onOptionClicked(optionIndex,)
+                        onOptionSelected(optionIndex)
                     },
             ) {
                 Text(

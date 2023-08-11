@@ -9,11 +9,9 @@ fun Poll.toPollUiState(): PollUiState =
         pollOptions = options.mapIndexed { index, pollOption ->
             val voteFraction = getVoteFraction(votesCount, pollOption)
             PollOptionUiState(
-                enabled = hasVoted != true,
                 fillFraction = voteFraction,
                 title = pollOption.title,
                 voteInfo = getVoteCountText(pollOption, voteFraction),
-                selected = ownVotes?.contains(index) ?: false,
             )
         },
         isUserCreatedPoll = false,
@@ -25,7 +23,7 @@ fun Poll.toPollUiState(): PollUiState =
         pollId = pollId,
         isMultipleChoice = allowsMultipleChoices,
         usersVotes = ownVotes ?: emptyList(),
-        voteButtonEnabled = false,
+        isExpired = isExpired,
     )
 
 private fun getVoteCountText(
