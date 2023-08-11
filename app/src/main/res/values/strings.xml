@@ -1,4 +1,4 @@
 <resources>
-    <string name="app_name">Mozilla Social</string>
+    <string name="app_name">mozilla.social</string>
     <string name="title_activity_main">MainActivity</string>
 </resources>
