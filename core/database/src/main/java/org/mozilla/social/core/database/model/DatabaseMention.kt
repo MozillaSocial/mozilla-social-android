@@ -1,9 +1,9 @@
-package org.mozilla.social.model
+package org.mozilla.social.core.database.model
 
 /**
  * Represents a mention of a user within the content of a status.
  */
-data class Mention(
+data class DatabaseMention(
     val accountId: String,
 
     /**

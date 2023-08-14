@@ -1,10 +1,10 @@
-package org.mozilla.social.model
+package org.mozilla.social.core.database.model
 
 /**
  * Represents daily usage history of a hashtag.
  */
 
-data class History(
+data class DatabaseHistory(
 
     /**
      * Day the historical data was recorded on.

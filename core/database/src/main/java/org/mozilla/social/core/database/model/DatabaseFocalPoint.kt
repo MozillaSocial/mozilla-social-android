@@ -1,9 +1,9 @@
-package org.mozilla.social.model
+package org.mozilla.social.core.database.model
 
 /**
  * @see [Official docs](https://docs.joinmastodon.org/methods/statuses/media/#focal-points)
  */
-data class FocalPoint(
+data class DatabaseFocalPoint(
 
     /**
      * x coordinate in [-1, +1]

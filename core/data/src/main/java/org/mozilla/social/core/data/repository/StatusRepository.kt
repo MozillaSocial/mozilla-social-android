@@ -2,8 +2,8 @@ package org.mozilla.social.core.data.repository
 
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
-import org.mozilla.social.core.data.repository.model.toExternalModel
-import org.mozilla.social.core.data.repository.model.toNetworkModel
+import org.mozilla.social.core.data.repository.model.status.toExternalModel
+import org.mozilla.social.core.data.repository.model.status.toNetworkModel
 import org.mozilla.social.core.network.MediaApi
 import org.mozilla.social.core.network.StatusApi
 import org.mozilla.social.core.network.model.NetworkStatusVisibility

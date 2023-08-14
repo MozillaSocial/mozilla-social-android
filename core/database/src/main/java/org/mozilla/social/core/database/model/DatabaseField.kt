@@ -1,4 +1,4 @@
-package org.mozilla.social.model
+package org.mozilla.social.core.database.model
 
 import kotlinx.datetime.Instant
 
@@ -7,7 +7,7 @@ import kotlinx.datetime.Instant
  *
  * By default, max 4 fields and 255 characters per property/value.
  */
-data class Field(
+data class DatabaseField(
     val name: String,
     val value: String,
 

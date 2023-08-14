@@ -1,9 +1,9 @@
-package org.mozilla.social.model
+package org.mozilla.social.core.database.model
 
 /**
  * Represents a custom emoji.
  */
-data class Emoji(
+data class DatabaseEmoji(
 
     /**
      * The name of the custom emoji.

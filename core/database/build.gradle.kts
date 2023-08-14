@@ -1,9 +1,10 @@
 plugins {
     id("org.mozilla.social.android.library")
+    alias(libs.plugins.kotlin.ksp)
 }
 
 android {
-    namespace = "org.mozilla.social.core.data"
+    namespace = "org.mozilla.social.core.database"
 
     defaultConfig {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -22,19 +23,12 @@ android {
 }
 
 dependencies {
-    implementation(project(":core:common"))
-    implementation(project(":core:network"))
-    implementation(project(":core:datastore"))
-    implementation(project(":core:model"))
-    implementation(project(":core:database"))
-
-    implementation(libs.kotlinx.coroutines.android)
-    implementation(libs.kotlinx.datetime)
-
-    implementation(libs.retrofit)
-
     implementation(libs.koin)
 
-    implementation(libs.androidx.datastore)
-    implementation(libs.protobuf.kotlin.lite)
+    implementation(libs.androidx.room.runtime)
+    ksp(libs.androidx.room.compiler)
+    implementation(libs.androidx.room.ktx)
+    implementation(libs.androidx.room.paging)
+
+    implementation(libs.kotlinx.datetime)
 }

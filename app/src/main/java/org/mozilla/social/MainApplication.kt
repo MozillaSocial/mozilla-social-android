@@ -15,6 +15,7 @@ import org.koin.dsl.module
 import org.mozilla.social.common.commonModule
 import org.mozilla.social.core.data.AuthTokenObserver
 import org.mozilla.social.core.data.repositoryModule
+import org.mozilla.social.core.database.databaseModule
 import org.mozilla.social.core.datastore.dataStoreModule
 import org.mozilla.social.feature.auth.authModule
 import org.mozilla.social.feature.settings.settingsModule
@@ -69,5 +70,6 @@ val appModules = module {
         settingsModule,
         accountModule,
         accountFollowUsersModule,
+        databaseModule,
     )
 }
