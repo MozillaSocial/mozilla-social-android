@@ -13,21 +13,21 @@ import org.mozilla.social.core.database.model.DatabasePollOption
 import org.mozilla.social.core.database.model.DatabaseSource
 import org.mozilla.social.core.database.model.DatabaseStatus
 import org.mozilla.social.core.database.model.DatabaseStatusVisibility
-import org.mozilla.social.core.network.model.NetworkAccount
-import org.mozilla.social.core.network.model.NetworkApplication
-import org.mozilla.social.core.network.model.NetworkAttachment
-import org.mozilla.social.core.network.model.NetworkEmoji
-import org.mozilla.social.core.network.model.NetworkField
-import org.mozilla.social.core.network.model.NetworkHashTag
-import org.mozilla.social.core.network.model.NetworkHistory
-import org.mozilla.social.core.network.model.NetworkMention
-import org.mozilla.social.core.network.model.NetworkPoll
-import org.mozilla.social.core.network.model.NetworkPollOption
-import org.mozilla.social.core.network.model.NetworkSource
-import org.mozilla.social.core.network.model.NetworkStatus
-import org.mozilla.social.core.network.model.NetworkStatusVisibility
+import org.mozilla.social.model.Account
+import org.mozilla.social.model.Application
+import org.mozilla.social.model.Attachment
+import org.mozilla.social.model.Emoji
+import org.mozilla.social.model.Field
+import org.mozilla.social.model.HashTag
+import org.mozilla.social.model.History
+import org.mozilla.social.model.Mention
+import org.mozilla.social.model.Poll
+import org.mozilla.social.model.PollOption
+import org.mozilla.social.model.Source
+import org.mozilla.social.model.Status
+import org.mozilla.social.model.StatusVisibility
 
-fun NetworkStatus.toDatabaseModel(
+fun Status.toDatabaseModel(
     isInHomeFeed: Boolean = false,
 ): DatabaseStatus =
     DatabaseStatus(
@@ -51,6 +51,7 @@ fun NetworkStatus.toDatabaseModel(
         url = url,
         inReplyToId = inReplyToId,
         inReplyToAccountId = inReplyToAccountId,
+        inReplyToAccountName = inReplyToAccountName,
         boostedStatus = boostedStatus?.toDatabaseModel(),
         poll = poll?.toDatabaseModel(),
         //TODO map this if we ever need it
@@ -64,7 +65,7 @@ fun NetworkStatus.toDatabaseModel(
         isPinned = isPinned,
     )
 
-fun NetworkAccount.toDatabaseModel(): DatabaseAccount = DatabaseAccount(
+fun Account.toDatabaseModel(): DatabaseAccount = DatabaseAccount(
     accountId = accountId,
     username = username,
     acct = acct,
@@ -92,17 +93,17 @@ fun NetworkAccount.toDatabaseModel(): DatabaseAccount = DatabaseAccount(
     muteExpiresAt = muteExpiresAt,
 )
 
-fun NetworkStatusVisibility.toDatabaseModel(): DatabaseStatusVisibility =
+fun StatusVisibility.toDatabaseModel(): DatabaseStatusVisibility =
     when(this) {
-        NetworkStatusVisibility.Direct -> DatabaseStatusVisibility.Direct
-        NetworkStatusVisibility.Private -> DatabaseStatusVisibility.Private
-        NetworkStatusVisibility.Public -> DatabaseStatusVisibility.Public
-        NetworkStatusVisibility.Unlisted -> DatabaseStatusVisibility.Unlisted
+        StatusVisibility.Direct -> DatabaseStatusVisibility.Direct
+        StatusVisibility.Private -> DatabaseStatusVisibility.Private
+        StatusVisibility.Public -> DatabaseStatusVisibility.Public
+        StatusVisibility.Unlisted -> DatabaseStatusVisibility.Unlisted
     }
 
-fun NetworkAttachment.toDatabaseModel(): DatabaseAttachment =
+fun Attachment.toDatabaseModel(): DatabaseAttachment =
     when (this) {
-        is NetworkAttachment.Image -> DatabaseAttachment.Image(
+        is Attachment.Image -> DatabaseAttachment.Image(
             attachmentId = attachmentId,
             url = url,
             previewUrl = previewUrl,
@@ -112,7 +113,7 @@ fun NetworkAttachment.toDatabaseModel(): DatabaseAttachment =
             description = description,
             blurHash = blurHash
         )
-        is NetworkAttachment.Gifv -> DatabaseAttachment.Gifv(
+        is Attachment.Gifv -> DatabaseAttachment.Gifv(
             attachmentId = attachmentId,
             url = url,
             previewUrl = previewUrl,
@@ -121,7 +122,7 @@ fun NetworkAttachment.toDatabaseModel(): DatabaseAttachment =
             textUrl = textUrl,
             description = description
         )
-        is NetworkAttachment.Video -> DatabaseAttachment.Video(
+        is Attachment.Video -> DatabaseAttachment.Video(
             attachmentId = attachmentId,
             url = url,
             previewUrl = previewUrl,
@@ -131,7 +132,7 @@ fun NetworkAttachment.toDatabaseModel(): DatabaseAttachment =
             description = description,
             blurHash = blurHash
         )
-        is NetworkAttachment.Audio -> DatabaseAttachment.Audio(
+        is Attachment.Audio -> DatabaseAttachment.Audio(
             attachmentId = attachmentId,
             url = url,
             previewUrl = previewUrl,
@@ -141,7 +142,7 @@ fun NetworkAttachment.toDatabaseModel(): DatabaseAttachment =
             description = description,
             blurHash = blurHash
         )
-        is NetworkAttachment.Unknown -> DatabaseAttachment.Unknown(
+        is Attachment.Unknown -> DatabaseAttachment.Unknown(
             attachmentId = attachmentId,
             url = url,
             previewUrl = previewUrl,
@@ -153,7 +154,7 @@ fun NetworkAttachment.toDatabaseModel(): DatabaseAttachment =
         )
     }
 
-fun NetworkMention.toDatabaseModel(): DatabaseMention =
+fun Mention.toDatabaseModel(): DatabaseMention =
     DatabaseMention(
         accountId = accountId,
         username = username,
@@ -161,21 +162,21 @@ fun NetworkMention.toDatabaseModel(): DatabaseMention =
         url = url
     )
 
-fun NetworkHashTag.toDatabaseModel(): DatabaseHashTag =
+fun HashTag.toDatabaseModel(): DatabaseHashTag =
     DatabaseHashTag(
         name = name,
         url = url,
         history = history?.map { it.toDatabaseModel() }
     )
 
-fun NetworkHistory.toDatabaseModel(): DatabaseHistory =
+fun History.toDatabaseModel(): DatabaseHistory =
     DatabaseHistory(
         day = day,
         usageCount = usageCount,
         accountCount = accountCount
     )
 
-fun NetworkEmoji.toDatabaseModel(): DatabaseEmoji =
+fun Emoji.toDatabaseModel(): DatabaseEmoji =
     DatabaseEmoji(
         shortCode = shortCode,
         url = url,
@@ -184,7 +185,7 @@ fun NetworkEmoji.toDatabaseModel(): DatabaseEmoji =
         category = category
     )
 
-fun NetworkApplication.toDatabaseModel(): DatabaseApplication =
+fun Application.toDatabaseModel(): DatabaseApplication =
     DatabaseApplication(
         name = name,
         website = website,
@@ -193,7 +194,7 @@ fun NetworkApplication.toDatabaseModel(): DatabaseApplication =
         clientSecret = clientSecret
     )
 
-fun NetworkPoll.toDatabaseModel(): DatabasePoll =
+fun Poll.toDatabaseModel(): DatabasePoll =
     DatabasePoll(
         pollId = pollId,
         isExpired = isExpired,
@@ -207,20 +208,20 @@ fun NetworkPoll.toDatabaseModel(): DatabasePoll =
         ownVotes = ownVotes
     )
 
-fun NetworkPollOption.toDatabaseModel(): DatabasePollOption =
+fun PollOption.toDatabaseModel(): DatabasePollOption =
     DatabasePollOption(
         title = title,
         votesCount = votesCount
     )
 
-fun NetworkField.toDatabaseModel(): DatabaseField =
+fun Field.toDatabaseModel(): DatabaseField =
     DatabaseField(
         name = name,
         value = value,
         verifiedAt = verifiedAt
     )
 
-fun NetworkSource.toDatabaseModel(): DatabaseSource =
+fun Source.toDatabaseModel(): DatabaseSource =
     DatabaseSource(
         bio = bio,
         fields = fields.map { it.toDatabaseModel() },

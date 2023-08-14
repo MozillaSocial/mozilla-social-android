@@ -2,6 +2,7 @@ package org.mozilla.social.feed
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
@@ -13,7 +14,9 @@ import org.mozilla.social.common.logging.Log
 import org.mozilla.social.core.data.repository.AccountRepository
 import org.mozilla.social.core.data.repository.StatusRepository
 import org.mozilla.social.core.data.repository.TimelineRepository
-import org.mozilla.social.core.domain.HomeTimelinePagingSource
+import org.mozilla.social.core.data.repository.model.status.toExternalModel
+import org.mozilla.social.core.database.SocialDatabase
+import org.mozilla.social.core.domain.HomeTimelineRemoteMediator
 import org.mozilla.social.core.ui.postcard.PostCardInteractions
 import org.mozilla.social.core.ui.postcard.toPostCardUiState
 
@@ -25,26 +28,27 @@ class FeedViewModel(
     private val timelineRepository: TimelineRepository,
     private val accountRepository: AccountRepository,
     private val statusRepository: StatusRepository,
+    private val socialDatabase: SocialDatabase,
     private val log: Log,
     private val onReplyClicked: (String) -> Unit,
 ) : ViewModel(), PostCardInteractions {
 
-    private lateinit var currentSource: HomeTimelinePagingSource
-
+    @OptIn(ExperimentalPagingApi::class)
     val feed = Pager(
-        PagingConfig(
+        config = PagingConfig(
             pageSize = 20,
             initialLoadSize = 40
+        ),
+        remoteMediator = HomeTimelineRemoteMediator(
+            timelineRepository,
+            accountRepository,
+            socialDatabase,
         )
     ) {
-        currentSource = HomeTimelinePagingSource(
-            timelineRepository = timelineRepository,
-            accountRepository = accountRepository,
-        )
-        currentSource
+        socialDatabase.statusDao().homeTimelinePagingSource()
     }.flow.map { pagingData ->
         pagingData.map {
-            it.toPostCardUiState()
+            it.toExternalModel().toPostCardUiState()
         }
     }.cachedIn(viewModelScope)
 
@@ -63,7 +67,6 @@ class FeedViewModel(
         viewModelScope.launch {
             try {
                 statusRepository.voteOnPoll(pollId, choices)
-                currentSource.invalidate()
             } catch (e: Exception) {
 
             }

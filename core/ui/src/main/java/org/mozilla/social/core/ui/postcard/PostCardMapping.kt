@@ -9,11 +9,11 @@ import org.mozilla.social.core.ui.poll.toPollUiState
 import org.mozilla.social.model.Post
 import org.mozilla.social.model.Status
 
-fun Post.toPostCardUiState(): PostCardUiState =
+fun Status.toPostCardUiState(): PostCardUiState =
     PostCardUiState(
-        statusId = status.id,
+        statusId = statusId,
         topRowMetaDataUiState = toTopRowMetaDataUiState(),
-        mainPostCardUiState = status.boostedStatus?.toMainPostCardUiState() ?: status.toMainPostCardUiState()
+        mainPostCardUiState = boostedStatus?.toMainPostCardUiState() ?: toMainPostCardUiState()
     )
 
 private fun Status.toMainPostCardUiState(): MainPostCardUiState =
@@ -30,10 +30,10 @@ private fun Status.toMainPostCardUiState(): MainPostCardUiState =
         statusId = statusId,
     )
 
-private fun Post.toTopRowMetaDataUiState(): TopRowMetaDataUiState? =
-    if (status.boostedStatus != null) {
+private fun Status.toTopRowMetaDataUiState(): TopRowMetaDataUiState? =
+    if (boostedStatus != null) {
         TopRowMetaDataUiState(
-            text = "${status.account.username} boosted",
+            text = "${account.username} boosted",
             icon = Icons.Default.Repeat
         )
     } else if (inReplyToAccountName != null) {

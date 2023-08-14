@@ -1,6 +1,5 @@
 package org.mozilla.social.core.database.model
 
-import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import kotlinx.datetime.Instant
@@ -13,10 +12,11 @@ data class DatabaseStatus(
     @PrimaryKey
     val statusId: String,
 
+    val isInHomeFeed: Boolean = false,
+
     /**
      * URI of the status used for federation.
      */
-    @ColumnInfo
     val uri: String,
 
     /**
@@ -103,6 +103,8 @@ data class DatabaseStatus(
      * ID of the account being replied to.
      */
     val inReplyToAccountId: String? = null,
+
+    val inReplyToAccountName: String? = null,
 
     /**
      * The status being boosted.

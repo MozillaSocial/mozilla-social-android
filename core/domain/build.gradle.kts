@@ -27,6 +27,9 @@ dependencies {
     implementation(libs.kotlinx.datetime)
     implementation(project(":core:data"))
     implementation(project(":core:model"))
+    implementation(project(":core:database"))
+
+    implementation(libs.androidx.room.ktx)
 
     implementation(libs.androidx.paging.runtime)
 

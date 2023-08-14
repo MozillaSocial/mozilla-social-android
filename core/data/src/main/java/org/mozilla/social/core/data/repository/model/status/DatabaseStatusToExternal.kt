@@ -48,6 +48,7 @@ fun DatabaseStatus.toExternalModel(): Status =
         url = url,
         inReplyToId = inReplyToId,
         inReplyToAccountId = inReplyToAccountId,
+        inReplyToAccountName = inReplyToAccountName,
         boostedStatus = boostedStatus?.toExternalModel(),
         poll = poll?.toExternalModel(),
         //TODO map this if we ever need it
