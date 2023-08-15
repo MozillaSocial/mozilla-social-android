@@ -84,7 +84,6 @@ fun DatabaseBoostedStatus.toDatabaseStatus(): DatabaseStatus = DatabaseStatus(
     inReplyToId = inReplyToId,
     inReplyToAccountId = inReplyToAccountId,
     inReplyToAccountName = inReplyToAccountName,
-    boostedStatus = null,
     poll = poll,
     //TODO map this if we ever need it
     card = null,

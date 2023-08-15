@@ -48,6 +48,7 @@ sealed class DatabaseAttachment {
      */
     abstract val blurHash: String?
 
+    @Serializable
     data class Image(
         override val attachmentId: String,
         override val url: String? = null,
@@ -59,6 +60,7 @@ sealed class DatabaseAttachment {
         override val blurHash: String? = null,
         val meta: Meta = Meta(),
     ) : DatabaseAttachment() {
+        @Serializable
         data class Meta(
             val width: Long? = null,
             val height: Long? = null,
@@ -69,6 +71,7 @@ sealed class DatabaseAttachment {
         )
     }
 
+    @Serializable
     data class Video(
         override val attachmentId: String,
         override val url: String? = null,
@@ -80,6 +83,7 @@ sealed class DatabaseAttachment {
         override val blurHash: String? = null,
         val meta: Meta = Meta(),
     ) : DatabaseAttachment() {
+        @Serializable
         data class Meta(
             val width: Long? = null,
             val height: Long? = null,
@@ -95,6 +99,7 @@ sealed class DatabaseAttachment {
         )
     }
 
+    @Serializable
     data class Gifv(
         override val attachmentId: String,
         override val url: String? = null,
@@ -106,6 +111,7 @@ sealed class DatabaseAttachment {
         override val blurHash: String? = null,
         val meta: Meta = Meta(),
     ) : DatabaseAttachment() {
+        @Serializable
         data class Meta(
             val width: Long? = null,
             val height: Long? = null,
@@ -118,6 +124,7 @@ sealed class DatabaseAttachment {
         )
     }
 
+    @Serializable
     data class Audio(
         override val attachmentId: String,
         override val url: String? = null,
@@ -129,6 +136,7 @@ sealed class DatabaseAttachment {
         override val blurHash: String? = null,
         val meta: Meta = Meta(),
     ) : DatabaseAttachment() {
+        @Serializable
         data class Meta(
             val durationSeconds: Double? = null,
             val audioCodec: String? = null,
@@ -139,6 +147,7 @@ sealed class DatabaseAttachment {
         )
     }
 
+    @Serializable
     data class Unknown(
         override val attachmentId: String,
         override val url: String? = null,

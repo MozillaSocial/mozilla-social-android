@@ -29,12 +29,11 @@ class HomeTimelineRemoteMediator(
             var pageSize: Int = state.config.pageSize
             val response = when (loadType) {
                 LoadType.REFRESH -> {
-                    //TODO refresh.  When is this called?
                     pageSize = state.config.initialLoadSize
                     timelineRepository.getHomeTimeline(
                         olderThanId = null,
                         immediatelyNewerThanId = null,
-                        loadSize = pageSize, //TODO is this right?
+                        loadSize = pageSize,
                     )
                 }
 
