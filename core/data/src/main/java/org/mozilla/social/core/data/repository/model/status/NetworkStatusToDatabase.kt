@@ -27,43 +27,43 @@ import org.mozilla.social.core.network.model.NetworkSource
 import org.mozilla.social.core.network.model.NetworkStatus
 import org.mozilla.social.core.network.model.NetworkStatusVisibility
 
-fun NetworkStatus.toDatabaseModel(
-    isInHomeFeed: Boolean = false,
-): DatabaseStatus =
-    DatabaseStatus(
-        statusId = statusId,
-        isInHomeFeed = isInHomeFeed,
-        uri = uri,
-        createdAt = createdAt,
-        account = account.toDatabaseModel(),
-        content = content,
-        visibility = visibility.toDatabaseModel(),
-        isSensitive = isSensitive,
-        contentWarningText = contentWarningText,
-        mediaAttachments = mediaAttachments.map { it.toDatabaseModel() },
-        mentions = mentions.map { it.toDatabaseModel() },
-        hashTags = hashTags.map { it.toDatabaseModel() },
-        emojis = emojis.map { it.toDatabaseModel() },
-        boostsCount = boostsCount,
-        favouritesCount = favouritesCount,
-        repliesCount = repliesCount,
-        application = application?.toDatabaseModel(),
-        url = url,
-        inReplyToId = inReplyToId,
-        inReplyToAccountId = inReplyToAccountId,
-        //TODO fix
-//        boostedStatus = boostedStatus?.toDatabaseModel(),
-        poll = poll?.toDatabaseModel(),
-        //TODO map this if we ever need it
-        card = null,
-        language = language,
-        plainText = plainText,
-        isFavourited = isFavourited,
-        isBoosted = isBoosted,
-        isMuted = isMuted,
-        isBookmarked = isBookmarked,
-        isPinned = isPinned,
-    )
+//fun NetworkStatus.toDatabaseModel(
+//    isInHomeFeed: Boolean = false,
+//): DatabaseStatus =
+//    DatabaseStatus(
+//        statusId = statusId,
+//        isInHomeFeed = isInHomeFeed,
+//        uri = uri,
+//        createdAt = createdAt,
+//        account = account.toDatabaseModel(),
+//        content = content,
+//        visibility = visibility.toDatabaseModel(),
+//        isSensitive = isSensitive,
+//        contentWarningText = contentWarningText,
+//        mediaAttachments = mediaAttachments.map { it.toDatabaseModel() },
+//        mentions = mentions.map { it.toDatabaseModel() },
+//        hashTags = hashTags.map { it.toDatabaseModel() },
+//        emojis = emojis.map { it.toDatabaseModel() },
+//        boostsCount = boostsCount,
+//        favouritesCount = favouritesCount,
+//        repliesCount = repliesCount,
+//        application = application?.toDatabaseModel(),
+//        url = url,
+//        inReplyToId = inReplyToId,
+//        inReplyToAccountId = inReplyToAccountId,
+//        //TODO fix
+////        boostedStatus = boostedStatus?.toDatabaseModel(),
+//        poll = poll?.toDatabaseModel(),
+//        //TODO map this if we ever need it
+//        card = null,
+//        language = language,
+//        plainText = plainText,
+//        isFavourited = isFavourited,
+//        isBoosted = isBoosted,
+//        isMuted = isMuted,
+//        isBookmarked = isBookmarked,
+//        isPinned = isPinned,
+//    )
 
 fun NetworkAccount.toDatabaseModel(): DatabaseAccount = DatabaseAccount(
     accountId = accountId,

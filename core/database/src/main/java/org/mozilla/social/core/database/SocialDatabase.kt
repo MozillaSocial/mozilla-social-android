@@ -15,16 +15,19 @@ import org.mozilla.social.core.database.converters.MentionConverter
 import org.mozilla.social.core.database.converters.PollOptionConverter
 import org.mozilla.social.core.database.dao.AccountsDao
 import org.mozilla.social.core.database.dao.HashtagDao
+import org.mozilla.social.core.database.dao.HomeTimelineStatusDao
 import org.mozilla.social.core.database.dao.StatusDao
 import org.mozilla.social.core.database.model.DatabaseAccount
 import org.mozilla.social.core.database.model.DatabaseHashTag
 import org.mozilla.social.core.database.model.DatabaseStatus
+import org.mozilla.social.core.database.model.statusCollections.HomeTimelineStatus
 
 @Database(
     entities = [
         DatabaseStatus::class,
         DatabaseAccount::class,
         DatabaseHashTag::class,
+        HomeTimelineStatus::class,
     ],
     version = 1,
     autoMigrations = [
@@ -48,4 +51,5 @@ abstract class SocialDatabase : RoomDatabase() {
     abstract fun statusDao(): StatusDao
     abstract fun accountsDao(): AccountsDao
     abstract fun hashtagDao(): HashtagDao
+    abstract fun homeTimelineDao(): HomeTimelineStatusDao
 }

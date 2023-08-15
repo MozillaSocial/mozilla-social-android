@@ -16,10 +16,10 @@ import org.mozilla.social.core.data.repository.StatusRepository
 import org.mozilla.social.core.data.repository.TimelineRepository
 import org.mozilla.social.core.data.repository.model.status.toExternalModel
 import org.mozilla.social.core.database.SocialDatabase
+import org.mozilla.social.core.database.model.statusCollections.toStatusWrapper
 import org.mozilla.social.core.domain.HomeTimelineRemoteMediator
 import org.mozilla.social.core.ui.postcard.PostCardInteractions
 import org.mozilla.social.core.ui.postcard.toPostCardUiState
-
 
 /**
  * Produces a flow of pages of statuses for a feed
@@ -45,10 +45,10 @@ class FeedViewModel(
             socialDatabase,
         )
     ) {
-        socialDatabase.statusDao().homeTimelinePagingSource()
+        socialDatabase.homeTimelineDao().homeTimelinePagingSource()
     }.flow.map { pagingData ->
         pagingData.map {
-            it.toExternalModel().toPostCardUiState()
+            it.toStatusWrapper().toExternalModel().toPostCardUiState()
         }
     }.cachedIn(viewModelScope)
 

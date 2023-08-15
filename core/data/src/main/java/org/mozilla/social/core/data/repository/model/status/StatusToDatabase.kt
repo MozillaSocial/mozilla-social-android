@@ -3,7 +3,6 @@ package org.mozilla.social.core.data.repository.model.status
 import org.mozilla.social.core.database.model.DatabaseAccount
 import org.mozilla.social.core.database.model.DatabaseApplication
 import org.mozilla.social.core.database.model.DatabaseAttachment
-import org.mozilla.social.core.database.model.DatabaseBoostedStatus
 import org.mozilla.social.core.database.model.DatabaseEmoji
 import org.mozilla.social.core.database.model.DatabaseField
 import org.mozilla.social.core.database.model.DatabaseHashTag
@@ -14,6 +13,7 @@ import org.mozilla.social.core.database.model.DatabasePollOption
 import org.mozilla.social.core.database.model.DatabaseSource
 import org.mozilla.social.core.database.model.DatabaseStatus
 import org.mozilla.social.core.database.model.DatabaseStatusVisibility
+import org.mozilla.social.core.database.model.wrappers.StatusWrapper
 import org.mozilla.social.model.Account
 import org.mozilla.social.model.Application
 import org.mozilla.social.model.Attachment
@@ -28,15 +28,12 @@ import org.mozilla.social.model.Source
 import org.mozilla.social.model.Status
 import org.mozilla.social.model.StatusVisibility
 
-fun Status.toDatabaseModel(
-    isInHomeFeed: Boolean = false,
-): DatabaseStatus =
+fun Status.toDatabaseModel(): DatabaseStatus =
     DatabaseStatus(
         statusId = statusId,
-        isInHomeFeed = isInHomeFeed,
         uri = uri,
         createdAt = createdAt,
-        account = account.toDatabaseModel(),
+        accountId = account.accountId,
         content = content,
         visibility = visibility.toDatabaseModel(),
         isSensitive = isSensitive,
@@ -53,7 +50,8 @@ fun Status.toDatabaseModel(
         inReplyToId = inReplyToId,
         inReplyToAccountId = inReplyToAccountId,
         inReplyToAccountName = inReplyToAccountName,
-        boostedStatus = boostedStatus?.toDatabaseBoostedStatus(),
+        boostedStatusId = boostedStatus?.statusId,
+        boostedStatusAccountId = boostedStatus?.account?.accountId,
         poll = poll?.toDatabaseModel(),
         //TODO map this if we ever need it
         card = null,
@@ -66,38 +64,38 @@ fun Status.toDatabaseModel(
         isPinned = isPinned,
     )
 
-fun Status.toDatabaseBoostedStatus(): DatabaseBoostedStatus = DatabaseBoostedStatus(
-    statusId = statusId,
-    uri = uri,
-    createdAt = createdAt,
-    account = account.toDatabaseModel(),
-    content = content,
-    visibility = visibility.toDatabaseModel(),
-    isSensitive = isSensitive,
-    contentWarningText = contentWarningText,
-    mediaAttachments = mediaAttachments.map { it.toDatabaseModel() },
-    mentions = mentions.map { it.toDatabaseModel() },
-    hashTags = hashTags.map { it.toDatabaseModel() },
-    emojis = emojis.map { it.toDatabaseModel() },
-    boostsCount = boostsCount,
-    favouritesCount = favouritesCount,
-    repliesCount = repliesCount,
-    application = application?.toDatabaseModel(),
-    url = url,
-    inReplyToId = inReplyToId,
-    inReplyToAccountId = inReplyToAccountId,
-    inReplyToAccountName = inReplyToAccountName,
-    poll = poll?.toDatabaseModel(),
-    //TODO map this if we ever need it
-    card = null,
-    language = language,
-    plainText = plainText,
-    isFavourited = isFavourited,
-    isBoosted = isBoosted,
-    isMuted = isMuted,
-    isBookmarked = isBookmarked,
-    isPinned = isPinned,
-)
+//fun Status.toDatabaseBoostedStatus(): DatabaseBoostedStatus = DatabaseBoostedStatus(
+//    statusId = statusId,
+//    uri = uri,
+//    createdAt = createdAt,
+//    account = account.toDatabaseModel(),
+//    content = content,
+//    visibility = visibility.toDatabaseModel(),
+//    isSensitive = isSensitive,
+//    contentWarningText = contentWarningText,
+//    mediaAttachments = mediaAttachments.map { it.toDatabaseModel() },
+//    mentions = mentions.map { it.toDatabaseModel() },
+//    hashTags = hashTags.map { it.toDatabaseModel() },
+//    emojis = emojis.map { it.toDatabaseModel() },
+//    boostsCount = boostsCount,
+//    favouritesCount = favouritesCount,
+//    repliesCount = repliesCount,
+//    application = application?.toDatabaseModel(),
+//    url = url,
+//    inReplyToId = inReplyToId,
+//    inReplyToAccountId = inReplyToAccountId,
+//    inReplyToAccountName = inReplyToAccountName,
+//    poll = poll?.toDatabaseModel(),
+//    //TODO map this if we ever need it
+//    card = null,
+//    language = language,
+//    plainText = plainText,
+//    isFavourited = isFavourited,
+//    isBoosted = isBoosted,
+//    isMuted = isMuted,
+//    isBookmarked = isBookmarked,
+//    isPinned = isPinned,
+//)
 
 fun Account.toDatabaseModel(): DatabaseAccount = DatabaseAccount(
     accountId = accountId,

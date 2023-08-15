@@ -3,7 +3,6 @@ package org.mozilla.social.core.data.repository.model.status
 import org.mozilla.social.core.database.model.DatabaseAccount
 import org.mozilla.social.core.database.model.DatabaseApplication
 import org.mozilla.social.core.database.model.DatabaseAttachment
-import org.mozilla.social.core.database.model.DatabaseBoostedStatus
 import org.mozilla.social.core.database.model.DatabaseEmoji
 import org.mozilla.social.core.database.model.DatabaseField
 import org.mozilla.social.core.database.model.DatabaseHashTag
@@ -14,6 +13,7 @@ import org.mozilla.social.core.database.model.DatabasePollOption
 import org.mozilla.social.core.database.model.DatabaseSource
 import org.mozilla.social.core.database.model.DatabaseStatus
 import org.mozilla.social.core.database.model.DatabaseStatusVisibility
+import org.mozilla.social.core.database.model.wrappers.StatusWrapper
 import org.mozilla.social.model.Account
 import org.mozilla.social.model.Application
 import org.mozilla.social.model.Attachment
@@ -28,7 +28,44 @@ import org.mozilla.social.model.Source
 import org.mozilla.social.model.Status
 import org.mozilla.social.model.StatusVisibility
 
-fun DatabaseStatus.toExternalModel(): Status =
+fun StatusWrapper.toExternalModel(): Status =
+    Status(
+        statusId = status.statusId,
+        uri = status.uri,
+        createdAt = status.createdAt,
+        account = account.toExternalModel(),
+        content = status.content,
+        visibility = status.visibility.toExternalModel(),
+        isSensitive = status.isSensitive,
+        contentWarningText = status.contentWarningText,
+        mediaAttachments = status.mediaAttachments.map { it.toExternalModel() },
+        mentions = status.mentions.map { it.toExternalModel() },
+        hashTags = status.hashTags.map { it.toExternalModel() },
+        emojis = status.emojis.map { it.toExternalModel() },
+        boostsCount = status.boostsCount,
+        favouritesCount = status.favouritesCount,
+        repliesCount = status.repliesCount,
+        application = status.application?.toExternalModel(),
+        url = status.url,
+        inReplyToId = status.inReplyToId,
+        inReplyToAccountId = status.inReplyToAccountId,
+        inReplyToAccountName = status.inReplyToAccountName,
+        boostedStatus = boostedAccount?.let { boostedStatus?.toExternalModel(it) },
+        poll = status.poll?.toExternalModel(),
+        //TODO map this if we ever need it
+        card = null,
+        language = status.language,
+        plainText = status.plainText,
+        isFavourited = status.isFavourited,
+        isBoosted = status.isBoosted,
+        isMuted = status.isMuted,
+        isBookmarked = status.isBookmarked,
+        isPinned = status.isPinned,
+    )
+
+fun DatabaseStatus.toExternalModel(
+    account: DatabaseAccount
+): Status =
     Status(
         statusId = statusId,
         uri = uri,
@@ -50,7 +87,7 @@ fun DatabaseStatus.toExternalModel(): Status =
         inReplyToId = inReplyToId,
         inReplyToAccountId = inReplyToAccountId,
         inReplyToAccountName = inReplyToAccountName,
-        boostedStatus = boostedStatus?.toDatabaseStatus()?.toExternalModel(),
+//        boostedStatus = boostedStatus?.toDatabaseStatus()?.toExternalModel(),
         poll = poll?.toExternalModel(),
         //TODO map this if we ever need it
         card = null,
@@ -63,38 +100,38 @@ fun DatabaseStatus.toExternalModel(): Status =
         isPinned = isPinned,
     )
 
-fun DatabaseBoostedStatus.toDatabaseStatus(): DatabaseStatus = DatabaseStatus(
-    statusId = statusId,
-    uri = uri,
-    createdAt = createdAt,
-    account = account,
-    content = content,
-    visibility = visibility,
-    isSensitive = isSensitive,
-    contentWarningText = contentWarningText,
-    mediaAttachments = mediaAttachments,
-    mentions = mentions,
-    hashTags = hashTags,
-    emojis = emojis,
-    boostsCount = boostsCount,
-    favouritesCount = favouritesCount,
-    repliesCount = repliesCount,
-    application = application,
-    url = url,
-    inReplyToId = inReplyToId,
-    inReplyToAccountId = inReplyToAccountId,
-    inReplyToAccountName = inReplyToAccountName,
-    poll = poll,
-    //TODO map this if we ever need it
-    card = null,
-    language = language,
-    plainText = plainText,
-    isFavourited = isFavourited,
-    isBoosted = isBoosted,
-    isMuted = isMuted,
-    isBookmarked = isBookmarked,
-    isPinned = isPinned,
-)
+//fun DatabaseBoostedStatus.toDatabaseStatus(): DatabaseStatus = DatabaseStatus(
+//    statusId = statusId,
+//    uri = uri,
+//    createdAt = createdAt,
+//    account = account,
+//    content = content,
+//    visibility = visibility,
+//    isSensitive = isSensitive,
+//    contentWarningText = contentWarningText,
+//    mediaAttachments = mediaAttachments,
+//    mentions = mentions,
+//    hashTags = hashTags,
+//    emojis = emojis,
+//    boostsCount = boostsCount,
+//    favouritesCount = favouritesCount,
+//    repliesCount = repliesCount,
+//    application = application,
+//    url = url,
+//    inReplyToId = inReplyToId,
+//    inReplyToAccountId = inReplyToAccountId,
+//    inReplyToAccountName = inReplyToAccountName,
+//    poll = poll,
+//    //TODO map this if we ever need it
+//    card = null,
+//    language = language,
+//    plainText = plainText,
+//    isFavourited = isFavourited,
+//    isBoosted = isBoosted,
+//    isMuted = isMuted,
+//    isBookmarked = isBookmarked,
+//    isPinned = isPinned,
+//)
 
 fun DatabaseAccount.toExternalModel(): Account = Account(
     accountId = accountId,

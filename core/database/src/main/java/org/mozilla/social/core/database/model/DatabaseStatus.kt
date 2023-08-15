@@ -14,8 +14,6 @@ data class DatabaseStatus(
     @PrimaryKey
     val statusId: String,
 
-    val isInHomeFeed: Boolean = false,
-
     /**
      * URI of the status used for federation.
      */
@@ -29,8 +27,7 @@ data class DatabaseStatus(
     /**
      * The account that authored this status.
      */
-    @Embedded(prefix = "account_")
-    val account: DatabaseAccount,
+    val accountId: String,
 
     /**
      * HTML-encoded status content.
@@ -113,8 +110,9 @@ data class DatabaseStatus(
     /**
      * The status being boosted.
      */
-    @Embedded(prefix = "boosted_")
-    val boostedStatus: DatabaseBoostedStatus? = null,
+    val boostedStatusId: String? = null,
+
+    val boostedStatusAccountId: String? = null,
 
     /**
      * The poll attached to the status.

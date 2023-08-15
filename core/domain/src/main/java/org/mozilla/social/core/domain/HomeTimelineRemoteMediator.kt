@@ -11,7 +11,8 @@ import org.mozilla.social.core.data.repository.AccountRepository
 import org.mozilla.social.core.data.repository.TimelineRepository
 import org.mozilla.social.core.data.repository.model.status.toDatabaseModel
 import org.mozilla.social.core.database.SocialDatabase
-import org.mozilla.social.core.database.model.DatabaseStatus
+import org.mozilla.social.core.database.model.statusCollections.HomeTimelineStatus
+import org.mozilla.social.core.database.model.statusCollections.HomeTimelineStatusWrapper
 import org.mozilla.social.model.Status
 
 @OptIn(ExperimentalPagingApi::class)
@@ -19,11 +20,11 @@ class HomeTimelineRemoteMediator(
     private val timelineRepository: TimelineRepository,
     private val accountRepository: AccountRepository,
     private val socialDatabase: SocialDatabase,
-) : RemoteMediator<Int, DatabaseStatus>() {
+) : RemoteMediator<Int, HomeTimelineStatusWrapper>() {
 
     override suspend fun load(
         loadType: LoadType,
-        state: PagingState<Int, DatabaseStatus>
+        state: PagingState<Int, HomeTimelineStatusWrapper>
     ): MediatorResult {
         return try {
             var pageSize: Int = state.config.pageSize
@@ -42,7 +43,7 @@ class HomeTimelineRemoteMediator(
                         ?: return MediatorResult.Success(endOfPaginationReached = true)
                     timelineRepository.getHomeTimeline(
                         olderThanId = null,
-                        immediatelyNewerThanId = firstItem.statusId,
+                        immediatelyNewerThanId = firstItem.status.statusId,
                         loadSize = pageSize,
                     )
                 }
@@ -51,7 +52,7 @@ class HomeTimelineRemoteMediator(
                     val lastItem = state.lastItemOrNull()
                         ?: return MediatorResult.Success(endOfPaginationReached = true)
                     timelineRepository.getHomeTimeline(
-                        olderThanId = lastItem.statusId,
+                        olderThanId = lastItem.status.statusId,
                         immediatelyNewerThanId = null,
                         loadSize = pageSize,
                     )
@@ -60,11 +61,29 @@ class HomeTimelineRemoteMediator(
 
             socialDatabase.withTransaction {
                 if (loadType == LoadType.REFRESH) {
-                    socialDatabase.statusDao().deleteHomeTimeline()
+                    socialDatabase.homeTimelineDao().deleteHomeTimeline()
                 }
 
+                val boostedStatuses = response.mapNotNull { it.boostedStatus }
+                socialDatabase.accountsDao().insertAll(boostedStatuses.map {
+                    it.account.toDatabaseModel()
+                })
+                socialDatabase.statusDao().insertAll(boostedStatuses.map {
+                    it.toDatabaseModel()
+                })
+                socialDatabase.accountsDao().insertAll(response.map {
+                    it.account.toDatabaseModel()
+                })
                 socialDatabase.statusDao().insertAll(response.map {
-                    it.toDatabaseModel(isInHomeFeed = true)
+                    it.toDatabaseModel()
+                })
+                socialDatabase.homeTimelineDao().insertAll(response.map {
+                    HomeTimelineStatus(
+                        statusId = it.statusId,
+                        accountId = it.account.accountId,
+                        boostedStatusId = it.boostedStatus?.statusId,
+                        boostedStatusAccountId = it.boostedStatus?.account?.accountId,
+                    )
                 })
             }
 
