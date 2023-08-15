@@ -80,6 +80,7 @@ class HomeTimelineRemoteMediator(
                 socialDatabase.homeTimelineDao().insertAll(response.map {
                     HomeTimelineStatus(
                         statusId = it.statusId,
+                        createdAt = it.createdAt,
                         accountId = it.account.accountId,
                         boostedStatusId = it.boostedStatus?.statusId,
                         boostedStatusAccountId = it.boostedStatus?.account?.accountId,

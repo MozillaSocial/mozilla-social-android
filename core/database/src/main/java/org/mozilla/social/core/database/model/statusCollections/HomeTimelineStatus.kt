@@ -4,6 +4,7 @@ import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.Relation
+import kotlinx.datetime.Instant
 import org.mozilla.social.core.database.model.DatabaseAccount
 import org.mozilla.social.core.database.model.DatabaseStatus
 import org.mozilla.social.core.database.model.wrappers.StatusWrapper
@@ -12,6 +13,7 @@ import org.mozilla.social.core.database.model.wrappers.StatusWrapper
 data class HomeTimelineStatus(
     @PrimaryKey
     val statusId: String,
+    val createdAt: Instant,
     val accountId: String,
     val boostedStatusId: String? = null,
     val boostedStatusAccountId: String? = null,

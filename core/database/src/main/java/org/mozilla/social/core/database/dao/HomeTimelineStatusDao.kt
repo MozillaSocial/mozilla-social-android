@@ -8,7 +8,8 @@ import org.mozilla.social.core.database.model.statusCollections.HomeTimelineStat
 
 @Dao
 interface HomeTimelineStatusDao : BaseDao<HomeTimelineStatus> {
-    @Query("SELECT * FROM homeTimeline")
+    @Query("SELECT * FROM homeTimeline " +
+            "ORDER BY createdAt DESC")
     fun homeTimelinePagingSource(): PagingSource<Int, HomeTimelineStatusWrapper>
 
     @Query("DELETE FROM homeTimeline")
