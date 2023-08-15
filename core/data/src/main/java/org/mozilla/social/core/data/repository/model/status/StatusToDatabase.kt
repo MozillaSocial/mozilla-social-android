@@ -64,39 +64,6 @@ fun Status.toDatabaseModel(): DatabaseStatus =
         isPinned = isPinned,
     )
 
-//fun Status.toDatabaseBoostedStatus(): DatabaseBoostedStatus = DatabaseBoostedStatus(
-//    statusId = statusId,
-//    uri = uri,
-//    createdAt = createdAt,
-//    account = account.toDatabaseModel(),
-//    content = content,
-//    visibility = visibility.toDatabaseModel(),
-//    isSensitive = isSensitive,
-//    contentWarningText = contentWarningText,
-//    mediaAttachments = mediaAttachments.map { it.toDatabaseModel() },
-//    mentions = mentions.map { it.toDatabaseModel() },
-//    hashTags = hashTags.map { it.toDatabaseModel() },
-//    emojis = emojis.map { it.toDatabaseModel() },
-//    boostsCount = boostsCount,
-//    favouritesCount = favouritesCount,
-//    repliesCount = repliesCount,
-//    application = application?.toDatabaseModel(),
-//    url = url,
-//    inReplyToId = inReplyToId,
-//    inReplyToAccountId = inReplyToAccountId,
-//    inReplyToAccountName = inReplyToAccountName,
-//    poll = poll?.toDatabaseModel(),
-//    //TODO map this if we ever need it
-//    card = null,
-//    language = language,
-//    plainText = plainText,
-//    isFavourited = isFavourited,
-//    isBoosted = isBoosted,
-//    isMuted = isMuted,
-//    isBookmarked = isBookmarked,
-//    isPinned = isPinned,
-//)
-
 fun Account.toDatabaseModel(): DatabaseAccount = DatabaseAccount(
     accountId = accountId,
     username = username,
@@ -116,7 +83,7 @@ fun Account.toDatabaseModel(): DatabaseAccount = DatabaseAccount(
     followersCount = followersCount,
     followingCount = followingCount,
     isDiscoverable = isDiscoverable,
-    //TODO fix
+    //TODO do we need this?  would require some work with the database wrappers
 //    movedTo = movedTo?.toDatabaseModel(),
     isGroup = isGroup,
     fields = fields?.map { it.toDatabaseModel() },

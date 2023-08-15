@@ -87,7 +87,6 @@ fun DatabaseStatus.toExternalModel(
         inReplyToId = inReplyToId,
         inReplyToAccountId = inReplyToAccountId,
         inReplyToAccountName = inReplyToAccountName,
-//        boostedStatus = boostedStatus?.toDatabaseStatus()?.toExternalModel(),
         poll = poll?.toExternalModel(),
         //TODO map this if we ever need it
         card = null,
@@ -99,39 +98,6 @@ fun DatabaseStatus.toExternalModel(
         isBookmarked = isBookmarked,
         isPinned = isPinned,
     )
-
-//fun DatabaseBoostedStatus.toDatabaseStatus(): DatabaseStatus = DatabaseStatus(
-//    statusId = statusId,
-//    uri = uri,
-//    createdAt = createdAt,
-//    account = account,
-//    content = content,
-//    visibility = visibility,
-//    isSensitive = isSensitive,
-//    contentWarningText = contentWarningText,
-//    mediaAttachments = mediaAttachments,
-//    mentions = mentions,
-//    hashTags = hashTags,
-//    emojis = emojis,
-//    boostsCount = boostsCount,
-//    favouritesCount = favouritesCount,
-//    repliesCount = repliesCount,
-//    application = application,
-//    url = url,
-//    inReplyToId = inReplyToId,
-//    inReplyToAccountId = inReplyToAccountId,
-//    inReplyToAccountName = inReplyToAccountName,
-//    poll = poll,
-//    //TODO map this if we ever need it
-//    card = null,
-//    language = language,
-//    plainText = plainText,
-//    isFavourited = isFavourited,
-//    isBoosted = isBoosted,
-//    isMuted = isMuted,
-//    isBookmarked = isBookmarked,
-//    isPinned = isPinned,
-//)
 
 fun DatabaseAccount.toExternalModel(): Account = Account(
     accountId = accountId,
