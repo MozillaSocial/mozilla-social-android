@@ -2,7 +2,6 @@ package org.mozilla.social.core.database.model
 
 import androidx.room.Embedded
 import androidx.room.Entity
-import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
@@ -74,7 +73,6 @@ data class DatabaseAccount(
      *
      * If none, an empty array will be returned.
      */
-//    @Embedded(prefix = "emoji_")
     val emojis: List<DatabaseEmoji>,
 
     /**
@@ -108,12 +106,6 @@ data class DatabaseAccount(
     val isDiscoverable: Boolean? = null,
 
     /**
-     * Indicates that the profile is currently inactive and that its user has moved to a new account.
-     */
-//    @Ignore
-//    val movedTo: DatabaseAccount? = null,
-
-    /**
      * Whether this account represents a group.
      */
     val isGroup: Boolean,
@@ -121,7 +113,6 @@ data class DatabaseAccount(
     /**
      * Additional metadata attached to a profile as name-value pairs.
      */
-//    @Embedded(prefix = "field_")
     val fields: List<DatabaseField>? = null,
 
     /**

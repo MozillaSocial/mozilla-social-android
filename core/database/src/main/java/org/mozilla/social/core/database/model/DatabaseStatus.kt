@@ -55,25 +55,21 @@ data class DatabaseStatus(
     /**
      * Media that is attached to this status.
      */
-//    @Embedded(prefix = "attachment_")
     val mediaAttachments: List<DatabaseAttachment>,
 
     /**
      * Mentions of users within the status content.
      */
-//    @Embedded(prefix = "mention")
     val mentions: List<DatabaseMention>,
 
     /**
      * Hashtags used within the status content.
      */
-//    @Embedded(prefix = "hashtags_")
     val hashTags: List<DatabaseHashTag>,
 
     /**
      * Custom emoji to be used when rendering status content.
      */
-//    @Embedded(prefix = "emoji")
     val emojis: List<DatabaseEmoji>,
 
     /**

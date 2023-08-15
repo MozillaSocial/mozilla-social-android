@@ -1,6 +1,5 @@
 package org.mozilla.social.core.database.model
 
-import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import kotlinx.serialization.Serializable
@@ -26,6 +25,5 @@ data class DatabaseHashTag(
     /**
      * Hashtag usage statistics for given days.
      */
-//    @Embedded(prefix = "history_")
     val history: List<DatabaseHistory>? = null
 )

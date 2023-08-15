@@ -19,7 +19,6 @@ data class DatabaseSource(
     /**
      * Metadata about the account as a list of name/values.
      */
-//    @Embedded(prefix = "field_")
     val fields: List<DatabaseField>,
 
     /**

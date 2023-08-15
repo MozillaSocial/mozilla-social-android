@@ -1,6 +1,5 @@
 package org.mozilla.social.core.database.model
 
-import androidx.room.Embedded
 import kotlinx.datetime.Instant
 import kotlinx.serialization.Serializable
 
@@ -29,13 +28,11 @@ data class DatabasePoll(
     /**
      * The list of options available in this poll.
      */
-//    @Embedded(prefix = "option_")
     val options: List<DatabasePollOption>,
 
     /**
      * Custom emoji to be used for rendering poll options.
      */
-//    @Embedded(prefix = "emoji_")
     val emojis: List<DatabaseEmoji>,
 
     /**
@@ -56,6 +53,5 @@ data class DatabasePoll(
     /**
      * If [hasVoted] is set, the current account's vote choices.
      */
-//    @Embedded(prefix = "votes_")
     val ownVotes: List<Int>? = null
 )
