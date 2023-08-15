@@ -1,12 +1,17 @@
 package org.mozilla.social.core.database.model
 
+import androidx.room.Embedded
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 
 /**
  * Represents a user of Mastodon and their associated profile.
  */
+@Entity(tableName = "accounts")
 data class DatabaseAccount(
+    @PrimaryKey
     val accountId: String,
 
     /**
@@ -66,6 +71,7 @@ data class DatabaseAccount(
      *
      * If none, an empty array will be returned.
      */
+    @Embedded(prefix = "emoji_")
     val emojis: List<DatabaseEmoji>,
 
     /**
@@ -111,6 +117,7 @@ data class DatabaseAccount(
     /**
      * Additional metadata attached to a profile as name-value pairs.
      */
+    @Embedded(prefix = "field_")
     val fields: List<DatabaseField>? = null,
 
     /**
@@ -124,6 +131,7 @@ data class DatabaseAccount(
     /**
      * An entity to be used with API methods to verify and update credentials.
      */
+    @Embedded(prefix = "source_")
     val source: DatabaseSource? = null,
 
     /**

@@ -18,8 +18,6 @@ data class DatabaseApplication(
 
     /**
      * Used for Push Streaming API.
-     *
-     * Equivalent to [PushSubscription.serverKey].
      */
     val vapidKey: String? = null,
 

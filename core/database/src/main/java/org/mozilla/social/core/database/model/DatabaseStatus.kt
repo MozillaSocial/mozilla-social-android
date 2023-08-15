@@ -1,5 +1,6 @@
 package org.mozilla.social.core.database.model
 
+import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import kotlinx.datetime.Instant
@@ -7,7 +8,7 @@ import kotlinx.datetime.Instant
 /**
  * Represents a status posted by an account.
  */
-@Entity
+@Entity(tableName = "statuses")
 data class DatabaseStatus(
     @PrimaryKey
     val statusId: String,
@@ -52,11 +53,13 @@ data class DatabaseStatus(
     /**
      * Media that is attached to this status.
      */
+    @Embedded(prefix = "attachment_")
     val mediaAttachments: List<DatabaseAttachment>,
 
     /**
      * Mentions of users within the status content.
      */
+    @Embedded(prefix = "mention")
     val mentions: List<DatabaseMention>,
 
     /**
@@ -67,6 +70,7 @@ data class DatabaseStatus(
     /**
      * Custom emoji to be used when rendering status content.
      */
+    @Embedded(prefix = "emoji")
     val emojis: List<DatabaseEmoji>,
 
     /**
@@ -87,6 +91,7 @@ data class DatabaseStatus(
     /**
      * The application used to post this status.
      */
+    @Embedded(prefix = "application_")
     val application: DatabaseApplication? = null,
 
     /**
@@ -114,11 +119,13 @@ data class DatabaseStatus(
     /**
      * The poll attached to the status.
      */
+    @Embedded(prefix = "poll_")
     val poll: DatabasePoll? = null,
 
     /**
      * Preview card for links included within status content.
      */
+    @Embedded(prefix = "card_")
     val card: DatabaseCard? = null,
 
     /**

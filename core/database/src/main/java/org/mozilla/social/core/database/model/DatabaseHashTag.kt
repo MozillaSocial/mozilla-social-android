@@ -1,13 +1,19 @@
 package org.mozilla.social.core.database.model
 
+import androidx.room.Embedded
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
 /**
  * Represents a hashtag used within the content of a status.
  */
+@Entity(tableName = "hashTags")
 data class DatabaseHashTag(
 
     /**
      * The value of the hashtag after the # sign.
      */
+    @PrimaryKey
     val name: String,
 
     /**
@@ -18,5 +24,6 @@ data class DatabaseHashTag(
     /**
      * Hashtag usage statistics for given days.
      */
+    @Embedded(prefix = "history_")
     val history: List<DatabaseHistory>? = null
 )

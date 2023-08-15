@@ -7,12 +7,12 @@ import org.mozilla.social.core.database.model.DatabaseStatus
 
 @Dao
 interface StatusDao : BaseDao<DatabaseStatus> {
-    @Query("SELECT * FROM databasestatus WHERE statusId IN (:statusIds)")
+    @Query("SELECT * FROM statuses WHERE statusId IN (:statusIds)")
     fun getAllByIds(statusIds: IntArray): List<DatabaseStatus>
 
-    @Query("SELECT * FROM databasestatus WHERE isInHomeFeed")
+    @Query("SELECT * FROM statuses WHERE isInHomeFeed")
     fun homeTimelinePagingSource(): PagingSource<String, DatabaseStatus>
 
-    @Query("DELETE FROM databasestatus WHERE isInHomeFeed")
+    @Query("DELETE FROM statuses WHERE isInHomeFeed")
     fun deleteHomeTimeline()
 }
