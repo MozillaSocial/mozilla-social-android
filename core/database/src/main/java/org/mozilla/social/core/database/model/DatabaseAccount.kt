@@ -2,6 +2,7 @@ package org.mozilla.social.core.database.model
 
 import androidx.room.Embedded
 import androidx.room.Entity
+import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
@@ -107,7 +108,8 @@ data class DatabaseAccount(
     /**
      * Indicates that the profile is currently inactive and that its user has moved to a new account.
      */
-    val movedTo: DatabaseAccount? = null,
+//    @Ignore
+//    val movedTo: DatabaseAccount? = null,
 
     /**
      * Whether this account represents a group.

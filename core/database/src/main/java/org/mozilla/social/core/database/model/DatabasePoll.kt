@@ -54,5 +54,6 @@ data class DatabasePoll(
     /**
      * If [hasVoted] is set, the current account's vote choices.
      */
+    @Embedded(prefix = "votes_")
     val ownVotes: List<Int>? = null
 )

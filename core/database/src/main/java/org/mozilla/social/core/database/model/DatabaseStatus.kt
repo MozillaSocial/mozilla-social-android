@@ -2,6 +2,7 @@ package org.mozilla.social.core.database.model
 
 import androidx.room.Embedded
 import androidx.room.Entity
+import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import kotlinx.datetime.Instant
 
@@ -28,6 +29,7 @@ data class DatabaseStatus(
     /**
      * The account that authored this status.
      */
+    @Embedded(prefix = "account_")
     val account: DatabaseAccount,
 
     /**
@@ -65,6 +67,7 @@ data class DatabaseStatus(
     /**
      * Hashtags used within the status content.
      */
+    @Embedded(prefix = "hashtags_")
     val hashTags: List<DatabaseHashTag>,
 
     /**
@@ -114,7 +117,8 @@ data class DatabaseStatus(
     /**
      * The status being boosted.
      */
-    val boostedStatus: DatabaseStatus? = null,
+//    @Ignore
+//    val boostedStatus: DatabaseStatus? = null,
 
     /**
      * The poll attached to the status.

@@ -11,7 +11,7 @@ interface StatusDao : BaseDao<DatabaseStatus> {
     fun getAllByIds(statusIds: IntArray): List<DatabaseStatus>
 
     @Query("SELECT * FROM statuses WHERE isInHomeFeed")
-    fun homeTimelinePagingSource(): PagingSource<String, DatabaseStatus>
+    fun homeTimelinePagingSource(): PagingSource<Int, DatabaseStatus>
 
     @Query("DELETE FROM statuses WHERE isInHomeFeed")
     fun deleteHomeTimeline()

@@ -52,7 +52,8 @@ fun Status.toDatabaseModel(
         inReplyToId = inReplyToId,
         inReplyToAccountId = inReplyToAccountId,
         inReplyToAccountName = inReplyToAccountName,
-        boostedStatus = boostedStatus?.toDatabaseModel(),
+        //TODO fix
+//        boostedStatus = boostedStatus?.toDatabaseModel(),
         poll = poll?.toDatabaseModel(),
         //TODO map this if we ever need it
         card = null,
@@ -84,7 +85,8 @@ fun Account.toDatabaseModel(): DatabaseAccount = DatabaseAccount(
     followersCount = followersCount,
     followingCount = followingCount,
     isDiscoverable = isDiscoverable,
-    movedTo = movedTo?.toDatabaseModel(),
+    //TODO fix
+//    movedTo = movedTo?.toDatabaseModel(),
     isGroup = isGroup,
     fields = fields?.map { it.toDatabaseModel() },
     isBot = isBot,

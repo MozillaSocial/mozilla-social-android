@@ -49,7 +49,8 @@ fun DatabaseStatus.toExternalModel(): Status =
         inReplyToId = inReplyToId,
         inReplyToAccountId = inReplyToAccountId,
         inReplyToAccountName = inReplyToAccountName,
-        boostedStatus = boostedStatus?.toExternalModel(),
+        //TODO fix
+//        boostedStatus = boostedStatus?.toExternalModel(),
         poll = poll?.toExternalModel(),
         //TODO map this if we ever need it
         card = null,
@@ -81,7 +82,8 @@ fun DatabaseAccount.toExternalModel(): Account = Account(
     followersCount = followersCount,
     followingCount = followingCount,
     isDiscoverable = isDiscoverable,
-    movedTo = movedTo?.toExternalModel(),
+    //TODO fix
+//    movedTo = movedTo?.toExternalModel(),
     isGroup = isGroup,
     fields = fields?.map { it.toExternalModel() },
     isBot = isBot,

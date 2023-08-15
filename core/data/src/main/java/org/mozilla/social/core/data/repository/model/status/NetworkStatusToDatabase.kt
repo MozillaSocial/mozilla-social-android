@@ -51,7 +51,8 @@ fun NetworkStatus.toDatabaseModel(
         url = url,
         inReplyToId = inReplyToId,
         inReplyToAccountId = inReplyToAccountId,
-        boostedStatus = boostedStatus?.toDatabaseModel(),
+        //TODO fix
+//        boostedStatus = boostedStatus?.toDatabaseModel(),
         poll = poll?.toDatabaseModel(),
         //TODO map this if we ever need it
         card = null,
@@ -83,7 +84,8 @@ fun NetworkAccount.toDatabaseModel(): DatabaseAccount = DatabaseAccount(
     followersCount = followersCount,
     followingCount = followingCount,
     isDiscoverable = isDiscoverable,
-    movedTo = movedTo?.toDatabaseModel(),
+    //TODO fix
+//    movedTo = movedTo?.toDatabaseModel(),
     isGroup = isGroup,
     fields = fields?.map { it.toDatabaseModel() },
     isBot = isBot,

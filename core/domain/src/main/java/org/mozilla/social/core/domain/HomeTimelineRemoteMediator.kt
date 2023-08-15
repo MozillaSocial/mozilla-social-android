@@ -19,11 +19,11 @@ class HomeTimelineRemoteMediator(
     private val timelineRepository: TimelineRepository,
     private val accountRepository: AccountRepository,
     private val socialDatabase: SocialDatabase,
-) : RemoteMediator<String, DatabaseStatus>() {
+) : RemoteMediator<Int, DatabaseStatus>() {
 
     override suspend fun load(
         loadType: LoadType,
-        state: PagingState<String, DatabaseStatus>
+        state: PagingState<Int, DatabaseStatus>
     ): MediatorResult {
         return try {
             var pageSize: Int = state.config.pageSize
