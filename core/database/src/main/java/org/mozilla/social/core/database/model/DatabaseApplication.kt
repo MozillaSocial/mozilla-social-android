@@ -1,9 +1,12 @@
 package org.mozilla.social.core.database.model
 
+import kotlinx.serialization.Serializable
+
 /**
  * Represents an application that interfaces with the
  * REST API to access accounts or post statuses.
  */
+@Serializable
 data class DatabaseApplication(
 
     /**

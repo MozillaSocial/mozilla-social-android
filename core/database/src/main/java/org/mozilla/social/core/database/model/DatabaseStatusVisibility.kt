@@ -1,5 +1,8 @@
 package org.mozilla.social.core.database.model
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 enum class DatabaseStatusVisibility(val value: String) {
 
     /**

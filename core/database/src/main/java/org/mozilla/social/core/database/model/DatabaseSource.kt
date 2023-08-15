@@ -1,12 +1,14 @@
 package org.mozilla.social.core.database.model
 
 import androidx.room.Embedded
+import kotlinx.serialization.Serializable
 
 /**
  * Represents display or publishing preferences of the [Account].
  *
  * Returned as an additional entity when verifying and updated credentials.
  */
+@Serializable
 data class DatabaseSource(
 
     /**
@@ -17,7 +19,7 @@ data class DatabaseSource(
     /**
      * Metadata about the account as a list of name/values.
      */
-    @Embedded(prefix = "field_")
+//    @Embedded(prefix = "field_")
     val fields: List<DatabaseField>,
 
     /**

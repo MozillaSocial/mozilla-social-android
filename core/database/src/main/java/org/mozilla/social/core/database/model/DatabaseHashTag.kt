@@ -3,10 +3,12 @@ package org.mozilla.social.core.database.model
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import kotlinx.serialization.Serializable
 
 /**
  * Represents a hashtag used within the content of a status.
  */
+@Serializable
 @Entity(tableName = "hashTags")
 data class DatabaseHashTag(
 
@@ -24,6 +26,6 @@ data class DatabaseHashTag(
     /**
      * Hashtag usage statistics for given days.
      */
-    @Embedded(prefix = "history_")
+//    @Embedded(prefix = "history_")
     val history: List<DatabaseHistory>? = null
 )

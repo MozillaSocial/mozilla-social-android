@@ -1,8 +1,11 @@
 package org.mozilla.social.core.database.model
 
+import kotlinx.serialization.Serializable
+
 /**
  * Represents a custom emoji.
  */
+@Serializable
 data class DatabaseEmoji(
 
     /**

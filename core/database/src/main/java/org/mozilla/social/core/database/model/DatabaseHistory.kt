@@ -1,9 +1,11 @@
 package org.mozilla.social.core.database.model
 
+import kotlinx.serialization.Serializable
+
 /**
  * Represents daily usage history of a hashtag.
  */
-
+@Serializable
 data class DatabaseHistory(
 
     /**

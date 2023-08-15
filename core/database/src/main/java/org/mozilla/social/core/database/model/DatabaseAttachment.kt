@@ -1,8 +1,11 @@
 package org.mozilla.social.core.database.model
 
+import kotlinx.serialization.Serializable
+
 /**
  * Represents a file or media attachment that can be added to a status.
  */
+@Serializable
 sealed class DatabaseAttachment {
 
     abstract val attachmentId: String

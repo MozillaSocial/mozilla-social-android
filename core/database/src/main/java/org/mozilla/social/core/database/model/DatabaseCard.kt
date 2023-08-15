@@ -1,9 +1,12 @@
 package org.mozilla.social.core.database.model
 
+import kotlinx.serialization.Serializable
+
 /**
  * Represents a rich preview card that is generated
  * using OpenGraph tags from a URL.
  */
+@Serializable
 sealed class DatabaseCard {
 
     /**

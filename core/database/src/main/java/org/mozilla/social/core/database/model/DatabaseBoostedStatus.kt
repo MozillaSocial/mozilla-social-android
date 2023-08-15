@@ -9,9 +9,7 @@ import kotlinx.datetime.Instant
 /**
  * Represents a status posted by an account.
  */
-@Entity(tableName = "statuses")
-data class DatabaseStatus(
-    @PrimaryKey
+data class DatabaseBoostedStatus(
     val statusId: String,
 
     val isInHomeFeed: Boolean = false,
@@ -113,12 +111,6 @@ data class DatabaseStatus(
     val inReplyToAccountId: String? = null,
 
     val inReplyToAccountName: String? = null,
-
-    /**
-     * The status being boosted.
-     */
-    @Embedded(prefix = "boosted_")
-    val boostedStatus: DatabaseBoostedStatus? = null,
 
     /**
      * The poll attached to the status.

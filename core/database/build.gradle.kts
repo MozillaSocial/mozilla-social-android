@@ -1,6 +1,7 @@
 plugins {
     id("org.mozilla.social.android.library")
     alias(libs.plugins.kotlin.ksp)
+    alias(libs.plugins.kotlinx.serialization)
 }
 
 android {
@@ -31,4 +32,7 @@ dependencies {
     implementation(libs.androidx.room.paging)
 
     implementation(libs.kotlinx.datetime)
+
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.kotlinx.serialization.converter)
 }

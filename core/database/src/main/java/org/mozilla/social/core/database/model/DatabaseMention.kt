@@ -1,8 +1,11 @@
 package org.mozilla.social.core.database.model
 
+import kotlinx.serialization.Serializable
+
 /**
  * Represents a mention of a user within the content of a status.
  */
+@Serializable
 data class DatabaseMention(
     val accountId: String,
 

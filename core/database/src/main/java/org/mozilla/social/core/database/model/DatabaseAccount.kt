@@ -6,10 +6,12 @@ import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
+import kotlinx.serialization.Serializable
 
 /**
  * Represents a user of Mastodon and their associated profile.
  */
+@Serializable
 @Entity(tableName = "accounts")
 data class DatabaseAccount(
     @PrimaryKey
@@ -72,7 +74,7 @@ data class DatabaseAccount(
      *
      * If none, an empty array will be returned.
      */
-    @Embedded(prefix = "emoji_")
+//    @Embedded(prefix = "emoji_")
     val emojis: List<DatabaseEmoji>,
 
     /**
@@ -119,7 +121,7 @@ data class DatabaseAccount(
     /**
      * Additional metadata attached to a profile as name-value pairs.
      */
-    @Embedded(prefix = "field_")
+//    @Embedded(prefix = "field_")
     val fields: List<DatabaseField>? = null,
 
     /**

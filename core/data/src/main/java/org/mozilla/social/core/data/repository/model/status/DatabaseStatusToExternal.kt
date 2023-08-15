@@ -3,6 +3,7 @@ package org.mozilla.social.core.data.repository.model.status
 import org.mozilla.social.core.database.model.DatabaseAccount
 import org.mozilla.social.core.database.model.DatabaseApplication
 import org.mozilla.social.core.database.model.DatabaseAttachment
+import org.mozilla.social.core.database.model.DatabaseBoostedStatus
 import org.mozilla.social.core.database.model.DatabaseEmoji
 import org.mozilla.social.core.database.model.DatabaseField
 import org.mozilla.social.core.database.model.DatabaseHashTag
@@ -49,8 +50,7 @@ fun DatabaseStatus.toExternalModel(): Status =
         inReplyToId = inReplyToId,
         inReplyToAccountId = inReplyToAccountId,
         inReplyToAccountName = inReplyToAccountName,
-        //TODO fix
-//        boostedStatus = boostedStatus?.toExternalModel(),
+        boostedStatus = boostedStatus?.toDatabaseStatus()?.toExternalModel(),
         poll = poll?.toExternalModel(),
         //TODO map this if we ever need it
         card = null,
@@ -62,6 +62,40 @@ fun DatabaseStatus.toExternalModel(): Status =
         isBookmarked = isBookmarked,
         isPinned = isPinned,
     )
+
+fun DatabaseBoostedStatus.toDatabaseStatus(): DatabaseStatus = DatabaseStatus(
+    statusId = statusId,
+    uri = uri,
+    createdAt = createdAt,
+    account = account,
+    content = content,
+    visibility = visibility,
+    isSensitive = isSensitive,
+    contentWarningText = contentWarningText,
+    mediaAttachments = mediaAttachments,
+    mentions = mentions,
+    hashTags = hashTags,
+    emojis = emojis,
+    boostsCount = boostsCount,
+    favouritesCount = favouritesCount,
+    repliesCount = repliesCount,
+    application = application,
+    url = url,
+    inReplyToId = inReplyToId,
+    inReplyToAccountId = inReplyToAccountId,
+    inReplyToAccountName = inReplyToAccountName,
+    boostedStatus = null,
+    poll = poll,
+    //TODO map this if we ever need it
+    card = null,
+    language = language,
+    plainText = plainText,
+    isFavourited = isFavourited,
+    isBoosted = isBoosted,
+    isMuted = isMuted,
+    isBookmarked = isBookmarked,
+    isPinned = isPinned,
+)
 
 fun DatabaseAccount.toExternalModel(): Account = Account(
     accountId = accountId,
