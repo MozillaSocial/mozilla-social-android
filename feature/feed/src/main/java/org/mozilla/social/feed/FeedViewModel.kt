@@ -10,10 +10,7 @@ import androidx.paging.map
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import org.mozilla.social.common.logging.Log
-import org.mozilla.social.core.data.repository.AccountRepository
 import org.mozilla.social.core.data.repository.StatusRepository
-import org.mozilla.social.core.data.repository.TimelineRepository
 import org.mozilla.social.core.data.repository.model.status.toExternalModel
 import org.mozilla.social.core.database.SocialDatabase
 import org.mozilla.social.core.database.model.statusCollections.toStatusWrapper
@@ -25,11 +22,9 @@ import org.mozilla.social.core.ui.postcard.toPostCardUiState
  * Produces a flow of pages of statuses for a feed
  */
 class FeedViewModel(
-    private val timelineRepository: TimelineRepository,
-    private val accountRepository: AccountRepository,
+    homeTimelineRemoteMediator: HomeTimelineRemoteMediator,
     private val statusRepository: StatusRepository,
     private val socialDatabase: SocialDatabase,
-    private val log: Log,
     private val onReplyClicked: (String) -> Unit,
 ) : ViewModel(), PostCardInteractions {
 
@@ -39,11 +34,7 @@ class FeedViewModel(
             pageSize = 20,
             initialLoadSize = 40
         ),
-        remoteMediator = HomeTimelineRemoteMediator(
-            timelineRepository,
-            accountRepository,
-            socialDatabase,
-        )
+        remoteMediator = homeTimelineRemoteMediator
     ) {
         socialDatabase.homeTimelineDao().homeTimelinePagingSource()
     }.flow.map { pagingData ->

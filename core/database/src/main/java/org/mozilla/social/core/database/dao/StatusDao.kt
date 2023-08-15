@@ -6,7 +6,6 @@ import org.mozilla.social.core.database.model.DatabaseStatus
 
 @Dao
 interface StatusDao : BaseDao<DatabaseStatus> {
-
     @Query("DELETE FROM statuses")
     fun deleteAll()
 }
