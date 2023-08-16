@@ -18,11 +18,13 @@ import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.filled.StarBorder
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
@@ -32,6 +34,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import coil.compose.AsyncImage
 import org.mozilla.social.common.utils.DimenUtil
+import org.mozilla.social.core.designsystem.theme.FirefoxColor
 import org.mozilla.social.core.designsystem.theme.MozillaSocialTheme
 import org.mozilla.social.core.ui.media.MediaDisplay
 import org.mozilla.social.core.ui.poll.Poll
@@ -146,9 +149,10 @@ private fun BottomRow(
         )
         Spacer(modifier = Modifier.weight(1f))
         BottomIconButton(
-            onClick = { postCardInteractions.onBoostClicked() },
+            onClick = { postCardInteractions.onBoostClicked(post.statusId) },
             imageVector = Icons.Default.Repeat,
             count = post.boostCount,
+            highlighted = post.userBoosted,
         )
         Spacer(modifier = Modifier.weight(1f))
         BottomIconButton(
@@ -170,6 +174,7 @@ private fun BottomIconButton(
     onClick: () -> Unit,
     imageVector: ImageVector,
     count: Long,
+    highlighted: Boolean = false,
 ) {
     IconButton(
         modifier = Modifier.width(IntrinsicSize.Max),
@@ -178,7 +183,12 @@ private fun BottomIconButton(
         Row {
             Icon(
                 imageVector = imageVector,
-                ""
+                "",
+                tint = if (highlighted) {
+                    FirefoxColor.Blue30
+                } else {
+                    LocalContentColor.current
+                }
             )
             if (count > 0) {
                 Text(text = "$count")

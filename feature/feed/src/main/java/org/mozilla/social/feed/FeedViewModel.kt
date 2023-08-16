@@ -68,8 +68,12 @@ class FeedViewModel(
         onReplyClicked.invoke(statusId)
     }
 
-    override fun onBoostClicked() {
-        super.onBoostClicked()
+    override fun onBoostClicked(statusId: String) {
+        //TODO don't do this here, this is only for testing that database updates work
+        // move to repository or usecase in the future
+        viewModelScope.launch {
+            socialDatabase.statusDao().updateBoosted(statusId, true)
+        }
     }
 
     override fun onFavoriteClicked() {
