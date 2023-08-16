@@ -1,0 +1,30 @@
+name: daily-build
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3.5.3
+    - name: Set up JDK
+      uses: actions/setup-java@v3.12.0
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        # Using 'temurin' speeds up the job, because this distribution is cached by the runner.
+        # See: https://github.com/actions/setup-java/blob/main/docs/advanced-usage.md#Hosted-Tool-Cache
+    - name: Build the release
+      env:
+        GPG_KEY: ${{ secrets.gpg_key }}
+        GRADLE_OPTS: -Dorg.gradle.daemon=false
+      run: ci/daily-build.sh
+    - name: Archive the release
+      uses: actions/upload-artifact@v3.1.2
+      with:
+        name: apk
+        path: secrets/mozilla-social.apk
+        if-no-files-found: error

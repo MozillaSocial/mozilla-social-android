@@ -13,4 +13,4 @@ fi
 
 decrypt "secret.properties"
 decrypt "daily.jks"
-decrypt "build_daily.sh"
+decrypt "build_daily.sh" && chmod +x build_daily.sh
