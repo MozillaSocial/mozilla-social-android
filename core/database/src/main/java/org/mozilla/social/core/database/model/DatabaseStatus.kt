@@ -114,11 +114,12 @@ data class DatabaseStatus(
 
     val boostedStatusAccountId: String? = null,
 
+    val boostedPollId: String? = null,
+
     /**
      * The poll attached to the status.
      */
-    @Embedded(prefix = "poll_")
-    val poll: DatabasePoll? = null,
+    val pollId: String? = null,
 
     /**
      * Preview card for links included within status content.

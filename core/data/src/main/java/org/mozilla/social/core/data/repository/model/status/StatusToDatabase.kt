@@ -52,7 +52,7 @@ fun Status.toDatabaseModel(): DatabaseStatus =
         inReplyToAccountName = inReplyToAccountName,
         boostedStatusId = boostedStatus?.statusId,
         boostedStatusAccountId = boostedStatus?.account?.accountId,
-        poll = poll?.toDatabaseModel(),
+        pollId = poll?.pollId,
         //TODO map this if we ever need it
         card = null,
         language = language,

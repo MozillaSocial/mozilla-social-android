@@ -65,11 +65,18 @@ class HomeTimelineRemoteMediator(
                 }
 
                 val boostedStatuses = response.mapNotNull { it.boostedStatus }
+                socialDatabase.pollDao().insertAll(boostedStatuses.mapNotNull {
+                    it.poll?.toDatabaseModel()
+                })
                 socialDatabase.accountsDao().insertAll(boostedStatuses.map {
                     it.account.toDatabaseModel()
                 })
                 socialDatabase.statusDao().insertAll(boostedStatuses.map {
                     it.toDatabaseModel()
+                })
+
+                socialDatabase.pollDao().insertAll(response.mapNotNull {
+                    it.poll?.toDatabaseModel()
                 })
                 socialDatabase.accountsDao().insertAll(response.map {
                     it.account.toDatabaseModel()
@@ -77,13 +84,16 @@ class HomeTimelineRemoteMediator(
                 socialDatabase.statusDao().insertAll(response.map {
                     it.toDatabaseModel()
                 })
+
                 socialDatabase.homeTimelineDao().insertAll(response.map {
                     HomeTimelineStatus(
                         statusId = it.statusId,
                         createdAt = it.createdAt,
                         accountId = it.account.accountId,
+                        pollId = it.poll?.pollId,
                         boostedStatusId = it.boostedStatus?.statusId,
                         boostedStatusAccountId = it.boostedStatus?.account?.accountId,
+                        boostedPollId = it.boostedStatus?.poll?.pollId,
                     )
                 })
             }

@@ -6,6 +6,7 @@ import androidx.room.PrimaryKey
 import androidx.room.Relation
 import kotlinx.datetime.Instant
 import org.mozilla.social.core.database.model.DatabaseAccount
+import org.mozilla.social.core.database.model.DatabasePoll
 import org.mozilla.social.core.database.model.DatabaseStatus
 import org.mozilla.social.core.database.model.wrappers.StatusWrapper
 
@@ -15,8 +16,10 @@ data class HomeTimelineStatus(
     val statusId: String,
     val createdAt: Instant,
     val accountId: String,
-    val boostedStatusId: String? = null,
-    val boostedStatusAccountId: String? = null,
+    val pollId: String?,
+    val boostedStatusId: String?,
+    val boostedStatusAccountId: String?,
+    val boostedPollId: String?,
 )
 
 data class HomeTimelineStatusWrapper(
@@ -36,6 +39,12 @@ data class HomeTimelineStatusWrapper(
     val account: DatabaseAccount,
 
     @Relation(
+        parentColumn = "pollId",
+        entityColumn = "pollId",
+    )
+    val poll: DatabasePoll?,
+
+    @Relation(
         parentColumn = "boostedStatusId",
         entityColumn = "statusId"
     )
@@ -46,11 +55,19 @@ data class HomeTimelineStatusWrapper(
         entityColumn = "accountId",
     )
     val boostedAccount: DatabaseAccount?,
+
+    @Relation(
+        parentColumn = "boostedPollId",
+        entityColumn = "pollId",
+    )
+    val boostedPoll: DatabasePoll?,
 )
 
 fun HomeTimelineStatusWrapper.toStatusWrapper(): StatusWrapper = StatusWrapper(
     status = status,
     account = account,
+    poll = poll,
     boostedStatus = boostedStatus,
-    boostedAccount = boostedAccount
+    boostedAccount = boostedAccount,
+    boostedPoll = boostedPoll,
 )

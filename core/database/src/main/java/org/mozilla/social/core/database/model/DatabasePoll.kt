@@ -1,13 +1,16 @@
 package org.mozilla.social.core.database.model
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import kotlinx.datetime.Instant
 import kotlinx.serialization.Serializable
 
 /**
  * Represents a poll attached to a status.
  */
-@Serializable
+@Entity(tableName = "polls")
 data class DatabasePoll(
+    @PrimaryKey
     val pollId: String,
 
     /**

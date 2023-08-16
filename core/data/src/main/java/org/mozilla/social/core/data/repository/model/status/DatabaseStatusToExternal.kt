@@ -50,8 +50,8 @@ fun StatusWrapper.toExternalModel(): Status =
         inReplyToId = status.inReplyToId,
         inReplyToAccountId = status.inReplyToAccountId,
         inReplyToAccountName = status.inReplyToAccountName,
-        boostedStatus = boostedAccount?.let { boostedStatus?.toExternalModel(it) },
-        poll = status.poll?.toExternalModel(),
+        boostedStatus = boostedAccount?.let { boostedStatus?.toExternalModel(it, boostedPoll) },
+        poll = poll?.toExternalModel(),
         //TODO map this if we ever need it
         card = null,
         language = status.language,
@@ -64,7 +64,8 @@ fun StatusWrapper.toExternalModel(): Status =
     )
 
 fun DatabaseStatus.toExternalModel(
-    account: DatabaseAccount
+    account: DatabaseAccount,
+    poll: DatabasePoll?,
 ): Status =
     Status(
         statusId = statusId,
