@@ -7,6 +7,7 @@ import androidx.paging.RemoteMediator
 import androidx.room.withTransaction
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
 import org.mozilla.social.core.data.repository.AccountRepository
 import org.mozilla.social.core.data.repository.TimelineRepository
 import org.mozilla.social.core.data.repository.model.status.toDatabaseModel
@@ -96,6 +97,17 @@ class HomeTimelineRemoteMediator(
                         boostedPollId = it.boostedStatus?.poll?.pollId,
                     )
                 })
+            }
+
+            // There seems to be some race condition for refreshes.  Subsequent pages do
+            // not get loaded because once we return a mediator result, the next append
+            // and prepend happen right away.  The paging source doesn't have enough time
+            // to collect the initial page from the database, so the [state] we get as
+            // a parameter in this load method doesn't have any data in the pages, so
+            // it's assumed we've reached the end of pagination, and nothing gets loaded
+            // ever again.
+            if (loadType == LoadType.REFRESH) {
+                delay(200)
             }
 
             MediatorResult.Success(
