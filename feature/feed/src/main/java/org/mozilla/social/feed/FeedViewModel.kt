@@ -7,12 +7,15 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
 import androidx.paging.map
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import org.mozilla.social.common.logging.Log
 import org.mozilla.social.core.data.repository.StatusRepository
 import org.mozilla.social.core.data.repository.model.status.toExternalModel
 import org.mozilla.social.core.database.SocialDatabase
@@ -27,9 +30,10 @@ import org.mozilla.social.core.ui.postcard.toPostCardUiState
  */
 class FeedViewModel(
     homeTimelineRemoteMediator: HomeTimelineRemoteMediator,
+    userPreferencesDatastore: UserPreferencesDatastore,
     private val statusRepository: StatusRepository,
     private val socialDatabase: SocialDatabase,
-    userPreferencesDatastore: UserPreferencesDatastore,
+    private val log: Log,
     private val onReplyClicked: (String) -> Unit,
 ) : ViewModel(), PostCardInteractions {
 
@@ -57,6 +61,9 @@ class FeedViewModel(
         }
     }.cachedIn(viewModelScope)
 
+    private val _errorToastMessage = MutableSharedFlow<String>(extraBufferCapacity = 1)
+    val errorToastMessage = _errorToastMessage.asSharedFlow()
+
     private val currentFeedType = MutableStateFlow(INITIAL_FEED).also {
         viewModelScope.launch {
             it.collect { feedType ->
@@ -73,7 +80,8 @@ class FeedViewModel(
             try {
                 statusRepository.voteOnPoll(pollId, choices)
             } catch (e: Exception) {
-
+                log.e(e)
+                _errorToastMessage.emit("Error Voting")
             }
         }
     }
