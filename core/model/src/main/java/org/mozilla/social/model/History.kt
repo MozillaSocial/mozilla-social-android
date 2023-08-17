@@ -1,8 +1,5 @@
 package org.mozilla.social.model
 
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
-
 /**
  * Represents daily usage history of a hashtag.
  */

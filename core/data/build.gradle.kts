@@ -26,6 +26,7 @@ dependencies {
     implementation(project(":core:network"))
     implementation(project(":core:datastore"))
     implementation(project(":core:model"))
+    implementation(project(":core:database"))
 
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.kotlinx.datetime)

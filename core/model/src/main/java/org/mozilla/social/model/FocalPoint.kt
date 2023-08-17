@@ -1,8 +1,5 @@
 package org.mozilla.social.model
 
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
-
 /**
  * @see [Official docs](https://docs.joinmastodon.org/methods/statuses/media/#focal-points)
  */

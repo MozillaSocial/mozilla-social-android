@@ -1,8 +1,5 @@
 package org.mozilla.social.model
 
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
-
 /**
  * Represents a mention of a user within the content of a status.
  */

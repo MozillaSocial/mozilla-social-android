@@ -1,24 +1,22 @@
-package org.mozilla.social.core.data.repository.model
+package org.mozilla.social.core.data.repository.model.status
 
-import org.mozilla.social.core.network.model.NetworkAccount
-import org.mozilla.social.core.network.model.NetworkApplication
-import org.mozilla.social.core.network.model.NetworkAttachment
-import org.mozilla.social.core.network.model.NetworkCard
-import org.mozilla.social.core.network.model.NetworkEmoji
-import org.mozilla.social.core.network.model.NetworkField
-import org.mozilla.social.core.network.model.NetworkHashTag
-import org.mozilla.social.core.network.model.NetworkHistory
-import org.mozilla.social.core.network.model.NetworkMention
-import org.mozilla.social.core.network.model.NetworkPoll
-import org.mozilla.social.core.network.model.NetworkPollOption
-import org.mozilla.social.core.network.model.NetworkSource
-import org.mozilla.social.core.network.model.NetworkStatus
-import org.mozilla.social.core.network.model.NetworkStatusVisibility
-import org.mozilla.social.core.network.model.request.NetworkPollCreate
+import org.mozilla.social.core.database.model.DatabaseAccount
+import org.mozilla.social.core.database.model.DatabaseApplication
+import org.mozilla.social.core.database.model.DatabaseAttachment
+import org.mozilla.social.core.database.model.DatabaseEmoji
+import org.mozilla.social.core.database.model.DatabaseField
+import org.mozilla.social.core.database.model.DatabaseHashTag
+import org.mozilla.social.core.database.model.DatabaseHistory
+import org.mozilla.social.core.database.model.DatabaseMention
+import org.mozilla.social.core.database.model.DatabasePoll
+import org.mozilla.social.core.database.model.DatabasePollOption
+import org.mozilla.social.core.database.model.DatabaseSource
+import org.mozilla.social.core.database.model.DatabaseStatus
+import org.mozilla.social.core.database.model.DatabaseStatusVisibility
+import org.mozilla.social.core.database.model.wrappers.StatusWrapper
 import org.mozilla.social.model.Account
 import org.mozilla.social.model.Application
 import org.mozilla.social.model.Attachment
-import org.mozilla.social.model.Card
 import org.mozilla.social.model.Emoji
 import org.mozilla.social.model.Field
 import org.mozilla.social.model.HashTag
@@ -29,31 +27,32 @@ import org.mozilla.social.model.PollOption
 import org.mozilla.social.model.Source
 import org.mozilla.social.model.Status
 import org.mozilla.social.model.StatusVisibility
-import org.mozilla.social.model.request.PollCreate
 
-fun NetworkStatus.toExternalModel(): Status =
-    Status(
+fun Status.toDatabaseModel(): DatabaseStatus =
+    DatabaseStatus(
         statusId = statusId,
         uri = uri,
         createdAt = createdAt,
-        account = account.toExternalModel(),
+        accountId = account.accountId,
         content = content,
-        visibility = visibility.toExternalModel(),
+        visibility = visibility.toDatabaseModel(),
         isSensitive = isSensitive,
         contentWarningText = contentWarningText,
-        mediaAttachments = mediaAttachments.map { it.toExternalModel() },
-        mentions = mentions.map { it.toExternalModel() },
-        hashTags = hashTags.map { it.toExternalModel() },
-        emojis = emojis.map { it.toExternalModel() },
+        mediaAttachments = mediaAttachments.map { it.toDatabaseModel() },
+        mentions = mentions.map { it.toDatabaseModel() },
+        hashTags = hashTags.map { it.toDatabaseModel() },
+        emojis = emojis.map { it.toDatabaseModel() },
         boostsCount = boostsCount,
         favouritesCount = favouritesCount,
         repliesCount = repliesCount,
-        application = application?.toExternalModel(),
+        application = application?.toDatabaseModel(),
         url = url,
         inReplyToId = inReplyToId,
         inReplyToAccountId = inReplyToAccountId,
-        boostedStatus = boostedStatus?.toExternalModel(),
-        poll = poll?.toExternalModel(),
+        inReplyToAccountName = inReplyToAccountName,
+        boostedStatusId = boostedStatus?.statusId,
+        boostedStatusAccountId = boostedStatus?.account?.accountId,
+        pollId = poll?.pollId,
         //TODO map this if we ever need it
         card = null,
         language = language,
@@ -65,7 +64,7 @@ fun NetworkStatus.toExternalModel(): Status =
         isPinned = isPinned,
     )
 
-fun NetworkAccount.toExternalModel(): Account = Account(
+fun Account.toDatabaseModel(): DatabaseAccount = DatabaseAccount(
     accountId = accountId,
     username = username,
     acct = acct,
@@ -77,33 +76,34 @@ fun NetworkAccount.toExternalModel(): Account = Account(
     headerUrl = headerUrl,
     headerStaticUrl = headerStaticUrl,
     isLocked = isLocked,
-    emojis = emojis.map { it.toExternalModel() },
+    emojis = emojis.map { it.toDatabaseModel() },
     createdAt = createdAt,
     lastStatusAt = lastStatusAt,
     statusesCount = statusesCount,
     followersCount = followersCount,
     followingCount = followingCount,
     isDiscoverable = isDiscoverable,
-    movedTo = movedTo?.toExternalModel(),
+    //TODO do we need this?  would require some work with the database wrappers
+//    movedTo = movedTo?.toDatabaseModel(),
     isGroup = isGroup,
-    fields = fields?.map { it.toExternalModel() },
+    fields = fields?.map { it.toDatabaseModel() },
     isBot = isBot,
-    source = source?.toExternalModel(),
+    source = source?.toDatabaseModel(),
     isSuspended = isSuspended,
     muteExpiresAt = muteExpiresAt,
 )
 
-fun NetworkStatusVisibility.toExternalModel(): StatusVisibility =
+fun StatusVisibility.toDatabaseModel(): DatabaseStatusVisibility =
     when(this) {
-        NetworkStatusVisibility.Direct -> StatusVisibility.Direct
-        NetworkStatusVisibility.Private -> StatusVisibility.Private
-        NetworkStatusVisibility.Public -> StatusVisibility.Public
-        NetworkStatusVisibility.Unlisted -> StatusVisibility.Unlisted
+        StatusVisibility.Direct -> DatabaseStatusVisibility.Direct
+        StatusVisibility.Private -> DatabaseStatusVisibility.Private
+        StatusVisibility.Public -> DatabaseStatusVisibility.Public
+        StatusVisibility.Unlisted -> DatabaseStatusVisibility.Unlisted
     }
 
-fun NetworkAttachment.toExternalModel(): Attachment =
+fun Attachment.toDatabaseModel(): DatabaseAttachment =
     when (this) {
-        is NetworkAttachment.Image -> Attachment.Image(
+        is Attachment.Image -> DatabaseAttachment.Image(
             attachmentId = attachmentId,
             url = url,
             previewUrl = previewUrl,
@@ -113,7 +113,7 @@ fun NetworkAttachment.toExternalModel(): Attachment =
             description = description,
             blurHash = blurHash
         )
-        is NetworkAttachment.Gifv -> Attachment.Gifv(
+        is Attachment.Gifv -> DatabaseAttachment.Gifv(
             attachmentId = attachmentId,
             url = url,
             previewUrl = previewUrl,
@@ -122,7 +122,7 @@ fun NetworkAttachment.toExternalModel(): Attachment =
             textUrl = textUrl,
             description = description
         )
-        is NetworkAttachment.Video -> Attachment.Video(
+        is Attachment.Video -> DatabaseAttachment.Video(
             attachmentId = attachmentId,
             url = url,
             previewUrl = previewUrl,
@@ -132,7 +132,7 @@ fun NetworkAttachment.toExternalModel(): Attachment =
             description = description,
             blurHash = blurHash
         )
-        is NetworkAttachment.Audio -> Attachment.Audio(
+        is Attachment.Audio -> DatabaseAttachment.Audio(
             attachmentId = attachmentId,
             url = url,
             previewUrl = previewUrl,
@@ -142,7 +142,7 @@ fun NetworkAttachment.toExternalModel(): Attachment =
             description = description,
             blurHash = blurHash
         )
-        is NetworkAttachment.Unknown -> Attachment.Unknown(
+        is Attachment.Unknown -> DatabaseAttachment.Unknown(
             attachmentId = attachmentId,
             url = url,
             previewUrl = previewUrl,
@@ -154,30 +154,30 @@ fun NetworkAttachment.toExternalModel(): Attachment =
         )
     }
 
-fun NetworkMention.toExternalModel(): Mention =
-    Mention(
+fun Mention.toDatabaseModel(): DatabaseMention =
+    DatabaseMention(
         accountId = accountId,
         username = username,
         acct = acct,
         url = url
     )
 
-fun NetworkHashTag.toExternalModel(): HashTag =
-    HashTag(
+fun HashTag.toDatabaseModel(): DatabaseHashTag =
+    DatabaseHashTag(
         name = name,
         url = url,
-        history = history?.map { it.toExternalModel() }
+        history = history?.map { it.toDatabaseModel() }
     )
 
-fun NetworkHistory.toExternalModel(): History =
-    History(
+fun History.toDatabaseModel(): DatabaseHistory =
+    DatabaseHistory(
         day = day,
         usageCount = usageCount,
         accountCount = accountCount
     )
 
-fun NetworkEmoji.toExternalModel(): Emoji =
-    Emoji(
+fun Emoji.toDatabaseModel(): DatabaseEmoji =
+    DatabaseEmoji(
         shortCode = shortCode,
         url = url,
         staticUrl = staticUrl,
@@ -185,8 +185,8 @@ fun NetworkEmoji.toExternalModel(): Emoji =
         category = category
     )
 
-fun NetworkApplication.toExternalModel(): Application =
-    Application(
+fun Application.toDatabaseModel(): DatabaseApplication =
+    DatabaseApplication(
         name = name,
         website = website,
         vapidKey = vapidKey,
@@ -194,55 +194,39 @@ fun NetworkApplication.toExternalModel(): Application =
         clientSecret = clientSecret
     )
 
-fun NetworkPoll.toExternalModel(): Poll =
-    Poll(
+fun Poll.toDatabaseModel(): DatabasePoll =
+    DatabasePoll(
         pollId = pollId,
         isExpired = isExpired,
         allowsMultipleChoices = allowsMultipleChoices,
         votesCount = votesCount,
-        options = options.map { it.toExternalModel() },
-        emojis = emojis.map { it.toExternalModel() },
+        options = options.map { it.toDatabaseModel() },
+        emojis = emojis.map { it.toDatabaseModel() },
         expiresAt = expiresAt,
         votersCount = votersCount,
         hasVoted = hasVoted,
         ownVotes = ownVotes
     )
 
-fun NetworkPollOption.toExternalModel(): PollOption =
-    PollOption(
+fun PollOption.toDatabaseModel(): DatabasePollOption =
+    DatabasePollOption(
         title = title,
         votesCount = votesCount
     )
 
-fun NetworkField.toExternalModel(): Field =
-    Field(
+fun Field.toDatabaseModel(): DatabaseField =
+    DatabaseField(
         name = name,
         value = value,
         verifiedAt = verifiedAt
     )
 
-fun NetworkSource.toExternalModel(): Source =
-    Source(
+fun Source.toDatabaseModel(): DatabaseSource =
+    DatabaseSource(
         bio = bio,
-        fields = fields.map { it.toExternalModel() },
-        defaultPrivacy = defaultPrivacy?.toExternalModel(),
+        fields = fields.map { it.toDatabaseModel() },
+        defaultPrivacy = defaultPrivacy?.toDatabaseModel(),
         defaultSensitivity = defaultSensitivity,
         defaultLanguage = defaultLanguage,
         followRequestsCount = followRequestsCount
-    )
-
-fun StatusVisibility.toNetworkModel(): NetworkStatusVisibility =
-    when(this) {
-        StatusVisibility.Direct -> NetworkStatusVisibility.Direct
-        StatusVisibility.Private -> NetworkStatusVisibility.Private
-        StatusVisibility.Public -> NetworkStatusVisibility.Public
-        StatusVisibility.Unlisted -> NetworkStatusVisibility.Unlisted
-    }
-
-fun PollCreate.toNetworkModel(): NetworkPollCreate =
-    NetworkPollCreate(
-        options = options,
-        expiresInSec = expiresInSec,
-        allowMultipleChoices = allowMultipleChoices,
-        hideTotals = hideTotals
     )

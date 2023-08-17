@@ -1,8 +1,6 @@
 package org.mozilla.social.model
 
 import kotlinx.datetime.Instant
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
 
 /**
  * Profile metadata name and value.

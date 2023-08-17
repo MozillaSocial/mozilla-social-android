@@ -1,7 +1,7 @@
 package org.mozilla.social.core.data.repository
 
 import kotlinx.coroutines.coroutineScope
-import org.mozilla.social.core.data.repository.model.toExternalModel
+import org.mozilla.social.core.data.repository.model.status.toExternalModel
 import org.mozilla.social.core.network.AccountApi
 import org.mozilla.social.model.Account
 import org.mozilla.social.model.Status

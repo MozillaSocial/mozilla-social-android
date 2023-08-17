@@ -1,7 +1,5 @@
 package org.mozilla.social.model
 
-
-import org.mozilla.social.model.paging.Pageable
 import kotlinx.datetime.Instant
 
 /**
@@ -100,6 +98,8 @@ data class Status(
      */
     val inReplyToAccountId: String? = null,
 
+    val inReplyToAccountName: String? = null,
+
     /**
      * The status being boosted.
      */
@@ -159,8 +159,4 @@ data class Status(
      */
     val isPinned: Boolean? = null,
 
-) : Pageable {
-
-    override val id: String
-        get() = statusId
-}
+)
