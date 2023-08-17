@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
+import org.mozilla.social.core.data.repository.AccountRepository
 import org.mozilla.social.core.data.repository.AuthRepository
 import org.mozilla.social.core.datastore.UserPreferencesDatastore
 import org.mozilla.social.feature.auth.AuthViewModel
@@ -13,6 +14,7 @@ import java.net.URL
 class MainViewModel(
     private val userPreferencesDatastore: UserPreferencesDatastore,
     private val authRepository: AuthRepository,
+    private val accountRepository: AccountRepository,
 ) : ViewModel() {
 
     fun onUserCodeReceived(code: String) {
@@ -40,6 +42,11 @@ class MainViewModel(
             userPreferencesDatastore.dataStore.updateData {
                 it.toBuilder()
                     .setAccessToken(accessToken)
+                    .build()
+            }
+            userPreferencesDatastore.dataStore.updateData {
+                it.toBuilder()
+                    .setAccountId(accountRepository.getUserAccount().accountId)
                     .build()
             }
         }

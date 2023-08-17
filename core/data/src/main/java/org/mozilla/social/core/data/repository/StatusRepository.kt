@@ -2,8 +2,10 @@ package org.mozilla.social.core.data.repository
 
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
+import org.mozilla.social.core.data.repository.model.status.toDatabaseModel
 import org.mozilla.social.core.data.repository.model.status.toExternalModel
 import org.mozilla.social.core.data.repository.model.status.toNetworkModel
+import org.mozilla.social.core.database.SocialDatabase
 import org.mozilla.social.core.network.MediaApi
 import org.mozilla.social.core.network.StatusApi
 import org.mozilla.social.core.network.model.NetworkStatusVisibility
@@ -18,6 +20,7 @@ import org.mozilla.social.model.request.PollCreate
 class StatusRepository(
     private val statusApi: StatusApi,
     private val mediaApi: MediaApi,
+    private val socialDatabase: SocialDatabase,
 ) {
 
     suspend fun sendPost(
@@ -86,8 +89,17 @@ class StatusRepository(
     suspend fun voteOnPoll(
         pollId: String,
         pollChoices: List<Int>,
-    ): Poll = statusApi.voteOnPoll(
-        pollId,
-        pollChoices,
-    ).toExternalModel()
+    ) {
+        socialDatabase.pollDao().updateOwnVotes(pollId, pollChoices)
+        try {
+            val poll = statusApi.voteOnPoll(
+                pollId,
+                pollChoices,
+            ).toExternalModel()
+            socialDatabase.pollDao().update(poll.toDatabaseModel())
+        } catch (e: Exception) {
+            socialDatabase.pollDao().updateOwnVotes(pollId, null)
+            throw e
+        }
+    }
 }

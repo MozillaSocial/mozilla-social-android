@@ -12,18 +12,21 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import org.mozilla.social.core.designsystem.theme.MozillaSocialTheme
 import org.mozilla.social.core.designsystem.utils.NoRipple
@@ -49,20 +52,26 @@ fun Poll(
                             userVotes.value.toMutableList().apply { add(optionIndex) }
                         }
                     } else {
-                        listOf(optionIndex)
+                        if (userVotes.value.contains(optionIndex)) {
+                            userVotes.value.toMutableList().apply { remove(optionIndex) }
+                        } else {
+                            listOf(optionIndex)
+                        }
                     }
                 }
             )
             Spacer(modifier = Modifier.padding(top = 4.dp))
         }
         Text(text = pollUiState.pollInfoText)
-        Button(
-            modifier = Modifier
-                .fillMaxWidth(),
-            onClick = { pollInteractions.onVoteClicked(pollUiState.pollId, userVotes.value) },
-            enabled = userVotes.value.isNotEmpty(),
-        ) {
-            Text(text = "Vote")
+        if (pollUiState.canVote) {
+            Button(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                onClick = { pollInteractions.onVoteClicked(pollUiState.pollId, userVotes.value) },
+                enabled = userVotes.value.isNotEmpty(),
+            ) {
+                Text(text = "Vote")
+            }
         }
     }
 }
@@ -83,58 +92,94 @@ private fun PollOption(
             .clip(RoundedCornerShape(90.dp))
             .border(
                 width = 1.dp,
-                color = if (userVotes.value.contains(optionIndex)) {
-                    MaterialTheme.colorScheme.primary
-                } else {
-                    MaterialTheme.colorScheme.outlineVariant
-                },
+                color = MaterialTheme.colorScheme.outlineVariant,
                 shape = RoundedCornerShape(90.dp),
             ),
     ) {
-        if (pollUiState.showResults) {
+        PollOptionFill(
+            height = height,
+            pollUiState = pollUiState,
+            pollOptionUiState = pollOptionUiState
+        )
+        PollOptionText(
+            height = height,
+            userVotes = userVotes,
+            optionIndex = optionIndex,
+            pollUiState = pollUiState,
+            pollOptionUiState = pollOptionUiState,
+            onOptionSelected = onOptionSelected,
+        )
+    }
+}
+
+@Composable
+private fun PollOptionFill(
+    height: Dp,
+    pollUiState: PollUiState,
+    pollOptionUiState: PollOptionUiState,
+) {
+    if (pollUiState.showResults) {
+        Box(
+            modifier = Modifier
+                .height(height)
+                .fillMaxWidth(fraction = pollOptionUiState.fillFraction)
+                .clip(RoundedCornerShape(90.dp)),
+        ) {
             Box(
                 modifier = Modifier
-                    .height(height)
-                    .fillMaxWidth(fraction = pollOptionUiState.fillFraction)
-                    .clip(RoundedCornerShape(90.dp)),
-            ) {
-                Box(
+                    .background(color = MaterialTheme.colorScheme.secondary)
+                    .fillMaxSize()
+            )
+        }
+    }
+}
+
+@Composable
+private fun PollOptionText(
+    height: Dp,
+    userVotes: MutableState<List<Int>>,
+    optionIndex: Int,
+    pollUiState: PollUiState,
+    pollOptionUiState: PollOptionUiState,
+    onOptionSelected: (index: Int) -> Unit,
+) {
+    NoRipple {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(height)
+                .clickable(
+                    enabled = pollUiState.canVote
+                ) {
+                    onOptionSelected(optionIndex)
+                },
+        ) {
+            Text(
+                modifier = Modifier
+                    .padding(start = 12.dp)
+                    .align(Alignment.CenterVertically),
+                text = pollOptionUiState.title
+            )
+            if (userVotes.value.contains(optionIndex)) {
+                Icon(
                     modifier = Modifier
-                        .background(color = MaterialTheme.colorScheme.secondary)
-                        .fillMaxSize()
+                        .align(Alignment.CenterVertically)
+                        .padding(start = 8.dp),
+                    imageVector = Icons.Rounded.Check,
+                    contentDescription = ""
                 )
             }
-        }
-        NoRipple {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(height)
-                    .clickable(
-                        enabled = !pollUiState.showResults && !pollUiState.isExpired
-                    ) {
-                        onOptionSelected(optionIndex)
-                    },
-            ) {
+            Spacer(modifier = Modifier.weight(1f))
+            if (pollUiState.showResults) {
                 Text(
                     modifier = Modifier
-                        .weight(1f)
-                        .padding(start = 12.dp)
+                        .padding(8.dp)
                         .align(Alignment.CenterVertically),
-                    text = pollOptionUiState.title
+                    text = pollOptionUiState.voteInfo
                 )
-                if (pollUiState.showResults) {
-                    Text(
-                        modifier = Modifier
-                            .padding(8.dp)
-                            .align(Alignment.CenterVertically),
-                        text = pollOptionUiState.voteInfo
-                    )
-                }
             }
         }
     }
-
 }
 
 @Preview

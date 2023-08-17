@@ -9,16 +9,26 @@ import org.mozilla.social.core.ui.poll.toPollUiState
 import org.mozilla.social.model.Post
 import org.mozilla.social.model.Status
 
-fun Status.toPostCardUiState(): PostCardUiState =
+/**
+ * @param currentUserAccountId refers to the current user, not necessarily the creator of the Status.
+ */
+fun Status.toPostCardUiState(
+    currentUserAccountId: String,
+): PostCardUiState =
     PostCardUiState(
         statusId = statusId,
         topRowMetaDataUiState = toTopRowMetaDataUiState(),
-        mainPostCardUiState = boostedStatus?.toMainPostCardUiState() ?: toMainPostCardUiState()
+        mainPostCardUiState = boostedStatus?.toMainPostCardUiState(currentUserAccountId)
+            ?: toMainPostCardUiState(currentUserAccountId)
     )
 
-private fun Status.toMainPostCardUiState(): MainPostCardUiState =
+private fun Status.toMainPostCardUiState(
+    currentUserAccountId: String,
+): MainPostCardUiState =
     MainPostCardUiState(
-        pollUiState = poll?.toPollUiState(),
+        pollUiState = poll?.toPollUiState(
+            isUserCreatedPoll = currentUserAccountId == account.accountId
+        ),
         statusText = HtmlCompat.fromHtml(content, 0),
         mediaAttachments = mediaAttachments,
         profilePictureUrl = account.avatarStaticUrl,

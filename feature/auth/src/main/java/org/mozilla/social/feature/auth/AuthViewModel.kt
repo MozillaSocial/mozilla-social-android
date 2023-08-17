@@ -13,7 +13,7 @@ import org.mozilla.social.core.datastore.UserPreferencesDatastore
 ) : ViewModel() {
 
      val isSignedIn: Flow<Boolean?> = userPreferencesDatastore.dataStore.data.map {
-         !it.accessToken.isNullOrBlank()
+         !it.accessToken.isNullOrBlank() && !it.accountId.isNullOrBlank()
      }.distinctUntilChanged()
 
     companion object {

@@ -69,15 +69,6 @@ class AccountViewModel(
                 }
             }.collect()
         }
-        viewModelScope.launch {
-            if (accountId.value.isNullOrBlank()) {
-                userPreferencesDatastore.dataStore.updateData {
-                    it.toBuilder()
-                        .setAccountId(accountRepository.getUserAccount().accountId)
-                        .build()
-                }
-            }
-        }
     }
 
     private fun getAccountForUser(accountId: String): Flow<Account> {
