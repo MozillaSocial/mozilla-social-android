@@ -4,9 +4,14 @@ import org.mozilla.social.common.utils.timeLeft
 import org.mozilla.social.model.Poll
 import org.mozilla.social.model.PollOption
 
-fun Poll.toPollUiState(): PollUiState =
+/**
+ * @param isUserCreatedPoll refers to if the current user is the creator of the poll
+ */
+fun Poll.toPollUiState(
+    isUserCreatedPoll: Boolean,
+): PollUiState =
     PollUiState(
-        pollOptions = options.mapIndexed { index, pollOption ->
+        pollOptions = options.map { pollOption ->
             val voteFraction = getVoteFraction(votesCount, pollOption)
             PollOptionUiState(
                 fillFraction = voteFraction,
@@ -14,7 +19,7 @@ fun Poll.toPollUiState(): PollUiState =
                 voteInfo = getVoteCountText(pollOption, voteFraction),
             )
         },
-        isUserCreatedPoll = false,
+        isUserCreatedPoll = isUserCreatedPoll,
         pollInfoText = "$votesCount votes - ${expiresAt?.timeLeft() ?: "poll closed"}" +
                 if (allowsMultipleChoices) {
                     " - Choose one or more"
@@ -24,6 +29,7 @@ fun Poll.toPollUiState(): PollUiState =
         isMultipleChoice = allowsMultipleChoices,
         usersVotes = ownVotes ?: emptyList(),
         isExpired = isExpired,
+        canVote = ownVotes.isNullOrEmpty() && !isExpired && !isUserCreatedPoll,
     )
 
 private fun getVoteCountText(

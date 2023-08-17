@@ -49,20 +49,26 @@ fun Poll(
                             userVotes.value.toMutableList().apply { add(optionIndex) }
                         }
                     } else {
-                        listOf(optionIndex)
+                        if (userVotes.value.contains(optionIndex)) {
+                            userVotes.value.toMutableList().apply { remove(optionIndex) }
+                        } else {
+                            listOf(optionIndex)
+                        }
                     }
                 }
             )
             Spacer(modifier = Modifier.padding(top = 4.dp))
         }
         Text(text = pollUiState.pollInfoText)
-        Button(
-            modifier = Modifier
-                .fillMaxWidth(),
-            onClick = { pollInteractions.onVoteClicked(pollUiState.pollId, userVotes.value) },
-            enabled = userVotes.value.isNotEmpty(),
-        ) {
-            Text(text = "Vote")
+        if (pollUiState.canVote) {
+            Button(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                onClick = { pollInteractions.onVoteClicked(pollUiState.pollId, userVotes.value) },
+                enabled = userVotes.value.isNotEmpty(),
+            ) {
+                Text(text = "Vote")
+            }
         }
     }
 }
