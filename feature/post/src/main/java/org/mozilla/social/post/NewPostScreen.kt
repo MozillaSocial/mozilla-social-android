@@ -107,29 +107,29 @@ import org.mozilla.social.post.status.StatusInteractions
 internal fun NewPostRoute(
     onStatusPosted: () -> Unit,
     onCloseClicked: () -> Unit,
-    replyId: String?,
+    replyStatusId: String?,
     viewModel: NewPostViewModel = koinViewModel(parameters = { parametersOf(
         onStatusPosted,
-        replyId,
+        replyStatusId,
     ) })
 ) {
     NewPostScreen(
         statusText = viewModel.statusText.collectAsState().value,
-        statusInteractions = viewModel,
+        statusInteractions = viewModel.statusInteractions,
         onPostClicked = viewModel::onPostClicked,
         onCloseClicked = onCloseClicked,
         sendButtonEnabled = viewModel.sendButtonEnabled.collectAsState().value,
         imageStates = viewModel.imageStates.collectAsState().value,
         addImageButtonEnabled = viewModel.addImageButtonEnabled.collectAsState().value,
-        mediaInteractions = viewModel,
+        mediaInteractions = viewModel.mediaInteractions,
         isSendingPost = viewModel.isSendingPost.collectAsState().value,
         visibility = viewModel.visibility.collectAsState().value,
         onVisibilitySelected = viewModel::onVisibilitySelected,
         poll = viewModel.poll.collectAsState().value,
-        pollInteractions = viewModel,
+        pollInteractions = viewModel.pollInteractions,
         pollButtonEnabled = viewModel.pollButtonEnabled.collectAsState().value,
         contentWarningText = viewModel.contentWarningText.collectAsState().value,
-        contentWarningInteractions = viewModel,
+        contentWarningInteractions = viewModel.contentWarningInteractions,
         accounts = viewModel.accountList.collectAsState().value,
         hashTags = viewModel.hashtagList.collectAsState().value,
     )

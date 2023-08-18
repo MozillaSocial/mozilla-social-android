@@ -1,6 +1,5 @@
 package org.mozilla.social.post
 
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -16,12 +15,12 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.mozilla.social.common.LoadState
 import org.mozilla.social.common.logging.Log
+import org.mozilla.social.core.data.repository.AccountRepository
 import org.mozilla.social.core.data.repository.MediaRepository
 import org.mozilla.social.core.data.repository.SearchRepository
 import org.mozilla.social.core.data.repository.StatusRepository
 import org.mozilla.social.model.StatusVisibility
 import org.mozilla.social.model.request.PollCreate
-import org.mozilla.social.post.contentwarning.ContentWarningDelegate
 import org.mozilla.social.post.contentwarning.ContentWarningInteractions
 import org.mozilla.social.post.media.MediaInteractions
 import org.mozilla.social.post.poll.PollInteractions
@@ -33,36 +32,36 @@ import org.mozilla.social.post.status.StatusInteractions
 
 class NewPostViewModel(
     private val statusRepository: StatusRepository,
-    private val mediaRepository: MediaRepository,
-    private val searchRepository: SearchRepository,
+    mediaRepository: MediaRepository,
+    searchRepository: SearchRepository,
     private val log: Log,
     private val onStatusPosted: () -> Unit,
-    private val replyId: String?,
-    private val pollDelegate: PollDelegate = PollDelegate(),
-    private val contentWarningDelegate: ContentWarningDelegate = ContentWarningDelegate(),
+    private val replyStatusId: String?,
+) : ViewModel() {
+
+    private val statusDelegate: StatusDelegate = StatusDelegate(
+        viewModelScope,
+        searchRepository,
+        statusRepository,
+        log,
+        replyStatusId,
+    )
+    val statusInteractions: StatusInteractions = statusDelegate
+    val contentWarningInteractions: ContentWarningInteractions = statusDelegate
+
+    private val pollDelegate: PollDelegate = PollDelegate()
+    val pollInteractions: PollInteractions = pollDelegate
+
     private val mediaDelegate: MediaDelegate = MediaDelegate(
+        viewModelScope,
         mediaRepository,
         log,
-    ),
-    private val statusDelegate: StatusDelegate = StatusDelegate(
-        searchRepository,
-        log,
-    ),
-) : ViewModel(),
-    MediaInteractions by mediaDelegate,
-    PollInteractions by pollDelegate,
-    ContentWarningInteractions by contentWarningDelegate,
-    StatusInteractions by statusDelegate
-{
-    init {
-        mediaDelegate.coroutineScope = viewModelScope
-        statusDelegate.coroutineScope = viewModelScope
-    }
+    )
+    val mediaInteractions: MediaInteractions = mediaDelegate
 
     val poll = pollDelegate.poll
-    val contentWarningText = contentWarningDelegate.contentWarningText
+    val contentWarningText = statusDelegate.contentWarningText
     val imageStates = mediaDelegate.imageStates
-
     val statusText = statusDelegate.statusText
     val accountList = statusDelegate.accountList
     val hashtagList = statusDelegate.hashtagList
@@ -107,16 +106,6 @@ class NewPostViewModel(
     private val _visibility = MutableStateFlow(StatusVisibility.Public)
     val visibility = _visibility.asStateFlow()
 
-    override fun onStatusTextUpdated(textFieldValue: TextFieldValue) {
-        if (textFieldValue.text.length + (contentWarningText.value?.length ?: 0) > MAX_POST_LENGTH) return
-        statusDelegate.onStatusTextUpdated(textFieldValue)
-    }
-
-    override fun onContentWarningTextChanged(text: String) {
-        if (text.length + statusText.value.text.length > MAX_POST_LENGTH) return
-        contentWarningDelegate.onContentWarningTextChanged(text)
-    }
-
     fun onVisibilitySelected(statusVisibility: StatusVisibility) {
         _visibility.update { statusVisibility }
     }
@@ -138,7 +127,7 @@ class NewPostViewModel(
                         )
                     },
                     contentWarningText = contentWarningText.value,
-                    inReplyToId = replyId,
+                    inReplyToId = replyStatusId,
                 )
                 onStatusPosted()
             } catch (e: Exception) {

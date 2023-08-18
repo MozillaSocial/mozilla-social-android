@@ -15,11 +15,10 @@ import org.mozilla.social.post.NewPostViewModel
 import java.io.File
 
 class MediaDelegate(
+    private val coroutineScope: CoroutineScope,
     private val mediaRepository: MediaRepository,
     private val log: Log,
 ) : MediaInteractions {
-
-    lateinit var coroutineScope: CoroutineScope
 
     private val _imageStates = MutableStateFlow<Map<Uri, ImageState>>(emptyMap())
     val imageStates = _imageStates.asStateFlow()
