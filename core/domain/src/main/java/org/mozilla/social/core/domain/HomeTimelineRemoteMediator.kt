@@ -9,6 +9,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import org.mozilla.social.core.data.repository.AccountRepository
+import org.mozilla.social.core.data.repository.StatusRepository
 import org.mozilla.social.core.data.repository.TimelineRepository
 import org.mozilla.social.core.data.repository.model.status.toDatabaseModel
 import org.mozilla.social.core.database.SocialDatabase
@@ -20,6 +21,7 @@ import org.mozilla.social.model.Status
 class HomeTimelineRemoteMediator(
     private val timelineRepository: TimelineRepository,
     private val accountRepository: AccountRepository,
+    private val statusRepository: StatusRepository,
     private val socialDatabase: SocialDatabase,
 ) : RemoteMediator<Int, HomeTimelineStatusWrapper>() {
 
@@ -65,26 +67,7 @@ class HomeTimelineRemoteMediator(
                     socialDatabase.homeTimelineDao().deleteHomeTimeline()
                 }
 
-                val boostedStatuses = response.mapNotNull { it.boostedStatus }
-                socialDatabase.pollDao().insertAll(boostedStatuses.mapNotNull {
-                    it.poll?.toDatabaseModel()
-                })
-                socialDatabase.accountsDao().insertAll(boostedStatuses.map {
-                    it.account.toDatabaseModel()
-                })
-                socialDatabase.statusDao().insertAll(boostedStatuses.map {
-                    it.toDatabaseModel()
-                })
-
-                socialDatabase.pollDao().insertAll(response.mapNotNull {
-                    it.poll?.toDatabaseModel()
-                })
-                socialDatabase.accountsDao().insertAll(response.map {
-                    it.account.toDatabaseModel()
-                })
-                socialDatabase.statusDao().insertAll(response.map {
-                    it.toDatabaseModel()
-                })
+                statusRepository.saveStatusesToDatabase(response)
 
                 socialDatabase.homeTimelineDao().insertAll(response.map {
                     HomeTimelineStatus(

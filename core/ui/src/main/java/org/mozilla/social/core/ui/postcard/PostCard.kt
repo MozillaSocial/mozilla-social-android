@@ -19,6 +19,7 @@ import androidx.compose.material.icons.filled.StarBorder
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -149,7 +150,7 @@ private fun BottomRow(
         )
         Spacer(modifier = Modifier.weight(1f))
         BottomIconButton(
-            onClick = { postCardInteractions.onBoostClicked(post.statusId) },
+            onClick = { postCardInteractions.onBoostClicked(post.statusId, !post.userBoosted) },
             imageVector = Icons.Default.Repeat,
             count = post.boostCount,
             highlighted = post.userBoosted,
@@ -185,7 +186,7 @@ private fun BottomIconButton(
                 imageVector = imageVector,
                 "",
                 tint = if (highlighted) {
-                    FirefoxColor.Blue30
+                    MaterialTheme.colorScheme.primary
                 } else {
                     LocalContentColor.current
                 }

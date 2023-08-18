@@ -15,7 +15,7 @@ fun FeedScreen(
 ) {
     PostCardList(
         feed = viewModel.feed,
-        postCardInteractions = viewModel
+        postCardInteractions = viewModel.postCardInteractions
     )
 
     val context = LocalContext.current

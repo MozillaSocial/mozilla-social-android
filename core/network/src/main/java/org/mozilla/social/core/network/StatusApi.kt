@@ -1,6 +1,7 @@
 package org.mozilla.social.core.network
 
 import org.mozilla.social.core.network.model.NetworkPoll
+import org.mozilla.social.core.network.model.NetworkStatus
 import org.mozilla.social.core.network.model.request.NetworkStatusCreate
 import retrofit2.Response
 import retrofit2.http.Body
@@ -24,4 +25,14 @@ interface StatusApi {
         @Path("pollId") pollId: String,
         @Field("choices") choices: List<Int>,
     ): NetworkPoll
+
+    @POST("/api/v1/statuses/{statusId}/reblog")
+    suspend fun boostStatus(
+        @Path("statusId") statusId: String,
+    ): NetworkStatus
+
+    @POST("/api/v1/statuses/{statusId}/unreblog")
+    suspend fun unBoostStatus(
+        @Path("statusId") statusId: String,
+    ): NetworkStatus
 }
