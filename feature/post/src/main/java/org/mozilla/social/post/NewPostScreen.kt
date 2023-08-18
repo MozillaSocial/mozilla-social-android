@@ -431,6 +431,9 @@ private fun MainBox(
                                 )
                             }
                         )
+                        LaunchedEffect(Unit) {
+                            textFieldFocusRequester.requestFocus()
+                        }
                     }
 
                     poll?.let {
