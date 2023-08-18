@@ -92,7 +92,7 @@ import org.mozilla.social.model.StatusVisibility
 import org.mozilla.social.post.NewPostViewModel.Companion.MAX_POLL_COUNT
 import org.mozilla.social.post.NewPostViewModel.Companion.MAX_POST_LENGTH
 import org.mozilla.social.post.NewPostViewModel.Companion.MIN_POLL_COUNT
-import org.mozilla.social.post.contentwarning.ContentWarningInteractions
+import org.mozilla.social.post.status.ContentWarningInteractions
 import org.mozilla.social.post.media.MediaInteractions
 import org.mozilla.social.post.poll.PollInteractions
 import org.mozilla.social.post.poll.Poll

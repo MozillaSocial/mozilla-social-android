@@ -15,13 +15,12 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.mozilla.social.common.LoadState
 import org.mozilla.social.common.logging.Log
-import org.mozilla.social.core.data.repository.AccountRepository
 import org.mozilla.social.core.data.repository.MediaRepository
 import org.mozilla.social.core.data.repository.SearchRepository
 import org.mozilla.social.core.data.repository.StatusRepository
 import org.mozilla.social.model.StatusVisibility
 import org.mozilla.social.model.request.PollCreate
-import org.mozilla.social.post.contentwarning.ContentWarningInteractions
+import org.mozilla.social.post.status.ContentWarningInteractions
 import org.mozilla.social.post.media.MediaInteractions
 import org.mozilla.social.post.poll.PollInteractions
 import org.mozilla.social.post.media.MediaDelegate

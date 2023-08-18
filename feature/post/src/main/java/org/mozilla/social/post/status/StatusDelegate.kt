@@ -15,11 +15,9 @@ import org.mozilla.social.common.utils.edit
 import org.mozilla.social.common.utils.hashtagText
 import org.mozilla.social.common.utils.replaceAccount
 import org.mozilla.social.common.utils.replaceHashtag
-import org.mozilla.social.core.data.repository.AccountRepository
 import org.mozilla.social.core.data.repository.SearchRepository
 import org.mozilla.social.core.data.repository.StatusRepository
 import org.mozilla.social.post.NewPostViewModel
-import org.mozilla.social.post.contentwarning.ContentWarningInteractions
 
 class StatusDelegate(
     private val coroutineScope: CoroutineScope,
