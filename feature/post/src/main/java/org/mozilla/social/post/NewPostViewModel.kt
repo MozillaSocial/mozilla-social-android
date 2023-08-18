@@ -48,9 +48,15 @@ class NewPostViewModel(
     )
     val statusInteractions: StatusInteractions = statusDelegate
     val contentWarningInteractions: ContentWarningInteractions = statusDelegate
+    val statusText = statusDelegate.statusText
+    val accountList = statusDelegate.accountList
+    val hashtagList = statusDelegate.hashtagList
+    val inReplyToAccountName = statusDelegate.inReplyToAccountName
+    val contentWarningText = statusDelegate.contentWarningText
 
     private val pollDelegate: PollDelegate = PollDelegate()
     val pollInteractions: PollInteractions = pollDelegate
+    val poll = pollDelegate.poll
 
     private val mediaDelegate: MediaDelegate = MediaDelegate(
         viewModelScope,
@@ -58,14 +64,7 @@ class NewPostViewModel(
         log,
     )
     val mediaInteractions: MediaInteractions = mediaDelegate
-
-    val poll = pollDelegate.poll
-    val contentWarningText = statusDelegate.contentWarningText
     val imageStates = mediaDelegate.imageStates
-    val statusText = statusDelegate.statusText
-    val accountList = statusDelegate.accountList
-    val hashtagList = statusDelegate.hashtagList
-    val inReplyToAccountName = statusDelegate.inReplyToAccountName
 
     val sendButtonEnabled: StateFlow<Boolean> =
         combine(statusText, imageStates, poll) { statusText, imageStates, poll ->
