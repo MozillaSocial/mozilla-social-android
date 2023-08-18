@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.mozilla.social.common.logging.Log
 import org.mozilla.social.common.utils.accountText
+import org.mozilla.social.common.utils.edit
 import org.mozilla.social.common.utils.hashtagText
 import org.mozilla.social.common.utils.replaceAccount
 import org.mozilla.social.common.utils.replaceHashtag
@@ -40,18 +41,22 @@ class StatusDelegate(
     private val _contentWarningText = MutableStateFlow<String?>(null)
     val contentWarningText = _contentWarningText.asStateFlow()
 
+    private val _inReplyToAccountName = MutableStateFlow<String?>(null)
+    val inReplyToAccountName = _inReplyToAccountName.asStateFlow()
+
     private var searchJob: Job? = null
 
     init {
         coroutineScope.launch {
             inReplyToId?.let {
-                statusRepository.getStatusLocal(inReplyToId)?.account?.acct?.let { account ->
+                statusRepository.getStatusLocal(inReplyToId)?.account?.let { account ->
                     _statusText.update {
                         TextFieldValue(
-                            text = "@$account ",
-                            selection = TextRange(account.length + 2)
+                            text = "@${account.acct} ",
+                            selection = TextRange(account.acct.length + 2)
                         )
                     }
+                    _inReplyToAccountName.edit { account.username }
                 }
             }
         }

@@ -65,6 +65,7 @@ class NewPostViewModel(
     val statusText = statusDelegate.statusText
     val accountList = statusDelegate.accountList
     val hashtagList = statusDelegate.hashtagList
+    val inReplyToAccountName = statusDelegate.inReplyToAccountName
 
     val sendButtonEnabled: StateFlow<Boolean> =
         combine(statusText, imageStates, poll) { statusText, imageStates, poll ->

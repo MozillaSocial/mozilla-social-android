@@ -26,6 +26,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -40,6 +41,7 @@ import androidx.compose.material.icons.filled.Poll
 import androidx.compose.material.icons.filled.Send
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material.icons.filled.WarningAmber
+import androidx.compose.material.icons.rounded.Reply
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
@@ -132,6 +134,7 @@ internal fun NewPostRoute(
         contentWarningInteractions = viewModel.contentWarningInteractions,
         accounts = viewModel.accountList.collectAsState().value,
         hashTags = viewModel.hashtagList.collectAsState().value,
+        inReplyToAccountName = viewModel.inReplyToAccountName.collectAsState().value,
     )
 
     val context = LocalContext.current
@@ -163,6 +166,7 @@ private fun NewPostScreen(
     contentWarningInteractions: ContentWarningInteractions,
     accounts: List<Account>?,
     hashTags: List<String>?,
+    inReplyToAccountName: String?,
 ) {
     val context = LocalContext.current
     val multipleMediaLauncher = rememberLauncherForActivityResult(
@@ -205,6 +209,7 @@ private fun NewPostScreen(
                     pollInteractions = pollInteractions,
                     contentWarningText = contentWarningText,
                     contentWarningInteractions = contentWarningInteractions,
+                    inReplyToAccountName = inReplyToAccountName,
                 )
             }
             accounts?.let {
@@ -378,6 +383,7 @@ private fun MainBox(
     pollInteractions: PollInteractions,
     contentWarningText: String?,
     contentWarningInteractions: ContentWarningInteractions,
+    inReplyToAccountName: String?,
 ) {
     val localIndication = LocalIndication.current
     // disable ripple on click for the background
@@ -399,6 +405,9 @@ private fun MainBox(
                 LocalIndication provides localIndication
             ) {
                 LazyColumn {
+                    item {
+                        InReplyToText(inReplyToAccountName = inReplyToAccountName)
+                    }
                     contentWarningText?.let {
                         item {
                             ContentWarningEntry(contentWarningText, contentWarningInteractions)
@@ -455,6 +464,30 @@ private fun MainBox(
                     }
                 }
             }
+        }
+    }
+}
+
+@Composable
+private fun InReplyToText(
+    inReplyToAccountName: String?,
+) {
+    if (inReplyToAccountName != null) {
+        Row(
+            modifier = Modifier.padding(start = 12.dp),
+        ) {
+            Icon(
+                modifier = Modifier
+                    .size(20.dp)
+                    .align(Alignment.CenterVertically),
+                imageVector = Icons.Rounded.Reply,
+                contentDescription = ""
+            )
+            Spacer(modifier = Modifier.padding(start = 8.dp))
+            Text(
+                text = "In reply to $inReplyToAccountName",
+                fontSize = 14.sp,
+            )
         }
     }
 }
@@ -667,6 +700,7 @@ private fun NewPostScreenPreview() {
             contentWarningInteractions = object : ContentWarningInteractions {},
             accounts = null,
             hashTags = null,
+            inReplyToAccountName = null
         )
     }
 }
