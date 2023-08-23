@@ -23,6 +23,13 @@ interface StatusDao : BaseDao<DatabaseStatus> {
     )
     suspend fun updateBoosted(statusId: String, isBoosted: Boolean)
 
+    @Query(
+        "UPDATE statuses " +
+        "SET boostsCount = boostsCount + :valueChange " +
+        "WHERE statusID = :statusId"
+    )
+    suspend fun updateBoostCount(statusId: String, valueChange: Long)
+
     @Query("DELETE FROM statuses")
     fun deleteAll()
 }
