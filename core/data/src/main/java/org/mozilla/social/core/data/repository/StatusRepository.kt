@@ -14,6 +14,7 @@ import org.mozilla.social.core.network.model.request.NetworkMediaUpdate
 import org.mozilla.social.core.network.model.request.NetworkPollCreate
 import org.mozilla.social.core.network.model.request.NetworkStatusCreate
 import org.mozilla.social.model.ImageState
+import org.mozilla.social.model.Poll
 import org.mozilla.social.model.Status
 import org.mozilla.social.model.StatusVisibility
 import org.mozilla.social.model.request.PollCreate
@@ -169,5 +170,12 @@ class StatusRepository(
             }
             throw e
         }
+    }
+
+    suspend fun getStatusLocal(
+        statusId: String
+    ): Status? {
+        val status = socialDatabase.statusDao().getStatus(statusId)
+        return status?.toExternalModel()
     }
 }
