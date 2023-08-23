@@ -26,6 +26,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -40,6 +41,7 @@ import androidx.compose.material.icons.filled.Poll
 import androidx.compose.material.icons.filled.Send
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material.icons.filled.WarningAmber
+import androidx.compose.material.icons.rounded.Reply
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
@@ -90,7 +92,7 @@ import org.mozilla.social.model.StatusVisibility
 import org.mozilla.social.post.NewPostViewModel.Companion.MAX_POLL_COUNT
 import org.mozilla.social.post.NewPostViewModel.Companion.MAX_POST_LENGTH
 import org.mozilla.social.post.NewPostViewModel.Companion.MIN_POLL_COUNT
-import org.mozilla.social.post.contentwarning.ContentWarningInteractions
+import org.mozilla.social.post.status.ContentWarningInteractions
 import org.mozilla.social.post.media.MediaInteractions
 import org.mozilla.social.post.poll.PollInteractions
 import org.mozilla.social.post.poll.Poll
@@ -107,31 +109,32 @@ import org.mozilla.social.post.status.StatusInteractions
 internal fun NewPostRoute(
     onStatusPosted: () -> Unit,
     onCloseClicked: () -> Unit,
-    replyId: String?,
+    replyStatusId: String?,
     viewModel: NewPostViewModel = koinViewModel(parameters = { parametersOf(
         onStatusPosted,
-        replyId,
+        replyStatusId,
     ) })
 ) {
     NewPostScreen(
         statusText = viewModel.statusText.collectAsState().value,
-        statusInteractions = viewModel,
+        statusInteractions = viewModel.statusInteractions,
         onPostClicked = viewModel::onPostClicked,
         onCloseClicked = onCloseClicked,
         sendButtonEnabled = viewModel.sendButtonEnabled.collectAsState().value,
         imageStates = viewModel.imageStates.collectAsState().value,
         addImageButtonEnabled = viewModel.addImageButtonEnabled.collectAsState().value,
-        mediaInteractions = viewModel,
+        mediaInteractions = viewModel.mediaInteractions,
         isSendingPost = viewModel.isSendingPost.collectAsState().value,
         visibility = viewModel.visibility.collectAsState().value,
         onVisibilitySelected = viewModel::onVisibilitySelected,
         poll = viewModel.poll.collectAsState().value,
-        pollInteractions = viewModel,
+        pollInteractions = viewModel.pollInteractions,
         pollButtonEnabled = viewModel.pollButtonEnabled.collectAsState().value,
         contentWarningText = viewModel.contentWarningText.collectAsState().value,
-        contentWarningInteractions = viewModel,
+        contentWarningInteractions = viewModel.contentWarningInteractions,
         accounts = viewModel.accountList.collectAsState().value,
         hashTags = viewModel.hashtagList.collectAsState().value,
+        inReplyToAccountName = viewModel.inReplyToAccountName.collectAsState().value,
     )
 
     val context = LocalContext.current
@@ -163,6 +166,7 @@ private fun NewPostScreen(
     contentWarningInteractions: ContentWarningInteractions,
     accounts: List<Account>?,
     hashTags: List<String>?,
+    inReplyToAccountName: String?,
 ) {
     val context = LocalContext.current
     val multipleMediaLauncher = rememberLauncherForActivityResult(
@@ -205,6 +209,7 @@ private fun NewPostScreen(
                     pollInteractions = pollInteractions,
                     contentWarningText = contentWarningText,
                     contentWarningInteractions = contentWarningInteractions,
+                    inReplyToAccountName = inReplyToAccountName,
                 )
             }
             accounts?.let {
@@ -378,6 +383,7 @@ private fun MainBox(
     pollInteractions: PollInteractions,
     contentWarningText: String?,
     contentWarningInteractions: ContentWarningInteractions,
+    inReplyToAccountName: String?,
 ) {
     val localIndication = LocalIndication.current
     // disable ripple on click for the background
@@ -399,6 +405,9 @@ private fun MainBox(
                 LocalIndication provides localIndication
             ) {
                 LazyColumn {
+                    item {
+                        InReplyToText(inReplyToAccountName = inReplyToAccountName)
+                    }
                     contentWarningText?.let {
                         item {
                             ContentWarningEntry(contentWarningText, contentWarningInteractions)
@@ -431,6 +440,9 @@ private fun MainBox(
                                 )
                             }
                         )
+                        LaunchedEffect(Unit) {
+                            textFieldFocusRequester.requestFocus()
+                        }
                     }
 
                     poll?.let {
@@ -452,6 +464,30 @@ private fun MainBox(
                     }
                 }
             }
+        }
+    }
+}
+
+@Composable
+private fun InReplyToText(
+    inReplyToAccountName: String?,
+) {
+    if (inReplyToAccountName != null) {
+        Row(
+            modifier = Modifier.padding(start = 12.dp),
+        ) {
+            Icon(
+                modifier = Modifier
+                    .size(20.dp)
+                    .align(Alignment.CenterVertically),
+                imageVector = Icons.Rounded.Reply,
+                contentDescription = ""
+            )
+            Spacer(modifier = Modifier.padding(start = 8.dp))
+            Text(
+                text = "In reply to $inReplyToAccountName",
+                fontSize = 14.sp,
+            )
         }
     }
 }
@@ -664,6 +700,7 @@ private fun NewPostScreenPreview() {
             contentWarningInteractions = object : ContentWarningInteractions {},
             accounts = null,
             hashTags = null,
+            inReplyToAccountName = null
         )
     }
 }

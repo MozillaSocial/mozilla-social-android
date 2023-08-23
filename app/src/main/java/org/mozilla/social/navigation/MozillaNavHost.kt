@@ -4,7 +4,6 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.NavHost
 import androidx.navigation.navigation
-import org.mozilla.social.feature.account.follows.FollowType
 import org.mozilla.social.feature.account.accountScreen
 import org.mozilla.social.feature.account.follows.accountFollowersScreen
 import org.mozilla.social.feature.account.follows.accountFollowingScreen
@@ -29,8 +28,8 @@ fun MozillaNavHost(appState: AppState) {
 private fun NavGraphBuilder.mainGraph(appState: AppState) {
     navigation(startDestination = FEED_ROUTE, route = MAIN_ROUTE) {
         feedScreen(
-            onReplyClicked = { replyId ->
-                appState.navController.navigateToNewPost(replyId = replyId)
+            onReplyClicked = { replyStatusId ->
+                appState.navController.navigateToNewPost(replyStatusId = replyStatusId)
             }
         )
         searchScreen()

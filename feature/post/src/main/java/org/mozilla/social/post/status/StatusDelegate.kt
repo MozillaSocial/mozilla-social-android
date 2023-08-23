@@ -1,6 +1,6 @@
 package org.mozilla.social.post.status
 
-import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -11,19 +11,21 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.mozilla.social.common.logging.Log
 import org.mozilla.social.common.utils.accountText
-import org.mozilla.social.common.utils.buildAnnotatedStringForAccountsAndHashtags
-import org.mozilla.social.common.utils.buildAnnotatedStringWithSymbols
+import org.mozilla.social.common.utils.edit
 import org.mozilla.social.common.utils.hashtagText
 import org.mozilla.social.common.utils.replaceAccount
 import org.mozilla.social.common.utils.replaceHashtag
 import org.mozilla.social.core.data.repository.SearchRepository
+import org.mozilla.social.core.data.repository.StatusRepository
+import org.mozilla.social.post.NewPostViewModel
 
 class StatusDelegate(
+    private val coroutineScope: CoroutineScope,
     private val searchRepository: SearchRepository,
+    private val statusRepository: StatusRepository,
     private val log: Log,
-) : StatusInteractions {
-
-    lateinit var coroutineScope: CoroutineScope
+    private val inReplyToId: String?,
+) : StatusInteractions, ContentWarningInteractions {
 
     private val _statusText = MutableStateFlow(TextFieldValue(""))
     val statusText = _statusText.asStateFlow()
@@ -34,9 +36,32 @@ class StatusDelegate(
     private val _hashtagList = MutableStateFlow<List<String>?>(null)
     val hashtagList = _hashtagList.asStateFlow()
 
+    private val _contentWarningText = MutableStateFlow<String?>(null)
+    val contentWarningText = _contentWarningText.asStateFlow()
+
+    private val _inReplyToAccountName = MutableStateFlow<String?>(null)
+    val inReplyToAccountName = _inReplyToAccountName.asStateFlow()
+
     private var searchJob: Job? = null
 
+    init {
+        coroutineScope.launch {
+            inReplyToId?.let {
+                statusRepository.getStatusLocal(inReplyToId)?.account?.let { account ->
+                    _statusText.update {
+                        TextFieldValue(
+                            text = "@${account.acct} ",
+                            selection = TextRange(account.acct.length + 2)
+                        )
+                    }
+                    _inReplyToAccountName.edit { account.username }
+                }
+            }
+        }
+    }
+
     override fun onStatusTextUpdated(textFieldValue: TextFieldValue) {
+        if (textFieldValue.text.length + (contentWarningText.value?.length ?: 0) > NewPostViewModel.MAX_POST_LENGTH) return
         _statusText.update {
             log.d("updating onStatusTextUpdated")
             textFieldValue
@@ -97,5 +122,18 @@ class StatusDelegate(
     override fun onHashtagClicked(hashtag: String) {
         _statusText.update { it.replaceHashtag(hashtag) }
         _hashtagList.update { null }
+    }
+
+    override fun onContentWarningClicked() {
+        if (contentWarningText.value == null) {
+            _contentWarningText.update { "" }
+        } else {
+            _contentWarningText.update { null }
+        }
+    }
+
+    override fun onContentWarningTextChanged(text: String) {
+        if (text.length + statusText.value.text.length > NewPostViewModel.MAX_POST_LENGTH) return
+        _contentWarningText.update { text }
     }
 }
