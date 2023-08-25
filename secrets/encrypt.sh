@@ -12,5 +12,5 @@ if [[ -z "$GPG_KEY" ]]; then
 fi
 
 encrypt "secret.properties"
+encrypt "secret-environment-variables.sh"
 encrypt "daily.jks"
-encrypt "build_daily.sh"
