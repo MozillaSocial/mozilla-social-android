@@ -26,6 +26,7 @@ private fun Status.toMainPostCardUiState(
     currentUserAccountId: String,
 ): MainPostCardUiState =
     MainPostCardUiState(
+        url = url,
         pollUiState = poll?.toPollUiState(
             isUserCreatedPoll = currentUserAccountId == account.accountId
         ),

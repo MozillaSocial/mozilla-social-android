@@ -1,5 +1,6 @@
 package org.mozilla.social.core.ui.postcard
 
+import android.content.Intent
 import android.widget.TextView
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -33,6 +34,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.core.content.ContextCompat.startActivity
 import coil.compose.AsyncImage
 import org.mozilla.social.common.utils.DimenUtil
 import org.mozilla.social.core.designsystem.theme.FirefoxColor
@@ -140,6 +142,7 @@ private fun BottomRow(
     post: MainPostCardUiState,
     postCardInteractions: PostCardInteractions,
 ) {
+    val context = LocalContext.current
     Row(
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -163,7 +166,17 @@ private fun BottomRow(
         )
         Spacer(modifier = Modifier.weight(1f))
         BottomIconButton(
-            onClick = { postCardInteractions.onShareClicked() },
+            onClick = {
+                post.url?.let { url ->
+                    val sendIntent: Intent = Intent().apply {
+                        action = Intent.ACTION_SEND
+                        putExtra(Intent.EXTRA_TEXT, url)
+                        type = "text/plain"
+                    }
+
+                    startActivity(context, Intent.createChooser(sendIntent, null), null)
+                }
+            },
             imageVector = Icons.Default.Share,
             count = 0,
         )
