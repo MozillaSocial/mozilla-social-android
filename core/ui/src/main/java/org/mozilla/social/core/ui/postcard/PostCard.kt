@@ -161,6 +161,7 @@ private fun BottomRow(
             imageVector = Icons.Default.StarBorder,
             count = post.favoriteCount,
             highlighted = post.isFavorited,
+            highlightColor = FirefoxColor.Yellow40
         )
         Spacer(modifier = Modifier.weight(1f))
         BottomIconButton(
@@ -177,6 +178,7 @@ private fun BottomIconButton(
     imageVector: ImageVector,
     count: Long,
     highlighted: Boolean = false,
+    highlightColor: Color = MaterialTheme.colorScheme.primary,
 ) {
     IconButton(
         modifier = Modifier.width(IntrinsicSize.Max),
@@ -187,7 +189,7 @@ private fun BottomIconButton(
                 imageVector = imageVector,
                 "",
                 tint = if (highlighted) {
-                    MaterialTheme.colorScheme.primary
+                    highlightColor
                 } else {
                     LocalContentColor.current
                 }
