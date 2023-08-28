@@ -157,9 +157,10 @@ private fun BottomRow(
         )
         Spacer(modifier = Modifier.weight(1f))
         BottomIconButton(
-            onClick = { postCardInteractions.onFavoriteClicked() },
+            onClick = { postCardInteractions.onFavoriteClicked(post.statusId, !post.isFavorited) },
             imageVector = Icons.Default.StarBorder,
             count = post.favoriteCount,
+            highlighted = post.isFavorited,
         )
         Spacer(modifier = Modifier.weight(1f))
         BottomIconButton(

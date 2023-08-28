@@ -30,6 +30,20 @@ interface StatusDao : BaseDao<DatabaseStatus> {
     )
     suspend fun updateBoostCount(statusId: String, valueChange: Long)
 
+    @Query(
+        "UPDATE statuses " +
+                "SET isFavorited = :isFavorited " +
+        "WHERE statusID = :statusId"
+    )
+    suspend fun updateFavorited(statusId: String, isFavorited: Boolean)
+
+    @Query(
+        "UPDATE statuses " +
+        "SET favouritesCount = favouritesCount + :valueChange " +
+        "WHERE statusID = :statusId"
+    )
+    suspend fun updateFavoriteCount(statusId: String, valueChange: Long)
+
     @Query("DELETE FROM statuses")
     fun deleteAll()
 }

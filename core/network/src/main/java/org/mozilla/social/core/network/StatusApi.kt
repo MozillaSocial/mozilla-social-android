@@ -35,4 +35,14 @@ interface StatusApi {
     suspend fun unBoostStatus(
         @Path("statusId") statusId: String,
     ): NetworkStatus
+
+    @POST("/api/v1/statuses/{statusId}/favourite")
+    suspend fun favoriteStatus(
+        @Path("statusId") statusId: String,
+    ): NetworkStatus
+
+    @POST("/api/v1/statuses/{statusId}/unfavourite")
+    suspend fun unFavoriteStatus(
+        @Path("statusId") statusId: String,
+    ): NetworkStatus
 }

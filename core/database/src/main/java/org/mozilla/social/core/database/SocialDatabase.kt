@@ -1,5 +1,6 @@
 package org.mozilla.social.core.database
 
+import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
@@ -32,9 +33,9 @@ import org.mozilla.social.core.database.model.statusCollections.HomeTimelineStat
         HomeTimelineStatus::class,
         DatabasePoll::class,
     ],
-    version = 1,
+    version = 2,
     autoMigrations = [
-
+        AutoMigration(1, 2, DatabaseMigrations.Schema1to2::class)
     ],
     exportSchema = true
 )
