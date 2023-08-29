@@ -1,5 +1,6 @@
 package org.mozilla.social.core.network
 
+import org.mozilla.social.core.network.model.NetworkContext
 import org.mozilla.social.core.network.model.NetworkPoll
 import org.mozilla.social.core.network.model.NetworkStatus
 import org.mozilla.social.core.network.model.request.NetworkStatusCreate
@@ -7,6 +8,7 @@ import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
+import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
 
@@ -45,4 +47,9 @@ interface StatusApi {
     suspend fun unFavoriteStatus(
         @Path("statusId") statusId: String,
     ): NetworkStatus
+
+    @GET("/api/v1/statuses/{statusId}/context")
+    suspend fun getStatusContext(
+        @Path("statusId") statusId: String,
+    ): NetworkContext
 }

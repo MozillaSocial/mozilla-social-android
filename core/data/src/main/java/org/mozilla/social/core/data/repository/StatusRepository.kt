@@ -3,6 +3,9 @@ package org.mozilla.social.core.data.repository
 import androidx.room.withTransaction
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
+import org.mozilla.social.core.data.repository.model.context.toExternalModel
 import org.mozilla.social.core.data.repository.model.status.toDatabaseModel
 import org.mozilla.social.core.data.repository.model.status.toExternalModel
 import org.mozilla.social.core.data.repository.model.status.toNetworkModel
@@ -13,6 +16,7 @@ import org.mozilla.social.core.network.model.NetworkStatusVisibility
 import org.mozilla.social.core.network.model.request.NetworkMediaUpdate
 import org.mozilla.social.core.network.model.request.NetworkPollCreate
 import org.mozilla.social.core.network.model.request.NetworkStatusCreate
+import org.mozilla.social.model.Context
 import org.mozilla.social.model.ImageState
 import org.mozilla.social.model.Status
 import org.mozilla.social.model.StatusVisibility
@@ -109,6 +113,14 @@ class StatusRepository(
     ): Status? {
         val status = socialDatabase.statusDao().getStatus(statusId)
         return status?.toExternalModel()
+    }
+
+    fun getStatusesFlow(
+        statusIds: List<String>,
+    ): Flow<List<Status>> = socialDatabase.statusDao().getStatuses(statusIds).map {
+        it.map { statusWrapper ->
+            statusWrapper.toExternalModel()
+        }
     }
 
     suspend fun saveStatusesToDatabase(statuses: List<Status>) {
@@ -215,4 +227,7 @@ class StatusRepository(
             throw e
         }
     }
+
+    suspend fun getStatusContext(statusId: String): Context =
+        statusApi.getStatusContext(statusId).toExternalModel()
 }
