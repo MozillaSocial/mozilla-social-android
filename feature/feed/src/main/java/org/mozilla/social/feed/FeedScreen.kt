@@ -15,13 +15,13 @@ fun FeedScreen(
 ) {
     PostCardList(
         feed = viewModel.feed,
-        postCardInteractions = viewModel.postCardInteractions
+        postCardInteractions = viewModel.postCardDelegate
     )
 
     val context = LocalContext.current
 
     LaunchedEffect(Unit) {
-        viewModel.errorToastMessage.collect {
+        viewModel.postCardDelegate.errorToastMessage.collect {
             Toast.makeText(context, it, Toast.LENGTH_LONG).show()
         }
     }

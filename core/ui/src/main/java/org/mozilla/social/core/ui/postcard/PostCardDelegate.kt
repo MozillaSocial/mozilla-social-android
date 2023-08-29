@@ -39,21 +39,37 @@ class PostCardDelegate(
                     statusRepository.boostStatus(statusId)
                 } catch (e: Exception) {
                     log.e(e)
-                    _errorToastMessage.emit("Error Boosting")
+                    _errorToastMessage.emit("Error boosting")
                 }
             } else {
                 try {
                     statusRepository.undoStatusBoost(statusId)
                 } catch (e: Exception) {
                     log.e(e)
-                    _errorToastMessage.emit("Error Undoing Boost")
+                    _errorToastMessage.emit("Error undoing boost")
                 }
             }
         }
     }
 
-    override fun onFavoriteClicked() {
-        super.onFavoriteClicked()
+    override fun onFavoriteClicked(statusId: String, isFavoriting: Boolean) {
+        coroutineScope.launch {
+            if (isFavoriting) {
+                try {
+                    statusRepository.favoriteStatus(statusId)
+                } catch (e: Exception) {
+                    log.e(e)
+                    _errorToastMessage.emit("Error adding favorite")
+                }
+            } else {
+                try {
+                    statusRepository.undoFavoriteStatus(statusId)
+                } catch (e: Exception) {
+                    log.e(e)
+                    _errorToastMessage.emit("Error removing favorite")
+                }
+            }
+        }
     }
 
     override fun onShareClicked() {

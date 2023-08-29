@@ -38,7 +38,8 @@ private fun Status.toMainPostCardUiState(
         favoriteCount = favouritesCount,
         username = account.username,
         statusId = statusId,
-        userBoosted = isBoosted ?: false
+        userBoosted = isBoosted ?: false,
+        isFavorited = isFavourited ?: false,
     )
 
 private fun Status.toTopRowMetaDataUiState(): TopRowMetaDataUiState? =

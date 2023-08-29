@@ -13,7 +13,6 @@ import org.mozilla.social.core.database.model.DatabasePollOption
 import org.mozilla.social.core.database.model.DatabaseSource
 import org.mozilla.social.core.database.model.DatabaseStatus
 import org.mozilla.social.core.database.model.DatabaseStatusVisibility
-import org.mozilla.social.core.database.model.wrappers.StatusWrapper
 import org.mozilla.social.model.Account
 import org.mozilla.social.model.Application
 import org.mozilla.social.model.Attachment
@@ -57,7 +56,7 @@ fun Status.toDatabaseModel(): DatabaseStatus =
         card = null,
         language = language,
         plainText = plainText,
-        isFavourited = isFavourited,
+        isFavorited = isFavourited,
         isBoosted = isBoosted,
         isMuted = isMuted,
         isBookmarked = isBookmarked,

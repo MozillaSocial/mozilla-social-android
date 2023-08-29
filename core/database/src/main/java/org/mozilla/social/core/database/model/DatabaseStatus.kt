@@ -2,7 +2,6 @@ package org.mozilla.social.core.database.model
 
 import androidx.room.Embedded
 import androidx.room.Entity
-import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import kotlinx.datetime.Instant
 
@@ -145,9 +144,9 @@ data class DatabaseStatus(
     val plainText: String? = null,
 
     /**
-     * Whether the current account has favourited this status.
+     * Whether the current account has favorited this status.
      */
-    val isFavourited: Boolean? = null,
+    val isFavorited: Boolean? = null,
 
     /**
      * Whether the current account has boosted this status.

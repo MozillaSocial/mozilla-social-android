@@ -59,14 +59,12 @@ class FeedViewModel(
         }
     }.cachedIn(viewModelScope)
 
-    private val postCardDelegate = PostCardDelegate(
+    val postCardDelegate = PostCardDelegate(
         coroutineScope = viewModelScope,
         statusRepository = statusRepository,
         log = log,
         onReplyClicked = onReplyClicked,
     )
-    val postCardInteractions = postCardDelegate
-    val errorToastMessage = postCardDelegate.errorToastMessage
 
     private val currentFeedType = MutableStateFlow(INITIAL_FEED).also {
         viewModelScope.launch {
