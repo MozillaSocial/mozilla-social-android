@@ -12,6 +12,7 @@ data class PostCardUiState(
 )
 
 data class MainPostCardUiState(
+    val url: String?,
     val pollUiState: PollUiState?,
     val username: String,
     val statusText: Spanned,
