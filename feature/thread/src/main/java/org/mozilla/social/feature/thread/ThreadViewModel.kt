@@ -21,6 +21,7 @@ class ThreadViewModel(
     userPreferencesDatastore: UserPreferencesDatastore,
     getThreadUseCase: GetThreadUseCase,
     mainStatusId: String,
+    onPostClicked: (String) -> Unit,
     onReplyClicked: (String) -> Unit,
 ) : ViewModel() {
 
@@ -41,6 +42,7 @@ class ThreadViewModel(
         coroutineScope = viewModelScope,
         statusRepository = statusRepository,
         log = log,
+        onPostClicked = onPostClicked,
         onReplyClicked = onReplyClicked,
     )
 

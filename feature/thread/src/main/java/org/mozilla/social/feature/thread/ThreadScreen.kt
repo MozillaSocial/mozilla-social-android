@@ -8,8 +8,14 @@ import org.mozilla.social.core.ui.postcard.PostCardList
 
 @Composable
 fun ThreadScreen(
+    threadStatusId: String,
+    onPostClicked: (String) -> Unit,
     onReplyClicked: (String) -> Unit,
-    viewModel: ThreadViewModel = koinViewModel(parameters = { parametersOf(onReplyClicked) })
+    viewModel: ThreadViewModel = koinViewModel(parameters = { parametersOf(
+        threadStatusId,
+        onPostClicked,
+        onReplyClicked
+    ) })
 ) {
     PostCardList(
         items = viewModel.statuses.collectAsState(emptyList()).value,

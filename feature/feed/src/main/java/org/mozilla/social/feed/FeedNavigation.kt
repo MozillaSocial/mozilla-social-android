@@ -13,9 +13,11 @@ fun NavController.navigateToFeed(navOptions: NavOptions? = null) {
 
 fun NavGraphBuilder.feedScreen(
     onReplyClicked: (String) -> Unit,
+    onPostClicked: (String) -> Unit,
 ) {
     composable(route = FEED_ROUTE) {
          FeedScreen(
+             onPostClicked = onPostClicked,
              onReplyClicked = onReplyClicked,
          )
     }

@@ -32,6 +32,7 @@ class FeedViewModel(
     statusRepository: StatusRepository,
     private val socialDatabase: SocialDatabase,
     log: Log,
+    onPostClicked: (String) -> Unit,
     onReplyClicked: (String) -> Unit,
 ) : ViewModel() {
 
@@ -64,6 +65,7 @@ class FeedViewModel(
         statusRepository = statusRepository,
         log = log,
         onReplyClicked = onReplyClicked,
+        onPostClicked = onPostClicked,
     )
 
     private val currentFeedType = MutableStateFlow(INITIAL_FEED).also {

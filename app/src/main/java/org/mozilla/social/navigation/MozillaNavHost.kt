@@ -10,6 +10,7 @@ import org.mozilla.social.feature.account.follows.accountFollowingScreen
 import org.mozilla.social.feature.auth.AUTH_ROUTE
 import org.mozilla.social.feature.auth.authScreen
 import org.mozilla.social.feature.settings.settingsScreen
+import org.mozilla.social.feature.thread.navigateToThread
 import org.mozilla.social.feature.thread.threadScreen
 import org.mozilla.social.feed.FEED_ROUTE
 import org.mozilla.social.feed.feedScreen
@@ -31,7 +32,10 @@ private fun NavGraphBuilder.mainGraph(appState: AppState) {
         feedScreen(
             onReplyClicked = { replyStatusId ->
                 appState.navController.navigateToNewPost(replyStatusId = replyStatusId)
-            }
+            },
+            onPostClicked = { statusId ->
+                appState.navController.navigateToThread(threadStatusId = statusId)
+            },
         )
         searchScreen()
         settingsScreen(onLogout = appState::onLogout)
@@ -49,7 +53,10 @@ private fun NavGraphBuilder.mainGraph(appState: AppState) {
         threadScreen(
             onReplyClicked = { replyStatusId ->
                 appState.navController.navigateToNewPost(replyStatusId = replyStatusId)
-            }
+            },
+            onPostClicked = { statusId ->
+                appState.navController.navigateToThread(threadStatusId = statusId)
+            },
         )
     }
 }
