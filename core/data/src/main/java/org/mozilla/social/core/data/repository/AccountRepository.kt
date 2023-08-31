@@ -43,4 +43,12 @@ class AccountRepository internal constructor(
         coroutineScope {
             accountApi.getAccountFavourites().map { it.toExternalModel() }
         }
+
+    suspend fun followAccount(accountId: String) {
+        accountApi.followAccount(accountId)
+    }
+
+    suspend fun unfollowAccount(accountId: String) {
+        accountApi.unfollowAccount(accountId)
+    }
 }
