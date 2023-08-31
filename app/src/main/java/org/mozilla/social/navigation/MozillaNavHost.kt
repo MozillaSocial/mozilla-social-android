@@ -30,12 +30,8 @@ fun MozillaNavHost(appState: AppState) {
 private fun NavGraphBuilder.mainGraph(appState: AppState) {
     navigation(startDestination = FEED_ROUTE, route = MAIN_ROUTE) {
         feedScreen(
-            onReplyClicked = { replyStatusId ->
-                appState.navController.navigateToNewPost(replyStatusId = replyStatusId)
-            },
-            onPostClicked = { statusId ->
-                appState.navController.navigateToThread(threadStatusId = statusId)
-            },
+            onReplyClicked = appState::navigateToNewPost,
+            onPostClicked = appState::navigateToThread,
         )
         searchScreen()
         settingsScreen(onLogout = appState::onLogout)
@@ -51,12 +47,8 @@ private fun NavGraphBuilder.mainGraph(appState: AppState) {
             onCloseClicked = { appState.popBackStack() },
         )
         threadScreen(
-            onReplyClicked = { replyStatusId ->
-                appState.navController.navigateToNewPost(replyStatusId = replyStatusId)
-            },
-            onPostClicked = { statusId ->
-                appState.navController.navigateToThread(threadStatusId = statusId)
-            },
+            onReplyClicked = appState::navigateToNewPost,
+            onPostClicked = appState::navigateToThread,
             onCloseClicked = { appState.popBackStack() },
         )
     }
