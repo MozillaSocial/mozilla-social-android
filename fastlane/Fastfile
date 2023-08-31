@@ -1,0 +1,31 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
+
+default_platform(:android)
+
+platform :android do
+  desc "Submit a new daily build to internal distribution (currently App Center)"
+  lane :daily do
+    # Switch to the root directory to run the release script.
+    # https://docs.fastlane.tools/advanced/fastlane/#directory-behavior
+    Dir.chdir("..") do
+      sh "ci/daily-build.sh"
+    end
+
+    appcenter_upload(
+      file: "secrets/mozilla-social.apk",
+      upload_build_only: true,
+      destinations: "MozillaSocial",
+      notify_testers: true
+    )
+  end
+end

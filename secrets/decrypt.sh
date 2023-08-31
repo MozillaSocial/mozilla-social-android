@@ -12,5 +12,5 @@ if [[ -z "$GPG_KEY" ]]; then
 fi
 
 decrypt "secret.properties"
+decrypt "secret-environment-variables.sh" && chmod +x secret-environment-variables.sh
 decrypt "daily.jks"
-decrypt "build_daily.sh" && chmod +x build_daily.sh

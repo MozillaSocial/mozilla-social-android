@@ -1,11 +1,11 @@
-name: daily-build
+name: daily
 
 on:
   push:
     branches: [ "main" ]
 
 jobs:
-  build:
+  release:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
@@ -17,11 +17,15 @@ jobs:
         distribution: 'temurin'
         # Using 'temurin' speeds up the job, because this distribution is cached by the runner.
         # See: https://github.com/actions/setup-java/blob/main/docs/advanced-usage.md#Hosted-Tool-Cache
-    - name: Build the release
+    - name: Decrypt secrets
       env:
         GPG_KEY: ${{ secrets.gpg_key }}
+      run: ./decrypt.sh
+      working-directory: ./secrets
+    - name: Build and release
+      env:
         GRADLE_OPTS: -Dorg.gradle.daemon=false
-      run: ci/daily-build.sh
+      run: ci/daily-release.sh
     - name: Archive the release
       uses: actions/upload-artifact@v3.1.2
       with:
