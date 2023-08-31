@@ -91,7 +91,10 @@ private fun MainPost(
     post: MainPostCardUiState,
     postCardInteractions: PostCardInteractions,
 ) {
-    MetaData(post = post)
+    MetaData(
+        post = post,
+        postCardInteractions = postCardInteractions,
+    )
     val context = LocalContext.current
     AndroidView(
         modifier = Modifier
@@ -114,6 +117,7 @@ private fun MainPost(
 @Composable
 private fun MetaData(
     post: MainPostCardUiState,
+    postCardInteractions: PostCardInteractions,
 ) {
     val overflowMenuExpanded = remember { mutableStateOf(false) }
 
@@ -156,22 +160,22 @@ private fun MetaData(
                 DropDownItem(
                     text = "Follow ${post.username}",
                     expanded = overflowMenuExpanded,
-                    onClick = {  }
+                    onClick = { postCardInteractions.onOverflowFollowClicked(post.accountId) }
                 )
                 DropDownItem(
                     text = "Mute ${post.username}",
                     expanded = overflowMenuExpanded,
-                    onClick = {  }
+                    onClick = { postCardInteractions.onOverflowMuteClicked(post.accountId) }
                 )
                 DropDownItem(
                     text = "Block ${post.username}",
                     expanded = overflowMenuExpanded,
-                    onClick = {  }
+                    onClick = { postCardInteractions.onOverflowBlockClicked(post.accountId) }
                 )
                 DropDownItem(
                     text = "Report ${post.username}",
                     expanded = overflowMenuExpanded,
-                    onClick = {  }
+                    onClick = { postCardInteractions.onOverflowReportClicked(post.accountId) }
                 )
             }
         }

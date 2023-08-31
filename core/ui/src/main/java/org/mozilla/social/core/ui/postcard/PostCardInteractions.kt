@@ -7,4 +7,8 @@ interface PostCardInteractions : PollInteractions {
     fun onBoostClicked(statusId: String, isBoosting: Boolean) = Unit
     fun onFavoriteClicked(statusId: String, isFavoriting: Boolean) = Unit
     fun onShareClicked() = Unit
+    fun onOverflowFollowClicked(accountId: String) = Unit
+    fun onOverflowMuteClicked(accountId: String) = Unit
+    fun onOverflowBlockClicked(accountId: String) = Unit
+    fun onOverflowReportClicked(accountId: String) = Unit
 }

@@ -75,4 +75,20 @@ class PostCardDelegate(
     override fun onShareClicked() {
         super.onShareClicked()
     }
+
+    override fun onOverflowFollowClicked(accountId: String) {
+        super.onOverflowFollowClicked(accountId)
+    }
+
+    override fun onOverflowMuteClicked(accountId: String) {
+        super.onOverflowMuteClicked(accountId)
+    }
+
+    override fun onOverflowBlockClicked(accountId: String) {
+        super.onOverflowBlockClicked(accountId)
+    }
+
+    override fun onOverflowReportClicked(accountId: String) {
+        super.onOverflowReportClicked(accountId)
+    }
 }
