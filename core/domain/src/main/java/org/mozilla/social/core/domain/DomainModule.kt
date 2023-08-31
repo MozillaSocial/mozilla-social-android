@@ -4,4 +4,5 @@ import org.koin.dsl.module
 
 val domainModule = module {
     single { HomeTimelineRemoteMediator(get(), get(), get(), get()) }
+    single { GetThreadUseCase(get()) }
 }

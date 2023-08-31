@@ -73,7 +73,7 @@ class PostCardDelegate(
         }
     }
 
-    override fun onShareClicked() {
-        super.onShareClicked()
+    override fun onPostCardClicked(statusId: String) {
+        onPostClicked(statusId)
     }
 }

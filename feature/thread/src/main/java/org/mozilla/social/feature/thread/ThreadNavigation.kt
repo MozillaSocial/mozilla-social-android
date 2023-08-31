@@ -15,7 +15,7 @@ fun NavController.navigateToThread(
     threadStatusId: String? = null,
 ) {
     when {
-        threadStatusId != null -> navigate("newPost?threadStatusId=$threadStatusId", navOptions)
+        threadStatusId != null -> navigate("$THREAD_ROUTE?$THREAD_STATUS_ID=$threadStatusId", navOptions)
         else -> this.navigate(THREAD_ROUTE, navOptions)
     }
 }

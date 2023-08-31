@@ -12,7 +12,10 @@ import org.mozilla.social.core.ui.postcard.PostCardList
 fun FeedScreen(
     onPostClicked: (String) -> Unit,
     onReplyClicked: (String) -> Unit,
-    viewModel: FeedViewModel = koinViewModel(parameters = { parametersOf(onReplyClicked) })
+    viewModel: FeedViewModel = koinViewModel(parameters = { parametersOf(
+        onPostClicked,
+        onReplyClicked,
+    ) })
 ) {
     PostCardList(
         feed = viewModel.feed,
