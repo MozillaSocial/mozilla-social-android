@@ -11,8 +11,12 @@ fun NavController.navigateToThread(navOptions: NavOptions? = null) {
     this.navigate(THREAD_ROUTE, navOptions)
 }
 
-fun NavGraphBuilder.threadScreen() {
+fun NavGraphBuilder.threadScreen(
+    onReplyClicked: (String) -> Unit,
+) {
     composable(route = THREAD_ROUTE) {
-        ThreadScreen()
+        ThreadScreen(
+            onReplyClicked,
+        )
     }
 }

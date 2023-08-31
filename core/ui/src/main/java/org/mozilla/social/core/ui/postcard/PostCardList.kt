@@ -12,6 +12,7 @@ import androidx.paging.PagingData
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.count
 
 @Composable
 fun PostCardList(
@@ -34,6 +35,30 @@ fun PostCardList(
                 if (index < lazyingPagingItems.itemCount) {
                     Divider()
                 }
+            }
+        }
+    }
+}
+
+@Composable
+fun PostCardList(
+    items: List<PostCardUiState>,
+    postCardInteractions: PostCardInteractions,
+) {
+
+    LazyColumn(
+        Modifier
+            .fillMaxSize()
+            .padding(4.dp),
+    ) {
+        items(
+            count = items.count(),
+            key = { items[it].statusId }
+        ) { index ->
+            val item = items[index]
+            PostCard(post = item, postCardInteractions)
+            if (index < items.count()) {
+                Divider()
             }
         }
     }

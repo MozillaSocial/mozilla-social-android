@@ -27,6 +27,7 @@ dependencies {
     implementation(project(":core:model"))
     implementation(project(":core:domain"))
     implementation(project(":core:data"))
+    implementation(project(":core:datastore"))
     implementation(project(":core:designsystem"))
     implementation(project(":core:ui"))
     implementation(project(":core:common"))
@@ -48,4 +49,7 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.test.manifest)
 
     implementation(libs.koin)
+
+    implementation(libs.androidx.datastore)
+    implementation(libs.protobuf.kotlin.lite)
 }
