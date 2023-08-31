@@ -15,7 +15,7 @@ fun NavController.navigateToNewPost(
     replyStatusId: String? = null,
 ) {
     when {
-        replyStatusId != null -> navigate("newPost?replyStatusId=$replyStatusId", navOptions)
+        replyStatusId != null -> navigate("$NEW_POST_ROUTE?$REPLY_STATUS_ID=$replyStatusId", navOptions)
         else -> this.navigate(NEW_POST_ROUTE, navOptions)
     }
 }

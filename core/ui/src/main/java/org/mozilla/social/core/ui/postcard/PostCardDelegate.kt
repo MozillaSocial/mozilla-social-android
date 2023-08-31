@@ -12,6 +12,7 @@ class PostCardDelegate(
     private val statusRepository: StatusRepository,
     private val log: Log,
     private val onReplyClicked: (String) -> Unit,
+    private val onPostClicked: (String) -> Unit,
 ) : PostCardInteractions {
 
     private val _errorToastMessage = MutableSharedFlow<String>(extraBufferCapacity = 1)
@@ -72,7 +73,7 @@ class PostCardDelegate(
         }
     }
 
-    override fun onShareClicked() {
-        super.onShareClicked()
+    override fun onPostCardClicked(statusId: String) {
+        onPostClicked(statusId)
     }
 }

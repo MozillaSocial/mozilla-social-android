@@ -6,5 +6,5 @@ interface PostCardInteractions : PollInteractions {
     fun onReplyClicked(statusId: String) = Unit
     fun onBoostClicked(statusId: String, isBoosting: Boolean) = Unit
     fun onFavoriteClicked(statusId: String, isFavoriting: Boolean) = Unit
-    fun onShareClicked() = Unit
+    fun onPostCardClicked(statusId: String) = Unit
 }
