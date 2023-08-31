@@ -11,7 +11,9 @@ val feedModule = module {
         get(),
         get(),
         get(),
-        parametersHolder.get()
+        get(),
+        parametersHolder[0],
+        parametersHolder[1],
     ) }
     includes(domainModule)
 }

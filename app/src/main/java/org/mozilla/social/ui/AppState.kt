@@ -49,6 +49,7 @@ import org.mozilla.social.feature.account.navigateToAccount
 import org.mozilla.social.feature.auth.AUTH_ROUTE
 import org.mozilla.social.feature.auth.navigateToAuth
 import org.mozilla.social.feature.settings.navigateToSettings
+import org.mozilla.social.feature.thread.navigateToThread
 import org.mozilla.social.navigation.Account
 import org.mozilla.social.navigation.Feed
 import org.mozilla.social.navigation.MAIN_ROUTE
@@ -248,6 +249,14 @@ class AppState(
     fun navigateToAccountFollowers() {
         coroutineScope.launch { navigationDrawerState.close() }
         navController.navigateToAccountFollowers()
+    }
+
+    fun navigateToNewPost(replyStatusId: String) {
+        navController.navigateToNewPost(replyStatusId = replyStatusId)
+    }
+
+    fun navigateToThread(statusId: String) {
+        navController.navigateToThread(threadStatusId = statusId)
     }
 
     private fun navigateToTopLevelDestination(destination: NavDestination) {

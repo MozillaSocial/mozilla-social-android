@@ -2,6 +2,7 @@ package org.mozilla.social.core.ui.postcard
 
 import android.content.Intent
 import android.widget.TextView
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
@@ -57,6 +58,7 @@ fun PostCard(
         Modifier
             .padding(8.dp)
             .fillMaxSize()
+            .clickable { postCardInteractions.onPostCardClicked(post.mainPostCardUiState.statusId) }
     ) {
         post.topRowMetaDataUiState?.let { TopRowMetaData(it) }
         MainPost(post.mainPostCardUiState, postCardInteractions)

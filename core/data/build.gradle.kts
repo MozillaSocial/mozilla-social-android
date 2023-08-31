@@ -1,5 +1,7 @@
 plugins {
     id("org.mozilla.social.android.library")
+    id("org.mozilla.social.android.library.secrets")
+
 }
 
 android {

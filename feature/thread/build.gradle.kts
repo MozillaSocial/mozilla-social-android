@@ -1,10 +1,11 @@
 plugins {
     id("org.mozilla.social.android.library")
     id("org.mozilla.social.android.library.compose")
+    alias(libs.plugins.kotlin.ksp)
 }
 
 android {
-    namespace = "org.mozilla.social.core.ui"
+    namespace = "org.mozilla.social.feature.feed"
 
     defaultConfig {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -13,7 +14,7 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = true
+            isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -24,31 +25,31 @@ android {
 
 dependencies {
     implementation(project(":core:model"))
-    implementation(project(":core:designsystem"))
-    implementation(project(":core:common"))
+    implementation(project(":core:domain"))
     implementation(project(":core:data"))
+    implementation(project(":core:datastore"))
+    implementation(project(":core:designsystem"))
+    implementation(project(":core:ui"))
+    implementation(project(":core:common"))
 
     implementation(libs.google.material)
 
-    implementation(libs.androidx.paging.compose)
+    implementation(libs.androidx.paging.runtime)
 
-    implementation(libs.koin)
-
-    implementation(libs.kotlinx.datetime)
-
-    implementation(libs.coil)
-    implementation(libs.androidx.media3.exoplayer)
-    implementation(libs.androidx.media3.ui)
-
-
-    // compose
+    //compose
+    implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.compose.material3)
-    implementation(libs.androidx.compose.material.iconsExtended)
     implementation(libs.androidx.compose.ui.ui)
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
-    implementation(libs.browser)
+    implementation(libs.androidx.navigation.compose)
+
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
+
+    implementation(libs.koin)
+
+    implementation(libs.androidx.datastore)
+    implementation(libs.protobuf.kotlin.lite)
 }

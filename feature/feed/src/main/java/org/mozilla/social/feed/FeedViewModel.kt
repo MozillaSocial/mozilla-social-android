@@ -10,10 +10,12 @@ import androidx.paging.map
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import org.mozilla.social.common.logging.Log
+import org.mozilla.social.core.data.repository.RecommendationRepository
 import org.mozilla.social.core.data.repository.StatusRepository
 import org.mozilla.social.core.data.repository.model.status.toExternalModel
 import org.mozilla.social.core.database.SocialDatabase
@@ -30,8 +32,10 @@ class FeedViewModel(
     homeTimelineRemoteMediator: HomeTimelineRemoteMediator,
     userPreferencesDatastore: UserPreferencesDatastore,
     statusRepository: StatusRepository,
+    recommendationRepository: RecommendationRepository,
     private val socialDatabase: SocialDatabase,
     log: Log,
+    onPostClicked: (String) -> Unit,
     onReplyClicked: (String) -> Unit,
 ) : ViewModel() {
 
@@ -59,11 +63,19 @@ class FeedViewModel(
         }
     }.cachedIn(viewModelScope)
 
+    val reccs = flow {
+        try {
+            emit(recommendationRepository.getRecommendations())
+        } catch (exception: Exception) {
+        }
+    }
+
     val postCardDelegate = PostCardDelegate(
         coroutineScope = viewModelScope,
         statusRepository = statusRepository,
         log = log,
         onReplyClicked = onReplyClicked,
+        onPostClicked = onPostClicked,
     )
 
     private val currentFeedType = MutableStateFlow(INITIAL_FEED).also {
