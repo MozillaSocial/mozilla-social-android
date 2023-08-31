@@ -25,6 +25,7 @@ data class MainPostCardUiState(
     val statusId: String,
     val userBoosted: Boolean,
     val isFavorited: Boolean,
+    val accountId: String,
 )
 
 data class TopRowMetaDataUiState(

@@ -18,12 +18,18 @@ import androidx.compose.material.icons.filled.Repeat
 import androidx.compose.material.icons.filled.Reply
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.filled.StarBorder
+import androidx.compose.material.icons.rounded.MoreVert
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -87,7 +93,10 @@ private fun MainPost(
     post: MainPostCardUiState,
     postCardInteractions: PostCardInteractions,
 ) {
-    MetaData(post = post)
+    MetaData(
+        post = post,
+        postCardInteractions = postCardInteractions,
+    )
     val context = LocalContext.current
     AndroidView(
         modifier = Modifier
@@ -110,7 +119,10 @@ private fun MainPost(
 @Composable
 private fun MetaData(
     post: MainPostCardUiState,
+    postCardInteractions: PostCardInteractions,
 ) {
+    val overflowMenuExpanded = remember { mutableStateOf(false) }
+
     Row {
         AsyncImage(
             modifier = Modifier
@@ -134,9 +146,42 @@ private fun MetaData(
                 fontSize = 12.sp
             )
         }
+        Spacer(modifier = Modifier.weight(1f))
+        IconButton(
+            modifier = Modifier.width(IntrinsicSize.Max),
+            onClick = { overflowMenuExpanded.value = true }
+        ) {
+            Icon(imageVector = Icons.Rounded.MoreVert, contentDescription = "")
 
+            DropdownMenu(
+                expanded = overflowMenuExpanded.value,
+                onDismissRequest = {
+                    overflowMenuExpanded.value = false
+                }
+            ) {
+                DropDownItem(
+                    text = "Follow ${post.username}",
+                    expanded = overflowMenuExpanded,
+                    onClick = { postCardInteractions.onOverflowFollowClicked(post.accountId) }
+                )
+                DropDownItem(
+                    text = "Mute ${post.username}",
+                    expanded = overflowMenuExpanded,
+                    onClick = { postCardInteractions.onOverflowMuteClicked(post.accountId) }
+                )
+                DropDownItem(
+                    text = "Block ${post.username}",
+                    expanded = overflowMenuExpanded,
+                    onClick = { postCardInteractions.onOverflowBlockClicked(post.accountId) }
+                )
+                DropDownItem(
+                    text = "Report ${post.username}",
+                    expanded = overflowMenuExpanded,
+                    onClick = { postCardInteractions.onOverflowReportClicked(post.accountId) }
+                )
+            }
+        }
     }
-
 }
 
 @Composable
@@ -214,6 +259,26 @@ private fun BottomIconButton(
             }
         }
     }
+}
+
+@Composable
+private fun DropDownItem(
+    text: String,
+    expanded: MutableState<Boolean>,
+    onClick: () -> Unit,
+) {
+    DropdownMenuItem(
+        text = {
+            Row {
+                Spacer(modifier = Modifier.padding(start = 8.dp))
+                Text(text = text)
+            }
+        },
+        onClick = {
+            onClick()
+            expanded.value = false
+        }
+    )
 }
 
 @Preview
