@@ -57,6 +57,7 @@ private fun NavGraphBuilder.mainGraph(appState: AppState) {
             onPostClicked = { statusId ->
                 appState.navController.navigateToThread(threadStatusId = statusId)
             },
+            onCloseClicked = { appState.popBackStack() },
         )
     }
 }

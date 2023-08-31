@@ -23,6 +23,7 @@ fun NavController.navigateToThread(
 fun NavGraphBuilder.threadScreen(
     onReplyClicked: (String) -> Unit,
     onPostClicked: (String) -> Unit,
+    onCloseClicked: () -> Unit,
 ) {
     composable(
         route = THREAD_FULL_ROUTE,
@@ -38,6 +39,7 @@ fun NavGraphBuilder.threadScreen(
                 threadStatusId = threadStatusId,
                 onPostClicked = onPostClicked,
                 onReplyClicked = onReplyClicked,
+                onCloseClicked = onCloseClicked,
             )
         }
     }
