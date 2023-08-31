@@ -29,6 +29,15 @@ fun networkModule(isDebug: Boolean) = module {
             .addInterceptor(get<AuthInterceptor>())
             .build()
     }
+    single(
+        named(RECCS_SERVICE)
+    ) {
+        Retrofit.Builder()
+            .baseUrl("https://firefox-api-proxy.cdn.mozilla.net/")
+            .client(get(qualifier = named(AUTHORIZED_CLIENT)))
+            .addConverterFactory(json.asConverterFactory(contentType = "application/json".toMediaType()))
+            .build()
+    }
     single {
         Retrofit.Builder()
             .baseUrl("https://mozilla.social/")
@@ -43,7 +52,9 @@ fun networkModule(isDebug: Boolean) = module {
     single { get<Retrofit>().create(SearchApi::class.java) }
     single { get<Retrofit>().create(StatusApi::class.java) }
     single { get<Retrofit>().create(TimelineApi::class.java) }
+    single { get<Retrofit>(named(RECCS_SERVICE)).create(RecommendationApi::class.java) }
 }
 
 private var json: Json = Json { ignoreUnknownKeys = true }
 private const val AUTHORIZED_CLIENT = "authorizedClient"
+private const val RECCS_SERVICE = "reccsService"

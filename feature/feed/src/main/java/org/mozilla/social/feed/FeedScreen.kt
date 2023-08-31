@@ -3,6 +3,7 @@ package org.mozilla.social.feed
 import android.widget.Toast
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.platform.LocalContext
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
@@ -15,7 +16,8 @@ fun FeedScreen(
 ) {
     PostCardList(
         feed = viewModel.feed,
-        postCardInteractions = viewModel.postCardDelegate
+        postCardInteractions = viewModel.postCardDelegate,
+        reccs = viewModel.reccs.collectAsState(initial = null).value,
     )
 
     val context = LocalContext.current
