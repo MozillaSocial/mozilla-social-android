@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import org.mozilla.social.common.logging.Log
+import org.mozilla.social.core.data.repository.AccountRepository
 import org.mozilla.social.core.data.repository.RecommendationRepository
 import org.mozilla.social.core.data.repository.StatusRepository
 import org.mozilla.social.core.data.repository.model.status.toExternalModel
@@ -33,6 +34,7 @@ class FeedViewModel(
     userPreferencesDatastore: UserPreferencesDatastore,
     statusRepository: StatusRepository,
     recommendationRepository: RecommendationRepository,
+    accountRepository: AccountRepository,
     private val socialDatabase: SocialDatabase,
     log: Log,
     onPostClicked: (String) -> Unit,
@@ -73,6 +75,7 @@ class FeedViewModel(
     val postCardDelegate = PostCardDelegate(
         coroutineScope = viewModelScope,
         statusRepository = statusRepository,
+        accountRepository = accountRepository,
         log = log,
         onReplyClicked = onReplyClicked,
         onPostClicked = onPostClicked,

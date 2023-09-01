@@ -13,7 +13,7 @@ import org.mozilla.social.core.network.networkModule
 fun repositoryModule(isDebug: Boolean) = module {
     single { AuthTokenObserver(get(), get()) }
     single { StatusRepository(get(), get(), get()) }
-    single { AccountRepository(get()) }
+    single { AccountRepository(get(), get()) }
     single { TimelineRepository(get()) }
     single { AuthRepository(get()) }
     single { MediaRepository(get()) }

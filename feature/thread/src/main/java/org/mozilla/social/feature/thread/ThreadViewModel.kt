@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import org.mozilla.social.common.logging.Log
+import org.mozilla.social.core.data.repository.AccountRepository
 import org.mozilla.social.core.data.repository.StatusRepository
 import org.mozilla.social.core.datastore.UserPreferencesDatastore
 import org.mozilla.social.core.domain.GetThreadUseCase
@@ -17,6 +18,7 @@ import org.mozilla.social.core.ui.postcard.toPostCardUiState
 
 class ThreadViewModel(
     statusRepository: StatusRepository,
+    accountRepository: AccountRepository,
     log: Log,
     userPreferencesDatastore: UserPreferencesDatastore,
     getThreadUseCase: GetThreadUseCase,
@@ -41,6 +43,7 @@ class ThreadViewModel(
     val postCardDelegate = PostCardDelegate(
         coroutineScope = viewModelScope,
         statusRepository = statusRepository,
+        accountRepository = accountRepository,
         log = log,
         onPostClicked = onPostClicked,
         onReplyClicked = onReplyClicked,
