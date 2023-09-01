@@ -5,11 +5,13 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import org.mozilla.social.common.logging.Log
+import org.mozilla.social.core.data.repository.AccountRepository
 import org.mozilla.social.core.data.repository.StatusRepository
 
 class PostCardDelegate(
     private val coroutineScope: CoroutineScope,
     private val statusRepository: StatusRepository,
+    private val accountRepository: AccountRepository,
     private val log: Log,
     private val onReplyClicked: (String) -> Unit,
     private val onPostClicked: (String) -> Unit,
@@ -77,16 +79,26 @@ class PostCardDelegate(
         onPostClicked(statusId)
     }
 
-    override fun onOverflowFollowClicked(accountId: String) {
-        super.onOverflowFollowClicked(accountId)
-    }
-
     override fun onOverflowMuteClicked(accountId: String) {
-        super.onOverflowMuteClicked(accountId)
+        coroutineScope.launch {
+            try {
+                accountRepository.muteAccount(accountId)
+            } catch (e: Exception) {
+                log.e(e)
+                _errorToastMessage.emit("Error muting account")
+            }
+        }
     }
 
     override fun onOverflowBlockClicked(accountId: String) {
-        super.onOverflowBlockClicked(accountId)
+        coroutineScope.launch {
+            try {
+                accountRepository.blockAccount(accountId)
+            } catch (e: Exception) {
+                log.e(e)
+                _errorToastMessage.emit("Error blocking account")
+            }
+        }
     }
 
     override fun onOverflowReportClicked(accountId: String) {

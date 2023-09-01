@@ -2,12 +2,14 @@ package org.mozilla.social.core.data.repository
 
 import kotlinx.coroutines.coroutineScope
 import org.mozilla.social.core.data.repository.model.status.toExternalModel
+import org.mozilla.social.core.database.SocialDatabase
 import org.mozilla.social.core.network.AccountApi
 import org.mozilla.social.model.Account
 import org.mozilla.social.model.Status
 
 class AccountRepository internal constructor(
-    private val accountApi: AccountApi
+    private val accountApi: AccountApi,
+    private val socialDatabase: SocialDatabase,
 ) {
 
     suspend fun getUserAccount(): Account {
@@ -50,5 +52,29 @@ class AccountRepository internal constructor(
 
     suspend fun unfollowAccount(accountId: String) {
         accountApi.unfollowAccount(accountId)
+    }
+
+    /**
+     * remove posts from any timelines before blocking
+     */
+    suspend fun blockAccount(accountId: String) {
+        socialDatabase.homeTimelineDao().remotePostsFromAccount(accountId)
+        accountApi.blockAccount(accountId)
+    }
+
+    suspend fun unblockAccount(accountId: String) {
+        accountApi.unblockAccount(accountId)
+    }
+
+    /**
+     * remove posts from any timelines before muting
+     */
+    suspend fun muteAccount(accountId: String) {
+        socialDatabase.homeTimelineDao().remotePostsFromAccount(accountId)
+        accountApi.muteAccount(accountId)
+    }
+
+    suspend fun unmuteAccount(accountId: String) {
+        accountApi.unmuteAccount(accountId)
     }
 }

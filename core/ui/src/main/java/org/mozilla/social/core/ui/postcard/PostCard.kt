@@ -160,11 +160,6 @@ private fun MetaData(
                 }
             ) {
                 DropDownItem(
-                    text = "Follow ${post.username}",
-                    expanded = overflowMenuExpanded,
-                    onClick = { postCardInteractions.onOverflowFollowClicked(post.accountId) }
-                )
-                DropDownItem(
                     text = "Mute ${post.username}",
                     expanded = overflowMenuExpanded,
                     onClick = { postCardInteractions.onOverflowMuteClicked(post.accountId) }
