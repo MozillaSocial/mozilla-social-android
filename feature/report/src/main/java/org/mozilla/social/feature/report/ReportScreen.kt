@@ -45,7 +45,7 @@ private fun ReportScreen(
             reportInteractions = reportInteractions,
         )
         Divider()
-        
+
     }
 }
 
