@@ -56,6 +56,7 @@ dependencies {
     implementation(project(":feature:account"))
     implementation(project(":core:model"))
     implementation(project(":feature:thread"))
+    implementation(project(":feature:report"))
 
     // android
     implementation(libs.androidx.core.ktx)
