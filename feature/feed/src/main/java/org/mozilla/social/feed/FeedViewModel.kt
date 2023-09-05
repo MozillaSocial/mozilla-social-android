@@ -39,6 +39,7 @@ class FeedViewModel(
     log: Log,
     onPostClicked: (String) -> Unit,
     onReplyClicked: (String) -> Unit,
+    onReportClicked: (accountId: String, statusId: String) -> Unit,
 ) : ViewModel() {
 
     private val currentUserAccountId: StateFlow<String> =
@@ -79,6 +80,7 @@ class FeedViewModel(
         log = log,
         onReplyClicked = onReplyClicked,
         onPostClicked = onPostClicked,
+        onReportClicked = onReportClicked,
     )
 
     private val currentFeedType = MutableStateFlow(INITIAL_FEED).also {

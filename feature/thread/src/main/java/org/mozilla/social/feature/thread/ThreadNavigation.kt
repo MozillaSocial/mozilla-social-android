@@ -24,6 +24,7 @@ fun NavGraphBuilder.threadScreen(
     onReplyClicked: (String) -> Unit,
     onPostClicked: (String) -> Unit,
     onCloseClicked: () -> Unit,
+    onReportClicked: (accountId: String, statusId: String) -> Unit,
 ) {
     composable(
         route = THREAD_FULL_ROUTE,
@@ -40,6 +41,7 @@ fun NavGraphBuilder.threadScreen(
                 onPostClicked = onPostClicked,
                 onReplyClicked = onReplyClicked,
                 onCloseClicked = onCloseClicked,
+                onReportClicked = onReportClicked,
             )
         }
     }
