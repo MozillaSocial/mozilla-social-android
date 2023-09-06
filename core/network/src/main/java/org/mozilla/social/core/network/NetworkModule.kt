@@ -9,6 +9,7 @@ import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import org.mozilla.social.core.network.interceptors.AuthInterceptor
 import retrofit2.Retrofit
+import retrofit2.create
 import java.util.concurrent.TimeUnit
 
 fun networkModule(isDebug: Boolean) = module {
@@ -52,6 +53,7 @@ fun networkModule(isDebug: Boolean) = module {
     single { get<Retrofit>().create(SearchApi::class.java) }
     single { get<Retrofit>().create(StatusApi::class.java) }
     single { get<Retrofit>().create(TimelineApi::class.java) }
+    single { get<Retrofit>().create(InstanceApi::class.java) }
     single { get<Retrofit>(named(RECCS_SERVICE)).create(RecommendationApi::class.java) }
 }
 

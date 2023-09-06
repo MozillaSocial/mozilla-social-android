@@ -3,14 +3,18 @@ package org.mozilla.social.feature.report
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -22,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
+import org.mozilla.social.model.InstanceRule
 
 @Composable
 fun ReportRoute(
@@ -37,6 +42,7 @@ fun ReportRoute(
     ) })
 ) {
     ReportScreen(
+        instanceRules = viewModel.instanceRules.collectAsState().value,
         selectedReportType = viewModel.selectedReportType.collectAsState().value,
         reportInteractions = viewModel
     )
@@ -44,15 +50,19 @@ fun ReportRoute(
 
 @Composable
 private fun ReportScreen(
+    instanceRules: List<InstanceRule>,
     selectedReportType: ReportType?,
     reportInteractions: ReportInteractions,
 ) {
-    Column {
+    Column(
+        modifier = Modifier.fillMaxHeight()
+    ) {
         TopBar(
             reportInteractions = reportInteractions,
         )
         Divider()
-        MainScreen(
+        MainContent(
+            instanceRules = instanceRules,
             selectedReportType = selectedReportType,
             reportInteractions = reportInteractions,
         )
@@ -86,7 +96,8 @@ private fun TopBar(
 }
 
 @Composable
-private fun MainScreen(
+private fun MainContent(
+    instanceRules: List<InstanceRule>,
     selectedReportType: ReportType?,
     reportInteractions: ReportInteractions,
 ) {
@@ -99,14 +110,91 @@ private fun MainScreen(
         )
         Spacer(modifier = Modifier.padding(8.dp))
         Text(text = "Choose the best match:")
+        SelectableReportType(
+            reportType = ReportType.SPAM,
+            title = "It's spam",
+            selectedReportType = selectedReportType,
+            reportInteractions = reportInteractions,
+        ) {
+            Text(text = "Malicious links, fake engagement, or repetitive replies")
+        }
+
+        SelectableReportType(
+            reportType = ReportType.VIOLATION,
+            title = "It violates one or more of the server rules",
+            selectedReportType = selectedReportType,
+            reportInteractions = reportInteractions,
+        ) {
+            LazyColumn {
+                items(
+                    count = instanceRules.size,
+                    key = { index -> instanceRules[index].id }
+                ) { index ->
+                    CheckableInstanceRule(
+                        instanceRule = instanceRules[index],
+                        reportInteractions = reportInteractions,
+                    )
+                }
+            }
+        }
+
+        SelectableReportType(
+            reportType = ReportType.OTHER,
+            title = "It's something else",
+            selectedReportType = selectedReportType,
+            reportInteractions = reportInteractions,
+        ) {
+            Text(text = "The issue does not fit into other categories")
+        }
+    }
+}
+
+@Composable
+private fun SelectableReportType(
+    reportType: ReportType,
+    title: String,
+    selectedReportType: ReportType?,
+    reportInteractions: ReportInteractions,
+    content: @Composable () -> Unit,
+) {
+    Row(
+        modifier = Modifier.padding(4.dp)
+    ) {
+        RadioButton(
+            modifier = Modifier
+                .size(20.dp),
+            selected = selectedReportType == reportType,
+            onClick = { reportInteractions.onReportTypeSelected(reportType) }
+        )
+        Spacer(modifier = Modifier.padding(4.dp))
+        Column {
+            Text(
+                text = title
+            )
+            content()
+        }
 
     }
+}
+
+@Composable
+private fun CheckableInstanceRule(
+    instanceRule: InstanceRule,
+    reportInteractions: ReportInteractions,
+) {
+
 }
 
 @Preview
 @Composable
 private fun ReportScreenPreview() {
     ReportScreen(
+        instanceRules = listOf(
+            InstanceRule(
+                1,
+                "no dummies"
+            )
+        ),
         selectedReportType = null,
         reportInteractions = object : ReportInteractions {}
     )

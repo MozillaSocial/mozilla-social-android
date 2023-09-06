@@ -3,6 +3,7 @@ package org.mozilla.social.core.data
 import org.koin.dsl.module
 import org.mozilla.social.core.data.repository.AccountRepository
 import org.mozilla.social.core.data.repository.AuthRepository
+import org.mozilla.social.core.data.repository.InstanceRepository
 import org.mozilla.social.core.data.repository.TimelineRepository
 import org.mozilla.social.core.data.repository.MediaRepository
 import org.mozilla.social.core.data.repository.RecommendationRepository
@@ -19,5 +20,6 @@ fun repositoryModule(isDebug: Boolean) = module {
     single { MediaRepository(get()) }
     single { SearchRepository(get()) }
     single { RecommendationRepository(get()) }
+    single { InstanceRepository(get()) }
     includes(networkModule(isDebug))
 }
