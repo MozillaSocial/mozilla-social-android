@@ -5,8 +5,14 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import org.mozilla.social.common.logging.Log
+import org.mozilla.social.common.utils.edit
+import org.mozilla.social.core.data.repository.InstanceRepository
+import org.mozilla.social.model.InstanceRule
 
 class ReportViewModel(
+    private val instanceRepository: InstanceRepository,
+    private val log: Log,
     private val onReported: () -> Unit,
     private val onClose: () -> Unit,
     private val reportAccountId: String,
@@ -15,6 +21,24 @@ class ReportViewModel(
 
     private val _selectedReportType = MutableStateFlow<ReportType?>(null)
     val selectedReportType = _selectedReportType.asStateFlow()
+
+    private val _instanceRules = MutableStateFlow<List<InstanceRule>>(emptyList())
+    val instanceRules = _instanceRules.asStateFlow()
+
+    init {
+        loadInstanceRules()
+    }
+
+    private fun loadInstanceRules() {
+        viewModelScope.launch {
+            try {
+                val rules = instanceRepository.getInstanceRules()
+                _instanceRules.edit { rules }
+            } catch (e: Exception) {
+                log.e(e)
+            }
+        }
+    }
 
     override fun onCloseClicked() {
         onClose()
@@ -25,7 +49,7 @@ class ReportViewModel(
             try {
 
             } catch (e: Exception) {
-
+                log.e(e)
             }
             onReported()
         }
