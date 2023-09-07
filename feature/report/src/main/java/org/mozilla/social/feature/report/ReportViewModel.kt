@@ -2,8 +2,11 @@ package org.mozilla.social.feature.report
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import org.mozilla.social.common.logging.Log
 import org.mozilla.social.common.utils.edit
@@ -32,6 +35,9 @@ class ReportViewModel(
 
     private val _additionCommentText = MutableStateFlow("")
     val additionalCommentText = _additionCommentText.asStateFlow()
+
+    private val _errorToastMessage = MutableSharedFlow<String>(extraBufferCapacity = 1)
+    val errorToastMessage = _errorToastMessage.asSharedFlow()
 
     init {
         loadInstanceRules()
@@ -66,6 +72,7 @@ class ReportViewModel(
                 )
             } catch (e: Exception) {
                 log.e(e)
+                _errorToastMessage.emit("Error sending report")
             }
             onReported()
         }
