@@ -1,5 +1,6 @@
 package org.mozilla.social.feature.report
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Close
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -20,12 +22,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
+import org.mozilla.social.core.designsystem.theme.FirefoxColor
 import org.mozilla.social.model.InstanceRule
 
 @Composable
@@ -44,6 +48,7 @@ fun ReportRoute(
     ReportScreen(
         instanceRules = viewModel.instanceRules.collectAsState().value,
         selectedReportType = viewModel.selectedReportType.collectAsState().value,
+        checkedRules = viewModel.checkedRules.collectAsState().value,
         reportInteractions = viewModel
     )
 }
@@ -52,6 +57,7 @@ fun ReportRoute(
 private fun ReportScreen(
     instanceRules: List<InstanceRule>,
     selectedReportType: ReportType?,
+    checkedRules: List<InstanceRule>,
     reportInteractions: ReportInteractions,
 ) {
     Column(
@@ -64,6 +70,7 @@ private fun ReportScreen(
         MainContent(
             instanceRules = instanceRules,
             selectedReportType = selectedReportType,
+            checkedRules = checkedRules,
             reportInteractions = reportInteractions,
         )
     }
@@ -99,6 +106,7 @@ private fun TopBar(
 private fun MainContent(
     instanceRules: List<InstanceRule>,
     selectedReportType: ReportType?,
+    checkedRules: List<InstanceRule>,
     reportInteractions: ReportInteractions,
 ) {
     Column(
@@ -131,6 +139,8 @@ private fun MainContent(
                     key = { index -> instanceRules[index].id }
                 ) { index ->
                     CheckableInstanceRule(
+                        enabled = selectedReportType == ReportType.VIOLATION,
+                        checked = checkedRules.contains(instanceRules[index]),
                         instanceRule = instanceRules[index],
                         reportInteractions = reportInteractions,
                     )
@@ -179,23 +189,48 @@ private fun SelectableReportType(
 
 @Composable
 private fun CheckableInstanceRule(
+    enabled: Boolean,
+    checked: Boolean,
     instanceRule: InstanceRule,
     reportInteractions: ReportInteractions,
 ) {
+    Row(
+        Modifier.clickable(
+            enabled = enabled
+        ) {
+            reportInteractions.onServerRuleClicked(instanceRule)
+        },
 
+    ) {
+        Checkbox(
+            enabled = enabled,
+            checked = checked,
+            onCheckedChange = { reportInteractions.onServerRuleClicked(instanceRule) }
+        )
+        Text(
+            modifier = Modifier.align(Alignment.CenterVertically),
+            text = instanceRule.text,
+            color = if (enabled) {
+                Color.Unspecified
+            } else {
+                // same alpha as the disabled checkbox
+                Color.Unspecified.copy(alpha = 0.38f)
+            }
+        )
+    }
 }
 
-@Preview
-@Composable
-private fun ReportScreenPreview() {
-    ReportScreen(
-        instanceRules = listOf(
-            InstanceRule(
-                1,
-                "no dummies"
-            )
-        ),
-        selectedReportType = null,
-        reportInteractions = object : ReportInteractions {}
-    )
-}
+//@Preview
+//@Composable
+//private fun ReportScreenPreview() {
+//    ReportScreen(
+//        instanceRules = listOf(
+//            InstanceRule(
+//                1,
+//                "no dummies"
+//            )
+//        ),
+//        selectedReportType = null,
+//        reportInteractions = object : ReportInteractions {}
+//    )
+//}

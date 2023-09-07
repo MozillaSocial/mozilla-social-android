@@ -22,6 +22,9 @@ class ReportViewModel(
     private val _selectedReportType = MutableStateFlow<ReportType?>(null)
     val selectedReportType = _selectedReportType.asStateFlow()
 
+    private val _checkedRules = MutableStateFlow<List<InstanceRule>>(emptyList())
+    val checkedRules = _checkedRules.asStateFlow()
+
     private val _instanceRules = MutableStateFlow<List<InstanceRule>>(emptyList())
     val instanceRules = _instanceRules.asStateFlow()
 
@@ -52,6 +55,26 @@ class ReportViewModel(
                 log.e(e)
             }
             onReported()
+        }
+    }
+
+    override fun onReportTypeSelected(reportType: ReportType) {
+        _selectedReportType.edit { reportType }
+        if (reportType != ReportType.VIOLATION) {
+            _checkedRules.edit { emptyList() }
+        }
+    }
+
+    override fun onServerRuleClicked(rule: InstanceRule) {
+        _checkedRules.edit {
+            buildList {
+                addAll(checkedRules.value)
+                if (checkedRules.value.contains(rule)) {
+                    remove(rule)
+                } else {
+                    add(rule)
+                }
+            }
         }
     }
 }
