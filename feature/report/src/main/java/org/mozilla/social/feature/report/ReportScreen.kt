@@ -1,6 +1,7 @@
 package org.mozilla.social.feature.report
 
 import android.widget.Toast
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -44,6 +45,7 @@ import androidx.compose.ui.unit.sp
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 import org.mozilla.social.core.designsystem.theme.FirefoxColor
+import org.mozilla.social.core.designsystem.theme.MozillaSocialTheme
 import org.mozilla.social.core.ui.transparentTextFieldColors
 import org.mozilla.social.model.InstanceRule
 
@@ -88,6 +90,7 @@ private fun ReportScreen(
     Box(
         modifier = Modifier
             .windowInsetsPadding(WindowInsets.ime.exclude(WindowInsets.navigationBars))
+            .background(MaterialTheme.colorScheme.surface),
     ) {
         Column(
             modifier = Modifier.fillMaxHeight()
@@ -292,17 +295,21 @@ private fun CheckableInstanceRule(
     }
 }
 
-//@Preview
-//@Composable
-//private fun ReportScreenPreview() {
-//    ReportScreen(
-//        instanceRules = listOf(
-//            InstanceRule(
-//                1,
-//                "no dummies"
-//            )
-//        ),
-//        selectedReportType = null,
-//        reportInteractions = object : ReportInteractions {}
-//    )
-//}
+@Preview
+@Composable
+private fun ReportScreenPreview() {
+    MozillaSocialTheme {
+        ReportScreen(
+            instanceRules = listOf(
+                InstanceRule(
+                    1,
+                    "no dummies"
+                )
+            ),
+            selectedReportType = null,
+            checkedRules = listOf(),
+            additionalCommentText = "",
+            reportInteractions = object : ReportInteractions {}
+        )
+    }
+}
