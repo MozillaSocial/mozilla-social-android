@@ -1,16 +1,26 @@
 package org.mozilla.social.feature.report
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.exclude
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.ime
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Close
+import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
@@ -18,6 +28,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
@@ -30,6 +41,7 @@ import androidx.compose.ui.unit.sp
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 import org.mozilla.social.core.designsystem.theme.FirefoxColor
+import org.mozilla.social.core.ui.transparentTextFieldColors
 import org.mozilla.social.model.InstanceRule
 
 @Composable
@@ -49,6 +61,7 @@ fun ReportRoute(
         instanceRules = viewModel.instanceRules.collectAsState().value,
         selectedReportType = viewModel.selectedReportType.collectAsState().value,
         checkedRules = viewModel.checkedRules.collectAsState().value,
+        additionalCommentText = viewModel.additionalCommentText.collectAsState().value,
         reportInteractions = viewModel
     )
 }
@@ -58,21 +71,28 @@ private fun ReportScreen(
     instanceRules: List<InstanceRule>,
     selectedReportType: ReportType?,
     checkedRules: List<InstanceRule>,
+    additionalCommentText: String,
     reportInteractions: ReportInteractions,
 ) {
-    Column(
-        modifier = Modifier.fillMaxHeight()
+    Box(
+        modifier = Modifier
+            .windowInsetsPadding(WindowInsets.ime.exclude(WindowInsets.navigationBars))
     ) {
-        TopBar(
-            reportInteractions = reportInteractions,
-        )
-        Divider()
-        MainContent(
-            instanceRules = instanceRules,
-            selectedReportType = selectedReportType,
-            checkedRules = checkedRules,
-            reportInteractions = reportInteractions,
-        )
+        Column(
+            modifier = Modifier.fillMaxHeight()
+        ) {
+            TopBar(
+                reportInteractions = reportInteractions,
+            )
+            Divider()
+            MainContent(
+                instanceRules = instanceRules,
+                selectedReportType = selectedReportType,
+                checkedRules = checkedRules,
+                additionalCommentText = additionalCommentText,
+                reportInteractions = reportInteractions,
+            )
+        }
     }
 }
 
@@ -107,17 +127,26 @@ private fun MainContent(
     instanceRules: List<InstanceRule>,
     selectedReportType: ReportType?,
     checkedRules: List<InstanceRule>,
+    additionalCommentText: String,
     reportInteractions: ReportInteractions,
 ) {
     Column(
-        modifier = Modifier.padding(8.dp)
+        modifier = Modifier
+            .padding(start = 16.dp, end = 16.dp)
+            .verticalScroll(rememberScrollState())
     ) {
+        Spacer(modifier = Modifier.padding(8.dp))
         Text(
             text = "Tell us what's wrong with this post",
             fontSize = 24.sp
         )
         Spacer(modifier = Modifier.padding(8.dp))
-        Text(text = "Choose the best match:")
+        Text(
+            text = "Choose the best match:",
+            fontSize = 18.sp,
+            fontWeight = FontWeight.Medium,
+        )
+        Spacer(modifier = Modifier.padding(4.dp))
         SelectableReportType(
             reportType = ReportType.SPAM,
             title = "It's spam",
@@ -133,18 +162,13 @@ private fun MainContent(
             selectedReportType = selectedReportType,
             reportInteractions = reportInteractions,
         ) {
-            LazyColumn {
-                items(
-                    count = instanceRules.size,
-                    key = { index -> instanceRules[index].id }
-                ) { index ->
-                    CheckableInstanceRule(
-                        enabled = selectedReportType == ReportType.VIOLATION,
-                        checked = checkedRules.contains(instanceRules[index]),
-                        instanceRule = instanceRules[index],
-                        reportInteractions = reportInteractions,
-                    )
-                }
+            instanceRules.forEach { instanceRule ->
+                CheckableInstanceRule(
+                    enabled = selectedReportType == ReportType.VIOLATION,
+                    checked = checkedRules.contains(instanceRule),
+                    instanceRule = instanceRule,
+                    reportInteractions = reportInteractions,
+                )
             }
         }
 
@@ -156,6 +180,35 @@ private fun MainContent(
         ) {
             Text(text = "The issue does not fit into other categories")
         }
+
+        Spacer(modifier = Modifier.padding(16.dp))
+        Text(text = "Is there anything else you think we should know?")
+        Spacer(modifier = Modifier.padding(8.dp))
+        TextField(
+            modifier = Modifier
+                .fillMaxWidth()
+                .border(
+                    width = 1.dp,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    shape = RoundedCornerShape(4.dp)
+                ),
+            value = additionalCommentText,
+            colors = transparentTextFieldColors(),
+            label = {
+                Text(text = "Additional comments")
+            },
+            onValueChange = { reportInteractions.onAdditionCommentTextChanged(it) },
+        )
+        Spacer(modifier = Modifier.padding(8.dp))
+
+        Button(
+            modifier = Modifier
+                .fillMaxWidth(),
+            onClick = { reportInteractions.onReportClicked() }
+        ) {
+            Text(text = "Report")
+        }
+        Spacer(modifier = Modifier.padding(16.dp))
     }
 }
 
@@ -179,7 +232,9 @@ private fun SelectableReportType(
         Spacer(modifier = Modifier.padding(4.dp))
         Column {
             Text(
-                text = title
+                text = title,
+                fontWeight = FontWeight.Medium,
+                fontSize = 18.sp,
             )
             content()
         }
@@ -195,18 +250,23 @@ private fun CheckableInstanceRule(
     reportInteractions: ReportInteractions,
 ) {
     Row(
-        Modifier.clickable(
-            enabled = enabled
-        ) {
-            reportInteractions.onServerRuleClicked(instanceRule)
-        },
-
+        Modifier
+            .clickable(
+                enabled = enabled
+            ) {
+                reportInteractions.onServerRuleClicked(instanceRule)
+            }
+            .padding(4.dp)
+            .fillMaxWidth(),
     ) {
         Checkbox(
+            modifier = Modifier
+                .size(20.dp),
             enabled = enabled,
             checked = checked,
             onCheckedChange = { reportInteractions.onServerRuleClicked(instanceRule) }
         )
+        Spacer(modifier = Modifier.padding(4.dp))
         Text(
             modifier = Modifier.align(Alignment.CenterVertically),
             text = instanceRule.text,

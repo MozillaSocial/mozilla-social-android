@@ -8,9 +8,11 @@ import kotlinx.coroutines.launch
 import org.mozilla.social.common.logging.Log
 import org.mozilla.social.common.utils.edit
 import org.mozilla.social.core.data.repository.InstanceRepository
+import org.mozilla.social.core.data.repository.ReportRepository
 import org.mozilla.social.model.InstanceRule
 
 class ReportViewModel(
+    private val reportRepository: ReportRepository,
     private val instanceRepository: InstanceRepository,
     private val log: Log,
     private val onReported: () -> Unit,
@@ -27,6 +29,9 @@ class ReportViewModel(
 
     private val _instanceRules = MutableStateFlow<List<InstanceRule>>(emptyList())
     val instanceRules = _instanceRules.asStateFlow()
+
+    private val _additionCommentText = MutableStateFlow("")
+    val additionalCommentText = _additionCommentText.asStateFlow()
 
     init {
         loadInstanceRules()
@@ -50,7 +55,15 @@ class ReportViewModel(
     override fun onReportClicked() {
         viewModelScope.launch {
             try {
-
+                reportRepository.report(
+                    accountId = reportAccountId,
+                    statusIds = buildList {
+                        reportStatusId?.let { add(it) }
+                    },
+                    comment = additionalCommentText.value,
+                    category = selectedReportType.value?.stringValue,
+                    ruleViolations = instanceRules.value.map { it.id }
+                )
             } catch (e: Exception) {
                 log.e(e)
             }
@@ -76,5 +89,9 @@ class ReportViewModel(
                 }
             }
         }
+    }
+
+    override fun onAdditionCommentTextChanged(text: String) {
+        _additionCommentText.edit { text }
     }
 }

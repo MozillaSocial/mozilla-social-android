@@ -1,7 +1,9 @@
 package org.mozilla.social.feature.report
 
-enum class ReportType {
-    SPAM,
-    VIOLATION,
-    OTHER,
+enum class ReportType(
+    val stringValue: String
+) {
+    SPAM("spam"),
+    VIOLATION("violation"),
+    OTHER("other"),
 }

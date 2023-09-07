@@ -54,6 +54,7 @@ fun networkModule(isDebug: Boolean) = module {
     single { get<Retrofit>().create(StatusApi::class.java) }
     single { get<Retrofit>().create(TimelineApi::class.java) }
     single { get<Retrofit>().create(InstanceApi::class.java) }
+    single { get<Retrofit>().create(ReportApi::class.java) }
     single { get<Retrofit>(named(RECCS_SERVICE)).create(RecommendationApi::class.java) }
 }
 

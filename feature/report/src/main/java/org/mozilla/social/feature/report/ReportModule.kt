@@ -8,6 +8,7 @@ val reportModule = module {
         ReportViewModel(
             get(),
             get(),
+            get(),
             parametersHolder[0],
             parametersHolder[1],
             parametersHolder[2],
