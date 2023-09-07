@@ -26,6 +26,7 @@ import androidx.media3.ui.PlayerView
 import org.koin.androidx.compose.get
 import org.mozilla.social.common.LoadState
 import org.mozilla.social.common.logging.Log
+import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.designsystem.theme.FirefoxColor
 import org.mozilla.social.core.ui.NoTouchOverlay
 
@@ -93,13 +94,13 @@ fun VideoPlayer(
             ) {
                 if (muted.value) {
                     Icon(
-                        imageVector = Icons.Default.VolumeMute,
+                        imageVector = MoSoIcons.VolumeMute,
                         contentDescription = null,
                         tint = FirefoxColor.White,
                     )
                 } else {
                     Icon(
-                        imageVector = Icons.Default.VolumeUp,
+                        imageVector = MoSoIcons.VolumeUp,
                         contentDescription = null,
                         tint = FirefoxColor.White,
                     )
