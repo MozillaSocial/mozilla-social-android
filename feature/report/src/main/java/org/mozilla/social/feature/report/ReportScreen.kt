@@ -236,7 +236,9 @@ private fun SelectableReportType(
     content: @Composable () -> Unit,
 ) {
     Row(
-        modifier = Modifier.padding(4.dp)
+        modifier = Modifier
+            .padding(4.dp)
+            .clickable { reportInteractions.onReportTypeSelected(reportType) }
     ) {
         RadioButton(
             modifier = Modifier
