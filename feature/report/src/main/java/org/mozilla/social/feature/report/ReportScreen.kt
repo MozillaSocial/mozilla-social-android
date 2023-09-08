@@ -20,8 +20,6 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Divider
@@ -44,7 +42,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
-import org.mozilla.social.core.designsystem.theme.FirefoxColor
+import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.designsystem.theme.MozillaSocialTheme
 import org.mozilla.social.core.ui.transparentTextFieldColors
 import org.mozilla.social.model.InstanceRule
@@ -122,7 +120,7 @@ private fun TopBar(
             onClick = { reportInteractions.onCloseClicked() },
         ) {
             Icon(
-                Icons.Rounded.Close,
+                MoSoIcons.Close,
                 "close",
                 tint = MaterialTheme.colorScheme.onSurface,
             )
