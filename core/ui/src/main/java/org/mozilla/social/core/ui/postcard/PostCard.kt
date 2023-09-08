@@ -13,12 +13,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Repeat
-import androidx.compose.material.icons.filled.Reply
-import androidx.compose.material.icons.filled.Share
-import androidx.compose.material.icons.filled.StarBorder
-import androidx.compose.material.icons.rounded.MoreVert
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
@@ -44,6 +38,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat.startActivity
 import coil.compose.AsyncImage
 import org.mozilla.social.common.utils.DimenUtil
+import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.designsystem.theme.FirefoxColor
 import org.mozilla.social.core.designsystem.theme.MozillaSocialTheme
 import org.mozilla.social.core.ui.media.MediaDisplay
@@ -151,7 +146,7 @@ private fun MetaData(
             modifier = Modifier.width(IntrinsicSize.Max),
             onClick = { overflowMenuExpanded.value = true }
         ) {
-            Icon(imageVector = Icons.Rounded.MoreVert, contentDescription = "")
+            Icon(imageVector = MoSoIcons.MoreVert, contentDescription = "")
 
             DropdownMenu(
                 expanded = overflowMenuExpanded.value,
@@ -190,20 +185,20 @@ private fun BottomRow(
     ) {
         BottomIconButton(
             onClick = { postCardInteractions.onReplyClicked(post.statusId) },
-            imageVector = Icons.Default.Reply,
+            imageVector = MoSoIcons.Reply,
             count = post.replyCount,
         )
         Spacer(modifier = Modifier.weight(1f))
         BottomIconButton(
             onClick = { postCardInteractions.onBoostClicked(post.statusId, !post.userBoosted) },
-            imageVector = Icons.Default.Repeat,
+            imageVector = MoSoIcons.Repeat,
             count = post.boostCount,
             highlighted = post.userBoosted,
         )
         Spacer(modifier = Modifier.weight(1f))
         BottomIconButton(
             onClick = { postCardInteractions.onFavoriteClicked(post.statusId, !post.isFavorited) },
-            imageVector = Icons.Default.StarBorder,
+            imageVector = MoSoIcons.StarBorder,
             count = post.favoriteCount,
             highlighted = post.isFavorited,
             highlightColor = FirefoxColor.Yellow40
@@ -221,7 +216,7 @@ private fun BottomRow(
                     startActivity(context, Intent.createChooser(sendIntent, null), null)
                 }
             },
-            imageVector = Icons.Default.Share,
+            imageVector = MoSoIcons.Share,
             count = 0,
         )
     }

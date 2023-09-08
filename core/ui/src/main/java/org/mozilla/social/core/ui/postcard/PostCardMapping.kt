@@ -5,6 +5,7 @@ import androidx.compose.material.icons.filled.Repeat
 import androidx.compose.material.icons.filled.Reply
 import androidx.core.text.HtmlCompat
 import org.mozilla.social.common.utils.timeSinceNow
+import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.ui.poll.toPollUiState
 import org.mozilla.social.model.Post
 import org.mozilla.social.model.Status
@@ -48,11 +49,11 @@ private fun Status.toTopRowMetaDataUiState(): TopRowMetaDataUiState? =
     if (boostedStatus != null) {
         TopRowMetaDataUiState(
             text = "${account.username} boosted",
-            icon = Icons.Default.Repeat
+            icon = MoSoIcons.Repeat
         )
     } else if (inReplyToAccountName != null) {
         TopRowMetaDataUiState(
             text = "In reply to $inReplyToAccountName",
-            icon = Icons.Default.Reply
+            icon = MoSoIcons.Reply
         )
     } else null

@@ -31,17 +31,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AddCircleOutline
-import androidx.compose.material.icons.filled.AddPhotoAlternate
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.DeleteOutline
-import androidx.compose.material.icons.filled.Poll
-import androidx.compose.material.icons.filled.Send
-import androidx.compose.material.icons.filled.Warning
-import androidx.compose.material.icons.filled.WarningAmber
-import androidx.compose.material.icons.rounded.Reply
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
@@ -79,6 +68,7 @@ import org.koin.core.parameter.parametersOf
 import org.mozilla.social.common.LoadState
 import org.mozilla.social.common.utils.buildAnnotatedStringForAccountsAndHashtags
 import org.mozilla.social.common.utils.toFile
+import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.designsystem.theme.FirefoxColor
 import org.mozilla.social.core.designsystem.theme.MozillaSocialTheme
 import org.mozilla.social.core.designsystem.utils.NoIndication
@@ -262,7 +252,7 @@ private fun TopBar(
                 onClick = { onCloseClicked() },
             ) {
                 Icon(
-                    Icons.Default.Close,
+                    MoSoIcons.Close,
                     "close",
                     tint = MaterialTheme.colorScheme.onSurface,
                 )
@@ -286,7 +276,7 @@ private fun TopBar(
                     },
                 ) {
                     Icon(
-                        Icons.Default.Send,
+                        MoSoIcons.Send,
                         "post",
                         tint = MaterialTheme.colorScheme.onSurface,
                     )
@@ -328,7 +318,7 @@ private fun BottomBar(
                     enabled = addImageButtonEnabled,
                 ) {
                     Icon(
-                        Icons.Default.AddPhotoAlternate,
+                        MoSoIcons.AddPhotoAlternate,
                         "attach image",
                         tint = MaterialTheme.colorScheme.onSurface,
                     )
@@ -338,7 +328,7 @@ private fun BottomBar(
                     enabled = pollButtonEnabled,
                 ) {
                     Icon(
-                        Icons.Default.Poll,
+                        MoSoIcons.Poll,
                         "add poll",
                         tint = MaterialTheme.colorScheme.onSurface,
                     )
@@ -347,10 +337,10 @@ private fun BottomBar(
                     onClick = { contentWarningInteractions.onContentWarningClicked() },
                 ) {
                     if (contentWarningText == null) {
-                        Icon(Icons.Default.WarningAmber, "content warning")
+                        Icon(MoSoIcons.WarningAmber, "content warning")
                     } else {
                         Icon(
-                            Icons.Default.Warning,
+                            MoSoIcons.Warning,
                             "content warning",
                             tint = MaterialTheme.colorScheme.error,
                         )
@@ -480,7 +470,7 @@ private fun InReplyToText(
                 modifier = Modifier
                     .size(20.dp)
                     .align(Alignment.CenterVertically),
-                imageVector = Icons.Rounded.Reply,
+                imageVector = MoSoIcons.Reply,
                 contentDescription = ""
             )
             Spacer(modifier = Modifier.padding(start = 8.dp))
@@ -561,7 +551,7 @@ private fun ImageUploadBox(
                     mediaInteractions.onDeleteMediaClicked(imageState.key)
                 }
             ) {
-                Icon(Icons.Default.Delete, "delete")
+                Icon(MoSoIcons.Delete, "delete")
             }
         }
     }
@@ -602,7 +592,7 @@ private fun PollChoice(
                 modifier = Modifier
                     .width(40.dp)
                     .height(40.dp),
-                imageVector = Icons.Default.DeleteOutline,
+                imageVector = MoSoIcons.DeleteOutline,
                 contentDescription = "add poll option",
             )
         }
@@ -629,7 +619,7 @@ private fun PollSettings(
                 modifier = Modifier
                     .width(40.dp)
                     .height(40.dp),
-                imageVector = Icons.Default.AddCircleOutline,
+                imageVector = MoSoIcons.AddCircleOutline,
                 contentDescription = "add poll option",
             )
         }

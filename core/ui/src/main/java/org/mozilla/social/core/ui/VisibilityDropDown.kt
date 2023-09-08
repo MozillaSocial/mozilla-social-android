@@ -24,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.designsystem.theme.MozillaSocialTheme
 import org.mozilla.social.model.StatusVisibility
 
@@ -42,14 +43,14 @@ fun VisibilityDropDownButton(
         )
     ) {
         when (visibility) {
-            StatusVisibility.Public -> ButtonContent(icon = Icons.Default.Public, text = "Public")
-            StatusVisibility.Unlisted -> ButtonContent(icon = Icons.Default.LockOpen, text = "Unlisted")
-            StatusVisibility.Private -> ButtonContent(icon = Icons.Default.Lock, text = "Private")
-            StatusVisibility.Direct -> ButtonContent(icon = Icons.Default.Message, text = "Direct")
+            StatusVisibility.Public -> ButtonContent(icon = MoSoIcons.Public, text = "Public")
+            StatusVisibility.Unlisted -> ButtonContent(icon = MoSoIcons.LockOpen, text = "Unlisted")
+            StatusVisibility.Private -> ButtonContent(icon = MoSoIcons.Lock, text = "Private")
+            StatusVisibility.Direct -> ButtonContent(icon = MoSoIcons.Message, text = "Direct")
         }
         Spacer(modifier = Modifier.padding(start = 8.dp))
         Icon(
-            Icons.Default.ArrowDropDown,
+            MoSoIcons.ArrowDropDown,
             "",
             tint = MaterialTheme.colorScheme.onSurface,
         )
@@ -63,28 +64,28 @@ fun VisibilityDropDownButton(
     ) {
         DropDownItem(
             type = StatusVisibility.Public,
-            icon = Icons.Default.Public,
+            icon = MoSoIcons.Public,
             text = "Public",
             expanded = expanded,
             onVisibilitySelected = onVisibilitySelected
         )
         DropDownItem(
             type = StatusVisibility.Unlisted,
-            icon = Icons.Default.LockOpen,
+            icon = MoSoIcons.LockOpen,
             text = "Unlisted",
             expanded = expanded,
             onVisibilitySelected = onVisibilitySelected
         )
         DropDownItem(
             type = StatusVisibility.Private,
-            icon = Icons.Default.Lock,
+            icon = MoSoIcons.Lock,
             text = "Private",
             expanded = expanded,
             onVisibilitySelected = onVisibilitySelected
         )
         DropDownItem(
             type = StatusVisibility.Direct,
-            icon = Icons.Default.Message,
+            icon = MoSoIcons.Message,
             text = "Direct",
             expanded = expanded,
             onVisibilitySelected = onVisibilitySelected

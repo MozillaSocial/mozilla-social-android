@@ -14,4 +14,4 @@ echo "Initializing secrets…"
 source "$SECRET_ENV"
 
 echo "Releasing with fastlane…"
-fastlane daily
+bundle exec fastlane daily
