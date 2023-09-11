@@ -7,12 +7,12 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
-import org.mozilla.social.core.network.interceptors.AuthInterceptor
+import org.mozilla.social.core.network.interceptors.AuthCredentialInterceptor
 import retrofit2.Retrofit
 import java.util.concurrent.TimeUnit
 
 fun networkModule(isDebug: Boolean) = module {
-    single { AuthInterceptor() }
+    single { AuthCredentialInterceptor() }
     single(
         named(AUTHORIZED_CLIENT)
     ) {
@@ -26,7 +26,21 @@ fun networkModule(isDebug: Boolean) = module {
                     HttpLoggingInterceptor.Level.NONE
                 }
             })
-            .addInterceptor(get<AuthInterceptor>())
+            .addInterceptor(get<AuthCredentialInterceptor>())
+            .build()
+    }
+
+    single(named(RECCS_CLIENT)) {
+        OkHttpClient.Builder()
+            .readTimeout(30, TimeUnit.SECONDS)
+            .connectTimeout(30, TimeUnit.SECONDS)
+            .addNetworkInterceptor(HttpLoggingInterceptor().apply {
+                level = if (isDebug) {
+                    HttpLoggingInterceptor.Level.BODY
+                } else {
+                    HttpLoggingInterceptor.Level.NONE
+                }
+            })
             .build()
     }
     single(
@@ -34,7 +48,7 @@ fun networkModule(isDebug: Boolean) = module {
     ) {
         Retrofit.Builder()
             .baseUrl("https://firefox-api-proxy.cdn.mozilla.net/")
-            .client(get(qualifier = named(AUTHORIZED_CLIENT)))
+            .client(get(qualifier = named(RECCS_CLIENT)))
             .addConverterFactory(json.asConverterFactory(contentType = "application/json".toMediaType()))
             .build()
     }
@@ -53,8 +67,10 @@ fun networkModule(isDebug: Boolean) = module {
     single { get<Retrofit>().create(StatusApi::class.java) }
     single { get<Retrofit>().create(TimelineApi::class.java) }
     single { get<Retrofit>(named(RECCS_SERVICE)).create(RecommendationApi::class.java) }
+    single { get<Retrofit>().create(AppApi::class.java) }
 }
 
 private var json: Json = Json { ignoreUnknownKeys = true }
 private const val AUTHORIZED_CLIENT = "authorizedClient"
+private const val RECCS_CLIENT = "reccsClient"
 private const val RECCS_SERVICE = "reccsService"

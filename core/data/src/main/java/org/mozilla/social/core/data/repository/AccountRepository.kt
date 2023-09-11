@@ -12,8 +12,8 @@ class AccountRepository internal constructor(
     private val socialDatabase: SocialDatabase,
 ) {
 
-    suspend fun getUserAccount(): Account {
-        return accountApi.verifyAccount().toExternalModel()
+    suspend fun verifyUserCredentials(): Account {
+        return accountApi.verifyCredentials().toExternalModel()
     }
 
     suspend fun getAccount(accountId: String): Account =

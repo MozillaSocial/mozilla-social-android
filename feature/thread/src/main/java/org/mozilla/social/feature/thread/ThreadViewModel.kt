@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.stateIn
 import org.mozilla.social.common.logging.Log
 import org.mozilla.social.core.data.repository.AccountRepository
 import org.mozilla.social.core.data.repository.StatusRepository
-import org.mozilla.social.core.datastore.UserPreferencesDatastore
+import org.mozilla.social.core.domain.AccountIdFlow
 import org.mozilla.social.core.domain.GetThreadUseCase
 import org.mozilla.social.core.ui.postcard.PostCardDelegate
 import org.mozilla.social.core.ui.postcard.PostCardUiState
@@ -20,7 +20,7 @@ class ThreadViewModel(
     statusRepository: StatusRepository,
     accountRepository: AccountRepository,
     log: Log,
-    userPreferencesDatastore: UserPreferencesDatastore,
+    accountIdFlow: AccountIdFlow,
     getThreadUseCase: GetThreadUseCase,
     mainStatusId: String,
     onPostClicked: (String) -> Unit,
@@ -28,17 +28,16 @@ class ThreadViewModel(
 ) : ViewModel() {
 
     private val currentUserAccountId: StateFlow<String> =
-        userPreferencesDatastore.dataStore.data.map {
-            it.accountId
-        }.stateIn(
+        accountIdFlow().stateIn(
             viewModelScope,
             SharingStarted.Eagerly,
             ""
         )
 
-    var statuses: Flow<List<PostCardUiState>> = getThreadUseCase.invoke(mainStatusId).map { statuses ->
-        statuses.map { it.toPostCardUiState(currentUserAccountId.value) }
-    }
+    var statuses: Flow<List<PostCardUiState>> =
+        getThreadUseCase.invoke(mainStatusId).map { statuses ->
+            statuses.map { it.toPostCardUiState(currentUserAccountId.value) }
+        }
 
     val postCardDelegate = PostCardDelegate(
         coroutineScope = viewModelScope,

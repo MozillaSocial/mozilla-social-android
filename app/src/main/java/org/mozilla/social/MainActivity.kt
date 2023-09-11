@@ -11,7 +11,6 @@ import androidx.compose.ui.Modifier
 import androidx.core.view.WindowCompat
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.mozilla.social.core.designsystem.theme.MozillaSocialTheme
-import org.mozilla.social.feature.auth.AuthViewModel
 import org.mozilla.social.ui.MainActivityScreen
 
 class MainActivity : ComponentActivity() {
@@ -24,7 +23,6 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             MozillaSocialTheme {
-                // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
@@ -35,12 +33,9 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    override fun onNewIntent(intent: Intent?) {
+    override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
-        if (intent?.data.toString().startsWith(AuthViewModel.AUTH_SCHEME)) {
-            intent?.data?.let {
-                viewModel.onUserCodeReceived(it.toString())
-            }
-        }
+        viewModel.onNewIntentReceived(intent)
     }
 }
+

@@ -1,5 +1,6 @@
 package org.mozilla.social.core.designsystem.component
 
+import android.content.res.Resources.Theme
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -12,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
+import org.mozilla.social.core.designsystem.theme.Typography
 
 @Composable
 fun MoSoBottomNavigationBar(
@@ -49,7 +51,7 @@ fun RowScope.MoSoNavigationBarItem(
         onClick = { navigateTo(destination) },
         colors = MoSoNavigationBarItemDefaults.colors(),
         icon = { MoSoIcon(destination = destination, isSelected = isSelected) },
-        label = { Text(text = destination.tabText) }
+        label = { Text(text = destination.tabText, style = Typography.bodyLarge) }
     )
 }
 

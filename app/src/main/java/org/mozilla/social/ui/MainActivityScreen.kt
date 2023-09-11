@@ -7,6 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import org.mozilla.social.core.designsystem.component.MoSoScaffold
+import org.mozilla.social.core.domain.IsSignedInFlow
 import org.mozilla.social.navigation.MozillaNavHost
 
 @OptIn(ExperimentalMaterial3Api::class)

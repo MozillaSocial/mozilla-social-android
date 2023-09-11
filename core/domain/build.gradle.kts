@@ -26,13 +26,17 @@ dependencies {
     implementation(libs.koin)
     implementation(libs.kotlinx.datetime)
     implementation(project(":core:data"))
+    implementation(project(":core:network"))
+    implementation(project(":core:datastore"))
     implementation(project(":core:model"))
     implementation(project(":core:database"))
 
     implementation(libs.androidx.room.ktx)
 
     implementation(libs.androidx.paging.runtime)
+    implementation(libs.browser)
 
     testImplementation(libs.kotlin.test)
     testImplementation(libs.kotlin.test.junit)
+    implementation(libs.androidx.browser)
 }

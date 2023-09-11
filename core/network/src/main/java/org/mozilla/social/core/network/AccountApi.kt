@@ -15,7 +15,7 @@ interface AccountApi {
     ): NetworkAccount
 
     @GET("/api/v1/accounts/verify_credentials")
-    suspend fun verifyAccount() : NetworkAccount
+    suspend fun verifyCredentials() : NetworkAccount
 
     @GET("/api/v1/accounts/{id}/followers")
     suspend fun getAccountFollowers(
