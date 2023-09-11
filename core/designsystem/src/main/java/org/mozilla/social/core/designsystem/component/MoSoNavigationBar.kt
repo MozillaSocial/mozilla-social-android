@@ -11,7 +11,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import org.mozilla.social.common.utils.StringFactory
 
 @Composable
 fun MoSoBottomNavigationBar(
@@ -49,7 +51,7 @@ fun RowScope.MoSoNavigationBarItem(
         onClick = { navigateTo(destination) },
         colors = MoSoNavigationBarItemDefaults.colors(),
         icon = { MoSoIcon(destination = destination, isSelected = isSelected) },
-        label = { Text(text = destination.tabText) }
+        label = { Text(text = destination.tabText.build(LocalContext.current)) }
     )
 }
 
@@ -81,7 +83,7 @@ interface NavDestination {
 interface NavBarDestination : NavDestination {
     val selectedIcon: ImageVector
     val unselectedIcon: ImageVector
-    val tabText: String
+    val tabText: StringFactory
 }
 
 object MoSoNavigationDefaults {
