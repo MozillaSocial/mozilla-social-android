@@ -46,6 +46,7 @@ import org.mozilla.social.feature.account.follows.navigateToAccountFollowing
 import org.mozilla.social.feature.account.navigateToAccount
 import org.mozilla.social.feature.auth.AUTH_ROUTE
 import org.mozilla.social.feature.auth.navigateToAuth
+import org.mozilla.social.feature.report.navigateToReport
 import org.mozilla.social.feature.settings.navigateToSettings
 import org.mozilla.social.feature.thread.navigateToThread
 import org.mozilla.social.navigation.Account
@@ -255,6 +256,10 @@ class AppState(
 
     fun navigateToThread(statusId: String) {
         navController.navigateToThread(threadStatusId = statusId)
+    }
+
+    fun navigateToReport(accountId: String, statusId: String?) {
+        navController.navigateToReport(reportAccountId = accountId, reportStatusId = statusId)
     }
 
     private fun navigateToTopLevelDestination(destination: NavDestination) {
