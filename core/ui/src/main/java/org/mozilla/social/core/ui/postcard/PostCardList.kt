@@ -1,6 +1,7 @@
 package org.mozilla.social.core.ui.postcard
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -91,24 +92,34 @@ fun PostCardList(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .wrapContentWidth(Alignment.CenterHorizontally)
+                                .padding(16.dp)
                         )
                     }
                 }
 
                 is LoadState.Error -> {
                     item {
-                        Button(
+                        Column(
                             modifier = Modifier
-                                .padding(8.dp),
-                            onClick = { lazyingPagingItems.retry() }) {
-                            Text(text = "Something went wrong")
+                                .padding(8.dp)
+                                .fillMaxWidth()
+                        ) {
+                            Text(
+                                modifier = Modifier.align(Alignment.CenterHorizontally),
+                                text = "Oops, something went wrong"
+                            )
+                            Button(
+                                modifier = Modifier
+                                    .padding(8.dp)
+                                    .align(Alignment.CenterHorizontally),
+                                onClick = { lazyingPagingItems.retry() }) {
+                                Text(text = "Retry")
+                            }
                         }
                     }
                 }
 
-                is LoadState.NotLoading -> {
-
-                }
+                is LoadState.NotLoading -> {}
             }
         }
 
