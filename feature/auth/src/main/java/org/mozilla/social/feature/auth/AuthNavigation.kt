@@ -7,12 +7,12 @@ import androidx.navigation.compose.composable
 
 const val AUTH_ROUTE = "auth"
 
-fun NavController.navigateToAuth(navOptions: NavOptions? = null) {
+fun NavController.navigateToLoginScreen(navOptions: NavOptions? = null) {
     this.navigate(AUTH_ROUTE, navOptions)
 }
 
-fun NavGraphBuilder.authScreen(onAuthenticated: () -> Unit) {
+fun NavGraphBuilder.loginScreen(navigateToLoggedInGraph: () -> Unit) {
     composable(route = AUTH_ROUTE) {
-        AuthRoute(onAuthenticated = onAuthenticated)
+        LoginRoute(navigateToLoggedInGraph = navigateToLoggedInGraph)
     }
 }

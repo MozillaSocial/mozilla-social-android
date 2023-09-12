@@ -4,14 +4,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.mozilla.social.common.logging.Log
-import org.mozilla.social.core.datastore.UserPreferencesDatastore
+import org.mozilla.social.core.domain.IsSignedInFlow
+import org.mozilla.social.core.domain.Logout
 
 class SettingsViewModel(
-    private val userPreferencesDatastore: UserPreferencesDatastore,
+    private val logout: Logout,
+    private val isSignedInFlow: IsSignedInFlow,
     private val log: Log,
     private val onLogout: () -> Unit,
 ) : ViewModel() {
@@ -21,13 +22,11 @@ class SettingsViewModel(
 
     init {
         viewModelScope.launch {
-            userPreferencesDatastore.dataStore.data.map {
-                !it.accessToken.isNullOrBlank()
-            }.map { signedIn ->
-                if (!signedIn) {
+            isSignedInFlow().collectLatest { isSignedIn ->
+                if (isSignedIn) {
                     onLogout()
                 }
-            }.collect()
+            }
         }
     }
 
@@ -37,11 +36,7 @@ class SettingsViewModel(
 
     fun logoutUser() {
         viewModelScope.launch {
-            userPreferencesDatastore.dataStore.updateData {
-                it.toBuilder()
-                    .setAccessToken("")
-                    .build()
-            }
+            logout()
         }
     }
 }

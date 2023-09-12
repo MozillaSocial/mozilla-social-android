@@ -11,7 +11,7 @@ interface OauthApi {
     @FormUrlEncoded
     @POST("oauth/token")
     suspend fun fetchOAuthToken(
-        @Header("domain") domain: String,
+//        @Header("domain") domain: String,
         @Field("client_id") clientId: String,
         @Field("client_secret") clientSecret: String,
         @Field("redirect_uri") redirectUri: String,

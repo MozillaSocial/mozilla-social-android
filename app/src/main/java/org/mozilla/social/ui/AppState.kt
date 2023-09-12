@@ -1,5 +1,6 @@
 package org.mozilla.social.ui
 
+import android.util.Log
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Divider
 import androidx.compose.material3.DrawerState
@@ -45,7 +46,7 @@ import org.mozilla.social.feature.account.follows.navigateToAccountFollowers
 import org.mozilla.social.feature.account.follows.navigateToAccountFollowing
 import org.mozilla.social.feature.account.navigateToAccount
 import org.mozilla.social.feature.auth.AUTH_ROUTE
-import org.mozilla.social.feature.auth.navigateToAuth
+import org.mozilla.social.feature.auth.navigateToLoginScreen
 import org.mozilla.social.feature.report.navigateToReport
 import org.mozilla.social.feature.settings.navigateToSettings
 import org.mozilla.social.feature.thread.navigateToThread
@@ -85,14 +86,13 @@ fun rememberAppState(
 @OptIn(ExperimentalMaterial3Api::class)
 class AppState(
     initialTopLevelDestination: NavDestination = Feed,
-    val navController: NavHostController,
+    val navController: NavHostController, // Don't access this other than for initializing the nav host
     val topAppBarScrollBehavior: TopAppBarScrollBehavior,
     val navigationDrawerState: DrawerState,
     val coroutineScope: CoroutineScope,
     val bottomSheetVisible: MutableState<Boolean>,
     val snackbarHostState: SnackbarHostState,
 ) {
-
 
     private val currentDestination: StateFlow<NavDestination?> =
         navController.currentBackStackEntryFlow.mapLatest { backStackEntry ->
@@ -217,11 +217,18 @@ class AppState(
         navController.popBackStack()
     }
 
-    private fun navigateToAuth() {
-        navController.navigateToAuth()
+    /**
+     * Navigate to the login screen when the user is logged out
+     */
+    fun navigateToLoginScreen() {
+        clearBackstack()
+        navController.navigateToLoginScreen()
     }
 
-    fun navigateToMainGraph() {
+    /**
+     * Navigate to the main graph once the user is logged in
+     */
+    fun navigateToLoggedInGraph() {
         navController.navigate(
             MAIN_ROUTE,
             navOptions = NavOptions.Builder()
@@ -272,11 +279,6 @@ class AppState(
         }
 
         navController.navigate(destination.route, navOptions)
-    }
-
-    fun onLogout() {
-        clearBackstack()
-        navigateToAuth()
     }
 
     @Composable

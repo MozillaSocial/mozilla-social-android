@@ -2,10 +2,9 @@ package org.mozilla.social.core.data.repository
 
 import org.mozilla.social.core.network.OauthApi
 
-class AuthRepository(private val oauthApi: OauthApi) {
+class OauthRepository(private val oauthApi: OauthApi) {
 
     suspend fun fetchOAuthToken(
-        domain: String,
         clientId: String,
         clientSecret: String,
         redirectUri: String,
@@ -13,7 +12,6 @@ class AuthRepository(private val oauthApi: OauthApi) {
         grantType: String
     ): String {
         return oauthApi.fetchOAuthToken(
-            domain = domain,
             clientId = clientId,
             clientSecret = clientSecret,
             redirectUri = redirectUri,

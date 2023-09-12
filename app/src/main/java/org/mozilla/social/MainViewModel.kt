@@ -1,54 +1,17 @@
 package org.mozilla.social
 
+import android.content.Intent
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
-import okhttp3.HttpUrl
-import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
-import org.mozilla.social.core.data.repository.AccountRepository
-import org.mozilla.social.core.data.repository.AuthRepository
-import org.mozilla.social.core.datastore.UserPreferencesDatastore
-import org.mozilla.social.feature.auth.AuthViewModel
-import java.net.URL
+import org.mozilla.social.core.domain.Login
 
 class MainViewModel(
-    private val userPreferencesDatastore: UserPreferencesDatastore,
-    private val authRepository: AuthRepository,
-    private val accountRepository: AccountRepository,
+    private val login: Login,
 ) : ViewModel() {
 
-    fun onUserCodeReceived(code: String) {
-        val httpUrl: HttpUrl? = URL(
-            code.replace("mozsoc://", "http://")
-        ).toHttpUrlOrNull()
-        val codeString = httpUrl?.queryParameter("code")!!
-
-        viewModelScope.launch {
-            onTokenReceived(
-                authRepository.fetchOAuthToken(
-                    domain = "mozilla.social",
-                    clientId = "MoJ_c0aOfXE-8RllOBvAKIeHUpr3usA5u3vS5HJEJ0M",
-                    clientSecret = "1rg6NsrXDuR81UM_ljyv_FNDj8TaInk6pbRok2eqmiM",
-                    redirectUri = AuthViewModel.AUTH_SCHEME,
-                    code = codeString,
-                    grantType = "authorization_code",
-                )
-            )
-        }
-    }
-
-    private fun onTokenReceived(accessToken: String) {
-        viewModelScope.launch {
-            userPreferencesDatastore.dataStore.updateData {
-                it.toBuilder()
-                    .setAccessToken(accessToken)
-                    .build()
-            }
-            userPreferencesDatastore.dataStore.updateData {
-                it.toBuilder()
-                    .setAccountId(accountRepository.getUserAccount().accountId)
-                    .build()
-            }
-        }
+    fun onNewIntentReceived(intent: Intent) {
+        // Attempt to resolve the intent as a login event
+        viewModelScope.launch { login.onNewIntentReceived(intent) }
     }
 }

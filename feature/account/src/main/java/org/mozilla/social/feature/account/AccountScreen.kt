@@ -48,7 +48,6 @@ import androidx.core.text.HtmlCompat
 import coil.compose.AsyncImage
 import com.google.android.material.textview.MaterialTextView
 import org.koin.androidx.compose.koinViewModel
-import org.koin.core.parameter.parametersOf
 import org.mozilla.social.core.designsystem.theme.MozillaSocialTheme
 import org.mozilla.social.model.Account
 
@@ -57,21 +56,19 @@ internal fun AccountRoute(
     onUserFollowings: () -> Unit,
     onUserFollowers: () -> Unit,
     onLogout: () -> Unit,
-    viewModel: AccountViewModel = koinViewModel(parameters = {
-        parametersOf(
-            onUserFollowers,
-            onUserFollowings,
-            onLogout
-        )}),
+    viewModel: AccountViewModel = koinViewModel(),
 ) {
     val account = viewModel.account.collectAsState(initial = null).value
 
     account?.let {
         AccountScreen(
             account = it,
-            userFollowing = viewModel::showUsersFollowing,
-            userFollowers = viewModel::showUsersFollowers,
-            logUserOut = viewModel::logoutUser
+            userFollowing = onUserFollowings,
+            userFollowers = onUserFollowers,
+            onLogoutClicked = {
+                viewModel.onLogoutClicked()
+                onLogout()
+            }
         )
     }
 }
@@ -81,7 +78,7 @@ internal fun AccountScreen(
     account: Account,
     userFollowing: () -> Unit,
     userFollowers: () -> Unit,
-    logUserOut: () -> Unit
+    onLogoutClicked: () -> Unit
 ) {
     MozillaSocialTheme {
         Surface(
@@ -145,7 +142,7 @@ internal fun AccountScreen(
                 }
                 Row {
                     logoutText(name = R.string.logout) {
-                        logUserOut()
+                        onLogoutClicked()
                     }
                 }
             }
@@ -209,18 +206,18 @@ private fun userFollow(
                 .height(IntrinsicSize.Min)
                 .padding(8.dp)
         ) {
-                Row(
+            Row(
+                modifier = Modifier
+                    .clickable {
+                        followersOnClick()
+                    }
+            ) {
+                Text(
+                    text = "Followers: ${account.followersCount}",
                     modifier = Modifier
-                        .clickable {
-                            followersOnClick()
-                        }
-                ) {
-                    Text(
-                        text = "Followers: ${account.followersCount}",
-                        modifier = Modifier
-                            .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 8.dp)
-                    )
-                }
+                        .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 8.dp)
+                )
+            }
 
             Divider(
                 color = Color.Gray,
@@ -229,18 +226,18 @@ private fun userFollow(
                     .width(1.dp)
             )
 
-                Row(
+            Row(
+                modifier = Modifier
+                    .clickable {
+                        followingOnClick()
+                    }
+            ) {
+                Text(
+                    text = "Following: ${account.followingCount}",
                     modifier = Modifier
-                        .clickable {
-                            followingOnClick()
-                        }
-                ) {
-                    Text(
-                        text = "Following: ${account.followingCount}",
-                        modifier = Modifier
-                            .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 8.dp)
-                    )
-                }
+                        .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 8.dp)
+                )
+            }
         }
     }
 }
@@ -292,14 +289,14 @@ private fun userFields(account: Account) {
                 Column(
                     verticalArrangement = Arrangement.SpaceEvenly
                 ) {
-                        Text(
-                            text = field.name,
-                            style = MaterialTheme.typography.bodyMedium
-                        )
-                        Text(
-                            text = field.value,
-                            style = MaterialTheme.typography.titleMedium
-                        )
+                    Text(
+                        text = field.name,
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                    Text(
+                        text = field.value,
+                        style = MaterialTheme.typography.titleMedium
+                    )
                 }
             }
             if (index < account.fields?.size!!) {

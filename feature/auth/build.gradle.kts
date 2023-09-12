@@ -26,7 +26,12 @@ android {
 dependencies {
     implementation(project(":core:designsystem"))
     implementation(project(":core:common"))
+    implementation(project(":core:data"))
+    implementation(project(":core:domain"))
     implementation(project(":core:datastore"))
+    implementation(project(":core:model"))
+
+    implementation("androidx.security:security-crypto:1.0.0")
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

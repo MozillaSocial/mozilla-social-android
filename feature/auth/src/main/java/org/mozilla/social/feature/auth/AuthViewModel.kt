@@ -1,22 +1,27 @@
 package org.mozilla.social.feature.auth
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.map
-import org.mozilla.social.common.logging.Log
-import org.mozilla.social.core.datastore.UserPreferencesDatastore
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
+import org.mozilla.social.core.domain.Login
 
- class AuthViewModel(
-    userPreferencesDatastore: UserPreferencesDatastore,
-    private val log: Log
+class AuthViewModel(
+    private val login: Login,
 ) : ViewModel() {
 
-     val isSignedIn: Flow<Boolean?> = userPreferencesDatastore.dataStore.data.map {
-         !it.accessToken.isNullOrBlank() && !it.accountId.isNullOrBlank()
-     }.distinctUntilChanged()
+    val isSignedIn: Flow<Boolean> = login.isSignedIn.stateIn(
+        viewModelScope,
+        SharingStarted.WhileSubscribed(),
+        initialValue = false
+    )
 
-    companion object {
-        const val AUTH_SCHEME = "mozsoc://auth"
+    fun onLoginClicked(context: Context, domain: String) {
+        viewModelScope.launch {
+            login(context, domain)
+        }
     }
 }

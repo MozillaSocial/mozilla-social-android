@@ -13,7 +13,7 @@ import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
 import org.koin.dsl.module
 import org.mozilla.social.common.commonModule
-import org.mozilla.social.core.data.AuthTokenObserver
+import org.mozilla.social.core.data.AuthCredentialObserver
 import org.mozilla.social.core.data.repositoryModule
 import org.mozilla.social.core.database.databaseModule
 import org.mozilla.social.core.datastore.dataStoreModule
@@ -29,7 +29,7 @@ import org.mozilla.social.feature.thread.threadModule
 
 class MainApplication : Application(), ImageLoaderFactory {
 
-    private lateinit var authTokenObserver: AuthTokenObserver
+    private lateinit var authCredentialObserver: AuthCredentialObserver
 
     override fun onCreate() {
         super.onCreate()
@@ -42,7 +42,7 @@ class MainApplication : Application(), ImageLoaderFactory {
             )
         }
 
-        authTokenObserver = get()
+        authCredentialObserver = get()
     }
 
     // setup coil

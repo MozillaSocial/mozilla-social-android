@@ -8,22 +8,18 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import org.mozilla.social.core.data.repository.AccountRepository
-import org.mozilla.social.core.datastore.UserPreferencesDatastore
-import org.mozilla.social.core.network.model.NetworkAccount
-import org.mozilla.social.core.network.model.NetworkStatus
+import org.mozilla.social.core.domain.AccountIdFlow
 import org.mozilla.social.model.Account
 
 class AccountFollowUsersViewModel(
-    private val userPreferencesDatastore: UserPreferencesDatastore,
+    accountIdFlow: AccountIdFlow,
     private val accountRepository: AccountRepository
 ) : ViewModel() {
     val accountId: StateFlow<String?> =
-        userPreferencesDatastore.dataStore.data.map {
-            it.accountId
-        }.stateIn(viewModelScope, SharingStarted.Eagerly, null)
+        accountIdFlow()
+            .stateIn(viewModelScope, SharingStarted.Eagerly, null)
 
     val accountFollowers: Flow<List<Account>> =
         accountId.flatMapLatest {
@@ -44,7 +40,7 @@ class AccountFollowUsersViewModel(
             val response = accountRepository.getAccountFollowers(accountId)
             try {
                 emit(response)
-            } catch(e: Exception) {
+            } catch (e: Exception) {
 
             }
         }
@@ -55,7 +51,7 @@ class AccountFollowUsersViewModel(
             val response = accountRepository.getAccountFollowing(accountId)
             try {
                 emit(response)
-            } catch(e: Exception) {
+            } catch (e: Exception) {
 
             }
         }
