@@ -24,6 +24,7 @@ import org.mozilla.social.post.newPostModule
 import org.mozilla.social.search.searchModule
 import org.mozilla.social.feature.account.accountModule
 import org.mozilla.social.feature.account.follows.accountFollowUsersModule
+import org.mozilla.social.feature.report.reportModule
 import org.mozilla.social.feature.thread.threadModule
 
 class MainApplication : Application(), ImageLoaderFactory {
@@ -73,5 +74,6 @@ val appModules = module {
         accountFollowUsersModule,
         databaseModule,
         threadModule,
+        reportModule,
     )
 }

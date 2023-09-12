@@ -52,11 +52,13 @@ dependencies {
     implementation(project(":feature:auth"))
     implementation(project(":feature:feed"))
     implementation(project(":feature:search"))
+    implementation(project(":feature:report"))
     implementation(project(":feature:post"))
     implementation(project(":feature:settings"))
     implementation(project(":feature:account"))
     implementation(project(":core:model"))
     implementation(project(":feature:thread"))
+    implementation(project(":feature:report"))
 
     // android
     implementation(libs.androidx.core.ktx)

@@ -1,6 +1,5 @@
 package org.mozilla.social.core.designsystem.component
 
-import android.content.res.Resources.Theme
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -12,7 +11,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.core.designsystem.theme.Typography
 
 @Composable
@@ -51,7 +52,14 @@ fun RowScope.MoSoNavigationBarItem(
         onClick = { navigateTo(destination) },
         colors = MoSoNavigationBarItemDefaults.colors(),
         icon = { MoSoIcon(destination = destination, isSelected = isSelected) },
-        label = { Text(text = destination.tabText, style = Typography.bodyLarge) }
+        label = {
+            Text(
+                text = destination.tabText.build(
+                    LocalContext.current,
+                ),
+                style = Typography.bodyLarge,
+            )
+        }
     )
 }
 
@@ -83,7 +91,7 @@ interface NavDestination {
 interface NavBarDestination : NavDestination {
     val selectedIcon: ImageVector
     val unselectedIcon: ImageVector
-    val tabText: String
+    val tabText: StringFactory
 }
 
 object MoSoNavigationDefaults {
