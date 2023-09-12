@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
@@ -60,30 +61,42 @@ fun PostCardList(
             .pullRefresh(pullRefreshState),
     ) {
 
+        if (lazyingPagingItems.loadState.refresh is LoadState.Error) {
+            Error(
+                modifier = Modifier
+                    .fillMaxSize(),
+                onRetryClicked = { lazyingPagingItems.refresh() }
+            )
+        }
+
         LazyColumn(
             Modifier
                 .fillMaxSize()
                 .padding(4.dp),
         ) {
 
-            reccs?.let {
-                item {
-                    RecommendationCarousel(reccs = it) { openAlertDialog.value = true }
-                }
-            }
+            when (lazyingPagingItems.loadState.refresh) {
+                is LoadState.Error -> {} // handle the error outside the lazy column
+                else -> {
+                    reccs?.let {
+                        item {
+                            RecommendationCarousel(reccs = it) { openAlertDialog.value = true }
+                        }
+                    }
 
-            items(
-                count = lazyingPagingItems.itemCount,
-                key = lazyingPagingItems.itemKey { it.statusId }
-            ) { index ->
-                lazyingPagingItems[index]?.let { item ->
-                    PostCard(post = item, postCardInteractions)
-                    if (index < lazyingPagingItems.itemCount) {
-                        Divider()
+                    items(
+                        count = lazyingPagingItems.itemCount,
+                        key = lazyingPagingItems.itemKey { it.statusId }
+                    ) { index ->
+                        lazyingPagingItems[index]?.let { item ->
+                            PostCard(post = item, postCardInteractions)
+                            if (index < lazyingPagingItems.itemCount) {
+                                Divider()
+                            }
+                        }
                     }
                 }
             }
-
 
             when (lazyingPagingItems.loadState.append) {
                 is LoadState.Loading -> {
@@ -99,23 +112,9 @@ fun PostCardList(
 
                 is LoadState.Error -> {
                     item {
-                        Column(
-                            modifier = Modifier
-                                .padding(8.dp)
-                                .fillMaxWidth()
-                        ) {
-                            Text(
-                                modifier = Modifier.align(Alignment.CenterHorizontally),
-                                text = "Oops, something went wrong"
-                            )
-                            Button(
-                                modifier = Modifier
-                                    .padding(8.dp)
-                                    .align(Alignment.CenterHorizontally),
-                                onClick = { lazyingPagingItems.retry() }) {
-                                Text(text = "Retry")
-                            }
-                        }
+                        Error(
+                            onRetryClicked = { lazyingPagingItems.retry() }
+                        )
                     }
                 }
 
@@ -128,6 +127,32 @@ fun PostCardList(
             refreshing = lazyingPagingItems.loadState.refresh == LoadState.Loading,
             state = pullRefreshState,
         )
+    }
+}
+
+@Composable
+private fun Error(
+    modifier: Modifier = Modifier,
+    onRetryClicked: () -> Unit,
+) {
+    Column(
+        modifier = modifier
+            .padding(8.dp)
+            .fillMaxWidth()
+            .wrapContentSize(align = Alignment.Center)
+    ) {
+        Text(
+            modifier = Modifier.align(Alignment.CenterHorizontally),
+            text = "Oops, something went wrong"
+        )
+        Button(
+            modifier = Modifier
+                .padding(8.dp)
+                .align(Alignment.CenterHorizontally),
+            onClick = { onRetryClicked() }
+        ) {
+            Text(text = "Retry")
+        }
     }
 }
 
