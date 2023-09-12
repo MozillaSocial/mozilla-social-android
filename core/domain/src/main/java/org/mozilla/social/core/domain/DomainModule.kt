@@ -6,7 +6,7 @@ val domainModule = module {
     single { HomeTimelineRemoteMediator(get(), get(), get(), get()) }
     single { GetThreadUseCase(get()) }
     single { Login(get(), get(), get(), get()) }
-    single { Logout(get()) }
+    single { Logout(get(), get()) }
     single { IsSignedInFlow(get()) }
     single { AccountIdFlow(get()) }
 }
