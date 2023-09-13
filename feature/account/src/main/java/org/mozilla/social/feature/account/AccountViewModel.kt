@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
@@ -13,7 +12,6 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import org.mozilla.social.core.data.repository.AccountRepository
 import org.mozilla.social.core.domain.AccountIdFlow
-import org.mozilla.social.core.domain.IsSignedInFlow
 import org.mozilla.social.core.domain.Logout
 import org.mozilla.social.model.Account
 import org.mozilla.social.model.Status
@@ -22,12 +20,42 @@ class AccountViewModel(
     private val accountRepository: AccountRepository,
     accountIdFlow: AccountIdFlow,
     private val logout: Logout,
+    initialAccountId: String?,
+    private val onLoggedOut: () -> Unit,
 ) : ViewModel() {
 
-    private val accountId: StateFlow<String?> =
-        accountIdFlow().stateIn(
-            scope = viewModelScope, started = SharingStarted.Eagerly, initialValue = null,
+    /**
+     * The account ID of the logged in user
+     */
+    private val usersAccountId: StateFlow<String?> = accountIdFlow()
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.Eagerly,
+            initialValue = null,
         )
+
+    /**
+     * if an account Id was passed in the constructor, the use that,
+     * otherwise get the user's account Id
+     */
+    private val accountId: StateFlow<String?> = initialAccountId?.let {
+        flowOf(it).stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.Eagerly,
+            initialValue = null,
+        )
+    } ?: usersAccountId
+
+    /**
+     * true if we are viewing the logged in user's profile
+     */
+    private val isUsersProfile: StateFlow<Boolean> = usersAccountId.flatMapLatest {
+        flowOf(initialAccountId == null || it != initialAccountId)
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.Eagerly,
+        initialValue = false,
+    )
 
     val account: Flow<Account> =
         accountId.flatMapLatest {
@@ -73,6 +101,7 @@ class AccountViewModel(
     fun onLogoutClicked() {
         viewModelScope.launch {
             logout()
+            onLoggedOut()
         }
     }
 

@@ -37,9 +37,9 @@ private fun NavGraphBuilder.mainGraph(appState: AppState) {
         searchScreen()
         settingsScreen(onLogout = appState::navigateToLoginScreen)
         accountScreen(
-            userFollowing = appState::navigateToAccountFollowing,
-            userFollowers = appState::navigateToAccountFollowers,
-            onLogout = appState::navigateToLoginScreen,
+            onFollowingClicked = appState::navigateToAccountFollowing,
+            onFollowersClicked = appState::navigateToAccountFollowers,
+            onLoggedOut = appState::navigateToLoginScreen,
         )
         accountFollowingScreen()
         accountFollowersScreen()
