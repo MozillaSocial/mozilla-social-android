@@ -1,4 +1,4 @@
-package org.mozilla.social.core.ui.postcard
+package org.mozilla.social.core.ui.recommendations
 
 import android.net.Uri
 import androidx.browser.customtabs.CustomTabsIntent

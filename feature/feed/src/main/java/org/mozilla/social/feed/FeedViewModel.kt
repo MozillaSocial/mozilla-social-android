@@ -22,7 +22,6 @@ import org.mozilla.social.core.data.repository.StatusRepository
 import org.mozilla.social.core.data.repository.model.status.toExternalModel
 import org.mozilla.social.core.database.SocialDatabase
 import org.mozilla.social.core.database.model.statusCollections.toStatusWrapper
-import org.mozilla.social.core.datastore.UserPreferencesDatastore
 import org.mozilla.social.core.domain.AccountIdFlow
 import org.mozilla.social.core.domain.HomeTimelineRemoteMediator
 import org.mozilla.social.core.ui.postcard.PostCardDelegate
