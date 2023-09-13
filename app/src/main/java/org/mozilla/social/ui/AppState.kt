@@ -242,9 +242,13 @@ class AppState(
         navController.navigateToSettings()
     }
 
-    fun navigateToAccount() {
+    fun navigateToAccount(
+        accountId: String? = null,
+    ) {
         coroutineScope.launch { navigationDrawerState.close() }
-        navController.navigateToAccount()
+        navController.navigateToAccount(
+            accountId = accountId,
+        )
     }
 
     fun navigateToAccountFollowing() {

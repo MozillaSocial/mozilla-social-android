@@ -28,11 +28,13 @@ fun ThreadScreen(
     onReplyClicked: (String) -> Unit,
     onCloseClicked: () -> Unit,
     onReportClicked: (accountId: String, statusId: String) -> Unit,
+    onAccountClicked: (String) -> Unit,
     viewModel: ThreadViewModel = koinViewModel(parameters = { parametersOf(
         threadStatusId,
         onPostClicked,
         onReplyClicked,
         onReportClicked,
+        onAccountClicked,
     ) })
 ) {
     Column {

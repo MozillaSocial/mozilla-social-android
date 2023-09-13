@@ -123,7 +123,8 @@ private fun MetaData(
             modifier = Modifier
                 .size(36.dp)
                 .clip(RoundedCornerShape(4.dp))
-                .align(Alignment.CenterVertically),
+                .align(Alignment.CenterVertically)
+                .clickable { postCardInteractions.onAccountImageClicked(post.accountId) },
             model = post.profilePictureUrl,
             contentDescription = "",
         )

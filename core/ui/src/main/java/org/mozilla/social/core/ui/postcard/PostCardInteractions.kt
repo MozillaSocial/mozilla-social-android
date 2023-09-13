@@ -10,4 +10,5 @@ interface PostCardInteractions : PollInteractions {
     fun onOverflowMuteClicked(accountId: String) = Unit
     fun onOverflowBlockClicked(accountId: String) = Unit
     fun onOverflowReportClicked(accountId: String, statusId: String) = Unit
+    fun onAccountImageClicked(accountId: String) = Unit
 }

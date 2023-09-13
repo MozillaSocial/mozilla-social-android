@@ -15,12 +15,14 @@ fun NavGraphBuilder.feedScreen(
     onReplyClicked: (String) -> Unit,
     onPostClicked: (String) -> Unit,
     onReportClicked: (accountId: String, statusId: String) -> Unit,
+    onAccountClicked: (String) -> Unit,
 ) {
     composable(route = FEED_ROUTE) {
          FeedScreen(
              onPostClicked = onPostClicked,
              onReplyClicked = onReplyClicked,
              onReportClicked = onReportClicked,
+             onAccountClicked = onAccountClicked,
          )
     }
 }

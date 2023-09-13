@@ -33,6 +33,7 @@ private fun NavGraphBuilder.mainGraph(appState: AppState) {
             onReplyClicked = appState::navigateToNewPost,
             onPostClicked = appState::navigateToThread,
             onReportClicked = appState::navigateToReport,
+            onAccountClicked = appState::navigateToAccount,
         )
         searchScreen()
         settingsScreen(onLogout = appState::navigateToLoginScreen)
@@ -52,6 +53,7 @@ private fun NavGraphBuilder.mainGraph(appState: AppState) {
             onPostClicked = appState::navigateToThread,
             onCloseClicked = { appState.popBackStack() },
             onReportClicked = appState::navigateToReport,
+            onAccountClicked = appState::navigateToAccount,
         )
         reportScreen(
             onReported = { appState.popBackStack() },

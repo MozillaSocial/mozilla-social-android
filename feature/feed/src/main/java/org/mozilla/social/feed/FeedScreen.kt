@@ -14,10 +14,12 @@ fun FeedScreen(
     onPostClicked: (String) -> Unit,
     onReplyClicked: (String) -> Unit,
     onReportClicked: (accountId: String, statusId: String) -> Unit,
+    onAccountClicked: (String) -> Unit,
     viewModel: FeedViewModel = koinViewModel(parameters = { parametersOf(
         onPostClicked,
         onReplyClicked,
         onReportClicked,
+        onAccountClicked,
     ) })
 ) {
     PostCardList(

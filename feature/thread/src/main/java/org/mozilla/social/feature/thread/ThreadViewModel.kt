@@ -26,6 +26,7 @@ class ThreadViewModel(
     onPostClicked: (String) -> Unit,
     onReplyClicked: (String) -> Unit,
     onReportClicked: (accountId: String, statusId: String) -> Unit,
+    onAccountClicked: (String) -> Unit,
 ) : ViewModel() {
 
     private val currentUserAccountId: StateFlow<String> =
@@ -48,6 +49,7 @@ class ThreadViewModel(
         onPostClicked = onPostClicked,
         onReplyClicked = onReplyClicked,
         onReportClicked = onReportClicked,
+        onAccountClicked = onAccountClicked,
     )
 
 }
