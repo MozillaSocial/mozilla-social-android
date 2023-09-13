@@ -5,6 +5,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import org.mozilla.social.core.ui.postcard.PostCardNavigation
 
 const val THREAD_ROUTE = "thread"
 const val THREAD_STATUS_ID = "threadStatusId"
@@ -21,11 +22,8 @@ fun NavController.navigateToThread(
 }
 
 fun NavGraphBuilder.threadScreen(
-    onReplyClicked: (String) -> Unit,
-    onPostClicked: (String) -> Unit,
     onCloseClicked: () -> Unit,
-    onReportClicked: (accountId: String, statusId: String) -> Unit,
-    onAccountClicked: (String) -> Unit,
+    postCardNavigation: PostCardNavigation,
 ) {
     composable(
         route = THREAD_FULL_ROUTE,
@@ -39,11 +37,8 @@ fun NavGraphBuilder.threadScreen(
         threadStatusId?.let {
             ThreadScreen(
                 threadStatusId = threadStatusId,
-                onPostClicked = onPostClicked,
-                onReplyClicked = onReplyClicked,
                 onCloseClicked = onCloseClicked,
-                onReportClicked = onReportClicked,
-                onAccountClicked = onAccountClicked,
+                postCardNavigation = postCardNavigation,
             )
         }
     }

@@ -20,21 +20,16 @@ import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.ui.postcard.PostCardList
+import org.mozilla.social.core.ui.postcard.PostCardNavigation
 
 @Composable
 fun ThreadScreen(
     threadStatusId: String,
-    onPostClicked: (String) -> Unit,
-    onReplyClicked: (String) -> Unit,
     onCloseClicked: () -> Unit,
-    onReportClicked: (accountId: String, statusId: String) -> Unit,
-    onAccountClicked: (String) -> Unit,
+    postCardNavigation: PostCardNavigation,
     viewModel: ThreadViewModel = koinViewModel(parameters = { parametersOf(
         threadStatusId,
-        onPostClicked,
-        onReplyClicked,
-        onReportClicked,
-        onAccountClicked,
+        postCardNavigation,
     ) })
 ) {
     Column {

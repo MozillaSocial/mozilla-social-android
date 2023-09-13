@@ -13,6 +13,7 @@ import org.mozilla.social.core.data.repository.StatusRepository
 import org.mozilla.social.core.domain.AccountIdFlow
 import org.mozilla.social.core.domain.GetThreadUseCase
 import org.mozilla.social.core.ui.postcard.PostCardDelegate
+import org.mozilla.social.core.ui.postcard.PostCardNavigation
 import org.mozilla.social.core.ui.postcard.PostCardUiState
 import org.mozilla.social.core.ui.postcard.toPostCardUiState
 
@@ -23,10 +24,7 @@ class ThreadViewModel(
     accountIdFlow: AccountIdFlow,
     getThreadUseCase: GetThreadUseCase,
     mainStatusId: String,
-    onPostClicked: (String) -> Unit,
-    onReplyClicked: (String) -> Unit,
-    onReportClicked: (accountId: String, statusId: String) -> Unit,
-    onAccountClicked: (String) -> Unit,
+    postCardNavigation: PostCardNavigation,
 ) : ViewModel() {
 
     private val currentUserAccountId: StateFlow<String> =
@@ -46,10 +44,7 @@ class ThreadViewModel(
         statusRepository = statusRepository,
         accountRepository = accountRepository,
         log = log,
-        onPostClicked = onPostClicked,
-        onReplyClicked = onReplyClicked,
-        onReportClicked = onReportClicked,
-        onAccountClicked = onAccountClicked,
+        postCardNavigation = postCardNavigation,
     )
 
 }

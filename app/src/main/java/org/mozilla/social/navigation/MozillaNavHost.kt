@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.NavHost
 import androidx.navigation.navigation
+import org.mozilla.social.core.ui.postcard.PostCardNavigation
 import org.mozilla.social.feature.account.accountScreen
 import org.mozilla.social.feature.account.follows.accountFollowersScreen
 import org.mozilla.social.feature.account.follows.accountFollowingScreen
@@ -29,11 +30,16 @@ fun MozillaNavHost(appState: AppState) {
 
 private fun NavGraphBuilder.mainGraph(appState: AppState) {
     navigation(startDestination = FEED_ROUTE, route = MAIN_ROUTE) {
+        val postCardNavigation = object: PostCardNavigation {
+            override fun onReplyClicked(statusId: String) = appState.navigateToNewPost(statusId)
+            override fun onPostClicked(statusId: String) = appState.navigateToThread(statusId)
+            override fun onReportClicked(accountId: String, statusId: String) =
+                appState.navigateToReport(accountId, statusId)
+            override fun onAccountClicked(accountId: String) = appState.navigateToAccount(accountId)
+        }
+
         feedScreen(
-            onReplyClicked = appState::navigateToNewPost,
-            onPostClicked = appState::navigateToThread,
-            onReportClicked = appState::navigateToReport,
-            onAccountClicked = appState::navigateToAccount,
+            postCardNavigation = postCardNavigation,
         )
         searchScreen()
         settingsScreen(onLogout = appState::navigateToLoginScreen)
@@ -49,11 +55,8 @@ private fun NavGraphBuilder.mainGraph(appState: AppState) {
             onCloseClicked = { appState.popBackStack() },
         )
         threadScreen(
-            onReplyClicked = appState::navigateToNewPost,
-            onPostClicked = appState::navigateToThread,
             onCloseClicked = { appState.popBackStack() },
-            onReportClicked = appState::navigateToReport,
-            onAccountClicked = appState::navigateToAccount,
+            postCardNavigation = postCardNavigation,
         )
         reportScreen(
             onReported = { appState.popBackStack() },

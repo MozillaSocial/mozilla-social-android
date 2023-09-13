@@ -12,8 +12,5 @@ val threadModule = module {
         get(),
         parametersHolder[0],
         parametersHolder[1],
-        parametersHolder[2],
-        parametersHolder[3],
-        parametersHolder[4],
     ) }
 }
