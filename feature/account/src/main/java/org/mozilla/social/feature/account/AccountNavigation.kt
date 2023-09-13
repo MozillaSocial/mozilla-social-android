@@ -6,6 +6,13 @@ import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 
+
+/**
+ * The my account route is used for the account tab.  The account route is used for any
+ * account that will open outside of the bottom navigation tab.
+ */
+const val MY_ACCOUNT_ROUTE = "myAccount"
+
 const val ACCOUNT_ROUTE = "account"
 const val ACCOUNT_ID = "accountId"
 const val ACCOUNT_FULL_ROUTE = "$ACCOUNT_ROUTE?$ACCOUNT_ID={$ACCOUNT_ID}"
@@ -14,9 +21,10 @@ fun NavController.navigateToAccount(
     navOptions: NavOptions? = null,
     accountId: String? = null,
 ) {
+    println("johnny accountId: $accountId")
     when {
         accountId != null -> navigate("$ACCOUNT_ROUTE?$ACCOUNT_ID=$accountId", navOptions)
-        else -> navigate(ACCOUNT_ROUTE, navOptions)
+        else -> navigate(MY_ACCOUNT_ROUTE, navOptions)
     }
 }
 
@@ -25,6 +33,19 @@ fun NavGraphBuilder.accountScreen(
     onFollowersClicked: () -> Unit,
     onLoggedOut: () -> Unit
 ) {
+
+    composable(
+        route = MY_ACCOUNT_ROUTE,
+    ) {
+        println("johnny a1")
+        AccountRoute(
+            accountId = null,
+            onFollowingClicked = onFollowingClicked,
+            onFollowersClicked = onFollowersClicked,
+            onLoggedOut = onLoggedOut
+        )
+    }
+
     composable(
         route = ACCOUNT_FULL_ROUTE,
         arguments = listOf(
@@ -33,6 +54,7 @@ fun NavGraphBuilder.accountScreen(
             }
         )
     ) {
+        println("johnny a2")
         val accountId: String? = it.arguments?.getString(ACCOUNT_ID)
         AccountRoute(
             accountId = accountId,
