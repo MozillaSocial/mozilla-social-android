@@ -21,7 +21,6 @@ fun NavController.navigateToAccount(
     navOptions: NavOptions? = null,
     accountId: String? = null,
 ) {
-    println("johnny accountId: $accountId")
     when {
         accountId != null -> navigate("$ACCOUNT_ROUTE?$ACCOUNT_ID=$accountId", navOptions)
         else -> navigate(MY_ACCOUNT_ROUTE, navOptions)
@@ -37,7 +36,6 @@ fun NavGraphBuilder.accountScreen(
     composable(
         route = MY_ACCOUNT_ROUTE,
     ) {
-        println("johnny a1")
         AccountRoute(
             accountId = null,
             onFollowingClicked = onFollowingClicked,
@@ -54,7 +52,6 @@ fun NavGraphBuilder.accountScreen(
             }
         )
     ) {
-        println("johnny a2")
         val accountId: String? = it.arguments?.getString(ACCOUNT_ID)
         AccountRoute(
             accountId = accountId,
