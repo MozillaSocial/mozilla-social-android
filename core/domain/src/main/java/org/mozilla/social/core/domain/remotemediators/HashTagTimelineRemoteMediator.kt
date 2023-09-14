@@ -1,39 +1,38 @@
-package org.mozilla.social.core.domain
+package org.mozilla.social.core.domain.remotemediators
 
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import androidx.room.withTransaction
-import kotlinx.coroutines.async
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import org.mozilla.social.core.data.repository.AccountRepository
 import org.mozilla.social.core.data.repository.StatusRepository
 import org.mozilla.social.core.data.repository.TimelineRepository
 import org.mozilla.social.core.database.SocialDatabase
-import org.mozilla.social.core.database.model.statusCollections.HomeTimelineStatus
-import org.mozilla.social.core.database.model.statusCollections.HomeTimelineStatusWrapper
-import org.mozilla.social.model.Status
+import org.mozilla.social.core.database.model.statusCollections.HashTagTimelineStatus
+import org.mozilla.social.core.database.model.statusCollections.HashTagTimelineStatusWrapper
 
 @OptIn(ExperimentalPagingApi::class)
-class HomeTimelineRemoteMediator(
+class HashTagTimelineRemoteMediator(
     private val timelineRepository: TimelineRepository,
     private val accountRepository: AccountRepository,
     private val statusRepository: StatusRepository,
     private val socialDatabase: SocialDatabase,
-) : RemoteMediator<Int, HomeTimelineStatusWrapper>() {
+    private val hashTag: String,
+) : RemoteMediator<Int, HashTagTimelineStatusWrapper>() {
 
     override suspend fun load(
         loadType: LoadType,
-        state: PagingState<Int, HomeTimelineStatusWrapper>
+        state: PagingState<Int, HashTagTimelineStatusWrapper>
     ): MediatorResult {
         return try {
             var pageSize: Int = state.config.pageSize
             val response = when (loadType) {
                 LoadType.REFRESH -> {
                     pageSize = state.config.initialLoadSize
-                    timelineRepository.getHomeTimeline(
+                    timelineRepository.getHashtagTimeline(
+                        hashTag = hashTag,
                         olderThanId = null,
                         immediatelyNewerThanId = null,
                         loadSize = pageSize,
@@ -43,7 +42,8 @@ class HomeTimelineRemoteMediator(
                 LoadType.PREPEND -> {
                     val firstItem = state.firstItemOrNull()
                         ?: return MediatorResult.Success(endOfPaginationReached = true)
-                    timelineRepository.getHomeTimeline(
+                    timelineRepository.getHashtagTimeline(
+                        hashTag = hashTag,
                         olderThanId = null,
                         immediatelyNewerThanId = firstItem.status.statusId,
                         loadSize = pageSize,
@@ -53,24 +53,26 @@ class HomeTimelineRemoteMediator(
                 LoadType.APPEND -> {
                     val lastItem = state.lastItemOrNull()
                         ?: return MediatorResult.Success(endOfPaginationReached = true)
-                    timelineRepository.getHomeTimeline(
+                    timelineRepository.getHashtagTimeline(
+                        hashTag = hashTag,
                         olderThanId = lastItem.status.statusId,
                         immediatelyNewerThanId = null,
                         loadSize = pageSize,
                     )
                 }
-            }.getInReplyToAccountNames()
+            }.getInReplyToAccountNames(accountRepository)
 
             socialDatabase.withTransaction {
                 if (loadType == LoadType.REFRESH) {
-                    socialDatabase.homeTimelineDao().deleteHomeTimeline()
+                    socialDatabase.hashTagTimelineDao().deleteHashTagTimeline(hashTag)
                 }
 
                 statusRepository.saveStatusesToDatabase(response)
 
-                socialDatabase.homeTimelineDao().insertAll(response.map {
-                    HomeTimelineStatus(
+                socialDatabase.hashTagTimelineDao().insertAll(response.map {
+                    HashTagTimelineStatus(
                         statusId = it.statusId,
+                        hashTag = hashTag,
                         createdAt = it.createdAt,
                         accountId = it.account.accountId,
                         pollId = it.poll?.pollId,
@@ -99,20 +101,4 @@ class HomeTimelineRemoteMediator(
             MediatorResult.Error(e)
         }
     }
-
-    private suspend fun List<Status>.getInReplyToAccountNames(): List<Status> =
-        coroutineScope {
-            map { status ->
-                // get in reply to account names
-                async {
-                    status.copy(
-                        inReplyToAccountName = status.inReplyToAccountId?.let { accountId ->
-                            accountRepository.getAccount(accountId).displayName
-                        }
-                    )
-                }
-            }.map {
-                it.await()
-            }
-        }
 }
