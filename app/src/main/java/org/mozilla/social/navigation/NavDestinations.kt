@@ -10,7 +10,9 @@ import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.core.designsystem.component.NavBarDestination
 import org.mozilla.social.core.designsystem.component.NavDestination
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
+import org.mozilla.social.feature.account.ACCOUNT_FULL_ROUTE
 import org.mozilla.social.feature.account.ACCOUNT_ROUTE
+import org.mozilla.social.feature.account.MY_ACCOUNT_ROUTE
 import org.mozilla.social.feature.settings.SETTINGS_ROUTE
 import org.mozilla.social.feed.FEED_ROUTE
 import org.mozilla.social.post.NEW_POST_ROUTE
@@ -38,7 +40,7 @@ object Settings : NavBarDestination {
 }
 
 object Account : NavBarDestination {
-    override val route: String = ACCOUNT_ROUTE
+    override val route: String = MY_ACCOUNT_ROUTE
     override val selectedIcon = MoSoIcons.AccountCircle
     override val unselectedIcon = Icons.Outlined.AccountCircle
     override val tabText = StringFactory.resource(R.string.account_tab_text)
