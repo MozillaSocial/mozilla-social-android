@@ -5,6 +5,12 @@ import org.koin.dsl.module
 
 val hashTagModule = module {
     viewModel { parametersHolder ->
-        HashTagViewModel()
+        HashTagViewModel(
+            get(),
+            get(),
+            get(),
+            parametersHolder[0],
+            parametersHolder[1],
+        )
     }
 }
