@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "org.mozilla.social.feature.thread"
+    namespace = "org.mozilla.social.feature.hashtag"
 
     defaultConfig {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
