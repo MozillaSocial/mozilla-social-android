@@ -25,6 +25,7 @@ import org.mozilla.social.core.database.model.statusCollections.toStatusWrapper
 import org.mozilla.social.core.domain.AccountIdFlow
 import org.mozilla.social.core.domain.HomeTimelineRemoteMediator
 import org.mozilla.social.core.ui.postcard.PostCardDelegate
+import org.mozilla.social.core.ui.postcard.PostCardNavigation
 import org.mozilla.social.core.ui.postcard.toPostCardUiState
 
 /**
@@ -38,9 +39,7 @@ class FeedViewModel(
     accountRepository: AccountRepository,
     private val socialDatabase: SocialDatabase,
     log: Log,
-    onPostClicked: (String) -> Unit,
-    onReplyClicked: (String) -> Unit,
-    onReportClicked: (accountId: String, statusId: String) -> Unit,
+    postCardNavigation: PostCardNavigation,
 ) : ViewModel() {
 
     private val currentUserAccountId: StateFlow<String> =
@@ -78,9 +77,7 @@ class FeedViewModel(
         statusRepository = statusRepository,
         accountRepository = accountRepository,
         log = log,
-        onReplyClicked = onReplyClicked,
-        onPostClicked = onPostClicked,
-        onReportClicked = onReportClicked,
+        postCardNavigation = postCardNavigation,
     )
 
     private val currentFeedType = MutableStateFlow(INITIAL_FEED).also {

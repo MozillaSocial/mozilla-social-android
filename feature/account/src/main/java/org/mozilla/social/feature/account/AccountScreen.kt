@@ -48,26 +48,34 @@ import androidx.core.text.HtmlCompat
 import coil.compose.AsyncImage
 import com.google.android.material.textview.MaterialTextView
 import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.parametersOf
 import org.mozilla.social.core.designsystem.theme.MozillaSocialTheme
 import org.mozilla.social.model.Account
 
 @Composable
 internal fun AccountRoute(
-    onUserFollowings: () -> Unit,
-    onUserFollowers: () -> Unit,
-    onLogout: () -> Unit,
-    viewModel: AccountViewModel = koinViewModel(),
+    accountId: String?,
+    onFollowingClicked: () -> Unit,
+    onFollowersClicked: () -> Unit,
+    onLoggedOut: () -> Unit,
+    viewModel: AccountViewModel = koinViewModel(
+        parameters = {
+            parametersOf(
+                accountId,
+                onLoggedOut,
+            )
+        }
+    ),
 ) {
     val account = viewModel.account.collectAsState(initial = null).value
 
     account?.let {
         AccountScreen(
             account = it,
-            userFollowing = onUserFollowings,
-            userFollowers = onUserFollowers,
+            onFollowingClicked = onFollowingClicked,
+            onFollowersClicked = onFollowersClicked,
             onLogoutClicked = {
                 viewModel.onLogoutClicked()
-                onLogout()
             }
         )
     }
@@ -76,8 +84,8 @@ internal fun AccountRoute(
 @Composable
 internal fun AccountScreen(
     account: Account,
-    userFollowing: () -> Unit,
-    userFollowers: () -> Unit,
+    onFollowingClicked: () -> Unit,
+    onFollowersClicked: () -> Unit,
     onLogoutClicked: () -> Unit
 ) {
     MozillaSocialTheme {
@@ -113,8 +121,8 @@ internal fun AccountScreen(
                                 border = BorderStroke(2.dp, Color.Gray),
                                 shape = RoundedCornerShape(8.dp)
                             ),
-                        followingOnClick = userFollowing,
-                        followersOnClick = userFollowers
+                        onFollowingClicked = onFollowingClicked,
+                        onFollowersClicked = onFollowersClicked
                     )
                 }
                 Box(
@@ -197,8 +205,8 @@ private fun userInfo(account: Account, modifier: Modifier) {
 private fun userFollow(
     account: Account,
     modifier: Modifier,
-    followersOnClick: () -> Unit,
-    followingOnClick: () -> Unit
+    onFollowingClicked: () -> Unit,
+    onFollowersClicked: () -> Unit,
 ) {
     Box(modifier = modifier) {
         Row(
@@ -209,7 +217,7 @@ private fun userFollow(
             Row(
                 modifier = Modifier
                     .clickable {
-                        followersOnClick()
+                        onFollowersClicked()
                     }
             ) {
                 Text(
@@ -229,7 +237,7 @@ private fun userFollow(
             Row(
                 modifier = Modifier
                     .clickable {
-                        followingOnClick()
+                        onFollowingClicked()
                     }
             ) {
                 Text(

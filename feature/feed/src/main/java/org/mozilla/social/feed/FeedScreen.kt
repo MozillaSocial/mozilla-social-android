@@ -8,16 +8,13 @@ import androidx.compose.ui.platform.LocalContext
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 import org.mozilla.social.core.ui.postcard.PostCardList
+import org.mozilla.social.core.ui.postcard.PostCardNavigation
 
 @Composable
 fun FeedScreen(
-    onPostClicked: (String) -> Unit,
-    onReplyClicked: (String) -> Unit,
-    onReportClicked: (accountId: String, statusId: String) -> Unit,
+    postCardNavigation: PostCardNavigation,
     viewModel: FeedViewModel = koinViewModel(parameters = { parametersOf(
-        onPostClicked,
-        onReplyClicked,
-        onReportClicked,
+        postCardNavigation
     ) })
 ) {
     PostCardList(
