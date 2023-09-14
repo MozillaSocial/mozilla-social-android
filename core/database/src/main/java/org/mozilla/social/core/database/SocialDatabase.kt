@@ -36,9 +36,10 @@ import org.mozilla.social.core.database.model.statusCollections.HomeTimelineStat
         DatabasePoll::class,
         HashTagTimelineStatus::class,
     ],
-    version = 2,
+    version = 3,
     autoMigrations = [
-        AutoMigration(1, 2, DatabaseMigrations.Schema1to2::class)
+        AutoMigration(1, 2, DatabaseMigrations.Schema1to2::class),
+        AutoMigration(2, 3)
     ],
     exportSchema = true
 )

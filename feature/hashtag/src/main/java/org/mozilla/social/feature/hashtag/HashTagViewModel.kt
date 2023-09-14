@@ -12,6 +12,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import org.koin.core.parameter.parametersOf
+import org.koin.java.KoinJavaComponent.inject
 import org.mozilla.social.common.logging.Log
 import org.mozilla.social.core.data.repository.AccountRepository
 import org.mozilla.social.core.data.repository.StatusRepository
@@ -28,12 +30,15 @@ class HashTagViewModel(
     statusRepository: StatusRepository,
     accountRepository: AccountRepository,
     log: Log,
-    hashTagTimelineRemoteMediator: HashTagTimelineRemoteMediator,
     socialDatabase: SocialDatabase,
     accountIdFlow: AccountIdFlow,
-    hastTag: String,
+    hashTag: String,
     postCardNavigation: PostCardNavigation,
 ) : ViewModel() {
+
+    private val hashTagTimelineRemoteMediator: HashTagTimelineRemoteMediator by inject(
+        HashTagTimelineRemoteMediator::class.java
+    ) { parametersOf(hashTag) }
 
     private val currentUserAccountId: StateFlow<String> =
         accountIdFlow().filterNotNull()
@@ -51,7 +56,7 @@ class HashTagViewModel(
         ),
         remoteMediator = hashTagTimelineRemoteMediator
     ) {
-        socialDatabase.hashTagTimelineDao().hashTagTimelinePagingSource(hastTag)
+        socialDatabase.hashTagTimelineDao().hashTagTimelinePagingSource(hashTag)
     }.flow.map { pagingData ->
         pagingData.map {
             it.toStatusWrapper().toExternalModel().toPostCardUiState(currentUserAccountId.value)
