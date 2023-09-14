@@ -5,6 +5,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import org.mozilla.social.core.ui.postcard.PostCardNavigation
 
 const val HASH_TAG_ROUTE = "hashTag"
 const val HASH_TAG_VALUE = "hashTagValue"
@@ -18,7 +19,7 @@ fun NavController.navigateToHashTag(
 }
 
 fun NavGraphBuilder.hashTagScreen(
-    //TODO add status card nav interface
+    postCardNavigation: PostCardNavigation,
 ) {
     composable(
         route = HASHTAG_FULL_ROUTE,
@@ -32,6 +33,7 @@ fun NavGraphBuilder.hashTagScreen(
         hashTagValue?.let {
             HashTagRoute(
                 hashTag = hashTagValue,
+                postCardNavigation = postCardNavigation,
             )
         }
     }
