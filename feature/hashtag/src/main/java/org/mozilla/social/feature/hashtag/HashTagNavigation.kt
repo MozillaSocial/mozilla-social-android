@@ -19,6 +19,7 @@ fun NavController.navigateToHashTag(
 }
 
 fun NavGraphBuilder.hashTagScreen(
+    onCloseClicked: () -> Unit,
     postCardNavigation: PostCardNavigation,
 ) {
     composable(
@@ -34,6 +35,7 @@ fun NavGraphBuilder.hashTagScreen(
             HashTagRoute(
                 hashTag = hashTagValue,
                 postCardNavigation = postCardNavigation,
+                onCloseClicked = onCloseClicked,
             )
         }
     }

@@ -64,6 +64,7 @@ private fun NavGraphBuilder.mainGraph(appState: AppState) {
             onCloseClicked = { appState.popBackStack() },
         )
         hashTagScreen(
+            onCloseClicked = { appState.popBackStack() },
             postCardNavigation = postCardNavigation,
         )
     }
