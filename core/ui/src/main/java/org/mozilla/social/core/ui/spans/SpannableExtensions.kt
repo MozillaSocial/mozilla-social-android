@@ -24,17 +24,19 @@ fun Spannable.makeLinksClickable(
         setSpan(
             object: URLSpan(span.url) {
                 override fun onClick(view: View) {
-                    println("johnny text: $spanText")
-                    println("johnny url: $url")
                     when {
                         spanText.startsWith("@") -> {
+                            // find the correct mention
                             mentions.find {
-                                it.acct == spanText.substringAfter("@")
-                            }?.accountId?.let { onAccountClicked(it) }
+                                // check the user name and the domain
+                                it.acct.substringBeforeLast("@") == spanText.substringAfter("@")
+                                        && url.contains(it.acct.substringAfter("@"))
+                            }?.accountId?.let {
+                                onAccountClicked(it)
+                            }
                         }
-                        spanText.startsWith("#") -> {
+                        spanText.startsWith("#") ->
                             onHashTagClicked(spanText.substringAfter("#"))
-                        }
                         else -> onLinkClick(url)
                     }
                 }
