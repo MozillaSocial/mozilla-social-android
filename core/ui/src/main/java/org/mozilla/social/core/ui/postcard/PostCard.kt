@@ -1,7 +1,11 @@
 package org.mozilla.social.core.ui.postcard
 
 import android.content.Intent
+import android.content.res.ColorStateList
+import android.net.Uri
+import android.text.method.LinkMovementMethod
 import android.widget.TextView
+import androidx.browser.customtabs.CustomTabsIntent
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -36,6 +40,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat.startActivity
+import androidx.core.net.toUri
+import androidx.core.text.HtmlCompat
+import androidx.core.text.toSpannable
 import coil.compose.AsyncImage
 import org.mozilla.social.common.utils.DimenUtil
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
@@ -43,6 +50,8 @@ import org.mozilla.social.core.designsystem.theme.FirefoxColor
 import org.mozilla.social.core.designsystem.theme.MozillaSocialTheme
 import org.mozilla.social.core.ui.media.MediaDisplay
 import org.mozilla.social.core.ui.poll.Poll
+import org.mozilla.social.core.ui.postcontent.PostContent
+import org.mozilla.social.core.ui.spans.makeLinksClickable
 
 @Composable
 fun PostCard(
@@ -92,18 +101,10 @@ private fun MainPost(
         post = post,
         postCardInteractions = postCardInteractions,
     )
-    val context = LocalContext.current
-    AndroidView(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = 4.dp, top = 4.dp),
-        factory = {
-            TextView(it).apply {
-                // there is an extra chunk of padding added, so lets remove some of that
-                setPadding(0, 0, 0, DimenUtil.dpToPxInt(context, -20f))
-            }
-        },
-        update = { it.text = post.statusText }
+    PostContent(
+        mentions = post.mentions,
+        htmlText = post.statusTextHtml,
+        postContentInteractions = postCardInteractions,
     )
     MediaDisplay(attachments = post.mediaAttachments)
     post.pollUiState?.let { Poll(it, postCardInteractions) }

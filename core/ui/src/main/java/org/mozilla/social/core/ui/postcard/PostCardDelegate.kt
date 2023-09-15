@@ -107,4 +107,16 @@ class PostCardDelegate(
     override fun onAccountImageClicked(accountId: String) {
         postCardNavigation.onAccountClicked(accountId)
     }
+
+    override fun onLinkClicked(url: String) {
+        postCardNavigation.onLinkClicked(url)
+    }
+
+    override fun onAccountClicked(accountId: String) {
+        postCardNavigation.onAccountClicked(accountId)
+    }
+
+    override fun onHashTagClicked(hashTag: String) {
+        postCardNavigation.onHashTagClicked(hashTag)
+    }
 }
