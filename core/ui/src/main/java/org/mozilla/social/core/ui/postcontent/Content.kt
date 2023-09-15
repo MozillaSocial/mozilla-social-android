@@ -27,7 +27,7 @@ fun PostContent(
 ) {
     val context = LocalContext.current
     val linkColor: Color = MaterialTheme.colorScheme.primary
-    val textContent = remember {
+    val textContent = remember(htmlText) {
         val spannable = HtmlCompat.fromHtml(htmlText, 0)
             .toSpannable()
             .makeLinksClickable(
