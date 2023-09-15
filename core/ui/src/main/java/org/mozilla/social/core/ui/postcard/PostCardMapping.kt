@@ -1,13 +1,9 @@
 package org.mozilla.social.core.ui.postcard
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Repeat
-import androidx.compose.material.icons.filled.Reply
 import androidx.core.text.HtmlCompat
 import org.mozilla.social.common.utils.timeSinceNow
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.ui.poll.toPollUiState
-import org.mozilla.social.model.Post
 import org.mozilla.social.model.Status
 
 /**
@@ -31,7 +27,7 @@ private fun Status.toMainPostCardUiState(
         pollUiState = poll?.toPollUiState(
             isUserCreatedPoll = currentUserAccountId == account.accountId
         ),
-        statusText = HtmlCompat.fromHtml(content, 0),
+        statusTextHtml = content,
         mediaAttachments = mediaAttachments,
         profilePictureUrl = account.avatarStaticUrl,
         postMetaDataText = "${createdAt.timeSinceNow()} - @${account.acct}",
@@ -43,6 +39,7 @@ private fun Status.toMainPostCardUiState(
         userBoosted = isBoosted ?: false,
         isFavorited = isFavourited ?: false,
         accountId = account.accountId,
+        mentions = mentions,
     )
 
 private fun Status.toTopRowMetaDataUiState(): TopRowMetaDataUiState? =

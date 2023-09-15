@@ -1,9 +1,9 @@
 package org.mozilla.social.core.ui.postcard
 
-import android.text.Spanned
 import androidx.compose.ui.graphics.vector.ImageVector
 import org.mozilla.social.core.ui.poll.PollUiState
 import org.mozilla.social.model.Attachment
+import org.mozilla.social.model.Mention
 
 data class PostCardUiState(
     val statusId: String,
@@ -15,7 +15,7 @@ data class MainPostCardUiState(
     val url: String?,
     val pollUiState: PollUiState?,
     val username: String,
-    val statusText: Spanned,
+    val statusTextHtml: String,
     val mediaAttachments: List<Attachment>,
     val profilePictureUrl: String,
     val postMetaDataText: String,
@@ -26,6 +26,7 @@ data class MainPostCardUiState(
     val userBoosted: Boolean,
     val isFavorited: Boolean,
     val accountId: String,
+    val mentions: List<Mention>,
 )
 
 data class TopRowMetaDataUiState(
