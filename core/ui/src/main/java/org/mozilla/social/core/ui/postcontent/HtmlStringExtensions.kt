@@ -1,4 +1,4 @@
-package org.mozilla.social.core.ui.spans
+package org.mozilla.social.core.ui.postcontent
 
 import android.text.Spannable
 import android.text.TextPaint

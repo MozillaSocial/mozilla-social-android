@@ -14,7 +14,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import org.mozilla.social.common.utils.DimenUtil
-import org.mozilla.social.core.ui.spans.htmlToSpannable
 import org.mozilla.social.model.Mention
 
 @Composable
