@@ -10,6 +10,7 @@ import org.mozilla.social.feature.account.follows.accountFollowersScreen
 import org.mozilla.social.feature.account.follows.accountFollowingScreen
 import org.mozilla.social.feature.auth.AUTH_ROUTE
 import org.mozilla.social.feature.auth.loginScreen
+import org.mozilla.social.feature.hashtag.hashTagScreen
 import org.mozilla.social.feature.report.reportScreen
 import org.mozilla.social.feature.settings.settingsScreen
 import org.mozilla.social.feature.thread.threadScreen
@@ -61,6 +62,10 @@ private fun NavGraphBuilder.mainGraph(appState: AppState) {
         reportScreen(
             onReported = { appState.popBackStack() },
             onCloseClicked = { appState.popBackStack() },
+        )
+        hashTagScreen(
+            onCloseClicked = { appState.popBackStack() },
+            postCardNavigation = postCardNavigation,
         )
     }
 }

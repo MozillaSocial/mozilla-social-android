@@ -34,7 +34,7 @@ import org.mozilla.social.model.Recommendation
 @Composable
 fun PostCardList(
     feed: Flow<PagingData<PostCardUiState>>,
-    reccs: List<Recommendation>?,
+    reccs: List<Recommendation>? = null,
     postCardInteractions: PostCardInteractions,
 ) {
 

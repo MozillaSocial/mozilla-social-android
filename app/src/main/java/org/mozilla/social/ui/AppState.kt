@@ -46,6 +46,7 @@ import org.mozilla.social.feature.account.follows.navigateToAccountFollowing
 import org.mozilla.social.feature.account.navigateToAccount
 import org.mozilla.social.feature.auth.AUTH_ROUTE
 import org.mozilla.social.feature.auth.navigateToLoginScreen
+import org.mozilla.social.feature.hashtag.navigateToHashTag
 import org.mozilla.social.feature.report.navigateToReport
 import org.mozilla.social.feature.settings.navigateToSettings
 import org.mozilla.social.feature.thread.navigateToThread
@@ -270,6 +271,10 @@ class AppState(
 
     fun navigateToReport(accountId: String, statusId: String?) {
         navController.navigateToReport(reportAccountId = accountId, reportStatusId = statusId)
+    }
+
+    fun navigateToHashTag(hashTag: String) {
+        navController.navigateToHashTag(hashTagValue = hashTag)
     }
 
     private fun navigateToTopLevelDestination(destination: NavDestination) {

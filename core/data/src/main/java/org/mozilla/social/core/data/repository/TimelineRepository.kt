@@ -21,4 +21,17 @@ class TimelineRepository internal constructor(
 
     suspend fun getPublicTimeline(): List<Status> =
         timelineApi.getPublicTimeline().map { it.toExternalModel() }
+
+    suspend fun getHashtagTimeline(
+        hashTag: String,
+        olderThanId: String? = null,
+        immediatelyNewerThanId: String? = null,
+        loadSize: Int? = null,
+    ): List<Status> =
+        timelineApi.getHashTagTimeline(
+            hashTag = hashTag,
+            olderThanId = olderThanId,
+            immediatelyNewerThanId = immediatelyNewerThanId,
+            limit = loadSize,
+        ).map { it.toExternalModel() }
 }

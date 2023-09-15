@@ -15,6 +15,7 @@ import org.mozilla.social.core.database.converters.LocalDateConverter
 import org.mozilla.social.core.database.converters.MentionConverter
 import org.mozilla.social.core.database.converters.PollOptionConverter
 import org.mozilla.social.core.database.dao.AccountsDao
+import org.mozilla.social.core.database.dao.HashTagTimelineStatusDao
 import org.mozilla.social.core.database.dao.HashtagDao
 import org.mozilla.social.core.database.dao.HomeTimelineStatusDao
 import org.mozilla.social.core.database.dao.PollsDao
@@ -23,6 +24,7 @@ import org.mozilla.social.core.database.model.DatabaseAccount
 import org.mozilla.social.core.database.model.DatabaseHashTag
 import org.mozilla.social.core.database.model.DatabasePoll
 import org.mozilla.social.core.database.model.DatabaseStatus
+import org.mozilla.social.core.database.model.statusCollections.HashTagTimelineStatus
 import org.mozilla.social.core.database.model.statusCollections.HomeTimelineStatus
 
 @Database(
@@ -32,10 +34,12 @@ import org.mozilla.social.core.database.model.statusCollections.HomeTimelineStat
         DatabaseHashTag::class,
         HomeTimelineStatus::class,
         DatabasePoll::class,
+        HashTagTimelineStatus::class,
     ],
-    version = 2,
+    version = 3,
     autoMigrations = [
-        AutoMigration(1, 2, DatabaseMigrations.Schema1to2::class)
+        AutoMigration(1, 2, DatabaseMigrations.Schema1to2::class),
+        AutoMigration(2, 3)
     ],
     exportSchema = true
 )
@@ -57,4 +61,5 @@ abstract class SocialDatabase : RoomDatabase() {
     abstract fun hashtagDao(): HashtagDao
     abstract fun homeTimelineDao(): HomeTimelineStatusDao
     abstract fun pollDao(): PollsDao
+    abstract fun hashTagTimelineDao(): HashTagTimelineStatusDao
 }

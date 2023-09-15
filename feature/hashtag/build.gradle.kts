@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "org.mozilla.social.feature.thread"
+    namespace = "org.mozilla.social.feature.hashtag"
 
     defaultConfig {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -31,6 +31,7 @@ dependencies {
     implementation(project(":core:designsystem"))
     implementation(project(":core:ui"))
     implementation(project(":core:common"))
+    implementation(project(":core:database"))
 
     implementation(libs.google.material)
 
@@ -52,4 +53,6 @@ dependencies {
 
     implementation(libs.androidx.datastore)
     implementation(libs.protobuf.kotlin.lite)
+
+    implementation(libs.androidx.room.ktx)
 }
