@@ -13,10 +13,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
-import androidx.core.text.HtmlCompat
-import androidx.core.text.toSpannable
 import org.mozilla.social.common.utils.DimenUtil
-import org.mozilla.social.core.ui.spans.makeLinksClickable
+import org.mozilla.social.core.ui.spans.htmlToSpannable
 import org.mozilla.social.model.Mention
 
 @Composable
@@ -28,16 +26,15 @@ fun PostContent(
     val context = LocalContext.current
     val linkColor: Color = MaterialTheme.colorScheme.primary
     val textContent = remember(htmlText) {
-        val spannable = HtmlCompat.fromHtml(htmlText, 0)
-            .toSpannable()
-            .makeLinksClickable(
+        mutableStateOf(
+            htmlText.htmlToSpannable(
                 mentions = mentions,
                 linkColor = linkColor,
                 onLinkClick = postContentInteractions::onLinkClicked,
                 onHashTagClicked = postContentInteractions::onHashTagClicked,
                 onAccountClicked = postContentInteractions::onAccountClicked,
             )
-        mutableStateOf(spannable)
+        )
     }
 
     AndroidView(
