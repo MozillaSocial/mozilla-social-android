@@ -39,7 +39,7 @@ fun PostContent(
         modifier = modifier,
         factory = {
             TextView(it).apply {
-                movementMethod = ClickableMovementMethod.getInstance()
+                movementMethod = ClickableMovementMethod
                 isClickable = false
                 isLongClickable = false
             }
