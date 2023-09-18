@@ -95,6 +95,7 @@ private fun MainPost(
         htmlText = post.statusTextHtml,
         postContentInteractions = postCardInteractions,
     )
+    Spacer(modifier = Modifier.padding(top = 4.dp))
     MediaDisplay(attachments = post.mediaAttachments)
     post.pollUiState?.let { Poll(it, postCardInteractions) }
 
