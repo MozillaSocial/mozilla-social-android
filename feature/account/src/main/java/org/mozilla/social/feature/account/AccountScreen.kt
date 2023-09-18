@@ -59,6 +59,7 @@ internal fun AccountRoute(
     onFollowingClicked: () -> Unit,
     onFollowersClicked: () -> Unit,
     onLoggedOut: () -> Unit,
+    onCloseClicked: () -> Unit = {},
     viewModel: AccountViewModel = koinViewModel(
         parameters = {
             parametersOf(
@@ -78,7 +79,8 @@ internal fun AccountRoute(
             onFollowersClicked = onFollowersClicked,
             onLogoutClicked = {
                 viewModel.onLogoutClicked()
-            }
+            },
+            onCloseClicked = onCloseClicked,
         )
     }
 }
@@ -90,6 +92,7 @@ internal fun AccountScreen(
     onFollowingClicked: () -> Unit,
     onFollowersClicked: () -> Unit,
     onLogoutClicked: () -> Unit,
+    onCloseClicked: () -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -97,6 +100,12 @@ internal fun AccountScreen(
             .verticalScroll(rememberScrollState()),
     ) {
 
+        if (showTopBar) {
+            MoSoTopBar(
+                title = account.username,
+                onCloseClicked = onCloseClicked,
+            )
+        }
         HeaderAndProfileImages(
             headerImage = account.headerUrl,
             headerStaticUrl = account.headerStaticUrl,

@@ -30,7 +30,8 @@ fun NavController.navigateToAccount(
 fun NavGraphBuilder.accountScreen(
     onFollowingClicked: () -> Unit,
     onFollowersClicked: () -> Unit,
-    onLoggedOut: () -> Unit
+    onLoggedOut: () -> Unit,
+    onCloseClicked: () -> Unit,
 ) {
 
     composable(
@@ -57,7 +58,8 @@ fun NavGraphBuilder.accountScreen(
             accountId = accountId,
             onFollowingClicked = onFollowingClicked,
             onFollowersClicked = onFollowersClicked,
-            onLoggedOut = onLoggedOut
+            onLoggedOut = onLoggedOut,
+            onCloseClicked = onCloseClicked,
         )
     }
 }
