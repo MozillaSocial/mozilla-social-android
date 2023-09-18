@@ -129,11 +129,9 @@ internal fun AccountScreen(
         )
         UserFields(
             account = account,
+            postContentInteractions = postContentInteractions,
         )
         QuickFunctions(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
             name = R.string.posts,
             numericalValue = account.statusesCount,
             onClick = { /*TODO*/ }
@@ -227,19 +225,19 @@ private fun UserBio(
 
 @Composable
 private fun UserFields(
-    account: Account
+    account: Account,
+    postContentInteractions: PostContentInteractions,
 ) {
     Column(
         verticalArrangement = Arrangement.SpaceEvenly,
         modifier = Modifier
             .fillMaxWidth()
             .width(IntrinsicSize.Max)
-            .padding(start = 16.dp, end = 16.dp)
+            .padding(start = 8.dp, end = 8.dp)
             .border(
                 border = BorderStroke(2.dp, Color.Gray),
                 shape = RoundedCornerShape(8.dp)
             )
-            .padding(start = 8.dp, end = 8.dp)
     ) {
         account.fields?.forEachIndexed { index, field ->
             Column(
@@ -254,12 +252,13 @@ private fun UserFields(
                     text = field.name,
                     style = MaterialTheme.typography.bodyMedium
                 )
-                Text(
-                    text = field.value,
-                    style = MaterialTheme.typography.titleMedium
+                PostContent(
+                    mentions = emptyList(),
+                    htmlText = "<p>${field.value}</p>",
+                    postContentInteractions = postContentInteractions,
                 )
             }
-            if (index < account.fields?.size!!) {
+            if (index < (account.fields?.size ?: 0) - 1) {
                 Divider(
                     color = Color.Gray,
                     modifier = Modifier
@@ -273,19 +272,20 @@ private fun UserFields(
 
 @Composable
 private fun QuickFunctions(
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
     @StringRes name: Int,
     numericalValue: Any,
     onClick: () -> Unit,
 ) {
     Box(
         modifier = modifier
+            .fillMaxWidth()
+            .padding(8.dp)
             .border(
                 border = BorderStroke(2.dp, Color.Gray),
                 shape = RoundedCornerShape(8.dp)
             )
             .clickable { onClick() }
-            .padding(8.dp)
     ) {
         Text(
             text = stringResource(id = name),
@@ -296,7 +296,7 @@ private fun QuickFunctions(
         )
         Text(
             text = numericalValue.toString(),
-            style = MaterialTheme.typography.headlineSmall,
+            style = MaterialTheme.typography.bodyLarge,
             modifier = Modifier
                 .align(Alignment.CenterEnd)
                 .padding(end = 8.dp)
@@ -313,7 +313,7 @@ private fun LogoutText(
         color = MaterialTheme.colorScheme.error,
         modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 36.dp, end = 36.dp),
+            .padding(start = 8.dp, end = 8.dp),
         shape = RoundedCornerShape(8.dp),
         onClick = onClick
     ) {

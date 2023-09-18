@@ -17,6 +17,7 @@ fun String.htmlToSpannable(
     onHashTagClicked: (hashTag: String) -> Unit,
     onAccountClicked: (accountName: String) -> Unit,
 ): Spannable = HtmlCompat.fromHtml(this, 0)
+    .trim('\n')
     .toSpannable()
     .apply {
         val urlSpans = getSpans(0, length, URLSpan::class.java)
