@@ -17,6 +17,7 @@ fun PostContent(
     mentions: List<Mention>,
     htmlText: String,
     postContentInteractions: PostContentInteractions,
+    onContentClicked: () -> Unit = {},
 ) {
     val linkColor: Color = MaterialTheme.colorScheme.primary
     val textContent = remember(htmlText) {
@@ -37,6 +38,7 @@ fun PostContent(
         factory = {
             TextView(it).apply {
                 movementMethod = LinkMovementMethod.getInstance()
+                setOnClickListener { onContentClicked() }
             }
         },
         update = {
