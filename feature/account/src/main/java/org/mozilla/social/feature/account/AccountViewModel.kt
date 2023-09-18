@@ -42,7 +42,7 @@ class AccountViewModel(
         flowOf(it).stateIn(
             scope = viewModelScope,
             started = SharingStarted.Eagerly,
-            initialValue = null,
+            initialValue = it,
         )
     } ?: usersAccountId
 

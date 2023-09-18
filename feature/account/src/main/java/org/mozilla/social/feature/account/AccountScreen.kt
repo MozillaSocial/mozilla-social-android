@@ -1,5 +1,3 @@
-@file:OptIn(ExperimentalMaterial3Api::class)
-
 package org.mozilla.social.feature.account
 
 import androidx.annotation.StringRes
@@ -20,17 +18,19 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Divider
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -49,6 +49,7 @@ import coil.compose.AsyncImage
 import com.google.android.material.textview.MaterialTextView
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
+import org.mozilla.social.core.designsystem.component.MoSoTopBar
 import org.mozilla.social.core.designsystem.theme.MozillaSocialTheme
 import org.mozilla.social.model.Account
 
@@ -72,6 +73,7 @@ internal fun AccountRoute(
     account?.let {
         AccountScreen(
             account = it,
+            showTopBar = accountId != null,
             onFollowingClicked = onFollowingClicked,
             onFollowersClicked = onFollowersClicked,
             onLogoutClicked = {
@@ -84,196 +86,141 @@ internal fun AccountRoute(
 @Composable
 internal fun AccountScreen(
     account: Account,
+    showTopBar: Boolean,
     onFollowingClicked: () -> Unit,
     onFollowersClicked: () -> Unit,
-    onLogoutClicked: () -> Unit
+    onLogoutClicked: () -> Unit,
 ) {
-    MozillaSocialTheme {
-        Surface(
-            color = MaterialTheme.colorScheme.background,
-            modifier = Modifier
-                .fillMaxWidth()
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .verticalScroll(rememberScrollState())
-            ) {
-                Row {
-                    userImages(account = account)
-                }
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                ) {
-                    userInfo(account = account, modifier = Modifier.align(Alignment.TopCenter))
-                }
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 16.dp, bottom = 24.dp)
-                ) {
-                    userFollow(
-                        account = account,
-                        modifier = Modifier
-                            .align(Alignment.TopCenter)
-                            .border(
-                                border = BorderStroke(2.dp, Color.Gray),
-                                shape = RoundedCornerShape(8.dp)
-                            ),
-                        onFollowingClicked = onFollowingClicked,
-                        onFollowersClicked = onFollowersClicked
-                    )
-                }
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                ) {
-                    userBio(
-                        account = account,
-                        modifier = Modifier
-                            .align(Alignment.TopCenter)
-                    )
-                }
-                Row {
-                    userFields(account = account)
-                }
-                Row {
-                    quickFunctions(
-                        name = R.string.posts,
-                        numericalValue = account.statusesCount,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp),
-                        onClick = { /*TODO*/ }
-                    )
-                }
-                Row {
-                    logoutText(name = R.string.logout) {
-                        onLogoutClicked()
-                    }
-                }
-            }
-        }
-    }
-}
-
-@Composable
-private fun userImages(account: Account) {
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState()),
     ) {
-        headerAndProfileImages(
+
+        HeaderAndProfileImages(
             headerImage = account.headerUrl,
             headerStaticUrl = account.headerStaticUrl,
             profileImage = account.avatarUrl,
             profileStaticUrl = account.avatarStaticUrl,
             onHeaderClick = { /*TODO*/ },
-            onProfileClick = { /*TODO*/ })
-    }
-}
+            onProfileClick = { /*TODO*/ }
+        )
 
-@Composable
-private fun userInfo(account: Account, modifier: Modifier) {
-    val url = account.url.split("/")
-    val handle = url.last()
-    val instance = "@" + url[url.lastIndex - 1]
-
-    Box(modifier = modifier) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
+        UserInfo(account = account)
+        UserFollow(
+            account = account,
+            onFollowingClicked = onFollowingClicked,
+            onFollowersClicked = onFollowersClicked,
+        )
+        UserBio(
+            account = account,
             modifier = Modifier
-                .padding(top = 8.dp)
                 .fillMaxWidth()
-        ) {
-            Row {
-                Text(
-                    text = account.displayName,
-                    fontSize = 20.sp,
-                    modifier = Modifier
-                        .padding(bottom = 4.dp)
-                )
-            }
-            Row {
-                Text(text = handle + instance)
-            }
+                .wrapContentWidth(Alignment.CenterHorizontally),
+        )
+        UserFields(
+            account = account,
+        )
+        QuickFunctions(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            name = R.string.posts,
+            numericalValue = account.statusesCount,
+            onClick = { /*TODO*/ }
+        )
+        LogoutText(name = R.string.logout) {
+            onLogoutClicked()
         }
     }
 }
 
 @Composable
-private fun userFollow(
+private fun UserInfo(
     account: Account,
-    modifier: Modifier,
+) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier
+            .padding(top = 8.dp)
+            .fillMaxWidth()
+    ) {
+        Text(
+            text = account.displayName,
+            fontSize = 20.sp,
+            modifier = Modifier
+                .padding(bottom = 4.dp)
+        )
+        Text(text = "@${account.acct}")
+    }
+}
+
+@Composable
+private fun UserFollow(
+    account: Account,
     onFollowingClicked: () -> Unit,
     onFollowersClicked: () -> Unit,
 ) {
-    Box(modifier = modifier) {
-        Row(
-            modifier = Modifier
-                .height(IntrinsicSize.Min)
-                .padding(8.dp)
-        ) {
-            Row(
-                modifier = Modifier
-                    .clickable {
-                        onFollowersClicked()
-                    }
-            ) {
-                Text(
-                    text = "Followers: ${account.followersCount}",
-                    modifier = Modifier
-                        .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 8.dp)
-                )
-            }
-
-            Divider(
-                color = Color.Gray,
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .width(1.dp)
+    Row(
+        modifier = Modifier
+            .height(IntrinsicSize.Min)
+            .padding(8.dp)
+            .fillMaxWidth()
+            .wrapContentWidth(Alignment.CenterHorizontally)
+            .border(
+                border = BorderStroke(2.dp, Color.Gray),
+                shape = RoundedCornerShape(8.dp)
             )
-
-            Row(
-                modifier = Modifier
-                    .clickable {
-                        onFollowingClicked()
-                    }
-            ) {
-                Text(
-                    text = "Following: ${account.followingCount}",
-                    modifier = Modifier
-                        .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 8.dp)
-                )
-            }
-        }
-    }
-}
-
-@Composable
-private fun userBio(account: Account, modifier: Modifier) {
-    Box(modifier = modifier) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center,
+    ) {
+        Text(
             modifier = Modifier
-                .wrapContentSize()
-        ) {
-            Row {
-                val bioText = HtmlCompat.fromHtml(account.bio, 0)
-                AndroidView(
-                    factory = { MaterialTextView(it) },
-                    update = { it.text = bioText },
-                    modifier = Modifier
-                        .wrapContentHeight(),
-                )
-            }
-        }
+                .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 8.dp)
+                .clickable { onFollowersClicked() },
+            text = "Followers: ${account.followersCount}",
+        )
+        Divider(
+            color = Color.Gray,
+            modifier = Modifier
+                .fillMaxHeight()
+                .width(1.dp)
+        )
+        Text(
+            modifier = Modifier
+                .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 8.dp)
+                .clickable { onFollowingClicked() },
+            text = "Following: ${account.followingCount}",
+
+        )
     }
 }
 
 @Composable
-private fun userFields(account: Account) {
+private fun UserBio(
+    account: Account,
+    modifier: Modifier
+) {
+    Column(
+        modifier = modifier
+            .wrapContentSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+    ) {
+        val bioText = remember(account.bio) {
+            mutableStateOf(HtmlCompat.fromHtml(account.bio, 0))
+        }
+        AndroidView(
+            factory = { MaterialTextView(it) },
+            update = { it.text = bioText.value },
+            modifier = Modifier
+                .wrapContentHeight(),
+        )
+    }
+}
+
+@Composable
+private fun UserFields(
+    account: Account
+) {
     Column(
         verticalArrangement = Arrangement.SpaceEvenly,
         modifier = Modifier
@@ -287,25 +234,22 @@ private fun userFields(account: Account) {
             .padding(start = 8.dp, end = 8.dp)
     ) {
         account.fields?.forEachIndexed { index, field ->
-            Surface(
+            Column(
                 modifier = Modifier
                     .padding(2.dp)
                     .fillMaxWidth()
                     .wrapContentHeight()
-                    .padding(8.dp)
+                    .padding(8.dp),
+                verticalArrangement = Arrangement.SpaceEvenly,
             ) {
-                Column(
-                    verticalArrangement = Arrangement.SpaceEvenly
-                ) {
-                    Text(
-                        text = field.name,
-                        style = MaterialTheme.typography.bodyMedium
-                    )
-                    Text(
-                        text = field.value,
-                        style = MaterialTheme.typography.titleMedium
-                    )
-                }
+                Text(
+                    text = field.name,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+                Text(
+                    text = field.value,
+                    style = MaterialTheme.typography.titleMedium
+                )
             }
             if (index < account.fields?.size!!) {
                 Divider(
@@ -320,44 +264,40 @@ private fun userFields(account: Account) {
 }
 
 @Composable
-private fun quickFunctions(
+private fun QuickFunctions(
+    modifier: Modifier,
     @StringRes name: Int,
     numericalValue: Any,
-    modifier: Modifier,
     onClick: () -> Unit,
 ) {
-    Surface(
-        modifier = modifier,
-        onClick = onClick
+    Box(
+        modifier = modifier
+            .border(
+                border = BorderStroke(2.dp, Color.Gray),
+                shape = RoundedCornerShape(8.dp)
+            )
+            .clickable { onClick() }
+            .padding(8.dp)
     ) {
-        Box(
+        Text(
+            text = stringResource(id = name),
+            style = MaterialTheme.typography.bodyLarge,
             modifier = Modifier
-                .border(
-                    border = BorderStroke(2.dp, Color.Gray),
-                    shape = RoundedCornerShape(8.dp)
-                )
-                .padding(8.dp)
-        ) {
-            Text(
-                text = stringResource(id = name),
-                style = MaterialTheme.typography.bodyLarge,
-                modifier = Modifier
-                    .padding(start = 8.dp, top = 8.dp, bottom = 8.dp)
-                    .align(Alignment.CenterStart)
-            )
-            Text(
-                text = numericalValue.toString(),
-                style = MaterialTheme.typography.headlineSmall,
-                modifier = Modifier
-                    .align(Alignment.CenterEnd)
-                    .padding(end = 8.dp)
-            )
-        }
+                .padding(start = 8.dp, top = 8.dp, bottom = 8.dp)
+                .align(Alignment.CenterStart)
+        )
+        Text(
+            text = numericalValue.toString(),
+            style = MaterialTheme.typography.headlineSmall,
+            modifier = Modifier
+                .align(Alignment.CenterEnd)
+                .padding(end = 8.dp)
+        )
     }
 }
 
 @Composable
-private fun logoutText(
+private fun LogoutText(
     @StringRes name: Int,
     onClick: () -> Unit
 ) {
@@ -379,7 +319,7 @@ private fun logoutText(
 }
 
 @Composable
-private fun overlapObjects(
+private fun OverlapObjects(
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit
 ) {
@@ -412,7 +352,7 @@ private fun overlapObjects(
 }
 
 @Composable
-private fun headerAndProfileImages(
+private fun HeaderAndProfileImages(
     modifier: Modifier = Modifier,
     headerImage: String,
     headerStaticUrl: String,
@@ -421,7 +361,7 @@ private fun headerAndProfileImages(
     onHeaderClick: () -> Unit,
     onProfileClick: () -> Unit
 ) {
-    overlapObjects(modifier = modifier.fillMaxWidth()) {
+    OverlapObjects(modifier = modifier.fillMaxWidth()) {
         val scrollState = rememberScrollState()
         Box(
             modifier = Modifier
