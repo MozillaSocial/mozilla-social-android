@@ -29,8 +29,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -43,14 +41,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.viewinterop.AndroidView
-import androidx.core.text.HtmlCompat
 import coil.compose.AsyncImage
-import com.google.android.material.textview.MaterialTextView
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 import org.mozilla.social.core.designsystem.component.MoSoTopBar
 import org.mozilla.social.core.designsystem.theme.MozillaSocialTheme
+import org.mozilla.social.core.ui.postcard.PostCardNavigation
+import org.mozilla.social.core.ui.postcontent.PostContent
+import org.mozilla.social.core.ui.postcontent.PostContentInteractions
 import org.mozilla.social.model.Account
 
 @Composable
@@ -60,11 +58,13 @@ internal fun AccountRoute(
     onFollowersClicked: () -> Unit,
     onLoggedOut: () -> Unit,
     onCloseClicked: () -> Unit = {},
+    postCardNavigation: PostCardNavigation,
     viewModel: AccountViewModel = koinViewModel(
         parameters = {
             parametersOf(
                 accountId,
                 onLoggedOut,
+                postCardNavigation,
             )
         }
     ),
@@ -81,6 +81,7 @@ internal fun AccountRoute(
                 viewModel.onLogoutClicked()
             },
             onCloseClicked = onCloseClicked,
+            postContentInteractions = viewModel.postCardDelegate,
         )
     }
 }
@@ -93,6 +94,7 @@ internal fun AccountScreen(
     onFollowersClicked: () -> Unit,
     onLogoutClicked: () -> Unit,
     onCloseClicked: () -> Unit,
+    postContentInteractions: PostContentInteractions,
 ) {
     Column(
         modifier = Modifier
@@ -123,9 +125,7 @@ internal fun AccountScreen(
         )
         UserBio(
             account = account,
-            modifier = Modifier
-                .fillMaxWidth()
-                .wrapContentWidth(Alignment.CenterHorizontally),
+            postContentInteractions = postContentInteractions,
         )
         UserFields(
             account = account,
@@ -205,23 +205,22 @@ private fun UserFollow(
 
 @Composable
 private fun UserBio(
+    modifier: Modifier = Modifier,
     account: Account,
-    modifier: Modifier
+    postContentInteractions: PostContentInteractions,
 ) {
     Column(
         modifier = modifier
-            .wrapContentSize(),
+            .fillMaxWidth()
+            .wrapContentWidth(Alignment.CenterHorizontally)
+            .padding(start = 8.dp, end = 8.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) {
-        val bioText = remember(account.bio) {
-            mutableStateOf(HtmlCompat.fromHtml(account.bio, 0))
-        }
-        AndroidView(
-            factory = { MaterialTextView(it) },
-            update = { it.text = bioText.value },
-            modifier = Modifier
-                .wrapContentHeight(),
+        PostContent(
+            mentions = emptyList(),
+            htmlText = account.bio,
+            postContentInteractions = postContentInteractions
         )
     }
 }

@@ -68,6 +68,7 @@ private fun NavGraphBuilder.mainGraph(
             onFollowersClicked = appState::navigateToAccountFollowers,
             onLoggedOut = appState::navigateToLoginScreen,
             onCloseClicked = { appState.popBackStack() },
+            postCardNavigation = postCardNavigation,
         )
         accountFollowingScreen()
         accountFollowersScreen()

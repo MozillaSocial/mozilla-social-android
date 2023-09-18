@@ -10,9 +10,13 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import org.mozilla.social.common.logging.Log
 import org.mozilla.social.core.data.repository.AccountRepository
+import org.mozilla.social.core.data.repository.StatusRepository
 import org.mozilla.social.core.domain.AccountIdFlow
 import org.mozilla.social.core.domain.Logout
+import org.mozilla.social.core.ui.postcard.PostCardDelegate
+import org.mozilla.social.core.ui.postcard.PostCardNavigation
 import org.mozilla.social.model.Account
 import org.mozilla.social.model.Status
 
@@ -20,9 +24,20 @@ class AccountViewModel(
     private val accountRepository: AccountRepository,
     accountIdFlow: AccountIdFlow,
     private val logout: Logout,
+    log: Log,
+    statusRepository: StatusRepository,
     initialAccountId: String?,
     private val onLoggedOut: () -> Unit,
+    postCardNavigation: PostCardNavigation,
 ) : ViewModel() {
+
+    val postCardDelegate = PostCardDelegate(
+        coroutineScope = viewModelScope,
+        statusRepository = statusRepository,
+        accountRepository = accountRepository,
+        log = log,
+        postCardNavigation = postCardNavigation,
+    )
 
     /**
      * The account ID of the logged in user
