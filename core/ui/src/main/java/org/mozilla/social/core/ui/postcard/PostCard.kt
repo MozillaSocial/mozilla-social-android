@@ -94,7 +94,6 @@ private fun MainPost(
         mentions = post.mentions,
         htmlText = post.statusTextHtml,
         postContentInteractions = postCardInteractions,
-        onContentClicked = { postCardInteractions.onPostCardClicked(post.statusId) }
     )
     Spacer(modifier = Modifier.padding(top = 4.dp))
     MediaDisplay(attachments = post.mediaAttachments)

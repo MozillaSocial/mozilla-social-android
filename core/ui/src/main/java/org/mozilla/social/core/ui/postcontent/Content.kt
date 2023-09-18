@@ -1,6 +1,5 @@
 package org.mozilla.social.core.ui.postcontent
 
-import android.text.method.LinkMovementMethod
 import android.widget.TextView
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -11,13 +10,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.viewinterop.AndroidView
 import org.mozilla.social.model.Mention
 
+/**
+ * @param mentions a list of mention objects that the htmlText contains
+ * @param htmlText html String.  Must be wrapped in a <p> tag
+ */
 @Composable
 fun PostContent(
     modifier: Modifier = Modifier,
     mentions: List<Mention>,
     htmlText: String,
     postContentInteractions: PostContentInteractions,
-    onContentClicked: () -> Unit = {},
 ) {
     val linkColor: Color = MaterialTheme.colorScheme.primary
     val textContent = remember(htmlText) {
@@ -37,8 +39,9 @@ fun PostContent(
         modifier = modifier,
         factory = {
             TextView(it).apply {
-                movementMethod = LinkMovementMethod.getInstance()
-                setOnClickListener { onContentClicked() }
+                movementMethod = ClickableMovementMethod.getInstance()
+                isClickable = false
+                isLongClickable = false
             }
         },
         update = {
