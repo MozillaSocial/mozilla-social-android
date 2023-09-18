@@ -87,20 +87,6 @@ class AccountViewModel(
             } else flowOf()
         }
 
-//    val accountBookmarks: Flow<List<NetworkStatus>> =
-//        accountId.flatMapLatest {
-//            if (it != null) {
-//                getAccountBookmarks()
-//            } else flowOf()
-//        }
-//
-//    val accountFavourites: Flow<List<NetworkStatus>> =
-//        accountId.flatMapLatest {
-//            if (it != null) {
-//                getAccountFavourites()
-//            } else flowOf()
-//        }
-
 
     private fun getAccountForUser(accountId: String): Flow<Account> {
         return flow {

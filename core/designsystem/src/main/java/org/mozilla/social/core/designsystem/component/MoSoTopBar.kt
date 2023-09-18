@@ -1,7 +1,9 @@
 package org.mozilla.social.core.designsystem.component
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -18,24 +20,27 @@ fun MoSoTopBar(
     title: String,
     onCloseClicked: () -> Unit,
 ) {
-    Row(
+    Column(
         modifier = Modifier.fillMaxWidth()
     ) {
-        IconButton(
-            modifier = Modifier.align(Alignment.CenterVertically),
-            onClick = { onCloseClicked() },
-        ) {
-            Icon(
-                MoSoIcons.Close,
-                "close",
-                tint = MaterialTheme.colorScheme.onSurface,
+        Row {
+            IconButton(
+                modifier = Modifier.align(Alignment.CenterVertically),
+                onClick = { onCloseClicked() },
+            ) {
+                Icon(
+                    MoSoIcons.Close,
+                    "close",
+                    tint = MaterialTheme.colorScheme.onSurface,
+                )
+            }
+            Text(
+                modifier = Modifier.align(Alignment.CenterVertically),
+                text = title,
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Medium,
             )
         }
-        Text(
-            modifier = Modifier.align(Alignment.CenterVertically),
-            text = title,
-            fontSize = 18.sp,
-            fontWeight = FontWeight.Medium,
-        )
+        Divider()
     }
 }

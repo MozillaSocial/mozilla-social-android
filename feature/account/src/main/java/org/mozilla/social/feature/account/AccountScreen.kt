@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -127,6 +128,7 @@ internal fun AccountScreen(
             account = account,
             postContentInteractions = postContentInteractions,
         )
+        Spacer(modifier = Modifier.padding(top = 4.dp))
         UserFields(
             account = account,
             postContentInteractions = postContentInteractions,
@@ -210,10 +212,7 @@ private fun UserBio(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .wrapContentWidth(Alignment.CenterHorizontally)
             .padding(start = 8.dp, end = 8.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
     ) {
         PostContent(
             mentions = emptyList(),
