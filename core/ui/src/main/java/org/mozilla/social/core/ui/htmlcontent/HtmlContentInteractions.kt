@@ -1,6 +1,6 @@
-package org.mozilla.social.core.ui.postcontent
+package org.mozilla.social.core.ui.htmlcontent
 
-interface PostContentInteractions {
+interface HtmlContentInteractions {
     fun onLinkClicked(url: String) = Unit
     fun onAccountClicked(accountId: String) = Unit
     fun onHashTagClicked(hashTag: String) = Unit

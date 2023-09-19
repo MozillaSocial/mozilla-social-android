@@ -72,7 +72,7 @@ fun PostCardList(
         LazyColumn(
             Modifier
                 .fillMaxSize()
-                .padding(4.dp),
+                .padding(horizontal = 4.dp),
         ) {
 
             when (lazyingPagingItems.loadState.refresh) {
@@ -165,7 +165,7 @@ fun PostCardList(
     LazyColumn(
         Modifier
             .fillMaxSize()
-            .padding(4.dp),
+            .padding(horizontal = 4.dp),
     ) {
         items(
             count = items.count(),

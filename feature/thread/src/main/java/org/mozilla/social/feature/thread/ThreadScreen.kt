@@ -25,7 +25,6 @@ fun ThreadScreen(
             title = "Thread",
             onCloseClicked = onCloseClicked,
         )
-        Divider()
 
         PostCardList(
             items = viewModel.statuses.collectAsState(emptyList()).value,

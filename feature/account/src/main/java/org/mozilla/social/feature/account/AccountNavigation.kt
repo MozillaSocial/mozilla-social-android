@@ -5,6 +5,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import org.mozilla.social.core.ui.postcard.PostCardNavigation
 
 
 /**
@@ -30,7 +31,9 @@ fun NavController.navigateToAccount(
 fun NavGraphBuilder.accountScreen(
     onFollowingClicked: () -> Unit,
     onFollowersClicked: () -> Unit,
-    onLoggedOut: () -> Unit
+    onLoggedOut: () -> Unit,
+    onCloseClicked: () -> Unit,
+    postCardNavigation: PostCardNavigation,
 ) {
 
     composable(
@@ -40,7 +43,8 @@ fun NavGraphBuilder.accountScreen(
             accountId = null,
             onFollowingClicked = onFollowingClicked,
             onFollowersClicked = onFollowersClicked,
-            onLoggedOut = onLoggedOut
+            onLoggedOut = onLoggedOut,
+            postCardNavigation = postCardNavigation,
         )
     }
 
@@ -57,7 +61,9 @@ fun NavGraphBuilder.accountScreen(
             accountId = accountId,
             onFollowingClicked = onFollowingClicked,
             onFollowersClicked = onFollowersClicked,
-            onLoggedOut = onLoggedOut
+            onLoggedOut = onLoggedOut,
+            onCloseClicked = onCloseClicked,
+            postCardNavigation = postCardNavigation,
         )
     }
 }

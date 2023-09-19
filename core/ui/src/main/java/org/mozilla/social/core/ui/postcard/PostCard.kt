@@ -40,7 +40,7 @@ import org.mozilla.social.core.designsystem.theme.FirefoxColor
 import org.mozilla.social.core.designsystem.theme.MozillaSocialTheme
 import org.mozilla.social.core.ui.media.MediaDisplay
 import org.mozilla.social.core.ui.poll.Poll
-import org.mozilla.social.core.ui.postcontent.PostContent
+import org.mozilla.social.core.ui.htmlcontent.HtmlContent
 
 @Composable
 fun PostCard(
@@ -90,11 +90,12 @@ private fun MainPost(
         post = post,
         postCardInteractions = postCardInteractions,
     )
-    PostContent(
+    HtmlContent(
         mentions = post.mentions,
         htmlText = post.statusTextHtml,
-        postContentInteractions = postCardInteractions,
+        htmlContentInteractions = postCardInteractions,
     )
+    Spacer(modifier = Modifier.padding(top = 4.dp))
     MediaDisplay(attachments = post.mediaAttachments)
     post.pollUiState?.let { Poll(it, postCardInteractions) }
 
