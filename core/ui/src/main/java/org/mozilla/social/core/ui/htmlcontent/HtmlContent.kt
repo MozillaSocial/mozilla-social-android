@@ -39,7 +39,7 @@ fun HtmlContent(
         modifier = modifier,
         factory = {
             TextView(it).apply {
-                movementMethod = ClickableMovementMethod
+                movementMethod = HtmlContentMovementMethod
                 isClickable = false
                 isLongClickable = false
             }
