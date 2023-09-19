@@ -34,11 +34,11 @@ sealed interface StringFactory {
     fun build(context: Context): String = when (this) {
         is LiteralString -> literalValue
         is StringResource -> context.getString(resId)
-        is FormattedStringResource -> context.getString(resId, formatArgs)
+        is FormattedStringResource -> context.getString(resId, *formatArgs)
         is QuantityStringResource -> context.resources.getQuantityString(
             resId,
             quantity,
-            formatArgs,
+            *formatArgs,
         )
     }
 
@@ -48,7 +48,7 @@ sealed interface StringFactory {
         fun string(
             @StringRes resId: Int,
             vararg formatArgs: Any,
-        ): StringFactory = FormattedStringResource(resId, formatArgs)
+        ): StringFactory = FormattedStringResource(resId, *formatArgs)
 
         /**
          * @param quantity determines which plural to use
@@ -58,7 +58,7 @@ sealed interface StringFactory {
             @PluralsRes resId: Int,
             quantity: Int,
             vararg formatArgs: Any,
-        ): StringFactory = QuantityStringResource(resId, quantity, formatArgs)
+        ): StringFactory = QuantityStringResource(resId, quantity, *formatArgs)
 
         fun literalString(
             literalValue: String
