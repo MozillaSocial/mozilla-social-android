@@ -1,9 +1,9 @@
 package org.mozilla.social.core.ui.postcard
 
 import org.mozilla.social.core.ui.poll.PollInteractions
-import org.mozilla.social.core.ui.postcontent.PostContentInteractions
+import org.mozilla.social.core.ui.htmlcontent.HtmlContentInteractions
 
-interface PostCardInteractions : PollInteractions, PostContentInteractions {
+interface PostCardInteractions : PollInteractions, HtmlContentInteractions {
     fun onReplyClicked(statusId: String) = Unit
     fun onBoostClicked(statusId: String, isBoosting: Boolean) = Unit
     fun onFavoriteClicked(statusId: String, isFavoriting: Boolean) = Unit

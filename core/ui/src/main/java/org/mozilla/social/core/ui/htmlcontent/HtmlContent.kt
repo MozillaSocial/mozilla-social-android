@@ -1,4 +1,4 @@
-package org.mozilla.social.core.ui.postcontent
+package org.mozilla.social.core.ui.htmlcontent
 
 import android.widget.TextView
 import androidx.compose.material3.MaterialTheme
@@ -15,20 +15,20 @@ import org.mozilla.social.model.Mention
  * @param htmlText html String.  Must be wrapped in a <p> tag
  */
 @Composable
-fun PostContent(
+fun HtmlContent(
     modifier: Modifier = Modifier,
     mentions: List<Mention>,
     htmlText: String,
-    postContentInteractions: PostContentInteractions,
+    htmlContentInteractions: HtmlContentInteractions,
 ) {
     val linkColor: Color = MaterialTheme.colorScheme.primary
     val textContent = remember(htmlText) {
         val spannable = htmlText.htmlToSpannable(
             mentions = mentions,
             linkColor = linkColor,
-            onLinkClick = postContentInteractions::onLinkClicked,
-            onHashTagClicked = postContentInteractions::onHashTagClicked,
-            onAccountClicked = postContentInteractions::onAccountClicked,
+            onLinkClick = htmlContentInteractions::onLinkClicked,
+            onHashTagClicked = htmlContentInteractions::onHashTagClicked,
+            onAccountClicked = htmlContentInteractions::onAccountClicked,
         )
         mutableStateOf(
             spannable

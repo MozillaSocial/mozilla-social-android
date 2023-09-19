@@ -1,4 +1,4 @@
-package org.mozilla.social.core.ui.postcontent
+package org.mozilla.social.core.ui.htmlcontent
 
 import android.text.Selection
 import android.text.Spannable

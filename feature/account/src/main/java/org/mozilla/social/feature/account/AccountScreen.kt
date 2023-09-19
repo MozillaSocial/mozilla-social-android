@@ -18,7 +18,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -48,8 +47,8 @@ import org.koin.core.parameter.parametersOf
 import org.mozilla.social.core.designsystem.component.MoSoTopBar
 import org.mozilla.social.core.designsystem.theme.MozillaSocialTheme
 import org.mozilla.social.core.ui.postcard.PostCardNavigation
-import org.mozilla.social.core.ui.postcontent.PostContent
-import org.mozilla.social.core.ui.postcontent.PostContentInteractions
+import org.mozilla.social.core.ui.htmlcontent.HtmlContent
+import org.mozilla.social.core.ui.htmlcontent.HtmlContentInteractions
 import org.mozilla.social.model.Account
 
 @Composable
@@ -82,7 +81,7 @@ internal fun AccountRoute(
                 viewModel.onLogoutClicked()
             },
             onCloseClicked = onCloseClicked,
-            postContentInteractions = viewModel.postCardDelegate,
+            htmlContentInteractions = viewModel.postCardDelegate,
         )
     }
 }
@@ -95,7 +94,7 @@ internal fun AccountScreen(
     onFollowersClicked: () -> Unit,
     onLogoutClicked: () -> Unit,
     onCloseClicked: () -> Unit,
-    postContentInteractions: PostContentInteractions,
+    htmlContentInteractions: HtmlContentInteractions,
 ) {
     Column(
         modifier = Modifier
@@ -126,12 +125,12 @@ internal fun AccountScreen(
         )
         UserBio(
             account = account,
-            postContentInteractions = postContentInteractions,
+            htmlContentInteractions = htmlContentInteractions,
         )
         Spacer(modifier = Modifier.padding(top = 4.dp))
         UserFields(
             account = account,
-            postContentInteractions = postContentInteractions,
+            htmlContentInteractions = htmlContentInteractions,
         )
         QuickFunctions(
             name = R.string.posts,
@@ -207,17 +206,17 @@ private fun UserFollow(
 private fun UserBio(
     modifier: Modifier = Modifier,
     account: Account,
-    postContentInteractions: PostContentInteractions,
+    htmlContentInteractions: HtmlContentInteractions,
 ) {
     Column(
         modifier = modifier
             .fillMaxWidth()
             .padding(start = 8.dp, end = 8.dp),
     ) {
-        PostContent(
+        HtmlContent(
             mentions = emptyList(),
             htmlText = account.bio,
-            postContentInteractions = postContentInteractions
+            htmlContentInteractions = htmlContentInteractions
         )
     }
 }
@@ -225,7 +224,7 @@ private fun UserBio(
 @Composable
 private fun UserFields(
     account: Account,
-    postContentInteractions: PostContentInteractions,
+    htmlContentInteractions: HtmlContentInteractions,
 ) {
     Column(
         verticalArrangement = Arrangement.SpaceEvenly,
@@ -251,10 +250,10 @@ private fun UserFields(
                     text = field.name,
                     style = MaterialTheme.typography.bodyMedium
                 )
-                PostContent(
+                HtmlContent(
                     mentions = emptyList(),
-                    htmlText = "<p>${field.value}</p>",
-                    postContentInteractions = postContentInteractions,
+                    htmlText = field.value,
+                    htmlContentInteractions = htmlContentInteractions,
                 )
             }
             if (index < (account.fields?.size ?: 0) - 1) {
