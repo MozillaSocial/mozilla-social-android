@@ -8,10 +8,16 @@ import android.view.MotionEvent
 import android.widget.TextView
 
 /**
+ * The object is meant to be used in [TextView.setMovementMethod].  It allows [ClickableSpan]s
+ * to be clicked.  Use this instead of [LinkMovementMethod] because [LinkMovementMethod] will
+ * intercept all touch events, even if you don't touch a link.  This allows parent layouts to
+ * receive clicks if you don't click a link.
+ *
  * Based on this stack overflow answer https://stackoverflow.com/a/34200772/5321814
  *
- * A movement method that traverses links in the text buffer and fires clicks. Unlike
- * [LinkMovementMethod], this will not consume touch events outside [ClickableSpan]s.
+ * I edited the kdoc and converted the class to kotlin.
+ *
+ * License for the stack overflow post: https://creativecommons.org/licenses/by-sa/3.0/legalcode
  */
 object ClickableMovementMethod : BaseMovementMethod() {
     override fun canSelectArbitrarily(): Boolean {
