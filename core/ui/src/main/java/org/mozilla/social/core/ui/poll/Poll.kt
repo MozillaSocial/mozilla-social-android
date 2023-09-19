@@ -23,12 +23,15 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.designsystem.theme.MozillaSocialTheme
 import org.mozilla.social.core.designsystem.utils.NoRipple
+import org.mozilla.social.core.ui.R
 
 @Composable
 fun Poll(
@@ -61,7 +64,7 @@ fun Poll(
             )
             Spacer(modifier = Modifier.padding(top = 4.dp))
         }
-        Text(text = pollUiState.pollInfoText)
+        Text(text = pollUiState.pollInfoText.build(LocalContext.current))
         if (pollUiState.canVote) {
             Button(
                 modifier = Modifier
@@ -69,7 +72,7 @@ fun Poll(
                 onClick = { pollInteractions.onVoteClicked(pollUiState.pollId, userVotes.value) },
                 enabled = userVotes.value.isNotEmpty(),
             ) {
-                Text(text = "Vote")
+                Text(text = stringResource(id = R.string.vote_button))
             }
         }
     }
@@ -174,7 +177,7 @@ private fun PollOptionText(
                     modifier = Modifier
                         .padding(8.dp)
                         .align(Alignment.CenterVertically),
-                    text = pollOptionUiState.voteInfo
+                    text = pollOptionUiState.voteInfo.build(LocalContext.current)
                 )
             }
         }

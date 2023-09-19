@@ -21,9 +21,14 @@ sealed interface StringFactory {
         vararg val formatArgs: Any,
     ) : StringFactory
 
+    /**
+     * @param quantity determines which plural to use
+     * @param formatArgs the value inserted into the string
+     */
     private class QuantityStringResource(
         @param:PluralsRes val resId: Int,
         val quantity: Int,
+        vararg val formatArgs: Any,
     ) : StringFactory
 
     fun build(context: Context): String = when (this) {
@@ -32,8 +37,8 @@ sealed interface StringFactory {
         is FormattedStringResource -> context.getString(resId, formatArgs)
         is QuantityStringResource -> context.resources.getQuantityString(
             resId,
-            quantity, // determines which plural to use
-            quantity, // the value inserted into the string
+            quantity,
+            formatArgs,
         )
     }
 
@@ -45,13 +50,39 @@ sealed interface StringFactory {
             vararg formatArgs: Any,
         ): StringFactory = FormattedStringResource(resId, formatArgs)
 
+        /**
+         * @param quantity determines which plural to use
+         * @param formatArgs the value inserted into the string
+         */
         fun quantityString(
             @PluralsRes resId: Int,
-            count: Int,
-        ): StringFactory = QuantityStringResource(resId, count)
+            quantity: Int,
+            vararg formatArgs: Any,
+        ): StringFactory = QuantityStringResource(resId, quantity, formatArgs)
 
         fun literalString(
             literalValue: String
         ): StringFactory = LiteralString(literalValue)
     }
+}
+
+/**
+ * Pass strings or string factories into the constructor, then build to concatenate the values.
+ *
+ * Useful if you have multiple string factories / strings that need to be
+ * concatenated, but you don't have access to context just yet.
+ */
+class StringFactoryConcatenator(
+    private vararg val stringArgs: Any,
+) {
+    fun build(context: Context): String =
+        buildString {
+            stringArgs.forEach {
+                when (it) {
+                    is StringFactoryConcatenator -> append(it.build(context))
+                    is StringFactory -> append(it.build(context))
+                    else -> append(it)
+                }
+            }
+        }
 }

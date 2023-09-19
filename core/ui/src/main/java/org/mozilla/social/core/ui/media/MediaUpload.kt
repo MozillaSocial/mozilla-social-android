@@ -14,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import org.mozilla.social.common.LoadState
@@ -21,6 +22,7 @@ import org.mozilla.social.common.utils.FileType
 import org.mozilla.social.common.utils.getFileType
 import org.mozilla.social.common.utils.toFile
 import org.mozilla.social.core.designsystem.theme.FirefoxColor
+import org.mozilla.social.core.ui.R
 import org.mozilla.social.core.ui.TransparentOverlay
 import java.io.File
 
@@ -52,7 +54,7 @@ fun MediaUpload(
                         .align(Alignment.Center),
                 ) {
                     Text(
-                        text = "Uploading...",
+                        text = stringResource(id = R.string.media_uploading),
                         color = FirefoxColor.White,
                     )
                     CircularProgressIndicator(
@@ -68,7 +70,7 @@ fun MediaUpload(
                     modifier = Modifier.align(Alignment.Center),
                 ) {
                     Text(
-                        text = "Failed to upload image",
+                        text = stringResource(id = R.string.media_upload_failed),
                         color = FirefoxColor.White,
                     )
                     Button(
@@ -80,7 +82,7 @@ fun MediaUpload(
                         }
                     ) {
                         Text(
-                            text = "Retry",
+                            text = stringResource(id = R.string.retry),
                             color = FirefoxColor.White,
                         )
                     }
