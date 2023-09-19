@@ -1,5 +1,6 @@
 package org.mozilla.social.ui
 
+import android.util.Log
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Divider
 import androidx.compose.material3.DrawerState
@@ -34,6 +35,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import org.mozilla.social.common.logging.TimberLog
 import org.mozilla.social.core.designsystem.component.MoSoAppBar
 import org.mozilla.social.core.designsystem.component.MoSoBottomNavigationBar
 import org.mozilla.social.core.designsystem.component.MoSoModalDrawerSheet
@@ -54,8 +56,10 @@ import org.mozilla.social.navigation.Account
 import org.mozilla.social.navigation.Feed
 import org.mozilla.social.navigation.MAIN_ROUTE
 import org.mozilla.social.navigation.NewPost
+import org.mozilla.social.navigation.SPLASH_ROUTE
 import org.mozilla.social.navigation.Search
 import org.mozilla.social.post.navigateToNewPost
+import timber.log.Timber
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -221,6 +225,7 @@ class AppState(
      * Navigate to the login screen when the user is logged out
      */
     fun navigateToLoginScreen() {
+        Timber.d("navigate to login screen")
         clearBackstack()
         navController.navigateToLoginScreen()
     }
@@ -229,12 +234,18 @@ class AppState(
      * Navigate to the main graph once the user is logged in
      */
     fun navigateToLoggedInGraph() {
+        Timber.d("navigate to login graph")
+
         navController.navigate(
             MAIN_ROUTE,
             navOptions = NavOptions.Builder()
                 .setPopUpTo(AUTH_ROUTE, true)
                 .build()
         )
+    }
+
+    fun navigateToSplashScreen() {
+        navController.navigate(SPLASH_ROUTE)
     }
 
     fun navigateToSettings() {
