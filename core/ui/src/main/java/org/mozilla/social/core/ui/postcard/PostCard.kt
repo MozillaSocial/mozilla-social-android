@@ -109,6 +109,8 @@ private fun MetaData(
 ) {
     val overflowMenuExpanded = remember { mutableStateOf(false) }
 
+    val context = LocalContext.current
+
     Row {
         AsyncImage(
             modifier = Modifier
@@ -129,7 +131,7 @@ private fun MetaData(
                 fontWeight = FontWeight.Medium
             )
             Text(
-                text = post.postMetaDataText,
+                text = "${post.postTimeSince.build(context)} - @${post.accountName.build(context)}",
                 fontSize = 12.sp
             )
         }
