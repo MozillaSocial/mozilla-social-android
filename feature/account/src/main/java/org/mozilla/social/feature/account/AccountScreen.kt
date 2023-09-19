@@ -96,49 +96,51 @@ internal fun AccountScreen(
     onCloseClicked: () -> Unit,
     htmlContentInteractions: HtmlContentInteractions,
 ) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState()),
-    ) {
-
+    Column {
         if (showTopBar) {
             MoSoTopBar(
                 title = account.username,
                 onCloseClicked = onCloseClicked,
             )
         }
-        HeaderAndProfileImages(
-            headerImage = account.headerUrl,
-            headerStaticUrl = account.headerStaticUrl,
-            profileImage = account.avatarUrl,
-            profileStaticUrl = account.avatarStaticUrl,
-            onHeaderClick = { /*TODO*/ },
-            onProfileClick = { /*TODO*/ }
-        )
 
-        UserInfo(account = account)
-        UserFollow(
-            account = account,
-            onFollowingClicked = onFollowingClicked,
-            onFollowersClicked = onFollowersClicked,
-        )
-        UserBio(
-            account = account,
-            htmlContentInteractions = htmlContentInteractions,
-        )
-        Spacer(modifier = Modifier.padding(top = 4.dp))
-        UserFields(
-            account = account,
-            htmlContentInteractions = htmlContentInteractions,
-        )
-        QuickFunctions(
-            name = R.string.posts,
-            numericalValue = account.statusesCount,
-            onClick = { /*TODO*/ }
-        )
-        LogoutText(name = R.string.logout) {
-            onLogoutClicked()
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState()),
+        ) {
+            HeaderAndProfileImages(
+                headerImage = account.headerUrl,
+                headerStaticUrl = account.headerStaticUrl,
+                profileImage = account.avatarUrl,
+                profileStaticUrl = account.avatarStaticUrl,
+                onHeaderClick = { /*TODO*/ },
+                onProfileClick = { /*TODO*/ }
+            )
+
+            UserInfo(account = account)
+            UserFollow(
+                account = account,
+                onFollowingClicked = onFollowingClicked,
+                onFollowersClicked = onFollowersClicked,
+            )
+            UserBio(
+                account = account,
+                htmlContentInteractions = htmlContentInteractions,
+            )
+            Spacer(modifier = Modifier.padding(top = 4.dp))
+            UserFields(
+                account = account,
+                htmlContentInteractions = htmlContentInteractions,
+            )
+            QuickFunctions(
+                name = R.string.posts,
+                numericalValue = account.statusesCount,
+                onClick = { /*TODO*/ }
+            )
+            LogoutText(name = R.string.logout) {
+                onLogoutClicked()
+            }
         }
     }
 }
