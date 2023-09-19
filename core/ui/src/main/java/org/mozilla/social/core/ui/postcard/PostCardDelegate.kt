@@ -5,8 +5,10 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import org.mozilla.social.common.logging.Log
+import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.core.data.repository.AccountRepository
 import org.mozilla.social.core.data.repository.StatusRepository
+import org.mozilla.social.core.ui.R
 
 class PostCardDelegate(
     private val coroutineScope: CoroutineScope,
@@ -16,7 +18,7 @@ class PostCardDelegate(
     private val postCardNavigation: PostCardNavigation,
 ) : PostCardInteractions {
 
-    private val _errorToastMessage = MutableSharedFlow<String>(extraBufferCapacity = 1)
+    private val _errorToastMessage = MutableSharedFlow<StringFactory>(extraBufferCapacity = 1)
     val errorToastMessage = _errorToastMessage.asSharedFlow()
 
     override fun onVoteClicked(pollId: String, choices: List<Int>) {
@@ -25,7 +27,7 @@ class PostCardDelegate(
                 statusRepository.voteOnPoll(pollId, choices)
             } catch (e: Exception) {
                 log.e(e)
-                _errorToastMessage.emit("Error Voting")
+                _errorToastMessage.emit(StringFactory.string(R.string.error_voting))
             }
         }
     }
@@ -41,14 +43,14 @@ class PostCardDelegate(
                     statusRepository.boostStatus(statusId)
                 } catch (e: Exception) {
                     log.e(e)
-                    _errorToastMessage.emit("Error boosting")
+                    _errorToastMessage.emit(StringFactory.string(R.string.error_boosting))
                 }
             } else {
                 try {
                     statusRepository.undoStatusBoost(statusId)
                 } catch (e: Exception) {
                     log.e(e)
-                    _errorToastMessage.emit("Error undoing boost")
+                    _errorToastMessage.emit(StringFactory.string(R.string.error_undoing_boost))
                 }
             }
         }
@@ -61,14 +63,14 @@ class PostCardDelegate(
                     statusRepository.favoriteStatus(statusId)
                 } catch (e: Exception) {
                     log.e(e)
-                    _errorToastMessage.emit("Error adding favorite")
+                    _errorToastMessage.emit(StringFactory.string(R.string.error_adding_favorite))
                 }
             } else {
                 try {
                     statusRepository.undoFavoriteStatus(statusId)
                 } catch (e: Exception) {
                     log.e(e)
-                    _errorToastMessage.emit("Error removing favorite")
+                    _errorToastMessage.emit(StringFactory.string(R.string.error_removing_favorite))
                 }
             }
         }
@@ -84,7 +86,7 @@ class PostCardDelegate(
                 accountRepository.muteAccount(accountId)
             } catch (e: Exception) {
                 log.e(e)
-                _errorToastMessage.emit("Error muting account")
+                _errorToastMessage.emit(StringFactory.string(R.string.error_muting_account))
             }
         }
     }
@@ -95,7 +97,7 @@ class PostCardDelegate(
                 accountRepository.blockAccount(accountId)
             } catch (e: Exception) {
                 log.e(e)
-                _errorToastMessage.emit("Error blocking account")
+                _errorToastMessage.emit(StringFactory.string(R.string.error_blocking_account))
             }
         }
     }

@@ -19,4 +19,16 @@
 
     <string name="poll_closed">poll closed</string>
     <string name="poll_choose_one_or_more_options">Choose one or more</string>
+
+    <string name="mute_user">Mute %s</string>
+    <string name="block_user">Block %s</string>
+    <string name="report_user">Report %s</string>
+
+    <string name="error_voting">Error voting</string>
+    <string name="error_boosting">Error boosting</string>
+    <string name="error_undoing_boost">Error undoing boost</string>
+    <string name="error_adding_favorite">Error adding favorite</string>
+    <string name="error_removing_favorite">Error removing favorite</string>
+    <string name="error_muting_account">Error muting account</string>
+    <string name="error_blocking_account">Error blocking account</string>
 </resources>
