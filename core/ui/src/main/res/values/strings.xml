@@ -5,6 +5,8 @@
 
     <string name="retry">Retry</string>
 
+    <string name="error_oops">Oops, something went wrong</string>
+
     <string name="vote_button">Vote</string>
 
     <plurals name="vote_count_and_percent">
@@ -31,4 +33,7 @@
     <string name="error_removing_favorite">Error removing favorite</string>
     <string name="error_muting_account">Error muting account</string>
     <string name="error_blocking_account">Error blocking account</string>
+
+    <string name="feed_recommendations_why_am_i_seeing_this">Why am I seeing this?</string>
+    <string name="feed_recommendations_reason_you_are_seeing_this">You\'re seeing this because it\'s the same thing we show to everyone.</string>
 </resources>

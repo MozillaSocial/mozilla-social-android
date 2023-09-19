@@ -17,6 +17,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.PagingData
@@ -24,6 +25,7 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import kotlinx.coroutines.flow.Flow
+import org.mozilla.social.core.ui.R
 import org.mozilla.social.core.ui.pullrefresh.PullRefreshIndicator
 import org.mozilla.social.core.ui.pullrefresh.pullRefresh
 import org.mozilla.social.core.ui.pullrefresh.rememberPullRefreshState
@@ -46,8 +48,8 @@ fun PostCardList(
         MoreInfoDialog(
             onDismissRequest = { openAlertDialog.value = false },
             onConfirmation = { openAlertDialog.value = false },
-            dialogTitle = "Why am I seeing this?",
-            dialogText = "You're seeing this because it's the same thing we show to everyone.",
+            dialogTitle = stringResource(id = R.string.feed_recommendations_why_am_i_seeing_this),
+            dialogText = stringResource(id = R.string.feed_recommendations_reason_you_are_seeing_this),
         )
     }
 
@@ -143,7 +145,7 @@ private fun Error(
     ) {
         Text(
             modifier = Modifier.align(Alignment.CenterHorizontally),
-            text = "Oops, something went wrong"
+            text = stringResource(id = R.string.error_oops)
         )
         Button(
             modifier = Modifier
@@ -151,7 +153,7 @@ private fun Error(
                 .align(Alignment.CenterHorizontally),
             onClick = { onRetryClicked() }
         ) {
-            Text(text = "Retry")
+            Text(text = stringResource(id = R.string.retry))
         }
     }
 }
