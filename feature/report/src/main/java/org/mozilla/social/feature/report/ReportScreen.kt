@@ -36,12 +36,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
+import org.mozilla.social.core.designsystem.component.MoSoTopBar
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.designsystem.theme.MozillaSocialTheme
 import org.mozilla.social.core.ui.transparentTextFieldColors
@@ -72,7 +74,7 @@ fun ReportRoute(
 
     LaunchedEffect(Unit) {
         viewModel.errorToastMessage.collect {
-            Toast.makeText(context, it, Toast.LENGTH_LONG).show()
+            Toast.makeText(context, it.build(context), Toast.LENGTH_LONG).show()
         }
     }
 }
@@ -88,13 +90,14 @@ private fun ReportScreen(
     Box(
         modifier = Modifier
             .windowInsetsPadding(WindowInsets.ime.exclude(WindowInsets.navigationBars))
-            .background(MaterialTheme.colorScheme.surface),
+            .background(MaterialTheme.colorScheme.background),
     ) {
         Column(
             modifier = Modifier.fillMaxHeight()
         ) {
-            TopBar(
-                reportInteractions = reportInteractions,
+            MoSoTopBar(
+                title = stringResource(id = R.string.report_screen_title),
+                onCloseClicked = { reportInteractions.onCloseClicked() }
             )
             Divider()
             MainContent(
@@ -105,32 +108,6 @@ private fun ReportScreen(
                 reportInteractions = reportInteractions,
             )
         }
-    }
-}
-
-@Composable
-private fun TopBar(
-    reportInteractions: ReportInteractions,
-) {
-    Row(
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        IconButton(
-            modifier = Modifier.align(Alignment.CenterVertically),
-            onClick = { reportInteractions.onCloseClicked() },
-        ) {
-            Icon(
-                MoSoIcons.Close,
-                "close",
-                tint = MaterialTheme.colorScheme.onSurface,
-            )
-        }
-        Text(
-            modifier = Modifier.align(Alignment.CenterVertically),
-            text = "Report",
-            fontSize = 18.sp,
-            fontWeight = FontWeight.Medium,
-        )
     }
 }
 
@@ -149,28 +126,28 @@ private fun MainContent(
     ) {
         Spacer(modifier = Modifier.padding(8.dp))
         Text(
-            text = "Tell us what's wrong with this post",
+            text = stringResource(id = R.string.report_instructions),
             fontSize = 24.sp
         )
         Spacer(modifier = Modifier.padding(8.dp))
         Text(
-            text = "Choose the best match:",
+            text = stringResource(id = R.string.choose_best_match),
             fontSize = 18.sp,
             fontWeight = FontWeight.Medium,
         )
         Spacer(modifier = Modifier.padding(4.dp))
         SelectableReportType(
             reportType = ReportType.SPAM,
-            title = "It's spam",
+            title = stringResource(id = R.string.report_reason_spam),
             selectedReportType = selectedReportType,
             reportInteractions = reportInteractions,
         ) {
-            Text(text = "Malicious links, fake engagement, or repetitive replies")
+            Text(text = stringResource(id = R.string.report_reason_spam_description))
         }
 
         SelectableReportType(
             reportType = ReportType.VIOLATION,
-            title = "It violates one or more of the server rules",
+            title = stringResource(id = R.string.report_reason_violation),
             selectedReportType = selectedReportType,
             reportInteractions = reportInteractions,
         ) {
@@ -186,15 +163,15 @@ private fun MainContent(
 
         SelectableReportType(
             reportType = ReportType.OTHER,
-            title = "It's something else",
+            title = stringResource(id = R.string.report_reason_other),
             selectedReportType = selectedReportType,
             reportInteractions = reportInteractions,
         ) {
-            Text(text = "The issue does not fit into other categories")
+            Text(text = stringResource(id = R.string.report_reason_other_description))
         }
 
         Spacer(modifier = Modifier.padding(16.dp))
-        Text(text = "Is there anything else you think we should know?")
+        Text(text = stringResource(id = R.string.extra_info_prompt))
         Spacer(modifier = Modifier.padding(8.dp))
         TextField(
             modifier = Modifier
@@ -207,7 +184,7 @@ private fun MainContent(
             value = additionalCommentText,
             colors = transparentTextFieldColors(),
             label = {
-                Text(text = "Additional comments")
+                Text(text = stringResource(id = R.string.extra_info_text_field_label))
             },
             onValueChange = { reportInteractions.onAdditionCommentTextChanged(it) },
         )
@@ -219,7 +196,7 @@ private fun MainContent(
             enabled = selectedReportType != null,
             onClick = { reportInteractions.onReportClicked() }
         ) {
-            Text(text = "Report")
+            Text(text = stringResource(id = R.string.report_button))
         }
         Spacer(modifier = Modifier.padding(16.dp))
     }
