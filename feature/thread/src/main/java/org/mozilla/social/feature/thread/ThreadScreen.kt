@@ -1,9 +1,9 @@
 package org.mozilla.social.feature.thread
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.material3.Divider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.res.stringResource
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 import org.mozilla.social.core.designsystem.component.MoSoTopBar
@@ -22,7 +22,7 @@ fun ThreadScreen(
 ) {
     Column {
         MoSoTopBar(
-            title = "Thread",
+            title = stringResource(id = R.string.thread_screen_title),
             onCloseClicked = onCloseClicked,
         )
 
