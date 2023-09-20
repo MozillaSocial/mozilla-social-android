@@ -70,8 +70,8 @@ object MoSoTheme {
 }
 
 private val darkColorPalette = MoSoColors(
-    layer1 = FirefoxColor.White,
-    layer2 = FirefoxColor.LightGrey20,
+    layer1 = FirefoxColor.DarkGrey60,
+    layer2 = FirefoxColor.DarkGrey30,
     layerAccent = FirefoxColor.Violet60,
     scrim = FirefoxColor.DarkGrey20,
     actionPrimary = FirefoxColor.Violet60,
