@@ -7,16 +7,18 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import org.mozilla.social.core.domain.IsSignedInFlow
 import org.mozilla.social.core.domain.Login
 
 class AuthViewModel(
     private val login: Login,
+    isSignedInFlow: IsSignedInFlow,
 ) : ViewModel() {
 
-    val isSignedIn: Flow<Boolean> = login.isSignedIn.stateIn(
+    val isSignedIn: Flow<Boolean> = isSignedInFlow().stateIn(
         viewModelScope,
         SharingStarted.WhileSubscribed(),
-        initialValue = false
+        initialValue = false,
     )
 
     fun onLoginClicked(context: Context, domain: String) {

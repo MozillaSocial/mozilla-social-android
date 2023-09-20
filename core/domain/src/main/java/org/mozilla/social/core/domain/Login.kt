@@ -24,9 +24,6 @@ class Login(
     private val appRepository: AppRepository,
 ) {
 
-    val isSignedIn: Flow<Boolean>
-        get() = userPreferencesDatastore.isSignedIn
-
     /**
      * When a  logging in by registering this client with the given domain
      */
