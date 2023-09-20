@@ -2,4 +2,14 @@
 <resources>
     <string name="logout">Log Out</string>
     <string name="posts">Posts</string>
+
+    <plurals name="followers_count">
+        <item quantity="one">%d follower</item>
+        <item quantity="other">%d followers</item>
+    </plurals>
+
+    <string name="following">Following</string>
+
+    <string name="following_count">Following: %d</string>
+    <string name="followers_count">Followers: %d</string>
 </resources>

@@ -22,10 +22,13 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.pluralStringResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import org.koin.androidx.compose.koinViewModel
 import org.mozilla.social.core.designsystem.theme.MozillaSocialTheme
+import org.mozilla.social.feature.account.R
 import org.mozilla.social.model.Account
 
 @Composable
@@ -97,7 +100,11 @@ internal fun AccountQuickView(account: Account) {
                         style = MaterialTheme.typography.bodySmall
                     )
                     Text(
-                        text = "${account.followersCount} followers",
+                        text = pluralStringResource(
+                            id = R.plurals.followers_count,
+                            count = account.followersCount.toInt(),
+                            account.followersCount.toInt(),
+                        ),
                         style = MaterialTheme.typography.bodyMedium
                     )
                 }
@@ -107,7 +114,7 @@ internal fun AccountQuickView(account: Account) {
             ) {
                 MozillaSocialTheme {
                     Text(
-                        text = "Following",
+                        text = stringResource(id = R.string.following),
                         color = lightColorScheme().primary,
                         modifier = Modifier
                             .background(
