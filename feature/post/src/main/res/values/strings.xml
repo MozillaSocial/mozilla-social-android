@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="five_minutes">5 minutes</string>
+    <string name="thirty_minutes">30 minutes</string>
+    <string name="one_hour">1 hour</string>
+    <string name="six_hours">6 hours</string>
+    <string name="one_day">1 day</string>
+    <string name="three_days">3 days</string>
+    <string name="one_week">1 week</string>
+
+    <string name="poll_duration">Poll duration</string>
+
+    <string name="poll_style_single_choice">Single choice</string>
+    <string name="poll_style_multiple_choice">Multiple choice</string>
+
+    <string name="poll_style">Poll style</string>
+</resources>
