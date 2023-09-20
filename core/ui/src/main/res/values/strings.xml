@@ -4,6 +4,7 @@
     <string name="media_upload_failed">Failed to upload media</string>
 
     <string name="retry">Retry</string>
+    <string name="ok">OK</string>
 
     <string name="error_oops">Oops, something went wrong</string>
 
@@ -39,5 +40,9 @@
 
     <string name="user_has_boosted_post">%s boosted</string>
     <string name="post_is_in_reply_to_user">In reply to %s</string>
+
+    <string name="recommended_for_you">Recommended for you</string>
+    <string name="more_info_content_description">more info</string>
+    <string name="recommendations_discover_more">Discover more</string>
 
 </resources>
