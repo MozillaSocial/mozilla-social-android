@@ -20,10 +20,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.designsystem.theme.FirefoxColor
 import org.mozilla.social.core.designsystem.theme.Typography
+import org.mozilla.social.core.ui.R
 import org.mozilla.social.model.Recommendation
 
 @Composable
@@ -39,14 +41,14 @@ fun RecommendationCarousel(reccs: List<Recommendation>, onMoreInfoClicked: () ->
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
-                text = "Recommended for you",
+                text = stringResource(id = R.string.recommended_for_you),
                 style = Typography.labelLarge,
             )
             Spacer(modifier = Modifier.weight(1f))
             IconButton(onClick = onMoreInfoClicked) {
                 Icon(
                     imageVector = MoSoIcons.Info,
-                    contentDescription = "more info",
+                    contentDescription = stringResource(id = R.string.more_info_content_description),
                     tint = MaterialTheme.colorScheme.onPrimary,
                 )
             }
@@ -69,7 +71,7 @@ fun RecommendationCarousel(reccs: List<Recommendation>, onMoreInfoClicked: () ->
                 horizontalArrangement = Arrangement.Center,
             ) {
                 Text(
-                    text = "Discover More",
+                    text = stringResource(id = R.string.recommendations_discover_more),
                     color = FirefoxColor.Violet70
                 )
                 Icon(
@@ -106,7 +108,7 @@ fun MoreInfoDialog(
                     onConfirmation()
                 }
             ) {
-                Text("Ok")
+                Text(stringResource(id = R.string.ok))
             }
         },
     )

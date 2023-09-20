@@ -7,7 +7,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import org.mozilla.social.core.designsystem.component.MoSoScaffold
-import org.mozilla.social.core.domain.IsSignedInFlow
 import org.mozilla.social.navigation.MozillaNavHost
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -18,13 +17,13 @@ fun MainActivityScreen() {
     MoSoScaffold(
         modifier = Modifier.nestedScroll(appState.topAppBarScrollBehavior.nestedScrollConnection),
         snackbarHost = { appState.snackbarHostState },
-        floatingActionButton = { appState.floatingActionButton() },
-        bottomBar = { appState.bottomBar() },
-        topBar = { appState.topBar() },
+        floatingActionButton = { appState.FloatingActionButton() },
+        bottomBar = { appState.BottomBar() },
+        topBar = { appState.TopBar() },
         topAppBarScrollBehavior = appState.topAppBarScrollBehavior,
         navigationDrawerState = appState.navigationDrawerState,
-        navigationDrawerContent = { appState.navigationDrawerContent(onSettingsClicked = appState::navigateToSettings) },
-        bottomSheetContent = { appState.bottomSheetContent() },
+        navigationDrawerContent = { appState.NavigationDrawerContent(onSettingsClicked = appState::navigateToSettings) },
+        bottomSheetContent = { appState.BottomSheetContent() },
         bottomSheetVisible = appState.bottomSheetVisible.value,
         content = {
             Box(modifier = Modifier.padding(it)) { MozillaNavHost(appState = appState) }

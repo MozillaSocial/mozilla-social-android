@@ -11,8 +11,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import org.mozilla.social.core.designsystem.R
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
 
 @Composable
@@ -30,7 +32,7 @@ fun MoSoTopBar(
             ) {
                 Icon(
                     MoSoIcons.Close,
-                    "close",
+                    stringResource(id = R.string.top_bar_close_content_description),
                     tint = MaterialTheme.colorScheme.onSurface,
                 )
             }

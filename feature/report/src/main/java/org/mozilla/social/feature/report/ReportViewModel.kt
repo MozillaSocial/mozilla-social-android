@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import org.mozilla.social.common.logging.Log
+import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.common.utils.edit
 import org.mozilla.social.core.data.repository.InstanceRepository
 import org.mozilla.social.core.data.repository.ReportRepository
@@ -35,7 +36,7 @@ class ReportViewModel(
     private val _additionCommentText = MutableStateFlow("")
     val additionalCommentText = _additionCommentText.asStateFlow()
 
-    private val _errorToastMessage = MutableSharedFlow<String>(extraBufferCapacity = 1)
+    private val _errorToastMessage = MutableSharedFlow<StringFactory>(extraBufferCapacity = 1)
     val errorToastMessage = _errorToastMessage.asSharedFlow()
 
     init {
@@ -71,7 +72,7 @@ class ReportViewModel(
                 )
             } catch (e: Exception) {
                 log.e(e)
-                _errorToastMessage.emit("Error sending report")
+                _errorToastMessage.emit(StringFactory.string(R.string.error_sending_report_toast))
             }
             onReported()
         }

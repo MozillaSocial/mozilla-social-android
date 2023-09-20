@@ -18,6 +18,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -52,7 +53,7 @@ private fun LoginScreen(onLoginClicked: (String) -> Unit) {
     ) {
         Spacer(modifier = Modifier.padding(80.dp))
         Text(
-            text = "Mozilla Social",
+            text = stringResource(id = R.string.title_text),
             fontSize = 30.sp
         )
         var text by remember { mutableStateOf("mozilla.social") }
@@ -71,7 +72,7 @@ private fun LoginButton(onLoginClicked: () -> Unit) {
         onClick = onLoginClicked,
         content = {
             Text(
-                text = "Login",
+                text = stringResource(id = R.string.login_button),
             )
         },
     )

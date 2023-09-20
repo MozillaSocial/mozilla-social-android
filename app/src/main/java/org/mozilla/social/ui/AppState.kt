@@ -1,6 +1,5 @@
 package org.mozilla.social.ui
 
-import android.util.Log
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Divider
 import androidx.compose.material3.DrawerState
@@ -23,6 +22,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -30,12 +30,13 @@ import androidx.navigation.NavOptions
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import org.mozilla.social.common.logging.TimberLog
+import org.mozilla.social.R
 import org.mozilla.social.core.designsystem.component.MoSoAppBar
 import org.mozilla.social.core.designsystem.component.MoSoBottomNavigationBar
 import org.mozilla.social.core.designsystem.component.MoSoModalDrawerSheet
@@ -98,6 +99,7 @@ class AppState(
     val snackbarHostState: SnackbarHostState,
 ) {
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     private val currentDestination: StateFlow<NavDestination?> =
         navController.currentBackStackEntryFlow.mapLatest { backStackEntry ->
             navDestinations.find { it.route == backStackEntry.destination.route }
@@ -108,13 +110,13 @@ class AppState(
         )
 
     @Composable
-    fun floatingActionButton() {
+    fun FloatingActionButton() {
         when (currentDestination.collectAsState().value) {
             Feed -> {
                 FloatingActionButton(onClick = { navController.navigateToNewPost() }) {
                     Icon(
                         MoSoIcons.Add,
-                        "new post"
+                        stringResource(id = R.string.feed_fab_content_description)
                     )
                 }
             }
@@ -125,20 +127,20 @@ class AppState(
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    fun topBar() {
+    fun TopBar() {
         val currentDestination = currentDestination.collectAsState().value
 
         val titleText = when (currentDestination) {
             Feed -> {
-                "Mozilla Social"
+                stringResource(id = R.string.top_bar_title_feed)
             }
 
             Search -> {
-                "Search"
+                stringResource(id = R.string.top_bar_title_search)
             }
 
             Account -> {
-                "Account"
+                stringResource(id = R.string.top_bar_title_account)
             }
 
             else -> {
@@ -168,7 +170,7 @@ class AppState(
                                 }) {
                                     Icon(
                                         imageVector = MoSoIcons.Menu,
-                                        contentDescription = "navigation menu",
+                                        contentDescription = stringResource(id = R.string.navigation_menu_content_description),
                                         tint = MaterialTheme.colorScheme.onPrimary,
                                     )
                                 }
@@ -184,7 +186,7 @@ class AppState(
                             }) {
                                 Icon(
                                     imageVector = MoSoIcons.Feed,
-                                    contentDescription = "feed selection",
+                                    contentDescription = stringResource(id = R.string.feed_selection_content_description),
                                     tint = MaterialTheme.colorScheme.onPrimary,
                                 )
                             }
@@ -200,7 +202,7 @@ class AppState(
     }
 
     @Composable
-    fun bottomBar() {
+    fun BottomBar() {
         val currentDestination =
             currentDestination.collectAsState().value as? NavBarDestination ?: return
 
@@ -301,22 +303,28 @@ class AppState(
     }
 
     @Composable
-    fun navigationDrawerContent(onSettingsClicked: () -> Unit) {
+    fun NavigationDrawerContent(onSettingsClicked: () -> Unit) {
         MoSoModalDrawerSheet {
-            Text("mozilla.social", modifier = Modifier.padding(16.dp))
+            Text(
+                modifier = Modifier.padding(16.dp),
+                text = stringResource(id = R.string.navigation_drawer_title),
+            )
 
             Divider()
             // TODO
 //                MoSoNavigationDrawerItem("Profile")
 //                MoSoNavigationDrawerItem("Favorites")
 //                MoSoNavigationDrawerItem("Bookmarks")
-            MoSoNavigationDrawerItem("Settings", onClick = onSettingsClicked)
+            MoSoNavigationDrawerItem(
+                text = stringResource(id = R.string.navigation_drawer_item_settings),
+                onClick = onSettingsClicked,
+            )
         }
 
     }
 
     @Composable
-    fun bottomSheetContent() {
+    fun BottomSheetContent() {
         Text(text = "feed options coming")
     }
 

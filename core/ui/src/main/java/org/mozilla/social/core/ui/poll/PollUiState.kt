@@ -1,8 +1,10 @@
 package org.mozilla.social.core.ui.poll
 
+import org.mozilla.social.common.utils.StringFactory
+
 data class PollUiState(
     val pollOptions: List<PollOptionUiState>,
-    val pollInfoText: String,
+    val pollInfoText: StringFactory,
     val isUserCreatedPoll: Boolean,
     val showResults: Boolean,
     val pollId: String,
@@ -15,5 +17,5 @@ data class PollUiState(
 data class PollOptionUiState(
     val fillFraction: Float,
     val title: String,
-    val voteInfo: String,
+    val voteInfo: StringFactory,
 )
