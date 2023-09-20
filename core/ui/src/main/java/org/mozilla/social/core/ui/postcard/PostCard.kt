@@ -77,7 +77,7 @@ private fun TopRowMetaData(
         Spacer(modifier = Modifier.padding(start = 8.dp))
         Text(
             modifier = Modifier.align(Alignment.CenterVertically),
-            text = topRowMetaDataUiState.text,
+            text = topRowMetaDataUiState.text.build(LocalContext.current),
             fontSize = 14.sp
         )
     }

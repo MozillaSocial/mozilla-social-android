@@ -33,5 +33,5 @@ data class MainPostCardUiState(
 
 data class TopRowMetaDataUiState(
     val icon: ImageVector,
-    val text: String,
+    val text: StringFactory,
 )

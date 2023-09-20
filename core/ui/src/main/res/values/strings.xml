@@ -36,4 +36,8 @@
 
     <string name="feed_recommendations_why_am_i_seeing_this">Why am I seeing this?</string>
     <string name="feed_recommendations_reason_you_are_seeing_this">You\'re seeing this because it\'s the same thing we show to everyone.</string>
+
+    <string name="user_has_boosted_post">%s boosted</string>
+    <string name="post_is_in_reply_to_user">In reply to %s</string>
+
 </resources>
