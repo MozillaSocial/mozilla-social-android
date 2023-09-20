@@ -31,6 +31,15 @@ sealed interface StringFactory {
         vararg val formatArgs: Any,
     ) : StringFactory
 
+    /**
+     * A collection of factories that will be concatenated into a single string when calling
+     * [FactoryCollection.build].  Useful if you need to concatenate a string but don't
+     * have access to [Context] just yet.
+     */
+    private class FactoryCollection(
+        vararg val factories: StringFactory
+    ): StringFactory
+
     fun build(context: Context): String = when (this) {
         is Literal -> literalValue
         is StringResource -> context.getString(resId)
@@ -40,6 +49,11 @@ sealed interface StringFactory {
             quantity,
             *formatArgs,
         )
+        is FactoryCollection -> buildString {
+            factories.forEach {
+                append(it.build(context))
+            }
+        }
     }
 
     companion object {
@@ -63,26 +77,9 @@ sealed interface StringFactory {
         fun literal(
             literalValue: String
         ): StringFactory = Literal(literalValue)
-    }
-}
 
-/**
- * Pass strings or string factories into the constructor, then build to concatenate the values.
- *
- * Useful if you have multiple string factories / strings that need to be
- * concatenated, but you don't have access to context just yet.
- */
-class StringFactoryConcatenator(
-    private vararg val stringArgs: Any,
-) {
-    fun build(context: Context): String =
-        buildString {
-            stringArgs.forEach {
-                when (it) {
-                    is StringFactoryConcatenator -> append(it.build(context))
-                    is StringFactory -> append(it.build(context))
-                    else -> append(it)
-                }
-            }
-        }
+        fun collection(
+            vararg factories: StringFactory
+        ): StringFactory = FactoryCollection(*factories)
+    }
 }

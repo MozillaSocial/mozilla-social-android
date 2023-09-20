@@ -1,11 +1,10 @@
 package org.mozilla.social.core.ui.poll
 
 import org.mozilla.social.common.utils.StringFactory
-import org.mozilla.social.common.utils.StringFactoryConcatenator
 
 data class PollUiState(
     val pollOptions: List<PollOptionUiState>,
-    val pollInfoText: StringFactoryConcatenator,
+    val pollInfoText: StringFactory,
     val isUserCreatedPoll: Boolean,
     val showResults: Boolean,
     val pollId: String,

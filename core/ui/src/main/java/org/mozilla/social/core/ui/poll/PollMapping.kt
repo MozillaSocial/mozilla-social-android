@@ -1,7 +1,6 @@
 package org.mozilla.social.core.ui.poll
 
 import org.mozilla.social.common.utils.StringFactory
-import org.mozilla.social.common.utils.StringFactoryConcatenator
 import org.mozilla.social.common.utils.timeLeft
 import org.mozilla.social.core.ui.R
 import org.mozilla.social.model.Poll
@@ -23,20 +22,20 @@ fun Poll.toPollUiState(
             )
         },
         isUserCreatedPoll = isUserCreatedPoll,
-        pollInfoText = StringFactoryConcatenator(
+        pollInfoText = StringFactory.collection(
             StringFactory.quantityString(
                 R.plurals.vote_count,
                 votesCount.toInt(),
                 votesCount.toInt(),
             ),
-            " - ",
+            StringFactory.literal(" - "),
             expiresAt?.timeLeft() ?: StringFactory.string(R.string.poll_closed),
             if (allowsMultipleChoices) {
-                StringFactoryConcatenator(
-                    " - ",
+                StringFactory.collection(
+                    StringFactory.literal(" - "),
                     StringFactory.string(R.string.poll_choose_one_or_more_options)
                 )
-            } else ""
+            } else StringFactory.literal("")
         ),
         showResults = hasVoted ?: false,
         pollId = pollId,
