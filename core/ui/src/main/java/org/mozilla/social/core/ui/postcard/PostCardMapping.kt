@@ -31,7 +31,7 @@ private fun Status.toMainPostCardUiState(
         mediaAttachments = mediaAttachments,
         profilePictureUrl = account.avatarStaticUrl,
         postTimeSince = createdAt.timeSinceNow(),
-        accountName = StringFactory.literalString(account.acct),
+        accountName = StringFactory.literal(account.acct),
         replyCount = repliesCount,
         boostCount = boostsCount,
         favoriteCount = favouritesCount,

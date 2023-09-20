@@ -8,7 +8,7 @@ import androidx.annotation.StringRes
  * String wrapper class that supports literals and string resources
  */
 sealed interface StringFactory {
-    private data class LiteralString(
+    private data class Literal(
         val literalValue: String,
     ) : StringFactory
 
@@ -32,7 +32,7 @@ sealed interface StringFactory {
     ) : StringFactory
 
     fun build(context: Context): String = when (this) {
-        is LiteralString -> literalValue
+        is Literal -> literalValue
         is StringResource -> context.getString(resId)
         is FormattedStringResource -> context.getString(resId, *formatArgs)
         is QuantityStringResource -> context.resources.getQuantityString(
@@ -60,9 +60,9 @@ sealed interface StringFactory {
             vararg formatArgs: Any,
         ): StringFactory = QuantityStringResource(resId, quantity, *formatArgs)
 
-        fun literalString(
+        fun literal(
             literalValue: String
-        ): StringFactory = LiteralString(literalValue)
+        ): StringFactory = Literal(literalValue)
     }
 }
 
