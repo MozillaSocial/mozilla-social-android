@@ -9,9 +9,26 @@
     <string name="one_week">1 week</string>
 
     <string name="poll_duration">Poll duration</string>
-
     <string name="poll_style_single_choice">Single choice</string>
     <string name="poll_style_multiple_choice">Multiple choice</string>
-
     <string name="poll_style">Poll style</string>
+    <string name="poll_choice_label">Choice %d</string>
+    <string name="poll_option_hide_results">Hide results until complete</string>
+
+    <string name="send_post_button_content_description">post</string>
+    <string name="attach_image_button_content_description">attach image</string>
+    <string name="add_poll_button_content_description">add poll</string>
+    <string name="content_warning_button_content_description">content warning</string>
+    <string name="delete_button_content_description">delete</string>
+    <string name="add_poll_option_button_content_description">add poll option</string>
+    <string name="remove_poll_option_button_content_description">remove poll option</string>
+
+    <string name="new_post_text_field_label">What\'s happening?</string>
+
+    <string name="in_reply_to_account_name_label">In reply to %s</string>
+
+    <string name="content_warning_label">Content Warning</string>
+    <string name="media_alt_text_label">Add a description</string>
+
+    <string name="error_sending_post_toast">Error sending post</string>
 </resources>

@@ -15,9 +15,11 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.mozilla.social.common.LoadState
 import org.mozilla.social.common.logging.Log
+import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.core.data.repository.MediaRepository
 import org.mozilla.social.core.data.repository.SearchRepository
 import org.mozilla.social.core.data.repository.StatusRepository
+import org.mozilla.social.feature.post.R
 import org.mozilla.social.model.StatusVisibility
 import org.mozilla.social.model.request.PollCreate
 import org.mozilla.social.post.status.ContentWarningInteractions
@@ -96,7 +98,7 @@ class NewPostViewModel(
             initialValue = true
         )
 
-    private val _errorToastMessage = MutableSharedFlow<String>(extraBufferCapacity = 1)
+    private val _errorToastMessage = MutableSharedFlow<StringFactory>(extraBufferCapacity = 1)
     val errorToastMessage = _errorToastMessage.asSharedFlow()
 
     private val _isSendingPost = MutableStateFlow(false)
@@ -131,7 +133,7 @@ class NewPostViewModel(
                 onStatusPosted()
             } catch (e: Exception) {
                 log.e(e)
-                _errorToastMessage.emit("Error Sending Post")
+                _errorToastMessage.emit(StringFactory.string(R.string.error_sending_post_toast))
                 _isSendingPost.update { false }
             }
         }
