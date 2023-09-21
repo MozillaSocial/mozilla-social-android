@@ -31,10 +31,18 @@ class AccountRepository internal constructor(
             accountApi.getAccountFollowing(accountId).map { it.toExternalModel() }
         }
 
-    suspend fun getAccountStatuses(accountId: String): List<Status> =
-        coroutineScope {
-            accountApi.getAccountStatuses(accountId).map { it.toExternalModel() }
-        }
+    suspend fun getAccountStatuses(
+        accountId: String,
+        olderThanId: String? = null,
+        immediatelyNewerThanId: String? = null,
+        loadSize: Int? = null,
+    ): List<Status> =
+        accountApi.getAccountStatuses(
+            accountId = accountId,
+            olderThanId = olderThanId,
+            immediatelyNewerThanId = immediatelyNewerThanId,
+            limit = loadSize,
+        ).map { it.toExternalModel() }
 
     suspend fun getAccountBookmarks(): List<Status> =
         coroutineScope {
