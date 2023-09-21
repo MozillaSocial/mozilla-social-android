@@ -26,7 +26,9 @@ fun MainActivityScreen() {
         bottomSheetContent = { appState.BottomSheetContent() },
         bottomSheetVisible = appState.bottomSheetVisible.value,
         content = {
-            Box(modifier = Modifier.padding(it)) { MozillaNavHost(appState = appState) }
+            Box(modifier = Modifier.padding(it)) {
+                MozillaNavHost(appState = appState)
+            }
         }
     )
 }

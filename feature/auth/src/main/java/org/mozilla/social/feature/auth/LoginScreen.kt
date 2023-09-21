@@ -25,11 +25,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.koin.androidx.compose.koinViewModel
-import org.mozilla.social.core.designsystem.theme.MozillaSocialTheme
+import org.mozilla.social.core.designsystem.theme.MoSoTheme
 
 @Suppress("KotlinConstantConditions")
 @Composable
-internal fun LoginScreen(
+fun LoginScreen(
     viewModel: AuthViewModel = koinViewModel(),
     navigateToLoggedInGraph: () -> Unit,
 ) {
@@ -51,7 +51,6 @@ internal fun LoginScreen(
                 domain = domain
             )
         })
-
 }
 
 @Composable
@@ -96,7 +95,7 @@ private fun LoginButton(onLoginClicked: () -> Unit) {
 @Preview
 @Composable
 internal fun AuthScreenPreview() {
-    MozillaSocialTheme {
-        LoginScreen {}
+    MoSoTheme {
+        LoginScreen(defaultUrl = "example.com", onLoginClicked = {})
     }
 }

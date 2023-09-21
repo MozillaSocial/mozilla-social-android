@@ -11,7 +11,7 @@ import org.koin.androidx.compose.koinViewModel
 import org.mozilla.social.core.domain.IsSignedInFlow
 
 @Composable
-fun SplashScreenRoute(
+fun SplashScreen(
     viewModel: SplashViewModel = koinViewModel(),
     navigateToLogin: () -> Unit,
     navigateToLoggedInGraph: () -> Unit,
@@ -45,4 +45,3 @@ class SplashViewModel(isSignedInFlow: IsSignedInFlow) : ViewModel() {
     )
 }
 
-const val SPLASH_ROUTE = "splash"

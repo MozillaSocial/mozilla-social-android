@@ -27,7 +27,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import org.koin.androidx.compose.koinViewModel
-import org.mozilla.social.core.designsystem.theme.MozillaSocialTheme
+import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.feature.account.R
 import org.mozilla.social.model.Account
 
@@ -48,7 +48,7 @@ internal fun AccountFollowUsersScreen(
 
 @Composable
 internal fun AccountFollowScreen(accounts: List<Account>) {
-    MozillaSocialTheme {
+    MoSoTheme {
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -112,7 +112,7 @@ internal fun AccountQuickView(account: Account) {
             Column(
                 horizontalAlignment = Alignment.End,
             ) {
-                MozillaSocialTheme {
+                MoSoTheme {
                     Text(
                         text = stringResource(id = R.string.following),
                         color = lightColorScheme().primary,

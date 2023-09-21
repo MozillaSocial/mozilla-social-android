@@ -14,7 +14,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
-import org.mozilla.social.core.designsystem.theme.MozillaSocialTheme
+import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.feature.post.R
 
 @Composable
@@ -63,7 +63,7 @@ fun PollDurationDropDown(
 @Preview
 @Composable
 private fun PollDurationDropDownPreview() {
-    MozillaSocialTheme {
+    MoSoTheme {
         PollDurationDropDown(
             poll = Poll(
                 options = listOf("option 1", "option 2"),
