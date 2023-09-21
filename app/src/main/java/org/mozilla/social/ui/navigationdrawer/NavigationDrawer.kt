@@ -43,7 +43,7 @@ fun NavigationDrawer(
 }
 
 @Composable
-fun ColumnScope.NavigationDrawerContent(
+private fun ColumnScope.NavigationDrawerContent(
     onSettingsClicked: () -> Unit,
     onLogoutClicked: () -> Unit,
 ) {
