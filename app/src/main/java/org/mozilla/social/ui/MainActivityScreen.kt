@@ -7,7 +7,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import org.mozilla.social.core.designsystem.component.MoSoScaffold
-import org.mozilla.social.core.domain.IsSignedInFlow
 import org.mozilla.social.navigation.MozillaNavHost
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -27,7 +26,9 @@ fun MainActivityScreen() {
         bottomSheetContent = { appState.bottomSheetContent() },
         bottomSheetVisible = appState.bottomSheetVisible.value,
         content = {
-            Box(modifier = Modifier.padding(it)) { MozillaNavHost(appState = appState) }
+            Box(modifier = Modifier.padding(it)) {
+                MozillaNavHost(appState = appState)
+            }
         }
     )
 }

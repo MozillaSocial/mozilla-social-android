@@ -5,10 +5,12 @@
 package org.mozilla.social.core.designsystem.theme
 
 
+import android.app.Activity
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -16,6 +18,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalView
+import androidx.core.view.WindowCompat
 
 /**
  * Indicates the theme that is displayed.
@@ -38,6 +43,8 @@ enum class Theme {
     }
 }
 
+fun Theme.isDark(): Boolean = this == Theme.Dark
+
 /**
  * The theme for Mozilla Social Android.
  *
@@ -51,6 +58,16 @@ fun MoSoTheme(
     val colors = when (theme) {
         Theme.Light -> lightColorPalette
         Theme.Dark -> darkColorPalette
+    }
+
+    val view = LocalView.current
+    if (!view.isInEditMode) {
+        SideEffect {
+            val window = (view.context as Activity).window
+            window.statusBarColor = Color.Transparent.toArgb()
+            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars =
+                !theme.isDark()
+        }
     }
 
     ProvideMoSoColors(colors) {
@@ -92,24 +109,24 @@ private val darkColorPalette = MoSoColors(
 )
 
 private val lightColorPalette = MoSoColors(
-    layer1 = FirefoxColor.LightGrey10,
-    layer2 = FirefoxColor.White,
-    layerAccent = FirefoxColor.Ink20,
-    scrim = FirefoxColor.DarkGrey30A95,
-    actionPrimary = FirefoxColor.Ink20,
+    layer1 = FirefoxColor.White,
+    layer2 = FirefoxColor.LightGrey10,
+    layerAccent = FirefoxColor.Violet60,
+    scrim = FirefoxColor.DarkGrey20,
+    actionPrimary = FirefoxColor.Violet60,
     actionSecondary = FirefoxColor.LightGrey30,
     textPrimary = FirefoxColor.DarkGrey90,
     textSecondary = FirefoxColor.DarkGrey05,
-    textLink = FirefoxColor.DarkGrey90A40,
+    textLink = FirefoxColor.Violet60,
     textWarning = FirefoxColor.Red70,
-    textActionPrimary = FirefoxColor.LightGrey05,
+    textActionPrimary = FirefoxColor.White,
     textActionSecondary = FirefoxColor.DarkGrey90,
     iconPrimary = FirefoxColor.DarkGrey90,
     iconSecondary = FirefoxColor.DarkGrey05,
     iconAccent = FirefoxColor.Violet60,
-    borderPrimary = FirefoxColor.LightGrey30,
+    borderPrimary = FirefoxColor.LightGrey40,
     borderForm = FirefoxColor.DarkGrey90,
-    borderAccent = FirefoxColor.Ink20,
+    borderAccent = FirefoxColor.Violet60,
     borderWarning = FirefoxColor.Red70,
 )
 
@@ -310,5 +327,5 @@ fun ProvideMoSoColors(
 }
 
 private val localMoSoColors = staticCompositionLocalOf<MoSoColors> {
-    error("No FirefoxColors provided")
+    error("No MoSo provided")
 }

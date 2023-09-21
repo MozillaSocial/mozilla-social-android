@@ -34,6 +34,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
+import org.mozilla.social.core.designsystem.component.MoSoSurface
 import org.mozilla.social.core.designsystem.theme.MozillaSocialTheme
 
 @Composable
@@ -79,7 +80,7 @@ fun SettingsGroup(
     Column(modifier = Modifier.padding(vertical = 8.dp)) {
         Text(stringResource(id = name))
         Spacer(modifier = Modifier.height(8.dp))
-        Surface(
+        MoSoSurface(
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(8),
         ) {
@@ -99,7 +100,7 @@ fun SettingsSwitch(
     state: Boolean,
     onClick: () -> Unit
 ) {
-    Surface(
+    MoSoSurface(
         color = Color.Transparent,
         modifier = Modifier
             .fillMaxWidth()
@@ -145,7 +146,7 @@ private fun SettingsTextLink(
     onClick: () -> Unit
 ) {
 
-    Surface(
+    MoSoSurface(
         color = Color.Transparent,
         modifier = Modifier
             .fillMaxWidth()
@@ -185,7 +186,7 @@ private fun LogoutText(
     onClick: () -> Unit
 ) {
 
-    Surface(
+    MoSoSurface(
         color = MaterialTheme.colorScheme.error,
         modifier = Modifier
             .fillMaxWidth(),

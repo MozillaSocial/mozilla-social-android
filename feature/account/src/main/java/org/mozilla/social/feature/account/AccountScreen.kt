@@ -25,7 +25,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -44,15 +43,16 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
+import org.mozilla.social.core.designsystem.component.MoSoSurface
 import org.mozilla.social.core.designsystem.component.MoSoTopBar
 import org.mozilla.social.core.designsystem.theme.MozillaSocialTheme
-import org.mozilla.social.core.ui.postcard.PostCardNavigation
 import org.mozilla.social.core.ui.htmlcontent.HtmlContent
 import org.mozilla.social.core.ui.htmlcontent.HtmlContentInteractions
+import org.mozilla.social.core.ui.postcard.PostCardNavigation
 import org.mozilla.social.model.Account
 
 @Composable
-internal fun AccountRoute(
+fun AccountScreen(
     accountId: String?,
     onFollowingClicked: () -> Unit,
     onFollowersClicked: () -> Unit,
@@ -309,7 +309,7 @@ private fun LogoutText(
     @StringRes name: Int,
     onClick: () -> Unit
 ) {
-    Surface(
+   MoSoSurface(
         color = MaterialTheme.colorScheme.error,
         modifier = Modifier
             .fillMaxWidth()
