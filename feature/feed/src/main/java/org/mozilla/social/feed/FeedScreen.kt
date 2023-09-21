@@ -30,6 +30,7 @@ fun FeedScreen(
             feed = viewModel.feed,
             postCardInteractions = viewModel.postCardDelegate,
             reccs = viewModel.reccs.collectAsState(initial = null).value,
+            enablePullToRefresh = true,
         )
 
         val context = LocalContext.current

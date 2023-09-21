@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -39,6 +38,7 @@ fun PostCardList(
     feed: Flow<PagingData<PostCardUiState>>,
     reccs: List<Recommendation>? = null,
     postCardInteractions: PostCardInteractions,
+    enablePullToRefresh: Boolean = false,
     headerContent: @Composable () -> Unit = {},
 ) {
 
@@ -62,7 +62,10 @@ fun PostCardList(
 
     Box(
         modifier = Modifier
-            .pullRefresh(pullRefreshState),
+            .pullRefresh(
+                pullRefreshState,
+                enabled = enablePullToRefresh,
+            ),
     ) {
 
         if (lazyingPagingItems.loadState.refresh is LoadState.Error) {
@@ -128,11 +131,13 @@ fun PostCardList(
             }
         }
 
-        PullRefreshIndicator(
-            modifier = Modifier.align(Alignment.TopCenter),
-            refreshing = lazyingPagingItems.loadState.refresh == LoadState.Loading,
-            state = pullRefreshState,
-        )
+        if (enablePullToRefresh) {
+            PullRefreshIndicator(
+                modifier = Modifier.align(Alignment.TopCenter),
+                refreshing = lazyingPagingItems.loadState.refresh == LoadState.Loading,
+                state = pullRefreshState,
+            )
+        }
     }
 }
 
