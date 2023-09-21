@@ -10,10 +10,8 @@ val accountModule = module {
             get(),
             get(),
             get(),
-            get(),
             parametersHolder[0],
             parametersHolder[1],
-            parametersHolder[2],
         )
     }
 }

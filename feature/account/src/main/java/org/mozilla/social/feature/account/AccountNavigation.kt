@@ -32,7 +32,6 @@ fun NavController.navigateToAccount(
 fun NavGraphBuilder.accountScreen(
     onFollowingClicked: () -> Unit,
     onFollowersClicked: () -> Unit,
-    onLoggedOut: () -> Unit,
     onCloseClicked: () -> Unit,
     postCardNavigation: PostCardNavigation,
 ) {
@@ -44,7 +43,6 @@ fun NavGraphBuilder.accountScreen(
             accountId = null,
             onFollowingClicked = onFollowingClicked,
             onFollowersClicked = onFollowersClicked,
-            onLoggedOut = onLoggedOut,
             postCardNavigation = postCardNavigation,
         )
     }
@@ -62,7 +60,6 @@ fun NavGraphBuilder.accountScreen(
             accountId = accountId,
             onFollowingClicked = onFollowingClicked,
             onFollowersClicked = onFollowersClicked,
-            onLoggedOut = onLoggedOut,
             onCloseClicked = onCloseClicked,
             postCardNavigation = postCardNavigation,
         )
