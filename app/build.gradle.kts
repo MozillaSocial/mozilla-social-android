@@ -1,3 +1,15 @@
+buildscript {
+    repositories {
+        maven {
+            url = uri("https://maven.mozilla.org/maven2")
+        }
+
+        dependencies {
+            classpath("org.mozilla.components:tooling-glean-gradle:54.0.0")
+        }
+    }
+}
+
 plugins {
     id("org.mozilla.social.android.application")
     id("org.mozilla.social.android.application.compose")
@@ -85,6 +97,8 @@ dependencies {
     implementation(libs.coil.gif)
     implementation(libs.coil.video)
 
+    implementation(libs.glean)
+
     //compose
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))
@@ -103,4 +117,6 @@ dependencies {
     testImplementation(libs.koin.test)
 
     implementation(libs.jakewharton.timber)
+
+    testImplementation(libs.glean.analytics)
 }

@@ -12,6 +12,7 @@ dependencyResolutionManagement {
         google()
         mavenCentral()
         maven { url = uri("https://nexus.outadoc.fr/repository/public") }
+        maven { url = uri("https://maven.mozilla.org/maven2") }
     }
 }
 rootProject.name = "Mozilla Social"
