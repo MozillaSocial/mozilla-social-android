@@ -11,6 +11,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -26,6 +27,7 @@ import androidx.compose.ui.unit.sp
 import org.koin.androidx.compose.koinViewModel
 import org.mozilla.social.core.designsystem.theme.MozillaSocialTheme
 
+@Suppress("KotlinConstantConditions")
 @Composable
 internal fun LoginScreen(
     viewModel: AuthViewModel = koinViewModel(),
@@ -35,17 +37,21 @@ internal fun LoginScreen(
     val defaultUrl = viewModel.defaultUrl.collectAsState().value
     val context = LocalContext.current
 
-    when (isSignedIn) {
-        true -> navigateToLoggedInGraph()
-        false -> LoginScreen(
-            defaultUrl = defaultUrl,
-            onLoginClicked = { domain ->
-                viewModel.onLoginClicked(
-                    context = context,
-                    domain = domain
-                )
-            })
+    if (isSignedIn) {
+        LaunchedEffect(key1 = isSignedIn) {
+            navigateToLoggedInGraph()
+        }
     }
+
+    LoginScreen(
+        defaultUrl = defaultUrl,
+        onLoginClicked = { domain ->
+            viewModel.onLoginClicked(
+                context = context,
+                domain = domain
+            )
+        })
+
 }
 
 @Composable
@@ -62,7 +68,10 @@ private fun LoginScreen(defaultUrl: String, onLoginClicked: (String) -> Unit) {
         )
         var text by remember { mutableStateOf(defaultUrl) }
         TextField(
-            modifier = Modifier.padding(8.dp).fillMaxWidth().wrapContentHeight(),
+            modifier = Modifier
+                .padding(8.dp)
+                .fillMaxWidth()
+                .wrapContentHeight(),
             value = text, singleLine = true, onValueChange = { text = it })
         Spacer(modifier = Modifier.padding(80.dp))
         LoginButton(onLoginClicked = { onLoginClicked(text) })
