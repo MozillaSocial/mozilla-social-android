@@ -11,8 +11,8 @@
     <string name="vote_button">Vote</string>
 
     <plurals name="vote_count_and_percent">
-        <item quantity="one">%1$d vote - %2$d%</item>
-        <item quantity="other">%1$d votes - %2$d%</item>
+        <item quantity="one">%1$d vote - %2$d%%</item>
+        <item quantity="other">%1$d votes - %2$d%%</item>
     </plurals>
 
     <plurals name="vote_count">
