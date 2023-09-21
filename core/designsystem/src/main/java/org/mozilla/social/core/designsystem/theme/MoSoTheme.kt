@@ -63,30 +63,32 @@ object MoSoTheme {
 }
 
 private val darkColorPalette = MoSoColors(
-    layer1 = FirefoxColor.DarkGrey60,
-    layer2 = FirefoxColor.DarkGrey30,
+    layer1 = FirefoxColor.DarkGrey70,
+    layer2 = FirefoxColor.DarkGrey40,
     layerAccent = FirefoxColor.Violet60,
-    scrim = FirefoxColor.DarkGrey20,
+    scrim = FirefoxColor.DarkGrey90,
     actionPrimary = FirefoxColor.Violet60,
     actionSecondary = FirefoxColor.LightGrey30,
     textPrimary = FirefoxColor.LightGrey05,
     textSecondary = FirefoxColor.LightGrey40,
-    textLink = FirefoxColor.LightGrey05A40,
+    textLink = FirefoxColor.Violet20,
     textWarning = FirefoxColor.Red20,
     textActionPrimary = FirefoxColor.LightGrey05,
     textActionSecondary = FirefoxColor.DarkGrey90,
+
     iconPrimary = FirefoxColor.LightGrey05,
     iconSecondary = FirefoxColor.LightGrey40,
-    iconAccent = FirefoxColor.Violet20,
+    iconAccent = FirefoxColor.Violet30,
+
     borderPrimary = FirefoxColor.DarkGrey05,
     borderForm = FirefoxColor.LightGrey05,
-    borderAccent = FirefoxColor.Violet40,
-    borderWarning = FirefoxColor.Red40,
+    borderAccent = FirefoxColor.Violet30,
+    borderWarning = FirefoxColor.Red20,
 )
 
 private val lightColorPalette = MoSoColors(
     layer1 = FirefoxColor.White,
-    layer2 = FirefoxColor.LightGrey10,
+    layer2 = FirefoxColor.LightGrey20,
     layerAccent = FirefoxColor.Violet60,
     scrim = FirefoxColor.DarkGrey20,
     actionPrimary = FirefoxColor.Violet60,
@@ -97,9 +99,11 @@ private val lightColorPalette = MoSoColors(
     textWarning = FirefoxColor.Red70,
     textActionPrimary = FirefoxColor.White,
     textActionSecondary = FirefoxColor.DarkGrey90,
+
     iconPrimary = FirefoxColor.DarkGrey90,
     iconSecondary = FirefoxColor.DarkGrey05,
     iconAccent = FirefoxColor.Violet60,
+
     borderPrimary = FirefoxColor.LightGrey40,
     borderForm = FirefoxColor.DarkGrey90,
     borderAccent = FirefoxColor.Violet60,
@@ -169,6 +173,9 @@ class MoSoColors(
 
     // Secondary text
     var textSecondary by mutableStateOf(textSecondary)
+        private set
+
+    var textLink by mutableStateOf(textLink)
         private set
 
     // Disabled text

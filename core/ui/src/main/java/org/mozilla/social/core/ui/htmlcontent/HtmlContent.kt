@@ -8,6 +8,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.viewinterop.AndroidView
+import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.model.Mention
 
 /**
@@ -21,7 +22,7 @@ fun HtmlContent(
     htmlText: String,
     htmlContentInteractions: HtmlContentInteractions,
 ) {
-    val linkColor: Color = MaterialTheme.colorScheme.primary
+    val linkColor: Color = MoSoTheme.colors.textLink
     val textContent = remember(htmlText) {
         val spannable = htmlText.htmlToSpannable(
             mentions = mentions,

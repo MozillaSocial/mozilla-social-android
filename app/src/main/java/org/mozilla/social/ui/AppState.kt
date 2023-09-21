@@ -44,6 +44,7 @@ import kotlinx.coroutines.launch
 import org.mozilla.social.R
 import org.mozilla.social.core.designsystem.component.MoSoAppBar
 import org.mozilla.social.core.designsystem.component.MoSoBottomNavigationBar
+import org.mozilla.social.core.designsystem.component.MoSoDivider
 import org.mozilla.social.core.designsystem.component.MoSoModalDrawerSheet
 import org.mozilla.social.core.designsystem.component.MoSoNavigationDrawerItem
 import org.mozilla.social.core.designsystem.component.NavBarDestination
@@ -200,7 +201,7 @@ class AppState(
                         }
                     )
 
-                    Divider(
+                    MoSoDivider(
                         modifier = Modifier
                             .height(1.dp)
                             .background(MoSoTheme.colors.borderPrimary)
@@ -324,7 +325,7 @@ class AppState(
                 text = stringResource(id = R.string.navigation_drawer_title),
             )
 
-            Divider()
+            MoSoDivider()
             // TODO
 //                MoSoNavigationDrawerItem("Profile")
 //                MoSoNavigationDrawerItem("Favorites")

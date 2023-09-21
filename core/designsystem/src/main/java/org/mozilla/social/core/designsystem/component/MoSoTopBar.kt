@@ -43,6 +43,6 @@ fun MoSoTopBar(
                 fontWeight = FontWeight.Medium,
             )
         }
-        Divider()
+       MoSoDivider()
     }
 }

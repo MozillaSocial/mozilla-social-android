@@ -22,7 +22,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
-import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
@@ -41,6 +40,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
+import org.mozilla.social.core.designsystem.component.MoSoDivider
 import org.mozilla.social.core.designsystem.component.MoSoTopBar
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.ui.transparentTextFieldColors
@@ -52,12 +52,14 @@ fun ReportRoute(
     onCloseClicked: () -> Unit,
     reportAccountId: String,
     reportStatusId: String?,
-    viewModel: ReportViewModel = koinViewModel(parameters = { parametersOf(
-        onReported,
-        onCloseClicked,
-        reportAccountId,
-        reportStatusId,
-    ) })
+    viewModel: ReportViewModel = koinViewModel(parameters = {
+        parametersOf(
+            onReported,
+            onCloseClicked,
+            reportAccountId,
+            reportStatusId,
+        )
+    })
 ) {
     ReportScreen(
         instanceRules = viewModel.instanceRules.collectAsState().value,
@@ -96,7 +98,7 @@ private fun ReportScreen(
                 title = stringResource(id = R.string.report_screen_title),
                 onCloseClicked = { reportInteractions.onCloseClicked() }
             )
-            Divider()
+            MoSoDivider()
             MainContent(
                 instanceRules = instanceRules,
                 selectedReportType = selectedReportType,

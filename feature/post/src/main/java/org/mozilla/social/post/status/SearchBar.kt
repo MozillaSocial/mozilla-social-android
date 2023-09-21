@@ -24,6 +24,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import org.mozilla.social.core.designsystem.component.MoSoDivider
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 
 @Composable
@@ -32,8 +33,8 @@ fun AccountSearchBar(
     statusInteractions: StatusInteractions,
 ) {
     Column {
-        Divider(
-            color = MaterialTheme.colorScheme.outlineVariant
+        MoSoDivider(
+            color =  MoSoTheme.colors.borderPrimary
         )
         LazyRow(content = {
             items(accounts.size) { index ->
@@ -47,7 +48,7 @@ fun AccountSearchBar(
                         modifier = Modifier
                             .border(
                                 width = 2.dp,
-                                color = MaterialTheme.colorScheme.outlineVariant,
+                                color =  MoSoTheme.colors.borderPrimary,
                                 shape = RoundedCornerShape(4.dp)
                             )
                             .padding(4.dp)
@@ -61,7 +62,7 @@ fun AccountSearchBar(
                                 .align(Alignment.CenterVertically)
                                 .border(
                                     width = 1.dp,
-                                    color = MaterialTheme.colorScheme.outlineVariant,
+                                    color =  MoSoTheme.colors.borderPrimary,
                                     shape = CircleShape
                                 )
                                 .clip(CircleShape),
@@ -73,7 +74,7 @@ fun AccountSearchBar(
                             modifier = Modifier
                                 .align(Alignment.CenterVertically)
                                 .padding(start = 4.dp, end = 4.dp),
-                            text =account.accountId,
+                            text = account.accountId,
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Medium
                         )
@@ -90,8 +91,8 @@ fun HashtagSearchBar(
     statusInteractions: StatusInteractions,
 ) {
     Column {
-        Divider(
-            color = MaterialTheme.colorScheme.outlineVariant
+       MoSoDivider(
+            color =  MoSoTheme.colors.borderPrimary
         )
         LazyRow(content = {
             items(hashTags.size) { index ->
@@ -105,7 +106,7 @@ fun HashtagSearchBar(
                         modifier = Modifier
                             .border(
                                 width = 2.dp,
-                                color = MaterialTheme.colorScheme.outlineVariant,
+                                color =  MoSoTheme.colors.borderPrimary,
                                 shape = RoundedCornerShape(4.dp)
                             )
                             .padding(4.dp)
