@@ -16,7 +16,7 @@ import org.mozilla.social.core.designsystem.theme.MoSoTheme
 @Composable
 fun VerticalDivider(
     modifier: Modifier = Modifier,
-    color: Color = MaterialTheme.colorScheme.outlineVariant,
+    color: Color = MoSoTheme.colors.borderPrimary,
     thickness: Dp = 1.dp
 ) {
     Box(

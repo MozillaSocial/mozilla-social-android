@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.lightColorScheme
@@ -27,6 +26,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import org.koin.androidx.compose.koinViewModel
+import org.mozilla.social.core.designsystem.component.MoSoDivider
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.feature.account.R
 import org.mozilla.social.model.Account
@@ -128,7 +128,7 @@ internal fun AccountQuickView(account: Account) {
         }
     }
 
-    Divider(
+    MoSoDivider(
         color = Color.Gray,
         modifier = Modifier
             .fillMaxWidth()

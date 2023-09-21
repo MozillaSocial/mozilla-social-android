@@ -25,6 +25,7 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import kotlinx.coroutines.flow.Flow
+import org.mozilla.social.core.designsystem.component.MoSoDivider
 import org.mozilla.social.core.ui.R
 import org.mozilla.social.core.ui.pullrefresh.PullRefreshIndicator
 import org.mozilla.social.core.ui.pullrefresh.pullRefresh
@@ -93,7 +94,7 @@ fun PostCardList(
                         lazyingPagingItems[index]?.let { item ->
                             PostCard(post = item, postCardInteractions)
                             if (index < lazyingPagingItems.itemCount) {
-                                Divider()
+                                MoSoDivider()
                             }
                         }
                     }
@@ -176,7 +177,7 @@ fun PostCardList(
             val item = items[index]
             PostCard(post = item, postCardInteractions)
             if (index < items.count()) {
-                Divider()
+                MoSoDivider()
             }
         }
     }

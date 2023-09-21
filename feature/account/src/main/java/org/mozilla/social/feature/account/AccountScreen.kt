@@ -23,7 +23,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -43,6 +42,7 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
+import org.mozilla.social.core.designsystem.component.MoSoDivider
 import org.mozilla.social.core.designsystem.component.MoSoSurface
 import org.mozilla.social.core.designsystem.component.MoSoTopBar
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
@@ -188,7 +188,7 @@ private fun UserFollow(
                 .clickable { onFollowersClicked() },
             text = stringResource(id = R.string.followers_count, account.followersCount),
         )
-        Divider(
+        MoSoDivider(
             color = Color.Gray,
             modifier = Modifier
                 .fillMaxHeight()
@@ -200,7 +200,7 @@ private fun UserFollow(
                 .clickable { onFollowingClicked() },
             text = stringResource(id = R.string.following_count, account.followingCount),
 
-        )
+            )
     }
 }
 
@@ -259,7 +259,7 @@ private fun UserFields(
                 )
             }
             if (index < (account.fields?.size ?: 0) - 1) {
-                Divider(
+                MoSoDivider(
                     color = Color.Gray,
                     modifier = Modifier
                         .fillMaxWidth()
@@ -309,7 +309,7 @@ private fun LogoutText(
     @StringRes name: Int,
     onClick: () -> Unit
 ) {
-   MoSoSurface(
+    MoSoSurface(
         color = MaterialTheme.colorScheme.error,
         modifier = Modifier
             .fillMaxWidth()

@@ -33,7 +33,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -69,6 +68,7 @@ import org.koin.core.parameter.parametersOf
 import org.mozilla.social.common.LoadState
 import org.mozilla.social.common.utils.buildAnnotatedStringForAccountsAndHashtags
 import org.mozilla.social.common.utils.toFile
+import org.mozilla.social.core.designsystem.component.MoSoDivider
 import org.mozilla.social.core.designsystem.component.MoSoSurface
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.designsystem.theme.FirefoxColor
@@ -305,8 +305,8 @@ private fun BottomBar(
         "${MAX_POST_LENGTH - statusText.length - (contentWarningText?.length ?: 0)}"
     }
     Column {
-        Divider(
-            color = MaterialTheme.colorScheme.outlineVariant
+        MoSoDivider(
+            color = MoSoTheme.colors.borderPrimary
         )
         Box(
             modifier = Modifier
@@ -345,7 +345,7 @@ private fun BottomBar(
                         MoSoIcons.Warning,
                         stringResource(id = R.string.content_warning_button_content_description),
                         tint = if (contentWarningText == null) {
-                           LocalContentColor.current
+                            LocalContentColor.current
                         } else {
                             MaterialTheme.colorScheme.error
                         },
@@ -480,7 +480,10 @@ private fun InReplyToText(
             )
             Spacer(modifier = Modifier.padding(start = 8.dp))
             Text(
-                text = stringResource(id = R.string.in_reply_to_account_name_label, inReplyToAccountName),
+                text = stringResource(
+                    id = R.string.in_reply_to_account_name_label,
+                    inReplyToAccountName
+                ),
                 fontSize = 14.sp,
             )
         }
@@ -520,7 +523,7 @@ private fun ImageUploadBox(
             .padding(16.dp)
             .border(
                 width = 2.dp,
-                color = MaterialTheme.colorScheme.outlineVariant,
+                color =  MoSoTheme.colors.borderPrimary,
                 shape = outlineShape
             )
             .clip(
@@ -561,7 +564,10 @@ private fun ImageUploadBox(
                     mediaInteractions.onDeleteMediaClicked(imageState.key)
                 }
             ) {
-                Icon(MoSoIcons.Delete, stringResource(id = R.string.delete_button_content_description))
+                Icon(
+                    MoSoIcons.Delete,
+                    stringResource(id = R.string.delete_button_content_description)
+                )
             }
         }
     }
