@@ -1,18 +1,8 @@
-buildscript {
-    repositories {
-        maven {
-            url = uri("https://maven.mozilla.org/maven2")
-        }
-
-        dependencies {
-            classpath("org.mozilla.components:tooling-glean-gradle:54.0.0")
-        }
-    }
-}
-
 plugins {
     id("org.mozilla.social.android.application")
     id("org.mozilla.social.android.application.compose")
+    libs.plugins.jetbrains.python
+    libs.plugins.glean.gradle.plugin
 }
 
 android {
@@ -118,5 +108,5 @@ dependencies {
 
     implementation(libs.jakewharton.timber)
 
-    testImplementation(libs.glean.analytics)
+    testImplementation(libs.glean.forUnitTests)
 }
