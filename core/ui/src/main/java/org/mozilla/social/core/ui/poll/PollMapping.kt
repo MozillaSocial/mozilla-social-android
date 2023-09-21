@@ -23,17 +23,17 @@ fun Poll.toPollUiState(
         },
         isUserCreatedPoll = isUserCreatedPoll,
         pollInfoText = StringFactory.collection(
-            StringFactory.quantityString(
+            StringFactory.quantityResource(
                 R.plurals.vote_count,
                 votesCount.toInt(),
                 votesCount.toInt(),
             ),
             StringFactory.literal(" - "),
-            expiresAt?.timeLeft() ?: StringFactory.string(R.string.poll_closed),
+            expiresAt?.timeLeft() ?: StringFactory.resource(R.string.poll_closed),
             if (allowsMultipleChoices) {
                 StringFactory.collection(
                     StringFactory.literal(" - "),
-                    StringFactory.string(R.string.poll_choose_one_or_more_options)
+                    StringFactory.resource(R.string.poll_choose_one_or_more_options)
                 )
             } else StringFactory.literal("")
         ),
@@ -51,7 +51,7 @@ private fun getVoteCountText(
 ): StringFactory {
     val votePercent = (voteFraction * 100).toInt()
 
-    return StringFactory.quantityString(
+    return StringFactory.quantityResource(
         R.plurals.vote_count_and_percent,
         pollOption.votesCount?.toInt() ?: 0,
         pollOption.votesCount?.toInt() ?: 0,
