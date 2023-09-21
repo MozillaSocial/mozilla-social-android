@@ -11,7 +11,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import org.mozilla.social.core.designsystem.theme.MozillaSocialTheme
+import org.mozilla.social.core.designsystem.theme.MoSoTheme
 
 @Composable
 fun VerticalDivider(
@@ -30,7 +30,7 @@ fun VerticalDivider(
 @Preview
 @Composable
 private fun VerticalDividerPreview() {
-    MozillaSocialTheme {
+    MoSoTheme {
         VerticalDivider()
     }
 }

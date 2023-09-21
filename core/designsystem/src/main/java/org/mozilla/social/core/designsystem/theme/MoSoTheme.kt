@@ -23,41 +23,16 @@ import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
 /**
- * Indicates the theme that is displayed.
- */
-enum class Theme {
-    Light,
-    Dark,
-    ;
-
-    companion object {
-        /**
-         * Returns the current [Theme] that is displayed.
-         */
-        @Composable
-        fun getTheme() = if (isSystemInDarkTheme()) {
-            Dark
-        } else {
-            Light
-        }
-    }
-}
-
-fun Theme.isDark(): Boolean = this == Theme.Dark
-
-/**
  * The theme for Mozilla Social Android.
- *
- * @param theme The current [Theme] that is displayed.
  */
 @Composable
 fun MoSoTheme(
-    theme: Theme = Theme.getTheme(),
+    darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit,
 ) {
-    val colors = when (theme) {
-        Theme.Light -> lightColorPalette
-        Theme.Dark -> darkColorPalette
+    val colors = when (darkTheme) {
+        false -> lightColorPalette
+        true -> darkColorPalette
     }
 
     val view = LocalView.current
@@ -66,12 +41,13 @@ fun MoSoTheme(
             val window = (view.context as Activity).window
             window.statusBarColor = Color.Transparent.toArgb()
             WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars =
-                !theme.isDark()
+                !darkTheme
         }
     }
 
     ProvideMoSoColors(colors) {
         MaterialTheme(
+            colorScheme = if (darkTheme) MaterialDarkColorScheme else MaterialLightColorScheme,
             content = content,
         )
     }

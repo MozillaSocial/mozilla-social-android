@@ -24,7 +24,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import org.mozilla.social.core.designsystem.theme.MozillaSocialTheme
+import org.mozilla.social.core.designsystem.theme.MoSoTheme
 
 @Composable
 fun AccountSearchBar(
@@ -130,7 +130,7 @@ fun HashtagSearchBar(
 @Preview
 @Composable
 private fun AccountSearchBarPreview() {
-    MozillaSocialTheme {
+    MoSoTheme {
         AccountSearchBar(
             accounts = listOf(
                 Account("account1", ""),

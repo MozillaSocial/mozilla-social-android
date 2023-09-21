@@ -12,7 +12,6 @@ import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 import org.mozilla.social.core.designsystem.component.MoSoSurface
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
-import org.mozilla.social.core.designsystem.theme.MozillaSocialTheme
 import org.mozilla.social.core.ui.postcard.PostCardInteractions
 import org.mozilla.social.core.ui.postcard.PostCardList
 import org.mozilla.social.core.ui.postcard.PostCardNavigation
@@ -46,7 +45,7 @@ fun FeedScreen(
 @Composable
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_NO, name = "Light theme")
 fun FeedScreenPreviewLight() {
-    MozillaSocialTheme(darkTheme = false) {
+    MoSoTheme(darkTheme = false) {
         MoSoSurface {
             PostCardList(items = listOf(), postCardInteractions = testInteractions)
             Text(text = "test", color = MoSoTheme.colors.textPrimary)
@@ -57,7 +56,7 @@ fun FeedScreenPreviewLight() {
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, name = "Dark theme")
 @Composable
 fun FeedScreenPreviewDark() {
-    MozillaSocialTheme(darkTheme = true) {
+    MoSoTheme(darkTheme = true) {
         MoSoSurface {
             PostCardList(items = listOf(), postCardInteractions = testInteractions)
             Text(text = "test", color = MoSoTheme.colors.textPrimary)

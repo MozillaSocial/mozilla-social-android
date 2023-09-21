@@ -1,7 +1,6 @@
 package org.mozilla.social.core.designsystem.theme
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -22,6 +21,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
+/**
+ * Material color schemes for compatability with our [MoSoTheme]
+ */
 @Preview
 @Composable
 private fun ColorSchemePreview() {
@@ -40,7 +42,7 @@ private fun RowScope.LightPalette() {
         Modifier.weight(1f)
     ) {
         Text(text = "Light Scheme", style = Typography.headlineMedium)
-        ColorSchemePalette(colorScheme = LightColorScheme)
+        ColorSchemePalette(colorScheme = MaterialLightColorScheme)
     }
 }
 
@@ -50,7 +52,7 @@ private fun RowScope.DarkPalette() {
         Modifier.weight(1f)
     ) {
         Text(text = "Dark Scheme", style = Typography.headlineMedium)
-        ColorSchemePalette(colorScheme = DarkColorScheme)
+        ColorSchemePalette(colorScheme = MaterialDarkColorScheme)
     }
 }
 
@@ -128,7 +130,10 @@ private fun TestBox(
     }
 }
 
-internal val LightColorScheme = lightColorScheme(
+/**
+ * This is for compatability purposes only- please use [MoSoColors] instead
+ */
+internal val MaterialLightColorScheme = lightColorScheme(
     primary = FirefoxColor.Violet60,
     onPrimary = FirefoxColor.Violet10,
     primaryContainer = FirefoxColor.Violet10,
@@ -160,7 +165,10 @@ internal val LightColorScheme = lightColorScheme(
     scrim = FirefoxColor.DarkGrey30,
 )
 
-internal val DarkColorScheme = darkColorScheme(
+/**
+ * This is for compatability purposes only- please use [MoSoColors] instead
+ */
+internal val MaterialDarkColorScheme = darkColorScheme(
     primary = FirefoxColor.Violet90,
     onPrimary = FirefoxColor.Violet10,
     primaryContainer = FirefoxColor.Violet80,
@@ -191,13 +199,3 @@ internal val DarkColorScheme = darkColorScheme(
     outlineVariant = FirefoxColor.DarkGrey80,
     scrim = FirefoxColor.DarkGrey90,
 )
-
-@Composable
-fun MozillaSocialTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = false,
-    content: @Composable () -> Unit
-) {
-    MoSoTheme(content = content, theme = if (darkTheme) Theme.Dark else Theme.Light)
-}

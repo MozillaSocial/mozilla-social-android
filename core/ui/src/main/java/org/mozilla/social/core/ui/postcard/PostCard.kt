@@ -38,7 +38,7 @@ import androidx.core.content.ContextCompat.startActivity
 import coil.compose.AsyncImage
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.designsystem.theme.FirefoxColor
-import org.mozilla.social.core.designsystem.theme.MozillaSocialTheme
+import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.ui.R
 import org.mozilla.social.core.ui.media.MediaDisplay
 import org.mozilla.social.core.ui.poll.Poll
@@ -270,7 +270,7 @@ private fun DropDownItem(
 @Preview
 @Composable
 private fun PostCardPreview() {
-    MozillaSocialTheme {
+    MoSoTheme {
 //        PostCard(
 //            status =
 //                Status(

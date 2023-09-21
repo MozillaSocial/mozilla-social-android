@@ -45,7 +45,7 @@ import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 import org.mozilla.social.core.designsystem.component.MoSoSurface
 import org.mozilla.social.core.designsystem.component.MoSoTopBar
-import org.mozilla.social.core.designsystem.theme.MozillaSocialTheme
+import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.ui.htmlcontent.HtmlContent
 import org.mozilla.social.core.ui.htmlcontent.HtmlContentInteractions
 import org.mozilla.social.core.ui.postcard.PostCardNavigation
@@ -408,7 +408,7 @@ private fun HeaderAndProfileImages(
 @Preview
 @Composable
 fun AccountScreenPreview() {
-    MozillaSocialTheme {
+    MoSoTheme {
 //        AccountScreen("110810174933375392")
     }
 }

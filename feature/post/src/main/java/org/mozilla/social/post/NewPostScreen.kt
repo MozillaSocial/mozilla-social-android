@@ -72,7 +72,7 @@ import org.mozilla.social.common.utils.toFile
 import org.mozilla.social.core.designsystem.component.MoSoSurface
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.designsystem.theme.FirefoxColor
-import org.mozilla.social.core.designsystem.theme.MozillaSocialTheme
+import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.designsystem.utils.NoIndication
 import org.mozilla.social.core.ui.TransparentNoTouchOverlay
 import org.mozilla.social.core.ui.VerticalDivider
@@ -673,7 +673,7 @@ private fun PollSettings(
 @Preview
 @Composable
 private fun NewPostScreenPreview() {
-    MozillaSocialTheme(
+    MoSoTheme(
         false
     ) {
         NewPostScreen(

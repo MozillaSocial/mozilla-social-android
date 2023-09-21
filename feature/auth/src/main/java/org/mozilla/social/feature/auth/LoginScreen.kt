@@ -23,7 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.koin.androidx.compose.koinViewModel
-import org.mozilla.social.core.designsystem.theme.MozillaSocialTheme
+import org.mozilla.social.core.designsystem.theme.MoSoTheme
 
 @Composable
 fun LoginScreen(
@@ -82,7 +82,7 @@ private fun LoginButton(onLoginClicked: () -> Unit) {
 @Preview
 @Composable
 internal fun AuthScreenPreview() {
-    MozillaSocialTheme {
+    MoSoTheme {
         LoginScreen(onLoginClicked = {})
     }
 }
