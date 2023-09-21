@@ -1,0 +1,24 @@
+name: pr
+
+on:
+  pull_request
+
+jobs:
+  compile:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4.0.0
+    - name: Set up JDK
+      uses: actions/setup-java@v3.12.0
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        # Using 'temurin' speeds up the job, because this distribution is cached by the runner.
+        # See: https://github.com/actions/setup-java/blob/main/docs/advanced-usage.md#Hosted-Tool-Cache
+    - name: Set up Gradle
+      uses: gradle/gradle-build-action@v2.8.0
+    - name: Compile a debug build
+      env:
+        GRADLE_OPTS: -Dorg.gradle.daemon=false
+      run: ci/debug-build.sh

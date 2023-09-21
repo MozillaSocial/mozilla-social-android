@@ -29,6 +29,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -38,6 +39,7 @@ import coil.compose.AsyncImage
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.designsystem.theme.FirefoxColor
 import org.mozilla.social.core.designsystem.theme.MozillaSocialTheme
+import org.mozilla.social.core.ui.R
 import org.mozilla.social.core.ui.media.MediaDisplay
 import org.mozilla.social.core.ui.poll.Poll
 import org.mozilla.social.core.ui.htmlcontent.HtmlContent
@@ -75,7 +77,7 @@ private fun TopRowMetaData(
         Spacer(modifier = Modifier.padding(start = 8.dp))
         Text(
             modifier = Modifier.align(Alignment.CenterVertically),
-            text = topRowMetaDataUiState.text,
+            text = topRowMetaDataUiState.text.build(LocalContext.current),
             fontSize = 14.sp
         )
     }
@@ -109,6 +111,8 @@ private fun MetaData(
 ) {
     val overflowMenuExpanded = remember { mutableStateOf(false) }
 
+    val context = LocalContext.current
+
     Row {
         AsyncImage(
             modifier = Modifier
@@ -129,7 +133,7 @@ private fun MetaData(
                 fontWeight = FontWeight.Medium
             )
             Text(
-                text = post.postMetaDataText,
+                text = "${post.postTimeSince.build(context)} - @${post.accountName.build(context)}",
                 fontSize = 12.sp
             )
         }
@@ -147,17 +151,17 @@ private fun MetaData(
                 }
             ) {
                 DropDownItem(
-                    text = "Mute ${post.username}",
+                    text = stringResource(id = R.string.mute_user, post.username),
                     expanded = overflowMenuExpanded,
                     onClick = { postCardInteractions.onOverflowMuteClicked(post.accountId) }
                 )
                 DropDownItem(
-                    text = "Block ${post.username}",
+                    text = stringResource(id = R.string.block_user, post.username),
                     expanded = overflowMenuExpanded,
                     onClick = { postCardInteractions.onOverflowBlockClicked(post.accountId) }
                 )
                 DropDownItem(
-                    text = "Report ${post.username}",
+                    text = stringResource(id = R.string.report_user, post.username),
                     expanded = overflowMenuExpanded,
                     onClick = { postCardInteractions.onOverflowReportClicked(post.accountId, post.statusId) }
                 )

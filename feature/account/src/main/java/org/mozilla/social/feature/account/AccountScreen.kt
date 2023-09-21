@@ -186,7 +186,7 @@ private fun UserFollow(
             modifier = Modifier
                 .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 8.dp)
                 .clickable { onFollowersClicked() },
-            text = "Followers: ${account.followersCount}",
+            text = stringResource(id = R.string.followers_count, account.followersCount),
         )
         Divider(
             color = Color.Gray,
@@ -198,7 +198,7 @@ private fun UserFollow(
             modifier = Modifier
                 .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 8.dp)
                 .clickable { onFollowingClicked() },
-            text = "Following: ${account.followingCount}",
+            text = stringResource(id = R.string.following_count, account.followingCount),
 
         )
     }

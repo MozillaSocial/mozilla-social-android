@@ -1,6 +1,7 @@
 package org.mozilla.social.core.ui.postcard
 
 import androidx.compose.ui.graphics.vector.ImageVector
+import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.core.ui.poll.PollUiState
 import org.mozilla.social.model.Attachment
 import org.mozilla.social.model.Mention
@@ -18,7 +19,8 @@ data class MainPostCardUiState(
     val statusTextHtml: String,
     val mediaAttachments: List<Attachment>,
     val profilePictureUrl: String,
-    val postMetaDataText: String,
+    val postTimeSince: StringFactory,
+    val accountName: StringFactory,
     val replyCount: Long,
     val boostCount: Long,
     val favoriteCount: Long,
@@ -31,5 +33,5 @@ data class MainPostCardUiState(
 
 data class TopRowMetaDataUiState(
     val icon: ImageVector,
-    val text: String,
+    val text: StringFactory,
 )

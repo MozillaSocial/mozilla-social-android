@@ -1,6 +1,8 @@
 package org.mozilla.social.core.ui.poll
 
+import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.common.utils.timeLeft
+import org.mozilla.social.core.ui.R
 import org.mozilla.social.model.Poll
 import org.mozilla.social.model.PollOption
 
@@ -20,10 +22,21 @@ fun Poll.toPollUiState(
             )
         },
         isUserCreatedPoll = isUserCreatedPoll,
-        pollInfoText = "$votesCount votes - ${expiresAt?.timeLeft() ?: "poll closed"}" +
-                if (allowsMultipleChoices) {
-                    " - Choose one or more"
-                } else "",
+        pollInfoText = StringFactory.collection(
+            StringFactory.quantityString(
+                R.plurals.vote_count,
+                votesCount.toInt(),
+                votesCount.toInt(),
+            ),
+            StringFactory.literal(" - "),
+            expiresAt?.timeLeft() ?: StringFactory.string(R.string.poll_closed),
+            if (allowsMultipleChoices) {
+                StringFactory.collection(
+                    StringFactory.literal(" - "),
+                    StringFactory.string(R.string.poll_choose_one_or_more_options)
+                )
+            } else StringFactory.literal("")
+        ),
         showResults = hasVoted ?: false,
         pollId = pollId,
         isMultipleChoice = allowsMultipleChoices,
@@ -35,17 +48,15 @@ fun Poll.toPollUiState(
 private fun getVoteCountText(
     pollOption: PollOption,
     voteFraction: Float,
-): String {
-    val voteText = if (pollOption.votesCount == 1L) {
-        "vote"
-    } else {
-        "votes"
-    }
-    val voteCountText = "${pollOption.votesCount ?: 0} $voteText"
-
+): StringFactory {
     val votePercent = (voteFraction * 100).toInt()
 
-    return "$voteCountText - $votePercent%"
+    return StringFactory.quantityString(
+        R.plurals.vote_count_and_percent,
+        pollOption.votesCount?.toInt() ?: 0,
+        pollOption.votesCount?.toInt() ?: 0,
+        votePercent,
+    )
 }
 
 private fun getVoteFraction(

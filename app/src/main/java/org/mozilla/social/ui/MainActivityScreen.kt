@@ -17,13 +17,13 @@ fun MainActivityScreen() {
     MoSoScaffold(
         modifier = Modifier.nestedScroll(appState.topAppBarScrollBehavior.nestedScrollConnection),
         snackbarHost = { appState.snackbarHostState },
-        floatingActionButton = { appState.floatingActionButton() },
-        bottomBar = { appState.bottomBar() },
-        topBar = { appState.topBar() },
+        floatingActionButton = { appState.FloatingActionButton() },
+        bottomBar = { appState.BottomBar() },
+        topBar = { appState.TopBar() },
         topAppBarScrollBehavior = appState.topAppBarScrollBehavior,
         navigationDrawerState = appState.navigationDrawerState,
-        navigationDrawerContent = { appState.navigationDrawerContent(onSettingsClicked = appState::navigateToSettings) },
-        bottomSheetContent = { appState.bottomSheetContent() },
+        navigationDrawerContent = { appState.NavigationDrawerContent(onSettingsClicked = appState::navigateToSettings) },
+        bottomSheetContent = { appState.BottomSheetContent() },
         bottomSheetVisible = appState.bottomSheetVisible.value,
         content = {
             Box(modifier = Modifier.padding(it)) {

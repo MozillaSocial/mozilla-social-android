@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="report">Report</string>
+    <string name="report_screen_title">@string/report</string>
+
+    <string name="report_instructions">Tell us what\'s wrong with this post</string>
+
+    <string name="choose_best_match">Choose the best match:</string>
+
+    <string name="report_reason_spam">It\'s spam</string>
+    <string name="report_reason_spam_description">Malicious links, fake engagement, or repetitive replies</string>
+
+    <string name="report_reason_violation">It violates one or more of the server rules</string>
+
+    <string name="report_reason_other">It\'s something else</string>
+    <string name="report_reason_other_description">The issue does not fit into other categories</string>
+
+    <string name="extra_info_prompt">Is there anything else you think we should know?</string>
+    <string name="extra_info_text_field_label">Additional comments</string>
+
+    <string name="report_button">@string/report</string>
+
+    <string name="error_sending_report_toast">Error sending report</string>
+</resources>

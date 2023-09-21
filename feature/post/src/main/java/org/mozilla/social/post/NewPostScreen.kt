@@ -37,6 +37,7 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -55,6 +56,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.input.OffsetMapping
 import androidx.compose.ui.text.input.TextFieldValue
@@ -77,6 +79,7 @@ import org.mozilla.social.core.ui.VerticalDivider
 import org.mozilla.social.core.ui.VisibilityDropDownButton
 import org.mozilla.social.core.ui.media.MediaUpload
 import org.mozilla.social.core.ui.transparentTextFieldColors
+import org.mozilla.social.feature.post.R
 import org.mozilla.social.model.ImageState
 import org.mozilla.social.model.StatusVisibility
 import org.mozilla.social.post.NewPostViewModel.Companion.MAX_POLL_COUNT
@@ -133,7 +136,7 @@ internal fun NewPostRoute(
 
     LaunchedEffect(Unit) {
         viewModel.errorToastMessage.collect {
-            Toast.makeText(context, it, Toast.LENGTH_LONG).show()
+            Toast.makeText(context, it.build(context), Toast.LENGTH_LONG).show()
         }
     }
 }
@@ -279,7 +282,7 @@ private fun TopBar(
                 ) {
                     Icon(
                         MoSoIcons.Send,
-                        "post",
+                        stringResource(id = R.string.send_post_button_content_description),
                         tint = MaterialTheme.colorScheme.onSurface,
                     )
                 }
@@ -321,7 +324,7 @@ private fun BottomBar(
                 ) {
                     Icon(
                         MoSoIcons.AddPhotoAlternate,
-                        "attach image",
+                        stringResource(id = R.string.attach_image_button_content_description),
                         tint = MaterialTheme.colorScheme.onSurface,
                     )
                 }
@@ -331,22 +334,22 @@ private fun BottomBar(
                 ) {
                     Icon(
                         MoSoIcons.Poll,
-                        "add poll",
+                        stringResource(id = R.string.add_poll_button_content_description),
                         tint = MaterialTheme.colorScheme.onSurface,
                     )
                 }
                 IconButton(
                     onClick = { contentWarningInteractions.onContentWarningClicked() },
                 ) {
-                    if (contentWarningText == null) {
-                        Icon(MoSoIcons.WarningAmber, "content warning")
-                    } else {
-                        Icon(
-                            MoSoIcons.Warning,
-                            "content warning",
-                            tint = MaterialTheme.colorScheme.error,
-                        )
-                    }
+                    Icon(
+                        MoSoIcons.Warning,
+                        stringResource(id = R.string.content_warning_button_content_description),
+                        tint = if (contentWarningText == null) {
+                           LocalContentColor.current
+                        } else {
+                            MaterialTheme.colorScheme.error
+                        },
+                    )
                 }
             }
             // right row
@@ -416,7 +419,7 @@ private fun MainBox(
                             onValueChange = { statusInteractions.onStatusTextUpdated(it) },
                             label = {
                                 Text(
-                                    text = "What's happening?"
+                                    text = stringResource(id = R.string.new_post_text_field_label)
                                 )
                             },
                             colors = transparentTextFieldColors(),
@@ -477,7 +480,7 @@ private fun InReplyToText(
             )
             Spacer(modifier = Modifier.padding(start = 8.dp))
             Text(
-                text = "In reply to $inReplyToAccountName",
+                text = stringResource(id = R.string.in_reply_to_account_name_label, inReplyToAccountName),
                 fontSize = 14.sp,
             )
         }
@@ -495,7 +498,7 @@ private fun ContentWarningEntry(
             .fillMaxWidth(),
         value = contentWarningText,
         onValueChange = { contentWarningInteractions.onContentWarningTextChanged(it) },
-        label = { Text(text = "Content Warning") },
+        label = { Text(text = stringResource(id = R.string.content_warning_label)) },
         colors = OutlinedTextFieldDefaults.colors(
             unfocusedBorderColor = MaterialTheme.colorScheme.error,
             focusedBorderColor = MaterialTheme.colorScheme.error,
@@ -545,7 +548,7 @@ private fun ImageUploadBox(
                     },
                     label = {
                         Text(
-                            text = "Add a description"
+                            text = stringResource(id = R.string.media_alt_text_label)
                         )
                     },
                     colors = transparentTextFieldColors(),
@@ -558,7 +561,7 @@ private fun ImageUploadBox(
                     mediaInteractions.onDeleteMediaClicked(imageState.key)
                 }
             ) {
-                Icon(MoSoIcons.Delete, "delete")
+                Icon(MoSoIcons.Delete, stringResource(id = R.string.delete_button_content_description))
             }
         }
     }
@@ -583,7 +586,7 @@ private fun PollChoice(
             onValueChange = { pollInteractions.onPollOptionTextChanged(index, it) },
             label = {
                 Text(
-                    text = "Choice ${index + 1}"
+                    text = stringResource(id = R.string.poll_choice_label, index + 1)
                 )
             }
         )
@@ -600,7 +603,7 @@ private fun PollChoice(
                     .width(40.dp)
                     .height(40.dp),
                 imageVector = MoSoIcons.DeleteOutline,
-                contentDescription = "add poll option",
+                contentDescription = stringResource(id = R.string.remove_poll_option_button_content_description),
             )
         }
     }
@@ -627,7 +630,7 @@ private fun PollSettings(
                     .width(40.dp)
                     .height(40.dp),
                 imageVector = MoSoIcons.AddCircleOutline,
-                contentDescription = "add poll option",
+                contentDescription = stringResource(id = R.string.add_poll_option_button_content_description),
             )
         }
 
@@ -660,7 +663,7 @@ private fun PollSettings(
         )
         Text(
             modifier = Modifier.align(Alignment.CenterVertically),
-            text = "Hide results until complete",
+            text = stringResource(id = R.string.poll_option_hide_results),
             fontSize = 16.sp
         )
         Spacer(modifier = Modifier.width(8.dp))

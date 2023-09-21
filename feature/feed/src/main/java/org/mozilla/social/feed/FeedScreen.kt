@@ -37,7 +37,7 @@ fun FeedScreen(
 
         LaunchedEffect(Unit) {
             viewModel.postCardDelegate.errorToastMessage.collect {
-                Toast.makeText(context, it, Toast.LENGTH_LONG).show()
+                Toast.makeText(context, it.build(context), Toast.LENGTH_LONG).show()
             }
         }
     }
@@ -65,4 +65,4 @@ fun FeedScreenPreviewDark() {
     }
 }
 
-private val testInteractions = object : PostCardInteractions {}
+val testInteractions = object : PostCardInteractions {}

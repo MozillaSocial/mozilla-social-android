@@ -1,8 +1,9 @@
 package org.mozilla.social.core.ui.postcard
 
-import androidx.core.text.HtmlCompat
+import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.common.utils.timeSinceNow
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
+import org.mozilla.social.core.ui.R
 import org.mozilla.social.core.ui.poll.toPollUiState
 import org.mozilla.social.model.Status
 
@@ -30,7 +31,8 @@ private fun Status.toMainPostCardUiState(
         statusTextHtml = content,
         mediaAttachments = mediaAttachments,
         profilePictureUrl = account.avatarStaticUrl,
-        postMetaDataText = "${createdAt.timeSinceNow()} - @${account.acct}",
+        postTimeSince = createdAt.timeSinceNow(),
+        accountName = StringFactory.literal(account.acct),
         replyCount = repliesCount,
         boostCount = boostsCount,
         favoriteCount = favouritesCount,
@@ -45,12 +47,12 @@ private fun Status.toMainPostCardUiState(
 private fun Status.toTopRowMetaDataUiState(): TopRowMetaDataUiState? =
     if (boostedStatus != null) {
         TopRowMetaDataUiState(
-            text = "${account.username} boosted",
+            text = StringFactory.string(R.string.user_has_boosted_post, account.username),
             icon = MoSoIcons.Repeat
         )
     } else if (inReplyToAccountName != null) {
         TopRowMetaDataUiState(
-            text = "In reply to $inReplyToAccountName",
+            text = StringFactory.string(R.string.post_is_in_reply_to_user, inReplyToAccountName!!),
             icon = MoSoIcons.Reply
         )
     } else null
