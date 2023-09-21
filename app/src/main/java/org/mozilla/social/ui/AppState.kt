@@ -186,17 +186,17 @@ class AppState(
                             }
                         },
                         actions = {
-                            if (currentDestination == Feed) {
-                                IconButton(onClick = {
-                                    bottomSheetVisible.value = !bottomSheetVisible.value
-                                }) {
-                                    Icon(
-                                        imageVector = MoSoIcons.Feed,
-                                        contentDescription = stringResource(id = R.string.feed_selection_content_description),
-                                        tint = MaterialTheme.colorScheme.onPrimary,
-                                    )
-                                }
-                            }
+//                            if (currentDestination == Feed) {
+//                                IconButton(onClick = {
+//                                    bottomSheetVisible.value = !bottomSheetVisible.value
+//                                }) {
+//                                    Icon(
+//                                        imageVector = MoSoIcons.Feed,
+//                                        contentDescription = stringResource(id = R.string.feed_selection_content_description),
+//                                        tint = MaterialTheme.colorScheme.onPrimary,
+//                                    )
+//                                }
+//                            }
                         }
                     )
 
