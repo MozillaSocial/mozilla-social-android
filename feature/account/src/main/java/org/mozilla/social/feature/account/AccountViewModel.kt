@@ -23,11 +23,9 @@ import org.mozilla.social.model.Status
 class AccountViewModel(
     private val accountRepository: AccountRepository,
     accountIdFlow: AccountIdFlow,
-    private val logout: Logout,
     log: Log,
     statusRepository: StatusRepository,
     initialAccountId: String?,
-    private val onLoggedOut: () -> Unit,
     postCardNavigation: PostCardNavigation,
 ) : ViewModel() {
 
@@ -96,13 +94,6 @@ class AccountViewModel(
             } catch (e: Exception) {
 
             }
-        }
-    }
-
-    fun onLogoutClicked() {
-        viewModelScope.launch {
-            logout()
-            onLoggedOut()
         }
     }
 

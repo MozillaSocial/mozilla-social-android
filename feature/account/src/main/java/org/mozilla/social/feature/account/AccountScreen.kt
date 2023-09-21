@@ -56,14 +56,12 @@ fun AccountScreen(
     accountId: String?,
     onFollowingClicked: () -> Unit,
     onFollowersClicked: () -> Unit,
-    onLoggedOut: () -> Unit,
     onCloseClicked: () -> Unit = {},
     postCardNavigation: PostCardNavigation,
     viewModel: AccountViewModel = koinViewModel(
         parameters = {
             parametersOf(
                 accountId,
-                onLoggedOut,
                 postCardNavigation,
             )
         }
@@ -77,9 +75,6 @@ fun AccountScreen(
             showTopBar = accountId != null,
             onFollowingClicked = onFollowingClicked,
             onFollowersClicked = onFollowersClicked,
-            onLogoutClicked = {
-                viewModel.onLogoutClicked()
-            },
             onCloseClicked = onCloseClicked,
             htmlContentInteractions = viewModel.postCardDelegate,
         )
@@ -92,7 +87,6 @@ internal fun AccountScreen(
     showTopBar: Boolean,
     onFollowingClicked: () -> Unit,
     onFollowersClicked: () -> Unit,
-    onLogoutClicked: () -> Unit,
     onCloseClicked: () -> Unit,
     htmlContentInteractions: HtmlContentInteractions,
 ) {
@@ -138,9 +132,6 @@ internal fun AccountScreen(
                 numericalValue = account.statusesCount,
                 onClick = { /*TODO*/ }
             )
-            LogoutText(name = R.string.logout) {
-                onLogoutClicked()
-            }
         }
     }
 }
@@ -300,28 +291,6 @@ private fun QuickFunctions(
             modifier = Modifier
                 .align(Alignment.CenterEnd)
                 .padding(end = 8.dp)
-        )
-    }
-}
-
-@Composable
-private fun LogoutText(
-    @StringRes name: Int,
-    onClick: () -> Unit
-) {
-    MoSoSurface(
-        color = MaterialTheme.colorScheme.error,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = 8.dp, end = 8.dp),
-        shape = RoundedCornerShape(8.dp),
-        onClick = onClick
-    ) {
-        Text(
-            text = stringResource(id = name),
-            style = MaterialTheme.typography.bodyLarge,
-            textAlign = TextAlign.Center,
-            modifier = Modifier.padding(start = 4.dp, top = 8.dp, bottom = 8.dp)
         )
     }
 }

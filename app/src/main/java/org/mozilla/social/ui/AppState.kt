@@ -242,6 +242,7 @@ class AppState(
      * Navigate to the login screen when the user is logged out
      */
     fun navigateToLoginScreen() {
+        coroutineScope.launch { navigationDrawerState.close() }
         Timber.d("navigate to login screen")
         clearBackstack()
         navController.navigateToLoginScreen()
@@ -315,27 +316,6 @@ class AppState(
         }
 
         navController.navigate(destination.route, navOptions)
-    }
-
-    @Composable
-    fun NavigationDrawerContent(onSettingsClicked: () -> Unit) {
-        MoSoModalDrawerSheet {
-            Text(
-                modifier = Modifier.padding(16.dp),
-                text = stringResource(id = R.string.navigation_drawer_title),
-            )
-
-            MoSoDivider()
-            // TODO
-//                MoSoNavigationDrawerItem("Profile")
-//                MoSoNavigationDrawerItem("Favorites")
-//                MoSoNavigationDrawerItem("Bookmarks")
-            MoSoNavigationDrawerItem(
-                text = stringResource(id = R.string.navigation_drawer_item_settings),
-                onClick = onSettingsClicked,
-            )
-        }
-
     }
 
     @Composable
