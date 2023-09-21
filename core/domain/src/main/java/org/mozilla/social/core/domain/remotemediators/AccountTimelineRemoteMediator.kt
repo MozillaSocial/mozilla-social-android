@@ -10,19 +10,20 @@ import org.mozilla.social.core.data.repository.AccountRepository
 import org.mozilla.social.core.data.repository.StatusRepository
 import org.mozilla.social.core.database.SocialDatabase
 import org.mozilla.social.core.database.model.statusCollections.AccountTimelineStatus
+import org.mozilla.social.core.database.model.statusCollections.AccountTimelineStatusWrapper
 import org.mozilla.social.core.database.model.statusCollections.HashTagTimelineStatusWrapper
 
 @OptIn(ExperimentalPagingApi::class)
-class AccountStatusesRemoteMediator(
+class AccountTimelineRemoteMediator(
     private val accountRepository: AccountRepository,
     private val statusRepository: StatusRepository,
     private val socialDatabase: SocialDatabase,
     private val accountId: String,
-) : RemoteMediator<Int, HashTagTimelineStatusWrapper>() {
+) : RemoteMediator<Int, AccountTimelineStatusWrapper>() {
 
     override suspend fun load(
         loadType: LoadType,
-        state: PagingState<Int, HashTagTimelineStatusWrapper>
+        state: PagingState<Int, AccountTimelineStatusWrapper>
     ): MediatorResult {
         return try {
             var pageSize: Int = state.config.pageSize

@@ -39,6 +39,7 @@ fun PostCardList(
     feed: Flow<PagingData<PostCardUiState>>,
     reccs: List<Recommendation>? = null,
     postCardInteractions: PostCardInteractions,
+    headerContent: @Composable () -> Unit = {},
 ) {
 
     val lazyingPagingItems: LazyPagingItems<PostCardUiState> = feed.collectAsLazyPagingItems()
@@ -77,6 +78,8 @@ fun PostCardList(
                 .fillMaxSize()
                 .padding(horizontal = 4.dp),
         ) {
+
+            item { headerContent() }
 
             when (lazyingPagingItems.loadState.refresh) {
                 is LoadState.Error -> {} // handle the error outside the lazy column

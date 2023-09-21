@@ -1,6 +1,7 @@
 package org.mozilla.social.core.domain
 
 import org.koin.dsl.module
+import org.mozilla.social.core.domain.remotemediators.AccountTimelineRemoteMediator
 import org.mozilla.social.core.domain.remotemediators.HashTagTimelineRemoteMediator
 import org.mozilla.social.core.domain.remotemediators.HomeTimelineRemoteMediator
 
@@ -9,6 +10,14 @@ val domainModule = module {
     factory { parametersHolder ->
         HashTagTimelineRemoteMediator(
             get(),
+            get(),
+            get(),
+            get(),
+            parametersHolder[0]
+        )
+    }
+    factory { parametersHolder ->
+        AccountTimelineRemoteMediator(
             get(),
             get(),
             get(),
