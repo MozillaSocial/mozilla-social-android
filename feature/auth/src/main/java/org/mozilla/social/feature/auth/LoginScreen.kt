@@ -23,25 +23,26 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.koin.androidx.compose.koinViewModel
-import org.mozilla.social.core.designsystem.theme.MozillaSocialTheme
+import org.mozilla.social.core.designsystem.theme.MoSoTheme
 
 @Composable
-internal fun LoginRoute(
+fun LoginScreen(
     viewModel: AuthViewModel = koinViewModel(),
     navigateToLoggedInGraph: () -> Unit,
 ) {
     val isSignedIn = viewModel.isSignedIn.collectAsState(initial = false).value
     val context = LocalContext.current
 
-    when (isSignedIn) {
-        true -> navigateToLoggedInGraph()
-        false -> LoginScreen(onLoginClicked = { domain ->
+    if (isSignedIn) {
+        navigateToLoggedInGraph()
+    }
+    LoginScreen(
+        onLoginClicked = { domain ->
             viewModel.onLoginClicked(
                 context = context,
                 domain = domain
             )
         })
-    }
 }
 
 @Composable
@@ -81,7 +82,7 @@ private fun LoginButton(onLoginClicked: () -> Unit) {
 @Preview
 @Composable
 internal fun AuthScreenPreview() {
-    MozillaSocialTheme {
-        LoginScreen {}
+    MoSoTheme {
+        LoginScreen(onLoginClicked = {})
     }
 }

@@ -39,8 +39,28 @@ import androidx.compose.material.icons.rounded.VolumeMute
 import androidx.compose.material.icons.rounded.VolumeUp
 import androidx.compose.material.icons.rounded.Warning
 import androidx.compose.material.icons.rounded.WarningAmber
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
+import org.mozilla.social.core.designsystem.R
 
 object MoSoIcons {
+
+    @Composable
+    fun house() = painterResource(R.drawable.house)
+    @Composable
+    fun compass() = painterResource(R.drawable.compass)
+
+    @Composable
+    fun bookmark() = painterResource(R.drawable.bookmark_simple)
+    
+    @Composable
+    fun userCircle() = painterResource(id = R.drawable.user_circle)
+
+    @Composable
+    fun list() = painterResource(id = R.drawable.list)
+
+
     val Add = Icons.Rounded.Add
     val ArrowBack = Icons.Rounded.ArrowBack
     val Check = Icons.Rounded.Check

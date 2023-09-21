@@ -29,6 +29,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import org.mozilla.social.core.designsystem.component.MoSoCard
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.designsystem.theme.Typography
 import org.mozilla.social.model.Recommendation
@@ -37,7 +38,7 @@ import org.mozilla.social.model.Recommendation
 fun RecommendationCarouselCard(modifier: Modifier, recommendation: Recommendation) {
     val context = LocalContext.current
 
-    Card(
+    MoSoCard(
         modifier = modifier
             .height(140.dp)
             .padding(4.dp),

@@ -2,6 +2,7 @@ package org.mozilla.social.navigation
 
 import android.content.Context
 import androidx.browser.customtabs.CustomTabsIntent
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.net.toUri
@@ -21,13 +22,15 @@ import org.mozilla.social.feature.thread.threadScreen
 import org.mozilla.social.feed.FEED_ROUTE
 import org.mozilla.social.feed.feedScreen
 import org.mozilla.social.post.newPostScreen
+import org.mozilla.social.search.SEARCH_ROUTE
+import org.mozilla.social.search.SearchScreen
 import org.mozilla.social.search.searchScreen
 import org.mozilla.social.ui.AppState
 
 @Composable
 fun MozillaNavHost(appState: AppState) {
     val context = LocalContext.current
-    NavHost(navController = appState.navController, startDestination = SPLASH_ROUTE) {
+    NavHost(navController = appState.navController, startDestination = Routes.SPLASH) {
         splashScreen(
             navigateToLogin = appState::navigateToLoginScreen,
             navigateToLoggedInGraph = appState::navigateToLoggedInGraph,
@@ -44,8 +47,8 @@ fun NavGraphBuilder.splashScreen(
     navigateToLogin: () -> Unit,
     navigateToLoggedInGraph: () -> Unit
 ) {
-    composable(route = SPLASH_ROUTE) {
-        SplashScreenRoute(
+    composable(route = Routes.SPLASH) {
+        SplashScreen(
             navigateToLogin = navigateToLogin,
             navigateToLoggedInGraph = navigateToLoggedInGraph
         )
@@ -78,7 +81,9 @@ private fun NavGraphBuilder.mainGraph(
         feedScreen(
             postCardNavigation = postCardNavigation,
         )
-        searchScreen()
+        composable(route = Routes.DISCOVER) {
+            SearchScreen()
+        }
         settingsScreen(onLogout = appState::navigateToLoginScreen)
         accountScreen(
             onFollowingClicked = appState::navigateToAccountFollowing,
@@ -105,6 +110,8 @@ private fun NavGraphBuilder.mainGraph(
             onCloseClicked = { appState.popBackStack() },
             postCardNavigation = postCardNavigation,
         )
+
+        composable(route = Routes.BOOKMARKS) { Text(text = "bookmarks") }
     }
 }
 

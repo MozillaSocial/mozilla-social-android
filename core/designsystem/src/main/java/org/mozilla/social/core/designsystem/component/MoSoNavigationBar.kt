@@ -1,33 +1,49 @@
 package org.mozilla.social.core.designsystem.component
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.only
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarDefaults
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemColors
 import androidx.compose.material3.NavigationBarItemDefaults
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import org.mozilla.social.common.utils.StringFactory
-import org.mozilla.social.core.designsystem.theme.Typography
+import org.mozilla.social.core.designsystem.theme.MoSoTheme
 
 @Composable
 fun MoSoBottomNavigationBar(
     modifier: Modifier = Modifier,
     currentDestination: NavBarDestination,
     navBarDestinations: List<NavBarDestination>,
-    navigateTo: (NavBarDestination) -> Unit
+    navigateTo: (NavBarDestination) -> Unit,
+    containerColor: Color = MoSoNavigationBarDefaults.containerColor,
+    contentColor: Color = MoSoTheme.colors.iconPrimary,
+    tonalElevation: Dp = NavigationBarDefaults.Elevation,
+    windowInsets: WindowInsets = MoSoNavigationBarDefaults.windowInsets,
 ) {
-
-    NavigationBar(
+    MoSoNavigationBar(
         modifier = modifier,
-        contentColor = MoSoNavigationDefaults.navigationContentColor(),
-        tonalElevation = 0.dp
+        containerColor = containerColor,
+        contentColor = contentColor,
+        tonalElevation = tonalElevation,
+        windowInsets = windowInsets
     ) {
         navBarDestinations.forEach { navBarDestination ->
             MoSoNavigationBarItem(
@@ -40,6 +56,34 @@ fun MoSoBottomNavigationBar(
 }
 
 @Composable
+fun MoSoNavigationBar(
+    modifier: Modifier = Modifier,
+    containerColor: Color = MoSoNavigationBarDefaults.containerColor,
+    contentColor: Color = MoSoTheme.colors.iconPrimary,
+    tonalElevation: Dp = MoSoNavigationBarDefaults.Elevation,
+    windowInsets: WindowInsets = MoSoNavigationBarDefaults.windowInsets,
+    height: Dp = MoSoNavigationBarDefaults.height,
+    content: @Composable RowScope.() -> Unit
+) {
+    MoSoSurface(
+        color = containerColor,
+        contentColor = contentColor,
+        tonalElevation = tonalElevation,
+        modifier = modifier
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .windowInsetsPadding(windowInsets)
+                .height(height)
+                .selectableGroup(),
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            content = content
+        )
+    }
+}
+
+@Composable
 fun RowScope.MoSoNavigationBarItem(
     modifier: Modifier = Modifier,
     destination: NavBarDestination,
@@ -47,34 +91,50 @@ fun RowScope.MoSoNavigationBarItem(
     navigateTo: (NavBarDestination) -> Unit
 ) {
     NavigationBarItem(
-        modifier = modifier,
+        modifier = modifier.height(48.dp),
         selected = isSelected,
         onClick = { navigateTo(destination) },
         colors = MoSoNavigationBarItemDefaults.colors(),
-        icon = { MoSoIcon(destination = destination, isSelected = isSelected) },
-        label = {
-            Text(
-                text = destination.tabText.build(
-                    LocalContext.current,
-                ),
-                style = Typography.bodyLarge,
+        icon = {
+            MoSoIcon(
+                destination = destination, isSelected = isSelected
             )
-        }
+        },
+//        label = {
+//            Text(
+//                text = destination.tabText.build(
+//                    LocalContext.current,
+//                ),
+//                style = Typography.bodyLarge,
+//            )
+//        }
     )
 }
 
 @Composable
-private fun MoSoIcon(destination: NavBarDestination, isSelected: Boolean) {
+private fun MoSoIcon(
+    destination: NavBarDestination, isSelected: Boolean
+) {
     if (isSelected) {
+//        val a = destination.selectedIcon
+//        val b = a.build()
         Icon(
-            imageVector = destination.selectedIcon,
+            painter = destination.selectedIcon(),
+            modifier = Modifier
+                .size(24.dp),
             contentDescription = null,
         )
     } else {
         Icon(
-            imageVector = destination.unselectedIcon,
+            painter = destination.selectedIcon(),
+            modifier = Modifier.size(24.dp),
             contentDescription = null,
         )
+
+//        Icon(
+//            imageVector = destination.unselectedIcon,
+//            contentDescription = null,
+//        )
     }
 }
 
@@ -89,21 +149,21 @@ interface NavDestination {
  * The navigation destinations which correspond to the bottom navigation tabs
  */
 interface NavBarDestination : NavDestination {
-    val selectedIcon: ImageVector
-    val unselectedIcon: ImageVector
+    @Composable
+    fun selectedIcon(): Painter
     val tabText: StringFactory
 }
 
 object MoSoNavigationDefaults {
 
     @Composable
-    fun navigationContentColor() = MaterialTheme.colorScheme.onSurfaceVariant
+    fun unselectedItemColor() = MoSoTheme.colors.iconPrimary
 
     @Composable
-    fun navigationSelectedItemColor() = MaterialTheme.colorScheme.onPrimaryContainer
+    fun selectedItemColor() = MoSoTheme.colors.actionPrimary
 
     @Composable
-    fun navigationIndicatorColor() = MaterialTheme.colorScheme.primaryContainer
+    fun indicatorColor() = MoSoTheme.colors.layer1
 
 }
 
@@ -111,11 +171,30 @@ object MoSoNavigationBarItemDefaults {
     @Composable
     fun colors(): NavigationBarItemColors {
         return NavigationBarItemDefaults.colors(
-            selectedIconColor = MoSoNavigationDefaults.navigationSelectedItemColor(),
-            unselectedIconColor = MoSoNavigationDefaults.navigationContentColor(),
-            selectedTextColor = MoSoNavigationDefaults.navigationSelectedItemColor(),
-            unselectedTextColor = MoSoNavigationDefaults.navigationContentColor(),
-            indicatorColor = MoSoNavigationDefaults.navigationIndicatorColor(),
+            selectedIconColor = MoSoNavigationDefaults.selectedItemColor(),
+            unselectedIconColor = MoSoNavigationDefaults.unselectedItemColor(),
+            selectedTextColor = MoSoNavigationDefaults.selectedItemColor(),
+            unselectedTextColor = MoSoNavigationDefaults.unselectedItemColor(),
+            indicatorColor = MoSoNavigationDefaults.indicatorColor(),
         )
     }
+}
+
+object MoSoNavigationBarDefaults {
+    /** Default elevation for a navigation bar. */
+    val Elevation: Dp = 0.dp
+
+    /** Default color for a navigation bar. */
+    val containerColor: Color @Composable get() = MoSoTheme.colors.layer1
+
+    /**
+     * Default window insets to be used and consumed by navigation bar
+     */
+    val windowInsets: WindowInsets
+        @Composable
+        get() = WindowInsets.systemBars
+            .only(WindowInsetsSides.Horizontal + WindowInsetsSides.Bottom)
+
+    val height: Dp
+        get() = 48.dp
 }

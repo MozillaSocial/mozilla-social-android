@@ -12,11 +12,11 @@ import org.mozilla.social.core.ui.postcard.PostCardNavigation
  * The my account route is used for the account tab.  The account route is used for any
  * account that will open outside of the bottom navigation tab.
  */
-const val MY_ACCOUNT_ROUTE = "myAccount"
+private const val MY_ACCOUNT_ROUTE = "myAccount"
 
-const val ACCOUNT_ROUTE = "account"
-const val ACCOUNT_ID = "accountId"
-const val ACCOUNT_FULL_ROUTE = "$ACCOUNT_ROUTE?$ACCOUNT_ID={$ACCOUNT_ID}"
+private const val ACCOUNT_ROUTE = "account"
+private const val ACCOUNT_ID = "accountId"
+private const val ACCOUNT_FULL_ROUTE = "$ACCOUNT_ROUTE?$ACCOUNT_ID={$ACCOUNT_ID}"
 
 fun NavController.navigateToAccount(
     navOptions: NavOptions? = null,
@@ -28,6 +28,7 @@ fun NavController.navigateToAccount(
     }
 }
 
+// The custom screen here doesn't seem to be used anywhere, so I'm going to 
 fun NavGraphBuilder.accountScreen(
     onFollowingClicked: () -> Unit,
     onFollowersClicked: () -> Unit,
@@ -39,7 +40,7 @@ fun NavGraphBuilder.accountScreen(
     composable(
         route = MY_ACCOUNT_ROUTE,
     ) {
-        AccountRoute(
+        AccountScreen(
             accountId = null,
             onFollowingClicked = onFollowingClicked,
             onFollowersClicked = onFollowersClicked,
@@ -57,7 +58,7 @@ fun NavGraphBuilder.accountScreen(
         )
     ) {
         val accountId: String? = it.arguments?.getString(ACCOUNT_ID)
-        AccountRoute(
+        AccountScreen(
             accountId = accountId,
             onFollowingClicked = onFollowingClicked,
             onFollowersClicked = onFollowersClicked,
