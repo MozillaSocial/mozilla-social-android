@@ -72,7 +72,7 @@ class ReportViewModel(
                 )
             } catch (e: Exception) {
                 log.e(e)
-                _errorToastMessage.emit(StringFactory.string(R.string.error_sending_report_toast))
+                _errorToastMessage.emit(StringFactory.resource(R.string.error_sending_report_toast))
             }
             onReported()
         }

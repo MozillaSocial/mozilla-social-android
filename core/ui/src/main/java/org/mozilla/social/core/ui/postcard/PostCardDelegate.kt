@@ -27,7 +27,7 @@ class PostCardDelegate(
                 statusRepository.voteOnPoll(pollId, choices)
             } catch (e: Exception) {
                 log.e(e)
-                _errorToastMessage.emit(StringFactory.string(R.string.error_voting))
+                _errorToastMessage.emit(StringFactory.resource(R.string.error_voting))
             }
         }
     }
@@ -43,14 +43,14 @@ class PostCardDelegate(
                     statusRepository.boostStatus(statusId)
                 } catch (e: Exception) {
                     log.e(e)
-                    _errorToastMessage.emit(StringFactory.string(R.string.error_boosting))
+                    _errorToastMessage.emit(StringFactory.resource(R.string.error_boosting))
                 }
             } else {
                 try {
                     statusRepository.undoStatusBoost(statusId)
                 } catch (e: Exception) {
                     log.e(e)
-                    _errorToastMessage.emit(StringFactory.string(R.string.error_undoing_boost))
+                    _errorToastMessage.emit(StringFactory.resource(R.string.error_undoing_boost))
                 }
             }
         }
@@ -63,14 +63,14 @@ class PostCardDelegate(
                     statusRepository.favoriteStatus(statusId)
                 } catch (e: Exception) {
                     log.e(e)
-                    _errorToastMessage.emit(StringFactory.string(R.string.error_adding_favorite))
+                    _errorToastMessage.emit(StringFactory.resource(R.string.error_adding_favorite))
                 }
             } else {
                 try {
                     statusRepository.undoFavoriteStatus(statusId)
                 } catch (e: Exception) {
                     log.e(e)
-                    _errorToastMessage.emit(StringFactory.string(R.string.error_removing_favorite))
+                    _errorToastMessage.emit(StringFactory.resource(R.string.error_removing_favorite))
                 }
             }
         }
@@ -86,7 +86,7 @@ class PostCardDelegate(
                 accountRepository.muteAccount(accountId)
             } catch (e: Exception) {
                 log.e(e)
-                _errorToastMessage.emit(StringFactory.string(R.string.error_muting_account))
+                _errorToastMessage.emit(StringFactory.resource(R.string.error_muting_account))
             }
         }
     }
@@ -97,7 +97,7 @@ class PostCardDelegate(
                 accountRepository.blockAccount(accountId)
             } catch (e: Exception) {
                 log.e(e)
-                _errorToastMessage.emit(StringFactory.string(R.string.error_blocking_account))
+                _errorToastMessage.emit(StringFactory.resource(R.string.error_blocking_account))
             }
         }
     }

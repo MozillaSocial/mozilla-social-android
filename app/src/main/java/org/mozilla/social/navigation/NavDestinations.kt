@@ -16,7 +16,7 @@ object Feed : NavBarDestination {
         return MoSoIcons.house()
     }
 
-    override val tabText = StringFactory.string(R.string.feed_tab_text)
+    override val tabText = StringFactory.resource(R.string.feed_tab_text)
     override val route = Routes.FEED
 }
 
@@ -26,7 +26,7 @@ object Discover : NavBarDestination {
         return MoSoIcons.compass()
     }
 
-    override val tabText = StringFactory.string(R.string.search_tab_text)
+    override val tabText = StringFactory.resource(R.string.search_tab_text)
     override val route = Routes.DISCOVER
 }
 
@@ -38,7 +38,7 @@ object Bookmarks : NavBarDestination {
         return MoSoIcons.bookmark()
     }
 
-    override val tabText = StringFactory.string(R.string.settings_tab_text)
+    override val tabText = StringFactory.resource(R.string.settings_tab_text)
 }
 
 
@@ -50,7 +50,7 @@ object Account : NavBarDestination {
         return MoSoIcons.userCircle()
     }
 
-    override val tabText = StringFactory.string(R.string.account_tab_text)
+    override val tabText = StringFactory.resource(R.string.account_tab_text)
 
 }
 

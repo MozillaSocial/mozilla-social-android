@@ -133,7 +133,7 @@ class NewPostViewModel(
                 onStatusPosted()
             } catch (e: Exception) {
                 log.e(e)
-                _errorToastMessage.emit(StringFactory.string(R.string.error_sending_post_toast))
+                _errorToastMessage.emit(StringFactory.resource(R.string.error_sending_post_toast))
                 _isSendingPost.update { false }
             }
         }

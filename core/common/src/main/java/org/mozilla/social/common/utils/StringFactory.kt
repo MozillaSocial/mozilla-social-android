@@ -12,11 +12,7 @@ sealed interface StringFactory {
         val literalValue: String,
     ) : StringFactory
 
-    private data class StringResource(
-        @param:StringRes val resId: Int,
-    ) : StringFactory
-
-    private class FormattedStringResource(
+    private class Resource(
         @param:StringRes val resId: Int,
         vararg val formatArgs: Any,
     ) : StringFactory
@@ -25,7 +21,7 @@ sealed interface StringFactory {
      * @param quantity determines which plural to use
      * @param formatArgs the value inserted into the string
      */
-    private class QuantityStringResource(
+    private class QuantityResource(
         @param:PluralsRes val resId: Int,
         val quantity: Int,
         vararg val formatArgs: Any,
@@ -42,9 +38,11 @@ sealed interface StringFactory {
 
     fun build(context: Context): String = when (this) {
         is Literal -> literalValue
-        is StringResource -> context.getString(resId)
-        is FormattedStringResource -> context.getString(resId, *formatArgs)
-        is QuantityStringResource -> context.resources.getQuantityString(
+        is Resource -> context.getString(
+            resId,
+            *formatArgs,
+        )
+        is QuantityResource -> context.resources.getQuantityString(
             resId,
             quantity,
             *formatArgs,
@@ -57,26 +55,24 @@ sealed interface StringFactory {
     }
 
     companion object {
-        fun string(@StringRes resId: Int): StringFactory = StringResource(resId)
+        fun literal(
+            literalValue: String
+        ): StringFactory = Literal(literalValue)
 
-        fun string(
+        fun resource(
             @StringRes resId: Int,
             vararg formatArgs: Any,
-        ): StringFactory = FormattedStringResource(resId, *formatArgs)
+        ): StringFactory = Resource(resId, *formatArgs)
 
         /**
          * @param quantity determines which plural to use
          * @param formatArgs the value inserted into the string
          */
-        fun quantityString(
+        fun quantityResource(
             @PluralsRes resId: Int,
             quantity: Int,
             vararg formatArgs: Any,
-        ): StringFactory = QuantityStringResource(resId, quantity, *formatArgs)
-
-        fun literal(
-            literalValue: String
-        ): StringFactory = Literal(literalValue)
+        ): StringFactory = QuantityResource(resId, quantity, *formatArgs)
 
         fun collection(
             vararg factories: StringFactory
