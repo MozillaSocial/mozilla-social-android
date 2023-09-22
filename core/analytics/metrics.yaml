@@ -58,3 +58,22 @@ events:
     metadata:
       tags:
         - Search
+  new_post_button:
+    type: event
+    extra_keys:
+      source:
+        description: |
+          User taps a new post
+        type: string
+    bugs:
+      - ######
+    data_reviews:
+      - ######
+    data_sensitivity:
+      - interaction
+    notification_emails:
+      - ######
+    expires: never
+    metadata:
+      tags:
+        - NewPost

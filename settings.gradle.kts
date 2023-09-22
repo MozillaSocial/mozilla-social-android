@@ -4,6 +4,7 @@ pluginManagement {
         google()
         mavenCentral()
         gradlePluginPortal()
+        maven { url = uri("https://maven.mozilla.org/maven2") }
     }
 }
 dependencyResolutionManagement {
@@ -35,3 +36,4 @@ include(":core:database")
 include(":feature:thread")
 include(":feature:report")
 include(":feature:hashtag")
+include(":core:analytics")
