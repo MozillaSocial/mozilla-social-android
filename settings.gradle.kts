@@ -2,9 +2,10 @@ pluginManagement {
     includeBuild("build-logic")
     repositories {
         google()
-        mavenCentral()
         gradlePluginPortal()
+        mavenCentral()
         maven { url = uri("https://maven.mozilla.org/maven2") }
+        maven { url = uri("https://plugins.gradle.org/m2/") }
     }
 }
 dependencyResolutionManagement {
