@@ -28,7 +28,8 @@ fun ThreadScreen(
 
         PostCardList(
             items = viewModel.statuses.collectAsState(emptyList()).value,
-            postCardInteractions = viewModel.postCardDelegate
+            errorToastMessage = viewModel.postCardDelegate.errorToastMessage,
+            postCardInteractions = viewModel.postCardDelegate,
         )
     }
 }

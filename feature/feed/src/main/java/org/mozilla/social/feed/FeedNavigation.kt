@@ -16,6 +16,6 @@ fun NavGraphBuilder.feedScreen(
     postCardNavigation: PostCardNavigation,
 ) {
     composable(route = FEED_ROUTE) {
-         FeedScreen(postCardNavigation)
+         FeedRoute(postCardNavigation)
     }
 }

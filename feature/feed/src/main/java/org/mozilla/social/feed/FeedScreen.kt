@@ -1,23 +1,27 @@
 package org.mozilla.social.feed
 
 import android.content.res.Configuration
-import android.widget.Toast
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.paging.PagingData
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.flowOf
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
+import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.core.designsystem.component.MoSoSurface
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.ui.postcard.PostCardInteractions
 import org.mozilla.social.core.ui.postcard.PostCardList
 import org.mozilla.social.core.ui.postcard.PostCardNavigation
+import org.mozilla.social.core.ui.postcard.PostCardUiState
+import org.mozilla.social.model.Recommendation
 
 @Composable
-fun FeedScreen(
+internal fun FeedRoute(
     postCardNavigation: PostCardNavigation,
     viewModel: FeedViewModel = koinViewModel(parameters = {
         parametersOf(
@@ -25,43 +29,53 @@ fun FeedScreen(
         )
     })
 ) {
+    FeedScreen(
+        feed = viewModel.feed,
+        errorToastMessage = viewModel.postCardDelegate.errorToastMessage,
+        postCardInteractions = viewModel.postCardDelegate,
+        reccs = viewModel.reccs.collectAsState(initial = emptyList()).value
+    )
+}
+
+@Composable
+private fun FeedScreen(
+    feed: Flow<PagingData<PostCardUiState>>,
+    errorToastMessage: SharedFlow<StringFactory>,
+    reccs: List<Recommendation>? = null,
+    postCardInteractions: PostCardInteractions,
+) {
     MoSoSurface {
         PostCardList(
-            feed = viewModel.feed,
-            postCardInteractions = viewModel.postCardDelegate,
-            reccs = viewModel.reccs.collectAsState(initial = null).value,
+            feed = feed,
+            errorToastMessage = errorToastMessage,
+            postCardInteractions = postCardInteractions,
+            reccs = reccs,
         )
-
-        val context = LocalContext.current
-
-        LaunchedEffect(Unit) {
-            viewModel.postCardDelegate.errorToastMessage.collect {
-                Toast.makeText(context, it.build(context), Toast.LENGTH_LONG).show()
-            }
-        }
     }
 }
 
 @Composable
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_NO, name = "Light theme")
-fun FeedScreenPreviewLight() {
+private fun FeedScreenPreviewLight() {
     MoSoTheme(darkTheme = false) {
-        MoSoSurface {
-            PostCardList(items = listOf(), postCardInteractions = testInteractions)
-            Text(text = "test", color = MoSoTheme.colors.textPrimary)
-        }
+        FeedScreen(
+            feed = flowOf(),
+            errorToastMessage = MutableSharedFlow(),
+            reccs = null,
+            postCardInteractions = object : PostCardInteractions {},
+        )
     }
 }
 
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, name = "Dark theme")
 @Composable
-fun FeedScreenPreviewDark() {
+private fun FeedScreenPreviewDark() {
     MoSoTheme(darkTheme = true) {
-        MoSoSurface {
-            PostCardList(items = listOf(), postCardInteractions = testInteractions)
-            Text(text = "test", color = MoSoTheme.colors.textPrimary)
-        }
+        FeedScreen(
+            feed = flowOf(),
+            errorToastMessage = MutableSharedFlow(),
+            reccs = null,
+            postCardInteractions = object : PostCardInteractions {},
+        )
     }
 }
-
-val testInteractions = object : PostCardInteractions {}
