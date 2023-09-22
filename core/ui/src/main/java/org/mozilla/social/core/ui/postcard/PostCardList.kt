@@ -24,7 +24,10 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharedFlow
+import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.core.designsystem.component.MoSoDivider
+import org.mozilla.social.core.designsystem.component.MoSoToast
 import org.mozilla.social.core.ui.R
 import org.mozilla.social.core.ui.pullrefresh.PullRefreshIndicator
 import org.mozilla.social.core.ui.pullrefresh.pullRefresh
@@ -36,6 +39,7 @@ import org.mozilla.social.model.Recommendation
 @Composable
 fun PostCardList(
     feed: Flow<PagingData<PostCardUiState>>,
+    errorToastMessage: SharedFlow<StringFactory>,
     reccs: List<Recommendation>? = null,
     postCardInteractions: PostCardInteractions,
     enablePullToRefresh: Boolean = false,
@@ -139,6 +143,8 @@ fun PostCardList(
             )
         }
     }
+
+    MoSoToast(toastMessage = errorToastMessage)
 }
 
 @Composable
@@ -170,6 +176,7 @@ private fun Error(
 @Composable
 fun PostCardList(
     items: List<PostCardUiState>,
+    errorToastMessage: SharedFlow<StringFactory>,
     postCardInteractions: PostCardInteractions,
 ) {
 
@@ -189,4 +196,6 @@ fun PostCardList(
             }
         }
     }
+
+    MoSoToast(toastMessage = errorToastMessage)
 }

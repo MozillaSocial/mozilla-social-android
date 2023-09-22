@@ -70,6 +70,7 @@ import org.mozilla.social.common.utils.buildAnnotatedStringForAccountsAndHashtag
 import org.mozilla.social.common.utils.toFile
 import org.mozilla.social.core.designsystem.component.MoSoDivider
 import org.mozilla.social.core.designsystem.component.MoSoSurface
+import org.mozilla.social.core.designsystem.component.MoSoToast
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.designsystem.theme.FirefoxColor
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
@@ -132,13 +133,7 @@ internal fun NewPostRoute(
         inReplyToAccountName = viewModel.inReplyToAccountName.collectAsState().value,
     )
 
-    val context = LocalContext.current
-
-    LaunchedEffect(Unit) {
-        viewModel.errorToastMessage.collect {
-            Toast.makeText(context, it.build(context), Toast.LENGTH_LONG).show()
-        }
-    }
+    MoSoToast(toastMessage = viewModel.errorToastMessage)
 }
 
 @Composable
@@ -523,7 +518,7 @@ private fun ImageUploadBox(
             .padding(16.dp)
             .border(
                 width = 2.dp,
-                color =  MoSoTheme.colors.borderPrimary,
+                color = MoSoTheme.colors.borderPrimary,
                 shape = outlineShape
             )
             .clip(

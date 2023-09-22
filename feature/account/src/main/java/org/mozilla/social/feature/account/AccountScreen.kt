@@ -40,8 +40,10 @@ import androidx.compose.ui.unit.sp
 import androidx.paging.PagingData
 import coil.compose.AsyncImage
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharedFlow
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
+import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.core.designsystem.component.MoSoDivider
 import org.mozilla.social.core.designsystem.component.MoSoTopBar
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
@@ -76,6 +78,7 @@ fun AccountScreen(
             account = it,
             showTopBar = accountId != null,
             feed = viewModel.feed,
+            errorToastMessage = viewModel.postCardDelegate.errorToastMessage,
             onFollowingClicked = onFollowingClicked,
             onFollowersClicked = onFollowersClicked,
             onCloseClicked = onCloseClicked,
@@ -90,6 +93,7 @@ internal fun AccountScreen(
     account: Account,
     showTopBar: Boolean,
     feed: Flow<PagingData<PostCardUiState>>,
+    errorToastMessage: SharedFlow<StringFactory>,
     onFollowingClicked: () -> Unit,
     onFollowersClicked: () -> Unit,
     onCloseClicked: () -> Unit,
@@ -111,6 +115,7 @@ internal fun AccountScreen(
 
             PostCardList(
                 feed = feed,
+                errorToastMessage = errorToastMessage,
                 postCardInteractions = postCardInteractions
             ) {
                 HeaderAndProfileImages(

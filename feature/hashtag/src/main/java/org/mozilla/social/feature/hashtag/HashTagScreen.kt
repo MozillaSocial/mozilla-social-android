@@ -2,11 +2,12 @@ package org.mozilla.social.feature.hashtag
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.paging.PagingData
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharedFlow
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
+import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.core.designsystem.component.MoSoTopBar
 import org.mozilla.social.core.ui.postcard.PostCardInteractions
 import org.mozilla.social.core.ui.postcard.PostCardList
@@ -26,6 +27,7 @@ internal fun HashTagRoute(
     HashTagScreen(
         hashTag = hashTag,
         feed = viewModel.feed,
+        errorToastMessage = viewModel.postCardDelegate.errorToastMessage,
         onCloseClicked = onCloseClicked,
         postCardInteractions = viewModel.postCardDelegate,
     )
@@ -35,6 +37,7 @@ internal fun HashTagRoute(
 private fun HashTagScreen(
     hashTag: String,
     feed: Flow<PagingData<PostCardUiState>>,
+    errorToastMessage: SharedFlow<StringFactory>,
     onCloseClicked: () -> Unit,
     postCardInteractions: PostCardInteractions,
 ) {
@@ -46,6 +49,7 @@ private fun HashTagScreen(
 
         PostCardList(
             feed = feed,
+            errorToastMessage = errorToastMessage,
             postCardInteractions = postCardInteractions,
         )
     }
