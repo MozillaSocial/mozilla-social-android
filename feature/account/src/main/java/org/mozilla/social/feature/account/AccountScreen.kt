@@ -22,7 +22,6 @@ import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -35,20 +34,25 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.paging.PagingData
 import coil.compose.AsyncImage
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharedFlow
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
+import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.core.designsystem.component.MoSoDivider
-import org.mozilla.social.core.designsystem.component.MoSoSurface
 import org.mozilla.social.core.designsystem.component.MoSoTopBar
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.ui.htmlcontent.HtmlContent
 import org.mozilla.social.core.ui.htmlcontent.HtmlContentInteractions
+import org.mozilla.social.core.ui.postcard.PostCardInteractions
+import org.mozilla.social.core.ui.postcard.PostCardList
 import org.mozilla.social.core.ui.postcard.PostCardNavigation
+import org.mozilla.social.core.ui.postcard.PostCardUiState
 import org.mozilla.social.model.Account
 
 @Composable
@@ -73,10 +77,13 @@ fun AccountScreen(
         AccountScreen(
             account = it,
             showTopBar = accountId != null,
+            feed = viewModel.feed,
+            errorToastMessage = viewModel.postCardDelegate.errorToastMessage,
             onFollowingClicked = onFollowingClicked,
             onFollowersClicked = onFollowersClicked,
             onCloseClicked = onCloseClicked,
             htmlContentInteractions = viewModel.postCardDelegate,
+            postCardInteractions = viewModel.postCardDelegate,
         )
     }
 }
@@ -85,10 +92,13 @@ fun AccountScreen(
 internal fun AccountScreen(
     account: Account,
     showTopBar: Boolean,
+    feed: Flow<PagingData<PostCardUiState>>,
+    errorToastMessage: SharedFlow<StringFactory>,
     onFollowingClicked: () -> Unit,
     onFollowersClicked: () -> Unit,
     onCloseClicked: () -> Unit,
     htmlContentInteractions: HtmlContentInteractions,
+    postCardInteractions: PostCardInteractions,
 ) {
     Column {
         if (showTopBar) {
@@ -100,38 +110,45 @@ internal fun AccountScreen(
 
         Column(
             modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState()),
+                .fillMaxSize(),
         ) {
-            HeaderAndProfileImages(
-                headerImage = account.headerUrl,
-                headerStaticUrl = account.headerStaticUrl,
-                profileImage = account.avatarUrl,
-                profileStaticUrl = account.avatarStaticUrl,
-                onHeaderClick = { /*TODO*/ },
-                onProfileClick = { /*TODO*/ }
-            )
 
-            UserInfo(account = account)
-            UserFollow(
-                account = account,
-                onFollowingClicked = onFollowingClicked,
-                onFollowersClicked = onFollowersClicked,
-            )
-            UserBio(
-                account = account,
-                htmlContentInteractions = htmlContentInteractions,
-            )
-            Spacer(modifier = Modifier.padding(top = 4.dp))
-            UserFields(
-                account = account,
-                htmlContentInteractions = htmlContentInteractions,
-            )
-            QuickFunctions(
-                name = R.string.posts,
-                numericalValue = account.statusesCount,
-                onClick = { /*TODO*/ }
-            )
+            PostCardList(
+                feed = feed,
+                errorToastMessage = errorToastMessage,
+                postCardInteractions = postCardInteractions
+            ) {
+                HeaderAndProfileImages(
+                    headerImage = account.headerUrl,
+                    headerStaticUrl = account.headerStaticUrl,
+                    profileImage = account.avatarUrl,
+                    profileStaticUrl = account.avatarStaticUrl,
+                    onHeaderClick = { /*TODO*/ },
+                    onProfileClick = { /*TODO*/ }
+                )
+
+                UserInfo(account = account)
+                UserFollow(
+                    account = account,
+                    onFollowingClicked = onFollowingClicked,
+                    onFollowersClicked = onFollowersClicked,
+                )
+                UserBio(
+                    account = account,
+                    htmlContentInteractions = htmlContentInteractions,
+                )
+                Spacer(modifier = Modifier.padding(top = 4.dp))
+                UserFields(
+                    account = account,
+                    htmlContentInteractions = htmlContentInteractions,
+                )
+                QuickFunctions(
+                    name = R.string.posts,
+                    numericalValue = account.statusesCount,
+                    onClick = { /*TODO*/ }
+                )
+                MoSoDivider()
+            }
         }
     }
 }

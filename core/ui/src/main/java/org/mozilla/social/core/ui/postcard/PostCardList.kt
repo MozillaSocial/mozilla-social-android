@@ -42,6 +42,8 @@ fun PostCardList(
     errorToastMessage: SharedFlow<StringFactory>,
     reccs: List<Recommendation>? = null,
     postCardInteractions: PostCardInteractions,
+    enablePullToRefresh: Boolean = false,
+    headerContent: @Composable () -> Unit = {},
 ) {
 
     val lazyingPagingItems: LazyPagingItems<PostCardUiState> = feed.collectAsLazyPagingItems()
@@ -64,7 +66,10 @@ fun PostCardList(
 
     Box(
         modifier = Modifier
-            .pullRefresh(pullRefreshState),
+            .pullRefresh(
+                pullRefreshState,
+                enabled = enablePullToRefresh,
+            ),
     ) {
 
         if (lazyingPagingItems.loadState.refresh is LoadState.Error) {
@@ -80,6 +85,8 @@ fun PostCardList(
                 .fillMaxSize()
                 .padding(horizontal = 4.dp),
         ) {
+
+            item { headerContent() }
 
             when (lazyingPagingItems.loadState.refresh) {
                 is LoadState.Error -> {} // handle the error outside the lazy column
@@ -128,11 +135,13 @@ fun PostCardList(
             }
         }
 
-        PullRefreshIndicator(
-            modifier = Modifier.align(Alignment.TopCenter),
-            refreshing = lazyingPagingItems.loadState.refresh == LoadState.Loading,
-            state = pullRefreshState,
-        )
+        if (enablePullToRefresh) {
+            PullRefreshIndicator(
+                modifier = Modifier.align(Alignment.TopCenter),
+                refreshing = lazyingPagingItems.loadState.refresh == LoadState.Loading,
+                state = pullRefreshState,
+            )
+        }
     }
 
     MoSoToast(toastMessage = errorToastMessage)

@@ -50,6 +50,7 @@ private fun FeedScreen(
             errorToastMessage = errorToastMessage,
             postCardInteractions = postCardInteractions,
             reccs = reccs,
+            enablePullToRefresh = true,
         )
     }
 }
