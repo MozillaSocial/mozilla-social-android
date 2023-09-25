@@ -21,6 +21,10 @@ class AccountRepository internal constructor(
             accountApi.getAccount(accountId).toExternalModel()
         }
 
+    suspend fun getAccountRelationships(
+        accountIds: List<String>,
+    ) = accountApi.getRelationships(accountIds.toTypedArray())
+
     suspend fun getAccountFollowers(accountId: String): List<Account> =
         coroutineScope {
             accountApi.getAccountFollowers(accountId).map { it.toExternalModel() }

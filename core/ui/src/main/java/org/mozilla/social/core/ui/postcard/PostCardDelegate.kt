@@ -102,7 +102,7 @@ class PostCardDelegate(
         }
     }
 
-    override fun onOverflowReportClicked(accountId: String, statusId: String) {
+    override fun onOverflowReportClicked(accountId: String, statusId: String?) {
         postCardNavigation.onReportClicked(accountId, statusId)
     }
 

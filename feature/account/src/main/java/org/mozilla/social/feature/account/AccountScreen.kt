@@ -116,7 +116,10 @@ internal fun AccountScreen(
                 onIconClicked = onCloseClicked,
                 rightSideContent = {
                     if (!isUsersProfile) {
-                        OverflowMenu(account = account)
+                        OverflowMenu(
+                            account = account,
+                            postCardInteractions = postCardInteractions,
+                        )
                     }
                 }
             )
@@ -170,6 +173,7 @@ internal fun AccountScreen(
 @Composable
 private fun OverflowMenu(
     account: Account,
+    postCardInteractions: PostCardInteractions,
 ) {
     val overflowMenuExpanded = remember { mutableStateOf(false) }
     IconButton(
@@ -190,7 +194,7 @@ private fun OverflowMenu(
                     account.username
                 ),
                 expanded = overflowMenuExpanded,
-                onClick = { }
+                onClick = { postCardInteractions.onOverflowMuteClicked(account.accountId) }
             )
             DropDownItem(
                 text = stringResource(
@@ -198,7 +202,7 @@ private fun OverflowMenu(
                     account.username
                 ),
                 expanded = overflowMenuExpanded,
-                onClick = { }
+                onClick = { postCardInteractions.onOverflowBlockClicked(account.accountId) }
             )
             DropDownItem(
                 text = stringResource(
@@ -206,7 +210,7 @@ private fun OverflowMenu(
                     account.username
                 ),
                 expanded = overflowMenuExpanded,
-                onClick = { }
+                onClick = { postCardInteractions.onOverflowReportClicked(account.accountId) }
             )
         }
     }
