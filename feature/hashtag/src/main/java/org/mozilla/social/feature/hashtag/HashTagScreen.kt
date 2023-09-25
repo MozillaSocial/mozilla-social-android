@@ -44,7 +44,7 @@ private fun HashTagScreen(
     Column {
         MoSoTopBar(
             title = "#$hashTag",
-            onCloseClicked = onCloseClicked,
+            onIconClicked = onCloseClicked,
         )
 
         PostCardList(

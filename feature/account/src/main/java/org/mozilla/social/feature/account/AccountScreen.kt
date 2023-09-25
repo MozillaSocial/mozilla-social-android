@@ -22,10 +22,15 @@ import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -46,7 +51,9 @@ import org.koin.core.parameter.parametersOf
 import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.core.designsystem.component.MoSoDivider
 import org.mozilla.social.core.designsystem.component.MoSoTopBar
+import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
+import org.mozilla.social.core.ui.DropDownItem
 import org.mozilla.social.core.ui.htmlcontent.HtmlContent
 import org.mozilla.social.core.ui.htmlcontent.HtmlContentInteractions
 import org.mozilla.social.core.ui.postcard.PostCardInteractions
@@ -76,7 +83,8 @@ fun AccountScreen(
     account?.let {
         AccountScreen(
             account = it,
-            showTopBar = accountId != null,
+            showTopBar = viewModel.shouldShowTopBar,
+            isUsersProfile = viewModel.isUsersProfile,
             feed = viewModel.feed,
             errorToastMessage = viewModel.postCardDelegate.errorToastMessage,
             onFollowingClicked = onFollowingClicked,
@@ -92,6 +100,7 @@ fun AccountScreen(
 internal fun AccountScreen(
     account: Account,
     showTopBar: Boolean,
+    isUsersProfile: Boolean,
     feed: Flow<PagingData<PostCardUiState>>,
     errorToastMessage: SharedFlow<StringFactory>,
     onFollowingClicked: () -> Unit,
@@ -104,7 +113,12 @@ internal fun AccountScreen(
         if (showTopBar) {
             MoSoTopBar(
                 title = account.username,
-                onCloseClicked = onCloseClicked,
+                onIconClicked = onCloseClicked,
+                rightSideContent = {
+                    if (!isUsersProfile) {
+                        OverflowMenu(account = account)
+                    }
+                }
             )
         }
 
@@ -149,6 +163,51 @@ internal fun AccountScreen(
                 )
                 MoSoDivider()
             }
+        }
+    }
+}
+
+@Composable
+private fun OverflowMenu(
+    account: Account,
+) {
+    val overflowMenuExpanded = remember { mutableStateOf(false) }
+    IconButton(
+        modifier = Modifier.width(IntrinsicSize.Max),
+        onClick = { overflowMenuExpanded.value = true }
+    ) {
+        Icon(imageVector = MoSoIcons.MoreVert, contentDescription = null)
+
+        DropdownMenu(
+            expanded = overflowMenuExpanded.value,
+            onDismissRequest = {
+                overflowMenuExpanded.value = false
+            }
+        ) {
+            DropDownItem(
+                text = stringResource(
+                    id = org.mozilla.social.core.ui.R.string.mute_user,
+                    account.username
+                ),
+                expanded = overflowMenuExpanded,
+                onClick = { }
+            )
+            DropDownItem(
+                text = stringResource(
+                    id = org.mozilla.social.core.ui.R.string.block_user,
+                    account.username
+                ),
+                expanded = overflowMenuExpanded,
+                onClick = { }
+            )
+            DropDownItem(
+                text = stringResource(
+                    id = org.mozilla.social.core.ui.R.string.report_user,
+                    account.username
+                ),
+                expanded = overflowMenuExpanded,
+                onClick = { }
+            )
         }
     }
 }

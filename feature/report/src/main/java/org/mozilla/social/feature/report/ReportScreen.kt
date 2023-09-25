@@ -88,7 +88,7 @@ private fun ReportScreen(
         ) {
             MoSoTopBar(
                 title = stringResource(id = R.string.report_screen_title),
-                onCloseClicked = { reportInteractions.onCloseClicked() }
+                onIconClicked = { reportInteractions.onCloseClicked() }
             )
             MoSoDivider()
             MainContent(

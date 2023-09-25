@@ -86,7 +86,9 @@ class AccountViewModel(
     /**
      * true if we are viewing the logged in user's profile
      */
-    private val isUsersProfile = initialAccountId == null || usersAccountId != initialAccountId
+    val isUsersProfile = usersAccountId == accountId
+
+    val shouldShowTopBar = initialAccountId != null
 
     val account: Flow<Account> = getAccountForUser(accountId)
 
