@@ -13,7 +13,6 @@ androidxMedia3 = "1.1.0"
 androidxPaging = "3.2.0"
 androidxRoom = "2.5.2"
 coil = "2.4.0"
-composeMaterial3 = "1.1.1"
 googleAndroidMaterial = "1.9.0"
 koin = "3.4.0"
 junit = "4.13.2"
@@ -40,7 +39,7 @@ androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version
 androidx-browser = { group = "androidx.browser", name = "browser", version.ref = "androidxBrowser" }
 androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "androidxComposeBom" }
 androidx-compose-compiler = { module = "androidx.compose.compiler:compiler", version.ref = "androidxComposeCompiler" } # Not used anywhere, but lets tools like Renovate or IDE warnings work by understanding what we use this version for.
-androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "composeMaterial3" }
+androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3" }
 androidx-compose-material-iconsExtended = { group = "androidx.compose.material", name = "material-icons-extended" }
 androidx-compose-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
 androidx-compose-ui-test-junit = { group = "androidx.compose.ui", name = "ui-test-junit4", version.ref = "junit" }
