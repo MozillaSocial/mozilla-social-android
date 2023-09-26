@@ -86,5 +86,5 @@ interface AccountApi {
     @GET("/api/v1/accounts/relationships")
     suspend fun getRelationships(
         @Query("id") ids: Array<String>
-    ): NetworkRelationship
+    ): List<NetworkRelationship>
 }

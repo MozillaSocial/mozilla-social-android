@@ -25,7 +25,7 @@ class AccountRepository internal constructor(
 
     suspend fun getAccountRelationships(
         accountIds: List<String>,
-    ): Relationship = accountApi.getRelationships(accountIds.toTypedArray()).toExternal()
+    ): List<Relationship> = accountApi.getRelationships(accountIds.toTypedArray()).map { it.toExternal() }
 
     suspend fun getAccountFollowers(accountId: String): List<Account> =
         coroutineScope {
