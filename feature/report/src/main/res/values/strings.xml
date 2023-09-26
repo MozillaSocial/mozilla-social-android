@@ -3,7 +3,8 @@
     <string name="report">Report</string>
     <string name="report_screen_title">@string/report</string>
 
-    <string name="report_instructions">Tell us what\'s wrong with this post</string>
+    <string name="report_instructions_for_post">Tell us what\'s wrong with this post</string>
+    <string name="report_instructions_for_account">Tell us what\'s wrong with this account</string>
 
     <string name="choose_best_match">Choose the best match:</string>
 
