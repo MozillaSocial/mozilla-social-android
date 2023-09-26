@@ -60,7 +60,6 @@ import org.mozilla.social.core.ui.postcard.PostCardInteractions
 import org.mozilla.social.core.ui.postcard.PostCardList
 import org.mozilla.social.core.ui.postcard.PostCardNavigation
 import org.mozilla.social.core.ui.postcard.PostCardUiState
-import org.mozilla.social.model.Account
 
 @Composable
 fun AccountScreen(
@@ -78,9 +77,8 @@ fun AccountScreen(
         }
     ),
 ) {
-    val account = viewModel.account.collectAsState(initial = null).value
 
-    account?.let {
+    viewModel.uiState.collectAsState(initial = null).value?.let {
         AccountScreen(
             account = it,
             showTopBar = viewModel.shouldShowTopBar,
@@ -98,7 +96,7 @@ fun AccountScreen(
 
 @Composable
 internal fun AccountScreen(
-    account: Account,
+    account: AccountUiState,
     showTopBar: Boolean,
     isUsersProfile: Boolean,
     feed: Flow<PagingData<PostCardUiState>>,
@@ -136,10 +134,8 @@ internal fun AccountScreen(
                 postCardInteractions = postCardInteractions
             ) {
                 HeaderAndProfileImages(
-                    headerImage = account.headerUrl,
-                    headerStaticUrl = account.headerStaticUrl,
-                    profileImage = account.avatarUrl,
-                    profileStaticUrl = account.avatarStaticUrl,
+                    headerUrl = account.headerUrl,
+                    avatarUrl = account.avatarUrl,
                     onHeaderClick = { /*TODO*/ },
                     onProfileClick = { /*TODO*/ }
                 )
@@ -172,7 +168,7 @@ internal fun AccountScreen(
 
 @Composable
 private fun OverflowMenu(
-    account: Account,
+    account: AccountUiState,
     postCardInteractions: PostCardInteractions,
 ) {
     val overflowMenuExpanded = remember { mutableStateOf(false) }
@@ -218,7 +214,7 @@ private fun OverflowMenu(
 
 @Composable
 private fun UserInfo(
-    account: Account,
+    account: AccountUiState,
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -232,13 +228,13 @@ private fun UserInfo(
             modifier = Modifier
                 .padding(bottom = 4.dp)
         )
-        Text(text = "@${account.acct}")
+        Text(text = "@${account.webFinger}")
     }
 }
 
 @Composable
 private fun UserFollow(
-    account: Account,
+    account: AccountUiState,
     onFollowingClicked: () -> Unit,
     onFollowersClicked: () -> Unit,
 ) {
@@ -278,7 +274,7 @@ private fun UserFollow(
 @Composable
 private fun UserBio(
     modifier: Modifier = Modifier,
-    account: Account,
+    account: AccountUiState,
     htmlContentInteractions: HtmlContentInteractions,
 ) {
     Column(
@@ -296,7 +292,7 @@ private fun UserBio(
 
 @Composable
 private fun UserFields(
-    account: Account,
+    account: AccountUiState,
     htmlContentInteractions: HtmlContentInteractions,
 ) {
     Column(
@@ -310,7 +306,7 @@ private fun UserFields(
                 shape = RoundedCornerShape(8.dp)
             )
     ) {
-        account.fields?.forEachIndexed { index, field ->
+        account.fields.forEachIndexed { index, field ->
             Column(
                 modifier = Modifier
                     .padding(2.dp)
@@ -329,7 +325,7 @@ private fun UserFields(
                     htmlContentInteractions = htmlContentInteractions,
                 )
             }
-            if (index < (account.fields?.size ?: 0) - 1) {
+            if (index < (account.fields.size) - 1) {
                 MoSoDivider(
                     color = Color.Gray,
                     modifier = Modifier
@@ -411,10 +407,8 @@ private fun OverlapObjects(
 @Composable
 private fun HeaderAndProfileImages(
     modifier: Modifier = Modifier,
-    headerImage: String,
-    headerStaticUrl: String,
-    profileImage: String,
-    profileStaticUrl: String,
+    headerUrl: String,
+    avatarUrl: String,
     onHeaderClick: () -> Unit,
     onProfileClick: () -> Unit
 ) {
@@ -430,8 +424,8 @@ private fun HeaderAndProfileImages(
                 },
         ) {
             AsyncImage(
-                model = headerImage,
-                contentDescription = headerStaticUrl,
+                model = headerUrl,
+                contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -445,8 +439,8 @@ private fun HeaderAndProfileImages(
                 .clickable { onProfileClick() }
         ) {
             AsyncImage(
-                model = profileImage,
-                contentDescription = profileStaticUrl,
+                model = avatarUrl,
+                contentDescription = null,
                 modifier = Modifier
                     .clip(CircleShape)
             )

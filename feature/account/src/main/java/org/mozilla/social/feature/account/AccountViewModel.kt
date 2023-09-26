@@ -11,6 +11,7 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
@@ -40,6 +41,7 @@ import org.mozilla.social.core.ui.postcard.PostCardDelegate
 import org.mozilla.social.core.ui.postcard.PostCardNavigation
 import org.mozilla.social.core.ui.postcard.toPostCardUiState
 import org.mozilla.social.model.Account
+import timber.log.Timber
 
 class AccountViewModel(
     private val accountRepository: AccountRepository,
@@ -101,9 +103,10 @@ class AccountViewModel(
         coroutineScope = viewModelScope,
     ) { account, relationship ->
         account.toUiState(relationship)
+    }.catch {
+    //TODO error state
+        Timber.e(it)
     }
-
-    val account: Flow<Account> = getAccountForUser(accountId)
 
     private val accountTimelineRemoteMediator: AccountTimelineRemoteMediator by KoinJavaComponent.inject(
         AccountTimelineRemoteMediator::class.java
@@ -123,15 +126,4 @@ class AccountViewModel(
             it.toStatusWrapper().toExternalModel().toPostCardUiState(usersAccountId)
         }
     }.cachedIn(viewModelScope)
-
-    private fun getAccountForUser(accountId: String): Flow<Account> {
-        return flow {
-            val response = accountRepository.getAccount(accountId)
-            try {
-                emit(response)
-            } catch (e: Exception) {
-
-            }
-        }
-    }
 }
