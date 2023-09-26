@@ -72,23 +72,47 @@ class AccountRepository internal constructor(
      * remove posts from any timelines before blocking
      */
     suspend fun blockAccount(accountId: String) {
-        socialDatabase.homeTimelineDao().remotePostsFromAccount(accountId)
-        accountApi.blockAccount(accountId)
+        try {
+            socialDatabase.homeTimelineDao().remotePostsFromAccount(accountId)
+            socialDatabase.relationshipsDao().updateBlocked(accountId, true)
+            accountApi.blockAccount(accountId)
+        } catch (e: Exception) {
+            socialDatabase.relationshipsDao().updateBlocked(accountId, false)
+            throw e
+        }
     }
 
     suspend fun unblockAccount(accountId: String) {
-        accountApi.unblockAccount(accountId)
+        try {
+            socialDatabase.relationshipsDao().updateBlocked(accountId, false)
+            accountApi.unblockAccount(accountId)
+        } catch (e: Exception) {
+            socialDatabase.relationshipsDao().updateBlocked(accountId, true)
+            throw e
+        }
     }
 
     /**
      * remove posts from any timelines before muting
      */
     suspend fun muteAccount(accountId: String) {
-        socialDatabase.homeTimelineDao().remotePostsFromAccount(accountId)
-        accountApi.muteAccount(accountId)
+        try {
+            socialDatabase.homeTimelineDao().remotePostsFromAccount(accountId)
+            socialDatabase.relationshipsDao().updateMuted(accountId, true)
+            accountApi.muteAccount(accountId)
+        } catch (e: Exception) {
+            socialDatabase.relationshipsDao().updateMuted(accountId, false)
+            throw e
+        }
     }
 
     suspend fun unmuteAccount(accountId: String) {
-        accountApi.unmuteAccount(accountId)
+        try {
+            socialDatabase.relationshipsDao().updateMuted(accountId, false)
+            accountApi.unmuteAccount(accountId)
+        } catch (e: Exception) {
+            socialDatabase.relationshipsDao().updateMuted(accountId, true)
+            throw e
+        }
     }
 }

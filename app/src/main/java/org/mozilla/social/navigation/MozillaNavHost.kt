@@ -11,6 +11,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import org.mozilla.social.core.ui.postcard.PostCardNavigation
+import org.mozilla.social.feature.account.AccountNavigationCallbacks
 import org.mozilla.social.feature.account.accountScreen
 import org.mozilla.social.feature.account.follows.accountFollowersScreen
 import org.mozilla.social.feature.account.follows.accountFollowingScreen
@@ -86,9 +87,12 @@ private fun NavGraphBuilder.mainGraph(
         }
         settingsScreen(onLogout = appState::navigateToLoginScreen)
         accountScreen(
-            onFollowingClicked = appState::navigateToAccountFollowing,
-            onFollowersClicked = appState::navigateToAccountFollowers,
-            onCloseClicked = { appState.popBackStack() },
+            accountNavigationCallbacks = object: AccountNavigationCallbacks {
+                override fun onFollowingClicked() = appState.navigateToAccountFollowing()
+                override fun onFollowersClicked() = appState.navigateToAccountFollowers()
+                override fun onCloseClicked() = appState.popBackStack()
+                override fun onReportClicked(accountId: String) = appState.navigateToReport(accountId)
+            },
             postCardNavigation = postCardNavigation,
         )
         accountFollowingScreen()

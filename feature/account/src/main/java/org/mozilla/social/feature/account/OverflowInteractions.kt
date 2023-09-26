@@ -1,7 +1,9 @@
 package org.mozilla.social.feature.account
 
 interface OverflowInteractions {
-    fun onOverflowMuteClicked(accountId: String) = Unit
-    fun onOverflowBlockClicked(accountId: String) = Unit
-    fun onOverflowReportClicked(accountId: String) = Unit
+    fun onOverflowMuteClicked() = Unit
+    fun onOverflowUnmuteClicked() = Unit
+    fun onOverflowBlockClicked() = Unit
+    fun onOverflowUnblockClicked() = Unit
+    fun onOverflowReportClicked() = Unit
 }

@@ -8,6 +8,8 @@ import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
 import androidx.paging.map
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -16,6 +18,7 @@ import org.koin.core.parameter.parametersOf
 import org.koin.java.KoinJavaComponent
 import org.mozilla.social.common.Resource
 import org.mozilla.social.common.logging.Log
+import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.core.data.repository.AccountRepository
 import org.mozilla.social.core.data.repository.StatusRepository
 import org.mozilla.social.core.data.repository.model.status.toExternalModel
@@ -24,12 +27,14 @@ import org.mozilla.social.core.database.model.statusCollections.toStatusWrapper
 import org.mozilla.social.core.domain.AccountIdFlow
 import org.mozilla.social.core.domain.GetDetailedAccount
 import org.mozilla.social.core.domain.remotemediators.AccountTimelineRemoteMediator
+import org.mozilla.social.core.ui.R
 import org.mozilla.social.core.ui.postcard.PostCardDelegate
 import org.mozilla.social.core.ui.postcard.PostCardNavigation
 import org.mozilla.social.core.ui.postcard.toPostCardUiState
+import timber.log.Timber
 
 class AccountViewModel(
-    accountRepository: AccountRepository,
+    private val accountRepository: AccountRepository,
     accountIdFlow: AccountIdFlow,
     log: Log,
     statusRepository: StatusRepository,
@@ -37,7 +42,11 @@ class AccountViewModel(
     getDetailedAccount: GetDetailedAccount,
     initialAccountId: String?,
     postCardNavigation: PostCardNavigation,
-) : ViewModel() {
+    private val accountNavigationCallbacks: AccountNavigationCallbacks,
+) : ViewModel(), OverflowInteractions {
+
+    private val _errorToastMessage = MutableSharedFlow<StringFactory>(extraBufferCapacity = 1)
+    val errorToastMessage = _errorToastMessage.asSharedFlow()
 
     val postCardDelegate = PostCardDelegate(
         coroutineScope = viewModelScope,
@@ -108,4 +117,52 @@ class AccountViewModel(
             it.toStatusWrapper().toExternalModel().toPostCardUiState(usersAccountId)
         }
     }.cachedIn(viewModelScope)
+
+    override fun onOverflowMuteClicked() {
+        viewModelScope.launch {
+            try {
+                accountRepository.muteAccount(accountId)
+            } catch (e: Exception) {
+                Timber.e(e)
+                _errorToastMessage.emit(StringFactory.resource(R.string.error_muting_account))
+            }
+        }
+    }
+
+    override fun onOverflowUnmuteClicked() {
+        viewModelScope.launch {
+            try {
+                accountRepository.unmuteAccount(accountId)
+            } catch (e: Exception) {
+                Timber.e(e)
+                _errorToastMessage.emit(StringFactory.resource(R.string.error_unmuting_account))
+            }
+        }
+    }
+
+    override fun onOverflowBlockClicked() {
+        viewModelScope.launch {
+            try {
+                accountRepository.blockAccount(accountId)
+            } catch (e: Exception) {
+                Timber.e(e)
+                _errorToastMessage.emit(StringFactory.resource(R.string.error_blocking_account))
+            }
+        }
+    }
+
+    override fun onOverflowUnblockClicked() {
+        viewModelScope.launch {
+            try {
+                accountRepository.unblockAccount(accountId)
+            } catch (e: Exception) {
+                Timber.e(e)
+                _errorToastMessage.emit(StringFactory.resource(R.string.error_unblocking_account))
+            }
+        }
+    }
+
+    override fun onOverflowReportClicked() {
+        accountNavigationCallbacks.onReportClicked(accountId)
+    }
 }

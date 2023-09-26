@@ -13,4 +13,18 @@ interface RelationshipsDao : BaseDao<DatabaseRelationship> {
         "WHERE accountId = :accountId"
     )
     fun getRelationshipFlow(accountId: String): Flow<DatabaseRelationship>
+
+    @Query(
+        "UPDATE relationships " +
+        "SET isMuting = :isMuted " +
+        "WHERE accountId = :accountId"
+    )
+    suspend fun updateMuted(accountId: String, isMuted: Boolean)
+
+    @Query(
+        "UPDATE relationships " +
+        "SET isBlocking = :isBlocked " +
+        "WHERE accountId = :accountId"
+    )
+    suspend fun updateBlocked(accountId: String, isBlocked: Boolean)
 }

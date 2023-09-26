@@ -298,7 +298,10 @@ class AppState(
         navController.navigateToThread(threadStatusId = statusId)
     }
 
-    fun navigateToReport(accountId: String, statusId: String?) {
+    fun navigateToReport(
+        accountId: String,
+        statusId: String? = null
+    ) {
         navController.navigateToReport(reportAccountId = accountId, reportStatusId = statusId)
     }
 
