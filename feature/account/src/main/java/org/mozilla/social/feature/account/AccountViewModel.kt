@@ -7,49 +7,34 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
 import androidx.paging.map
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.sync.Mutex
 import org.koin.core.parameter.parametersOf
 import org.koin.java.KoinJavaComponent
+import org.mozilla.social.common.Resource
 import org.mozilla.social.common.logging.Log
-import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.core.data.repository.AccountRepository
 import org.mozilla.social.core.data.repository.StatusRepository
-import org.mozilla.social.core.data.repository.model.account.toExternal
 import org.mozilla.social.core.data.repository.model.status.toExternalModel
 import org.mozilla.social.core.database.SocialDatabase
 import org.mozilla.social.core.database.model.statusCollections.toStatusWrapper
 import org.mozilla.social.core.domain.AccountIdFlow
 import org.mozilla.social.core.domain.GetDetailedAccount
 import org.mozilla.social.core.domain.remotemediators.AccountTimelineRemoteMediator
-import org.mozilla.social.core.domain.remotemediators.HashTagTimelineRemoteMediator
-import org.mozilla.social.core.ui.R
 import org.mozilla.social.core.ui.postcard.PostCardDelegate
 import org.mozilla.social.core.ui.postcard.PostCardNavigation
 import org.mozilla.social.core.ui.postcard.toPostCardUiState
-import org.mozilla.social.model.Account
-import timber.log.Timber
 
 class AccountViewModel(
-    private val accountRepository: AccountRepository,
+    accountRepository: AccountRepository,
     accountIdFlow: AccountIdFlow,
     log: Log,
     statusRepository: StatusRepository,
     socialDatabase: SocialDatabase,
-    private val getDetailedAccount: GetDetailedAccount,
+    getDetailedAccount: GetDetailedAccount,
     initialAccountId: String?,
     postCardNavigation: PostCardNavigation,
 ) : ViewModel() {
@@ -98,14 +83,11 @@ class AccountViewModel(
 
     val shouldShowTopBar = initialAccountId != null
 
-    val uiState: Flow<AccountUiState> = getDetailedAccount(
+    val uiState: Flow<Resource<AccountUiState>> = getDetailedAccount(
         accountId = accountId,
         coroutineScope = viewModelScope,
     ) { account, relationship ->
         account.toUiState(relationship)
-    }.catch {
-    //TODO error state
-        Timber.e(it)
     }
 
     private val accountTimelineRemoteMediator: AccountTimelineRemoteMediator by KoinJavaComponent.inject(

@@ -48,6 +48,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharedFlow
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
+import org.mozilla.social.common.Resource
 import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.core.designsystem.component.MoSoDivider
 import org.mozilla.social.core.designsystem.component.MoSoTopBar
@@ -78,19 +79,27 @@ fun AccountScreen(
     ),
 ) {
 
-    viewModel.uiState.collectAsState(initial = null).value?.let {
-        AccountScreen(
-            account = it,
-            showTopBar = viewModel.shouldShowTopBar,
-            isUsersProfile = viewModel.isUsersProfile,
-            feed = viewModel.feed,
-            errorToastMessage = viewModel.postCardDelegate.errorToastMessage,
-            onFollowingClicked = onFollowingClicked,
-            onFollowersClicked = onFollowersClicked,
-            onCloseClicked = onCloseClicked,
-            htmlContentInteractions = viewModel.postCardDelegate,
-            postCardInteractions = viewModel.postCardDelegate,
-        )
+    when (val resource = viewModel.uiState.collectAsState(initial = Resource.Loading()).value) {
+        is Resource.Loading -> {
+            //TODO loading state
+        }
+        is Resource.Loaded<AccountUiState> -> {
+            AccountScreen(
+                account = resource.data,
+                showTopBar = viewModel.shouldShowTopBar,
+                isUsersProfile = viewModel.isUsersProfile,
+                feed = viewModel.feed,
+                errorToastMessage = viewModel.postCardDelegate.errorToastMessage,
+                onFollowingClicked = onFollowingClicked,
+                onFollowersClicked = onFollowersClicked,
+                onCloseClicked = onCloseClicked,
+                htmlContentInteractions = viewModel.postCardDelegate,
+                postCardInteractions = viewModel.postCardDelegate,
+            )
+        }
+        is Resource.Error -> {
+            //TODO error state
+        }
     }
 }
 

@@ -7,8 +7,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
+import org.mozilla.social.common.Resource
 import org.mozilla.social.common.utils.launchSupervisor
 import org.mozilla.social.core.data.repository.AccountRepository
 import org.mozilla.social.core.data.repository.model.account.toDatabaseModel
@@ -32,7 +32,8 @@ class GetDetailedAccount(
         accountId: String,
         coroutineScope: CoroutineScope,
         transform: (account: Account, relationship: Relationship) -> T,
-    ): Flow<T> = flow {
+    ): Flow<Resource<T>> = flow {
+        emit(Resource.Loading())
         val mutex = Mutex(true)
         var exception: Exception? = null
         coroutineScope.launchSupervisor {
@@ -56,13 +57,15 @@ class GetDetailedAccount(
         // wait to emit until after we have grabbed everything stored in the database
         mutex.lock()
 
-        exception?.let { throw it }
-
-        emitAll(
+        exception?.let {
+            emit(Resource.Error(it))
+        } ?: emitAll(
             socialDatabase.accountsDao().getAccountFlow(accountId).combine(
                 socialDatabase.relationshipsDao().getRelationshipFlow(accountId)
             ) { databaseAccount, databaseRelationship ->
-                transform(databaseAccount.toExternalModel(), databaseRelationship.toExternal())
+                Resource.Loaded(
+                    transform(databaseAccount.toExternalModel(), databaseRelationship.toExternal())
+                )
             }
         )
     }
