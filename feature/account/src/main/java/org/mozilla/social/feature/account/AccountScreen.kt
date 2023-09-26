@@ -73,6 +73,7 @@ fun AccountScreen(
             parametersOf(
                 accountId,
                 postCardNavigation,
+                accountNavigationCallbacks,
             )
         }
     ),

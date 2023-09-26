@@ -14,6 +14,7 @@ val accountModule = module {
             get(),
             parametersHolder[0],
             parametersHolder[1],
+            parametersHolder[2],
         )
     }
 }
