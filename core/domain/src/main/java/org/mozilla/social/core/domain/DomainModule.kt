@@ -29,4 +29,5 @@ val domainModule = module {
     single { Logout(get(), get()) }
     single { IsSignedInFlow(get()) }
     single { AccountIdFlow(get()) }
+    single { GetDetailedAccount(get(), get()) }
 }
