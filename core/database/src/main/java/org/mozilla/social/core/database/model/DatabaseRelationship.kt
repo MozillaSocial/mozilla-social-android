@@ -1,13 +1,14 @@
-package org.mozilla.social.model
+package org.mozilla.social.core.database.model
 
-/**
- * Represents the relationship between accounts.
- */
-data class Relationship(
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 
+@Entity(tableName = "relationships")
+data class DatabaseRelationship(
     /**
      * ID of the account being examined.
      */
+    @PrimaryKey
     val accountId: String,
 
     /**

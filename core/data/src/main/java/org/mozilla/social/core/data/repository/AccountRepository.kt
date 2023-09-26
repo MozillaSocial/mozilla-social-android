@@ -1,10 +1,12 @@
 package org.mozilla.social.core.data.repository
 
 import kotlinx.coroutines.coroutineScope
+import org.mozilla.social.core.data.repository.model.account.toExternal
 import org.mozilla.social.core.data.repository.model.status.toExternalModel
 import org.mozilla.social.core.database.SocialDatabase
 import org.mozilla.social.core.network.AccountApi
 import org.mozilla.social.model.Account
+import org.mozilla.social.model.Relationship
 import org.mozilla.social.model.Status
 
 class AccountRepository internal constructor(
@@ -23,7 +25,7 @@ class AccountRepository internal constructor(
 
     suspend fun getAccountRelationships(
         accountIds: List<String>,
-    ) = accountApi.getRelationships(accountIds.toTypedArray())
+    ): Relationship = accountApi.getRelationships(accountIds.toTypedArray()).toExternal()
 
     suspend fun getAccountFollowers(accountId: String): List<Account> =
         coroutineScope {
