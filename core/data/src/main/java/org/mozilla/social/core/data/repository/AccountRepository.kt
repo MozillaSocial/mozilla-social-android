@@ -27,15 +27,31 @@ class AccountRepository internal constructor(
         accountIds: List<String>,
     ): List<Relationship> = accountApi.getRelationships(accountIds.toTypedArray()).map { it.toExternal() }
 
-    suspend fun getAccountFollowers(accountId: String): List<Account> =
-        coroutineScope {
-            accountApi.getAccountFollowers(accountId).map { it.toExternalModel() }
-        }
+    suspend fun getAccountFollowers(
+        accountId: String,
+        olderThanId: String? = null,
+        immediatelyNewerThanId: String? = null,
+        loadSize: Int? = null,
+    ): List<Account> =
+        accountApi.getAccountFollowers(
+            accountId = accountId,
+            olderThanId = olderThanId,
+            immediatelyNewerThanId = immediatelyNewerThanId,
+            limit = loadSize,
+        ).map { it.toExternalModel() }
 
-    suspend fun getAccountFollowing(accountId: String): List<Account> =
-        coroutineScope {
-            accountApi.getAccountFollowing(accountId).map { it.toExternalModel() }
-        }
+    suspend fun getAccountFollowing(
+        accountId: String,
+        olderThanId: String? = null,
+        immediatelyNewerThanId: String? = null,
+        loadSize: Int? = null,
+    ): List<Account> =
+        accountApi.getAccountFollowing(
+            accountId = accountId,
+            olderThanId = olderThanId,
+            immediatelyNewerThanId = immediatelyNewerThanId,
+            limit = loadSize,
+        ).map { it.toExternalModel() }
 
     suspend fun getAccountStatuses(
         accountId: String,
@@ -51,14 +67,10 @@ class AccountRepository internal constructor(
         ).map { it.toExternalModel() }
 
     suspend fun getAccountBookmarks(): List<Status> =
-        coroutineScope {
-            accountApi.getAccountBookmarks().map { it.toExternalModel() }
-        }
+        accountApi.getAccountBookmarks().map { it.toExternalModel() }
 
     suspend fun getAccountFavourites(): List<Status> =
-        coroutineScope {
-            accountApi.getAccountFavourites().map { it.toExternalModel() }
-        }
+        accountApi.getAccountFavourites().map { it.toExternalModel() }
 
     suspend fun followAccount(accountId: String) {
         accountApi.followAccount(accountId)

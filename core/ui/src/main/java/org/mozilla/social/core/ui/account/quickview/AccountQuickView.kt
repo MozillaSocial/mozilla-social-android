@@ -1,5 +1,6 @@
 package org.mozilla.social.core.ui.account.quickview
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -16,12 +17,16 @@ import coil.compose.AsyncImage
 import org.mozilla.social.core.designsystem.theme.defaultTypography
 
 @Composable
-fun AccountQuickView(uiState: AccountQuickViewUiState) {
+fun AccountQuickView(
+    uiState: AccountQuickViewUiState,
+    onClick: (accountId: String,) -> Unit,
+) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight()
             .padding(top = 8.dp, bottom = 8.dp)
+            .clickable { onClick(uiState.accountId) }
     ) {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -46,7 +51,7 @@ fun AccountQuickView(uiState: AccountQuickViewUiState) {
                     )
                     Text(
                         text = uiState.webFinger,
-                        style = defaultTypography.bodySmall
+                        style = defaultTypography.bodyMedium
                     )
                 }
             }
