@@ -1,10 +1,12 @@
 package org.mozilla.social.core.data.repository
 
 import kotlinx.coroutines.coroutineScope
+import org.mozilla.social.core.data.repository.model.account.toExternal
 import org.mozilla.social.core.data.repository.model.status.toExternalModel
 import org.mozilla.social.core.database.SocialDatabase
 import org.mozilla.social.core.network.AccountApi
 import org.mozilla.social.model.Account
+import org.mozilla.social.model.Relationship
 import org.mozilla.social.model.Status
 
 class AccountRepository internal constructor(
@@ -20,6 +22,10 @@ class AccountRepository internal constructor(
         coroutineScope {
             accountApi.getAccount(accountId).toExternalModel()
         }
+
+    suspend fun getAccountRelationships(
+        accountIds: List<String>,
+    ): List<Relationship> = accountApi.getRelationships(accountIds.toTypedArray()).map { it.toExternal() }
 
     suspend fun getAccountFollowers(accountId: String): List<Account> =
         coroutineScope {
@@ -66,23 +72,47 @@ class AccountRepository internal constructor(
      * remove posts from any timelines before blocking
      */
     suspend fun blockAccount(accountId: String) {
-        socialDatabase.homeTimelineDao().remotePostsFromAccount(accountId)
-        accountApi.blockAccount(accountId)
+        try {
+            socialDatabase.homeTimelineDao().remotePostsFromAccount(accountId)
+            socialDatabase.relationshipsDao().updateBlocked(accountId, true)
+            accountApi.blockAccount(accountId)
+        } catch (e: Exception) {
+            socialDatabase.relationshipsDao().updateBlocked(accountId, false)
+            throw e
+        }
     }
 
     suspend fun unblockAccount(accountId: String) {
-        accountApi.unblockAccount(accountId)
+        try {
+            socialDatabase.relationshipsDao().updateBlocked(accountId, false)
+            accountApi.unblockAccount(accountId)
+        } catch (e: Exception) {
+            socialDatabase.relationshipsDao().updateBlocked(accountId, true)
+            throw e
+        }
     }
 
     /**
      * remove posts from any timelines before muting
      */
     suspend fun muteAccount(accountId: String) {
-        socialDatabase.homeTimelineDao().remotePostsFromAccount(accountId)
-        accountApi.muteAccount(accountId)
+        try {
+            socialDatabase.homeTimelineDao().remotePostsFromAccount(accountId)
+            socialDatabase.relationshipsDao().updateMuted(accountId, true)
+            accountApi.muteAccount(accountId)
+        } catch (e: Exception) {
+            socialDatabase.relationshipsDao().updateMuted(accountId, false)
+            throw e
+        }
     }
 
     suspend fun unmuteAccount(accountId: String) {
-        accountApi.unmuteAccount(accountId)
+        try {
+            socialDatabase.relationshipsDao().updateMuted(accountId, false)
+            accountApi.unmuteAccount(accountId)
+        } catch (e: Exception) {
+            socialDatabase.relationshipsDao().updateMuted(accountId, true)
+            throw e
+        }
     }
 }

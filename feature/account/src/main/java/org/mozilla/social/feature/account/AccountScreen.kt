@@ -22,10 +22,15 @@ import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -43,68 +48,87 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharedFlow
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
+import org.mozilla.social.common.Resource
 import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.core.designsystem.component.MoSoDivider
+import org.mozilla.social.core.designsystem.component.MoSoToast
 import org.mozilla.social.core.designsystem.component.MoSoTopBar
+import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
+import org.mozilla.social.core.ui.DropDownItem
 import org.mozilla.social.core.ui.htmlcontent.HtmlContent
 import org.mozilla.social.core.ui.htmlcontent.HtmlContentInteractions
 import org.mozilla.social.core.ui.postcard.PostCardInteractions
 import org.mozilla.social.core.ui.postcard.PostCardList
 import org.mozilla.social.core.ui.postcard.PostCardNavigation
 import org.mozilla.social.core.ui.postcard.PostCardUiState
-import org.mozilla.social.model.Account
 
 @Composable
 fun AccountScreen(
     accountId: String?,
-    onFollowingClicked: () -> Unit,
-    onFollowersClicked: () -> Unit,
-    onCloseClicked: () -> Unit = {},
+    accountNavigationCallbacks: AccountNavigationCallbacks,
     postCardNavigation: PostCardNavigation,
     viewModel: AccountViewModel = koinViewModel(
         parameters = {
             parametersOf(
                 accountId,
                 postCardNavigation,
+                accountNavigationCallbacks,
             )
         }
     ),
 ) {
-    val account = viewModel.account.collectAsState(initial = null).value
 
-    account?.let {
-        AccountScreen(
-            account = it,
-            showTopBar = accountId != null,
-            feed = viewModel.feed,
-            errorToastMessage = viewModel.postCardDelegate.errorToastMessage,
-            onFollowingClicked = onFollowingClicked,
-            onFollowersClicked = onFollowersClicked,
-            onCloseClicked = onCloseClicked,
-            htmlContentInteractions = viewModel.postCardDelegate,
-            postCardInteractions = viewModel.postCardDelegate,
-        )
+    when (val resource = viewModel.uiState.collectAsState(initial = Resource.Loading()).value) {
+        is Resource.Loading -> {
+            //TODO loading state
+        }
+        is Resource.Loaded<AccountUiState> -> {
+            AccountScreen(
+                account = resource.data,
+                showTopBar = viewModel.shouldShowTopBar,
+                isUsersProfile = viewModel.isUsersProfile,
+                feed = viewModel.feed,
+                errorToastMessage = viewModel.postCardDelegate.errorToastMessage,
+                accountNavigationCallbacks = accountNavigationCallbacks,
+                htmlContentInteractions = viewModel.postCardDelegate,
+                postCardInteractions = viewModel.postCardDelegate,
+                overflowInteractions = viewModel
+            )
+        }
+        is Resource.Error -> {
+            //TODO error state
+        }
     }
+
+    MoSoToast(toastMessage = viewModel.errorToastMessage)
 }
 
 @Composable
 internal fun AccountScreen(
-    account: Account,
+    account: AccountUiState,
     showTopBar: Boolean,
+    isUsersProfile: Boolean,
     feed: Flow<PagingData<PostCardUiState>>,
     errorToastMessage: SharedFlow<StringFactory>,
-    onFollowingClicked: () -> Unit,
-    onFollowersClicked: () -> Unit,
-    onCloseClicked: () -> Unit,
+    accountNavigationCallbacks: AccountNavigationCallbacks,
     htmlContentInteractions: HtmlContentInteractions,
     postCardInteractions: PostCardInteractions,
+    overflowInteractions: OverflowInteractions,
 ) {
     Column {
         if (showTopBar) {
             MoSoTopBar(
                 title = account.username,
-                onCloseClicked = onCloseClicked,
+                onIconClicked = { accountNavigationCallbacks.onCloseClicked() },
+                rightSideContent = {
+                    if (!isUsersProfile) {
+                        OverflowMenu(
+                            account = account,
+                            overflowInteractions = overflowInteractions,
+                        )
+                    }
+                }
             )
         }
 
@@ -119,10 +143,8 @@ internal fun AccountScreen(
                 postCardInteractions = postCardInteractions
             ) {
                 HeaderAndProfileImages(
-                    headerImage = account.headerUrl,
-                    headerStaticUrl = account.headerStaticUrl,
-                    profileImage = account.avatarUrl,
-                    profileStaticUrl = account.avatarStaticUrl,
+                    headerUrl = account.headerUrl,
+                    avatarUrl = account.avatarUrl,
                     onHeaderClick = { /*TODO*/ },
                     onProfileClick = { /*TODO*/ }
                 )
@@ -130,8 +152,8 @@ internal fun AccountScreen(
                 UserInfo(account = account)
                 UserFollow(
                     account = account,
-                    onFollowingClicked = onFollowingClicked,
-                    onFollowersClicked = onFollowersClicked,
+                    onFollowingClicked = { accountNavigationCallbacks.onFollowingClicked() },
+                    onFollowersClicked = { accountNavigationCallbacks.onFollowersClicked() },
                 )
                 UserBio(
                     account = account,
@@ -154,8 +176,78 @@ internal fun AccountScreen(
 }
 
 @Composable
+private fun OverflowMenu(
+    account: AccountUiState,
+    overflowInteractions: OverflowInteractions,
+) {
+    val overflowMenuExpanded = remember { mutableStateOf(false) }
+    IconButton(
+        modifier = Modifier.width(IntrinsicSize.Max),
+        onClick = { overflowMenuExpanded.value = true }
+    ) {
+        Icon(imageVector = MoSoIcons.MoreVert, contentDescription = null)
+
+        DropdownMenu(
+            expanded = overflowMenuExpanded.value,
+            onDismissRequest = {
+                overflowMenuExpanded.value = false
+            }
+        ) {
+            if (account.isMuted) {
+                DropDownItem(
+                    text = stringResource(
+                        id = org.mozilla.social.core.ui.R.string.unmute_user,
+                        account.username
+                    ),
+                    expanded = overflowMenuExpanded,
+                    onClick = { overflowInteractions.onOverflowUnmuteClicked() }
+                )
+            } else {
+                DropDownItem(
+                    text = stringResource(
+                        id = org.mozilla.social.core.ui.R.string.mute_user,
+                        account.username
+                    ),
+                    expanded = overflowMenuExpanded,
+                    onClick = { overflowInteractions.onOverflowMuteClicked() }
+                )
+            }
+
+            if (account.isBlocked) {
+                DropDownItem(
+                    text = stringResource(
+                        id = org.mozilla.social.core.ui.R.string.unblock_user,
+                        account.username
+                    ),
+                    expanded = overflowMenuExpanded,
+                    onClick = { overflowInteractions.onOverflowUnblockClicked() }
+                )
+            } else {
+                DropDownItem(
+                    text = stringResource(
+                        id = org.mozilla.social.core.ui.R.string.block_user,
+                        account.username
+                    ),
+                    expanded = overflowMenuExpanded,
+                    onClick = { overflowInteractions.onOverflowBlockClicked() }
+                )
+            }
+
+            DropDownItem(
+                text = stringResource(
+                    id = org.mozilla.social.core.ui.R.string.report_user,
+                    account.username
+                ),
+                expanded = overflowMenuExpanded,
+                onClick = { overflowInteractions.onOverflowReportClicked() }
+            )
+        }
+    }
+}
+
+@Composable
 private fun UserInfo(
-    account: Account,
+    account: AccountUiState,
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -169,13 +261,13 @@ private fun UserInfo(
             modifier = Modifier
                 .padding(bottom = 4.dp)
         )
-        Text(text = "@${account.acct}")
+        Text(text = "@${account.webFinger}")
     }
 }
 
 @Composable
 private fun UserFollow(
-    account: Account,
+    account: AccountUiState,
     onFollowingClicked: () -> Unit,
     onFollowersClicked: () -> Unit,
 ) {
@@ -215,7 +307,7 @@ private fun UserFollow(
 @Composable
 private fun UserBio(
     modifier: Modifier = Modifier,
-    account: Account,
+    account: AccountUiState,
     htmlContentInteractions: HtmlContentInteractions,
 ) {
     Column(
@@ -233,7 +325,7 @@ private fun UserBio(
 
 @Composable
 private fun UserFields(
-    account: Account,
+    account: AccountUiState,
     htmlContentInteractions: HtmlContentInteractions,
 ) {
     Column(
@@ -247,7 +339,7 @@ private fun UserFields(
                 shape = RoundedCornerShape(8.dp)
             )
     ) {
-        account.fields?.forEachIndexed { index, field ->
+        account.fields.forEachIndexed { index, field ->
             Column(
                 modifier = Modifier
                     .padding(2.dp)
@@ -266,7 +358,7 @@ private fun UserFields(
                     htmlContentInteractions = htmlContentInteractions,
                 )
             }
-            if (index < (account.fields?.size ?: 0) - 1) {
+            if (index < (account.fields.size) - 1) {
                 MoSoDivider(
                     color = Color.Gray,
                     modifier = Modifier
@@ -348,10 +440,8 @@ private fun OverlapObjects(
 @Composable
 private fun HeaderAndProfileImages(
     modifier: Modifier = Modifier,
-    headerImage: String,
-    headerStaticUrl: String,
-    profileImage: String,
-    profileStaticUrl: String,
+    headerUrl: String,
+    avatarUrl: String,
     onHeaderClick: () -> Unit,
     onProfileClick: () -> Unit
 ) {
@@ -367,8 +457,8 @@ private fun HeaderAndProfileImages(
                 },
         ) {
             AsyncImage(
-                model = headerImage,
-                contentDescription = headerStaticUrl,
+                model = headerUrl,
+                contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -382,8 +472,8 @@ private fun HeaderAndProfileImages(
                 .clickable { onProfileClick() }
         ) {
             AsyncImage(
-                model = profileImage,
-                contentDescription = profileStaticUrl,
+                model = avatarUrl,
+                contentDescription = null,
                 modifier = Modifier
                     .clip(CircleShape)
             )

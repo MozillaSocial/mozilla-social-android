@@ -1,6 +1,7 @@
 package org.mozilla.social.core.network
 
 import org.mozilla.social.core.network.model.NetworkAccount
+import org.mozilla.social.core.network.model.NetworkRelationship
 import org.mozilla.social.core.network.model.NetworkStatus
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
@@ -81,4 +82,9 @@ interface AccountApi {
     suspend fun unmuteAccount(
         @Path("accountId") accountId: String,
     )
+
+    @GET("/api/v1/accounts/relationships")
+    suspend fun getRelationships(
+        @Query("id") ids: Array<String>
+    ): List<NetworkRelationship>
 }

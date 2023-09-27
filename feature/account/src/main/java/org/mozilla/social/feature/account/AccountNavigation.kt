@@ -30,9 +30,7 @@ fun NavController.navigateToAccount(
 
 // The custom screen here doesn't seem to be used anywhere, so I'm going to 
 fun NavGraphBuilder.accountScreen(
-    onFollowingClicked: () -> Unit,
-    onFollowersClicked: () -> Unit,
-    onCloseClicked: () -> Unit,
+    accountNavigationCallbacks: AccountNavigationCallbacks,
     postCardNavigation: PostCardNavigation,
 ) {
 
@@ -41,8 +39,7 @@ fun NavGraphBuilder.accountScreen(
     ) {
         AccountScreen(
             accountId = null,
-            onFollowingClicked = onFollowingClicked,
-            onFollowersClicked = onFollowersClicked,
+            accountNavigationCallbacks = accountNavigationCallbacks,
             postCardNavigation = postCardNavigation,
         )
     }
@@ -58,9 +55,7 @@ fun NavGraphBuilder.accountScreen(
         val accountId: String? = it.arguments?.getString(ACCOUNT_ID)
         AccountScreen(
             accountId = accountId,
-            onFollowingClicked = onFollowingClicked,
-            onFollowersClicked = onFollowersClicked,
-            onCloseClicked = onCloseClicked,
+            accountNavigationCallbacks = accountNavigationCallbacks,
             postCardNavigation = postCardNavigation,
         )
     }

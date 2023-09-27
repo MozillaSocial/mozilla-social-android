@@ -60,6 +60,11 @@ fun ReportRoute(
     })
 ) {
     ReportScreen(
+        reportTarget = if (reportStatusId != null) {
+            ReportTarget.POST
+        } else {
+           ReportTarget.ACCOUNT
+        },
         instanceRules = viewModel.instanceRules.collectAsState().value,
         selectedReportType = viewModel.selectedReportType.collectAsState().value,
         checkedRules = viewModel.checkedRules.collectAsState().value,
@@ -72,6 +77,7 @@ fun ReportRoute(
 
 @Composable
 private fun ReportScreen(
+    reportTarget: ReportTarget,
     instanceRules: List<InstanceRule>,
     selectedReportType: ReportType?,
     checkedRules: List<InstanceRule>,
@@ -88,10 +94,11 @@ private fun ReportScreen(
         ) {
             MoSoTopBar(
                 title = stringResource(id = R.string.report_screen_title),
-                onCloseClicked = { reportInteractions.onCloseClicked() }
+                onIconClicked = { reportInteractions.onCloseClicked() }
             )
             MoSoDivider()
             MainContent(
+                reportTarget = reportTarget,
                 instanceRules = instanceRules,
                 selectedReportType = selectedReportType,
                 checkedRules = checkedRules,
@@ -104,6 +111,7 @@ private fun ReportScreen(
 
 @Composable
 private fun MainContent(
+    reportTarget: ReportTarget,
     instanceRules: List<InstanceRule>,
     selectedReportType: ReportType?,
     checkedRules: List<InstanceRule>,
@@ -117,7 +125,11 @@ private fun MainContent(
     ) {
         Spacer(modifier = Modifier.padding(8.dp))
         Text(
-            text = stringResource(id = R.string.report_instructions),
+            text = stringResource(id = if (reportTarget == ReportTarget.POST) {
+                R.string.report_instructions_for_post
+            } else {
+                R.string.report_instructions_for_account
+            }),
             fontSize = 24.sp
         )
         Spacer(modifier = Modifier.padding(8.dp))
@@ -268,6 +280,7 @@ private fun CheckableInstanceRule(
 private fun ReportScreenPreview() {
     MoSoTheme {
         ReportScreen(
+            reportTarget = ReportTarget.POST,
             instanceRules = listOf(
                 InstanceRule(
                     1,
