@@ -29,6 +29,7 @@ dependencies {
     implementation(project(":core:ui"))
     implementation(project(":core:data"))
     implementation(project(":core:common"))
+    implementation(project(":core:domain"))
 
     implementation(libs.google.material)
 
@@ -47,6 +48,9 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.test.manifest)
 
     implementation(libs.koin)
+
+    implementation(libs.androidx.paging.runtime)
+    implementation(libs.androidx.paging.compose)
 
     implementation(libs.jakewharton.timber)
 }

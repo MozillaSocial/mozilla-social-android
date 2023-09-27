@@ -3,6 +3,7 @@ package org.mozilla.social.core.network
 import org.mozilla.social.core.network.model.NetworkAccount
 import org.mozilla.social.core.network.model.NetworkRelationship
 import org.mozilla.social.core.network.model.NetworkStatus
+import retrofit2.Response
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
@@ -30,7 +31,7 @@ interface AccountApi {
         @Query("min_id") immediatelyNewerThanId: String? = null,
         // Maximum number of results to return. Defaults to 20 statuses. Max 40 statuses.
         @Query("limit") limit: Int? = null,
-    ): List<NetworkAccount>
+    ): Response<List<NetworkAccount>>
 
     @GET("/api/v1/accounts/{id}/following")
     suspend fun getAccountFollowing(

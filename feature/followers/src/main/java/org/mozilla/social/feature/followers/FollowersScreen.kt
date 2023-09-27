@@ -3,6 +3,7 @@ package org.mozilla.social.feature.followers
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
@@ -10,6 +11,10 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.paging.PagingData
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
+import kotlinx.coroutines.flow.Flow
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 import org.mozilla.social.common.Resource
@@ -30,14 +35,14 @@ internal fun FollowersRoute(
     )
 ) {
     FollowersScreen(
-        uiState = viewModel.followersUiState.collectAsState().value,
+        followers = viewModel.followers,
         followersInteractions = viewModel,
     )
 }
 
 @Composable
 private fun FollowersScreen(
-    uiState: Resource<List<AccountQuickViewUiState>>,
+    followers: Flow<PagingData<AccountQuickViewUiState>>,
     followersInteractions: FollowersInteractions,
 ) {
     Column {
@@ -45,30 +50,20 @@ private fun FollowersScreen(
             title = stringResource(id = R.string.followers),
             onIconClicked = { followersInteractions.onCloseClicked() }
         )
-        when (uiState) {
-            is Resource.Loading -> {
-                //TODO loading state
-            }
 
-            is Resource.Loaded -> {
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .verticalScroll(rememberScrollState())
-                        .padding(16.dp)
-                ) {
-                    uiState.data.forEach {
-                        AccountQuickView(
-                            uiState = it,
-                            onClick = followersInteractions::onAccountClicked
-                        )
-                        MoSoDivider()
-                    }
+        val lazyPagingItems = followers.collectAsLazyPagingItems()
+
+        //TODO loading and error states and pull to refresh
+        LazyColumn {
+            items(count = lazyPagingItems.itemCount) { index ->
+                lazyPagingItems[index]?.let { uiState ->
+                    AccountQuickView(
+                        uiState = uiState,
+                        onClick = followersInteractions::onAccountClicked
+                    )
+                    MoSoDivider()
                 }
-            }
 
-            is Resource.Error -> {
-                //TODO error state
             }
         }
     }

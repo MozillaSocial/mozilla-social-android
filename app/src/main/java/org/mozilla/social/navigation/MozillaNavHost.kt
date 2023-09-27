@@ -13,8 +13,6 @@ import androidx.navigation.navigation
 import org.mozilla.social.core.ui.postcard.PostCardNavigation
 import org.mozilla.social.feature.account.AccountNavigationCallbacks
 import org.mozilla.social.feature.account.accountScreen
-import org.mozilla.social.feature.account.follows.accountFollowersScreen
-import org.mozilla.social.feature.account.follows.accountFollowingScreen
 import org.mozilla.social.feature.auth.loginScreen
 import org.mozilla.social.feature.followers.FollowersNavigationCallbacks
 import org.mozilla.social.feature.followers.followersScreen
@@ -25,9 +23,7 @@ import org.mozilla.social.feature.thread.threadScreen
 import org.mozilla.social.feed.FEED_ROUTE
 import org.mozilla.social.feed.feedScreen
 import org.mozilla.social.post.newPostScreen
-import org.mozilla.social.search.SEARCH_ROUTE
 import org.mozilla.social.search.SearchScreen
-import org.mozilla.social.search.searchScreen
 import org.mozilla.social.ui.AppState
 
 @Composable
@@ -105,8 +101,6 @@ private fun NavGraphBuilder.mainGraph(
                 override fun onAccountClicked(accountId: String) = appState.navigateToAccount(accountId)
             }
         )
-        accountFollowingScreen()
-        accountFollowersScreen()
         newPostScreen(
             onStatusPosted = { appState.popBackStack() },
             onCloseClicked = { appState.popBackStack() },

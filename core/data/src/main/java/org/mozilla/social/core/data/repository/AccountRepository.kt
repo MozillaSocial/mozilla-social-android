@@ -2,12 +2,15 @@ package org.mozilla.social.core.data.repository
 
 import kotlinx.coroutines.coroutineScope
 import org.mozilla.social.core.data.repository.model.account.toExternal
+import org.mozilla.social.core.data.repository.model.followers.FollowersPagingWrapper
 import org.mozilla.social.core.data.repository.model.status.toExternalModel
 import org.mozilla.social.core.database.SocialDatabase
 import org.mozilla.social.core.network.AccountApi
 import org.mozilla.social.model.Account
 import org.mozilla.social.model.Relationship
 import org.mozilla.social.model.Status
+import retrofit2.HttpException
+import retrofit2.Response
 
 class AccountRepository internal constructor(
     private val accountApi: AccountApi,
@@ -30,15 +33,23 @@ class AccountRepository internal constructor(
     suspend fun getAccountFollowers(
         accountId: String,
         olderThanId: String? = null,
-        immediatelyNewerThanId: String? = null,
+        newerThanId: String? = null,
         loadSize: Int? = null,
-    ): List<Account> =
-        accountApi.getAccountFollowers(
+    ): FollowersPagingWrapper {
+        val response = accountApi.getAccountFollowers(
             accountId = accountId,
             olderThanId = olderThanId,
-            immediatelyNewerThanId = immediatelyNewerThanId,
+            newerThanId = newerThanId,
             limit = loadSize,
-        ).map { it.toExternalModel() }
+        )
+        if (!response.isSuccessful) {
+            throw HttpException(response)
+        }
+        return FollowersPagingWrapper(
+            accounts = response.body()?.map { it.toExternalModel() } ?: emptyList(),
+            link = response.headers().get("link"),
+        )
+    }
 
     suspend fun getAccountFollowing(
         accountId: String,
