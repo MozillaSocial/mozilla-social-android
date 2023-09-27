@@ -88,8 +88,10 @@ private fun NavGraphBuilder.mainGraph(
         settingsScreen(onLogout = appState::navigateToLoginScreen)
         accountScreen(
             accountNavigationCallbacks = object: AccountNavigationCallbacks {
-                override fun onFollowingClicked() = appState.navigateToAccountFollowing()
-                override fun onFollowersClicked() = appState.navigateToAccountFollowers()
+                override fun onFollowingClicked(accountId: String) =
+                    appState.navigateToAccountFollowing(accountId)
+                override fun onFollowersClicked(accountId: String) =
+                    appState.navigateToAccountFollowers(accountId)
                 override fun onCloseClicked() = appState.popBackStack()
                 override fun onReportClicked(accountId: String) = appState.navigateToReport(accountId)
             },

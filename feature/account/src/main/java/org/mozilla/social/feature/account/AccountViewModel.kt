@@ -43,7 +43,7 @@ class AccountViewModel(
     initialAccountId: String?,
     postCardNavigation: PostCardNavigation,
     private val accountNavigationCallbacks: AccountNavigationCallbacks,
-) : ViewModel(), OverflowInteractions {
+) : ViewModel(), AccountInteractions {
 
     private val _errorToastMessage = MutableSharedFlow<StringFactory>(extraBufferCapacity = 1)
     val errorToastMessage = _errorToastMessage.asSharedFlow()
@@ -164,5 +164,13 @@ class AccountViewModel(
 
     override fun onOverflowReportClicked() {
         accountNavigationCallbacks.onReportClicked(accountId)
+    }
+
+    override fun onFollowersClicked() {
+        accountNavigationCallbacks.onFollowersClicked(accountId)
+    }
+
+    override fun onFollowingClicked() {
+        accountNavigationCallbacks.onFollowingClicked(accountId)
     }
 }

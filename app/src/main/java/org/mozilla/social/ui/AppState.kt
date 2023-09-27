@@ -280,12 +280,12 @@ class AppState(
         )
     }
 
-    fun navigateToAccountFollowing() {
+    fun navigateToAccountFollowing(accountId: String) {
         coroutineScope.launch { navigationDrawerState.close() }
         navController.navigateToAccountFollowing()
     }
 
-    fun navigateToAccountFollowers() {
+    fun navigateToAccountFollowers(accountId: String) {
         coroutineScope.launch { navigationDrawerState.close() }
         navController.navigateToAccountFollowers()
     }
