@@ -29,6 +29,7 @@ import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.core.designsystem.component.MoSoDivider
 import org.mozilla.social.core.designsystem.component.MoSoToast
 import org.mozilla.social.core.ui.R
+import org.mozilla.social.core.ui.error.GenericError
 import org.mozilla.social.core.ui.pullrefresh.PullRefreshIndicator
 import org.mozilla.social.core.ui.pullrefresh.pullRefresh
 import org.mozilla.social.core.ui.pullrefresh.rememberPullRefreshState
@@ -73,7 +74,7 @@ fun PostCardList(
     ) {
 
         if (lazyingPagingItems.loadState.refresh is LoadState.Error) {
-            Error(
+            GenericError(
                 modifier = Modifier
                     .fillMaxSize(),
                 onRetryClicked = { lazyingPagingItems.refresh() }
@@ -125,7 +126,7 @@ fun PostCardList(
 
                 is LoadState.Error -> {
                     item {
-                        Error(
+                        GenericError(
                             onRetryClicked = { lazyingPagingItems.retry() }
                         )
                     }
@@ -145,32 +146,6 @@ fun PostCardList(
     }
 
     MoSoToast(toastMessage = errorToastMessage)
-}
-
-@Composable
-private fun Error(
-    modifier: Modifier = Modifier,
-    onRetryClicked: () -> Unit,
-) {
-    Column(
-        modifier = modifier
-            .padding(8.dp)
-            .fillMaxWidth()
-            .wrapContentSize(align = Alignment.Center)
-    ) {
-        Text(
-            modifier = Modifier.align(Alignment.CenterHorizontally),
-            text = stringResource(id = R.string.error_oops)
-        )
-        Button(
-            modifier = Modifier
-                .padding(8.dp)
-                .align(Alignment.CenterHorizontally),
-            onClick = { onRetryClicked() }
-        ) {
-            Text(text = stringResource(id = R.string.retry))
-        }
-    }
 }
 
 @Composable
