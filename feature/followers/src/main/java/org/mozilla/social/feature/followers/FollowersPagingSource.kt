@@ -13,9 +13,6 @@ class FollowersPagingSource(
     private val followerScreenType: FollowerScreenType,
 ) : PagingSource<String, Account>() {
 
-    override val keyReuseSupported: Boolean
-        get() = true
-
     override fun getRefreshKey(state: PagingState<String, Account>): String? {
         return null
     }
