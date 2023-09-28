@@ -45,7 +45,9 @@ private fun FollowersScreen(
     followers: Flow<PagingData<AccountQuickViewUiState>>,
     followersInteractions: FollowersInteractions,
 ) {
-    Column {
+    Column(
+        modifier = Modifier.fillMaxSize()
+    ) {
         MoSoTopBar(
             title = stringResource(id = R.string.followers),
             onIconClicked = { followersInteractions.onCloseClicked() }
