@@ -1,4 +1,4 @@
-package org.mozilla.social.core.domain.pagingsource
+package org.mozilla.social.feature.followers
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
@@ -10,6 +10,7 @@ import org.mozilla.social.model.Account
 class FollowersPagingSource(
     private val accountRepository: AccountRepository,
     private val accountId: String,
+    private val followerScreenType: FollowerScreenType,
 ) : PagingSource<String, Account>() {
 
     override val keyReuseSupported: Boolean
@@ -21,11 +22,18 @@ class FollowersPagingSource(
 
     override suspend fun load(params: LoadParams<String>): LoadResult<String, Account> {
         return try {
-            val response = accountRepository.getAccountFollowers(
-                accountId = accountId,
-                olderThanId = params.key,
-                loadSize = params.loadSize,
-            )
+            val response = when(followerScreenType) {
+                FollowerScreenType.FOLLOWERS -> accountRepository.getAccountFollowers(
+                    accountId = accountId,
+                    olderThanId = params.key,
+                    loadSize = params.loadSize,
+                )
+                FollowerScreenType.FOLLOWING -> accountRepository.getAccountFollowing(
+                    accountId = accountId,
+                    olderThanId = params.key,
+                    loadSize = params.loadSize,
+                )
+            }
             // We get the next item from the links header in the response.
             val links = response.link?.parseMastodonLinkHeader()
             LoadResult.Page(

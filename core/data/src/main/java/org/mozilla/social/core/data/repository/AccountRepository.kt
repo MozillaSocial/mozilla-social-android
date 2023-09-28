@@ -54,15 +54,23 @@ class AccountRepository internal constructor(
     suspend fun getAccountFollowing(
         accountId: String,
         olderThanId: String? = null,
-        immediatelyNewerThanId: String? = null,
+        newerThanId: String? = null,
         loadSize: Int? = null,
-    ): List<Account> =
-        accountApi.getAccountFollowing(
+    ): FollowersPagingWrapper {
+        val response = accountApi.getAccountFollowing(
             accountId = accountId,
             olderThanId = olderThanId,
-            immediatelyNewerThanId = immediatelyNewerThanId,
+            newerThanId = newerThanId,
             limit = loadSize,
-        ).map { it.toExternalModel() }
+        )
+        if (!response.isSuccessful) {
+            throw HttpException(response)
+        }
+        return FollowersPagingWrapper(
+            accounts = response.body()?.map { it.toExternalModel() } ?: emptyList(),
+            link = response.headers().get("link"),
+        )
+    }
 
     suspend fun getAccountStatuses(
         accountId: String,

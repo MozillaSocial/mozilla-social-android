@@ -24,7 +24,6 @@ import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 import org.mozilla.social.core.designsystem.component.MoSoDivider
 import org.mozilla.social.core.designsystem.component.MoSoTopBar
-import org.mozilla.social.core.designsystem.theme.MoSoColors
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.ui.account.quickview.AccountQuickView
 import org.mozilla.social.core.ui.account.quickview.AccountQuickViewUiState
@@ -37,14 +36,17 @@ import org.mozilla.social.core.ui.pullrefresh.rememberPullRefreshState
 internal fun FollowersRoute(
     accountId: String,
     followersNavigationCallbacks: FollowersNavigationCallbacks,
+    followersScreenType: FollowerScreenType,
     viewModel: FollowersViewModel = koinViewModel(
         parameters = { parametersOf(
             accountId,
             followersNavigationCallbacks,
+            followersScreenType,
         ) }
     )
 ) {
     FollowersScreen(
+        followersScreenType = followersScreenType,
         followers = viewModel.followers,
         followersInteractions = viewModel,
     )
@@ -52,6 +54,7 @@ internal fun FollowersRoute(
 
 @Composable
 private fun FollowersScreen(
+    followersScreenType: FollowerScreenType,
     followers: Flow<PagingData<AccountQuickViewUiState>>,
     followersInteractions: FollowersInteractions,
 ) {
@@ -59,7 +62,10 @@ private fun FollowersScreen(
         modifier = Modifier.fillMaxSize()
     ) {
         MoSoTopBar(
-            title = stringResource(id = R.string.followers),
+            title = when (followersScreenType) {
+                FollowerScreenType.FOLLOWERS -> stringResource(id = R.string.followers)
+                FollowerScreenType.FOLLOWING -> stringResource(id = R.string.following)
+            },
             onIconClicked = { followersInteractions.onCloseClicked() }
         )
 

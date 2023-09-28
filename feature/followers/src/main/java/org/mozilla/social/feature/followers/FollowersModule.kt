@@ -9,6 +9,7 @@ val followersModule = module {
             get(),
             parameters[0],
             parameters[1],
+            parameters[2],
         )
     }
 }

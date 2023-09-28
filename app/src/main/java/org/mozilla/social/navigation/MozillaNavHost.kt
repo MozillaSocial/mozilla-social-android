@@ -16,6 +16,7 @@ import org.mozilla.social.feature.account.accountScreen
 import org.mozilla.social.feature.auth.loginScreen
 import org.mozilla.social.feature.followers.FollowersNavigationCallbacks
 import org.mozilla.social.feature.followers.followersScreen
+import org.mozilla.social.feature.followers.followingScreen
 import org.mozilla.social.feature.hashtag.hashTagScreen
 import org.mozilla.social.feature.report.reportScreen
 import org.mozilla.social.feature.settings.settingsScreen
@@ -95,12 +96,13 @@ private fun NavGraphBuilder.mainGraph(
             },
             postCardNavigation = postCardNavigation,
         )
-        followersScreen(
-            followersNavigationCallbacks = object : FollowersNavigationCallbacks {
-                override fun onCloseClicked() = appState.popBackStack()
-                override fun onAccountClicked(accountId: String) = appState.navigateToAccount(accountId)
-            }
-        )
+
+        val followersNavigationCallbacks = object : FollowersNavigationCallbacks {
+            override fun onCloseClicked() = appState.popBackStack()
+            override fun onAccountClicked(accountId: String) = appState.navigateToAccount(accountId)
+        }
+        followersScreen(followersNavigationCallbacks = followersNavigationCallbacks)
+        followingScreen(followersNavigationCallbacks = followersNavigationCallbacks)
         newPostScreen(
             onStatusPosted = { appState.popBackStack() },
             onCloseClicked = { appState.popBackStack() },

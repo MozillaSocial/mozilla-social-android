@@ -44,7 +44,7 @@ interface AccountApi {
         @Query("min_id") immediatelyNewerThanId: String? = null,
         // Maximum number of results to return. Defaults to 20 statuses. Max 40 statuses.
         @Query("limit") limit: Int? = null,
-    ): List<NetworkAccount>
+    ): Response<List<NetworkAccount>>
 
     @GET("/api/v1/accounts/{id}/statuses")
     suspend fun getAccountStatuses(
