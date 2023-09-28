@@ -93,7 +93,7 @@ fun AccountScreen(
                 accountNavigationCallbacks = accountNavigationCallbacks,
                 htmlContentInteractions = viewModel.postCardDelegate,
                 postCardInteractions = viewModel.postCardDelegate,
-                overflowInteractions = viewModel
+                accountInteractions = viewModel
             )
         }
         is Resource.Error -> {
@@ -114,7 +114,7 @@ internal fun AccountScreen(
     accountNavigationCallbacks: AccountNavigationCallbacks,
     htmlContentInteractions: HtmlContentInteractions,
     postCardInteractions: PostCardInteractions,
-    overflowInteractions: OverflowInteractions,
+    accountInteractions: AccountInteractions,
 ) {
     Column {
         if (showTopBar) {
@@ -125,7 +125,7 @@ internal fun AccountScreen(
                     if (!isUsersProfile) {
                         OverflowMenu(
                             account = account,
-                            overflowInteractions = overflowInteractions,
+                            overflowInteractions = accountInteractions,
                         )
                     }
                 }
@@ -152,8 +152,8 @@ internal fun AccountScreen(
                 UserInfo(account = account)
                 UserFollow(
                     account = account,
-                    onFollowingClicked = { accountNavigationCallbacks.onFollowingClicked() },
-                    onFollowersClicked = { accountNavigationCallbacks.onFollowersClicked() },
+                    onFollowingClicked = { accountInteractions.onFollowingClicked() },
+                    onFollowersClicked = { accountInteractions.onFollowersClicked() },
                 )
                 UserBio(
                     account = account,

@@ -4,16 +4,13 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Divider
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
@@ -45,18 +42,16 @@ import org.mozilla.social.R
 import org.mozilla.social.core.designsystem.component.MoSoAppBar
 import org.mozilla.social.core.designsystem.component.MoSoBottomNavigationBar
 import org.mozilla.social.core.designsystem.component.MoSoDivider
-import org.mozilla.social.core.designsystem.component.MoSoModalDrawerSheet
-import org.mozilla.social.core.designsystem.component.MoSoNavigationDrawerItem
 import org.mozilla.social.core.designsystem.component.NavBarDestination
 import org.mozilla.social.core.designsystem.component.NavDestination
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.designsystem.icon.mozillaLogo
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
-import org.mozilla.social.feature.account.follows.navigateToAccountFollowers
-import org.mozilla.social.feature.account.follows.navigateToAccountFollowing
 import org.mozilla.social.feature.account.navigateToAccount
 import org.mozilla.social.feature.auth.AUTH_ROUTE
 import org.mozilla.social.feature.auth.navigateToLoginScreen
+import org.mozilla.social.feature.followers.navigateToFollowers
+import org.mozilla.social.feature.followers.navigateToFollowing
 import org.mozilla.social.feature.hashtag.navigateToHashTag
 import org.mozilla.social.feature.report.navigateToReport
 import org.mozilla.social.feature.settings.navigateToSettings
@@ -280,14 +275,14 @@ class AppState(
         )
     }
 
-    fun navigateToAccountFollowing() {
+    fun navigateToAccountFollowing(accountId: String) {
         coroutineScope.launch { navigationDrawerState.close() }
-        navController.navigateToAccountFollowing()
+        navController.navigateToFollowing(accountId)
     }
 
-    fun navigateToAccountFollowers() {
+    fun navigateToAccountFollowers(accountId: String) {
         coroutineScope.launch { navigationDrawerState.close() }
-        navController.navigateToAccountFollowers()
+        navController.navigateToFollowers(accountId)
     }
 
     fun navigateToNewPost(replyStatusId: String) {

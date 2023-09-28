@@ -23,7 +23,7 @@ import org.mozilla.social.feed.feedModule
 import org.mozilla.social.post.newPostModule
 import org.mozilla.social.search.searchModule
 import org.mozilla.social.feature.account.accountModule
-import org.mozilla.social.feature.account.follows.accountFollowUsersModule
+import org.mozilla.social.feature.followers.followersModule
 import org.mozilla.social.feature.hashtag.hashTagModule
 import org.mozilla.social.feature.report.reportModule
 import org.mozilla.social.feature.thread.threadModule
@@ -72,10 +72,10 @@ val appModules = module {
         newPostModule,
         settingsModule,
         accountModule,
-        accountFollowUsersModule,
         databaseModule,
         threadModule,
         reportModule,
         hashTagModule,
+        followersModule,
     )
 }
