@@ -1,12 +1,13 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "local>Pocket/renovate-config"
+    "github>Pocket/renovate-config"
   ],
   "packageRules": [
     {
       "matchSourceUrls": [
-        "https://github.com/JetBrains/kotlin"
+        "https://github.com/JetBrains/kotlin",
+        "https://github.com/google/ksp"
       ],
       "enabled": false
     }
