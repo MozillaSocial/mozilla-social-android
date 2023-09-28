@@ -92,11 +92,23 @@ class AccountRepository internal constructor(
         accountApi.getAccountFavourites().map { it.toExternalModel() }
 
     suspend fun followAccount(accountId: String) {
-        accountApi.followAccount(accountId)
+        try {
+            socialDatabase.relationshipsDao().updateFollowing(accountId, true)
+            accountApi.followAccount(accountId)
+        } catch (e: Exception) {
+            socialDatabase.relationshipsDao().updateFollowing(accountId, false)
+            throw e
+        }
     }
 
     suspend fun unfollowAccount(accountId: String) {
-        accountApi.unfollowAccount(accountId)
+        try {
+            socialDatabase.relationshipsDao().updateFollowing(accountId, false)
+            accountApi.unfollowAccount(accountId)
+        } catch (e: Exception) {
+            socialDatabase.relationshipsDao().updateFollowing(accountId, true)
+            throw e
+        }
     }
 
     /**

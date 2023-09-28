@@ -18,9 +18,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.layout.wrapContentWidth
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.Icon
@@ -35,7 +32,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.res.stringResource
@@ -50,6 +46,7 @@ import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 import org.mozilla.social.common.Resource
 import org.mozilla.social.common.utils.StringFactory
+import org.mozilla.social.core.designsystem.component.MoSoButton
 import org.mozilla.social.core.designsystem.component.MoSoDivider
 import org.mozilla.social.core.designsystem.component.MoSoToast
 import org.mozilla.social.core.designsystem.component.MoSoTopBar
@@ -62,6 +59,7 @@ import org.mozilla.social.core.ui.postcard.PostCardInteractions
 import org.mozilla.social.core.ui.postcard.PostCardList
 import org.mozilla.social.core.ui.postcard.PostCardNavigation
 import org.mozilla.social.core.ui.postcard.PostCardUiState
+import kotlin.math.max
 
 @Composable
 fun AccountScreen(
@@ -142,18 +140,16 @@ internal fun AccountScreen(
                 errorToastMessage = errorToastMessage,
                 postCardInteractions = postCardInteractions
             ) {
-                HeaderAndProfileImages(
-                    headerUrl = account.headerUrl,
-                    avatarUrl = account.avatarUrl,
-                    onHeaderClick = { /*TODO*/ },
-                    onProfileClick = { /*TODO*/ }
+                Header(
+                    isUsersProfile = isUsersProfile,
+                    accountUiState = account,
+                    accountInteractions = accountInteractions,
                 )
 
                 UserInfo(account = account)
                 UserFollow(
                     account = account,
-                    onFollowingClicked = { accountInteractions.onFollowingClicked() },
-                    onFollowersClicked = { accountInteractions.onFollowersClicked() },
+                    accountInteractions = accountInteractions,
                 )
                 UserBio(
                     account = account,
@@ -250,9 +246,8 @@ private fun UserInfo(
     account: AccountUiState,
 ) {
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
-            .padding(top = 8.dp)
+            .padding(start = 8.dp, top = 8.dp)
             .fillMaxWidth()
     ) {
         Text(
@@ -268,15 +263,12 @@ private fun UserInfo(
 @Composable
 private fun UserFollow(
     account: AccountUiState,
-    onFollowingClicked: () -> Unit,
-    onFollowersClicked: () -> Unit,
+    accountInteractions: AccountInteractions,
 ) {
     Row(
         modifier = Modifier
             .height(IntrinsicSize.Min)
             .padding(8.dp)
-            .fillMaxWidth()
-            .wrapContentWidth(Alignment.CenterHorizontally)
             .border(
                 border = BorderStroke(2.dp, Color.Gray),
                 shape = RoundedCornerShape(8.dp)
@@ -285,7 +277,7 @@ private fun UserFollow(
         Text(
             modifier = Modifier
                 .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 8.dp)
-                .clickable { onFollowersClicked() },
+                .clickable { accountInteractions.onFollowersClicked() },
             text = stringResource(id = R.string.followers_count, account.followersCount),
         )
         MoSoDivider(
@@ -297,7 +289,7 @@ private fun UserFollow(
         Text(
             modifier = Modifier
                 .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 8.dp)
-                .clickable { onFollowingClicked() },
+                .clickable { accountInteractions.onFollowingClicked() },
             text = stringResource(id = R.string.following_count, account.followingCount),
 
             )
@@ -405,77 +397,106 @@ private fun QuickFunctions(
 }
 
 @Composable
-private fun OverlapObjects(
+private fun Header(
     modifier: Modifier = Modifier,
-    content: @Composable () -> Unit
+    isUsersProfile: Boolean,
+    accountUiState: AccountUiState,
+    accountInteractions: AccountInteractions,
 ) {
-    Layout(
-        modifier = modifier,
-        content = content,
-    ) { measurables, constraints ->
-        val largeBox = measurables[0]
-        val smallBox = measurables[1]
-        val looseConstraints = constraints.copy(
-            minWidth = 0,
-            minHeight = 0,
-        )
-        val largePlaceable = largeBox.measure(looseConstraints)
-        val smallPlaceable = smallBox.measure(looseConstraints)
-        layout(
-            width = constraints.maxWidth,
-            height = largePlaceable.height + smallPlaceable.height / 2,
-        ) {
-            largePlaceable.placeRelative(
-                x = 0,
-                y = 0,
+    HeaderLayout(
+        modifier = modifier.fillMaxWidth(),
+        headerImage = {
+            AsyncImage(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(120.dp),
+                model = accountUiState.headerUrl,
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
             )
-            smallPlaceable.placeRelative(
-                x = (constraints.maxWidth - smallPlaceable.width) / 2,
-                y = largePlaceable.height - smallPlaceable.height / 2
+        },
+        profileImage = {
+            AsyncImage(
+                modifier = Modifier
+                    .padding(start = 8.dp)
+                    .size(120.dp)
+                    .clip(RoundedCornerShape(16.dp)),
+                model = accountUiState.avatarUrl,
+                contentDescription = null,
             )
+        },
+        rightSideContent = {
+            val buttonModifier = Modifier.padding(end = 8.dp)
+            if (isUsersProfile) {
+                MoSoButton(
+                    modifier = buttonModifier,
+                    onClick = { /*TODO*/ }
+                ) {
+                    Text(text = stringResource(id = R.string.edit_button))
+                }
+            } else {
+                MoSoButton(
+                    modifier = buttonModifier,
+                    onClick = {
+                        if (accountUiState.isFollowing) {
+                            accountInteractions.onUnfollowClicked()
+                        } else {
+                            accountInteractions.onFollowClicked()
+                        }
+                    }
+                ) {
+                    Text(
+                        text = if (accountUiState.isFollowing) {
+                            stringResource(id = R.string.unfollow_button)
+                        } else {
+                            stringResource(id = R.string.follow_button)
+                        }
+                    )
+                }
+            }
         }
-    }
+    )
 }
 
 @Composable
-private fun HeaderAndProfileImages(
+private fun HeaderLayout(
     modifier: Modifier = Modifier,
-    headerUrl: String,
-    avatarUrl: String,
-    onHeaderClick: () -> Unit,
-    onProfileClick: () -> Unit
+    headerImage: @Composable () -> Unit,
+    profileImage: @Composable () -> Unit,
+    rightSideContent: @Composable () -> Unit,
 ) {
-    OverlapObjects(modifier = modifier.fillMaxWidth()) {
-        val scrollState = rememberScrollState()
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable { onHeaderClick() }
-                .graphicsLayer {
-                    alpha = 1f - ((scrollState.value.toFloat() / scrollState.maxValue) * 1.5f)
-                    translationY = 0.5f * scrollState.value
-                },
-        ) {
-            AsyncImage(
-                model = headerUrl,
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(120.dp)
-            )
+    Layout(
+        modifier = modifier,
+        content = {
+            Box { headerImage() }
+            Box { profileImage() }
+            Box { rightSideContent() }
+        },
+    ) { measurables, constraints ->
+        val placeables = measurables.map {
+            it.measure(constraints.copy(
+                minWidth = 0,
+                minHeight = 0,
+            ))
         }
-        Box(
-            modifier = Modifier
-                .size(120.dp)
-                .clip(RoundedCornerShape(16.dp))
-                .clickable { onProfileClick() }
+        val headerImagePlaceable = placeables[0]
+        val profileImagePlaceable = placeables[1]
+        val rightSideContentPlaceable = placeables[2]
+        layout(
+            width = constraints.maxWidth,
+            height = headerImagePlaceable.height + max(profileImagePlaceable.height / 2, rightSideContentPlaceable.height),
         ) {
-            AsyncImage(
-                model = avatarUrl,
-                contentDescription = null,
-                modifier = Modifier
-                    .clip(CircleShape)
+            headerImagePlaceable.placeRelative(
+                x = 0,
+                y = 0,
+            )
+            profileImagePlaceable.placeRelative(
+                x = 0,
+                y = headerImagePlaceable.height - profileImagePlaceable.height / 2
+            )
+            rightSideContentPlaceable.placeRelative(
+                x = (constraints.maxWidth - rightSideContentPlaceable.width),
+                y = headerImagePlaceable.height
             )
         }
     }

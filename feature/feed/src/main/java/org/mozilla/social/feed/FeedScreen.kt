@@ -1,9 +1,13 @@
 package org.mozilla.social.feed
 
 import android.content.res.Configuration
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.paging.PagingData
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -45,13 +49,17 @@ private fun FeedScreen(
     postCardInteractions: PostCardInteractions,
 ) {
     MoSoSurface {
-        PostCardList(
-            feed = feed,
-            errorToastMessage = errorToastMessage,
-            postCardInteractions = postCardInteractions,
-            reccs = reccs,
-            enablePullToRefresh = true,
-        )
+        Box(
+            modifier = Modifier.padding(horizontal = 4.dp)
+        ) {
+            PostCardList(
+                feed = feed,
+                errorToastMessage = errorToastMessage,
+                postCardInteractions = postCardInteractions,
+                reccs = reccs,
+                enablePullToRefresh = true,
+            )
+        }
     }
 }
 

@@ -12,4 +12,8 @@
 
     <string name="following_count">Following: %d</string>
     <string name="followers_count">Followers: %d</string>
+
+    <string name="follow_button">Follow</string>
+    <string name="unfollow_button">Unfollow</string>
+    <string name="edit_button">Edit</string>
 </resources>

@@ -83,8 +83,7 @@ fun PostCardList(
 
         LazyColumn(
             Modifier
-                .fillMaxSize()
-                .padding(horizontal = 4.dp),
+                .fillMaxSize(),
         ) {
 
             item { headerContent() }
