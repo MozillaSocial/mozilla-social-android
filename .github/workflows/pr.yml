@@ -3,6 +3,11 @@ name: pr
 on:
   pull_request
 
+# Cancel in-progress/pending PR checks if a new commit is pushed to the branch.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref_name }}
+  cancel-in-progress: true
+
 jobs:
   compile:
     runs-on: ubuntu-latest
