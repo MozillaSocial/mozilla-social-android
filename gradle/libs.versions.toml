@@ -34,6 +34,7 @@ junit-junit = "4.13.2"
 androidx-test-ext-junit = "1.1.5"
 espresso-core = "3.5.1"
 glean = "54.0.0"
+mozilla-components = "118.0"
 jetbrains-python = "0.0.31"
 
 [libraries]
@@ -87,6 +88,7 @@ retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = 
 square-okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
 square-okhttp-logging = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp" }
 glean = { group = "org.mozilla.telemetry", name = "glean", version.ref = "glean" }
+mozilla-components-service-glean = { group = "org.mozilla.components", name = "service-glean", version.ref = "mozilla-components" }
 glean-forUnitTests = { group = "org.mozilla.telemetry", name = "glean-native-forUnitTests", version.ref = "glean" }
 
 # Dependencies of build-logic

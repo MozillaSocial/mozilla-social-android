@@ -6,10 +6,34 @@ pluginManagement {
         mavenCentral()
         maven { url = uri("https://maven.mozilla.org/maven2") }
         maven { url = uri("https://plugins.gradle.org/m2/") }
+        plugins {
+            id("org.mozilla.telemetry.glean-gradle-plugin") version "54.0.0"
+            id ("com.jetbrains.python.envs") version "0.0.31"
+        }
     }
 }
+
+buildscript {
+    repositories {
+        maven {
+            url = uri("https://snapshots.maven.mozilla.org/maven2")
+        }
+        maven {
+            url = uri("https://maven.mozilla.org/maven2")
+        }
+        google()
+        gradlePluginPortal()
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath("org.mozilla.telemetry:glean-gradle-plugin:54.0.0")
+        classpath("gradle.plugin.com.jetbrains.python:gradle-python-envs:0.0.31")
+    }
+}
+
 dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositoriesMode.set(RepositoriesMode.PREFER_SETTINGS)
     repositories {
         google()
         mavenCentral()

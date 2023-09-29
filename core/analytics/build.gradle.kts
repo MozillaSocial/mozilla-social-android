@@ -1,8 +1,8 @@
 plugins {
     id("org.mozilla.social.android.library")
     id("org.mozilla.social.android.library.secrets")
-    alias(libs.plugins.jetbrains.python)
-    alias(libs.plugins.glean.gradle.plugin)
+    id("com.jetbrains.python.envs")
+    id("org.mozilla.telemetry.glean-gradle-plugin")
 }
 
 android {
@@ -26,6 +26,7 @@ android {
 
 dependencies {
     implementation(libs.glean)
+    implementation(libs.mozilla.components.service.glean)
 
     implementation(libs.koin)
 
