@@ -118,19 +118,22 @@ internal fun AccountScreen(
     accountInteractions: AccountInteractions,
 ) {
     Column {
-        if (showTopBar) {
-            MoSoTopBar(
-                title = account.username,
-                onIconClicked = { accountNavigationCallbacks.onCloseClicked() },
-                rightSideContent = {
-                    OverflowMenu(
-                        account = account,
-                        isUsersProfile = isUsersProfile,
-                        overflowInteractions = accountInteractions,
-                    )
-                }
-            )
-        }
+        MoSoTopBar(
+            title = account.displayName,
+            icon = if (showTopBar) {
+                MoSoIcons.Close
+            } else {
+                null
+            },
+            onIconClicked = { accountNavigationCallbacks.onCloseClicked() },
+            rightSideContent = {
+                OverflowMenu(
+                    account = account,
+                    isUsersProfile = isUsersProfile,
+                    overflowInteractions = accountInteractions,
+                )
+            }
+        )
 
         Column(
             modifier = Modifier
