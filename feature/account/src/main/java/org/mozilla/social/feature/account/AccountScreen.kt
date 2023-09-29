@@ -34,7 +34,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -51,6 +50,7 @@ import org.mozilla.social.common.Resource
 import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.core.designsystem.component.MoSoButton
 import org.mozilla.social.core.designsystem.component.MoSoDivider
+import org.mozilla.social.core.designsystem.component.MoSoDropdownMenu
 import org.mozilla.social.core.designsystem.component.MoSoToast
 import org.mozilla.social.core.designsystem.component.MoSoTopBar
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
@@ -62,10 +62,9 @@ import org.mozilla.social.core.ui.postcard.PostCardInteractions
 import org.mozilla.social.core.ui.postcard.PostCardList
 import org.mozilla.social.core.ui.postcard.PostCardNavigation
 import org.mozilla.social.core.ui.postcard.PostCardUiState
-import kotlin.math.max
 
 @Composable
-fun AccountScreen(
+internal fun AccountRoute(
     accountId: String?,
     accountNavigationCallbacks: AccountNavigationCallbacks,
     postCardNavigation: PostCardNavigation,
@@ -190,7 +189,7 @@ private fun OverflowMenu(
     ) {
         Icon(imageVector = MoSoIcons.MoreVert, contentDescription = null)
 
-        DropdownMenu(
+        MoSoDropdownMenu(
             expanded = overflowMenuExpanded.value,
             onDismissRequest = {
                 overflowMenuExpanded.value = false
