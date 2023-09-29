@@ -15,6 +15,7 @@ import org.koin.core.context.startKoin
 import org.koin.dsl.module
 import org.mozilla.social.common.commonModule
 import org.mozilla.social.core.analytics.glean.Analytics
+import org.mozilla.social.core.analytics.glean.GleanAnalytics
 import org.mozilla.social.core.analytics.glean.analyticsModule
 import org.mozilla.social.core.data.AuthCredentialObserver
 import org.mozilla.social.core.data.repositoryModule

@@ -4,11 +4,8 @@
 ---
 $schema: moz://mozilla.org/schemas/glean/metrics/2-0-0
 
-no_lint:
-  - CATEGORY_GENERIC
-
-events:
-  app_opened:
+app:
+  opened:
     type: event
     description: |
       A user opened the app (from cold start, to the homescreen or browser)
