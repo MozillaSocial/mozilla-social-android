@@ -44,7 +44,7 @@ fun MoSoTopBar(
                     Icon(
                         icon,
                         stringResource(id = R.string.top_bar_close_content_description),
-                        tint = MaterialTheme.colorScheme.onSurface,
+                        tint = MoSoTheme.colors.iconPrimary,
                     )
                 }
             }
