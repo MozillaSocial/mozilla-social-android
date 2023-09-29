@@ -403,9 +403,10 @@ private fun Header(
     accountUiState: AccountUiState,
     accountInteractions: AccountInteractions,
 ) {
-    HeaderLayout(
-        modifier = modifier.fillMaxWidth(),
-        headerImage = {
+    Box(
+        modifier = modifier.fillMaxWidth()
+    ) {
+        Column {
             AsyncImage(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -414,8 +415,42 @@ private fun Header(
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
             )
-        },
-        profileImage = {
+
+            Row {
+                Spacer(modifier = Modifier.weight(1f))
+                val buttonModifier = Modifier.padding(end = 8.dp)
+                if (isUsersProfile) {
+                    MoSoButton(
+                        modifier = buttonModifier,
+                        onClick = { /*TODO*/ }
+                    ) {
+                        Text(text = stringResource(id = R.string.edit_button))
+                    }
+                } else {
+                    MoSoButton(
+                        modifier = buttonModifier,
+                        onClick = {
+                            if (accountUiState.isFollowing) {
+                                accountInteractions.onUnfollowClicked()
+                            } else {
+                                accountInteractions.onFollowClicked()
+                            }
+                        }
+                    ) {
+                        Text(
+                            text = if (accountUiState.isFollowing) {
+                                stringResource(id = R.string.unfollow_button)
+                            } else {
+                                stringResource(id = R.string.follow_button)
+                            }
+                        )
+                    }
+                }
+            }
+
+        }
+        Column {
+            Spacer(modifier = Modifier.padding(top = 60.dp))
             AsyncImage(
                 modifier = Modifier
                     .padding(start = 8.dp)
@@ -423,80 +458,6 @@ private fun Header(
                     .clip(RoundedCornerShape(16.dp)),
                 model = accountUiState.avatarUrl,
                 contentDescription = null,
-            )
-        },
-        rightSideContent = {
-            val buttonModifier = Modifier.padding(end = 8.dp)
-            if (isUsersProfile) {
-                MoSoButton(
-                    modifier = buttonModifier,
-                    onClick = { /*TODO*/ }
-                ) {
-                    Text(text = stringResource(id = R.string.edit_button))
-                }
-            } else {
-                MoSoButton(
-                    modifier = buttonModifier,
-                    onClick = {
-                        if (accountUiState.isFollowing) {
-                            accountInteractions.onUnfollowClicked()
-                        } else {
-                            accountInteractions.onFollowClicked()
-                        }
-                    }
-                ) {
-                    Text(
-                        text = if (accountUiState.isFollowing) {
-                            stringResource(id = R.string.unfollow_button)
-                        } else {
-                            stringResource(id = R.string.follow_button)
-                        }
-                    )
-                }
-            }
-        }
-    )
-}
-
-@Composable
-private fun HeaderLayout(
-    modifier: Modifier = Modifier,
-    headerImage: @Composable () -> Unit,
-    profileImage: @Composable () -> Unit,
-    rightSideContent: @Composable () -> Unit,
-) {
-    Layout(
-        modifier = modifier,
-        content = {
-            Box { headerImage() }
-            Box { profileImage() }
-            Box { rightSideContent() }
-        },
-    ) { measurables, constraints ->
-        val placeables = measurables.map {
-            it.measure(constraints.copy(
-                minWidth = 0,
-                minHeight = 0,
-            ))
-        }
-        val headerImagePlaceable = placeables[0]
-        val profileImagePlaceable = placeables[1]
-        val rightSideContentPlaceable = placeables[2]
-        layout(
-            width = constraints.maxWidth,
-            height = headerImagePlaceable.height + max(profileImagePlaceable.height / 2, rightSideContentPlaceable.height),
-        ) {
-            headerImagePlaceable.placeRelative(
-                x = 0,
-                y = 0,
-            )
-            profileImagePlaceable.placeRelative(
-                x = 0,
-                y = headerImagePlaceable.height - profileImagePlaceable.height / 2
-            )
-            rightSideContentPlaceable.placeRelative(
-                x = (constraints.maxWidth - rightSideContentPlaceable.width),
-                y = headerImagePlaceable.height
             )
         }
     }
