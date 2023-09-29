@@ -173,4 +173,26 @@ class AccountViewModel(
     override fun onFollowingClicked() {
         accountNavigationCallbacks.onFollowingClicked(accountId)
     }
+
+    override fun onFollowClicked() {
+        viewModelScope.launch {
+            try {
+                accountRepository.followAccount(accountId)
+            } catch (e: Exception) {
+                Timber.e(e)
+                _errorToastMessage.emit(StringFactory.resource(R.string.error_following_account))
+            }
+        }
+    }
+
+    override fun onUnfollowClicked() {
+        viewModelScope.launch {
+            try {
+                accountRepository.unfollowAccount(accountId)
+            } catch (e: Exception) {
+                Timber.e(e)
+                _errorToastMessage.emit(StringFactory.resource(R.string.error_unfollowing_account))
+            }
+        }
+    }
 }
