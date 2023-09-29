@@ -23,6 +23,8 @@ jobs:
         # See: https://github.com/actions/setup-java/blob/main/docs/advanced-usage.md#Hosted-Tool-Cache
     - name: Set up Gradle
       uses: gradle/gradle-build-action@v2.8.0
+    - name: Verify KSP version
+      run: ci/verify-ksp-version.sh
     - name: Compile a debug build
       env:
         GRADLE_OPTS: -Dorg.gradle.daemon=false
