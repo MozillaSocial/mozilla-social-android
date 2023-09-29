@@ -1,5 +1,6 @@
 package org.mozilla.social.feature.account
 
+import android.content.Intent
 import androidx.annotation.StringRes
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
@@ -38,10 +39,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.Layout
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
 import androidx.paging.PagingData
 import coil.compose.AsyncImage
 import kotlinx.coroutines.flow.Flow
@@ -122,12 +125,11 @@ internal fun AccountScreen(
                 title = account.username,
                 onIconClicked = { accountNavigationCallbacks.onCloseClicked() },
                 rightSideContent = {
-                    if (!isUsersProfile) {
-                        OverflowMenu(
-                            account = account,
-                            overflowInteractions = accountInteractions,
-                        )
-                    }
+                    OverflowMenu(
+                        account = account,
+                        isUsersProfile = isUsersProfile,
+                        overflowInteractions = accountInteractions,
+                    )
                 }
             )
         }
@@ -178,9 +180,11 @@ internal fun AccountScreen(
 @Composable
 private fun OverflowMenu(
     account: AccountUiState,
+    isUsersProfile: Boolean,
     overflowInteractions: OverflowInteractions,
 ) {
     val overflowMenuExpanded = remember { mutableStateOf(false) }
+    val context = LocalContext.current
     IconButton(
         modifier = Modifier.width(IntrinsicSize.Max),
         onClick = { overflowMenuExpanded.value = true }
@@ -193,54 +197,73 @@ private fun OverflowMenu(
                 overflowMenuExpanded.value = false
             }
         ) {
-            if (account.isMuted) {
-                DropDownItem(
-                    text = stringResource(
-                        id = org.mozilla.social.core.ui.R.string.unmute_user,
-                        account.username
-                    ),
-                    expanded = overflowMenuExpanded,
-                    onClick = { overflowInteractions.onOverflowUnmuteClicked() }
-                )
-            } else {
-                DropDownItem(
-                    text = stringResource(
-                        id = org.mozilla.social.core.ui.R.string.mute_user,
-                        account.username
-                    ),
-                    expanded = overflowMenuExpanded,
-                    onClick = { overflowInteractions.onOverflowMuteClicked() }
-                )
-            }
-
-            if (account.isBlocked) {
-                DropDownItem(
-                    text = stringResource(
-                        id = org.mozilla.social.core.ui.R.string.unblock_user,
-                        account.username
-                    ),
-                    expanded = overflowMenuExpanded,
-                    onClick = { overflowInteractions.onOverflowUnblockClicked() }
-                )
-            } else {
-                DropDownItem(
-                    text = stringResource(
-                        id = org.mozilla.social.core.ui.R.string.block_user,
-                        account.username
-                    ),
-                    expanded = overflowMenuExpanded,
-                    onClick = { overflowInteractions.onOverflowBlockClicked() }
-                )
-            }
-
             DropDownItem(
-                text = stringResource(
-                    id = org.mozilla.social.core.ui.R.string.report_user,
-                    account.username
-                ),
+                text = stringResource(R.string.share_option),
                 expanded = overflowMenuExpanded,
-                onClick = { overflowInteractions.onOverflowReportClicked() }
+                onClick = {
+                    val sendIntent: Intent = Intent().apply {
+                        action = Intent.ACTION_SEND
+                        putExtra(Intent.EXTRA_TEXT, account.accountUrl)
+                        type = "text/plain"
+                    }
+
+                    ContextCompat.startActivity(
+                        context,
+                        Intent.createChooser(sendIntent, null),
+                        null
+                    )
+                }
             )
+            if (!isUsersProfile) {
+                if (account.isMuted) {
+                    DropDownItem(
+                        text = stringResource(
+                            id = org.mozilla.social.core.ui.R.string.unmute_user,
+                            account.username
+                        ),
+                        expanded = overflowMenuExpanded,
+                        onClick = { overflowInteractions.onOverflowUnmuteClicked() }
+                    )
+                } else {
+                    DropDownItem(
+                        text = stringResource(
+                            id = org.mozilla.social.core.ui.R.string.mute_user,
+                            account.username
+                        ),
+                        expanded = overflowMenuExpanded,
+                        onClick = { overflowInteractions.onOverflowMuteClicked() }
+                    )
+                }
+
+                if (account.isBlocked) {
+                    DropDownItem(
+                        text = stringResource(
+                            id = org.mozilla.social.core.ui.R.string.unblock_user,
+                            account.username
+                        ),
+                        expanded = overflowMenuExpanded,
+                        onClick = { overflowInteractions.onOverflowUnblockClicked() }
+                    )
+                } else {
+                    DropDownItem(
+                        text = stringResource(
+                            id = org.mozilla.social.core.ui.R.string.block_user,
+                            account.username
+                        ),
+                        expanded = overflowMenuExpanded,
+                        onClick = { overflowInteractions.onOverflowBlockClicked() }
+                    )
+                }
+
+                DropDownItem(
+                    text = stringResource(
+                        id = org.mozilla.social.core.ui.R.string.report_user,
+                        account.username
+                    ),
+                    expanded = overflowMenuExpanded,
+                    onClick = { overflowInteractions.onOverflowReportClicked() }
+                )
+            }
         }
     }
 }
