@@ -61,6 +61,7 @@ dependencies {
     implementation(project(":feature:thread"))
     implementation(project(":feature:report"))
     implementation(project(":feature:hashtag"))
+    implementation(project(":feature:followers"))
 
     // android
     implementation(libs.androidx.core.ktx)

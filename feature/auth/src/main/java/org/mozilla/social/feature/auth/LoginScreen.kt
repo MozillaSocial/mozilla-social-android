@@ -6,10 +6,12 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -23,29 +25,36 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.koin.androidx.compose.koinViewModel
-import org.mozilla.social.core.designsystem.theme.MozillaSocialTheme
+import org.mozilla.social.core.designsystem.theme.MoSoTheme
 
+@Suppress("KotlinConstantConditions")
 @Composable
-internal fun LoginRoute(
+fun LoginScreen(
     viewModel: AuthViewModel = koinViewModel(),
     navigateToLoggedInGraph: () -> Unit,
 ) {
     val isSignedIn = viewModel.isSignedIn.collectAsState(initial = false).value
+    val defaultUrl = viewModel.defaultUrl.collectAsState().value
     val context = LocalContext.current
 
-    when (isSignedIn) {
-        true -> navigateToLoggedInGraph()
-        false -> LoginScreen(onLoginClicked = { domain ->
+    if (isSignedIn) {
+        SideEffect {
+            navigateToLoggedInGraph()
+        }
+    }
+
+    LoginScreen(
+        defaultUrl = defaultUrl,
+        onLoginClicked = { domain ->
             viewModel.onLoginClicked(
                 context = context,
                 domain = domain
             )
         })
-    }
 }
 
 @Composable
-private fun LoginScreen(onLoginClicked: (String) -> Unit) {
+private fun LoginScreen(defaultUrl: String, onLoginClicked: (String) -> Unit) {
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Top,
@@ -56,8 +65,13 @@ private fun LoginScreen(onLoginClicked: (String) -> Unit) {
             text = stringResource(id = R.string.title_text),
             fontSize = 30.sp
         )
-        var text by remember { mutableStateOf("mozilla.social") }
-        TextField(value = text, onValueChange = { text = it })
+        var text by remember { mutableStateOf(defaultUrl) }
+        TextField(
+            modifier = Modifier
+                .padding(8.dp)
+                .fillMaxWidth()
+                .wrapContentHeight(),
+            value = text, singleLine = true, onValueChange = { text = it })
         Spacer(modifier = Modifier.padding(80.dp))
         LoginButton(onLoginClicked = { onLoginClicked(text) })
     }
@@ -81,7 +95,7 @@ private fun LoginButton(onLoginClicked: () -> Unit) {
 @Preview
 @Composable
 internal fun AuthScreenPreview() {
-    MozillaSocialTheme {
-        LoginScreen {}
+    MoSoTheme {
+        LoginScreen(defaultUrl = "example.com", onLoginClicked = {})
     }
 }

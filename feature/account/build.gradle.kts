@@ -31,6 +31,7 @@ dependencies {
     implementation(project(":core:designsystem"))
     implementation(project(":core:ui"))
     implementation(project(":core:common"))
+    implementation(project(":core:database"))
 
     implementation(libs.google.material)
 
@@ -54,4 +55,9 @@ dependencies {
 
     implementation(libs.androidx.datastore)
     implementation(libs.protobuf.kotlin.lite)
+
+    implementation(libs.androidx.room.ktx)
+    implementation(libs.androidx.paging.runtime)
+
+    implementation(libs.jakewharton.timber)
 }

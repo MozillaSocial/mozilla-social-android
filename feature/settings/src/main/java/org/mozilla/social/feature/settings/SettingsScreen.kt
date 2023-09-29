@@ -19,7 +19,6 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -34,7 +33,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
-import org.mozilla.social.core.designsystem.theme.MozillaSocialTheme
+import org.mozilla.social.core.designsystem.component.MoSoDivider
+import org.mozilla.social.core.designsystem.component.MoSoSurface
+import org.mozilla.social.core.designsystem.theme.MoSoTheme
 
 @Composable
 fun SettingsScreen(
@@ -79,7 +80,7 @@ fun SettingsGroup(
     Column(modifier = Modifier.padding(vertical = 8.dp)) {
         Text(stringResource(id = name))
         Spacer(modifier = Modifier.height(8.dp))
-        Surface(
+        MoSoSurface(
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(8),
         ) {
@@ -99,7 +100,7 @@ fun SettingsSwitch(
     state: Boolean,
     onClick: () -> Unit
 ) {
-    Surface(
+    MoSoSurface(
         color = Color.Transparent,
         modifier = Modifier
             .fillMaxWidth()
@@ -131,7 +132,7 @@ fun SettingsSwitch(
                     onCheckedChange = { onClick() }
                 )
             }
-            Divider()
+           MoSoDivider()
         }
     }
 }
@@ -145,7 +146,7 @@ private fun SettingsTextLink(
     onClick: () -> Unit
 ) {
 
-    Surface(
+    MoSoSurface(
         color = Color.Transparent,
         modifier = Modifier
             .fillMaxWidth()
@@ -173,7 +174,7 @@ private fun SettingsTextLink(
                 }
                 Spacer(modifier = Modifier.weight(1f))
             }
-            Divider()
+            MoSoDivider()
         }
     }
 }
@@ -185,7 +186,7 @@ private fun LogoutText(
     onClick: () -> Unit
 ) {
 
-    Surface(
+    MoSoSurface(
         color = MaterialTheme.colorScheme.error,
         modifier = Modifier
             .fillMaxWidth(),
@@ -213,7 +214,7 @@ private fun LogoutText(
 @Preview
 @Composable
 internal fun SettingsScreenPreview() {
-    MozillaSocialTheme {
+    MoSoTheme {
         SettingsScreen(false, {}, {})
     }
 }

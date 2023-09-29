@@ -30,6 +30,7 @@ dependencies {
     implementation(project(":core:datastore"))
     implementation(project(":core:model"))
     implementation(project(":core:database"))
+    implementation(project(":core:common"))
 
     implementation(libs.androidx.room.ktx)
 

@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import org.mozilla.social.common.logging.Log
@@ -16,6 +17,7 @@ import org.mozilla.social.core.ui.postcard.PostCardDelegate
 import org.mozilla.social.core.ui.postcard.PostCardNavigation
 import org.mozilla.social.core.ui.postcard.PostCardUiState
 import org.mozilla.social.core.ui.postcard.toPostCardUiState
+import timber.log.Timber
 
 class ThreadViewModel(
     statusRepository: StatusRepository,
@@ -37,6 +39,8 @@ class ThreadViewModel(
     var statuses: Flow<List<PostCardUiState>> =
         getThreadUseCase.invoke(mainStatusId).map { statuses ->
             statuses.map { it.toPostCardUiState(currentUserAccountId.value) }
+        }.catch {
+            Timber.e(it)
         }
 
     val postCardDelegate = PostCardDelegate(

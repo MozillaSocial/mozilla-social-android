@@ -14,16 +14,20 @@ import org.mozilla.social.core.database.converters.IntListConverter
 import org.mozilla.social.core.database.converters.LocalDateConverter
 import org.mozilla.social.core.database.converters.MentionConverter
 import org.mozilla.social.core.database.converters.PollOptionConverter
+import org.mozilla.social.core.database.dao.AccountTimelineStatusDao
 import org.mozilla.social.core.database.dao.AccountsDao
 import org.mozilla.social.core.database.dao.HashTagTimelineStatusDao
 import org.mozilla.social.core.database.dao.HashtagDao
 import org.mozilla.social.core.database.dao.HomeTimelineStatusDao
 import org.mozilla.social.core.database.dao.PollsDao
+import org.mozilla.social.core.database.dao.RelationshipsDao
 import org.mozilla.social.core.database.dao.StatusDao
 import org.mozilla.social.core.database.model.DatabaseAccount
 import org.mozilla.social.core.database.model.DatabaseHashTag
 import org.mozilla.social.core.database.model.DatabasePoll
+import org.mozilla.social.core.database.model.DatabaseRelationship
 import org.mozilla.social.core.database.model.DatabaseStatus
+import org.mozilla.social.core.database.model.statusCollections.AccountTimelineStatus
 import org.mozilla.social.core.database.model.statusCollections.HashTagTimelineStatus
 import org.mozilla.social.core.database.model.statusCollections.HomeTimelineStatus
 
@@ -35,11 +39,15 @@ import org.mozilla.social.core.database.model.statusCollections.HomeTimelineStat
         HomeTimelineStatus::class,
         DatabasePoll::class,
         HashTagTimelineStatus::class,
+        AccountTimelineStatus::class,
+        DatabaseRelationship::class,
     ],
-    version = 3,
+    version = 5,
     autoMigrations = [
         AutoMigration(1, 2, DatabaseMigrations.Schema1to2::class),
-        AutoMigration(2, 3)
+        AutoMigration(2, 3),
+        AutoMigration(3, 4),
+        AutoMigration(4, 5),
     ],
     exportSchema = true
 )
@@ -62,4 +70,6 @@ abstract class SocialDatabase : RoomDatabase() {
     abstract fun homeTimelineDao(): HomeTimelineStatusDao
     abstract fun pollDao(): PollsDao
     abstract fun hashTagTimelineDao(): HashTagTimelineStatusDao
+    abstract fun accountTimelineDao(): AccountTimelineStatusDao
+    abstract fun relationshipsDao(): RelationshipsDao
 }

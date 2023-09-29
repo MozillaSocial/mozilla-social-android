@@ -1,12 +1,15 @@
 package org.mozilla.social.core.network
 
 import org.mozilla.social.core.network.model.NetworkAccount
+import org.mozilla.social.core.network.model.NetworkRelationship
 import org.mozilla.social.core.network.model.NetworkStatus
+import retrofit2.Response
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface AccountApi {
     @GET("/api/v1/accounts/{id}")
@@ -19,17 +22,41 @@ interface AccountApi {
 
     @GET("/api/v1/accounts/{id}/followers")
     suspend fun getAccountFollowers(
-        @Path("id") accountId: String
-    ): List<NetworkAccount>
+        @Path("id") accountId: String,
+        // Return results older than ID.
+        @Query("max_id") olderThanId: String? = null,
+        // Return results newer than ID.
+        @Query("since_id") newerThanId: String? = null,
+        // Return results immediately newer than ID.
+        @Query("min_id") immediatelyNewerThanId: String? = null,
+        // Maximum number of results to return. Defaults to 20 statuses. Max 40 statuses.
+        @Query("limit") limit: Int? = null,
+    ): Response<List<NetworkAccount>>
 
     @GET("/api/v1/accounts/{id}/following")
     suspend fun getAccountFollowing(
-        @Path("id") accountId: String
-    ): List<NetworkAccount>
+        @Path("id") accountId: String,
+        // Return results older than ID.
+        @Query("max_id") olderThanId: String? = null,
+        // Return results newer than ID.
+        @Query("since_id") newerThanId: String? = null,
+        // Return results immediately newer than ID.
+        @Query("min_id") immediatelyNewerThanId: String? = null,
+        // Maximum number of results to return. Defaults to 20 statuses. Max 40 statuses.
+        @Query("limit") limit: Int? = null,
+    ): Response<List<NetworkAccount>>
 
     @GET("/api/v1/accounts/{id}/statuses")
     suspend fun getAccountStatuses(
-        @Path("id") accountId: String
+        @Path("id") accountId: String,
+        // Return results older than ID.
+        @Query("max_id") olderThanId: String? = null,
+        // Return results newer than ID.
+        @Query("since_id") newerThanId: String? = null,
+        // Return results immediately newer than ID.
+        @Query("min_id") immediatelyNewerThanId: String? = null,
+        // Maximum number of results to return. Defaults to 20 statuses. Max 40 statuses.
+        @Query("limit") limit: Int? = null,
     ): List<NetworkStatus>
 
     @GET("/api/v1/bookmarks")
@@ -72,4 +99,9 @@ interface AccountApi {
     suspend fun unmuteAccount(
         @Path("accountId") accountId: String,
     )
+
+    @GET("/api/v1/accounts/relationships")
+    suspend fun getRelationships(
+        @Query("id") ids: Array<String>
+    ): List<NetworkRelationship>
 }

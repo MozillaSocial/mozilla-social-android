@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -25,7 +24,12 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharedFlow
+import org.mozilla.social.common.utils.StringFactory
+import org.mozilla.social.core.designsystem.component.MoSoDivider
+import org.mozilla.social.core.designsystem.component.MoSoToast
 import org.mozilla.social.core.ui.R
+import org.mozilla.social.core.ui.error.GenericError
 import org.mozilla.social.core.ui.pullrefresh.PullRefreshIndicator
 import org.mozilla.social.core.ui.pullrefresh.pullRefresh
 import org.mozilla.social.core.ui.pullrefresh.rememberPullRefreshState
@@ -36,8 +40,11 @@ import org.mozilla.social.model.Recommendation
 @Composable
 fun PostCardList(
     feed: Flow<PagingData<PostCardUiState>>,
+    errorToastMessage: SharedFlow<StringFactory>,
     reccs: List<Recommendation>? = null,
     postCardInteractions: PostCardInteractions,
+    enablePullToRefresh: Boolean = false,
+    headerContent: @Composable () -> Unit = {},
 ) {
 
     val lazyingPagingItems: LazyPagingItems<PostCardUiState> = feed.collectAsLazyPagingItems()
@@ -60,11 +67,14 @@ fun PostCardList(
 
     Box(
         modifier = Modifier
-            .pullRefresh(pullRefreshState),
+            .pullRefresh(
+                pullRefreshState,
+                enabled = enablePullToRefresh,
+            ),
     ) {
 
         if (lazyingPagingItems.loadState.refresh is LoadState.Error) {
-            Error(
+            GenericError(
                 modifier = Modifier
                     .fillMaxSize(),
                 onRetryClicked = { lazyingPagingItems.refresh() }
@@ -76,6 +86,8 @@ fun PostCardList(
                 .fillMaxSize()
                 .padding(horizontal = 4.dp),
         ) {
+
+            item { headerContent() }
 
             when (lazyingPagingItems.loadState.refresh) {
                 is LoadState.Error -> {} // handle the error outside the lazy column
@@ -93,7 +105,7 @@ fun PostCardList(
                         lazyingPagingItems[index]?.let { item ->
                             PostCard(post = item, postCardInteractions)
                             if (index < lazyingPagingItems.itemCount) {
-                                Divider()
+                                MoSoDivider()
                             }
                         }
                     }
@@ -114,7 +126,7 @@ fun PostCardList(
 
                 is LoadState.Error -> {
                     item {
-                        Error(
+                        GenericError(
                             onRetryClicked = { lazyingPagingItems.retry() }
                         )
                     }
@@ -124,43 +136,22 @@ fun PostCardList(
             }
         }
 
-        PullRefreshIndicator(
-            modifier = Modifier.align(Alignment.TopCenter),
-            refreshing = lazyingPagingItems.loadState.refresh == LoadState.Loading,
-            state = pullRefreshState,
-        )
-    }
-}
-
-@Composable
-private fun Error(
-    modifier: Modifier = Modifier,
-    onRetryClicked: () -> Unit,
-) {
-    Column(
-        modifier = modifier
-            .padding(8.dp)
-            .fillMaxWidth()
-            .wrapContentSize(align = Alignment.Center)
-    ) {
-        Text(
-            modifier = Modifier.align(Alignment.CenterHorizontally),
-            text = stringResource(id = R.string.error_oops)
-        )
-        Button(
-            modifier = Modifier
-                .padding(8.dp)
-                .align(Alignment.CenterHorizontally),
-            onClick = { onRetryClicked() }
-        ) {
-            Text(text = stringResource(id = R.string.retry))
+        if (enablePullToRefresh) {
+            PullRefreshIndicator(
+                modifier = Modifier.align(Alignment.TopCenter),
+                refreshing = lazyingPagingItems.loadState.refresh == LoadState.Loading,
+                state = pullRefreshState,
+            )
         }
     }
+
+    MoSoToast(toastMessage = errorToastMessage)
 }
 
 @Composable
 fun PostCardList(
     items: List<PostCardUiState>,
+    errorToastMessage: SharedFlow<StringFactory>,
     postCardInteractions: PostCardInteractions,
 ) {
 
@@ -176,8 +167,10 @@ fun PostCardList(
             val item = items[index]
             PostCard(post = item, postCardInteractions)
             if (index < items.count()) {
-                Divider()
+                MoSoDivider()
             }
         }
     }
+
+    MoSoToast(toastMessage = errorToastMessage)
 }

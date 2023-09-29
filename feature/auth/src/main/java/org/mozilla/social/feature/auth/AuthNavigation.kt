@@ -13,6 +13,6 @@ fun NavController.navigateToLoginScreen(navOptions: NavOptions? = null) {
 
 fun NavGraphBuilder.loginScreen(navigateToLoggedInGraph: () -> Unit) {
     composable(route = AUTH_ROUTE) {
-        LoginRoute(navigateToLoggedInGraph = navigateToLoggedInGraph)
+        LoginScreen(navigateToLoggedInGraph = navigateToLoggedInGraph)
     }
 }

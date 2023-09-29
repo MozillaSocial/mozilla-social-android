@@ -8,6 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import org.mozilla.social.core.designsystem.component.MoSoScaffold
 import org.mozilla.social.navigation.MozillaNavHost
+import org.mozilla.social.ui.navigationdrawer.NavigationDrawer
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -22,11 +23,18 @@ fun MainActivityScreen() {
         topBar = { appState.TopBar() },
         topAppBarScrollBehavior = appState.topAppBarScrollBehavior,
         navigationDrawerState = appState.navigationDrawerState,
-        navigationDrawerContent = { appState.NavigationDrawerContent(onSettingsClicked = appState::navigateToSettings) },
+        navigationDrawerContent = {
+            NavigationDrawer(
+                onSettingsClicked = appState::navigateToSettings,
+                onLoggedOut = appState::navigateToLoginScreen,
+            )
+        },
         bottomSheetContent = { appState.BottomSheetContent() },
         bottomSheetVisible = appState.bottomSheetVisible.value,
         content = {
-            Box(modifier = Modifier.padding(it)) { MozillaNavHost(appState = appState) }
+            Box(modifier = Modifier.padding(it)) {
+                MozillaNavHost(appState = appState)
+            }
         }
     )
 }

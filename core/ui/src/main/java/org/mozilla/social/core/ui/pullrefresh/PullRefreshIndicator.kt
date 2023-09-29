@@ -26,9 +26,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.derivedStateOf
@@ -48,6 +45,8 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
+import org.mozilla.social.core.designsystem.component.MoSoSurface
+import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
@@ -72,15 +71,15 @@ fun PullRefreshIndicator(
     refreshing: Boolean,
     state: PullRefreshState,
     modifier: Modifier = Modifier,
-    backgroundColor: Color = MaterialTheme.colorScheme.surface,
-    contentColor: Color = contentColorFor(backgroundColor),
+    backgroundColor: Color = MoSoTheme.colors.layer1,
+    contentColor: Color = MoSoTheme.colors.textPrimary,
     scale: Boolean = false,
 ) {
     val showElevation by remember(refreshing, state) {
         derivedStateOf { refreshing || state.position > 0.5f }
     }
 
-    Surface(
+    MoSoSurface(
         modifier = modifier
             .size(IndicatorSize)
             .pullRefreshIndicatorTransform(state, scale),

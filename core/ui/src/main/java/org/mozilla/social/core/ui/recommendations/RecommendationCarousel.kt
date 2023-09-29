@@ -22,8 +22,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import org.mozilla.social.core.designsystem.component.MoSoDivider
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.designsystem.theme.FirefoxColor
+import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.designsystem.theme.Typography
 import org.mozilla.social.core.ui.R
 import org.mozilla.social.model.Recommendation
@@ -72,16 +74,16 @@ fun RecommendationCarousel(reccs: List<Recommendation>, onMoreInfoClicked: () ->
             ) {
                 Text(
                     text = stringResource(id = R.string.recommendations_discover_more),
-                    color = FirefoxColor.Violet70
+                    color = MoSoTheme.colors.actionPrimary
                 )
                 Icon(
                     imageVector = MoSoIcons.ChevronRight,
-                    tint = FirefoxColor.Violet70,
+                    tint = MoSoTheme.colors.actionPrimary,
                     contentDescription = null
                 )
             }
         }
-        Divider()
+        MoSoDivider()
     }
 }
 

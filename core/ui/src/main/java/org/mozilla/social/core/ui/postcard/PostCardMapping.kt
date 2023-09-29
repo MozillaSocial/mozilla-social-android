@@ -47,12 +47,12 @@ private fun Status.toMainPostCardUiState(
 private fun Status.toTopRowMetaDataUiState(): TopRowMetaDataUiState? =
     if (boostedStatus != null) {
         TopRowMetaDataUiState(
-            text = StringFactory.string(R.string.user_has_boosted_post, account.username),
+            text = StringFactory.resource(R.string.user_has_boosted_post, account.username),
             icon = MoSoIcons.Repeat
         )
     } else if (inReplyToAccountName != null) {
         TopRowMetaDataUiState(
-            text = StringFactory.string(R.string.post_is_in_reply_to_user, inReplyToAccountName!!),
+            text = StringFactory.resource(R.string.post_is_in_reply_to_user, inReplyToAccountName!!),
             icon = MoSoIcons.Reply
         )
     } else null

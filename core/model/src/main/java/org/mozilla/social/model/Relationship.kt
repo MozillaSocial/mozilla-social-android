@@ -21,11 +21,6 @@ data class Relationship(
     val hasPendingFollowRequest: Boolean,
 
     /**
-     * Whether the current account is featuring this account on their profile.
-     */
-    val isFeatured: Boolean,
-
-    /**
      * Whether the current account is being followed by this account.
      */
     val isFollowedBy: Boolean,
@@ -65,8 +60,5 @@ data class Relationship(
      */
     val isBlockedBy: Boolean,
 
-    /**
-     * A private comment left by the current account on this account.
-     */
-    val note: String
+    val endorsed: Boolean,
 )

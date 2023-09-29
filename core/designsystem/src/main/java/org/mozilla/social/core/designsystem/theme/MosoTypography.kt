@@ -182,7 +182,7 @@ private fun TypographyPreview() {
         Pair("Body Small", defaultTypography.bodySmall),
     )
 
-    MozillaSocialTheme {
+    MoSoTheme {
         LazyColumn(
             modifier = Modifier
                 .background(MoSoTheme.colors.layer1)

@@ -33,7 +33,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -41,7 +40,6 @@ import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -70,9 +68,12 @@ import org.koin.core.parameter.parametersOf
 import org.mozilla.social.common.LoadState
 import org.mozilla.social.common.utils.buildAnnotatedStringForAccountsAndHashtags
 import org.mozilla.social.common.utils.toFile
+import org.mozilla.social.core.designsystem.component.MoSoDivider
+import org.mozilla.social.core.designsystem.component.MoSoSurface
+import org.mozilla.social.core.designsystem.component.MoSoToast
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.designsystem.theme.FirefoxColor
-import org.mozilla.social.core.designsystem.theme.MozillaSocialTheme
+import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.designsystem.utils.NoIndication
 import org.mozilla.social.core.ui.TransparentNoTouchOverlay
 import org.mozilla.social.core.ui.VerticalDivider
@@ -85,16 +86,16 @@ import org.mozilla.social.model.StatusVisibility
 import org.mozilla.social.post.NewPostViewModel.Companion.MAX_POLL_COUNT
 import org.mozilla.social.post.NewPostViewModel.Companion.MAX_POST_LENGTH
 import org.mozilla.social.post.NewPostViewModel.Companion.MIN_POLL_COUNT
-import org.mozilla.social.post.status.ContentWarningInteractions
 import org.mozilla.social.post.media.MediaInteractions
-import org.mozilla.social.post.poll.PollInteractions
 import org.mozilla.social.post.poll.Poll
 import org.mozilla.social.post.poll.PollDuration
 import org.mozilla.social.post.poll.PollDurationDropDown
+import org.mozilla.social.post.poll.PollInteractions
 import org.mozilla.social.post.poll.PollStyle
 import org.mozilla.social.post.poll.PollStyleDropDown
 import org.mozilla.social.post.status.Account
 import org.mozilla.social.post.status.AccountSearchBar
+import org.mozilla.social.post.status.ContentWarningInteractions
 import org.mozilla.social.post.status.HashtagSearchBar
 import org.mozilla.social.post.status.StatusInteractions
 
@@ -103,10 +104,12 @@ internal fun NewPostRoute(
     onStatusPosted: () -> Unit,
     onCloseClicked: () -> Unit,
     replyStatusId: String?,
-    viewModel: NewPostViewModel = koinViewModel(parameters = { parametersOf(
-        onStatusPosted,
-        replyStatusId,
-    ) })
+    viewModel: NewPostViewModel = koinViewModel(parameters = {
+        parametersOf(
+            onStatusPosted,
+            replyStatusId,
+        )
+    })
 ) {
     NewPostScreen(
         statusText = viewModel.statusText.collectAsState().value,
@@ -130,13 +133,7 @@ internal fun NewPostRoute(
         inReplyToAccountName = viewModel.inReplyToAccountName.collectAsState().value,
     )
 
-    val context = LocalContext.current
-
-    LaunchedEffect(Unit) {
-        viewModel.errorToastMessage.collect {
-            Toast.makeText(context, it.build(context), Toast.LENGTH_LONG).show()
-        }
-    }
+    MoSoToast(toastMessage = viewModel.errorToastMessage)
 }
 
 @Composable
@@ -303,8 +300,8 @@ private fun BottomBar(
         "${MAX_POST_LENGTH - statusText.length - (contentWarningText?.length ?: 0)}"
     }
     Column {
-        Divider(
-            color = MaterialTheme.colorScheme.outlineVariant
+        MoSoDivider(
+            color = MoSoTheme.colors.borderPrimary
         )
         Box(
             modifier = Modifier
@@ -343,7 +340,7 @@ private fun BottomBar(
                         MoSoIcons.Warning,
                         stringResource(id = R.string.content_warning_button_content_description),
                         tint = if (contentWarningText == null) {
-                           LocalContentColor.current
+                            LocalContentColor.current
                         } else {
                             MaterialTheme.colorScheme.error
                         },
@@ -385,7 +382,7 @@ private fun MainBox(
     ) {
         val keyboard = LocalSoftwareKeyboardController.current
         val textFieldFocusRequester = remember { FocusRequester() }
-        Surface(
+        MoSoSurface(
             modifier = Modifier
                 .fillMaxSize()
                 .clickable {
@@ -478,7 +475,10 @@ private fun InReplyToText(
             )
             Spacer(modifier = Modifier.padding(start = 8.dp))
             Text(
-                text = stringResource(id = R.string.in_reply_to_account_name_label, inReplyToAccountName),
+                text = stringResource(
+                    id = R.string.in_reply_to_account_name_label,
+                    inReplyToAccountName
+                ),
                 fontSize = 14.sp,
             )
         }
@@ -518,7 +518,7 @@ private fun ImageUploadBox(
             .padding(16.dp)
             .border(
                 width = 2.dp,
-                color = MaterialTheme.colorScheme.outlineVariant,
+                color = MoSoTheme.colors.borderPrimary,
                 shape = outlineShape
             )
             .clip(
@@ -538,7 +538,12 @@ private fun ImageUploadBox(
                 TextField(
                     modifier = Modifier.weight(1f),
                     value = imageState.value.description,
-                    onValueChange = { mediaInteractions.onMediaDescriptionTextUpdated(imageState.key, it) },
+                    onValueChange = {
+                        mediaInteractions.onMediaDescriptionTextUpdated(
+                            imageState.key,
+                            it
+                        )
+                    },
                     label = {
                         Text(
                             text = stringResource(id = R.string.media_alt_text_label)
@@ -554,7 +559,10 @@ private fun ImageUploadBox(
                     mediaInteractions.onDeleteMediaClicked(imageState.key)
                 }
             ) {
-                Icon(MoSoIcons.Delete, stringResource(id = R.string.delete_button_content_description))
+                Icon(
+                    MoSoIcons.Delete,
+                    stringResource(id = R.string.delete_button_content_description)
+                )
             }
         }
     }
@@ -666,7 +674,7 @@ private fun PollSettings(
 @Preview
 @Composable
 private fun NewPostScreenPreview() {
-    MozillaSocialTheme(
+    MoSoTheme(
         false
     ) {
         NewPostScreen(

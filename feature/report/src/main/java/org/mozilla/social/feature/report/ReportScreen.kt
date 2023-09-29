@@ -1,6 +1,5 @@
 package org.mozilla.social.feature.report
 
-import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -22,20 +21,15 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
-import androidx.compose.material3.Divider
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -43,9 +37,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
+import org.mozilla.social.core.designsystem.component.MoSoDivider
+import org.mozilla.social.core.designsystem.component.MoSoToast
 import org.mozilla.social.core.designsystem.component.MoSoTopBar
-import org.mozilla.social.core.designsystem.icon.MoSoIcons
-import org.mozilla.social.core.designsystem.theme.MozillaSocialTheme
+import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.ui.transparentTextFieldColors
 import org.mozilla.social.model.InstanceRule
 
@@ -55,14 +50,21 @@ fun ReportRoute(
     onCloseClicked: () -> Unit,
     reportAccountId: String,
     reportStatusId: String?,
-    viewModel: ReportViewModel = koinViewModel(parameters = { parametersOf(
-        onReported,
-        onCloseClicked,
-        reportAccountId,
-        reportStatusId,
-    ) })
+    viewModel: ReportViewModel = koinViewModel(parameters = {
+        parametersOf(
+            onReported,
+            onCloseClicked,
+            reportAccountId,
+            reportStatusId,
+        )
+    })
 ) {
     ReportScreen(
+        reportTarget = if (reportStatusId != null) {
+            ReportTarget.POST
+        } else {
+           ReportTarget.ACCOUNT
+        },
         instanceRules = viewModel.instanceRules.collectAsState().value,
         selectedReportType = viewModel.selectedReportType.collectAsState().value,
         checkedRules = viewModel.checkedRules.collectAsState().value,
@@ -70,17 +72,12 @@ fun ReportRoute(
         reportInteractions = viewModel
     )
 
-    val context = LocalContext.current
-
-    LaunchedEffect(Unit) {
-        viewModel.errorToastMessage.collect {
-            Toast.makeText(context, it.build(context), Toast.LENGTH_LONG).show()
-        }
-    }
+    MoSoToast(toastMessage = viewModel.errorToastMessage)
 }
 
 @Composable
 private fun ReportScreen(
+    reportTarget: ReportTarget,
     instanceRules: List<InstanceRule>,
     selectedReportType: ReportType?,
     checkedRules: List<InstanceRule>,
@@ -97,10 +94,11 @@ private fun ReportScreen(
         ) {
             MoSoTopBar(
                 title = stringResource(id = R.string.report_screen_title),
-                onCloseClicked = { reportInteractions.onCloseClicked() }
+                onIconClicked = { reportInteractions.onCloseClicked() }
             )
-            Divider()
+            MoSoDivider()
             MainContent(
+                reportTarget = reportTarget,
                 instanceRules = instanceRules,
                 selectedReportType = selectedReportType,
                 checkedRules = checkedRules,
@@ -113,6 +111,7 @@ private fun ReportScreen(
 
 @Composable
 private fun MainContent(
+    reportTarget: ReportTarget,
     instanceRules: List<InstanceRule>,
     selectedReportType: ReportType?,
     checkedRules: List<InstanceRule>,
@@ -126,7 +125,11 @@ private fun MainContent(
     ) {
         Spacer(modifier = Modifier.padding(8.dp))
         Text(
-            text = stringResource(id = R.string.report_instructions),
+            text = stringResource(id = if (reportTarget == ReportTarget.POST) {
+                R.string.report_instructions_for_post
+            } else {
+                R.string.report_instructions_for_account
+            }),
             fontSize = 24.sp
         )
         Spacer(modifier = Modifier.padding(8.dp))
@@ -275,8 +278,9 @@ private fun CheckableInstanceRule(
 @Preview
 @Composable
 private fun ReportScreenPreview() {
-    MozillaSocialTheme {
+    MoSoTheme {
         ReportScreen(
+            reportTarget = ReportTarget.POST,
             instanceRules = listOf(
                 InstanceRule(
                     1,

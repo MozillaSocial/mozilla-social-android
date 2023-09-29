@@ -23,12 +23,13 @@ fun ThreadScreen(
     Column {
         MoSoTopBar(
             title = stringResource(id = R.string.thread_screen_title),
-            onCloseClicked = onCloseClicked,
+            onIconClicked = onCloseClicked,
         )
 
         PostCardList(
             items = viewModel.statuses.collectAsState(emptyList()).value,
-            postCardInteractions = viewModel.postCardDelegate
+            errorToastMessage = viewModel.postCardDelegate.errorToastMessage,
+            postCardInteractions = viewModel.postCardDelegate,
         )
     }
 }

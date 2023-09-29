@@ -1,14 +1,16 @@
 package org.mozilla.social.ui
 
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Divider
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
@@ -39,26 +41,27 @@ import kotlinx.coroutines.launch
 import org.mozilla.social.R
 import org.mozilla.social.core.designsystem.component.MoSoAppBar
 import org.mozilla.social.core.designsystem.component.MoSoBottomNavigationBar
-import org.mozilla.social.core.designsystem.component.MoSoModalDrawerSheet
-import org.mozilla.social.core.designsystem.component.MoSoNavigationDrawerItem
+import org.mozilla.social.core.designsystem.component.MoSoDivider
 import org.mozilla.social.core.designsystem.component.NavBarDestination
 import org.mozilla.social.core.designsystem.component.NavDestination
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
-import org.mozilla.social.feature.account.follows.navigateToAccountFollowers
-import org.mozilla.social.feature.account.follows.navigateToAccountFollowing
+import org.mozilla.social.core.designsystem.icon.mozillaLogo
+import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.feature.account.navigateToAccount
 import org.mozilla.social.feature.auth.AUTH_ROUTE
 import org.mozilla.social.feature.auth.navigateToLoginScreen
+import org.mozilla.social.feature.followers.navigateToFollowers
+import org.mozilla.social.feature.followers.navigateToFollowing
 import org.mozilla.social.feature.hashtag.navigateToHashTag
 import org.mozilla.social.feature.report.navigateToReport
 import org.mozilla.social.feature.settings.navigateToSettings
 import org.mozilla.social.feature.thread.navigateToThread
 import org.mozilla.social.navigation.Account
+import org.mozilla.social.navigation.Bookmarks
+import org.mozilla.social.navigation.Discover
 import org.mozilla.social.navigation.Feed
-import org.mozilla.social.navigation.MAIN_ROUTE
 import org.mozilla.social.navigation.NewPost
-import org.mozilla.social.navigation.SPLASH_ROUTE
-import org.mozilla.social.navigation.Search
+import org.mozilla.social.navigation.Routes
 import org.mozilla.social.post.navigateToNewPost
 import timber.log.Timber
 
@@ -68,7 +71,7 @@ fun rememberAppState(
     navController: NavHostController = rememberNavController(),
     coroutineScope: CoroutineScope = rememberCoroutineScope(),
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
-    topAppBarScrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
+    topAppBarScrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(
         rememberTopAppBarState()
     ),
     navigationDrawerState: DrawerState = rememberDrawerState(DrawerValue.Closed),
@@ -121,7 +124,7 @@ class AppState(
                 }
             }
 
-            NewPost, Search, Account, null -> {}
+            NewPost, Bookmarks, Account, null -> {}
         }
     }
 
@@ -135,7 +138,7 @@ class AppState(
                 stringResource(id = R.string.top_bar_title_feed)
             }
 
-            Search -> {
+            Bookmarks -> {
                 stringResource(id = R.string.top_bar_title_search)
             }
 
@@ -149,50 +152,56 @@ class AppState(
         }
 
         when (currentDestination) {
-            Feed, Search, Account -> {
-                MoSoAppBar(
-                    scrollBehavior = topAppBarScrollBehavior,
-                    title = {
-                        if (titleText != null) {
-                            Text(
-                                text = titleText,
-                                color = MaterialTheme.colorScheme.onPrimary
+            Feed, Discover, Bookmarks, Account -> {
+                Column {
+                    MoSoAppBar(
+                        scrollBehavior = topAppBarScrollBehavior,
+                        title = {
+                            Image(
+                                painter = mozillaLogo(),
+                                contentDescription = "mozilla logo"
                             )
-                        }
-                    },
-                    navigationIcon = {
-                        when (currentDestination) {
-                            Feed, Search, Account -> {
-                                IconButton(onClick = {
-                                    coroutineScope.launch {
-                                        navigationDrawerState.open()
+                        },
+                        navigationIcon = {
+                            when (currentDestination) {
+                                Feed, Discover, Account, Bookmarks -> {
+                                    IconButton(onClick = {
+                                        coroutineScope.launch {
+                                            navigationDrawerState.open()
+                                        }
+                                    }) {
+                                        Icon(
+                                            painter = MoSoIcons.list(),
+                                            modifier = Modifier.size(24.dp),
+                                            contentDescription = stringResource(id = R.string.navigation_menu_content_description),
+                                        )
                                     }
-                                }) {
-                                    Icon(
-                                        imageVector = MoSoIcons.Menu,
-                                        contentDescription = stringResource(id = R.string.navigation_menu_content_description),
-                                        tint = MaterialTheme.colorScheme.onPrimary,
-                                    )
                                 }
-                            }
 
-                            else -> {}
-                        }
-                    },
-                    actions = {
-                        if (currentDestination == Feed) {
-                            IconButton(onClick = {
-                                bottomSheetVisible.value = !bottomSheetVisible.value
-                            }) {
-                                Icon(
-                                    imageVector = MoSoIcons.Feed,
-                                    contentDescription = stringResource(id = R.string.feed_selection_content_description),
-                                    tint = MaterialTheme.colorScheme.onPrimary,
-                                )
+                                else -> {}
                             }
+                        },
+                        actions = {
+//                            if (currentDestination == Feed) {
+//                                IconButton(onClick = {
+//                                    bottomSheetVisible.value = !bottomSheetVisible.value
+//                                }) {
+//                                    Icon(
+//                                        imageVector = MoSoIcons.Feed,
+//                                        contentDescription = stringResource(id = R.string.feed_selection_content_description),
+//                                        tint = MaterialTheme.colorScheme.onPrimary,
+//                                    )
+//                                }
+//                            }
                         }
-                    }
-                )
+                    )
+
+                    MoSoDivider(
+                        modifier = Modifier
+                            .height(1.dp)
+                            .background(MoSoTheme.colors.borderPrimary)
+                    )
+                }
             }
 
             else -> {
@@ -200,6 +209,7 @@ class AppState(
             }
         }
     }
+
 
     @Composable
     fun BottomBar() {
@@ -227,6 +237,7 @@ class AppState(
      * Navigate to the login screen when the user is logged out
      */
     fun navigateToLoginScreen() {
+        coroutineScope.launch { navigationDrawerState.close() }
         Timber.d("navigate to login screen")
         clearBackstack()
         navController.navigateToLoginScreen()
@@ -239,7 +250,7 @@ class AppState(
         Timber.d("navigate to login graph")
 
         navController.navigate(
-            MAIN_ROUTE,
+            Routes.MAIN,
             navOptions = NavOptions.Builder()
                 .setPopUpTo(AUTH_ROUTE, true)
                 .build()
@@ -247,7 +258,7 @@ class AppState(
     }
 
     fun navigateToSplashScreen() {
-        navController.navigate(SPLASH_ROUTE)
+        navController.navigate(Routes.SPLASH)
     }
 
     fun navigateToSettings() {
@@ -264,14 +275,14 @@ class AppState(
         )
     }
 
-    fun navigateToAccountFollowing() {
+    fun navigateToAccountFollowing(accountId: String) {
         coroutineScope.launch { navigationDrawerState.close() }
-        navController.navigateToAccountFollowing()
+        navController.navigateToFollowing(accountId)
     }
 
-    fun navigateToAccountFollowers() {
+    fun navigateToAccountFollowers(accountId: String) {
         coroutineScope.launch { navigationDrawerState.close() }
-        navController.navigateToAccountFollowers()
+        navController.navigateToFollowers(accountId)
     }
 
     fun navigateToNewPost(replyStatusId: String) {
@@ -282,7 +293,10 @@ class AppState(
         navController.navigateToThread(threadStatusId = statusId)
     }
 
-    fun navigateToReport(accountId: String, statusId: String?) {
+    fun navigateToReport(
+        accountId: String,
+        statusId: String? = null
+    ) {
         navController.navigateToReport(reportAccountId = accountId, reportStatusId = statusId)
     }
 
@@ -303,27 +317,6 @@ class AppState(
     }
 
     @Composable
-    fun NavigationDrawerContent(onSettingsClicked: () -> Unit) {
-        MoSoModalDrawerSheet {
-            Text(
-                modifier = Modifier.padding(16.dp),
-                text = stringResource(id = R.string.navigation_drawer_title),
-            )
-
-            Divider()
-            // TODO
-//                MoSoNavigationDrawerItem("Profile")
-//                MoSoNavigationDrawerItem("Favorites")
-//                MoSoNavigationDrawerItem("Bookmarks")
-            MoSoNavigationDrawerItem(
-                text = stringResource(id = R.string.navigation_drawer_item_settings),
-                onClick = onSettingsClicked,
-            )
-        }
-
-    }
-
-    @Composable
     fun BottomSheetContent() {
         Text(text = "feed options coming")
     }
@@ -332,11 +325,12 @@ class AppState(
         /**
          * All navigation destinations corresponding to nav bar tabs
          */
-        val navBarDestinations: List<NavBarDestination> = listOf(Feed, Search, Account)
+        val navBarDestinations: List<NavBarDestination> =
+            listOf(Feed, Discover, Bookmarks, Account)
 
         /**
          * All navigation destinations in the graph
          */
-        val navDestinations: List<NavDestination> = listOf(Feed, Search, Account, NewPost)
+        val navDestinations: List<NavDestination> = navBarDestinations + listOf(NewPost)
     }
 }

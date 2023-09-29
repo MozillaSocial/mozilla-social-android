@@ -1,11 +1,16 @@
 package org.mozilla.social.core.data.repository
 
 import kotlinx.coroutines.coroutineScope
+import org.mozilla.social.core.data.repository.model.account.toExternal
+import org.mozilla.social.core.data.repository.model.followers.FollowersPagingWrapper
 import org.mozilla.social.core.data.repository.model.status.toExternalModel
 import org.mozilla.social.core.database.SocialDatabase
 import org.mozilla.social.core.network.AccountApi
 import org.mozilla.social.model.Account
+import org.mozilla.social.model.Relationship
 import org.mozilla.social.model.Status
+import retrofit2.HttpException
+import retrofit2.Response
 
 class AccountRepository internal constructor(
     private val accountApi: AccountApi,
@@ -21,30 +26,70 @@ class AccountRepository internal constructor(
             accountApi.getAccount(accountId).toExternalModel()
         }
 
-    suspend fun getAccountFollowers(accountId: String): List<Account> =
-        coroutineScope {
-            accountApi.getAccountFollowers(accountId).map { it.toExternalModel() }
-        }
+    suspend fun getAccountRelationships(
+        accountIds: List<String>,
+    ): List<Relationship> = accountApi.getRelationships(accountIds.toTypedArray()).map { it.toExternal() }
 
-    suspend fun getAccountFollowing(accountId: String): List<Account> =
-        coroutineScope {
-            accountApi.getAccountFollowing(accountId).map { it.toExternalModel() }
+    suspend fun getAccountFollowers(
+        accountId: String,
+        olderThanId: String? = null,
+        newerThanId: String? = null,
+        loadSize: Int? = null,
+    ): FollowersPagingWrapper {
+        val response = accountApi.getAccountFollowers(
+            accountId = accountId,
+            olderThanId = olderThanId,
+            newerThanId = newerThanId,
+            limit = loadSize,
+        )
+        if (!response.isSuccessful) {
+            throw HttpException(response)
         }
+        return FollowersPagingWrapper(
+            accounts = response.body()?.map { it.toExternalModel() } ?: emptyList(),
+            link = response.headers().get("link"),
+        )
+    }
 
-    suspend fun getAccountStatuses(accountId: String): List<Status> =
-        coroutineScope {
-            accountApi.getAccountStatuses(accountId).map { it.toExternalModel() }
+    suspend fun getAccountFollowing(
+        accountId: String,
+        olderThanId: String? = null,
+        newerThanId: String? = null,
+        loadSize: Int? = null,
+    ): FollowersPagingWrapper {
+        val response = accountApi.getAccountFollowing(
+            accountId = accountId,
+            olderThanId = olderThanId,
+            newerThanId = newerThanId,
+            limit = loadSize,
+        )
+        if (!response.isSuccessful) {
+            throw HttpException(response)
         }
+        return FollowersPagingWrapper(
+            accounts = response.body()?.map { it.toExternalModel() } ?: emptyList(),
+            link = response.headers().get("link"),
+        )
+    }
+
+    suspend fun getAccountStatuses(
+        accountId: String,
+        olderThanId: String? = null,
+        immediatelyNewerThanId: String? = null,
+        loadSize: Int? = null,
+    ): List<Status> =
+        accountApi.getAccountStatuses(
+            accountId = accountId,
+            olderThanId = olderThanId,
+            immediatelyNewerThanId = immediatelyNewerThanId,
+            limit = loadSize,
+        ).map { it.toExternalModel() }
 
     suspend fun getAccountBookmarks(): List<Status> =
-        coroutineScope {
-            accountApi.getAccountBookmarks().map { it.toExternalModel() }
-        }
+        accountApi.getAccountBookmarks().map { it.toExternalModel() }
 
     suspend fun getAccountFavourites(): List<Status> =
-        coroutineScope {
-            accountApi.getAccountFavourites().map { it.toExternalModel() }
-        }
+        accountApi.getAccountFavourites().map { it.toExternalModel() }
 
     suspend fun followAccount(accountId: String) {
         accountApi.followAccount(accountId)
@@ -58,23 +103,47 @@ class AccountRepository internal constructor(
      * remove posts from any timelines before blocking
      */
     suspend fun blockAccount(accountId: String) {
-        socialDatabase.homeTimelineDao().remotePostsFromAccount(accountId)
-        accountApi.blockAccount(accountId)
+        try {
+            socialDatabase.homeTimelineDao().remotePostsFromAccount(accountId)
+            socialDatabase.relationshipsDao().updateBlocked(accountId, true)
+            accountApi.blockAccount(accountId)
+        } catch (e: Exception) {
+            socialDatabase.relationshipsDao().updateBlocked(accountId, false)
+            throw e
+        }
     }
 
     suspend fun unblockAccount(accountId: String) {
-        accountApi.unblockAccount(accountId)
+        try {
+            socialDatabase.relationshipsDao().updateBlocked(accountId, false)
+            accountApi.unblockAccount(accountId)
+        } catch (e: Exception) {
+            socialDatabase.relationshipsDao().updateBlocked(accountId, true)
+            throw e
+        }
     }
 
     /**
      * remove posts from any timelines before muting
      */
     suspend fun muteAccount(accountId: String) {
-        socialDatabase.homeTimelineDao().remotePostsFromAccount(accountId)
-        accountApi.muteAccount(accountId)
+        try {
+            socialDatabase.homeTimelineDao().remotePostsFromAccount(accountId)
+            socialDatabase.relationshipsDao().updateMuted(accountId, true)
+            accountApi.muteAccount(accountId)
+        } catch (e: Exception) {
+            socialDatabase.relationshipsDao().updateMuted(accountId, false)
+            throw e
+        }
     }
 
     suspend fun unmuteAccount(accountId: String) {
-        accountApi.unmuteAccount(accountId)
+        try {
+            socialDatabase.relationshipsDao().updateMuted(accountId, false)
+            accountApi.unmuteAccount(accountId)
+        } catch (e: Exception) {
+            socialDatabase.relationshipsDao().updateMuted(accountId, true)
+            throw e
+        }
     }
 }

@@ -5,9 +5,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import org.mozilla.social.core.domain.Login
+import org.mozilla.social.core.domain.Logout
 
 class MainViewModel(
     private val login: Login,
+
 ) : ViewModel() {
 
     fun onNewIntentReceived(intent: Intent) {
