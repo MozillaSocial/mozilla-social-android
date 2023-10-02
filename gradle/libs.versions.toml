@@ -13,57 +13,57 @@ okhttp = "4.10.0"
 protobuf = "3.23.0"
 
 [libraries]
-androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version = "1.7.2" }
-androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version = "1.6.1" }
-androidx-browser = { group = "androidx.browser", name = "browser", version = "1.5.0" }
-androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version = "2023.09.02" }
+androidx-activity-compose = { module = "androidx.activity:activity-compose", version = "1.7.2" }
+androidx-appcompat = { module = "androidx.appcompat:appcompat", version = "1.6.1" }
+androidx-browser = { module = "androidx.browser:browser", version = "1.5.0" }
+androidx-compose-bom = { module = "androidx.compose:compose-bom", version = "2023.09.02" }
 androidx-compose-compiler = { module = "androidx.compose.compiler:compiler", version = "1.5.3" }
-androidx-compose-material-iconsExtended = { group = "androidx.compose.material", name = "material-icons-extended" }
-androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3" }
-androidx-compose-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
-androidx-compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
-androidx-compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
-androidx-compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
-androidx-compose-ui-ui = { group = "androidx.compose.ui", name = "ui" }
-androidx-core = { group = "androidx.core", name = "core-ktx", version = "1.10.1" }
-androidx-datastore = { group = "androidx.datastore", name = "datastore", version = "1.0.0" }
-androidx-lifecycle-runtime = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "androidx-lifecycle" }
-androidx-lifecycle-viewmodel = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "androidx-lifecycle" }
-androidx-lifecycle-viewmodel-compose = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "androidx-lifecycle" }
-androidx-media3-exoplayer = { group = "androidx.media3", name = "media3-exoplayer", version.ref = "androidx-media3" }
-androidx-media3-ui = { group = "androidx.media3", name = "media3-ui", version.ref = "androidx-media3" }
-androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version = "2.6.0"}
-androidx-paging-compose = { group = "androidx.paging", name = "paging-compose", version.ref = "androidx-paging" }
-androidx-paging-runtime = { group = "androidx.paging", name = "paging-runtime", version.ref = "androidx-paging" }
-androidx-room = { group = "androidx.room", name = "room-ktx", version.ref = "androidx-room" }
-androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "androidx-room" }
-androidx-room-paging = { group = "androidx.room", name = "room-paging", version.ref = "androidx-room" }
-androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "androidx-room" }
-coil = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
-coil-gif = { group = "io.coil-kt", name = "coil-gif", version.ref = "coil" }
-coil-video = { group = "io.coil-kt", name = "coil-video", version.ref = "coil" }
-google-material = { group = "com.google.android.material", name = "material", version = "1.9.0" }
-jakewharton-timber = { group = "com.jakewharton.timber", name = "timber", version = "5.0.1" }
-koin = { group = "io.insert-koin", name = "koin-androidx-compose", version.ref = "koin" }
-koin-android = { group = "io.insert-koin", name = "koin-android", version.ref = "koin" }
-koin-test = { group = "io.insert-koin", name = "koin-test", version.ref = "koin" }
-kotlin-test = { group = "org.jetbrains.kotlin", name = "kotlin-test-common", version.ref = "kotlin" }
-kotlin-test-junit = { group = "org.jetbrains.kotlin", name = "kotlin-test-junit", version.ref = "kotlin" }
-kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version = "1.7.3" }
-kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version = "0.4.0" }
-kotlinx-serialization-converter = { group = "com.jakewharton.retrofit", name = "retrofit2-kotlinx-serialization-converter", version = "1.0.0" }
-kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version = "1.5.1" }
-protobuf-kotlin-lite = { group = "com.google.protobuf", name = "protobuf-kotlin-lite", version.ref = "protobuf" }
-protobuf-protoc = { group = "com.google.protobuf", name = "protoc", version.ref = "protobuf" }
-retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version = "2.9.0" }
-square-okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
-square-okhttp-logging = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp" }
+androidx-compose-material-iconsExtended = { module = "androidx.compose.material:material-icons-extended" }
+androidx-compose-material3 = { module = "androidx.compose.material3:material3" }
+androidx-compose-ui-graphics = { module = "androidx.compose.ui:ui-graphics" }
+androidx-compose-ui-test-manifest = { module = "androidx.compose.ui:ui-test-manifest" }
+androidx-compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
+androidx-compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
+androidx-compose-ui-ui = { module = "androidx.compose.ui:ui" }
+androidx-core = { module = "androidx.core:core-ktx", version = "1.10.1" }
+androidx-datastore = { module = "androidx.datastore:datastore", version = "1.0.0" }
+androidx-lifecycle-runtime = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "androidx-lifecycle" }
+androidx-lifecycle-viewmodel = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "androidx-lifecycle" }
+androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "androidx-lifecycle" }
+androidx-media3-exoplayer = { module = "androidx.media3:media3-exoplayer", version.ref = "androidx-media3" }
+androidx-media3-ui = { module = "androidx.media3:media3-ui", version.ref = "androidx-media3" }
+androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version = "2.6.0"}
+androidx-paging-compose = { module = "androidx.paging:paging-compose", version.ref = "androidx-paging" }
+androidx-paging-runtime = { module = "androidx.paging:paging-runtime", version.ref = "androidx-paging" }
+androidx-room = { module = "androidx.room:room-ktx", version.ref = "androidx-room" }
+androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "androidx-room" }
+androidx-room-paging = { module = "androidx.room:room-paging", version.ref = "androidx-room" }
+androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "androidx-room" }
+coil = { module = "io.coil-kt:coil-compose", version.ref = "coil" }
+coil-gif = { module = "io.coil-kt:coil-gif", version.ref = "coil" }
+coil-video = { module = "io.coil-kt:coil-video", version.ref = "coil" }
+google-material = { module = "com.google.android.material:material", version = "1.9.0" }
+jakewharton-timber = { module = "com.jakewharton.timber:timber", version = "5.0.1" }
+koin = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koin" }
+koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
+koin-test = { module = "io.insert-koin:koin-test", version.ref = "koin" }
+kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test-common", version.ref = "kotlin" }
+kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
+kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version = "1.7.3" }
+kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version = "0.4.0" }
+kotlinx-serialization-converter = { module = "com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter", version = "1.0.0" }
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version = "1.5.1" }
+protobuf-kotlin-lite = { module = "com.google.protobuf:protobuf-kotlin-lite", version.ref = "protobuf" }
+protobuf-protoc = { module = "com.google.protobuf:protoc", version.ref = "protobuf" }
+retrofit = { module = "com.squareup.retrofit2:retrofit", version = "2.9.0" }
+square-okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp" }
+square-okhttp-logging = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "okhttp" }
 
 
 # Dependencies of build-logic
-android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "android-gradle-plugin" }
+android-gradlePlugin = { module = "com.android.tools.build:gradle", version.ref = "android-gradle-plugin" }
 android-secrets-gradlePlugin = { module = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin:secrets-gradle-plugin", version.ref = "android-secrets-plugin" }
-kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
+kotlin-gradlePlugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "android-gradle-plugin" }
