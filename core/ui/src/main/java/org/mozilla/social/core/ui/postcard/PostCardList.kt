@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.CircularProgressIndicator
@@ -19,6 +20,7 @@ import androidx.paging.compose.itemKey
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharedFlow
 import org.mozilla.social.common.utils.StringFactory
+import org.mozilla.social.core.designsystem.component.MoSoCircularProgressIndicator
 import org.mozilla.social.core.designsystem.component.MoSoDivider
 import org.mozilla.social.core.designsystem.component.MoSoToast
 import org.mozilla.social.core.ui.error.GenericError
@@ -27,9 +29,14 @@ import org.mozilla.social.core.ui.pullrefresh.pullRefresh
 import org.mozilla.social.core.ui.pullrefresh.rememberPullRefreshState
 
 /**
+ * Shows a list of post cards and various loading and error states.
+ *
  * @param errorToastMessage a flow of toast messages to show when an error happens
- * @param fullScreenRefreshError if false, the error message will appear below the header
- * If true, the error message will be centered and full screen
+ * @param enablePullToRefresh if true, the user will be able to pull to refresh, and
+ * the pull to refresh loading indicator will be used when doing an initial load or a refresh.
+ * @param fullScreenRefreshStates if false, loading and error states will appear below the header
+ * If true, loading and error states will be centered and full screen.
+ * Note that if [enablePullToRefresh] is true, the pull to refresh loading indicator will be used instead.
  * @param headerContent content that will show above the list
  */
 @Composable
@@ -38,7 +45,7 @@ fun PostCardList(
     errorToastMessage: SharedFlow<StringFactory>,
     postCardInteractions: PostCardInteractions,
     enablePullToRefresh: Boolean = false,
-    fullScreenRefreshError: Boolean = false,
+    fullScreenRefreshStates: Boolean = false,
     headerContent: @Composable () -> Unit = {},
 ) {
 
@@ -66,13 +73,27 @@ fun PostCardList(
 
             when (lazyingPagingItems.loadState.refresh) {
                 is LoadState.Error -> {
-                    if (!fullScreenRefreshError) {
+                    if (!fullScreenRefreshStates) {
                         item {
                             GenericError(
                                 modifier = Modifier
                                     .fillMaxSize(),
                                 onRetryClicked = { lazyingPagingItems.refresh() }
                             )
+                        }
+                    }
+                }
+                is LoadState.Loading -> {
+                    if (!fullScreenRefreshStates && !enablePullToRefresh) {
+                        item {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .wrapContentWidth(Alignment.CenterHorizontally)
+                                    .padding(top = 40.dp)
+                            ) {
+                                MoSoCircularProgressIndicator()
+                            }
                         }
                     }
                 }
@@ -115,12 +136,22 @@ fun PostCardList(
             }
         }
 
-        if (lazyingPagingItems.loadState.refresh is LoadState.Error && fullScreenRefreshError) {
+        if (lazyingPagingItems.loadState.refresh is LoadState.Error && fullScreenRefreshStates) {
             GenericError(
                 modifier = Modifier
                     .fillMaxSize(),
                 onRetryClicked = { lazyingPagingItems.refresh() }
             )
+        }
+
+        if (lazyingPagingItems.loadState.refresh is LoadState.Loading && !enablePullToRefresh && fullScreenRefreshStates) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .wrapContentSize(Alignment.Center)
+            ) {
+                MoSoCircularProgressIndicator()
+            }
         }
 
         if (enablePullToRefresh) {
