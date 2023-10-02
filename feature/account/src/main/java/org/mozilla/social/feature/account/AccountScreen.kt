@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -48,6 +49,7 @@ import org.koin.core.parameter.parametersOf
 import org.mozilla.social.common.Resource
 import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.core.designsystem.component.MoSoButton
+import org.mozilla.social.core.designsystem.component.MoSoCircularProgressIndicator
 import org.mozilla.social.core.designsystem.component.MoSoDivider
 import org.mozilla.social.core.designsystem.component.MoSoDropdownMenu
 import org.mozilla.social.core.designsystem.component.MoSoToast
@@ -55,6 +57,7 @@ import org.mozilla.social.core.designsystem.component.MoSoTopBar
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.ui.DropDownItem
+import org.mozilla.social.core.ui.error.GenericError
 import org.mozilla.social.core.ui.htmlcontent.HtmlContent
 import org.mozilla.social.core.ui.htmlcontent.HtmlContentInteractions
 import org.mozilla.social.core.ui.postcard.PostCardInteractions
@@ -78,35 +81,25 @@ internal fun AccountRoute(
     ),
 ) {
 
-    when (val resource = viewModel.uiState.collectAsState(initial = Resource.Loading()).value) {
-        is Resource.Loading -> {
-            //TODO loading state
-        }
-        is Resource.Loaded<AccountUiState> -> {
-            AccountScreen(
-                account = resource.data,
-                showTopBar = viewModel.shouldShowTopBar,
-                isUsersProfile = viewModel.isOwnProfile,
-                feed = viewModel.feed,
-                errorToastMessage = viewModel.postCardDelegate.errorToastMessage,
-                accountNavigationCallbacks = accountNavigationCallbacks,
-                htmlContentInteractions = viewModel.postCardDelegate,
-                postCardInteractions = viewModel.postCardDelegate,
-                accountInteractions = viewModel
-            )
-        }
-        is Resource.Error -> {
-            //TODO error state
-        }
-    }
+    AccountScreen(
+        resource = viewModel.uiState.collectAsState().value,
+        showCloseButton = viewModel.shouldShowCloseButton,
+        isUsersProfile = viewModel.isOwnProfile,
+        feed = viewModel.feed,
+        errorToastMessage = viewModel.postCardDelegate.errorToastMessage,
+        accountNavigationCallbacks = accountNavigationCallbacks,
+        htmlContentInteractions = viewModel.postCardDelegate,
+        postCardInteractions = viewModel.postCardDelegate,
+        accountInteractions = viewModel
+    )
 
     MoSoToast(toastMessage = viewModel.errorToastMessage)
 }
 
 @Composable
-internal fun AccountScreen(
-    account: AccountUiState,
-    showTopBar: Boolean,
+private fun AccountScreen(
+    resource: Resource<AccountUiState>,
+    showCloseButton: Boolean,
     isUsersProfile: Boolean,
     feed: Flow<PagingData<PostCardUiState>>,
     errorToastMessage: SharedFlow<StringFactory>,
@@ -116,60 +109,127 @@ internal fun AccountScreen(
     accountInteractions: AccountInteractions,
 ) {
     Column {
-        MoSoTopBar(
-            title = account.displayName,
-            icon = if (showTopBar) {
-                MoSoIcons.Close
-            } else {
-                null
-            },
-            onIconClicked = { accountNavigationCallbacks.onCloseClicked() },
-            rightSideContent = {
-                OverflowMenu(
-                    account = account,
+        when (resource) {
+            is Resource.Loading -> {
+                MoSoTopBar(
+                    icon = if (showCloseButton) {
+                        MoSoIcons.Close
+                    } else {
+                        null
+                    },
+                    onIconClicked = { accountNavigationCallbacks.onCloseClicked() },
+                )
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .wrapContentSize(
+                            align = Alignment.Center
+                        )
+                ) {
+                    MoSoCircularProgressIndicator()
+                }
+            }
+            is Resource.Loaded<AccountUiState> -> {
+                MoSoTopBar(
+                    title = resource.data.displayName,
+                    icon = if (showCloseButton) {
+                        MoSoIcons.Close
+                    } else {
+                        null
+                    },
+                    onIconClicked = { accountNavigationCallbacks.onCloseClicked() },
+                    rightSideContent = {
+                        OverflowMenu(
+                            account = resource.data,
+                            isUsersProfile = isUsersProfile,
+                            overflowInteractions = accountInteractions,
+                        )
+                    }
+                )
+
+                MainContent(
+                    account = resource.data,
                     isUsersProfile = isUsersProfile,
-                    overflowInteractions = accountInteractions,
+                    feed = feed,
+                    errorToastMessage = errorToastMessage,
+                    htmlContentInteractions = htmlContentInteractions,
+                    postCardInteractions = postCardInteractions,
+                    accountInteractions = accountInteractions
                 )
             }
-        )
+            is Resource.Error -> {
+                MoSoTopBar(
+                    icon = if (showCloseButton) {
+                        MoSoIcons.Close
+                    } else {
+                        null
+                    },
+                    onIconClicked = { accountNavigationCallbacks.onCloseClicked() },
+                )
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .wrapContentSize(
+                            align = Alignment.Center
+                        )
+                ) {
+                    GenericError(
+                        onRetryClicked = {
+                            accountInteractions.onRetryClicked()
+                        }
+                    )
+                }
+            }
+        }
+    }
+}
 
-        Column(
-            modifier = Modifier
-                .fillMaxSize(),
+@Composable
+private fun MainContent(
+    account: AccountUiState,
+    isUsersProfile: Boolean,
+    feed: Flow<PagingData<PostCardUiState>>,
+    errorToastMessage: SharedFlow<StringFactory>,
+    htmlContentInteractions: HtmlContentInteractions,
+    postCardInteractions: PostCardInteractions,
+    accountInteractions: AccountInteractions,
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize(),
+    ) {
+
+        PostCardList(
+            feed = feed,
+            errorToastMessage = errorToastMessage,
+            postCardInteractions = postCardInteractions
         ) {
+            Header(
+                isUsersProfile = isUsersProfile,
+                accountUiState = account,
+                accountInteractions = accountInteractions,
+            )
 
-            PostCardList(
-                feed = feed,
-                errorToastMessage = errorToastMessage,
-                postCardInteractions = postCardInteractions
-            ) {
-                Header(
-                    isUsersProfile = isUsersProfile,
-                    accountUiState = account,
-                    accountInteractions = accountInteractions,
-                )
-
-                UserInfo(account = account)
-                UserFollow(
-                    account = account,
-                    accountInteractions = accountInteractions,
-                )
-                UserBio(
-                    account = account,
-                    htmlContentInteractions = htmlContentInteractions,
-                )
-                Spacer(modifier = Modifier.padding(top = 4.dp))
-                UserFields(
-                    account = account,
-                    htmlContentInteractions = htmlContentInteractions,
-                )
-                QuickFunctions(
-                    name = R.string.posts,
-                    numericalValue = account.statusesCount,
-                    onClick = { /*TODO*/ }
-                )
-                MoSoDivider()
-            }
+            UserInfo(account = account)
+            UserFollow(
+                account = account,
+                accountInteractions = accountInteractions,
+            )
+            UserBio(
+                account = account,
+                htmlContentInteractions = htmlContentInteractions,
+            )
+            Spacer(modifier = Modifier.padding(top = 4.dp))
+            UserFields(
+                account = account,
+                htmlContentInteractions = htmlContentInteractions,
+            )
+            QuickFunctions(
+                name = R.string.posts,
+                numericalValue = account.statusesCount,
+                onClick = { /*TODO*/ }
+            )
+            MoSoDivider()
         }
     }
 }

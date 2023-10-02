@@ -7,10 +7,15 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
 import androidx.paging.map
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.sync.Mutex
@@ -19,6 +24,7 @@ import org.koin.java.KoinJavaComponent
 import org.mozilla.social.common.Resource
 import org.mozilla.social.common.logging.Log
 import org.mozilla.social.common.utils.StringFactory
+import org.mozilla.social.common.utils.edit
 import org.mozilla.social.core.data.repository.AccountRepository
 import org.mozilla.social.core.data.repository.StatusRepository
 import org.mozilla.social.core.data.repository.model.status.toExternalModel
@@ -39,7 +45,7 @@ class AccountViewModel(
     log: Log,
     statusRepository: StatusRepository,
     socialDatabase: SocialDatabase,
-    getDetailedAccount: GetDetailedAccount,
+    private val getDetailedAccount: GetDetailedAccount,
     initialAccountId: String?,
     postCardNavigation: PostCardNavigation,
     private val accountNavigationCallbacks: AccountNavigationCallbacks,
@@ -90,14 +96,12 @@ class AccountViewModel(
      */
     val isOwnProfile = usersAccountId == accountId
 
-    val shouldShowTopBar = initialAccountId != null
+    val shouldShowCloseButton = initialAccountId != null
 
-    val uiState: Flow<Resource<AccountUiState>> = getDetailedAccount(
-        accountId = accountId,
-        coroutineScope = viewModelScope,
-    ) { account, relationship ->
-        account.toUiState(relationship)
-    }
+    private val _uiState = MutableStateFlow<Resource<AccountUiState>>(Resource.Loading())
+    val uiState = _uiState.asStateFlow()
+
+    private var getAccountJob: Job? = null
 
     private val accountTimelineRemoteMediator: AccountTimelineRemoteMediator by KoinJavaComponent.inject(
         AccountTimelineRemoteMediator::class.java
@@ -117,6 +121,25 @@ class AccountViewModel(
             it.toStatusWrapper().toExternalModel().toPostCardUiState(usersAccountId)
         }
     }.cachedIn(viewModelScope)
+
+    init {
+        loadAccount()
+    }
+
+    private fun loadAccount() {
+        // ensure only one job happens at a time
+        getAccountJob?.cancel()
+        getAccountJob = viewModelScope.launch {
+            getDetailedAccount(
+                accountId = accountId,
+                coroutineScope = viewModelScope,
+            ) { account, relationship ->
+                account.toUiState(relationship)
+            }.collect {
+                _uiState.edit { it }
+            }
+        }
+    }
 
     override fun onOverflowMuteClicked() {
         viewModelScope.launch {
@@ -194,5 +217,9 @@ class AccountViewModel(
                 _errorToastMessage.emit(StringFactory.resource(R.string.error_unfollowing_account))
             }
         }
+    }
+
+    override fun onRetryClicked() {
+        loadAccount()
     }
 }
