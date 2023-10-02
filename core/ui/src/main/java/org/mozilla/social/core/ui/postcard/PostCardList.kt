@@ -26,12 +26,19 @@ import org.mozilla.social.core.ui.pullrefresh.PullRefreshIndicator
 import org.mozilla.social.core.ui.pullrefresh.pullRefresh
 import org.mozilla.social.core.ui.pullrefresh.rememberPullRefreshState
 
+/**
+ * @param errorToastMessage a flow of toast messages to show when an error happens
+ * @param fullScreenRefreshError if false, the error message will appear below the header
+ * If true, the error message will be centered and full screen
+ * @param headerContent content that will show above the list
+ */
 @Composable
 fun PostCardList(
     feed: Flow<PagingData<PostCardUiState>>,
     errorToastMessage: SharedFlow<StringFactory>,
     postCardInteractions: PostCardInteractions,
     enablePullToRefresh: Boolean = false,
+    fullScreenRefreshError: Boolean = false,
     headerContent: @Composable () -> Unit = {},
 ) {
 
@@ -50,14 +57,6 @@ fun PostCardList(
             ),
     ) {
 
-        if (lazyingPagingItems.loadState.refresh is LoadState.Error) {
-            GenericError(
-                modifier = Modifier
-                    .fillMaxSize(),
-                onRetryClicked = { lazyingPagingItems.refresh() }
-            )
-        }
-
         LazyColumn(
             Modifier
                 .fillMaxSize(),
@@ -66,7 +65,17 @@ fun PostCardList(
             item { headerContent() }
 
             when (lazyingPagingItems.loadState.refresh) {
-                is LoadState.Error -> {} // handle the error outside the lazy column
+                is LoadState.Error -> {
+                    if (!fullScreenRefreshError) {
+                        item {
+                            GenericError(
+                                modifier = Modifier
+                                    .fillMaxSize(),
+                                onRetryClicked = { lazyingPagingItems.refresh() }
+                            )
+                        }
+                    }
+                }
                 else -> {
                     items(
                         count = lazyingPagingItems.itemCount,
@@ -104,6 +113,14 @@ fun PostCardList(
 
                 is LoadState.NotLoading -> {}
             }
+        }
+
+        if (lazyingPagingItems.loadState.refresh is LoadState.Error && fullScreenRefreshError) {
+            GenericError(
+                modifier = Modifier
+                    .fillMaxSize(),
+                onRetryClicked = { lazyingPagingItems.refresh() }
+            )
         }
 
         if (enablePullToRefresh) {
