@@ -20,7 +20,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -87,7 +86,7 @@ internal fun AccountRoute(
             AccountScreen(
                 account = resource.data,
                 showTopBar = viewModel.shouldShowTopBar,
-                isUsersProfile = viewModel.isUsersProfile,
+                isUsersProfile = viewModel.isOwnProfile,
                 feed = viewModel.feed,
                 errorToastMessage = viewModel.postCardDelegate.errorToastMessage,
                 accountNavigationCallbacks = accountNavigationCallbacks,
