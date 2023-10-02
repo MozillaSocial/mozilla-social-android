@@ -22,7 +22,7 @@ jobs:
         # Using 'temurin' speeds up the job, because this distribution is cached by the runner.
         # See: https://github.com/actions/setup-java/blob/main/docs/advanced-usage.md#Hosted-Tool-Cache
     - name: Set up Gradle
-      uses: gradle/gradle-build-action@v2.8.0
+      uses: gradle/gradle-build-action@842c587ad8aa4c68eeba24c396e15af4c2e9f30a # v2.9.0
     - name: Verify KSP version
       run: ci/verify-ksp-version.sh
     - name: Compile a debug build
