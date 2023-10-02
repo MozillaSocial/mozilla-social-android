@@ -65,7 +65,6 @@ square-okhttp-logging = { group = "com.squareup.okhttp3", name = "logging-interc
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "android-gradle-plugin" }
 android-secrets = { module = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin:secrets-gradle-plugin", version.ref = "android-secrets-plugin" }
 kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
-browser = { group = "androidx.browser", name = "browser", version = "1.6.0" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "android-gradle-plugin" }
