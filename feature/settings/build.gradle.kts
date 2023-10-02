@@ -28,7 +28,6 @@ dependencies {
     implementation(project(":core:datastore"))
     implementation(project(":core:domain"))
 
-    implementation(libs.androidx.lifecycle.viewmodel)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
 

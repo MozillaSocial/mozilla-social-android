@@ -68,7 +68,6 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtimeKtx)
     implementation(libs.google.material)
 
-    implementation(libs.androidx.lifecycle.viewmodel)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
 
