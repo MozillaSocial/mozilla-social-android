@@ -1,5 +1,6 @@
 package org.mozilla.social.feature.account
 
+import android.content.Intent
 import androidx.annotation.StringRes
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
@@ -19,7 +20,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -33,11 +33,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.layout.Layout
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
 import androidx.paging.PagingData
 import coil.compose.AsyncImage
 import kotlinx.coroutines.flow.Flow
@@ -48,6 +49,7 @@ import org.mozilla.social.common.Resource
 import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.core.designsystem.component.MoSoButton
 import org.mozilla.social.core.designsystem.component.MoSoDivider
+import org.mozilla.social.core.designsystem.component.MoSoDropdownMenu
 import org.mozilla.social.core.designsystem.component.MoSoToast
 import org.mozilla.social.core.designsystem.component.MoSoTopBar
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
@@ -59,10 +61,9 @@ import org.mozilla.social.core.ui.postcard.PostCardInteractions
 import org.mozilla.social.core.ui.postcard.PostCardList
 import org.mozilla.social.core.ui.postcard.PostCardNavigation
 import org.mozilla.social.core.ui.postcard.PostCardUiState
-import kotlin.math.max
 
 @Composable
-fun AccountScreen(
+internal fun AccountRoute(
     accountId: String?,
     accountNavigationCallbacks: AccountNavigationCallbacks,
     postCardNavigation: PostCardNavigation,
@@ -85,7 +86,7 @@ fun AccountScreen(
             AccountScreen(
                 account = resource.data,
                 showTopBar = viewModel.shouldShowTopBar,
-                isUsersProfile = viewModel.isUsersProfile,
+                isUsersProfile = viewModel.isOwnProfile,
                 feed = viewModel.feed,
                 errorToastMessage = viewModel.postCardDelegate.errorToastMessage,
                 accountNavigationCallbacks = accountNavigationCallbacks,
@@ -115,20 +116,22 @@ internal fun AccountScreen(
     accountInteractions: AccountInteractions,
 ) {
     Column {
-        if (showTopBar) {
-            MoSoTopBar(
-                title = account.username,
-                onIconClicked = { accountNavigationCallbacks.onCloseClicked() },
-                rightSideContent = {
-                    if (!isUsersProfile) {
-                        OverflowMenu(
-                            account = account,
-                            overflowInteractions = accountInteractions,
-                        )
-                    }
-                }
-            )
-        }
+        MoSoTopBar(
+            title = account.displayName,
+            icon = if (showTopBar) {
+                MoSoIcons.Close
+            } else {
+                null
+            },
+            onIconClicked = { accountNavigationCallbacks.onCloseClicked() },
+            rightSideContent = {
+                OverflowMenu(
+                    account = account,
+                    isUsersProfile = isUsersProfile,
+                    overflowInteractions = accountInteractions,
+                )
+            }
+        )
 
         Column(
             modifier = Modifier
@@ -174,69 +177,90 @@ internal fun AccountScreen(
 @Composable
 private fun OverflowMenu(
     account: AccountUiState,
+    isUsersProfile: Boolean,
     overflowInteractions: OverflowInteractions,
 ) {
     val overflowMenuExpanded = remember { mutableStateOf(false) }
+    val context = LocalContext.current
     IconButton(
         modifier = Modifier.width(IntrinsicSize.Max),
         onClick = { overflowMenuExpanded.value = true }
     ) {
         Icon(imageVector = MoSoIcons.MoreVert, contentDescription = null)
 
-        DropdownMenu(
+        MoSoDropdownMenu(
             expanded = overflowMenuExpanded.value,
             onDismissRequest = {
                 overflowMenuExpanded.value = false
             }
         ) {
-            if (account.isMuted) {
-                DropDownItem(
-                    text = stringResource(
-                        id = org.mozilla.social.core.ui.R.string.unmute_user,
-                        account.username
-                    ),
-                    expanded = overflowMenuExpanded,
-                    onClick = { overflowInteractions.onOverflowUnmuteClicked() }
-                )
-            } else {
-                DropDownItem(
-                    text = stringResource(
-                        id = org.mozilla.social.core.ui.R.string.mute_user,
-                        account.username
-                    ),
-                    expanded = overflowMenuExpanded,
-                    onClick = { overflowInteractions.onOverflowMuteClicked() }
-                )
-            }
-
-            if (account.isBlocked) {
-                DropDownItem(
-                    text = stringResource(
-                        id = org.mozilla.social.core.ui.R.string.unblock_user,
-                        account.username
-                    ),
-                    expanded = overflowMenuExpanded,
-                    onClick = { overflowInteractions.onOverflowUnblockClicked() }
-                )
-            } else {
-                DropDownItem(
-                    text = stringResource(
-                        id = org.mozilla.social.core.ui.R.string.block_user,
-                        account.username
-                    ),
-                    expanded = overflowMenuExpanded,
-                    onClick = { overflowInteractions.onOverflowBlockClicked() }
-                )
-            }
-
             DropDownItem(
-                text = stringResource(
-                    id = org.mozilla.social.core.ui.R.string.report_user,
-                    account.username
-                ),
+                text = stringResource(R.string.share_option),
                 expanded = overflowMenuExpanded,
-                onClick = { overflowInteractions.onOverflowReportClicked() }
+                onClick = {
+                    val sendIntent: Intent = Intent().apply {
+                        action = Intent.ACTION_SEND
+                        putExtra(Intent.EXTRA_TEXT, account.accountUrl)
+                        type = "text/plain"
+                    }
+
+                    ContextCompat.startActivity(
+                        context,
+                        Intent.createChooser(sendIntent, null),
+                        null
+                    )
+                }
             )
+            if (!isUsersProfile) {
+                if (account.isMuted) {
+                    DropDownItem(
+                        text = stringResource(
+                            id = org.mozilla.social.core.ui.R.string.unmute_user,
+                            account.username
+                        ),
+                        expanded = overflowMenuExpanded,
+                        onClick = { overflowInteractions.onOverflowUnmuteClicked() }
+                    )
+                } else {
+                    DropDownItem(
+                        text = stringResource(
+                            id = org.mozilla.social.core.ui.R.string.mute_user,
+                            account.username
+                        ),
+                        expanded = overflowMenuExpanded,
+                        onClick = { overflowInteractions.onOverflowMuteClicked() }
+                    )
+                }
+
+                if (account.isBlocked) {
+                    DropDownItem(
+                        text = stringResource(
+                            id = org.mozilla.social.core.ui.R.string.unblock_user,
+                            account.username
+                        ),
+                        expanded = overflowMenuExpanded,
+                        onClick = { overflowInteractions.onOverflowUnblockClicked() }
+                    )
+                } else {
+                    DropDownItem(
+                        text = stringResource(
+                            id = org.mozilla.social.core.ui.R.string.block_user,
+                            account.username
+                        ),
+                        expanded = overflowMenuExpanded,
+                        onClick = { overflowInteractions.onOverflowBlockClicked() }
+                    )
+                }
+
+                DropDownItem(
+                    text = stringResource(
+                        id = org.mozilla.social.core.ui.R.string.report_user,
+                        account.username
+                    ),
+                    expanded = overflowMenuExpanded,
+                    onClick = { overflowInteractions.onOverflowReportClicked() }
+                )
+            }
         }
     }
 }
