@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -96,19 +97,12 @@ fun PostCardList(
                             }
                         }
                     }
-                }
-                else -> {
-                    items(
-                        count = lazyingPagingItems.itemCount,
-                        key = lazyingPagingItems.itemKey { it.statusId }
-                    ) { index ->
-                        lazyingPagingItems[index]?.let { item ->
-                            PostCard(post = item, postCardInteractions)
-                            if (index < lazyingPagingItems.itemCount) {
-                                MoSoDivider()
-                            }
-                        }
+                    if (enablePullToRefresh) {
+                        listContent(lazyingPagingItems, postCardInteractions)
                     }
+                }
+                is LoadState.NotLoading -> {
+                    listContent(lazyingPagingItems, postCardInteractions)
                 }
             }
 
@@ -164,6 +158,23 @@ fun PostCardList(
     }
 
     MoSoToast(toastMessage = errorToastMessage)
+}
+
+private fun LazyListScope.listContent(
+    lazyingPagingItems: LazyPagingItems<PostCardUiState>,
+    postCardInteractions: PostCardInteractions,
+) {
+    items(
+        count = lazyingPagingItems.itemCount,
+        key = lazyingPagingItems.itemKey { it.statusId }
+    ) { index ->
+        lazyingPagingItems[index]?.let { item ->
+            PostCard(post = item, postCardInteractions)
+            if (index < lazyingPagingItems.itemCount) {
+                MoSoDivider()
+            }
+        }
+    }
 }
 
 @Composable
