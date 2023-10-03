@@ -16,7 +16,7 @@ class GleanAnalytics : Analytics {
         val buildInfo = BuildInfo("1", "1", Calendar.getInstance())
 
         Glean.setLogPings(true)
-        Glean.setDebugViewTag("Tim-Test")
+        Glean.setDebugViewTag("Android-Test")
 
         Glean.initialize(
             applicationContext = context,
