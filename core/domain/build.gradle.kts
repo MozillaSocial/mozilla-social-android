@@ -32,12 +32,11 @@ dependencies {
     implementation(project(":core:database"))
     implementation(project(":core:common"))
 
-    implementation(libs.androidx.room.ktx)
+    implementation(libs.androidx.room)
 
     implementation(libs.androidx.paging.runtime)
-    implementation(libs.browser)
+    implementation(libs.androidx.browser)
 
     testImplementation(libs.kotlin.test)
     testImplementation(libs.kotlin.test.junit)
-    implementation(libs.androidx.browser)
 }

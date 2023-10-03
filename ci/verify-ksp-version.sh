@@ -16,7 +16,7 @@ findVersion() {
   RETURN="$VERSION"
 }
 
-findVersion "kotlinKsp"
+findVersion "kotlin-ksp"
 KSP_VERSION=$RETURN
 findVersion "kotlin"
 KOTLIN_VERSION=$RETURN

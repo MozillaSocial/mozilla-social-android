@@ -56,7 +56,7 @@ dependencies {
     implementation(libs.androidx.datastore)
     implementation(libs.protobuf.kotlin.lite)
 
-    implementation(libs.androidx.room.ktx)
+    implementation(libs.androidx.room)
     implementation(libs.androidx.paging.runtime)
 
     implementation(libs.jakewharton.timber)

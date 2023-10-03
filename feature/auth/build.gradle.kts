@@ -33,14 +33,13 @@ dependencies {
 
     implementation("androidx.security:security-crypto:1.0.0")
 
-    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.core)
     implementation(libs.androidx.appcompat)
     implementation(libs.google.material)
 
     implementation(libs.androidx.browser)
 
     implementation(libs.androidx.lifecycle.viewmodel)
-    implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
 
     implementation(libs.koin)

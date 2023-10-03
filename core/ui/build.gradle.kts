@@ -48,7 +48,7 @@ dependencies {
     implementation(libs.androidx.compose.ui.ui)
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
-    implementation(libs.browser)
+    implementation(libs.androidx.browser)
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
 }
