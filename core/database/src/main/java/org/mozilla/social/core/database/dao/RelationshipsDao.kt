@@ -27,4 +27,11 @@ interface RelationshipsDao : BaseDao<DatabaseRelationship> {
         "WHERE accountId = :accountId"
     )
     suspend fun updateBlocked(accountId: String, isBlocked: Boolean)
+
+    @Query(
+        "UPDATE relationships " +
+        "SET isFollowing = :isFollowing " +
+        "WHERE accountId = :accountId"
+    )
+    suspend fun updateFollowing(accountId: String, isFollowing: Boolean)
 }

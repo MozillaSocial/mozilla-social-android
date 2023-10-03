@@ -3,7 +3,6 @@ package org.mozilla.social.post.poll
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -14,6 +13,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
+import org.mozilla.social.core.designsystem.component.MoSoDropdownMenu
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.feature.post.R
 
@@ -41,7 +41,7 @@ fun PollStyleDropDown(
         }
     }
 
-    DropdownMenu(
+    MoSoDropdownMenu(
         expanded = expanded.value,
         onDismissRequest = { expanded.value = false }
     ) {

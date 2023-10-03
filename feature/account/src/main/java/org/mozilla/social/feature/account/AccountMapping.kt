@@ -11,6 +11,7 @@ fun Account.toUiState(
     username = username,
     webFinger = acct,
     displayName = displayName,
+    accountUrl = url,
     bio = bio,
     avatarUrl = avatarUrl,
     headerUrl = headerUrl,

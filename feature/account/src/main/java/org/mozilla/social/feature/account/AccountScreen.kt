@@ -1,5 +1,6 @@
 package org.mozilla.social.feature.account
 
+import android.content.Intent
 import androidx.annotation.StringRes
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
@@ -18,11 +19,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.layout.wrapContentWidth
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -35,13 +32,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.layout.Layout
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
 import androidx.paging.PagingData
 import coil.compose.AsyncImage
 import kotlinx.coroutines.flow.Flow
@@ -50,7 +47,9 @@ import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 import org.mozilla.social.common.Resource
 import org.mozilla.social.common.utils.StringFactory
+import org.mozilla.social.core.designsystem.component.MoSoButton
 import org.mozilla.social.core.designsystem.component.MoSoDivider
+import org.mozilla.social.core.designsystem.component.MoSoDropdownMenu
 import org.mozilla.social.core.designsystem.component.MoSoToast
 import org.mozilla.social.core.designsystem.component.MoSoTopBar
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
@@ -64,7 +63,7 @@ import org.mozilla.social.core.ui.postcard.PostCardNavigation
 import org.mozilla.social.core.ui.postcard.PostCardUiState
 
 @Composable
-fun AccountScreen(
+internal fun AccountRoute(
     accountId: String?,
     accountNavigationCallbacks: AccountNavigationCallbacks,
     postCardNavigation: PostCardNavigation,
@@ -87,7 +86,7 @@ fun AccountScreen(
             AccountScreen(
                 account = resource.data,
                 showTopBar = viewModel.shouldShowTopBar,
-                isUsersProfile = viewModel.isUsersProfile,
+                isUsersProfile = viewModel.isOwnProfile,
                 feed = viewModel.feed,
                 errorToastMessage = viewModel.postCardDelegate.errorToastMessage,
                 accountNavigationCallbacks = accountNavigationCallbacks,
@@ -117,20 +116,22 @@ internal fun AccountScreen(
     accountInteractions: AccountInteractions,
 ) {
     Column {
-        if (showTopBar) {
-            MoSoTopBar(
-                title = account.username,
-                onIconClicked = { accountNavigationCallbacks.onCloseClicked() },
-                rightSideContent = {
-                    if (!isUsersProfile) {
-                        OverflowMenu(
-                            account = account,
-                            overflowInteractions = accountInteractions,
-                        )
-                    }
-                }
-            )
-        }
+        MoSoTopBar(
+            title = account.displayName,
+            icon = if (showTopBar) {
+                MoSoIcons.Close
+            } else {
+                null
+            },
+            onIconClicked = { accountNavigationCallbacks.onCloseClicked() },
+            rightSideContent = {
+                OverflowMenu(
+                    account = account,
+                    isUsersProfile = isUsersProfile,
+                    overflowInteractions = accountInteractions,
+                )
+            }
+        )
 
         Column(
             modifier = Modifier
@@ -142,18 +143,16 @@ internal fun AccountScreen(
                 errorToastMessage = errorToastMessage,
                 postCardInteractions = postCardInteractions
             ) {
-                HeaderAndProfileImages(
-                    headerUrl = account.headerUrl,
-                    avatarUrl = account.avatarUrl,
-                    onHeaderClick = { /*TODO*/ },
-                    onProfileClick = { /*TODO*/ }
+                Header(
+                    isUsersProfile = isUsersProfile,
+                    accountUiState = account,
+                    accountInteractions = accountInteractions,
                 )
 
                 UserInfo(account = account)
                 UserFollow(
                     account = account,
-                    onFollowingClicked = { accountInteractions.onFollowingClicked() },
-                    onFollowersClicked = { accountInteractions.onFollowersClicked() },
+                    accountInteractions = accountInteractions,
                 )
                 UserBio(
                     account = account,
@@ -178,69 +177,90 @@ internal fun AccountScreen(
 @Composable
 private fun OverflowMenu(
     account: AccountUiState,
+    isUsersProfile: Boolean,
     overflowInteractions: OverflowInteractions,
 ) {
     val overflowMenuExpanded = remember { mutableStateOf(false) }
+    val context = LocalContext.current
     IconButton(
         modifier = Modifier.width(IntrinsicSize.Max),
         onClick = { overflowMenuExpanded.value = true }
     ) {
         Icon(imageVector = MoSoIcons.MoreVert, contentDescription = null)
 
-        DropdownMenu(
+        MoSoDropdownMenu(
             expanded = overflowMenuExpanded.value,
             onDismissRequest = {
                 overflowMenuExpanded.value = false
             }
         ) {
-            if (account.isMuted) {
-                DropDownItem(
-                    text = stringResource(
-                        id = org.mozilla.social.core.ui.R.string.unmute_user,
-                        account.username
-                    ),
-                    expanded = overflowMenuExpanded,
-                    onClick = { overflowInteractions.onOverflowUnmuteClicked() }
-                )
-            } else {
-                DropDownItem(
-                    text = stringResource(
-                        id = org.mozilla.social.core.ui.R.string.mute_user,
-                        account.username
-                    ),
-                    expanded = overflowMenuExpanded,
-                    onClick = { overflowInteractions.onOverflowMuteClicked() }
-                )
-            }
-
-            if (account.isBlocked) {
-                DropDownItem(
-                    text = stringResource(
-                        id = org.mozilla.social.core.ui.R.string.unblock_user,
-                        account.username
-                    ),
-                    expanded = overflowMenuExpanded,
-                    onClick = { overflowInteractions.onOverflowUnblockClicked() }
-                )
-            } else {
-                DropDownItem(
-                    text = stringResource(
-                        id = org.mozilla.social.core.ui.R.string.block_user,
-                        account.username
-                    ),
-                    expanded = overflowMenuExpanded,
-                    onClick = { overflowInteractions.onOverflowBlockClicked() }
-                )
-            }
-
             DropDownItem(
-                text = stringResource(
-                    id = org.mozilla.social.core.ui.R.string.report_user,
-                    account.username
-                ),
+                text = stringResource(R.string.share_option),
                 expanded = overflowMenuExpanded,
-                onClick = { overflowInteractions.onOverflowReportClicked() }
+                onClick = {
+                    val sendIntent: Intent = Intent().apply {
+                        action = Intent.ACTION_SEND
+                        putExtra(Intent.EXTRA_TEXT, account.accountUrl)
+                        type = "text/plain"
+                    }
+
+                    ContextCompat.startActivity(
+                        context,
+                        Intent.createChooser(sendIntent, null),
+                        null
+                    )
+                }
             )
+            if (!isUsersProfile) {
+                if (account.isMuted) {
+                    DropDownItem(
+                        text = stringResource(
+                            id = org.mozilla.social.core.ui.R.string.unmute_user,
+                            account.username
+                        ),
+                        expanded = overflowMenuExpanded,
+                        onClick = { overflowInteractions.onOverflowUnmuteClicked() }
+                    )
+                } else {
+                    DropDownItem(
+                        text = stringResource(
+                            id = org.mozilla.social.core.ui.R.string.mute_user,
+                            account.username
+                        ),
+                        expanded = overflowMenuExpanded,
+                        onClick = { overflowInteractions.onOverflowMuteClicked() }
+                    )
+                }
+
+                if (account.isBlocked) {
+                    DropDownItem(
+                        text = stringResource(
+                            id = org.mozilla.social.core.ui.R.string.unblock_user,
+                            account.username
+                        ),
+                        expanded = overflowMenuExpanded,
+                        onClick = { overflowInteractions.onOverflowUnblockClicked() }
+                    )
+                } else {
+                    DropDownItem(
+                        text = stringResource(
+                            id = org.mozilla.social.core.ui.R.string.block_user,
+                            account.username
+                        ),
+                        expanded = overflowMenuExpanded,
+                        onClick = { overflowInteractions.onOverflowBlockClicked() }
+                    )
+                }
+
+                DropDownItem(
+                    text = stringResource(
+                        id = org.mozilla.social.core.ui.R.string.report_user,
+                        account.username
+                    ),
+                    expanded = overflowMenuExpanded,
+                    onClick = { overflowInteractions.onOverflowReportClicked() }
+                )
+            }
         }
     }
 }
@@ -250,9 +270,8 @@ private fun UserInfo(
     account: AccountUiState,
 ) {
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
-            .padding(top = 8.dp)
+            .padding(start = 8.dp, top = 8.dp)
             .fillMaxWidth()
     ) {
         Text(
@@ -268,15 +287,12 @@ private fun UserInfo(
 @Composable
 private fun UserFollow(
     account: AccountUiState,
-    onFollowingClicked: () -> Unit,
-    onFollowersClicked: () -> Unit,
+    accountInteractions: AccountInteractions,
 ) {
     Row(
         modifier = Modifier
             .height(IntrinsicSize.Min)
             .padding(8.dp)
-            .fillMaxWidth()
-            .wrapContentWidth(Alignment.CenterHorizontally)
             .border(
                 border = BorderStroke(2.dp, Color.Gray),
                 shape = RoundedCornerShape(8.dp)
@@ -285,7 +301,7 @@ private fun UserFollow(
         Text(
             modifier = Modifier
                 .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 8.dp)
-                .clickable { onFollowersClicked() },
+                .clickable { accountInteractions.onFollowersClicked() },
             text = stringResource(id = R.string.followers_count, account.followersCount),
         )
         MoSoDivider(
@@ -297,7 +313,7 @@ private fun UserFollow(
         Text(
             modifier = Modifier
                 .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 8.dp)
-                .clickable { onFollowingClicked() },
+                .clickable { accountInteractions.onFollowingClicked() },
             text = stringResource(id = R.string.following_count, account.followingCount),
 
             )
@@ -405,77 +421,67 @@ private fun QuickFunctions(
 }
 
 @Composable
-private fun OverlapObjects(
+private fun Header(
     modifier: Modifier = Modifier,
-    content: @Composable () -> Unit
+    isUsersProfile: Boolean,
+    accountUiState: AccountUiState,
+    accountInteractions: AccountInteractions,
 ) {
-    Layout(
-        modifier = modifier,
-        content = content,
-    ) { measurables, constraints ->
-        val largeBox = measurables[0]
-        val smallBox = measurables[1]
-        val looseConstraints = constraints.copy(
-            minWidth = 0,
-            minHeight = 0,
-        )
-        val largePlaceable = largeBox.measure(looseConstraints)
-        val smallPlaceable = smallBox.measure(looseConstraints)
-        layout(
-            width = constraints.maxWidth,
-            height = largePlaceable.height + smallPlaceable.height / 2,
-        ) {
-            largePlaceable.placeRelative(
-                x = 0,
-                y = 0,
-            )
-            smallPlaceable.placeRelative(
-                x = (constraints.maxWidth - smallPlaceable.width) / 2,
-                y = largePlaceable.height - smallPlaceable.height / 2
-            )
-        }
-    }
-}
-
-@Composable
-private fun HeaderAndProfileImages(
-    modifier: Modifier = Modifier,
-    headerUrl: String,
-    avatarUrl: String,
-    onHeaderClick: () -> Unit,
-    onProfileClick: () -> Unit
-) {
-    OverlapObjects(modifier = modifier.fillMaxWidth()) {
-        val scrollState = rememberScrollState()
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable { onHeaderClick() }
-                .graphicsLayer {
-                    alpha = 1f - ((scrollState.value.toFloat() / scrollState.maxValue) * 1.5f)
-                    translationY = 0.5f * scrollState.value
-                },
-        ) {
+    Box(
+        modifier = modifier.fillMaxWidth()
+    ) {
+        Column {
             AsyncImage(
-                model = headerUrl,
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(120.dp)
-            )
-        }
-        Box(
-            modifier = Modifier
-                .size(120.dp)
-                .clip(RoundedCornerShape(16.dp))
-                .clickable { onProfileClick() }
-        ) {
-            AsyncImage(
-                model = avatarUrl,
+                    .height(120.dp),
+                model = accountUiState.headerUrl,
                 contentDescription = null,
+                contentScale = ContentScale.Crop,
+            )
+
+            Row {
+                Spacer(modifier = Modifier.weight(1f))
+                val buttonModifier = Modifier.padding(end = 8.dp)
+                if (isUsersProfile) {
+                    MoSoButton(
+                        modifier = buttonModifier,
+                        onClick = { /*TODO*/ }
+                    ) {
+                        Text(text = stringResource(id = R.string.edit_button))
+                    }
+                } else {
+                    MoSoButton(
+                        modifier = buttonModifier,
+                        onClick = {
+                            if (accountUiState.isFollowing) {
+                                accountInteractions.onUnfollowClicked()
+                            } else {
+                                accountInteractions.onFollowClicked()
+                            }
+                        }
+                    ) {
+                        Text(
+                            text = if (accountUiState.isFollowing) {
+                                stringResource(id = R.string.unfollow_button)
+                            } else {
+                                stringResource(id = R.string.follow_button)
+                            }
+                        )
+                    }
+                }
+            }
+
+        }
+        Column {
+            Spacer(modifier = Modifier.padding(top = 60.dp))
+            AsyncImage(
                 modifier = Modifier
-                    .clip(CircleShape)
+                    .padding(start = 8.dp)
+                    .size(120.dp)
+                    .clip(RoundedCornerShape(16.dp)),
+                model = accountUiState.avatarUrl,
+                contentDescription = null,
             )
         }
     }

@@ -152,7 +152,7 @@ class AppState(
         }
 
         when (currentDestination) {
-            Feed, Discover, Bookmarks, Account -> {
+            Feed, Discover, Bookmarks -> {
                 Column {
                     MoSoAppBar(
                         scrollBehavior = topAppBarScrollBehavior,
@@ -163,37 +163,19 @@ class AppState(
                             )
                         },
                         navigationIcon = {
-                            when (currentDestination) {
-                                Feed, Discover, Account, Bookmarks -> {
-                                    IconButton(onClick = {
-                                        coroutineScope.launch {
-                                            navigationDrawerState.open()
-                                        }
-                                    }) {
-                                        Icon(
-                                            painter = MoSoIcons.list(),
-                                            modifier = Modifier.size(24.dp),
-                                            contentDescription = stringResource(id = R.string.navigation_menu_content_description),
-                                        )
-                                    }
+                            IconButton(onClick = {
+                                coroutineScope.launch {
+                                    navigationDrawerState.open()
                                 }
-
-                                else -> {}
+                            }) {
+                                Icon(
+                                    painter = MoSoIcons.list(),
+                                    modifier = Modifier.size(24.dp),
+                                    contentDescription = stringResource(id = R.string.navigation_menu_content_description),
+                                )
                             }
                         },
-                        actions = {
-//                            if (currentDestination == Feed) {
-//                                IconButton(onClick = {
-//                                    bottomSheetVisible.value = !bottomSheetVisible.value
-//                                }) {
-//                                    Icon(
-//                                        imageVector = MoSoIcons.Feed,
-//                                        contentDescription = stringResource(id = R.string.feed_selection_content_description),
-//                                        tint = MaterialTheme.colorScheme.onPrimary,
-//                                    )
-//                                }
-//                            }
-                        }
+                        actions = {}
                     )
 
                     MoSoDivider(

@@ -5,6 +5,7 @@ data class AccountUiState(
     val username: String,
     val webFinger: String,
     val displayName: String,
+    val accountUrl: String,
     val bio: String,
     val avatarUrl: String,
     val headerUrl: String,
