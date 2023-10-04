@@ -24,7 +24,7 @@ import org.mozilla.social.feature.thread.threadScreen
 import org.mozilla.social.feed.FEED_ROUTE
 import org.mozilla.social.feed.feedScreen
 import org.mozilla.social.post.newPostScreen
-import org.mozilla.social.search.SearchScreen
+import org.mozilla.social.search.searchScreen
 import org.mozilla.social.ui.AppState
 
 @Composable
@@ -81,9 +81,7 @@ private fun NavGraphBuilder.mainGraph(
         feedScreen(
             postCardNavigation = postCardNavigation,
         )
-        composable(route = Routes.DISCOVER) {
-            SearchScreen()
-        }
+        searchScreen()
         settingsScreen(onLogout = appState::navigateToLoginScreen)
         accountScreen(
             accountNavigationCallbacks = object: AccountNavigationCallbacks {

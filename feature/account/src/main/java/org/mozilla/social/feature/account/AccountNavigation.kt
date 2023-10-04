@@ -12,7 +12,7 @@ import org.mozilla.social.core.ui.postcard.PostCardNavigation
  * The my account route is used for the account tab.  The account route is used for any
  * account that will open outside of the bottom navigation tab.
  */
-private const val MY_ACCOUNT_ROUTE = "myAccount"
+const val MY_ACCOUNT_ROUTE = "myAccount"
 
 private const val ACCOUNT_ROUTE = "account"
 private const val ACCOUNT_ID = "accountId"

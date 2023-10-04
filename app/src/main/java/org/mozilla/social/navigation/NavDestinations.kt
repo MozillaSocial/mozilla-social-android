@@ -7,8 +7,13 @@ import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.core.designsystem.component.NavBarDestination
 import org.mozilla.social.core.designsystem.component.NavDestination
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
+import org.mozilla.social.feature.account.MY_ACCOUNT_ROUTE
+import org.mozilla.social.feature.auth.AUTH_ROUTE
+import org.mozilla.social.feature.settings.SETTINGS_ROUTE
+import org.mozilla.social.feed.FEED_ROUTE
 
 import org.mozilla.social.post.NEW_POST_ROUTE
+import org.mozilla.social.search.SEARCH_ROUTE
 
 object Feed : NavBarDestination {
     @Composable
@@ -17,7 +22,7 @@ object Feed : NavBarDestination {
     }
 
     override val tabText = StringFactory.resource(R.string.feed_tab_text)
-    override val route = Routes.FEED
+    override val route = FEED_ROUTE
 }
 
 object Discover : NavBarDestination {
@@ -27,7 +32,7 @@ object Discover : NavBarDestination {
     }
 
     override val tabText = StringFactory.resource(R.string.search_tab_text)
-    override val route = Routes.DISCOVER
+    override val route = SEARCH_ROUTE
 }
 
 object Bookmarks : NavBarDestination {
@@ -43,7 +48,7 @@ object Bookmarks : NavBarDestination {
 
 
 object Account : NavBarDestination {
-    override val route: String = Routes.MY_ACCOUNT
+    override val route: String = MY_ACCOUNT_ROUTE
 
     @Composable
     override fun selectedIcon(): Painter {
@@ -59,13 +64,7 @@ object NewPost : NavDestination {
 }
 
 object Routes {
-    const val AUTH = "auth"
     const val SPLASH = "splash"
     const val BOOKMARKS = "bookmarks"
-    const val DISCOVER = "discover"
     const val MAIN = "main"
-    const val FEED = "feed"
-    const val SEARCH = "search"
-    const val SETTINGS = "settings"
-    const val MY_ACCOUNT = "myAccount"
 }
