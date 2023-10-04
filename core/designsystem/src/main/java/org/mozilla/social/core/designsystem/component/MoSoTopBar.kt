@@ -24,7 +24,7 @@ import org.mozilla.social.core.designsystem.theme.MoSoTheme
 
 @Composable
 fun MoSoTopBar(
-    title: String,
+    title: String = "",
     icon: ImageVector? = MoSoIcons.Close,
     onIconClicked: () -> Unit,
     leftSideContent:  @Composable () -> Unit = {},

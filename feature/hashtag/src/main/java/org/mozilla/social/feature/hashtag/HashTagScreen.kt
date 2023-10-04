@@ -51,6 +51,8 @@ private fun HashTagScreen(
             feed = feed,
             errorToastMessage = errorToastMessage,
             postCardInteractions = postCardInteractions,
+            pullToRefreshEnabled = true,
+            isFullScreenLoading = true,
         )
     }
 }

@@ -5,7 +5,10 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.paging.PagingData
@@ -18,10 +21,13 @@ import org.koin.core.parameter.parametersOf
 import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.core.designsystem.component.MoSoSurface
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
+import org.mozilla.social.core.ui.R
 import org.mozilla.social.core.ui.postcard.PostCardInteractions
 import org.mozilla.social.core.ui.postcard.PostCardList
 import org.mozilla.social.core.ui.postcard.PostCardNavigation
 import org.mozilla.social.core.ui.postcard.PostCardUiState
+import org.mozilla.social.core.ui.recommendations.MoreInfoDialog
+import org.mozilla.social.core.ui.recommendations.RecommendationCarousel
 import org.mozilla.social.model.Recommendation
 
 @Composable
@@ -52,12 +58,29 @@ private fun FeedScreen(
         Box(
             modifier = Modifier.padding(horizontal = 4.dp)
         ) {
+
+            val openAlertDialog = remember { mutableStateOf(false) }
+
+            if (openAlertDialog.value) {
+                MoreInfoDialog(
+                    onDismissRequest = { openAlertDialog.value = false },
+                    onConfirmation = { openAlertDialog.value = false },
+                    dialogTitle = stringResource(id = R.string.feed_recommendations_why_am_i_seeing_this),
+                    dialogText = stringResource(id = R.string.feed_recommendations_reason_you_are_seeing_this),
+                )
+            }
+
             PostCardList(
                 feed = feed,
                 errorToastMessage = errorToastMessage,
                 postCardInteractions = postCardInteractions,
-                reccs = reccs,
-                enablePullToRefresh = true,
+                pullToRefreshEnabled = true,
+                isFullScreenLoading = true,
+                headerContent = {
+                    reccs?.let {
+                        RecommendationCarousel(reccs = it) { openAlertDialog.value = true }
+                    }
+                }
             )
         }
     }

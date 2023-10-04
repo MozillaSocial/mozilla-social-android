@@ -5,4 +5,5 @@ interface AccountInteractions : OverflowInteractions {
     fun onFollowingClicked() = Unit
     fun onFollowClicked() = Unit
     fun onUnfollowClicked() = Unit
+    fun onRetryClicked() = Unit
 }
