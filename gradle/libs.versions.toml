@@ -75,6 +75,8 @@ square-okhttp-logging = { module = "com.squareup.okhttp3:logging-interceptor", v
 # Dependencies of build-logic
 android-gradlePlugin = { module = "com.android.tools.build:gradle", version.ref = "android-gradle-plugin" }
 android-secrets-gradlePlugin = { module = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin:secrets-gradle-plugin", version.ref = "android-secrets-plugin" }
+glean-gradlePlugin = { module = "org.mozilla.telemetry:glean-gradle-plugin", version.ref = "glean" }
+jetbrains-python-gradlePlugin = { module = "gradle.plugin.com.jetbrains.python:gradle-python-envs", version.ref = "jetbrains-python" }
 kotlin-gradlePlugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
 
 [plugins]
