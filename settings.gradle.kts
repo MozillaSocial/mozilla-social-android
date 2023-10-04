@@ -3,15 +3,18 @@ pluginManagement {
     repositories {
         google()
         mavenCentral()
-        gradlePluginPortal()
+        maven { url = uri("https://maven.mozilla.org/maven2") }
+        maven { url = uri("https://plugins.gradle.org/m2/") }
     }
 }
+
 dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositoriesMode.set(RepositoriesMode.PREFER_SETTINGS)
     repositories {
         google()
         mavenCentral()
         maven { url = uri("https://nexus.outadoc.fr/repository/public") }
+        maven { url = uri("https://maven.mozilla.org/maven2") }
     }
 }
 rootProject.name = "Mozilla Social"
@@ -34,4 +37,5 @@ include(":core:database")
 include(":feature:thread")
 include(":feature:report")
 include(":feature:hashtag")
+include(":core:analytics")
 include(":feature:followers")
