@@ -1,20 +1,13 @@
 package org.mozilla.social.navigation
 
-import android.content.Context
-import androidx.browser.customtabs.CustomTabsIntent
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
-import androidx.core.net.toUri
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import org.mozilla.social.core.ui.postcard.PostCardNavigation
-import org.mozilla.social.feature.account.AccountNavigationCallbacks
 import org.mozilla.social.feature.account.accountScreen
 import org.mozilla.social.feature.auth.loginScreen
-import org.mozilla.social.feature.followers.FollowersNavigationCallbacks
 import org.mozilla.social.feature.followers.followersScreen
 import org.mozilla.social.feature.followers.followingScreen
 import org.mozilla.social.feature.hashtag.hashTagScreen
@@ -29,7 +22,6 @@ import org.mozilla.social.ui.AppState
 
 @Composable
 fun MozillaNavHost(appState: AppState) {
-    val context = LocalContext.current
     NavHost(navController = appState.navController, startDestination = Routes.SPLASH) {
         splashScreen(
             navigateToLogin = appState::navigateToLoginScreen,
@@ -38,7 +30,6 @@ fun MozillaNavHost(appState: AppState) {
         loginScreen(navigateToLoggedInGraph = appState::navigateToLoggedInGraph)
         mainGraph(
             appState = appState,
-            context = context,
         )
     }
 }
@@ -57,57 +48,26 @@ fun NavGraphBuilder.splashScreen(
 
 private fun NavGraphBuilder.mainGraph(
     appState: AppState,
-    context: Context
 ) {
-    navigation(startDestination = FEED_ROUTE, route = MAIN_ROUTE) {
-        val postCardNavigation = object : PostCardNavigation {
-            override fun onReplyClicked(statusId: String) = appState.navigateToNewPost(statusId)
-            override fun onPostClicked(statusId: String) = appState.navigateToThread(statusId)
-            override fun onReportClicked(accountId: String, statusId: String) =
-                appState.navigateToReport(accountId, statusId)
-
-            override fun onAccountClicked(accountId: String) = appState.navigateToAccount(accountId)
-            override fun onHashTagClicked(hashTag: String) = appState.navigateToHashTag(hashTag)
-            override fun onLinkClicked(url: String) {
-                CustomTabsIntent.Builder()
-                    .build()
-                    .launchUrl(
-                        context,
-                        url.toUri(),
-                    )
-            }
-        }
-
+    navigation(startDestination = FEED_ROUTE, route = Routes.MAIN) {
         feedScreen(
-            postCardNavigation = postCardNavigation,
+            postCardNavigation = appState.postCardNavigation,
         )
         searchScreen()
         settingsScreen(onLogout = appState::navigateToLoginScreen)
         accountScreen(
-            accountNavigationCallbacks = object: AccountNavigationCallbacks {
-                override fun onFollowingClicked(accountId: String) =
-                    appState.navigateToAccountFollowing(accountId)
-                override fun onFollowersClicked(accountId: String) =
-                    appState.navigateToAccountFollowers(accountId)
-                override fun onCloseClicked() = appState.popBackStack()
-                override fun onReportClicked(accountId: String) = appState.navigateToReport(accountId)
-            },
-            postCardNavigation = postCardNavigation,
+            accountNavigationCallbacks = appState.accountNavigation,
+            postCardNavigation = appState.postCardNavigation,
         )
-
-        val followersNavigationCallbacks = object : FollowersNavigationCallbacks {
-            override fun onCloseClicked() = appState.popBackStack()
-            override fun onAccountClicked(accountId: String) = appState.navigateToAccount(accountId)
-        }
-        followersScreen(followersNavigationCallbacks = followersNavigationCallbacks)
-        followingScreen(followersNavigationCallbacks = followersNavigationCallbacks)
+        followersScreen(followersNavigationCallbacks = appState.followersNavigation)
+        followingScreen(followersNavigationCallbacks = appState.followersNavigation)
         newPostScreen(
             onStatusPosted = { appState.popBackStack() },
             onCloseClicked = { appState.popBackStack() },
         )
         threadScreen(
             onCloseClicked = { appState.popBackStack() },
-            postCardNavigation = postCardNavigation,
+            postCardNavigation = appState.postCardNavigation,
         )
         reportScreen(
             onReported = { appState.popBackStack() },
@@ -115,11 +75,9 @@ private fun NavGraphBuilder.mainGraph(
         )
         hashTagScreen(
             onCloseClicked = { appState.popBackStack() },
-            postCardNavigation = postCardNavigation,
+            postCardNavigation = appState.postCardNavigation,
         )
 
         composable(route = Routes.BOOKMARKS) { Text(text = "bookmarks") }
     }
 }
-
-const val MAIN_ROUTE = "main"

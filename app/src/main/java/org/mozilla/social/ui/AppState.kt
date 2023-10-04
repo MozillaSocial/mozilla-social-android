@@ -1,5 +1,7 @@
 package org.mozilla.social.ui
 
+import android.content.Context
+import androidx.browser.customtabs.CustomTabsIntent
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -13,6 +15,8 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.platform.LocalContext
+import androidx.core.net.toUri
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.NavOptions
@@ -27,9 +31,12 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import org.mozilla.social.core.designsystem.component.NavBarDestination
 import org.mozilla.social.core.designsystem.component.NavDestination
+import org.mozilla.social.core.ui.postcard.PostCardNavigation
+import org.mozilla.social.feature.account.AccountNavigationCallbacks
 import org.mozilla.social.feature.account.navigateToAccount
 import org.mozilla.social.feature.auth.AUTH_ROUTE
 import org.mozilla.social.feature.auth.navigateToLoginScreen
+import org.mozilla.social.feature.followers.FollowersNavigationCallbacks
 import org.mozilla.social.feature.followers.navigateToFollowers
 import org.mozilla.social.feature.followers.navigateToFollowing
 import org.mozilla.social.feature.hashtag.navigateToHashTag
@@ -56,15 +63,19 @@ fun rememberAppState(
     ),
     navigationDrawerState: DrawerState = rememberDrawerState(DrawerValue.Closed),
     bottomSheetVisible: MutableState<Boolean> = remember { mutableStateOf(false) }
-): AppState = remember(navController) {
-    AppState(
-        navController = navController,
-        topAppBarScrollBehavior = topAppBarScrollBehavior,
-        navigationDrawerState = navigationDrawerState,
-        coroutineScope = coroutineScope,
-        bottomSheetVisible = bottomSheetVisible,
-        snackbarHostState = snackbarHostState,
-    )
+): AppState {
+    val context = LocalContext.current
+    return remember(navController) {
+        AppState(
+            navController = navController,
+            topAppBarScrollBehavior = topAppBarScrollBehavior,
+            navigationDrawerState = navigationDrawerState,
+            coroutineScope = coroutineScope,
+            bottomSheetVisible = bottomSheetVisible,
+            snackbarHostState = snackbarHostState,
+            context = context,
+        )
+    }
 }
 
 /**
@@ -79,6 +90,7 @@ class AppState(
     val coroutineScope: CoroutineScope,
     val bottomSheetVisible: MutableState<Boolean>,
     val snackbarHostState: SnackbarHostState,
+    val context: Context,
 ) {
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -90,6 +102,38 @@ class AppState(
             started = SharingStarted.WhileSubscribed(),
             initialTopLevelDestination
         )
+
+    val postCardNavigation = object : PostCardNavigation {
+        override fun onReplyClicked(statusId: String) = navigateToNewPost(statusId)
+        override fun onPostClicked(statusId: String) = navigateToThread(statusId)
+        override fun onReportClicked(accountId: String, statusId: String) =
+            navigateToReport(accountId, statusId)
+
+        override fun onAccountClicked(accountId: String) = navigateToAccount(accountId)
+        override fun onHashTagClicked(hashTag: String) = navigateToHashTag(hashTag)
+        override fun onLinkClicked(url: String) {
+            CustomTabsIntent.Builder()
+                .build()
+                .launchUrl(
+                    context,
+                    url.toUri(),
+                )
+        }
+    }
+
+    val accountNavigation = object: AccountNavigationCallbacks {
+        override fun onFollowingClicked(accountId: String) =
+            navigateToAccountFollowing(accountId)
+        override fun onFollowersClicked(accountId: String) =
+            navigateToAccountFollowers(accountId)
+        override fun onCloseClicked() = popBackStack()
+        override fun onReportClicked(accountId: String) = navigateToReport(accountId)
+    }
+
+    val followersNavigation = object : FollowersNavigationCallbacks {
+        override fun onCloseClicked() = popBackStack()
+        override fun onAccountClicked(accountId: String) = navigateToAccount(accountId)
+    }
 
     private fun clearBackstack() {
         while (navController.currentBackStack.value.isNotEmpty()) {
