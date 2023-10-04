@@ -88,7 +88,7 @@ fun MainActivityScreen() {
 }
 
 @Composable
-fun FloatingActionButton(
+private fun FloatingActionButton(
     currentDestination: NavDestination?,
     onClick: () -> Unit,
 ) {
@@ -107,7 +107,7 @@ fun FloatingActionButton(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopBar(
+private fun TopBar(
     currentDestination: NavDestination?,
     topAppBarScrollBehavior: TopAppBarScrollBehavior,
     navigationDrawerState: DrawerState,
@@ -156,7 +156,7 @@ fun TopBar(
 }
 
 @Composable
-fun BottomBar(
+private fun BottomBar(
     currentDestination: NavDestination?,
     navigateToTopLevelDestination: (navDestination: NavDestination) -> Unit,
 ) {
@@ -170,6 +170,6 @@ fun BottomBar(
 }
 
 @Composable
-fun BottomSheetContent() {
+private fun BottomSheetContent() {
     Text(text = "feed options coming")
 }
