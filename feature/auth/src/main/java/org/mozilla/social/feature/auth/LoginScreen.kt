@@ -27,9 +27,8 @@ import androidx.compose.ui.unit.sp
 import org.koin.androidx.compose.koinViewModel
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 
-@Suppress("KotlinConstantConditions")
 @Composable
-fun LoginScreen(
+internal fun LoginScreen(
     viewModel: AuthViewModel = koinViewModel(),
     navigateToLoggedInGraph: () -> Unit,
 ) {

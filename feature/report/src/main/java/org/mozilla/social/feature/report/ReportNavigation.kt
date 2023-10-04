@@ -40,7 +40,7 @@ fun NavGraphBuilder.reportScreen(
         val reportAccountId: String? = it.arguments?.getString(REPORT_ACCOUNT_ID)
         val reportStatusId: String? = it.arguments?.getString(REPORT_STATUS_ID)
         reportAccountId?.let {
-            ReportRoute(
+            ReportScreen(
                 onReported,
                 onCloseClicked,
                 reportAccountId = reportAccountId,

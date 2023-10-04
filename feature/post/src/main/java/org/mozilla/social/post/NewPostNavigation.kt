@@ -33,7 +33,7 @@ fun NavGraphBuilder.newPostScreen(
         )
     ) {
         val replyStatusId: String? = it.arguments?.getString(REPLY_STATUS_ID)
-        NewPostRoute(
+        NewPostScreen(
             onStatusPosted,
             onCloseClicked,
             replyStatusId = replyStatusId

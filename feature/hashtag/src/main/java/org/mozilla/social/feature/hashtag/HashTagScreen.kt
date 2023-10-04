@@ -15,7 +15,7 @@ import org.mozilla.social.core.ui.postcard.PostCardNavigation
 import org.mozilla.social.core.ui.postcard.PostCardUiState
 
 @Composable
-internal fun HashTagRoute(
+internal fun HashTagScreen(
     hashTag: String,
     onCloseClicked: () -> Unit,
     postCardNavigation: PostCardNavigation,

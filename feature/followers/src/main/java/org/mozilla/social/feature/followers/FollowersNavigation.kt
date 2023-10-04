@@ -40,7 +40,7 @@ fun NavGraphBuilder.followersScreen(
         )
     ) {
         val accountId: String = it.arguments?.getString(ACCOUNT_ID)!!
-        FollowersRoute(
+        FollowersScreen(
             accountId = accountId,
             followersNavigationCallbacks = followersNavigationCallbacks,
             followersScreenType = FollowerScreenType.FOLLOWERS,
@@ -60,7 +60,7 @@ fun NavGraphBuilder.followingScreen(
         )
     ) {
         val accountId: String = it.arguments?.getString(ACCOUNT_ID)!!
-        FollowersRoute(
+        FollowersScreen(
             accountId = accountId,
             followersNavigationCallbacks = followersNavigationCallbacks,
             followersScreenType = FollowerScreenType.FOLLOWING,

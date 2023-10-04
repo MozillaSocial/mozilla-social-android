@@ -32,7 +32,7 @@ fun NavGraphBuilder.hashTagScreen(
     ) {
         val hashTagValue: String? = it.arguments?.getString(HASH_TAG_VALUE)
         hashTagValue?.let {
-            HashTagRoute(
+            HashTagScreen(
                 hashTag = hashTagValue,
                 postCardNavigation = postCardNavigation,
                 onCloseClicked = onCloseClicked,

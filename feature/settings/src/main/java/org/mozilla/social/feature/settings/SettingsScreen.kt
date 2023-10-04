@@ -15,8 +15,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Divider
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
@@ -38,7 +36,7 @@ import org.mozilla.social.core.designsystem.component.MoSoSurface
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 
 @Composable
-fun SettingsScreen(
+internal fun SettingsScreen(
     onLogout: () -> Unit,
     viewModel: SettingsViewModel = koinViewModel(parameters = { parametersOf(onLogout) })
 ) {
@@ -51,7 +49,6 @@ fun SettingsScreen(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun SettingsScreen(
     isToggled: Boolean,
@@ -91,7 +88,6 @@ fun SettingsGroup(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsSwitch(
     @DrawableRes icon: Int,
@@ -137,7 +133,6 @@ fun SettingsSwitch(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SettingsTextLink(
     @DrawableRes icon: Int,
@@ -179,7 +174,6 @@ private fun SettingsTextLink(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun LogoutText(
     @StringRes name: Int,

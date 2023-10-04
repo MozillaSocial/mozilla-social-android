@@ -37,7 +37,7 @@ fun NavGraphBuilder.accountScreen(
     composable(
         route = MY_ACCOUNT_ROUTE,
     ) {
-        AccountRoute(
+        AccountScreen(
             accountId = null,
             accountNavigationCallbacks = accountNavigationCallbacks,
             postCardNavigation = postCardNavigation,
@@ -53,7 +53,7 @@ fun NavGraphBuilder.accountScreen(
         )
     ) {
         val accountId: String? = it.arguments?.getString(ACCOUNT_ID)
-        AccountRoute(
+        AccountScreen(
             accountId = accountId,
             accountNavigationCallbacks = accountNavigationCallbacks,
             postCardNavigation = postCardNavigation,
