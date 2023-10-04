@@ -83,7 +83,7 @@ internal fun AccountRoute(
 
     AccountScreen(
         resource = viewModel.uiState.collectAsState().value,
-        showCloseButton = viewModel.shouldShowCloseButton,
+        closeButtonVisible = viewModel.shouldShowCloseButton,
         isUsersProfile = viewModel.isOwnProfile,
         feed = viewModel.feed,
         errorToastMessage = viewModel.postCardDelegate.errorToastMessage,
@@ -99,7 +99,7 @@ internal fun AccountRoute(
 @Composable
 private fun AccountScreen(
     resource: Resource<AccountUiState>,
-    showCloseButton: Boolean,
+    closeButtonVisible: Boolean,
     isUsersProfile: Boolean,
     feed: Flow<PagingData<PostCardUiState>>,
     errorToastMessage: SharedFlow<StringFactory>,
@@ -112,7 +112,7 @@ private fun AccountScreen(
         when (resource) {
             is Resource.Loading -> {
                 MoSoTopBar(
-                    icon = if (showCloseButton) {
+                    icon = if (closeButtonVisible) {
                         MoSoIcons.Close
                     } else {
                         null
@@ -132,7 +132,7 @@ private fun AccountScreen(
             is Resource.Loaded<AccountUiState> -> {
                 MoSoTopBar(
                     title = resource.data.displayName,
-                    icon = if (showCloseButton) {
+                    icon = if (closeButtonVisible) {
                         MoSoIcons.Close
                     } else {
                         null
@@ -159,7 +159,7 @@ private fun AccountScreen(
             }
             is Resource.Error -> {
                 MoSoTopBar(
-                    icon = if (showCloseButton) {
+                    icon = if (closeButtonVisible) {
                         MoSoIcons.Close
                     } else {
                         null

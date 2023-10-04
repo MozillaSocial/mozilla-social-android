@@ -74,8 +74,8 @@ private fun FeedScreen(
                 feed = feed,
                 errorToastMessage = errorToastMessage,
                 postCardInteractions = postCardInteractions,
-                enablePullToRefresh = true,
-                fullScreenRefreshStates = true,
+                pullToRefreshEnabled = true,
+                isFullScreenLoading = true,
                 headerContent = {
                     reccs?.let {
                         RecommendationCarousel(reccs = it) { openAlertDialog.value = true }

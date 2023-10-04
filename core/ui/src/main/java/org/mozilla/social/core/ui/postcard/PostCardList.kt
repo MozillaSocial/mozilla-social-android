@@ -33,11 +33,11 @@ import org.mozilla.social.core.ui.pullrefresh.rememberPullRefreshState
  * Shows a list of post cards and various loading and error states.
  *
  * @param errorToastMessage a flow of toast messages to show when an error happens
- * @param enablePullToRefresh if true, the user will be able to pull to refresh, and
+ * @param pullToRefreshEnabled if true, the user will be able to pull to refresh, and
  * the pull to refresh loading indicator will be used when doing an initial load or a refresh.
- * @param fullScreenRefreshStates if false, loading and error states will appear below the header
+ * @param isFullScreenLoading if false, loading and error states will appear below the header
  * If true, loading and error states will be centered and full screen.
- * Note that if [enablePullToRefresh] is true, the pull to refresh loading indicator will be used instead.
+ * Note that if [pullToRefreshEnabled] is true, the pull to refresh loading indicator will be used instead.
  * @param headerContent content that will show above the list
  */
 @Composable
@@ -45,8 +45,8 @@ fun PostCardList(
     feed: Flow<PagingData<PostCardUiState>>,
     errorToastMessage: SharedFlow<StringFactory>,
     postCardInteractions: PostCardInteractions,
-    enablePullToRefresh: Boolean = false,
-    fullScreenRefreshStates: Boolean = false,
+    pullToRefreshEnabled: Boolean = false,
+    isFullScreenLoading: Boolean = false,
     headerContent: @Composable () -> Unit = {},
 ) {
 
@@ -61,7 +61,7 @@ fun PostCardList(
         modifier = Modifier
             .pullRefresh(
                 pullRefreshState,
-                enabled = enablePullToRefresh,
+                enabled = pullToRefreshEnabled,
             ),
     ) {
 
@@ -74,7 +74,7 @@ fun PostCardList(
 
             when (lazyingPagingItems.loadState.refresh) {
                 is LoadState.Error -> {
-                    if (!fullScreenRefreshStates) {
+                    if (!isFullScreenLoading) {
                         item {
                             GenericError(
                                 modifier = Modifier
@@ -85,7 +85,7 @@ fun PostCardList(
                     }
                 }
                 is LoadState.Loading -> {
-                    if (!fullScreenRefreshStates && !enablePullToRefresh) {
+                    if (!isFullScreenLoading && !pullToRefreshEnabled) {
                         item {
                             Box(
                                 modifier = Modifier
@@ -97,7 +97,7 @@ fun PostCardList(
                             }
                         }
                     }
-                    if (enablePullToRefresh) {
+                    if (pullToRefreshEnabled) {
                         listContent(lazyingPagingItems, postCardInteractions)
                     }
                 }
@@ -130,7 +130,7 @@ fun PostCardList(
             }
         }
 
-        if (lazyingPagingItems.loadState.refresh is LoadState.Error && fullScreenRefreshStates) {
+        if (lazyingPagingItems.loadState.refresh is LoadState.Error && isFullScreenLoading) {
             GenericError(
                 modifier = Modifier
                     .fillMaxSize(),
@@ -138,7 +138,7 @@ fun PostCardList(
             )
         }
 
-        if (lazyingPagingItems.loadState.refresh is LoadState.Loading && !enablePullToRefresh && fullScreenRefreshStates) {
+        if (lazyingPagingItems.loadState.refresh is LoadState.Loading && !pullToRefreshEnabled && isFullScreenLoading) {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
@@ -148,7 +148,7 @@ fun PostCardList(
             }
         }
 
-        if (enablePullToRefresh) {
+        if (pullToRefreshEnabled) {
             PullRefreshIndicator(
                 modifier = Modifier.align(Alignment.TopCenter),
                 refreshing = lazyingPagingItems.loadState.refresh == LoadState.Loading,
