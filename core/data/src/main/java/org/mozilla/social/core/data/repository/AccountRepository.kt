@@ -77,12 +77,16 @@ class AccountRepository internal constructor(
         olderThanId: String? = null,
         immediatelyNewerThanId: String? = null,
         loadSize: Int? = null,
+        onlyMedia: Boolean = false,
+        excludeReplies: Boolean = false,
     ): List<Status> =
         accountApi.getAccountStatuses(
             accountId = accountId,
             olderThanId = olderThanId,
             immediatelyNewerThanId = immediatelyNewerThanId,
             limit = loadSize,
+            onlyMedia = onlyMedia,
+            excludeReplies = excludeReplies,
         ).map { it.toExternalModel() }
 
     suspend fun getAccountBookmarks(): List<Status> =

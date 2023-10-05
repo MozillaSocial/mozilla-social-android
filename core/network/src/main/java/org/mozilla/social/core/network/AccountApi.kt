@@ -57,6 +57,8 @@ interface AccountApi {
         @Query("min_id") immediatelyNewerThanId: String? = null,
         // Maximum number of results to return. Defaults to 20 statuses. Max 40 statuses.
         @Query("limit") limit: Int? = null,
+        @Query("only_media") onlyMedia: Boolean = false,
+        @Query("exclude_replies") excludeReplies: Boolean = false,
     ): List<NetworkStatus>
 
     @GET("/api/v1/bookmarks")

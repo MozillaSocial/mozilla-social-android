@@ -1,4 +1,4 @@
-package org.mozilla.social.core.domain.remotemediators
+package org.mozilla.social.feature.account
 
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
@@ -6,12 +6,13 @@ import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import androidx.room.withTransaction
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.StateFlow
 import org.mozilla.social.core.data.repository.AccountRepository
 import org.mozilla.social.core.data.repository.StatusRepository
 import org.mozilla.social.core.database.SocialDatabase
 import org.mozilla.social.core.database.model.statusCollections.AccountTimelineStatus
 import org.mozilla.social.core.database.model.statusCollections.AccountTimelineStatusWrapper
-import org.mozilla.social.core.database.model.statusCollections.HashTagTimelineStatusWrapper
+import org.mozilla.social.core.domain.remotemediators.getInReplyToAccountNames
 
 @OptIn(ExperimentalPagingApi::class)
 class AccountTimelineRemoteMediator(
@@ -19,6 +20,7 @@ class AccountTimelineRemoteMediator(
     private val statusRepository: StatusRepository,
     private val socialDatabase: SocialDatabase,
     private val accountId: String,
+    private val timelineType: StateFlow<TimelineType>,
 ) : RemoteMediator<Int, AccountTimelineStatusWrapper>() {
 
     override suspend fun load(
@@ -35,6 +37,8 @@ class AccountTimelineRemoteMediator(
                         olderThanId = null,
                         immediatelyNewerThanId = null,
                         loadSize = pageSize,
+                        onlyMedia = timelineType.value == TimelineType.MEDIA,
+                        excludeReplies = timelineType.value == TimelineType.POSTS,
                     )
                 }
 
@@ -46,6 +50,8 @@ class AccountTimelineRemoteMediator(
                         olderThanId = null,
                         immediatelyNewerThanId = firstItem.status.statusId,
                         loadSize = pageSize,
+                        onlyMedia = timelineType.value == TimelineType.MEDIA,
+                        excludeReplies = timelineType.value == TimelineType.POSTS,
                     )
                 }
 
@@ -57,6 +63,8 @@ class AccountTimelineRemoteMediator(
                         olderThanId = lastItem.status.statusId,
                         immediatelyNewerThanId = null,
                         loadSize = pageSize,
+                        onlyMedia = timelineType.value == TimelineType.MEDIA,
+                        excludeReplies = timelineType.value == TimelineType.POSTS,
                     )
                 }
             }.getInReplyToAccountNames(accountRepository)
@@ -99,4 +107,10 @@ class AccountTimelineRemoteMediator(
             MediatorResult.Error(e)
         }
     }
+}
+
+enum class TimelineType {
+    POSTS,
+    POSTS_AND_REPLIES,
+    MEDIA,
 }

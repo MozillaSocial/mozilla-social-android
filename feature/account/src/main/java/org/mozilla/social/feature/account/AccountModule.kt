@@ -17,4 +17,13 @@ val accountModule = module {
             parametersHolder[2],
         )
     }
+    factory { parametersHolder ->
+        AccountTimelineRemoteMediator(
+            get(),
+            get(),
+            get(),
+            parametersHolder[0],
+            parametersHolder[1],
+        )
+    }
 }
