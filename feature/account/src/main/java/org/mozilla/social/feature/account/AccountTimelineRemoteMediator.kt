@@ -108,9 +108,3 @@ class AccountTimelineRemoteMediator(
         }
     }
 }
-
-enum class TimelineType {
-    POSTS,
-    POSTS_AND_REPLIES,
-    MEDIA,
-}

@@ -44,6 +44,7 @@ import androidx.paging.PagingData
 import coil.compose.AsyncImage
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 import org.mozilla.social.common.Resource
@@ -52,6 +53,8 @@ import org.mozilla.social.core.designsystem.component.MoSoButton
 import org.mozilla.social.core.designsystem.component.MoSoCircularProgressIndicator
 import org.mozilla.social.core.designsystem.component.MoSoDivider
 import org.mozilla.social.core.designsystem.component.MoSoDropdownMenu
+import org.mozilla.social.core.designsystem.component.MoSoTab
+import org.mozilla.social.core.designsystem.component.MoSoTabRow
 import org.mozilla.social.core.designsystem.component.MoSoToast
 import org.mozilla.social.core.designsystem.component.MoSoTopBar
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
@@ -87,6 +90,7 @@ internal fun AccountRoute(
         isUsersProfile = viewModel.isOwnProfile,
         feed = viewModel.feed,
         errorToastMessage = viewModel.postCardDelegate.errorToastMessage,
+        timelineTypeFlow = viewModel.timelineType,
         accountNavigationCallbacks = accountNavigationCallbacks,
         htmlContentInteractions = viewModel.postCardDelegate,
         postCardInteractions = viewModel.postCardDelegate,
@@ -103,6 +107,7 @@ private fun AccountScreen(
     isUsersProfile: Boolean,
     feed: Flow<PagingData<PostCardUiState>>,
     errorToastMessage: SharedFlow<StringFactory>,
+    timelineTypeFlow: StateFlow<TimelineType>,
     accountNavigationCallbacks: AccountNavigationCallbacks,
     htmlContentInteractions: HtmlContentInteractions,
     postCardInteractions: PostCardInteractions,
@@ -154,7 +159,8 @@ private fun AccountScreen(
                     errorToastMessage = errorToastMessage,
                     htmlContentInteractions = htmlContentInteractions,
                     postCardInteractions = postCardInteractions,
-                    accountInteractions = accountInteractions
+                    accountInteractions = accountInteractions,
+                    timelineTypeFlow = timelineTypeFlow,
                 )
             }
             is Resource.Error -> {
@@ -190,10 +196,14 @@ private fun MainContent(
     isUsersProfile: Boolean,
     feed: Flow<PagingData<PostCardUiState>>,
     errorToastMessage: SharedFlow<StringFactory>,
+    timelineTypeFlow: StateFlow<TimelineType>,
     htmlContentInteractions: HtmlContentInteractions,
     postCardInteractions: PostCardInteractions,
     accountInteractions: AccountInteractions,
 ) {
+    val selectedTimelineType = timelineTypeFlow.collectAsState().value
+    val context = LocalContext.current
+
     Column(
         modifier = Modifier
             .fillMaxSize(),
@@ -202,6 +212,7 @@ private fun MainContent(
         PostCardList(
             feed = feed,
             errorToastMessage = errorToastMessage,
+            refreshSignalFlow = timelineTypeFlow,
             postCardInteractions = postCardInteractions
         ) {
             Header(
@@ -229,7 +240,25 @@ private fun MainContent(
                 numericalValue = account.statusesCount,
                 onClick = { /*TODO*/ }
             )
-            MoSoDivider()
+            MoSoTabRow(
+                modifier = Modifier.padding(top = 20.dp),
+                selectedTabIndex = selectedTimelineType.ordinal,
+            ) {
+                TimelineType.values().forEach { timelineType ->
+                    MoSoTab(
+                        modifier = Modifier
+                            .height(40.dp),
+                        selected = selectedTimelineType == timelineType,
+                        onClick = { accountInteractions.onTabClicked(timelineType) },
+                        content = {
+                            Text(
+                                text = timelineType.tabTitle.build(context),
+                                style = MoSoTheme.typography.labelMedium
+                            )
+                        },
+                    )
+                }
+            }
         }
     }
 }

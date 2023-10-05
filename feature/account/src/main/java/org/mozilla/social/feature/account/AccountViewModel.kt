@@ -204,4 +204,8 @@ class AccountViewModel(
     override fun onRetryClicked() {
         loadAccount()
     }
+
+    override fun onTabClicked(timelineType: TimelineType) {
+        _timelineType.edit { timelineType }
+    }
 }
