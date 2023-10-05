@@ -1,6 +1,4 @@
 $schema: moz://mozilla.org/schemas/glean/metrics/2-0-0
-#$tags:
-#  - 'Mozilla Social - Core'
 
 identifiers:
   oauth_client_id:
@@ -97,7 +95,8 @@ ui:
           with by the user (e.g. `home.rec` or `home.boost`).
           The identifier is a period-delimited string, ordered in
           increasing order of specificity (e.g. `[SCREEN].[BUTTON]`).
-          #Call out tracking spreadsheet for all possible values of ui_identifier here?
+          All existing identifier values are being tracked here:
+          https://docs.google.com/spreadsheets/d/1KX6TiyXXg2fE0a1IDKsy5O97ZrHYvjKohmIX_m8ECXY/edit?usp=sharing
         type: string
       ui_additional_detail: &ui_additional_detail
         description: >
@@ -151,6 +150,53 @@ ui:
           toggle/setting after user interaction has taken place.
         type: string
 
+web:
+  page_url:
+    type: string
+    description: >
+      The full URL of the page that was visited,
+      along with URL query parameters.
+      For example, `https://mozilla.social/home?utm_source=test`.
+    bugs:
+      - TBD
+    data_reviews:
+      - TBD
+    notification_emails:
+      - kdemtchouk@mozilla.com
+    expires: never
+    send_in_pings:
+      - events
+
+  referrer_url:
+    type: string
+    description: >
+      The full URL of the previous web page from which a link was followed
+      in order to trigger the page view.
+      Comes from the `referer` field of the HTTP header.
+      May not always be available.
+      For example, `https://www.google.com`.
+    bugs:
+      - TBD
+    data_reviews:
+      - TBD
+    notification_emails:
+      - kdemtchouk@mozilla.com
+    expires: never
+    send_in_pings:
+      - events
+
+  page_view:
+    type: event
+    description: >
+      Event triggered when a user requests to load a web page.
+    bugs:
+      - TBD
+    data_reviews:
+      - TBD
+    notification_emails:
+      - kdemtchouk@mozilla.com
+    expires: never
+
   link_click:
     type: event
     description: >
@@ -163,8 +209,6 @@ ui:
       - kdemtchouk@mozilla.com
     expires: never
     extra_keys:
-#      page_url: #*page_url
-#      referrer_url: #*referrer_url
       target_url:
         description: >
           The destination URL of the link that the user clicked.
@@ -172,34 +216,6 @@ ui:
       element_id:
         description: >
           The HTML element ID of the link that the user clicked.
-        type: string
-
-page:
-  view:
-    type: event
-    description: >
-      Event triggered when a user requests to load a web page.
-    bugs:
-      - TBD
-    data_reviews:
-      - TBD
-    notification_emails:
-      - kdemtchouk@mozilla.com
-    expires: never
-    extra_keys:
-      page_url: &page_url
-        description: >
-          The full URL of the page that was visited,
-          along with URL query parameters.
-          For example, `https://mozilla.social/home?utm_source=test`.
-        type: string
-      referrer_url: &referrer_url
-        description: >
-          The full URL of the previous web page from which a link was followed
-          in order to trigger the page view.
-          Comes from the `referer` field of the HTTP header.
-          May not always be available.
-          For example, `https://www.google.com`.
         type: string
 
 backend:
