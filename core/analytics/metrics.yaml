@@ -1,57 +1,231 @@
-# This Source Code Form is subject to the terms of the Mozilla Public
-# License, v. 2.0. If a copy of the MPL was not distributed with this
-# file, You can obtain one at http://mozilla.org/MPL/2.0/.
----
 $schema: moz://mozilla.org/schemas/glean/metrics/2-0-0
+#$tags:
+#  - 'Mozilla Social - Core'
 
-app:
-  opened:
-    type: event
-    description: |
-      A user opened the app (from cold start, to the homescreen or browser)
-    extra_keys:
-      source:
-        description: |
-          The method used to open MoSo App. Possible values are: `app_icon`,
-          `custom_tab` or `link`
-        type: string
+identifiers:
+  oauth_client_id:
+    type: uuid
+    lifetime: user
+    description: >
+      The client_id from oauth.
     bugs:
-      - "N/A"
+      - TBD
     data_reviews:
-      - "N/A"
-    data_sensitivity:
-      - interaction
+      - TBD
     notification_emails:
-      - "N/A"
+      - kdemtchouk@mozilla.com
     expires: never
-#    metadata:
-#      tags:
-#        - Performance
-#  search_bar_tapped:
-#    type: event
-#    description: |
-#      A user tapped the search bar
-#    extra_keys:
-#      source:
-#        description: |
-#          The view the user was on when they initiated the search (For example:
-#          `Home` or `Browser`)
-#        type: string
-#    bugs:
-#      - https://github.com/mozilla-mobile/fenix/issues/959
-#      - https://github.com/mozilla-mobile/fenix/issues/19923
-#    data_reviews:
-#      - https://github.com/mozilla-mobile/fenix/pull/1067#issuecomment-474598673
-#      - https://github.com/mozilla-mobile/fenix/pull/13958#issuecomment-676857877
-#      - https://github.com/mozilla-mobile/fenix/pull/18143
-#      - https://github.com/mozilla-mobile/fenix/pull/19924#issuecomment-861423789
-#      - https://github.com/mozilla-mobile/fenix/pull/21038#issuecomment-906757301
-#    data_sensitivity:
-#      - interaction
-#    notification_emails:
-#      - android-probes@mozilla.com
-#      - cgordon@mozilla.com
-#    expires: never
-#    metadata:
-#      tags:
-#        - Search
+    send_in_pings:
+      - events
+
+  fxa_account_id:
+    type: string
+    description: >
+      The user's FxA account ID, if available.
+    bugs:
+      - TBD
+    data_reviews:
+      - TBD
+    notification_emails:
+      - kdemtchouk@mozilla.com
+    expires: never
+    send_in_pings:
+      - events
+
+  mastodon_account_id:
+    type: string
+    description: >
+      The user's numeric account ID from Mastodon.
+    bugs:
+      - TBD
+    data_reviews:
+      - TBD
+    notification_emails:
+      - kdemtchouk@mozilla.com
+    expires: never
+    send_in_pings:
+      - events
+
+  mastodon_instance_domain:
+    type: string
+    description: >
+      The domain of the Mastodon instance where
+      the user's Mastodon account is hosted (e.g. `mozilla.social`).
+    bugs:
+      - TBD
+    data_reviews:
+      - TBD
+    notification_emails:
+      - kdemtchouk@mozilla.com
+    expires: never
+    send_in_pings:
+      - events
+
+  adjust_device_id:
+    type: string
+    description: >
+      The Adjust device ID for this user, if available.
+    bugs:
+      - TBD
+    data_reviews:
+      - TBD
+    notification_emails:
+      - kdemtchouk@mozilla.com
+    expires: never
+    send_in_pings:
+      - events
+
+ui:
+  impression:
+    type: event
+    description: >
+      Event triggered when a user views a notable UI element.
+      Triggered once per page load, as soon as any pixel of that UI 
+      element is visible in the foreground for any length of time.
+      UI elements may include: content, pages, CTAs, etc.
+    bugs:
+      - TBD
+    data_reviews:
+      - TBD
+    notification_emails:
+      - kdemtchouk@mozilla.com
+    expires: never
+    extra_keys:
+      ui_identifier: &ui_identifier
+        description: >
+          The string id of the UI element that was seen/interacted
+          with by the user (e.g. `home.rec` or `home.boost`).
+          The identifier is a period-delimited string, ordered in
+          increasing order of specificity (e.g. `[SCREEN].[BUTTON]`).
+          #Call out tracking spreadsheet for all possible values of ui_identifier here?
+        type: string
+      ui_additional_detail: &ui_additional_detail
+        description: >
+          An optional string to record further informatin about the UI
+          element, such as its starting value if it is a toggle or setting.
+        type: string
+      mastodon_status_id: &mastodon_status_id
+        description: >
+          The Mastodon status ID of the post that was seen/interacted
+          with by the user, if any.
+          The Mastodon API calls statuses "posts", but they are one and the same.
+        type: string
+      corpus_recommendation_id: &corpus_recommendation_id
+        description: >
+          TBD machine learning/recommendation identifier of the content
+          that was seen/interacted with by the user, if any.
+        type: string
+
+  engagement:
+    type: event
+    description: >
+      Event triggered when a user taps/clicks on a UI element, 
+      triggering a change in app state.
+    bugs:
+      - TBD
+    data_reviews:
+      - TBD
+    notification_emails:
+      - kdemtchouk@mozilla.com
+    expires: never
+    extra_keys:
+      ui_identifier: *ui_identifier
+      ui_additional_detail: *ui_additional_detail
+      mastodon_status_id: *mastodon_status_id
+      corpus_recommendation_id: *corpus_recommendation_id
+      engagement_type:
+        description: >
+          The type of user engagement that triggered this event.
+          One of:
+            * `follow`
+            * `post`
+            * `reply`
+            * `favorite`
+            * `boost`
+            * `bookmark`
+            * `general`
+        type: string
+      engagement_value:
+        description: >
+          If the UI element is a toggle or setting, the value of the
+          toggle/setting after user interaction has taken place.
+        type: string
+
+  link_click:
+    type: event
+    description: >
+      Event triggered when a user clicks a link on a web page.
+    bugs:
+      - TBD
+    data_reviews:
+      - TBD
+    notification_emails:
+      - kdemtchouk@mozilla.com
+    expires: never
+    extra_keys:
+#      page_url: #*page_url
+#      referrer_url: #*referrer_url
+      target_url:
+        description: >
+          The destination URL of the link that the user clicked.
+        type: string
+      element_id:
+        description: >
+          The HTML element ID of the link that the user clicked.
+        type: string
+
+page:
+  view:
+    type: event
+    description: >
+      Event triggered when a user requests to load a web page.
+    bugs:
+      - TBD
+    data_reviews:
+      - TBD
+    notification_emails:
+      - kdemtchouk@mozilla.com
+    expires: never
+    extra_keys:
+      page_url: &page_url
+        description: >
+          The full URL of the page that was visited,
+          along with URL query parameters.
+          For example, `https://mozilla.social/home?utm_source=test`.
+        type: string
+      referrer_url: &referrer_url
+        description: >
+          The full URL of the previous web page from which a link was followed
+          in order to trigger the page view.
+          Comes from the `referer` field of the HTTP header.
+          May not always be available.
+          For example, `https://www.google.com`.
+        type: string
+
+backend:
+  object_update:
+    type: event
+    description: >
+      Event triggered by the backend to record the change in state
+      of an object (e.g. API requests to the mozilla.social Mastodon
+      server).
+      In the future, we could potentially use this event to track
+      changes in state to core Mastodon objects (e.g. accounts and
+      posts).
+    bugs:
+      - TBD
+    data_reviews:
+      - TBD
+    notification_emails:
+      - kdemtchouk@mozilla.com
+    expires: never
+    extra_keys:
+      object_type:
+        description: >
+          A simple name to describe the object whose state changed.
+          For example, `api_request`.
+        type: string
+      object_state:
+        description: >
+          A JSON representation of the latest state of the object.
+        type: string

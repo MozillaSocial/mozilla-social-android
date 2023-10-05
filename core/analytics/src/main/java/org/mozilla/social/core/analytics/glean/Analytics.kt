@@ -3,12 +3,10 @@ package org.mozilla.social.core.analytics.glean
 import android.content.Context
 import mozilla.telemetry.glean.BuildInfo
 import mozilla.telemetry.glean.Glean
-import org.mozilla.social.core.analytics.GleanMetrics.App
 import java.util.Calendar
 
 interface Analytics {
-    fun initialize(context: Context) {
-    }
+    fun initialize(context: Context)
 }
 
 class GleanAnalytics : Analytics {
@@ -23,7 +21,5 @@ class GleanAnalytics : Analytics {
             uploadEnabled = true,
             buildInfo = buildInfo
         )
-
-        App.opened.record()
     }
 }
