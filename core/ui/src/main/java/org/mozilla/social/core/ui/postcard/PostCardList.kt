@@ -46,7 +46,7 @@ import org.mozilla.social.core.ui.pullrefresh.rememberPullRefreshState
 fun PostCardList(
     feed: Flow<PagingData<PostCardUiState>>,
     errorToastMessage: SharedFlow<StringFactory>,
-    refreshSignalFlow: SharedFlow<Any>? = null,
+    refreshSignalFlow: Flow<Any>? = null,
     postCardInteractions: PostCardInteractions,
     pullToRefreshEnabled: Boolean = false,
     isFullScreenLoading: Boolean = false,
