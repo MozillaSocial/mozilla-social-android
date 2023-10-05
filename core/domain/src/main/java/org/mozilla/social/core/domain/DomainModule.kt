@@ -30,4 +30,5 @@ val domainModule = module {
     single { IsSignedInFlow(get()) }
     single { AccountIdFlow(get()) }
     single { GetDetailedAccount(get(), get()) }
+    single { AccountIdBlocking(get()) }
 }

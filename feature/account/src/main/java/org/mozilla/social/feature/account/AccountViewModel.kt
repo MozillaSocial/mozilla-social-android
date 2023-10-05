@@ -30,6 +30,7 @@ import org.mozilla.social.core.data.repository.StatusRepository
 import org.mozilla.social.core.data.repository.model.status.toExternalModel
 import org.mozilla.social.core.database.SocialDatabase
 import org.mozilla.social.core.database.model.statusCollections.toStatusWrapper
+import org.mozilla.social.core.domain.AccountIdBlocking
 import org.mozilla.social.core.domain.AccountIdFlow
 import org.mozilla.social.core.domain.GetDetailedAccount
 import org.mozilla.social.core.domain.remotemediators.AccountTimelineRemoteMediator
@@ -41,7 +42,7 @@ import timber.log.Timber
 
 class AccountViewModel(
     private val accountRepository: AccountRepository,
-    accountIdFlow: AccountIdFlow,
+    accountIdBlocking: AccountIdBlocking,
     log: Log,
     statusRepository: StatusRepository,
     socialDatabase: SocialDatabase,
@@ -64,26 +65,8 @@ class AccountViewModel(
 
     /**
      * The account ID of the logged in user
-     *
-     * So much depends on this value, trying out a blocking call to simplify the rest of the code.
-     *
-     * Uses a mutex so we can cancel the flow collection after we get the value.
      */
-    private val usersAccountId: String = runBlocking {
-        var value = ""
-
-        val mutex = Mutex(true)
-        val job = launch {
-            accountIdFlow().collect {
-                value = it
-                mutex.unlock()
-            }
-        }
-        mutex.lock()
-        job.cancel()
-
-        value
-    }
+    private val usersAccountId: String = accountIdBlocking()
 
     /**
      * if an account Id was passed in the constructor, the use that,
