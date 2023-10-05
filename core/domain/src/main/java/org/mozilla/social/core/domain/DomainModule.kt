@@ -1,7 +1,6 @@
 package org.mozilla.social.core.domain
 
 import org.koin.dsl.module
-import org.mozilla.social.core.domain.remotemediators.AccountTimelineRemoteMediator
 import org.mozilla.social.core.domain.remotemediators.HashTagTimelineRemoteMediator
 import org.mozilla.social.core.domain.remotemediators.HomeTimelineRemoteMediator
 
@@ -16,18 +15,11 @@ val domainModule = module {
             parametersHolder[0]
         )
     }
-    factory { parametersHolder ->
-        AccountTimelineRemoteMediator(
-            get(),
-            get(),
-            get(),
-            parametersHolder[0]
-        )
-    }
     single { GetThreadUseCase(get()) }
     single { Login(get(), get(), get(), get()) }
     single { Logout(get(), get()) }
     single { IsSignedInFlow(get()) }
     single { AccountIdFlow(get()) }
     single { GetDetailedAccount(get(), get()) }
+    single { AccountIdBlocking(get()) }
 }
