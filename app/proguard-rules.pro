@@ -28,6 +28,8 @@
 # R8 full mode strips generic signatures from return types if not kept.
 -if interface * { @retrofit2.http.* public *** *(...); }
 -keep,allowoptimization,allowshrinking,allowobfuscation class <3>
+-dontwarn androidx.work.testing.TestDriver
+-dontwarn androidx.work.testing.WorkManagerTestInitHelper
 
 # End of Retrofit rules from https://github.com/square/retrofit/blob/029cbb419553d6d9f5fc642a2c716556d630b4d4/retrofit/src/main/resources/META-INF/proguard/retrofit2.pro
 
