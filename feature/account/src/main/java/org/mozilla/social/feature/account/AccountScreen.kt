@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -34,8 +35,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -67,6 +70,7 @@ import org.mozilla.social.core.ui.postcard.PostCardInteractions
 import org.mozilla.social.core.ui.postcard.PostCardList
 import org.mozilla.social.core.ui.postcard.PostCardNavigation
 import org.mozilla.social.core.ui.postcard.PostCardUiState
+import kotlin.math.max
 
 @Composable
 internal fun AccountRoute(
@@ -222,23 +226,19 @@ private fun MainContent(
             )
 
             UserInfo(account = account)
-            UserFollow(
-                account = account,
-                accountInteractions = accountInteractions,
-            )
             UserBio(
+                modifier = Modifier
+                    .padding(top = 12.dp),
                 account = account,
                 htmlContentInteractions = htmlContentInteractions,
             )
-            Spacer(modifier = Modifier.padding(top = 4.dp))
             UserFields(
                 account = account,
                 htmlContentInteractions = htmlContentInteractions,
             )
-            QuickFunctions(
-                name = R.string.posts,
-                numericalValue = account.statusesCount,
-                onClick = { /*TODO*/ }
+            UserFollow(
+                account = account,
+                accountInteractions = accountInteractions,
             )
             MoSoTabRow(
                 modifier = Modifier.padding(top = 20.dp),
@@ -365,11 +365,13 @@ private fun UserInfo(
     ) {
         Text(
             text = account.displayName,
-            fontSize = 20.sp,
-            modifier = Modifier
-                .padding(bottom = 4.dp)
+            style = MoSoTheme.typography.titleLarge
         )
-        Text(text = "@${account.webFinger}")
+        Text(
+            text = "@${account.webFinger}",
+            style = MoSoTheme.typography.labelMedium,
+            color = MoSoTheme.colors.textSecondary,
+        )
     }
 }
 
@@ -380,32 +382,47 @@ private fun UserFollow(
 ) {
     Row(
         modifier = Modifier
-            .height(IntrinsicSize.Min)
             .padding(8.dp)
-            .border(
-                border = BorderStroke(2.dp, Color.Gray),
-                shape = RoundedCornerShape(8.dp)
-            )
+    ) {
+        Counter(
+            value = account.followersCount.toString(),
+            label = stringResource(id = R.string.followers),
+            onClick = { accountInteractions.onFollowersClicked() }
+        )
+        Spacer(modifier = Modifier.width(24.dp))
+        Counter(
+            value = account.followingCount.toString(),
+            label = stringResource(id = R.string.following),
+            onClick = { accountInteractions.onFollowingClicked() }
+        )
+        Spacer(modifier = Modifier.width(24.dp))
+        Counter(
+            value = account.statusesCount.toString(),
+            label = stringResource(id = R.string.posts),
+        )
+    }
+}
+
+@Composable
+private fun Counter(
+    modifier: Modifier = Modifier,
+    value: String,
+    label: String,
+    onClick: () -> Unit = {},
+) {
+    Column(
+        modifier = modifier
+            .clickable { onClick() },
     ) {
         Text(
-            modifier = Modifier
-                .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 8.dp)
-                .clickable { accountInteractions.onFollowersClicked() },
-            text = stringResource(id = R.string.followers_count, account.followersCount),
-        )
-        MoSoDivider(
-            color = Color.Gray,
-            modifier = Modifier
-                .fillMaxHeight()
-                .width(1.dp)
+            text = value,
+            style = MoSoTheme.typography.bodyLarge,
+            fontWeight = FontWeight.Bold,
         )
         Text(
-            modifier = Modifier
-                .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 8.dp)
-                .clickable { accountInteractions.onFollowingClicked() },
-            text = stringResource(id = R.string.following_count, account.followingCount),
-
-            )
+            text = label,
+            style = MoSoTheme.typography.bodyMedium,
+        )
     }
 }
 
@@ -423,7 +440,9 @@ private fun UserBio(
         HtmlContent(
             mentions = emptyList(),
             htmlText = account.bio,
-            htmlContentInteractions = htmlContentInteractions
+            htmlContentInteractions = htmlContentInteractions,
+            textStyle = MoSoTheme.typography.bodyMedium,
+//            maximumLineCount = 3,
         )
     }
 }
@@ -476,50 +495,15 @@ private fun UserFields(
 }
 
 @Composable
-private fun QuickFunctions(
-    modifier: Modifier = Modifier,
-    @StringRes name: Int,
-    numericalValue: Any,
-    onClick: () -> Unit,
-) {
-    Box(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(8.dp)
-            .border(
-                border = BorderStroke(2.dp, Color.Gray),
-                shape = RoundedCornerShape(8.dp)
-            )
-            .clickable { onClick() }
-    ) {
-        Text(
-            text = stringResource(id = name),
-            style = MaterialTheme.typography.bodyLarge,
-            modifier = Modifier
-                .padding(start = 8.dp, top = 8.dp, bottom = 8.dp)
-                .align(Alignment.CenterStart)
-        )
-        Text(
-            text = numericalValue.toString(),
-            style = MaterialTheme.typography.bodyLarge,
-            modifier = Modifier
-                .align(Alignment.CenterEnd)
-                .padding(end = 8.dp)
-        )
-    }
-}
-
-@Composable
 private fun Header(
     modifier: Modifier = Modifier,
     isUsersProfile: Boolean,
     accountUiState: AccountUiState,
     accountInteractions: AccountInteractions,
 ) {
-    Box(
-        modifier = modifier.fillMaxWidth()
-    ) {
-        Column {
+    HeaderLayout(
+        modifier = modifier.fillMaxWidth(),
+        headerImage = {
             AsyncImage(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -528,49 +512,99 @@ private fun Header(
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
             )
-
-            Row {
-                Spacer(modifier = Modifier.weight(1f))
-                val buttonModifier = Modifier.padding(end = 8.dp)
-                if (isUsersProfile) {
-                    MoSoButton(
-                        modifier = buttonModifier,
-                        onClick = { /*TODO*/ }
-                    ) {
-                        Text(text = stringResource(id = R.string.edit_button))
-                    }
-                } else {
-                    MoSoButton(
-                        modifier = buttonModifier,
-                        onClick = {
-                            if (accountUiState.isFollowing) {
-                                accountInteractions.onUnfollowClicked()
-                            } else {
-                                accountInteractions.onFollowClicked()
-                            }
-                        }
-                    ) {
-                        Text(
-                            text = if (accountUiState.isFollowing) {
-                                stringResource(id = R.string.unfollow_button)
-                            } else {
-                                stringResource(id = R.string.follow_button)
-                            }
-                        )
-                    }
-                }
-            }
-
-        }
-        Column {
-            Spacer(modifier = Modifier.padding(top = 60.dp))
+        },
+        profileImage = {
             AsyncImage(
                 modifier = Modifier
                     .padding(start = 8.dp)
-                    .size(120.dp)
-                    .clip(RoundedCornerShape(16.dp)),
+                    .size(92.dp)
+                    .clip(CircleShape)
+                    .border(
+                        width = 3.dp,
+                        color = MoSoTheme.colors.layer1,
+                        shape = CircleShape
+                    ),
                 model = accountUiState.avatarUrl,
                 contentDescription = null,
+            )
+        },
+        rightSideContent = {
+            val buttonModifier = Modifier.padding(end = 8.dp)
+            if (isUsersProfile) {
+                MoSoButton(
+                    modifier = buttonModifier,
+                    onClick = { /*TODO*/ }
+                ) {
+                    Text(text = stringResource(id = R.string.edit_button))
+                }
+            } else {
+                MoSoButton(
+                    modifier = buttonModifier,
+                    onClick = {
+                        if (accountUiState.isFollowing) {
+                            accountInteractions.onUnfollowClicked()
+                        } else {
+                            accountInteractions.onFollowClicked()
+                        }
+                    }
+                ) {
+                    Text(
+                        text = if (accountUiState.isFollowing) {
+                            stringResource(id = R.string.unfollow_button)
+                        } else {
+                            stringResource(id = R.string.follow_button)
+                        }
+                    )
+                }
+            }
+        }
+    )
+}
+
+/**
+ * Layout for the header images and edit / follow buttons
+ * Using a layout is nice because it automatically calculates the spacing for the
+ * avatar image so you don't have to calculate the value yourself if the avatar size changes.
+ */
+@Composable
+private fun HeaderLayout(
+    modifier: Modifier = Modifier,
+    headerImage: @Composable () -> Unit,
+    profileImage: @Composable () -> Unit,
+    rightSideContent: @Composable () -> Unit,
+) {
+    Layout(
+        modifier = modifier,
+        content = {
+            Box { headerImage() }
+            Box { profileImage() }
+            Box { rightSideContent() }
+        },
+    ) { measurables, constraints ->
+        val placeables = measurables.map {
+            it.measure(constraints.copy(
+                minWidth = 0,
+                minHeight = 0,
+            ))
+        }
+        val headerImagePlaceable = placeables[0]
+        val profileImagePlaceable = placeables[1]
+        val rightSideContentPlaceable = placeables[2]
+        layout(
+            width = constraints.maxWidth,
+            height = headerImagePlaceable.height + max(profileImagePlaceable.height / 2, rightSideContentPlaceable.height),
+        ) {
+            headerImagePlaceable.placeRelative(
+                x = 0,
+                y = 0,
+            )
+            profileImagePlaceable.placeRelative(
+                x = 0,
+                y = headerImagePlaceable.height - profileImagePlaceable.height / 2
+            )
+            rightSideContentPlaceable.placeRelative(
+                x = (constraints.maxWidth - rightSideContentPlaceable.width),
+                y = headerImagePlaceable.height
             )
         }
     }

@@ -9,9 +9,7 @@
     </plurals>
 
     <string name="following">Following</string>
-
-    <string name="following_count">Following: %d</string>
-    <string name="followers_count">Followers: %d</string>
+    <string name="followers">Followers</string>
 
     <string name="share_option">Share</string>
     <string name="follow_button">Follow</string>
