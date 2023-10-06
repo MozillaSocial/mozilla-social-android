@@ -27,7 +27,7 @@ fun HtmlContent(
     mentions: List<Mention>,
     htmlText: String,
     htmlContentInteractions: HtmlContentInteractions,
-    maximumLineCount: Int? = null,
+    maximumLineCount: Int = Int.MAX_VALUE,
     textStyle: TextStyle? = null,
 ) {
     val linkColor: Color = MoSoTheme.colors.textLink
@@ -69,11 +69,12 @@ fun HtmlContent(
                 isLongClickable = false
                 //TODO ellipsize not working
                 ellipsize = TextUtils.TruncateAt.END
-                maximumLineCount?.let { maxLines = it }
+                maxLines = maximumLineCount
             }
         },
         update = {
             it.text = textContent.value
+            it.maxLines = maximumLineCount
         }
     )
 }

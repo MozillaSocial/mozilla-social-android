@@ -1,7 +1,6 @@
 package org.mozilla.social.feature.account
 
 import android.content.Intent
-import androidx.annotation.StringRes
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -11,7 +10,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -41,7 +39,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.paging.PagingData
 import coil.compose.AsyncImage
@@ -232,10 +229,11 @@ private fun MainContent(
                 account = account,
                 htmlContentInteractions = htmlContentInteractions,
             )
-            UserFields(
-                account = account,
-                htmlContentInteractions = htmlContentInteractions,
-            )
+            //TODO add these back in when there are designs
+//            UserFields(
+//                account = account,
+//                htmlContentInteractions = htmlContentInteractions,
+//            )
             UserFollow(
                 account = account,
                 accountInteractions = accountInteractions,
@@ -432,18 +430,33 @@ private fun UserBio(
     account: AccountUiState,
     htmlContentInteractions: HtmlContentInteractions,
 ) {
+    val expanded = remember { mutableStateOf(false) }
     Column(
         modifier = modifier
             .fillMaxWidth()
             .padding(start = 8.dp, end = 8.dp),
     ) {
-        HtmlContent(
-            mentions = emptyList(),
-            htmlText = account.bio,
-            htmlContentInteractions = htmlContentInteractions,
-            textStyle = MoSoTheme.typography.bodyMedium,
-//            maximumLineCount = 3,
-        )
+        Row {
+            HtmlContent(
+                modifier = Modifier
+                    .weight(1f, false),
+                mentions = emptyList(),
+                htmlText = account.bio,
+                htmlContentInteractions = htmlContentInteractions,
+                textStyle = MoSoTheme.typography.bodyMedium,
+                maximumLineCount = if (expanded.value) Int.MAX_VALUE else 3,
+            )
+            IconButton(
+                modifier = Modifier,
+                onClick = { expanded.value = !expanded.value }
+            ) {
+                Icon(
+                    imageVector = MoSoIcons.Caret,
+                    contentDescription = null
+                )
+            }
+
+        }
     }
 }
 
