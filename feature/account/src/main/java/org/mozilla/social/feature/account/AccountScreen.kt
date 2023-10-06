@@ -69,6 +69,7 @@ import org.mozilla.social.core.designsystem.component.MoSoButtonSecondary
 import org.mozilla.social.core.designsystem.component.MoSoCircularProgressIndicator
 import org.mozilla.social.core.designsystem.component.MoSoDivider
 import org.mozilla.social.core.designsystem.component.MoSoDropdownMenu
+import org.mozilla.social.core.designsystem.component.MoSoSurface
 import org.mozilla.social.core.designsystem.component.MoSoTab
 import org.mozilla.social.core.designsystem.component.MoSoTabRow
 import org.mozilla.social.core.designsystem.component.MoSoToast
@@ -131,77 +132,82 @@ private fun AccountScreen(
     postCardInteractions: PostCardInteractions,
     accountInteractions: AccountInteractions,
 ) {
-    Column {
-        when (resource) {
-            is Resource.Loading -> {
-                MoSoTopBar(
-                    icon = if (closeButtonVisible) {
-                        MoSoIcons.Close
-                    } else {
-                        null
-                    },
-                    onIconClicked = { accountNavigationCallbacks.onCloseClicked() },
-                )
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .wrapContentSize(
-                            align = Alignment.Center
-                        )
-                ) {
-                    MoSoCircularProgressIndicator()
+    MoSoSurface {
+        Column {
+            when (resource) {
+                is Resource.Loading -> {
+                    MoSoTopBar(
+                        icon = if (closeButtonVisible) {
+                            MoSoIcons.Close
+                        } else {
+                            null
+                        },
+                        onIconClicked = { accountNavigationCallbacks.onCloseClicked() },
+                    )
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .wrapContentSize(
+                                align = Alignment.Center
+                            )
+                    ) {
+                        MoSoCircularProgressIndicator()
+                    }
                 }
-            }
-            is Resource.Loaded<AccountUiState> -> {
-                MoSoTopBar(
-                    title = resource.data.displayName,
-                    icon = if (closeButtonVisible) {
-                        MoSoIcons.Close
-                    } else {
-                        null
-                    },
-                    onIconClicked = { accountNavigationCallbacks.onCloseClicked() },
-                    rightSideContent = {
-                        OverflowMenu(
-                            account = resource.data,
-                            isUsersProfile = isUsersProfile,
-                            overflowInteractions = accountInteractions,
+
+                is Resource.Loaded<AccountUiState> -> {
+                    MoSoTopBar(
+                        title = resource.data.displayName,
+                        icon = if (closeButtonVisible) {
+                            MoSoIcons.Close
+                        } else {
+                            null
+                        },
+                        onIconClicked = { accountNavigationCallbacks.onCloseClicked() },
+                        rightSideContent = {
+                            OverflowMenu(
+                                account = resource.data,
+                                isUsersProfile = isUsersProfile,
+                                overflowInteractions = accountInteractions,
+                            )
+                        },
+                        showDivider = false,
+                    )
+
+                    MainContent(
+                        account = resource.data,
+                        isUsersProfile = isUsersProfile,
+                        feed = feed,
+                        errorToastMessage = errorToastMessage,
+                        htmlContentInteractions = htmlContentInteractions,
+                        postCardInteractions = postCardInteractions,
+                        accountInteractions = accountInteractions,
+                        timelineTypeFlow = timelineTypeFlow,
+                    )
+                }
+
+                is Resource.Error -> {
+                    MoSoTopBar(
+                        icon = if (closeButtonVisible) {
+                            MoSoIcons.Close
+                        } else {
+                            null
+                        },
+                        onIconClicked = { accountNavigationCallbacks.onCloseClicked() },
+                    )
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .wrapContentSize(
+                                align = Alignment.Center
+                            )
+                    ) {
+                        GenericError(
+                            onRetryClicked = {
+                                accountInteractions.onRetryClicked()
+                            }
                         )
                     }
-                )
-
-                MainContent(
-                    account = resource.data,
-                    isUsersProfile = isUsersProfile,
-                    feed = feed,
-                    errorToastMessage = errorToastMessage,
-                    htmlContentInteractions = htmlContentInteractions,
-                    postCardInteractions = postCardInteractions,
-                    accountInteractions = accountInteractions,
-                    timelineTypeFlow = timelineTypeFlow,
-                )
-            }
-            is Resource.Error -> {
-                MoSoTopBar(
-                    icon = if (closeButtonVisible) {
-                        MoSoIcons.Close
-                    } else {
-                        null
-                    },
-                    onIconClicked = { accountNavigationCallbacks.onCloseClicked() },
-                )
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .wrapContentSize(
-                            align = Alignment.Center
-                        )
-                ) {
-                    GenericError(
-                        onRetryClicked = {
-                            accountInteractions.onRetryClicked()
-                        }
-                    )
                 }
             }
         }
