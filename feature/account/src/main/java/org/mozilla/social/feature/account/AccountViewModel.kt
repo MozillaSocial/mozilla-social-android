@@ -8,17 +8,12 @@ import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
 import androidx.paging.map
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.sync.Mutex
 import org.koin.core.parameter.parametersOf
 import org.koin.java.KoinJavaComponent
 import org.mozilla.social.common.Resource
@@ -30,9 +25,8 @@ import org.mozilla.social.core.data.repository.StatusRepository
 import org.mozilla.social.core.data.repository.model.status.toExternalModel
 import org.mozilla.social.core.database.SocialDatabase
 import org.mozilla.social.core.database.model.statusCollections.toStatusWrapper
-import org.mozilla.social.core.domain.AccountIdFlow
+import org.mozilla.social.core.domain.AccountIdBlocking
 import org.mozilla.social.core.domain.GetDetailedAccount
-import org.mozilla.social.core.domain.remotemediators.AccountTimelineRemoteMediator
 import org.mozilla.social.core.ui.R
 import org.mozilla.social.core.ui.postcard.PostCardDelegate
 import org.mozilla.social.core.ui.postcard.PostCardNavigation
@@ -41,10 +35,10 @@ import timber.log.Timber
 
 class AccountViewModel(
     private val accountRepository: AccountRepository,
-    accountIdFlow: AccountIdFlow,
+    accountIdBlocking: AccountIdBlocking,
     log: Log,
     statusRepository: StatusRepository,
-    socialDatabase: SocialDatabase,
+    private val socialDatabase: SocialDatabase,
     private val getDetailedAccount: GetDetailedAccount,
     initialAccountId: String?,
     postCardNavigation: PostCardNavigation,
@@ -64,26 +58,8 @@ class AccountViewModel(
 
     /**
      * The account ID of the logged in user
-     *
-     * So much depends on this value, trying out a blocking call to simplify the rest of the code.
-     *
-     * Uses a mutex so we can cancel the flow collection after we get the value.
      */
-    private val usersAccountId: String = runBlocking {
-        var value = ""
-
-        val mutex = Mutex(true)
-        val job = launch {
-            accountIdFlow().collect {
-                value = it
-                mutex.unlock()
-            }
-        }
-        mutex.lock()
-        job.cancel()
-
-        value
-    }
+    private val usersAccountId: String = accountIdBlocking()
 
     /**
      * if an account Id was passed in the constructor, the use that,
@@ -103,9 +79,15 @@ class AccountViewModel(
 
     private var getAccountJob: Job? = null
 
+    private val _timelineType = MutableStateFlow(TimelineType.POSTS)
+    val timelineType = _timelineType.asStateFlow()
+
     private val accountTimelineRemoteMediator: AccountTimelineRemoteMediator by KoinJavaComponent.inject(
         AccountTimelineRemoteMediator::class.java
-    ) { parametersOf(accountId) }
+    ) { parametersOf(
+        accountId,
+        timelineType,
+    ) }
 
     @OptIn(ExperimentalPagingApi::class)
     val feed = Pager(
@@ -221,5 +203,9 @@ class AccountViewModel(
 
     override fun onRetryClicked() {
         loadAccount()
+    }
+
+    override fun onTabClicked(timelineType: TimelineType) {
+        _timelineType.edit { timelineType }
     }
 }
