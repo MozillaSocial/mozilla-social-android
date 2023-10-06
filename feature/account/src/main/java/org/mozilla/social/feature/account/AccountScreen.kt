@@ -65,6 +65,7 @@ import org.mozilla.social.common.Resource
 import org.mozilla.social.common.utils.DateTimeFormatters
 import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.core.designsystem.component.MoSoButton
+import org.mozilla.social.core.designsystem.component.MoSoButtonSecondary
 import org.mozilla.social.core.designsystem.component.MoSoCircularProgressIndicator
 import org.mozilla.social.core.designsystem.component.MoSoDivider
 import org.mozilla.social.core.designsystem.component.MoSoDropdownMenu
@@ -617,7 +618,7 @@ private fun Header(
         rightSideContent = {
             val buttonModifier = Modifier.padding(end = 8.dp)
             if (isUsersProfile) {
-                MoSoButton(
+                MoSoButtonSecondary(
                     modifier = buttonModifier,
                     onClick = { /*TODO*/ }
                 ) {
