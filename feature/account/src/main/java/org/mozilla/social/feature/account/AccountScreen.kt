@@ -4,17 +4,13 @@ import android.content.Intent
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.SizeTransform
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.keyframes
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.animation.shrinkVertically
 import androidx.compose.animation.togetherWith
-import androidx.compose.animation.with
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -55,7 +51,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.paging.PagingData
@@ -63,9 +58,11 @@ import coil.compose.AsyncImage
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.datetime.toJavaLocalDateTime
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 import org.mozilla.social.common.Resource
+import org.mozilla.social.common.utils.DateTimeFormatters
 import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.core.designsystem.component.MoSoButton
 import org.mozilla.social.core.designsystem.component.MoSoCircularProgressIndicator
@@ -242,12 +239,12 @@ private fun MainContent(
             )
 
             UserInfo(account = account)
+            Spacer(modifier = Modifier.height(12.dp))
             UserBio(
-                modifier = Modifier
-                    .padding(top = 12.dp),
                 account = account,
                 htmlContentInteractions = htmlContentInteractions,
             )
+            Spacer(modifier = Modifier.height(12.dp))
             //TODO add these back in when there are designs
 //            UserFields(
 //                account = account,
@@ -487,13 +484,36 @@ private fun UserBio(
                 }
 
             ) { targetState ->
-                HtmlContent(
-                    mentions = emptyList(),
-                    htmlText = account.bio,
-                    htmlContentInteractions = htmlContentInteractions,
-                    textStyle = MoSoTheme.typography.bodyMedium,
-                    maximumLineCount = if (targetState) Int.MAX_VALUE else 3,
-                )
+                Column {
+                    HtmlContent(
+                        mentions = emptyList(),
+                        htmlText = account.bio,
+                        htmlContentInteractions = htmlContentInteractions,
+                        textStyle = MoSoTheme.typography.bodyMedium,
+                        maximumLineCount = if (targetState) Int.MAX_VALUE else 3,
+                    )
+                    if (targetState) {
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Row {
+                            Icon(
+                                modifier = Modifier
+                                    .size(16.dp),
+                                painter = MoSoIcons.userJoin(),
+                                contentDescription = null,
+                                tint = MoSoTheme.colors.textSecondary,
+                            )
+                            Spacer(modifier = Modifier.width(4.dp))
+                            Text(
+                                text = stringResource(
+                                    id = R.string.joined_date,
+                                    DateTimeFormatters.standard.format(account.joinDate.toJavaLocalDateTime())
+                                ),
+                                style = MoSoTheme.typography.bodySmall,
+                                color = MoSoTheme.colors.textSecondary,
+                            )
+                        }
+                    }
+                }
             }
 
             val rotation: Float by animateFloatAsState(

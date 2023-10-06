@@ -19,4 +19,6 @@
     <string name="tab_posts">Posts</string>
     <string name="tab_posts_and_replies">Posts and Replies</string>
     <string name="tab_media">Media</string>
+
+    <string name="joined_date">Joined %s</string>
 </resources>

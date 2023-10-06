@@ -61,6 +61,9 @@ object MoSoIcons {
     @Composable
     fun list() = painterResource(id = R.drawable.list)
 
+    @Composable
+    fun userJoin() = painterResource(id = R.drawable.user_join)
+
 
     val Add = Icons.Rounded.Add
     val ArrowBack = Icons.Rounded.ArrowBack
