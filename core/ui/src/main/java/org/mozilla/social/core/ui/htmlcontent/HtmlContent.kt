@@ -2,6 +2,8 @@ package org.mozilla.social.core.ui.htmlcontent
 
 import android.graphics.Typeface
 import android.os.Build
+import android.text.SpannableStringBuilder
+import android.text.Spanned
 import android.text.TextUtils
 import android.widget.TextView
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -14,8 +16,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.core.view.doOnNextLayout
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.model.Mention
+import kotlin.math.min
 
 /**
  * @param mentions a list of mention objects that the htmlText contains
@@ -67,14 +71,28 @@ fun HtmlContent(
                 movementMethod = HtmlContentMovementMethod
                 isClickable = false
                 isLongClickable = false
-                //TODO ellipsize not working
-                ellipsize = TextUtils.TruncateAt.END
                 maxLines = maximumLineCount
             }
         },
-        update = {
-            it.text = textContent.value
-            it.maxLines = maximumLineCount
+        update = { textView ->
+            textView.text = textContent.value
+            textView.maxLines = maximumLineCount
+
+            // Add ellipsize manually
+            // setting textView.ellipsize = TextUtils.TruncateAt.END doesn't seem to work.
+            textView.doOnNextLayout {
+                textView.layout?.let { layout ->
+                    val textViewLineCount = textView.lineCount
+                    if (textViewLineCount > maximumLineCount) {
+                        val indexOfLastChar = layout.getLineEnd(maximumLineCount - 1)
+                        val indexToEndAt = indexOfLastChar - min(3, indexOfLastChar)
+                        val spanned = textView.text.subSequence(0, indexToEndAt).trim() as? Spanned
+                        textView.text = SpannableStringBuilder()
+                            .append(spanned)
+                            .append("…")
+                    }
+                }
+            }
         }
     )
 }
