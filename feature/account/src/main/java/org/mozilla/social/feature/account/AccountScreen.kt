@@ -1,6 +1,20 @@
 package org.mozilla.social.feature.account
 
 import android.content.Intent
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.SizeTransform
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.keyframes
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.animation.togetherWith
+import androidx.compose.animation.with
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -26,11 +40,14 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.Layout
@@ -38,6 +55,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.paging.PagingData
@@ -59,6 +77,7 @@ import org.mozilla.social.core.designsystem.component.MoSoToast
 import org.mozilla.social.core.designsystem.component.MoSoTopBar
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
+import org.mozilla.social.core.designsystem.utils.NoRipple
 import org.mozilla.social.core.ui.DropDownItem
 import org.mozilla.social.core.ui.error.GenericError
 import org.mozilla.social.core.ui.htmlcontent.HtmlContent
@@ -378,26 +397,28 @@ private fun UserFollow(
     account: AccountUiState,
     accountInteractions: AccountInteractions,
 ) {
-    Row(
-        modifier = Modifier
-            .padding(8.dp)
-    ) {
-        Counter(
-            value = account.followersCount.toString(),
-            label = stringResource(id = R.string.followers),
-            onClick = { accountInteractions.onFollowersClicked() }
-        )
-        Spacer(modifier = Modifier.width(24.dp))
-        Counter(
-            value = account.followingCount.toString(),
-            label = stringResource(id = R.string.following),
-            onClick = { accountInteractions.onFollowingClicked() }
-        )
-        Spacer(modifier = Modifier.width(24.dp))
-        Counter(
-            value = account.statusesCount.toString(),
-            label = stringResource(id = R.string.posts),
-        )
+    NoRipple {
+        Row(
+            modifier = Modifier
+                .padding(8.dp)
+        ) {
+            Counter(
+                value = account.followersCount.toString(),
+                label = stringResource(id = R.string.followers),
+                onClick = { accountInteractions.onFollowersClicked() }
+            )
+            Spacer(modifier = Modifier.width(24.dp))
+            Counter(
+                value = account.followingCount.toString(),
+                label = stringResource(id = R.string.following),
+                onClick = { accountInteractions.onFollowingClicked() }
+            )
+            Spacer(modifier = Modifier.width(24.dp))
+            Counter(
+                value = account.statusesCount.toString(),
+                label = stringResource(id = R.string.posts),
+            )
+        }
     }
 }
 
@@ -430,32 +451,61 @@ private fun UserBio(
     account: AccountUiState,
     htmlContentInteractions: HtmlContentInteractions,
 ) {
-    val expanded = remember { mutableStateOf(false) }
-    Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(start = 8.dp, end = 8.dp),
-    ) {
-        Row {
-            HtmlContent(
-                modifier = Modifier
-                    .weight(1f, false),
-                mentions = emptyList(),
-                htmlText = account.bio,
-                htmlContentInteractions = htmlContentInteractions,
-                textStyle = MoSoTheme.typography.bodyMedium,
-                maximumLineCount = if (expanded.value) Int.MAX_VALUE else 3,
-            )
-            IconButton(
-                modifier = Modifier,
-                onClick = { expanded.value = !expanded.value }
-            ) {
-                Icon(
-                    imageVector = MoSoIcons.Caret,
-                    contentDescription = null
+    var expanded by remember { mutableStateOf(false) }
+    NoRipple {
+        Row(
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(start = 8.dp, end = 8.dp)
+                .clickable { expanded = !expanded },
+        ) {
+            val animationDuration = 150
+
+            AnimatedContent(
+                modifier = Modifier.weight(1f, false),
+                targetState = expanded,
+                label = "",
+                transitionSpec = {
+                    // expanding
+                    if (targetState) {
+                        EnterTransition.None togetherWith ExitTransition.None using
+                                SizeTransform { _, _ ->
+                                    keyframes {
+                                        durationMillis = animationDuration
+                                    }
+                                }
+                    } else { // shrinking
+                        fadeIn(animationSpec = tween(0, 0)) togetherWith
+                                fadeOut(animationSpec = tween(animationDuration)) using
+                                SizeTransform { _, _ ->
+                                    keyframes {
+                                        durationMillis = animationDuration
+                                    }
+                                }
+                    }
+
+                }
+
+            ) { targetState ->
+                HtmlContent(
+                    mentions = emptyList(),
+                    htmlText = account.bio,
+                    htmlContentInteractions = htmlContentInteractions,
+                    textStyle = MoSoTheme.typography.bodyMedium,
+                    maximumLineCount = if (targetState) Int.MAX_VALUE else 3,
                 )
             }
 
+            val rotation: Float by animateFloatAsState(
+                targetValue = if (expanded) 180f else 0f,
+                animationSpec = tween(animationDuration),
+                label = ""
+            )
+            Icon(
+                modifier = Modifier.rotate(rotation),
+                imageVector = MoSoIcons.Caret,
+                contentDescription = null,
+            )
         }
     }
 }
