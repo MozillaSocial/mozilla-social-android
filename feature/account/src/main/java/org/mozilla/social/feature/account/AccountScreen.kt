@@ -450,7 +450,7 @@ private fun UserBio(
 ) {
     var expanded by remember { mutableStateOf(false) }
     NoRipple {
-        Row(
+        Box(
             modifier = modifier
                 .fillMaxWidth()
                 .padding(start = 8.dp, end = 8.dp)
@@ -459,7 +459,8 @@ private fun UserBio(
             val animationDuration = 150
 
             AnimatedContent(
-                modifier = Modifier.weight(1f, false),
+                modifier = Modifier
+                    .padding(end = 32.dp),
                 targetState = expanded,
                 label = "",
                 transitionSpec = {
@@ -522,7 +523,9 @@ private fun UserBio(
                 label = ""
             )
             Icon(
-                modifier = Modifier.rotate(rotation),
+                modifier = Modifier
+                    .rotate(rotation)
+                    .align(Alignment.TopEnd),
                 imageVector = MoSoIcons.Caret,
                 contentDescription = null,
             )
