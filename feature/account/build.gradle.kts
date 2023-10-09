@@ -60,4 +60,6 @@ dependencies {
     implementation(libs.androidx.paging.runtime)
 
     implementation(libs.jakewharton.timber)
+
+    implementation(libs.kotlinx.datetime)
 }
