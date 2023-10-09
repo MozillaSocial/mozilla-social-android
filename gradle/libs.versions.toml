@@ -20,6 +20,9 @@ espresso-core = "3.5.1"
 glean = "54.0.0"
 mozilla-components = "118.0"
 jetbrains-python = "0.0.31"
+junit = "4.13.2"
+androidx-test-ext-junit115 = "1.1.5"
+androidx-test-espresso-espresso-core = "3.5.1"
 
 
 [libraries]
@@ -78,6 +81,9 @@ android-secrets-gradlePlugin = { module = "com.google.android.libraries.mapsplat
 glean-gradlePlugin = { module = "org.mozilla.telemetry:glean-gradle-plugin", version.ref = "glean" }
 jetbrains-python-gradlePlugin = { module = "gradle.plugin.com.jetbrains.python:gradle-python-envs", version.ref = "jetbrains-python" }
 kotlin-gradlePlugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
+junit = { group = "junit", name = "junit", version.ref = "junit" }
+androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidx-test-ext-junit115" }
+espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "androidx-test-espresso-espresso-core" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "android-gradle-plugin" }

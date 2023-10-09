@@ -33,7 +33,7 @@ import org.mozilla.social.core.ui.pullrefresh.pullRefresh
 import org.mozilla.social.core.ui.pullrefresh.rememberPullRefreshState
 
 @Composable
-internal fun FollowersRoute(
+internal fun FollowersScreen(
     accountId: String,
     followersNavigationCallbacks: FollowersNavigationCallbacks,
     followersScreenType: FollowerScreenType,

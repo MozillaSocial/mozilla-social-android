@@ -69,7 +69,7 @@ import org.mozilla.social.core.ui.postcard.PostCardNavigation
 import org.mozilla.social.core.ui.postcard.PostCardUiState
 
 @Composable
-internal fun AccountRoute(
+internal fun AccountScreen(
     accountId: String?,
     accountNavigationCallbacks: AccountNavigationCallbacks,
     postCardNavigation: PostCardNavigation,

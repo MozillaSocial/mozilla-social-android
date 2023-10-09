@@ -6,7 +6,6 @@
 package org.mozilla.social.post
 
 import android.net.Uri
-import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -100,7 +99,7 @@ import org.mozilla.social.post.status.HashtagSearchBar
 import org.mozilla.social.post.status.StatusInteractions
 
 @Composable
-internal fun NewPostRoute(
+internal fun NewPostScreen(
     onStatusPosted: () -> Unit,
     onCloseClicked: () -> Unit,
     replyStatusId: String?,

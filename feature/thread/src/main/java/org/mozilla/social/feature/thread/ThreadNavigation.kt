@@ -5,20 +5,14 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import org.mozilla.social.core.navigation.NavigationDestination
 import org.mozilla.social.core.ui.postcard.PostCardNavigation
-
-const val THREAD_ROUTE = "thread"
-const val THREAD_STATUS_ID = "threadStatusId"
-const val THREAD_FULL_ROUTE = "$THREAD_ROUTE?$THREAD_STATUS_ID={$THREAD_STATUS_ID}"
 
 fun NavController.navigateToThread(
     navOptions: NavOptions? = null,
-    threadStatusId: String? = null,
+    threadStatusId: String,
 ) {
-    when {
-        threadStatusId != null -> navigate("$THREAD_ROUTE?$THREAD_STATUS_ID=$threadStatusId", navOptions)
-        else -> this.navigate(THREAD_ROUTE, navOptions)
-    }
+    navigate(NavigationDestination.Thread.route(threadStatusId), navOptions)
 }
 
 fun NavGraphBuilder.threadScreen(
@@ -26,14 +20,14 @@ fun NavGraphBuilder.threadScreen(
     postCardNavigation: PostCardNavigation,
 ) {
     composable(
-        route = THREAD_FULL_ROUTE,
+        route = NavigationDestination.Thread.fullRoute,
         arguments = listOf(
-            navArgument(THREAD_STATUS_ID) {
+            navArgument(NavigationDestination.Thread.NAV_PARAM_STATUS_ID) {
                 nullable = true
             }
         )
     ) {
-        val threadStatusId: String? = it.arguments?.getString(THREAD_STATUS_ID)
+        val threadStatusId: String? = it.arguments?.getString(NavigationDestination.Thread.NAV_PARAM_STATUS_ID)
         threadStatusId?.let {
             ThreadScreen(
                 threadStatusId = threadStatusId,

@@ -1,31 +1,22 @@
 package org.mozilla.social.ui
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.size
+import android.content.Context
+import androidx.browser.customtabs.CustomTabsIntent
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.platform.LocalContext
+import androidx.core.net.toUri
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.NavOptions
@@ -38,29 +29,18 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import org.mozilla.social.R
-import org.mozilla.social.core.designsystem.component.MoSoAppBar
-import org.mozilla.social.core.designsystem.component.MoSoBottomNavigationBar
-import org.mozilla.social.core.designsystem.component.MoSoDivider
-import org.mozilla.social.core.designsystem.component.NavBarDestination
-import org.mozilla.social.core.designsystem.component.NavDestination
-import org.mozilla.social.core.designsystem.icon.MoSoIcons
-import org.mozilla.social.core.designsystem.icon.mozillaLogo
-import org.mozilla.social.core.designsystem.theme.MoSoTheme
+import org.mozilla.social.core.navigation.NavigationDestination
+import org.mozilla.social.core.ui.postcard.PostCardNavigation
+import org.mozilla.social.feature.account.AccountNavigationCallbacks
 import org.mozilla.social.feature.account.navigateToAccount
-import org.mozilla.social.feature.auth.AUTH_ROUTE
 import org.mozilla.social.feature.auth.navigateToLoginScreen
+import org.mozilla.social.feature.followers.FollowersNavigationCallbacks
 import org.mozilla.social.feature.followers.navigateToFollowers
 import org.mozilla.social.feature.followers.navigateToFollowing
 import org.mozilla.social.feature.hashtag.navigateToHashTag
 import org.mozilla.social.feature.report.navigateToReport
 import org.mozilla.social.feature.settings.navigateToSettings
 import org.mozilla.social.feature.thread.navigateToThread
-import org.mozilla.social.navigation.Account
-import org.mozilla.social.navigation.Bookmarks
-import org.mozilla.social.navigation.Discover
-import org.mozilla.social.navigation.Feed
-import org.mozilla.social.navigation.NewPost
 import org.mozilla.social.navigation.Routes
 import org.mozilla.social.post.navigateToNewPost
 import timber.log.Timber
@@ -76,133 +56,76 @@ fun rememberAppState(
     ),
     navigationDrawerState: DrawerState = rememberDrawerState(DrawerValue.Closed),
     bottomSheetVisible: MutableState<Boolean> = remember { mutableStateOf(false) }
-): AppState = remember(navController) {
-    AppState(
-        navController = navController,
-        topAppBarScrollBehavior = topAppBarScrollBehavior,
-        navigationDrawerState = navigationDrawerState,
-        coroutineScope = coroutineScope,
-        bottomSheetVisible = bottomSheetVisible,
-        snackbarHostState = snackbarHostState,
-    )
+): AppState {
+    val context = LocalContext.current
+    return remember(navController) {
+        AppState(
+            navController = navController,
+            topAppBarScrollBehavior = topAppBarScrollBehavior,
+            navigationDrawerState = navigationDrawerState,
+            coroutineScope = coroutineScope,
+            bottomSheetVisible = bottomSheetVisible,
+            snackbarHostState = snackbarHostState,
+            context = context,
+        )
+    }
 }
 
 /**
- * Class to encapsulate high-level app state, including UI elements in the top-level scaffold and
- * navigation
+ * Class to encapsulate high-level app state
  */
 @OptIn(ExperimentalMaterial3Api::class)
 class AppState(
-    initialTopLevelDestination: NavDestination = Feed,
+    initialTopLevelDestination: NavigationDestination = NavigationDestination.Feed,
     val navController: NavHostController, // Don't access this other than for initializing the nav host
     val topAppBarScrollBehavior: TopAppBarScrollBehavior,
     val navigationDrawerState: DrawerState,
     val coroutineScope: CoroutineScope,
     val bottomSheetVisible: MutableState<Boolean>,
     val snackbarHostState: SnackbarHostState,
+    val context: Context,
 ) {
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    private val currentDestination: StateFlow<NavDestination?> =
+    val currentNavigationDestination: StateFlow<NavigationDestination?> =
         navController.currentBackStackEntryFlow.mapLatest { backStackEntry ->
-            navDestinations.find { it.route == backStackEntry.destination.route }
+            NavigationDestination::class.sealedSubclasses.firstOrNull { it.objectInstance?.route == backStackEntry.destination.route }?.objectInstance
         }.stateIn(
             coroutineScope,
             started = SharingStarted.WhileSubscribed(),
             initialTopLevelDestination
         )
 
-    @Composable
-    fun FloatingActionButton() {
-        when (currentDestination.collectAsState().value) {
-            Feed -> {
-                FloatingActionButton(onClick = { navController.navigateToNewPost() }) {
-                    Icon(
-                        MoSoIcons.Add,
-                        stringResource(id = R.string.feed_fab_content_description)
-                    )
-                }
-            }
+    val postCardNavigation = object : PostCardNavigation {
+        override fun onReplyClicked(statusId: String) = navigateToNewPost(statusId)
+        override fun onPostClicked(statusId: String) = navigateToThread(statusId)
+        override fun onReportClicked(accountId: String, statusId: String) =
+            navigateToReport(accountId, statusId)
 
-            NewPost, Bookmarks, Account, null -> {}
+        override fun onAccountClicked(accountId: String) = navigateToAccount(accountId)
+        override fun onHashTagClicked(hashTag: String) = navigateToHashTag(hashTag)
+        override fun onLinkClicked(url: String) {
+            CustomTabsIntent.Builder()
+                .build()
+                .launchUrl(
+                    context,
+                    url.toUri(),
+                )
         }
     }
 
-    @OptIn(ExperimentalMaterial3Api::class)
-    @Composable
-    fun TopBar() {
-        val currentDestination = currentDestination.collectAsState().value
-
-        val titleText = when (currentDestination) {
-            Feed -> {
-                stringResource(id = R.string.top_bar_title_feed)
-            }
-
-            Bookmarks -> {
-                stringResource(id = R.string.top_bar_title_search)
-            }
-
-            Account -> {
-                stringResource(id = R.string.top_bar_title_account)
-            }
-
-            else -> {
-                null
-            }
-        }
-
-        when (currentDestination) {
-            Feed, Discover, Bookmarks -> {
-                Column {
-                    MoSoAppBar(
-                        scrollBehavior = topAppBarScrollBehavior,
-                        title = {
-                            Image(
-                                painter = mozillaLogo(),
-                                contentDescription = "mozilla logo"
-                            )
-                        },
-                        navigationIcon = {
-                            IconButton(onClick = {
-                                coroutineScope.launch {
-                                    navigationDrawerState.open()
-                                }
-                            }) {
-                                Icon(
-                                    painter = MoSoIcons.list(),
-                                    modifier = Modifier.size(24.dp),
-                                    contentDescription = stringResource(id = R.string.navigation_menu_content_description),
-                                )
-                            }
-                        },
-                        actions = {}
-                    )
-
-                    MoSoDivider(
-                        modifier = Modifier
-                            .height(1.dp)
-                            .background(MoSoTheme.colors.borderPrimary)
-                    )
-                }
-            }
-
-            else -> {
-
-            }
-        }
+    val accountNavigation = object: AccountNavigationCallbacks {
+        override fun onFollowingClicked(accountId: String) =
+            navigateToAccountFollowing(accountId)
+        override fun onFollowersClicked(accountId: String) =
+            navigateToAccountFollowers(accountId)
+        override fun onCloseClicked() = popBackStack()
+        override fun onReportClicked(accountId: String) = navigateToReport(accountId)
     }
 
-
-    @Composable
-    fun BottomBar() {
-        val currentDestination =
-            currentDestination.collectAsState().value as? NavBarDestination ?: return
-
-        MoSoBottomNavigationBar(
-            currentDestination = currentDestination,
-            navBarDestinations = navBarDestinations,
-            navigateTo = { navigateToTopLevelDestination(it) }
-        )
+    val followersNavigation = object : FollowersNavigationCallbacks {
+        override fun onCloseClicked() = popBackStack()
+        override fun onAccountClicked(accountId: String) = navigateToAccount(accountId)
     }
 
     private fun clearBackstack() {
@@ -234,7 +157,7 @@ class AppState(
         navController.navigate(
             Routes.MAIN,
             navOptions = NavOptions.Builder()
-                .setPopUpTo(AUTH_ROUTE, true)
+                .setPopUpTo(NavigationDestination.Auth.route, true)
                 .build()
         )
     }
@@ -249,7 +172,7 @@ class AppState(
     }
 
     fun navigateToAccount(
-        accountId: String? = null,
+        accountId: String,
     ) {
         coroutineScope.launch { navigationDrawerState.close() }
         navController.navigateToAccount(
@@ -267,7 +190,7 @@ class AppState(
         navController.navigateToFollowers(accountId)
     }
 
-    fun navigateToNewPost(replyStatusId: String) {
+    fun navigateToNewPost(replyStatusId: String? = null) {
         navController.navigateToNewPost(replyStatusId = replyStatusId)
     }
 
@@ -286,7 +209,10 @@ class AppState(
         navController.navigateToHashTag(hashTagValue = hashTag)
     }
 
-    private fun navigateToTopLevelDestination(destination: NavDestination) {
+    /**
+     * Used by bottom bar navigation
+     */
+    fun navigateToTopLevelDestination(destination: String) {
         val navOptions = navOptions {
             popUpTo(navController.graph.findStartDestination().id) {
                 saveState = true
@@ -295,24 +221,6 @@ class AppState(
             restoreState = true
         }
 
-        navController.navigate(destination.route, navOptions)
-    }
-
-    @Composable
-    fun BottomSheetContent() {
-        Text(text = "feed options coming")
-    }
-
-    companion object {
-        /**
-         * All navigation destinations corresponding to nav bar tabs
-         */
-        val navBarDestinations: List<NavBarDestination> =
-            listOf(Feed, Discover, Bookmarks, Account)
-
-        /**
-         * All navigation destinations in the graph
-         */
-        val navDestinations: List<NavDestination> = navBarDestinations + listOf(NewPost)
+        navController.navigate(destination, navOptions)
     }
 }
