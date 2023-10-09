@@ -25,11 +25,12 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
+import org.mozilla.social.core.navigation.NavigationDestination
 
 @Composable
 fun MoSoBottomNavigationBar(
     modifier: Modifier = Modifier,
-    currentRoute: String,
+    currentDestination: NavigationDestination,
     bottomBarTabs: List<BottomBarTab>,
     navigateTo: (route: String) -> Unit,
     containerColor: Color = MoSoNavigationBarDefaults.containerColor,
@@ -47,7 +48,7 @@ fun MoSoBottomNavigationBar(
         bottomBarTabs.forEach { navBarDestination ->
             MoSoNavigationBarItem(
                 destination = navBarDestination,
-                isSelected = currentRoute == navBarDestination.route,
+                isSelected = currentDestination == navBarDestination.navigationDestination,
                 navigateTo = navigateTo,
             )
         }
@@ -92,7 +93,7 @@ fun RowScope.MoSoNavigationBarItem(
     NavigationBarItem(
         modifier = modifier.height(48.dp),
         selected = isSelected,
-        onClick = { navigateTo(destination.route) },
+        onClick = { navigateTo(destination.navigationDestination.route) },
         colors = MoSoNavigationBarItemDefaults.colors(),
         icon = {
             MoSoIcon(
@@ -144,7 +145,7 @@ interface BottomBarTab {
     @Composable
     fun selectedIcon(): Painter
     val tabText: StringFactory
-    val route: String
+    val navigationDestination: NavigationDestination
 }
 
 object MoSoNavigationDefaults {

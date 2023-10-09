@@ -25,7 +25,7 @@ enum class BottomBarTabs(
             }
 
             override val tabText = StringFactory.resource(R.string.feed_tab_text)
-            override val route = NavigationDestination.Feed.route
+            override val navigationDestination: NavigationDestination = NavigationDestination.Feed
         }
     ),
     DISCOVER(
@@ -36,31 +36,29 @@ enum class BottomBarTabs(
             }
 
             override val tabText = StringFactory.resource(R.string.search_tab_text)
-            override val route = NavigationDestination.Search.route
+            override val navigationDestination: NavigationDestination = NavigationDestination.Search
         }
     ),
     BOOKMARKS(
         bottomBarTab = object : BottomBarTab {
-            override val route: String = Routes.BOOKMARKS
-
             @Composable
             override fun selectedIcon(): Painter {
                 return MoSoIcons.bookmark()
             }
 
             override val tabText = StringFactory.resource(R.string.settings_tab_text)
+            override val navigationDestination: NavigationDestination = NavigationDestination.Bookmarks
         }
     ),
     ACCOUNT(
         bottomBarTab = object : BottomBarTab {
-            override val route: String = NavigationDestination.MyAccount.route
-
             @Composable
             override fun selectedIcon(): Painter {
                 return MoSoIcons.userCircle()
             }
 
             override val tabText = StringFactory.resource(R.string.account_tab_text)
+            override val navigationDestination: NavigationDestination = NavigationDestination.MyAccount
 
         }
     )

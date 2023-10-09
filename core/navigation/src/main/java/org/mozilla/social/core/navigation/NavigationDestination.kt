@@ -20,6 +20,10 @@ sealed class NavigationDestination(
         route = "auth"
     )
 
+    data object Bookmarks: NavigationDestination(
+        route = "bookmarks"
+    )
+
     data object Feed: NavigationDestination(
         route = "feed"
     )

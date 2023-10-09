@@ -76,7 +76,7 @@ fun rememberAppState(
  */
 @OptIn(ExperimentalMaterial3Api::class)
 class AppState(
-    initialTopLevelDestination: String = NavigationDestination.Feed.route,
+    initialTopLevelDestination: NavigationDestination = NavigationDestination.Feed,
     val navController: NavHostController, // Don't access this other than for initializing the nav host
     val topAppBarScrollBehavior: TopAppBarScrollBehavior,
     val navigationDrawerState: DrawerState,
@@ -87,9 +87,9 @@ class AppState(
 ) {
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    val currentRoute: StateFlow<String> =
+    val currentNavigationDestination: StateFlow<NavigationDestination?> =
         navController.currentBackStackEntryFlow.mapLatest { backStackEntry ->
-            backStackEntry.destination.route ?: ""
+            NavigationDestination::class.sealedSubclasses.firstOrNull { it.objectInstance?.route == backStackEntry.destination.route }?.objectInstance
         }.stateIn(
             coroutineScope,
             started = SharingStarted.WhileSubscribed(),

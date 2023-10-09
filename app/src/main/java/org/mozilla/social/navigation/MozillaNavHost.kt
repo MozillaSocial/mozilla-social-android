@@ -83,6 +83,6 @@ private fun NavGraphBuilder.mainGraph(
             postCardNavigation = appState.postCardNavigation,
         )
 
-        composable(route = Routes.BOOKMARKS) { Text(text = "bookmarks") }
+        composable(route = NavigationDestination.Bookmarks.route) { Text(text = "bookmarks") }
     }
 }
