@@ -30,7 +30,7 @@ import org.mozilla.social.core.designsystem.theme.MoSoTheme
 fun MoSoBottomNavigationBar(
     modifier: Modifier = Modifier,
     currentRoute: String,
-    navBarDestinations: List<NavBarDestination>,
+    bottomBarTabs: List<BottomBarTab>,
     navigateTo: (route: String) -> Unit,
     containerColor: Color = MoSoNavigationBarDefaults.containerColor,
     contentColor: Color = MoSoTheme.colors.iconPrimary,
@@ -44,7 +44,7 @@ fun MoSoBottomNavigationBar(
         tonalElevation = tonalElevation,
         windowInsets = windowInsets
     ) {
-        navBarDestinations.forEach { navBarDestination ->
+        bottomBarTabs.forEach { navBarDestination ->
             MoSoNavigationBarItem(
                 destination = navBarDestination,
                 isSelected = currentRoute == navBarDestination.route,
@@ -85,7 +85,7 @@ fun MoSoNavigationBar(
 @Composable
 fun RowScope.MoSoNavigationBarItem(
     modifier: Modifier = Modifier,
-    destination: NavBarDestination,
+    destination: BottomBarTab,
     isSelected: Boolean,
     navigateTo: (route: String) -> Unit
 ) {
@@ -112,7 +112,7 @@ fun RowScope.MoSoNavigationBarItem(
 
 @Composable
 private fun MoSoIcon(
-    destination: NavBarDestination, isSelected: Boolean
+    destination: BottomBarTab, isSelected: Boolean
 ) {
     if (isSelected) {
 //        val a = destination.selectedIcon
@@ -140,7 +140,7 @@ private fun MoSoIcon(
 /**
  * The navigation destinations which correspond to the bottom navigation tabs
  */
-interface NavBarDestination {
+interface BottomBarTab {
     @Composable
     fun selectedIcon(): Painter
     val tabText: StringFactory

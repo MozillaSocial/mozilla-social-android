@@ -29,10 +29,10 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import org.mozilla.social.core.navigation.NavigationDestination
 import org.mozilla.social.core.ui.postcard.PostCardNavigation
 import org.mozilla.social.feature.account.AccountNavigationCallbacks
 import org.mozilla.social.feature.account.navigateToAccount
-import org.mozilla.social.feature.auth.AUTH_ROUTE
 import org.mozilla.social.feature.auth.navigateToLoginScreen
 import org.mozilla.social.feature.followers.FollowersNavigationCallbacks
 import org.mozilla.social.feature.followers.navigateToFollowers
@@ -41,7 +41,6 @@ import org.mozilla.social.feature.hashtag.navigateToHashTag
 import org.mozilla.social.feature.report.navigateToReport
 import org.mozilla.social.feature.settings.navigateToSettings
 import org.mozilla.social.feature.thread.navigateToThread
-import org.mozilla.social.feed.FEED_ROUTE
 import org.mozilla.social.navigation.Routes
 import org.mozilla.social.post.navigateToNewPost
 import timber.log.Timber
@@ -77,7 +76,7 @@ fun rememberAppState(
  */
 @OptIn(ExperimentalMaterial3Api::class)
 class AppState(
-    initialTopLevelDestination: String = FEED_ROUTE,
+    initialTopLevelDestination: String = NavigationDestination.Feed.route,
     val navController: NavHostController, // Don't access this other than for initializing the nav host
     val topAppBarScrollBehavior: TopAppBarScrollBehavior,
     val navigationDrawerState: DrawerState,
@@ -158,7 +157,7 @@ class AppState(
         navController.navigate(
             Routes.MAIN,
             navOptions = NavOptions.Builder()
-                .setPopUpTo(AUTH_ROUTE, true)
+                .setPopUpTo(NavigationDestination.Auth.route, true)
                 .build()
         )
     }
@@ -173,7 +172,7 @@ class AppState(
     }
 
     fun navigateToAccount(
-        accountId: String? = null,
+        accountId: String,
     ) {
         coroutineScope.launch { navigationDrawerState.close() }
         navController.navigateToAccount(
@@ -210,6 +209,9 @@ class AppState(
         navController.navigateToHashTag(hashTagValue = hashTag)
     }
 
+    /**
+     * Used by bottom bar navigation
+     */
     fun navigateToTopLevelDestination(destination: String) {
         val navOptions = navOptions {
             popUpTo(navController.graph.findStartDestination().id) {

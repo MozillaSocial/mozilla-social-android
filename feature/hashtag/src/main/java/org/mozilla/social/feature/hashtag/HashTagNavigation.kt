@@ -5,17 +5,14 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import org.mozilla.social.core.navigation.NavigationDestination
 import org.mozilla.social.core.ui.postcard.PostCardNavigation
-
-const val HASH_TAG_ROUTE = "hashTag"
-const val HASH_TAG_VALUE = "hashTagValue"
-const val HASHTAG_FULL_ROUTE = "$HASH_TAG_ROUTE?$HASH_TAG_VALUE={$HASH_TAG_VALUE}"
 
 fun NavController.navigateToHashTag(
     navOptions: NavOptions? = null,
     hashTagValue: String,
 ) {
-    navigate("$HASH_TAG_ROUTE?$HASH_TAG_VALUE=$hashTagValue", navOptions)
+    navigate(NavigationDestination.HashTag.route(hashTagValue), navOptions)
 }
 
 fun NavGraphBuilder.hashTagScreen(
@@ -23,14 +20,14 @@ fun NavGraphBuilder.hashTagScreen(
     postCardNavigation: PostCardNavigation,
 ) {
     composable(
-        route = HASHTAG_FULL_ROUTE,
+        route = NavigationDestination.HashTag.fullRoute,
         arguments = listOf(
-            navArgument(HASH_TAG_VALUE) {
+            navArgument(NavigationDestination.HashTag.NAV_PARAM_HASH_TAG) {
                 nullable = true
             }
         )
     ) {
-        val hashTagValue: String? = it.arguments?.getString(HASH_TAG_VALUE)
+        val hashTagValue: String? = it.arguments?.getString(NavigationDestination.HashTag.NAV_PARAM_HASH_TAG)
         hashTagValue?.let {
             HashTagScreen(
                 hashTag = hashTagValue,

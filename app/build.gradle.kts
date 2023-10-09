@@ -62,6 +62,7 @@ dependencies {
     implementation(project(":feature:report"))
     implementation(project(":feature:hashtag"))
     implementation(project(":feature:followers"))
+    implementation(project(":core:navigation"))
 
     // android
     implementation(libs.androidx.core)

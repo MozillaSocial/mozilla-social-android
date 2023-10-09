@@ -4,12 +4,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.painter.Painter
 import org.mozilla.social.R
 import org.mozilla.social.common.utils.StringFactory
-import org.mozilla.social.core.designsystem.component.NavBarDestination
+import org.mozilla.social.core.designsystem.component.BottomBarTab
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
-import org.mozilla.social.feature.account.MY_ACCOUNT_ROUTE
-import org.mozilla.social.feed.FEED_ROUTE
-
-import org.mozilla.social.search.SEARCH_ROUTE
+import org.mozilla.social.core.navigation.NavigationDestination
 
 /**
  * An enum of all the bottom nav bar destinations
@@ -17,33 +14,33 @@ import org.mozilla.social.search.SEARCH_ROUTE
  * Using an enum instead of a sealed class so we can iterate through all the values
  * without requiring the kotlin reflect dependency
  */
-enum class NavBarDestinations(
-    val navBarDestination: NavBarDestination,
+enum class BottomBarTabs(
+    val bottomBarTab: BottomBarTab,
 ) {
     FEED(
-        navBarDestination = object : NavBarDestination {
+        bottomBarTab = object : BottomBarTab {
             @Composable
             override fun selectedIcon(): Painter {
                 return MoSoIcons.house()
             }
 
             override val tabText = StringFactory.resource(R.string.feed_tab_text)
-            override val route = FEED_ROUTE
+            override val route = NavigationDestination.Feed.route
         }
     ),
     DISCOVER(
-        navBarDestination = object : NavBarDestination {
+        bottomBarTab = object : BottomBarTab {
             @Composable
             override fun selectedIcon(): Painter {
                 return MoSoIcons.compass()
             }
 
             override val tabText = StringFactory.resource(R.string.search_tab_text)
-            override val route = SEARCH_ROUTE
+            override val route = NavigationDestination.Search.route
         }
     ),
     BOOKMARKS(
-        navBarDestination = object : NavBarDestination {
+        bottomBarTab = object : BottomBarTab {
             override val route: String = Routes.BOOKMARKS
 
             @Composable
@@ -55,8 +52,8 @@ enum class NavBarDestinations(
         }
     ),
     ACCOUNT(
-        navBarDestination = object : NavBarDestination {
-            override val route: String = MY_ACCOUNT_ROUTE
+        bottomBarTab = object : BottomBarTab {
+            override val route: String = NavigationDestination.MyAccount.route
 
             @Composable
             override fun selectedIcon(): Painter {

@@ -29,9 +29,9 @@ import org.mozilla.social.core.designsystem.component.MoSoScaffold
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.designsystem.icon.mozillaLogo
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
-import org.mozilla.social.feed.FEED_ROUTE
+import org.mozilla.social.core.navigation.NavigationDestination
 import org.mozilla.social.navigation.MozillaNavHost
-import org.mozilla.social.navigation.NavBarDestinations
+import org.mozilla.social.navigation.BottomBarTabs
 import org.mozilla.social.ui.navigationdrawer.NavigationDrawer
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -87,7 +87,7 @@ private fun FloatingActionButton(
     onClick: () -> Unit,
 ) {
     when (currentRoute) {
-        FEED_ROUTE -> {
+        NavigationDestination.Feed.route -> {
             androidx.compose.material3.FloatingActionButton(onClick = onClick) {
                 Icon(
                     MoSoIcons.Add,
@@ -109,9 +109,9 @@ private fun TopBar(
     val coroutineScope = rememberCoroutineScope()
 
     when (currentRoute) {
-        NavBarDestinations.FEED.navBarDestination.route,
-        NavBarDestinations.DISCOVER.navBarDestination.route,
-        NavBarDestinations.BOOKMARKS.navBarDestination.route -> {
+        BottomBarTabs.FEED.bottomBarTab.route,
+        BottomBarTabs.DISCOVER.bottomBarTab.route,
+        BottomBarTabs.BOOKMARKS.bottomBarTab.route -> {
             Column {
                 MoSoAppBar(
                     scrollBehavior = topAppBarScrollBehavior,
@@ -154,13 +154,13 @@ private fun BottomBar(
     navigateToTopLevelDestination: (route: String) -> Unit,
 ) {
     // don't show bottom bar if our current route is not one of the bottom nav options
-    if (NavBarDestinations.values().find { it.navBarDestination.route == currentRoute } == null) {
+    if (BottomBarTabs.values().find { it.bottomBarTab.route == currentRoute } == null) {
         return
     }
 
     MoSoBottomNavigationBar(
         currentRoute = currentRoute,
-        navBarDestinations = NavBarDestinations.values().map { it.navBarDestination },
+        bottomBarTabs = BottomBarTabs.values().map { it.bottomBarTab },
         navigateTo = navigateToTopLevelDestination
     )
 }

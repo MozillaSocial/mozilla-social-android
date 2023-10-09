@@ -6,7 +6,9 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import org.mozilla.social.core.navigation.NavigationDestination
 import org.mozilla.social.feature.account.accountScreen
+import org.mozilla.social.feature.account.myAccountScreen
 import org.mozilla.social.feature.auth.loginScreen
 import org.mozilla.social.feature.followers.followersScreen
 import org.mozilla.social.feature.followers.followingScreen
@@ -14,7 +16,6 @@ import org.mozilla.social.feature.hashtag.hashTagScreen
 import org.mozilla.social.feature.report.reportScreen
 import org.mozilla.social.feature.settings.settingsScreen
 import org.mozilla.social.feature.thread.threadScreen
-import org.mozilla.social.feed.FEED_ROUTE
 import org.mozilla.social.feed.feedScreen
 import org.mozilla.social.post.newPostScreen
 import org.mozilla.social.search.searchScreen
@@ -49,13 +50,17 @@ fun NavGraphBuilder.splashScreen(
 private fun NavGraphBuilder.mainGraph(
     appState: AppState,
 ) {
-    navigation(startDestination = FEED_ROUTE, route = Routes.MAIN) {
+    navigation(startDestination = NavigationDestination.Feed.route, route = Routes.MAIN) {
         feedScreen(
             postCardNavigation = appState.postCardNavigation,
         )
         searchScreen()
         settingsScreen(onLogout = appState::navigateToLoginScreen)
         accountScreen(
+            accountNavigationCallbacks = appState.accountNavigation,
+            postCardNavigation = appState.postCardNavigation,
+        )
+        myAccountScreen(
             accountNavigationCallbacks = appState.accountNavigation,
             postCardNavigation = appState.postCardNavigation,
         )
