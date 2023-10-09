@@ -29,8 +29,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import org.mozilla.social.core.designsystem.component.NavBarDestination
-import org.mozilla.social.core.designsystem.component.NavDestination
 import org.mozilla.social.core.ui.postcard.PostCardNavigation
 import org.mozilla.social.feature.account.AccountNavigationCallbacks
 import org.mozilla.social.feature.account.navigateToAccount
@@ -43,11 +41,7 @@ import org.mozilla.social.feature.hashtag.navigateToHashTag
 import org.mozilla.social.feature.report.navigateToReport
 import org.mozilla.social.feature.settings.navigateToSettings
 import org.mozilla.social.feature.thread.navigateToThread
-import org.mozilla.social.navigation.Account
-import org.mozilla.social.navigation.Bookmarks
-import org.mozilla.social.navigation.Discover
-import org.mozilla.social.navigation.Feed
-import org.mozilla.social.navigation.NewPost
+import org.mozilla.social.feed.FEED_ROUTE
 import org.mozilla.social.navigation.Routes
 import org.mozilla.social.post.navigateToNewPost
 import timber.log.Timber
@@ -83,7 +77,7 @@ fun rememberAppState(
  */
 @OptIn(ExperimentalMaterial3Api::class)
 class AppState(
-    initialTopLevelDestination: NavDestination = Feed,
+    initialTopLevelDestination: String = FEED_ROUTE,
     val navController: NavHostController, // Don't access this other than for initializing the nav host
     val topAppBarScrollBehavior: TopAppBarScrollBehavior,
     val navigationDrawerState: DrawerState,
@@ -94,9 +88,9 @@ class AppState(
 ) {
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    val currentDestination: StateFlow<NavDestination?> =
+    val currentRoute: StateFlow<String> =
         navController.currentBackStackEntryFlow.mapLatest { backStackEntry ->
-            navDestinations.find { it.route == backStackEntry.destination.route }
+            backStackEntry.destination.route ?: ""
         }.stateIn(
             coroutineScope,
             started = SharingStarted.WhileSubscribed(),
@@ -216,7 +210,7 @@ class AppState(
         navController.navigateToHashTag(hashTagValue = hashTag)
     }
 
-    fun navigateToTopLevelDestination(destination: NavDestination) {
+    fun navigateToTopLevelDestination(destination: String) {
         val navOptions = navOptions {
             popUpTo(navController.graph.findStartDestination().id) {
                 saveState = true
@@ -225,19 +219,6 @@ class AppState(
             restoreState = true
         }
 
-        navController.navigate(destination.route, navOptions)
-    }
-
-    companion object {
-        /**
-         * All navigation destinations corresponding to nav bar tabs
-         */
-        val navBarDestinations: List<NavBarDestination> =
-            listOf(Feed, Discover, Bookmarks, Account)
-
-        /**
-         * All navigation destinations in the graph
-         */
-        val navDestinations: List<NavDestination> = navBarDestinations + listOf(NewPost)
+        navController.navigate(destination, navOptions)
     }
 }

@@ -21,7 +21,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import org.mozilla.social.common.utils.StringFactory
@@ -30,9 +29,9 @@ import org.mozilla.social.core.designsystem.theme.MoSoTheme
 @Composable
 fun MoSoBottomNavigationBar(
     modifier: Modifier = Modifier,
-    currentDestination: NavBarDestination,
+    currentRoute: String,
     navBarDestinations: List<NavBarDestination>,
-    navigateTo: (NavBarDestination) -> Unit,
+    navigateTo: (route: String) -> Unit,
     containerColor: Color = MoSoNavigationBarDefaults.containerColor,
     contentColor: Color = MoSoTheme.colors.iconPrimary,
     tonalElevation: Dp = NavigationBarDefaults.Elevation,
@@ -48,7 +47,7 @@ fun MoSoBottomNavigationBar(
         navBarDestinations.forEach { navBarDestination ->
             MoSoNavigationBarItem(
                 destination = navBarDestination,
-                isSelected = currentDestination == navBarDestination,
+                isSelected = currentRoute == navBarDestination.route,
                 navigateTo = navigateTo,
             )
         }
@@ -88,12 +87,12 @@ fun RowScope.MoSoNavigationBarItem(
     modifier: Modifier = Modifier,
     destination: NavBarDestination,
     isSelected: Boolean,
-    navigateTo: (NavBarDestination) -> Unit
+    navigateTo: (route: String) -> Unit
 ) {
     NavigationBarItem(
         modifier = modifier.height(48.dp),
         selected = isSelected,
-        onClick = { navigateTo(destination) },
+        onClick = { navigateTo(destination.route) },
         colors = MoSoNavigationBarItemDefaults.colors(),
         icon = {
             MoSoIcon(
@@ -139,19 +138,13 @@ private fun MoSoIcon(
 }
 
 /**
- * Corresponds with the navigation destinations in the main (logged in) graph
- */
-interface NavDestination {
-    val route: String
-}
-
-/**
  * The navigation destinations which correspond to the bottom navigation tabs
  */
-interface NavBarDestination : NavDestination {
+interface NavBarDestination {
     @Composable
     fun selectedIcon(): Painter
     val tabText: StringFactory
+    val route: String
 }
 
 object MoSoNavigationDefaults {

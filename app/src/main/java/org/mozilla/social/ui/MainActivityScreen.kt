@@ -26,18 +26,12 @@ import org.mozilla.social.core.designsystem.component.MoSoAppBar
 import org.mozilla.social.core.designsystem.component.MoSoBottomNavigationBar
 import org.mozilla.social.core.designsystem.component.MoSoDivider
 import org.mozilla.social.core.designsystem.component.MoSoScaffold
-import org.mozilla.social.core.designsystem.component.NavBarDestination
-import org.mozilla.social.core.designsystem.component.NavDestination
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.designsystem.icon.mozillaLogo
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
-import org.mozilla.social.navigation.Account
-import org.mozilla.social.navigation.Bookmarks
-import org.mozilla.social.navigation.Discover
-import org.mozilla.social.navigation.Feed
+import org.mozilla.social.feed.FEED_ROUTE
 import org.mozilla.social.navigation.MozillaNavHost
-import org.mozilla.social.navigation.NewPost
-import org.mozilla.social.post.navigateToNewPost
+import org.mozilla.social.navigation.NavBarDestinations
 import org.mozilla.social.ui.navigationdrawer.NavigationDrawer
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -45,26 +39,26 @@ import org.mozilla.social.ui.navigationdrawer.NavigationDrawer
 fun MainActivityScreen() {
     val appState = rememberAppState()
 
-    val currentDestination = appState.currentDestination.collectAsState().value
+    val currentRoute = appState.currentRoute.collectAsState().value
 
     MoSoScaffold(
         modifier = Modifier.nestedScroll(appState.topAppBarScrollBehavior.nestedScrollConnection),
         snackbarHost = { appState.snackbarHostState },
         floatingActionButton = {
             FloatingActionButton(
-                currentDestination = currentDestination,
+                currentRoute = currentRoute,
                 onClick = appState::navigateToNewPost
             )
         },
         bottomBar = {
             BottomBar(
-                currentDestination = currentDestination,
+                currentRoute = currentRoute,
                 navigateToTopLevelDestination = appState::navigateToTopLevelDestination
             )
         },
         topBar = {
             TopBar(
-                currentDestination = currentDestination,
+                currentRoute = currentRoute,
                 topAppBarScrollBehavior = appState.topAppBarScrollBehavior,
                 navigationDrawerState = appState.navigationDrawerState,
             )
@@ -89,11 +83,11 @@ fun MainActivityScreen() {
 
 @Composable
 private fun FloatingActionButton(
-    currentDestination: NavDestination?,
+    currentRoute: String,
     onClick: () -> Unit,
 ) {
-    when (currentDestination) {
-        Feed -> {
+    when (currentRoute) {
+        FEED_ROUTE -> {
             androidx.compose.material3.FloatingActionButton(onClick = onClick) {
                 Icon(
                     MoSoIcons.Add,
@@ -108,14 +102,16 @@ private fun FloatingActionButton(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun TopBar(
-    currentDestination: NavDestination?,
+    currentRoute: String,
     topAppBarScrollBehavior: TopAppBarScrollBehavior,
     navigationDrawerState: DrawerState,
 ) {
     val coroutineScope = rememberCoroutineScope()
 
-    when (currentDestination) {
-        Feed, Discover, Bookmarks -> {
+    when (currentRoute) {
+        NavBarDestinations.FEED.navBarDestination.route,
+        NavBarDestinations.DISCOVER.navBarDestination.route,
+        NavBarDestinations.BOOKMARKS.navBarDestination.route -> {
             Column {
                 MoSoAppBar(
                     scrollBehavior = topAppBarScrollBehavior,
@@ -148,24 +144,24 @@ private fun TopBar(
                 )
             }
         }
-
-        else -> {
-
-        }
+        else -> {}
     }
 }
 
 @Composable
 private fun BottomBar(
-    currentDestination: NavDestination?,
-    navigateToTopLevelDestination: (navDestination: NavDestination) -> Unit,
+    currentRoute: String,
+    navigateToTopLevelDestination: (route: String) -> Unit,
 ) {
-    val currentNavBarDestination = currentDestination as? NavBarDestination ?: return
+    // don't show bottom bar if our current route is not one of the bottom nav options
+    if (NavBarDestinations.values().find { it.navBarDestination.route == currentRoute } == null) {
+        return
+    }
 
     MoSoBottomNavigationBar(
-        currentDestination = currentNavBarDestination,
-        navBarDestinations = AppState.navBarDestinations,
-        navigateTo = { navigateToTopLevelDestination(it) }
+        currentRoute = currentRoute,
+        navBarDestinations = NavBarDestinations.values().map { it.navBarDestination },
+        navigateTo = navigateToTopLevelDestination
     )
 }
 
