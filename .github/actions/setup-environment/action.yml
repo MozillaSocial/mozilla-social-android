@@ -1,0 +1,25 @@
+name: Setup environment
+description: Common environment setup steps for all workflows
+inputs:
+  jdk:
+    description: Set up JDK
+    required: false
+    default: 'true'
+  gradle:
+    description: Set up Gradle
+    required: false
+    default: 'true'
+runs:
+  using: composite
+  steps:
+  - name: Set up JDK
+    if: ${{ inputs.jdk || inputs.gradle }}
+    uses: actions/setup-java@0ab4596768b603586c0de567f2430c30f5b0d2b0 # v3.13.0
+    with:
+      java-version: '17'
+      distribution: 'temurin'
+      # Using 'temurin' speeds up the job, because this distribution is cached by the runner.
+      # See: https://github.com/actions/setup-java/blob/main/docs/advanced-usage.md#Hosted-Tool-Cache
+  - name: Set up Gradle
+    if: ${{ inputs.gradle }}
+    uses: gradle/gradle-build-action@842c587ad8aa4c68eeba24c396e15af4c2e9f30a # v2.9.0

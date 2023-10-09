@@ -6,6 +6,7 @@ androidx-media3 = "1.1.0"
 androidx-paging = "3.2.0"
 androidx-room = "2.5.2"
 coil = "2.4.0"
+detekt = "1.23.1"
 koin = "3.4.0"
 kotlin = "1.9.10"
 kotlin-ksp = "1.9.10-1.0.13" # Used only once, but keeping this definition makes the KSP version check at ci/verify-ksp-version.sh simpler.
@@ -78,6 +79,7 @@ square-okhttp-logging = { module = "com.squareup.okhttp3:logging-interceptor", v
 # Dependencies of build-logic
 android-gradlePlugin = { module = "com.android.tools.build:gradle", version.ref = "android-gradle-plugin" }
 android-secrets-gradlePlugin = { module = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin:secrets-gradle-plugin", version.ref = "android-secrets-plugin" }
+detekt-gradlePlugin = { module = "io.gitlab.arturbosch.detekt:io.gitlab.arturbosch.detekt.gradle.plugin", version.ref = "detekt" }
 glean-gradlePlugin = { module = "org.mozilla.telemetry:glean-gradle-plugin", version.ref = "glean" }
 jetbrains-python-gradlePlugin = { module = "gradle.plugin.com.jetbrains.python:gradle-python-envs", version.ref = "jetbrains-python" }
 kotlin-gradlePlugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
@@ -89,6 +91,7 @@ espresso-core = { group = "androidx.test.espresso", name = "espresso-core", vers
 android-application = { id = "com.android.application", version.ref = "android-gradle-plugin" }
 android-library = { id = "com.android.library", version.ref = "android-gradle-plugin" }
 android-secrets = { id = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin", version.ref = "android-secrets-plugin" }
+detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-ksp = { id = "com.google.devtools.ksp", version.ref = "kotlin-ksp" }
 kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin"}

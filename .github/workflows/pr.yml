@@ -14,18 +14,23 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # v4.1.0
-    - name: Set up JDK
-      uses: actions/setup-java@0ab4596768b603586c0de567f2430c30f5b0d2b0 # v3.13.0
-      with:
-        java-version: '17'
-        distribution: 'temurin'
-        # Using 'temurin' speeds up the job, because this distribution is cached by the runner.
-        # See: https://github.com/actions/setup-java/blob/main/docs/advanced-usage.md#Hosted-Tool-Cache
-    - name: Set up Gradle
-      uses: gradle/gradle-build-action@842c587ad8aa4c68eeba24c396e15af4c2e9f30a # v2.9.0
+    - name: Setup
+      uses: ./.github/actions/setup-environment
     - name: Verify KSP version
       run: ci/verify-ksp-version.sh
     - name: Compile a debug build
       env:
         GRADLE_OPTS: -Dorg.gradle.daemon=false
       run: ci/debug-build.sh
+
+  detekt:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # v4.1.0
+    - name: Setup
+      uses: ./.github/actions/setup-environment
+    - name: Run Detekt
+      env:
+        GRADLE_OPTS: -Dorg.gradle.daemon=false
+      run: ci/detekt.sh
