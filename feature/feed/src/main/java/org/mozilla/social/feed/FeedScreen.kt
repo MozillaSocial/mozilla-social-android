@@ -31,7 +31,7 @@ import org.mozilla.social.core.ui.recommendations.RecommendationCarousel
 import org.mozilla.social.model.Recommendation
 
 @Composable
-internal fun FeedRoute(
+internal fun FeedScreen(
     postCardNavigation: PostCardNavigation,
     viewModel: FeedViewModel = koinViewModel(parameters = {
         parametersOf(

@@ -88,7 +88,7 @@ import org.mozilla.social.core.ui.postcard.PostCardUiState
 import kotlin.math.max
 
 @Composable
-internal fun AccountRoute(
+internal fun AccountScreen(
     accountId: String?,
     accountNavigationCallbacks: AccountNavigationCallbacks,
     postCardNavigation: PostCardNavigation,

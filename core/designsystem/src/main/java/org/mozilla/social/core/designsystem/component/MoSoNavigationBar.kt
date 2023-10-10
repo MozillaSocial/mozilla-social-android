@@ -21,18 +21,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
+import org.mozilla.social.core.navigation.NavigationDestination
 
 @Composable
 fun MoSoBottomNavigationBar(
     modifier: Modifier = Modifier,
-    currentDestination: NavBarDestination,
-    navBarDestinations: List<NavBarDestination>,
-    navigateTo: (NavBarDestination) -> Unit,
+    currentDestination: NavigationDestination,
+    bottomBarTabs: List<BottomBarTab>,
+    navigateTo: (route: String) -> Unit,
     containerColor: Color = MoSoNavigationBarDefaults.containerColor,
     contentColor: Color = MoSoTheme.colors.iconPrimary,
     tonalElevation: Dp = NavigationBarDefaults.Elevation,
@@ -45,10 +45,10 @@ fun MoSoBottomNavigationBar(
         tonalElevation = tonalElevation,
         windowInsets = windowInsets
     ) {
-        navBarDestinations.forEach { navBarDestination ->
+        bottomBarTabs.forEach { navBarDestination ->
             MoSoNavigationBarItem(
                 destination = navBarDestination,
-                isSelected = currentDestination == navBarDestination,
+                isSelected = currentDestination == navBarDestination.navigationDestination,
                 navigateTo = navigateTo,
             )
         }
@@ -86,14 +86,14 @@ fun MoSoNavigationBar(
 @Composable
 fun RowScope.MoSoNavigationBarItem(
     modifier: Modifier = Modifier,
-    destination: NavBarDestination,
+    destination: BottomBarTab,
     isSelected: Boolean,
-    navigateTo: (NavBarDestination) -> Unit
+    navigateTo: (route: String) -> Unit
 ) {
     NavigationBarItem(
         modifier = modifier.height(48.dp),
         selected = isSelected,
-        onClick = { navigateTo(destination) },
+        onClick = { navigateTo(destination.navigationDestination.route) },
         colors = MoSoNavigationBarItemDefaults.colors(),
         icon = {
             MoSoIcon(
@@ -113,7 +113,7 @@ fun RowScope.MoSoNavigationBarItem(
 
 @Composable
 private fun MoSoIcon(
-    destination: NavBarDestination, isSelected: Boolean
+    destination: BottomBarTab, isSelected: Boolean
 ) {
     if (isSelected) {
 //        val a = destination.selectedIcon
@@ -139,19 +139,13 @@ private fun MoSoIcon(
 }
 
 /**
- * Corresponds with the navigation destinations in the main (logged in) graph
- */
-interface NavDestination {
-    val route: String
-}
-
-/**
  * The navigation destinations which correspond to the bottom navigation tabs
  */
-interface NavBarDestination : NavDestination {
+interface BottomBarTab {
     @Composable
     fun selectedIcon(): Painter
     val tabText: StringFactory
+    val navigationDestination: NavigationDestination
 }
 
 object MoSoNavigationDefaults {

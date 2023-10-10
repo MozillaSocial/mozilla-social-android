@@ -11,7 +11,7 @@ import org.mozilla.social.core.ui.postcard.PostCardList
 import org.mozilla.social.core.ui.postcard.PostCardNavigation
 
 @Composable
-fun ThreadScreen(
+internal fun ThreadScreen(
     threadStatusId: String,
     onCloseClicked: () -> Unit,
     postCardNavigation: PostCardNavigation,

@@ -32,6 +32,7 @@ dependencies {
     implementation(project(":core:ui"))
     implementation(project(":core:common"))
     implementation(project(":core:database"))
+    implementation(project(":core:navigation"))
 
     implementation(libs.google.material)
 

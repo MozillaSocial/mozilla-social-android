@@ -30,6 +30,7 @@ dependencies {
     implementation(project(":core:domain"))
     implementation(project(":core:datastore"))
     implementation(project(":core:model"))
+    implementation(project(":core:navigation"))
 
     implementation("androidx.security:security-crypto:1.0.0")
 

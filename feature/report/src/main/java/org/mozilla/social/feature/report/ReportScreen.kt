@@ -45,7 +45,7 @@ import org.mozilla.social.core.ui.transparentTextFieldColors
 import org.mozilla.social.model.InstanceRule
 
 @Composable
-fun ReportRoute(
+internal fun ReportScreen(
     onReported: () -> Unit,
     onCloseClicked: () -> Unit,
     reportAccountId: String,
@@ -63,7 +63,7 @@ fun ReportRoute(
         reportTarget = if (reportStatusId != null) {
             ReportTarget.POST
         } else {
-           ReportTarget.ACCOUNT
+            ReportTarget.ACCOUNT
         },
         instanceRules = viewModel.instanceRules.collectAsState().value,
         selectedReportType = viewModel.selectedReportType.collectAsState().value,
