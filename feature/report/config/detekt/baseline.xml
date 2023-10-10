@@ -1,0 +1,7 @@
+<?xml version="1.0" ?>
+<SmellBaseline>
+  <ManuallySuppressedIssues></ManuallySuppressedIssues>
+  <CurrentIssues>
+    <ID>LongMethod:ReportScreen.kt$@Composable private fun MainContent( reportTarget: ReportTarget, instanceRules: List&lt;InstanceRule&gt;, selectedReportType: ReportType?, checkedRules: List&lt;InstanceRule&gt;, additionalCommentText: String, reportInteractions: ReportInteractions, )</ID>
+  </CurrentIssues>
+</SmellBaseline>
