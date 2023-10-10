@@ -9,16 +9,16 @@
     </plurals>
 
     <string name="following">Following</string>
-
-    <string name="following_count">Following: %d</string>
-    <string name="followers_count">Followers: %d</string>
+    <string name="followers">Followers</string>
 
     <string name="share_option">Share</string>
     <string name="follow_button">Follow</string>
     <string name="unfollow_button">Unfollow</string>
-    <string name="edit_button">Edit</string>
+    <string name="edit_button">Edit profile</string>
 
     <string name="tab_posts">Posts</string>
     <string name="tab_posts_and_replies">Posts and Replies</string>
     <string name="tab_media">Media</string>
+
+    <string name="joined_date">Joined %s</string>
 </resources>

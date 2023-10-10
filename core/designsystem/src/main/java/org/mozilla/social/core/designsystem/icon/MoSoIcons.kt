@@ -20,6 +20,7 @@ import androidx.compose.material.icons.rounded.FavoriteBorder
 import androidx.compose.material.icons.rounded.Feed
 import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material.icons.rounded.Info
+import androidx.compose.material.icons.rounded.KeyboardArrowUp
 import androidx.compose.material.icons.rounded.Lock
 import androidx.compose.material.icons.rounded.LockOpen
 import androidx.compose.material.icons.rounded.Menu
@@ -60,6 +61,9 @@ object MoSoIcons {
     @Composable
     fun list() = painterResource(id = R.drawable.list)
 
+    @Composable
+    fun userJoin() = painterResource(id = R.drawable.user_join)
+
 
     val Add = Icons.Rounded.Add
     val ArrowBack = Icons.Rounded.ArrowBack
@@ -76,6 +80,7 @@ object MoSoIcons {
     val Share = Icons.Rounded.Share
     val ChevronLeft = Icons.Rounded.ChevronLeft
     val ChevronRight = Icons.Rounded.ChevronRight
+    val Caret = Icons.Rounded.KeyboardArrowUp
     val BookmarkBorder = Icons.Rounded.BookmarkBorder
     val Bookmark = Icons.Rounded.Bookmark
     val Reply = Icons.Rounded.Reply
