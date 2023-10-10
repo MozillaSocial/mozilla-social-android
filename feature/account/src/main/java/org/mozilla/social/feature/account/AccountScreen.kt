@@ -524,8 +524,10 @@ private fun UserBio(
                 }
             }
 
+            val rotatedDegrees = 180f
+
             val rotation: Float by animateFloatAsState(
-                targetValue = if (expanded) 180f else 0f,
+                targetValue = if (expanded) rotatedDegrees else 0f,
                 animationSpec = tween(animationDuration),
                 label = ""
             )
@@ -540,6 +542,8 @@ private fun UserBio(
     }
 }
 
+//TODO add this back in when we have designs
+@Suppress("UnusedPrivateMember")
 @Composable
 private fun UserFields(
     account: AccountUiState,
@@ -685,7 +689,8 @@ private fun HeaderLayout(
         val rightSideContentPlaceable = placeables[2]
         layout(
             width = constraints.maxWidth,
-            height = headerImagePlaceable.height + max(profileImagePlaceable.height / 2, rightSideContentPlaceable.height),
+            height = headerImagePlaceable.height
+                    + max(profileImagePlaceable.height / 2, rightSideContentPlaceable.height),
         ) {
             headerImagePlaceable.placeRelative(
                 x = 0,

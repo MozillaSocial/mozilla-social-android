@@ -4,6 +4,8 @@ complexity:
     # Relaxing this to a smaller degree is recommended for Compose anyway.
   TooManyFunctions:
     active: false # Carried over from Pocket configuration.
+  LongMethod:
+    threshold: 100 # Increasing from 60 to 100 because I find compose methods can run long sometimes.
 
 exceptions:
   TooGenericExceptionCaught:
@@ -27,6 +29,7 @@ style:
   MagicNumber:
     ignorePropertyDeclaration: true # Recommended configuration for Compose.
     ignoreCompanionObjectPropertyDeclaration: true # Recommended configuration for Compose.
+    ignoreLocalVariableDeclaration: true # Useful for compose
   NewLineAtEndOfFile:
     active: false # Carried over from Pocket configuration.
   UnusedPrivateMember:
