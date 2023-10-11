@@ -12,6 +12,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -25,7 +26,7 @@ import org.mozilla.social.core.designsystem.theme.MoSoTheme
 @Composable
 fun MoSoTopBar(
     title: String = "",
-    icon: ImageVector? = MoSoIcons.Close,
+    icon: Painter? = MoSoIcons.close(),
     onIconClicked: () -> Unit,
     leftSideContent:  @Composable () -> Unit = {},
     rightSideContent: @Composable () -> Unit = {},

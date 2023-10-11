@@ -94,13 +94,13 @@ fun VideoPlayer(
             ) {
                 if (muted.value) {
                     Icon(
-                        imageVector = MoSoIcons.VolumeMute,
+                        painter = MoSoIcons.volumeMute(),
                         contentDescription = null,
                         tint = FirefoxColor.White,
                     )
                 } else {
                     Icon(
-                        imageVector = MoSoIcons.VolumeUp,
+                        painter = MoSoIcons.volumeUp(),
                         contentDescription = null,
                         tint = FirefoxColor.White,
                     )

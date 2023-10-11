@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalContentColor
@@ -26,7 +25,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -76,7 +75,10 @@ private fun TopRowMetaData(
             modifier = Modifier
                 .size(20.dp)
                 .align(Alignment.CenterVertically),
-            imageVector = topRowMetaDataUiState.icon,
+            painter = when(topRowMetaDataUiState.iconType) {
+                TopRowIconType.BOOSTED -> MoSoIcons.repeat()
+                TopRowIconType.REPLY -> MoSoIcons.reply()
+            },
             contentDescription = ""
         )
         Spacer(modifier = Modifier.padding(start = 8.dp))
@@ -148,7 +150,7 @@ private fun MetaData(
             modifier = Modifier.width(IntrinsicSize.Max),
             onClick = { overflowMenuExpanded.value = true }
         ) {
-            Icon(imageVector = MoSoIcons.MoreVert, contentDescription = "")
+            Icon(painter = MoSoIcons.moreVertical(), contentDescription = "")
 
             MoSoDropdownMenu(
                 expanded = overflowMenuExpanded.value,
@@ -187,20 +189,20 @@ private fun BottomRow(
     ) {
         BottomIconButton(
             onClick = { postCardInteractions.onReplyClicked(post.statusId) },
-            imageVector = MoSoIcons.Reply,
+            painter = MoSoIcons.reply(),
             count = post.replyCount,
         )
         Spacer(modifier = Modifier.weight(1f))
         BottomIconButton(
             onClick = { postCardInteractions.onBoostClicked(post.statusId, !post.userBoosted) },
-            imageVector = MoSoIcons.Repeat,
+            painter = MoSoIcons.repeat(),
             count = post.boostCount,
             highlighted = post.userBoosted,
         )
         Spacer(modifier = Modifier.weight(1f))
         BottomIconButton(
             onClick = { postCardInteractions.onFavoriteClicked(post.statusId, !post.isFavorited) },
-            imageVector = MoSoIcons.StarBorder,
+            painter = MoSoIcons.starBorder(),
             count = post.favoriteCount,
             highlighted = post.isFavorited,
             highlightColor = FirefoxColor.Yellow40
@@ -218,7 +220,7 @@ private fun BottomRow(
                     startActivity(context, Intent.createChooser(sendIntent, null), null)
                 }
             },
-            imageVector = MoSoIcons.Share,
+            painter = MoSoIcons.share(),
             count = 0,
         )
     }
@@ -227,7 +229,7 @@ private fun BottomRow(
 @Composable
 private fun BottomIconButton(
     onClick: () -> Unit,
-    imageVector: ImageVector,
+    painter: Painter,
     count: Long,
     highlighted: Boolean = false,
     highlightColor: Color = MaterialTheme.colorScheme.primary,
@@ -238,7 +240,7 @@ private fun BottomIconButton(
     ) {
         Row {
             Icon(
-                imageVector = imageVector,
+                painter = painter,
                 "",
                 tint = if (highlighted) {
                     highlightColor
@@ -263,7 +265,7 @@ private fun PostCardPreview() {
                 post = PostCardUiState(
                     statusId = "",
                     topRowMetaDataUiState = TopRowMetaDataUiState(
-                        MoSoIcons.Reply,
+                        TopRowIconType.REPLY,
                         StringFactory.literal("")
                     ),
                     mainPostCardUiState = MainPostCardUiState(

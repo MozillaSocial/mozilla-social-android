@@ -94,7 +94,7 @@ private fun PollOption(
             .clip(RoundedCornerShape(90.dp))
             .border(
                 width = 1.dp,
-                color =  MoSoTheme.colors.borderPrimary,
+                color = MoSoTheme.colors.borderPrimary,
                 shape = RoundedCornerShape(90.dp),
             ),
     ) {
@@ -167,7 +167,7 @@ private fun PollOptionText(
                     modifier = Modifier
                         .align(Alignment.CenterVertically)
                         .padding(start = 8.dp),
-                    imageVector = MoSoIcons.Check,
+                    painter = MoSoIcons.check(),
                     contentDescription = ""
                 )
             }

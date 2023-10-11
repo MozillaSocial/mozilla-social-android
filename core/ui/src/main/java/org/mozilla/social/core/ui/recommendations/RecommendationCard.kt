@@ -22,6 +22,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -108,11 +109,11 @@ fun RecommendationCarouselCard(modifier: Modifier, recommendation: Recommendatio
                     ) {
                         BottomIconButton(
                             onClick = { },
-                            imageVector = MoSoIcons.BookmarkBorder,
+                            painter = MoSoIcons.bookmarkBorder(),
                         )
                         BottomIconButton(
                             onClick = { },
-                            imageVector = MoSoIcons.Share,
+                            painter = MoSoIcons.share(),
                         )
                     }
                 }
@@ -136,14 +137,14 @@ fun RecommendationCarouselCard(modifier: Modifier, recommendation: Recommendatio
 @Composable
 private fun BottomIconButton(
     onClick: () -> Unit,
-    imageVector: ImageVector,
+    painter: Painter,
 ) {
     IconButton(
         onClick = onClick,
         modifier = Modifier.wrapContentSize()
     ) {
         Icon(
-            imageVector = imageVector,
+            painter = painter,
             "",
         )
     }
