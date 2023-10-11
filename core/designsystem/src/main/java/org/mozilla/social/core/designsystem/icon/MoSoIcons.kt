@@ -49,6 +49,7 @@ object MoSoIcons {
 
     @Composable
     fun house() = painterResource(R.drawable.house)
+
     @Composable
     fun compass() = painterResource(R.drawable.compass)
 

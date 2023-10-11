@@ -1,6 +1,7 @@
 package org.mozilla.social.core.ui.postcard
 
 import android.content.Intent
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -33,7 +35,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat.startActivity
 import coil.compose.AsyncImage
+import kotlinx.datetime.Instant
+import org.mozilla.social.common.utils.StringFactory
+import org.mozilla.social.common.utils.timeSinceNow
 import org.mozilla.social.core.designsystem.component.MoSoDropdownMenu
+import org.mozilla.social.core.designsystem.component.MoSoSurface
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.designsystem.theme.FirefoxColor
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
@@ -116,8 +122,9 @@ private fun MetaData(
         AsyncImage(
             modifier = Modifier
                 .size(36.dp)
-                .clip(RoundedCornerShape(4.dp))
+                .clip(CircleShape)
                 .align(Alignment.CenterVertically)
+                .background(MoSoTheme.colors.layer2)
                 .clickable { postCardInteractions.onAccountImageClicked(post.accountId) },
             model = post.profilePictureUrl,
             contentDescription = "",
@@ -246,19 +253,40 @@ private fun BottomIconButton(
     }
 }
 
+@Suppress("MagicNumber", "MaxLineLength")
 @Preview
 @Composable
 private fun PostCardPreview() {
     MoSoTheme {
-//        PostCard(
-//            status =
-//                Status(
-//                    "1",
-//                    "asdf",
-//                     Account("1", username = "username"),
-//                    content = "here's a post",
-//                    isSensitive = false,
-//                )
-//            )
+        MoSoSurface {
+            PostCard(
+                post = PostCardUiState(
+                    statusId = "",
+                    topRowMetaDataUiState = TopRowMetaDataUiState(
+                        MoSoIcons.Reply,
+                        StringFactory.literal("")
+                    ),
+                    mainPostCardUiState = MainPostCardUiState(
+                        url = "",
+                        pollUiState = null,
+                        username = "Cool guy",
+                        statusTextHtml = "<p><span class=\"h-card\"><a href=\"https://mozilla.social/@obez\" class=\"u-url mention\" rel=\"nofollow noopener noreferrer\" target=\"_blank\">@<span>obez</span></a></span> This is a text status.  Here is the text and that is all I have to say about that.</p>",
+                        mediaAttachments = emptyList(),
+                        profilePictureUrl = "",
+                        postTimeSince = Instant.fromEpochMilliseconds(1695308821000L).timeSinceNow(),
+                        accountName = StringFactory.literal("coolguy"),
+                        replyCount = 4L,
+                        boostCount = 3L,
+                        favoriteCount = 7L,
+                        statusId = "",
+                        userBoosted = false,
+                        isFavorited = false,
+                        accountId = "",
+                        mentions = emptyList()
+                    )
+                ),
+                postCardInteractions = object : PostCardInteractions {},
+            )
+        }
     }
 }
