@@ -12,6 +12,7 @@ identifiers:
     notification_emails:
       - kdemtchouk@mozilla.com
     expires: never
+    lifetime: user
     send_in_pings:
       - events
     no_lint:
@@ -28,6 +29,7 @@ identifiers:
     notification_emails:
       - kdemtchouk@mozilla.com
     expires: never
+    lifetime: user
     send_in_pings:
       - events
     no_lint:
@@ -45,6 +47,7 @@ identifiers:
     notification_emails:
       - kdemtchouk@mozilla.com
     expires: never
+    lifetime: user
     send_in_pings:
       - events
     no_lint:
@@ -61,6 +64,7 @@ identifiers:
     notification_emails:
       - kdemtchouk@mozilla.com
     expires: never
+    lifetime: user
     send_in_pings:
       - events
     no_lint:
@@ -77,6 +81,7 @@ identifiers:
     notification_emails:
       - kdemtchouk@mozilla.com
     expires: never
+    lifetime: user
     send_in_pings:
       - events
     no_lint:

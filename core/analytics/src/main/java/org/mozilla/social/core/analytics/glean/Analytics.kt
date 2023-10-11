@@ -35,9 +35,12 @@ interface Analytics {
 
     fun setMastodonAccountHandle(mastodonAccountHandle: String)
 
+
     fun setMastodonAccountId(mastodonAccountId: String)
 
     fun setUserAgent(userAgent: String)
+
+    fun clearLoggedInIdentifiers()
 }
 
 class GleanAnalytics : Analytics {
@@ -45,7 +48,7 @@ class GleanAnalytics : Analytics {
         val buildInfo = BuildInfo("1", "1", Calendar.getInstance())
 
         Glean.setLogPings(true)
-        Glean.setDebugViewTag("Android-Test")
+        Glean.setDebugViewTag("moso-android-debug")
 
         Glean.initialize(
             applicationContext = context,
@@ -110,5 +113,10 @@ class GleanAnalytics : Analytics {
 
     override fun setUserAgent(userAgent: String) {
         Identifiers.userAgent.set(userAgent)
+    }
+
+    override fun clearLoggedInIdentifiers() {
+        Identifiers.mastodonAccountHandle.destroy()
+        Identifiers.mastodonAccountId.destroy()
     }
 }

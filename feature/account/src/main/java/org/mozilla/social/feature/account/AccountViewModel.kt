@@ -20,6 +20,8 @@ import org.mozilla.social.common.Resource
 import org.mozilla.social.common.logging.Log
 import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.common.utils.edit
+import org.mozilla.social.core.analytics.glean.Analytics
+import org.mozilla.social.core.analytics.glean.GleanAnalytics
 import org.mozilla.social.core.data.repository.AccountRepository
 import org.mozilla.social.core.data.repository.StatusRepository
 import org.mozilla.social.core.data.repository.model.status.toExternalModel
@@ -34,6 +36,7 @@ import org.mozilla.social.core.ui.postcard.toPostCardUiState
 import timber.log.Timber
 
 class AccountViewModel(
+    private val analytics: Analytics,
     private val accountRepository: AccountRepository,
     accountIdBlocking: AccountIdBlocking,
     log: Log,
@@ -106,6 +109,7 @@ class AccountViewModel(
 
     init {
         loadAccount()
+        setupIdentifiers()
     }
 
     private fun loadAccount() {
@@ -121,6 +125,17 @@ class AccountViewModel(
                 _uiState.edit { it }
             }
         }
+    }
+
+    private fun setupIdentifiers() {
+        analytics.uiImpression(
+            mastodonAccountHandle = null,
+            mastodonAccountId = "id_test",
+            mastodonStatusId = null,
+            recommendationId = null,
+            null,
+            null,
+        )
     }
 
     override fun onOverflowMuteClicked() {
