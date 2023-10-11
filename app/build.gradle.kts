@@ -64,8 +64,6 @@ dependencies {
     implementation(project(":feature:followers"))
     implementation(project(":core:navigation"))
 
-    implementation(kotlin("reflect"))
-
     // android
     implementation(libs.androidx.core)
     implementation(libs.androidx.appcompat)
