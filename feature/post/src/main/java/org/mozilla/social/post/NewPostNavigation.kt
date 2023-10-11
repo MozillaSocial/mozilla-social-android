@@ -5,19 +5,13 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-
-const val REPLY_STATUS_ID = "replyStatusId"
-const val NEW_POST_ROUTE = "newPost"
-const val NEW_POST_FULL_ROUTE = "$NEW_POST_ROUTE?$REPLY_STATUS_ID={$REPLY_STATUS_ID}"
+import org.mozilla.social.core.navigation.NavigationDestination
 
 fun NavController.navigateToNewPost(
     navOptions: NavOptions? = null,
     replyStatusId: String? = null,
 ) {
-    when {
-        replyStatusId != null -> navigate("$NEW_POST_ROUTE?$REPLY_STATUS_ID=$replyStatusId", navOptions)
-        else -> this.navigate(NEW_POST_ROUTE, navOptions)
-    }
+    navigate(NavigationDestination.NewPost.route(replyStatusId), navOptions)
 }
 
 fun NavGraphBuilder.newPostScreen(
@@ -25,15 +19,15 @@ fun NavGraphBuilder.newPostScreen(
     onCloseClicked: () -> Unit,
 ) {
     composable(
-        route = NEW_POST_FULL_ROUTE,
+        route = NavigationDestination.NewPost.fullRoute,
         arguments = listOf(
-            navArgument(REPLY_STATUS_ID) {
+            navArgument(NavigationDestination.NewPost.NAV_PARAM_REPLY_STATUS_ID) {
                 nullable = true
             }
         )
     ) {
-        val replyStatusId: String? = it.arguments?.getString(REPLY_STATUS_ID)
-        NewPostRoute(
+        val replyStatusId: String? = it.arguments?.getString(NavigationDestination.NewPost.NAV_PARAM_REPLY_STATUS_ID)
+        NewPostScreen(
             onStatusPosted,
             onCloseClicked,
             replyStatusId = replyStatusId

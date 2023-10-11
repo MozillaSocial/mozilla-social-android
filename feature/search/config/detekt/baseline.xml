@@ -1,0 +1,9 @@
+<?xml version="1.0" ?>
+<SmellBaseline>
+  <ManuallySuppressedIssues></ManuallySuppressedIssues>
+  <CurrentIssues>
+    <ID>EmptyFunctionBlock:SearchScreen.kt${ }</ID>
+    <ID>UnusedParameter:SearchScreen.kt$viewModel: SearchViewModel = koinViewModel()</ID>
+    <ID>UnusedPrivateProperty:SearchViewModel.kt$SearchViewModel$private val timelineRepository: TimelineRepository</ID>
+  </CurrentIssues>
+</SmellBaseline>

@@ -1,5 +1,7 @@
 package org.mozilla.social.feature.account
 
+import kotlinx.datetime.LocalDateTime
+
 data class AccountUiState(
     val accountId: String,
     val username: String,
@@ -17,6 +19,7 @@ data class AccountUiState(
     val isFollowing: Boolean,
     val isMuted: Boolean,
     val isBlocked: Boolean,
+    val joinDate: LocalDateTime,
 )
 
 data class AccountFieldUiState(

@@ -29,6 +29,7 @@ fun MoSoTopBar(
     onIconClicked: () -> Unit,
     leftSideContent:  @Composable () -> Unit = {},
     rightSideContent: @Composable () -> Unit = {},
+    showDivider: Boolean = true,
 ) {
     Column(
         modifier = Modifier.fillMaxWidth()
@@ -61,7 +62,9 @@ fun MoSoTopBar(
             Spacer(modifier = Modifier.weight(1f))
             rightSideContent()
         }
-       MoSoDivider()
+        if (showDivider) {
+            MoSoDivider()
+        }
     }
 }
 

@@ -1,0 +1,18 @@
+<?xml version="1.0" ?>
+<SmellBaseline>
+  <ManuallySuppressedIssues></ManuallySuppressedIssues>
+  <CurrentIssues>
+    <ID>LongMethod:NewPostScreen.kt$@Composable private fun BottomBar( onUploadImageClicked: () -&gt; Unit, addImageButtonEnabled: Boolean, statusText: String, contentWarningText: String?, pollInteractions: PollInteractions, pollButtonEnabled: Boolean, contentWarningInteractions: ContentWarningInteractions, )</ID>
+    <ID>LongMethod:NewPostScreen.kt$@Composable private fun NewPostScreen( statusText: TextFieldValue, statusInteractions: StatusInteractions, onPostClicked: () -&gt; Unit, onCloseClicked: () -&gt; Unit, sendButtonEnabled: Boolean, imageStates: Map&lt;Uri, ImageState&gt;, addImageButtonEnabled: Boolean, mediaInteractions: MediaInteractions, isSendingPost: Boolean, visibility: StatusVisibility, onVisibilitySelected: (StatusVisibility) -&gt; Unit, poll: Poll?, pollInteractions: PollInteractions, pollButtonEnabled: Boolean, contentWarningText: String?, contentWarningInteractions: ContentWarningInteractions, accounts: List&lt;Account&gt;?, hashTags: List&lt;String&gt;?, inReplyToAccountName: String?, )</ID>
+    <ID>LongMethod:NewPostScreen.kt$@OptIn(ExperimentalComposeUiApi::class) @Composable private fun MainBox( statusText: TextFieldValue, statusInteractions: StatusInteractions, imageStates: Map&lt;Uri, ImageState&gt;, mediaInteractions: MediaInteractions, poll: Poll?, pollInteractions: PollInteractions, contentWarningText: String?, contentWarningInteractions: ContentWarningInteractions, inReplyToAccountName: String?, )</ID>
+    <ID>MagicNumber:PollDuration.kt$PollDuration.FIVE_MINUTES$300</ID>
+    <ID>MagicNumber:PollDuration.kt$PollDuration.ONE_DAY$86_400</ID>
+    <ID>MagicNumber:PollDuration.kt$PollDuration.ONE_HOUR$3_600</ID>
+    <ID>MagicNumber:PollDuration.kt$PollDuration.ONE_WEEK$604_800</ID>
+    <ID>MagicNumber:PollDuration.kt$PollDuration.SIX_HOURS$21_600</ID>
+    <ID>MagicNumber:PollDuration.kt$PollDuration.THIRTY_MINUTES$1_800</ID>
+    <ID>MagicNumber:PollDuration.kt$PollDuration.THREE_DAYS$259_200</ID>
+    <ID>MagicNumber:StatusDelegate.kt$StatusDelegate$500</ID>
+    <ID>MaxLineLength:StatusDelegate.kt$StatusDelegate$if (textFieldValue.text.length + (contentWarningText.value?.length ?: 0) &gt; NewPostViewModel.MAX_POST_LENGTH) return</ID>
+  </CurrentIssues>
+</SmellBaseline>

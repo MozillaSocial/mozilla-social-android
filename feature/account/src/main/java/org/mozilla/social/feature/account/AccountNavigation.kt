@@ -5,27 +5,14 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import org.mozilla.social.core.navigation.NavigationDestination
 import org.mozilla.social.core.ui.postcard.PostCardNavigation
-
-
-/**
- * The my account route is used for the account tab.  The account route is used for any
- * account that will open outside of the bottom navigation tab.
- */
-private const val MY_ACCOUNT_ROUTE = "myAccount"
-
-private const val ACCOUNT_ROUTE = "account"
-private const val ACCOUNT_ID = "accountId"
-private const val ACCOUNT_FULL_ROUTE = "$ACCOUNT_ROUTE?$ACCOUNT_ID={$ACCOUNT_ID}"
 
 fun NavController.navigateToAccount(
     navOptions: NavOptions? = null,
-    accountId: String? = null,
+    accountId: String,
 ) {
-    when {
-        accountId != null -> navigate("$ACCOUNT_ROUTE?$ACCOUNT_ID=$accountId", navOptions)
-        else -> navigate(MY_ACCOUNT_ROUTE, navOptions)
-    }
+    navigate(NavigationDestination.Account.route(accountId), navOptions)
 }
 
 // The custom screen here doesn't seem to be used anywhere, so I'm going to 
@@ -33,27 +20,16 @@ fun NavGraphBuilder.accountScreen(
     accountNavigationCallbacks: AccountNavigationCallbacks,
     postCardNavigation: PostCardNavigation,
 ) {
-
     composable(
-        route = MY_ACCOUNT_ROUTE,
-    ) {
-        AccountRoute(
-            accountId = null,
-            accountNavigationCallbacks = accountNavigationCallbacks,
-            postCardNavigation = postCardNavigation,
-        )
-    }
-
-    composable(
-        route = ACCOUNT_FULL_ROUTE,
+        route = NavigationDestination.Account.fullRoute,
         arguments = listOf(
-            navArgument(ACCOUNT_ID) {
+            navArgument(NavigationDestination.Account.NAV_PARAM_ACCOUNT_ID) {
                 nullable = true
             }
         )
     ) {
-        val accountId: String? = it.arguments?.getString(ACCOUNT_ID)
-        AccountRoute(
+        val accountId: String? = it.arguments?.getString(NavigationDestination.Account.NAV_PARAM_ACCOUNT_ID)
+        AccountScreen(
             accountId = accountId,
             accountNavigationCallbacks = accountNavigationCallbacks,
             postCardNavigation = postCardNavigation,

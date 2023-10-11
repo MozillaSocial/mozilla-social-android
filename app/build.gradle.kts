@@ -62,6 +62,9 @@ dependencies {
     implementation(project(":feature:report"))
     implementation(project(":feature:hashtag"))
     implementation(project(":feature:followers"))
+    implementation(project(":core:navigation"))
+
+    implementation(kotlin("reflect"))
 
     // android
     implementation(libs.androidx.core)

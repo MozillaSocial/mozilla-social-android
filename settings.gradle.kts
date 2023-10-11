@@ -4,7 +4,17 @@ pluginManagement {
         google()
         mavenCentral()
         maven { url = uri("https://maven.mozilla.org/maven2") }
-        maven { url = uri("https://plugins.gradle.org/m2/") }
+        gradlePluginPortal()
+    }
+    resolutionStrategy {
+        eachPlugin {
+            // Manually resolve Glean plugin ID to Maven coordinates,
+            // because the Maven repository is missing plugin marker artifacts.
+            // See: https://docs.gradle.org/current/userguide/plugins.html#sec:plugin_resolution_rules
+            if (requested.id.id == "org.mozilla.telemetry.glean-gradle-plugin") {
+                useModule("org.mozilla.telemetry:glean-gradle-plugin:${requested.version}")
+            }
+        }
     }
 }
 
@@ -13,7 +23,6 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
-        maven { url = uri("https://nexus.outadoc.fr/repository/public") }
         maven { url = uri("https://maven.mozilla.org/maven2") }
     }
 }
@@ -39,3 +48,4 @@ include(":feature:report")
 include(":feature:hashtag")
 include(":core:analytics")
 include(":feature:followers")
+include(":core:navigation")

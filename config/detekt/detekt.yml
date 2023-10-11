@@ -1,0 +1,39 @@
+complexity:
+  LongParameterList:
+    active: false # Carried over from Pocket configuration.
+    # Relaxing this to a smaller degree is recommended for Compose anyway.
+  TooManyFunctions:
+    active: false # Carried over from Pocket configuration.
+  LongMethod:
+    threshold: 100 # Increasing from 60 to 100 because I find compose methods can run long sometimes.
+
+exceptions:
+  TooGenericExceptionCaught:
+    active: false # Carried over from Pocket configuration.
+
+naming:
+  FunctionNaming:
+    ignoreAnnotated:
+    - 'Composable' # Recommended configuration for Compose.
+  TopLevelPropertyNaming:
+    # Default pattern is '[A-Z][_A-Z0-9]*' (ALL_CAPS_SNAKE_CASE).
+    # Recommended configuration for Compose is changing the pattern to '[A-Z][A-Za-z0-9]*' (UppercaseCamelCase).
+    # We currently use both, so the pattern below allows both.
+    constantPattern: '[A-Z][_A-Za-z0-9]*'
+
+performance:
+  SpreadOperator:
+    active: false # Carried over from Pocket configuration.
+
+style:
+  MagicNumber:
+    ignorePropertyDeclaration: true # Recommended configuration for Compose.
+    ignoreCompanionObjectPropertyDeclaration: true # Recommended configuration for Compose.
+    ignoreLocalVariableDeclaration: true # Useful for compose
+  NewLineAtEndOfFile:
+    active: false # Carried over from Pocket configuration.
+  UnusedPrivateMember:
+    ignoreAnnotated:
+    - 'Preview' # Recommended configuration for Compose.
+  WildcardImport:
+    active: false # Carried over from Pocket configuration.

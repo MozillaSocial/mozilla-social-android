@@ -1,0 +1,11 @@
+<?xml version="1.0" ?>
+<SmellBaseline>
+  <ManuallySuppressedIssues></ManuallySuppressedIssues>
+  <CurrentIssues>
+    <ID>LongMethod:AccountScreen.kt$@Composable private fun AccountScreen( resource: Resource&lt;AccountUiState&gt;, closeButtonVisible: Boolean, isUsersProfile: Boolean, feed: Flow&lt;PagingData&lt;PostCardUiState&gt;&gt;, errorToastMessage: SharedFlow&lt;StringFactory&gt;, timelineTypeFlow: StateFlow&lt;TimelineType&gt;, accountNavigationCallbacks: AccountNavigationCallbacks, htmlContentInteractions: HtmlContentInteractions, postCardInteractions: PostCardInteractions, accountInteractions: AccountInteractions, )</ID>
+    <ID>LongMethod:AccountScreen.kt$@Composable private fun OverflowMenu( account: AccountUiState, isUsersProfile: Boolean, overflowInteractions: OverflowInteractions, )</ID>
+    <ID>LongMethod:AccountTimelineRemoteMediator.kt$AccountTimelineRemoteMediator$override suspend fun load( loadType: LoadType, state: PagingState&lt;Int, AccountTimelineStatusWrapper&gt; ): MediatorResult</ID>
+    <ID>MagicNumber:AccountTimelineRemoteMediator.kt$AccountTimelineRemoteMediator$200</ID>
+    <ID>ReturnCount:AccountTimelineRemoteMediator.kt$AccountTimelineRemoteMediator$override suspend fun load( loadType: LoadType, state: PagingState&lt;Int, AccountTimelineStatusWrapper&gt; ): MediatorResult</ID>
+  </CurrentIssues>
+</SmellBaseline>

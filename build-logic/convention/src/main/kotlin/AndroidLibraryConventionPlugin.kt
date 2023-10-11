@@ -26,6 +26,7 @@ class AndroidLibraryConventionPlugin : Plugin<Project> {
             with(pluginManager) {
                 apply("com.android.library")
                 apply("org.jetbrains.kotlin.android")
+                apply("org.mozilla.social.detekt")
             }
 
             extensions.configure<LibraryExtension> {

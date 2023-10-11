@@ -1,15 +1,25 @@
 package org.mozilla.social.core.ui.htmlcontent
 
+import android.graphics.Typeface
+import android.os.Build
+import android.text.SpannableStringBuilder
+import android.text.Spanned
+import android.text.TextUtils
 import android.widget.TextView
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.core.view.doOnNextLayout
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.model.Mention
+import kotlin.math.min
 
 /**
  * @param mentions a list of mention objects that the htmlText contains
@@ -21,6 +31,8 @@ fun HtmlContent(
     mentions: List<Mention>,
     htmlText: String,
     htmlContentInteractions: HtmlContentInteractions,
+    maximumLineCount: Int = Int.MAX_VALUE,
+    textStyle: TextStyle? = null,
 ) {
     val linkColor: Color = MoSoTheme.colors.textLink
     val textContent = remember(htmlText) {
@@ -36,17 +48,51 @@ fun HtmlContent(
         )
     }
 
+    val textColor = MoSoTheme.colors.textPrimary
+
     AndroidView(
         modifier = modifier,
-        factory = {
-            TextView(it).apply {
+        factory = { context ->
+            TextView(context).apply {
+                textStyle?.let {  textStyle ->
+                    textSize = textStyle.fontSize.value
+                    setTextColor(textColor.toArgb())
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                        typeface = textStyle.fontWeight?.let { fontWeight ->
+                            Typeface.create(
+                                typeface,
+                                fontWeight.weight,
+                                false
+                            )
+                        }
+                    }
+                }
+
                 movementMethod = HtmlContentMovementMethod
                 isClickable = false
                 isLongClickable = false
+                maxLines = maximumLineCount
             }
         },
-        update = {
-            it.text = textContent.value
+        update = { textView ->
+            textView.text = textContent.value
+            textView.maxLines = maximumLineCount
+
+            // Add ellipsize manually
+            // setting textView.ellipsize = TextUtils.TruncateAt.END doesn't seem to work.
+            textView.doOnNextLayout {
+                textView.layout?.let { layout ->
+                    val textViewLineCount = textView.lineCount
+                    if (textViewLineCount > maximumLineCount) {
+                        val indexOfLastChar = layout.getLineEnd(maximumLineCount - 1)
+                        val indexToEndAt = indexOfLastChar - min(3, indexOfLastChar)
+                        val spanned = textView.text.subSequence(0, indexToEndAt).trim() as? Spanned
+                        textView.text = SpannableStringBuilder()
+                            .append(spanned)
+                            .append("…")
+                    }
+                }
+            }
         }
     )
 }

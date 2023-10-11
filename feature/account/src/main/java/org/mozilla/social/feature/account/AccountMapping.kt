@@ -1,5 +1,7 @@
 package org.mozilla.social.feature.account
 
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 import org.mozilla.social.model.Account
 import org.mozilla.social.model.Field
 import org.mozilla.social.model.Relationship
@@ -22,7 +24,8 @@ fun Account.toUiState(
     isBot = isBot ?: false,
     isFollowing = relationship.isFollowing,
     isMuted = relationship.isMuting,
-    isBlocked = relationship.isBlocking
+    isBlocked = relationship.isBlocking,
+    joinDate = createdAt.toLocalDateTime(TimeZone.currentSystemDefault()),
 )
 
 fun Field.toUiState() = AccountFieldUiState(
