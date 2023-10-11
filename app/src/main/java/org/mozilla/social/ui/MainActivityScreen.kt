@@ -39,7 +39,7 @@ import org.mozilla.social.ui.navigationdrawer.NavigationDrawer
 fun MainActivityScreen() {
     val appState = rememberAppState()
 
-    val currentRoute = appState.currentNavigationDestination.collectAsState().value
+    val currentRoute = appState.currentNavigationRoute.collectAsState().value
 
     MoSoScaffold(
         modifier = Modifier.nestedScroll(appState.topAppBarScrollBehavior.nestedScrollConnection),
@@ -83,11 +83,11 @@ fun MainActivityScreen() {
 
 @Composable
 private fun FloatingActionButton(
-    currentDestination: NavigationDestination?,
+    currentDestination: String?,
     onClick: () -> Unit,
 ) {
     when (currentDestination) {
-        NavigationDestination.Feed -> {
+        NavigationDestination.Feed.route -> {
             androidx.compose.material3.FloatingActionButton(onClick = onClick) {
                 Icon(
                     MoSoIcons.Add,
@@ -102,16 +102,16 @@ private fun FloatingActionButton(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun TopBar(
-    currentDestination: NavigationDestination?,
+    currentDestination: String?,
     topAppBarScrollBehavior: TopAppBarScrollBehavior,
     navigationDrawerState: DrawerState,
 ) {
     val coroutineScope = rememberCoroutineScope()
 
     when (currentDestination) {
-        NavigationDestination.Feed,
-        NavigationDestination.Search,
-        NavigationDestination.Bookmarks -> {
+        NavigationDestination.Feed.route,
+        NavigationDestination.Search.route,
+        NavigationDestination.Bookmarks.route -> {
             Column {
                 MoSoAppBar(
                     scrollBehavior = topAppBarScrollBehavior,
@@ -150,11 +150,11 @@ private fun TopBar(
 
 @Composable
 private fun BottomBar(
-    currentDestination: NavigationDestination?,
+    currentDestination: String?,
     navigateToTopLevelDestination: (route: String) -> Unit,
 ) {
     // don't show bottom bar if our current route is not one of the bottom nav options
-    if (BottomBarTabs.values().find { it.bottomBarTab.navigationDestination == currentDestination } == null) {
+    if (BottomBarTabs.values().find { it.bottomBarTab.navigationDestination.route == currentDestination } == null) {
         return
     }
 

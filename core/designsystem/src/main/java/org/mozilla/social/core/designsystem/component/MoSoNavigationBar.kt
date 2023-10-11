@@ -30,7 +30,7 @@ import org.mozilla.social.core.navigation.NavigationDestination
 @Composable
 fun MoSoBottomNavigationBar(
     modifier: Modifier = Modifier,
-    currentDestination: NavigationDestination,
+    currentDestination: String,
     bottomBarTabs: List<BottomBarTab>,
     navigateTo: (route: String) -> Unit,
     containerColor: Color = MoSoNavigationBarDefaults.containerColor,
@@ -48,7 +48,7 @@ fun MoSoBottomNavigationBar(
         bottomBarTabs.forEach { navBarDestination ->
             MoSoNavigationBarItem(
                 destination = navBarDestination,
-                isSelected = currentDestination == navBarDestination.navigationDestination,
+                isSelected = currentDestination == navBarDestination.navigationDestination.route,
                 navigateTo = navigateTo,
             )
         }
