@@ -76,7 +76,7 @@ private fun TopRowMetaData(
                 .size(20.dp)
                 .align(Alignment.CenterVertically),
             painter = when(topRowMetaDataUiState.iconType) {
-                TopRowIconType.BOOSTED -> MoSoIcons.repeat()
+                TopRowIconType.BOOSTED -> MoSoIcons.boost()
                 TopRowIconType.REPLY -> MoSoIcons.reply()
             },
             contentDescription = ""
@@ -195,14 +195,14 @@ private fun BottomRow(
         Spacer(modifier = Modifier.weight(1f))
         BottomIconButton(
             onClick = { postCardInteractions.onBoostClicked(post.statusId, !post.userBoosted) },
-            painter = MoSoIcons.repeat(),
+            painter = MoSoIcons.boost(),
             count = post.boostCount,
             highlighted = post.userBoosted,
         )
         Spacer(modifier = Modifier.weight(1f))
         BottomIconButton(
             onClick = { postCardInteractions.onFavoriteClicked(post.statusId, !post.isFavorited) },
-            painter = MoSoIcons.starBorder(),
+            painter = MoSoIcons.heart(),
             count = post.favoriteCount,
             highlighted = post.isFavorited,
             highlightColor = FirefoxColor.Yellow40
@@ -234,23 +234,28 @@ private fun BottomIconButton(
     highlighted: Boolean = false,
     highlightColor: Color = MaterialTheme.colorScheme.primary,
 ) {
-    IconButton(
-        modifier = Modifier.width(IntrinsicSize.Max),
-        onClick = onClick
-    ) {
-        Row {
+    Row {
+        IconButton(
+            modifier = Modifier
+                .width(IntrinsicSize.Max)
+                .align(Alignment.CenterVertically),
+            onClick = onClick
+        ) {
             Icon(
                 painter = painter,
-                "",
+                contentDescription = "",
                 tint = if (highlighted) {
                     highlightColor
                 } else {
                     LocalContentColor.current
                 }
             )
-            if (count > 0) {
-                Text(text = "$count")
-            }
+        }
+        if (count > 0) {
+            Text(
+                modifier = Modifier.align(Alignment.CenterVertically),
+                text = "$count"
+            )
         }
     }
 }
@@ -277,8 +282,8 @@ private fun PostCardPreview() {
                         profilePictureUrl = "",
                         postTimeSince = Instant.fromEpochMilliseconds(1695308821000L).timeSinceNow(),
                         accountName = StringFactory.literal("coolguy"),
-                        replyCount = 4L,
-                        boostCount = 3L,
+                        replyCount = 4000L,
+                        boostCount = 30000L,
                         favoriteCount = 7L,
                         statusId = "",
                         userBoosted = false,

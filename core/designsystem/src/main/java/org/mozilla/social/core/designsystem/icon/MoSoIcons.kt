@@ -1,49 +1,30 @@
 package org.mozilla.social.core.designsystem.icon
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.AccountCircle
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.AddCircleOutline
 import androidx.compose.material.icons.rounded.AddPhotoAlternate
-import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.ArrowDropDown
-import androidx.compose.material.icons.rounded.Bookmark
 import androidx.compose.material.icons.rounded.BookmarkBorder
 import androidx.compose.material.icons.rounded.Check
-import androidx.compose.material.icons.rounded.ChevronLeft
 import androidx.compose.material.icons.rounded.ChevronRight
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.DeleteOutline
-import androidx.compose.material.icons.rounded.Favorite
-import androidx.compose.material.icons.rounded.FavoriteBorder
-import androidx.compose.material.icons.rounded.Feed
-import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material.icons.rounded.Info
 import androidx.compose.material.icons.rounded.KeyboardArrowUp
 import androidx.compose.material.icons.rounded.Lock
 import androidx.compose.material.icons.rounded.LockOpen
-import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.material.icons.rounded.Message
-import androidx.compose.material.icons.rounded.MoreVert
-import androidx.compose.material.icons.rounded.Person
 import androidx.compose.material.icons.rounded.Poll
 import androidx.compose.material.icons.rounded.Public
-import androidx.compose.material.icons.rounded.Repeat
-import androidx.compose.material.icons.rounded.Reply
-import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material.icons.rounded.Send
-import androidx.compose.material.icons.rounded.Settings
-import androidx.compose.material.icons.rounded.Share
-import androidx.compose.material.icons.rounded.StarBorder
 import androidx.compose.material.icons.rounded.VolumeMute
 import androidx.compose.material.icons.rounded.VolumeUp
 import androidx.compose.material.icons.rounded.Warning
-import androidx.compose.material.icons.rounded.WarningAmber
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.dp
 import org.mozilla.social.core.designsystem.R
 
 object MoSoIcons {
@@ -73,13 +54,13 @@ object MoSoIcons {
     fun check() = rememberVectorPainter(image = Icons.Rounded.Check)
 
     @Composable
-    fun moreVertical() = rememberVectorPainter(image = Icons.Rounded.MoreVert)
+    fun moreVertical() = painterResource(id = R.drawable.more_vertical)
 
     @Composable
     fun info() = rememberVectorPainter(image = Icons.Rounded.Info)
 
     @Composable
-    fun share() = rememberVectorPainter(image = Icons.Rounded.Share)
+    fun share() = painterResource(id = R.drawable.share)
 
     @Composable
     fun chevronRight() = rememberVectorPainter(image = Icons.Rounded.ChevronRight)
@@ -91,13 +72,13 @@ object MoSoIcons {
     fun bookmarkBorder() = rememberVectorPainter(image = Icons.Rounded.BookmarkBorder)
 
     @Composable
-    fun reply() = rememberVectorPainter(image = Icons.Rounded.Reply)
+    fun reply() = painterResource(id = R.drawable.chat_bubbles)
 
     @Composable
-    fun repeat() = rememberVectorPainter(image = Icons.Rounded.Repeat)
+    fun boost() = painterResource(id = R.drawable.repeat)
 
     @Composable
-    fun starBorder() = rememberVectorPainter(image = Icons.Rounded.StarBorder)
+    fun heart() = painterResource(id = R.drawable.heart)
 
     @Composable
     fun public() = rememberVectorPainter(image = Icons.Rounded.Public)
