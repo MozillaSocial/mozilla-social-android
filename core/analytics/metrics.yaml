@@ -36,24 +36,8 @@ identifiers:
   mastodon_account_handle:
     type: string
     description: >
-      The user's account handle.
-    bugs:
-      - TBD
-    data_reviews:
-      - TBD
-    notification_emails:
-      - kdemtchouk@mozilla.com
-    expires: never
-    send_in_pings:
-      - events
-    no_lint:
-      - baseline
-
-  mastodon_instance_domain:
-    type: string
-    description: >
-      The domain of the Mastodon instance where
-      the user's Mastodon account is hosted (e.g. `mozilla.social`).
+      The user's full account handle, with domain.
+      For example, `account_name@mozilla.social`.
     bugs:
       - TBD
     data_reviews:
@@ -134,9 +118,23 @@ ui:
           with by the user, if any.
           The Mastodon API calls statuses "posts", but they are one and the same.
         type: string
-      corpus_recommendation_id: &corpus_recommendation_id
+      mastodon_account_id: &mastodon_account_id
         description: >
-          TBD machine learning/recommendation identifier of the content
+          The Mastodon account ID of the UI element that was seen/interacted
+          with by the user, if any.
+          For example, the account ID of the user who created a post that was
+          seen/interacted with. Or, the account ID of the user that was followed.
+        type: string
+      mastodon_account_handle: &mastodon_account_handle
+        description: >
+          The Mastodon account handle of the UI element that was seen/interacted
+          with by the user, if any.
+          For example, the account handle of the user who created a post that was
+          seen/interacted with. Or, the account handle of the user that was followed.
+        type: string
+      recommendation_id: &recommendation_id
+        description: >
+          TBD recommendation identifier of the content
           that was seen/interacted with by the user, if any.
         type: string
 
@@ -156,7 +154,9 @@ ui:
       ui_identifier: *ui_identifier
       ui_additional_detail: *ui_additional_detail
       mastodon_status_id: *mastodon_status_id
-      corpus_recommendation_id: *corpus_recommendation_id
+      mastodon_account_id: *mastodon_account_id
+      mastodon_account_handle: *mastodon_account_handle
+      recommendation_id: *recommendation_id
       engagement_type:
         description: >
           The type of user engagement that triggered this event.

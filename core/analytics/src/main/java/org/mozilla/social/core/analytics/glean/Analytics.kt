@@ -10,19 +10,34 @@ import java.util.Calendar
 interface Analytics {
     fun initialize(context: Context)
 
-    fun uiEngagement()
+    fun uiEngagement(
+        engagementType: String?,
+        engagementValue: String?,
+        mastodonAccountHandle: String?,
+        mastodonAccountId: String?,
+        recommendationId: String?,
+        uiAdditionalDetail: String?,
+        uiIdentifier: String?
+    )
 
-    fun uiImpression()
+    fun uiImpression(
+        mastodonAccountHandle: String?,
+        mastodonAccountId: String?,
+        mastodonStatusId: String?,
+        recommendationId: String?,
+        uiAdditionalDetail: String?,
+        uiIdentifier: String?
+    )
 
-    fun setAdjustDeviceId()
+    fun setAdjustDeviceId(adjustDeviceId: String)
 
-    fun setFxaAccountId()
+    fun setFxaAccountId(fxaAccountId: String)
 
-    fun setMastodonAccountHandle()
+    fun setMastodonAccountHandle(mastodonAccountHandle: String)
 
-    fun setMastodonInstanceDomain()
+    fun setMastodonAccountId(mastodonAccountId: String)
 
-    fun setUserAgent()
+    fun setUserAgent(userAgent: String)
 }
 
 class GleanAnalytics : Analytics {
@@ -39,31 +54,61 @@ class GleanAnalytics : Analytics {
         )
     }
 
-    override fun uiEngagement() {
-        Ui.engagement.record(extra = Ui.EngagementExtra())
+    override fun uiEngagement(
+        engagementType: String?,
+        engagementValue: String?,
+        mastodonAccountHandle: String?,
+        mastodonAccountId: String?,
+        recommendationId: String?,
+        uiAdditionalDetail: String?,
+        uiIdentifier: String?
+    ) {
+        Ui.engagement.record(extra = Ui.EngagementExtra(
+            engagementType,
+            engagementValue,
+            mastodonAccountHandle,
+            mastodonAccountId,
+            recommendationId,
+            uiAdditionalDetail,
+            uiIdentifier
+        ))
     }
 
-    override fun uiImpression() {
-        Ui.impression.record(extra = Ui.ImpressionExtra())
+    override fun uiImpression(
+        mastodonAccountHandle: String?,
+        mastodonAccountId: String?,
+        mastodonStatusId: String?,
+        recommendationId: String?,
+        uiAdditionalDetail: String?,
+        uiIdentifier: String?
+    ) {
+        Ui.impression.record(extra = Ui.ImpressionExtra(
+            mastodonAccountHandle,
+            mastodonAccountId,
+            mastodonStatusId,
+            recommendationId,
+            uiAdditionalDetail,
+            uiIdentifier
+        ))
     }
 
-    override fun setAdjustDeviceId() {
-        Identifiers.adjustDeviceId
+    override fun setAdjustDeviceId(adjustDeviceId: String) {
+        Identifiers.adjustDeviceId.set(adjustDeviceId)
     }
 
-    override fun setFxaAccountId() {
-        Identifiers.fxaAccountId
+    override fun setFxaAccountId(fxaAccountId: String) {
+        Identifiers.fxaAccountId.set(fxaAccountId)
     }
 
-    override fun setMastodonAccountHandle() {
-        Identifiers.mastodonAccountHandle
+    override fun setMastodonAccountHandle(mastodonAccountHandle: String) {
+        Identifiers.mastodonAccountHandle.set(mastodonAccountHandle)
     }
 
-    override fun setMastodonInstanceDomain() {
-        Identifiers.mastodonInstanceDomain
+    override fun setMastodonAccountId(mastodonAccountId: String) {
+        Identifiers.mastodonAccountId.set(mastodonAccountId)
     }
 
-    override fun setUserAgent() {
-        Identifiers.userAgent
+    override fun setUserAgent(userAgent: String) {
+        Identifiers.userAgent.set(userAgent)
     }
 }
