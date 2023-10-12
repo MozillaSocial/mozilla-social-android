@@ -33,6 +33,7 @@ import org.mozilla.social.core.ui.R
 import org.mozilla.social.core.ui.postcard.PostCardDelegate
 import org.mozilla.social.core.ui.postcard.PostCardNavigation
 import org.mozilla.social.core.ui.postcard.toPostCardUiState
+import org.mozilla.social.model.Account
 import timber.log.Timber
 
 class AccountViewModel(
@@ -109,7 +110,6 @@ class AccountViewModel(
 
     init {
         loadAccount()
-        setupIdentifiers()
     }
 
     private fun loadAccount() {
@@ -120,6 +120,7 @@ class AccountViewModel(
                 accountId = accountId,
                 coroutineScope = viewModelScope,
             ) { account, relationship ->
+                impressionAnalytics(account)
                 account.toUiState(relationship)
             }.collect {
                 _uiState.edit { it }
@@ -127,10 +128,10 @@ class AccountViewModel(
         }
     }
 
-    private fun setupIdentifiers() {
+    private fun impressionAnalytics(account: Account) {
         analytics.uiImpression(
-            mastodonAccountHandle = null,
-            mastodonAccountId = "id_test",
+            mastodonAccountHandle = account.username,
+            mastodonAccountId = account.accountId,
             mastodonStatusId = null,
             recommendationId = null,
             null,
