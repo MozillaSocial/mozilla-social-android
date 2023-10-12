@@ -19,6 +19,10 @@
     <string name="report_reason_other">It\'s something else</string>
     <string name="report_reason_other_description">The issue does not fit into other categories.</string>
 
+    <string name="external_instance_title">The user you\'re reporting is from another server</string>
+    <string name="external_instance_description">Do you want to send a copy of this report to that server as well?</string>
+    <string name="external_instance_option">Yes, forward this report to %s</string>
+
     <string name="extra_info_prompt">Is there anything else you think we should know?</string>
     <string name="extra_info_text_field_label">Additional comments</string>
 

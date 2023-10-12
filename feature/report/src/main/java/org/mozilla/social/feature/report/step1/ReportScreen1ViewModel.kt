@@ -21,9 +21,10 @@ class ReportScreen1ViewModel(
     private val reportRepository: ReportRepository,
     private val instanceRepository: InstanceRepository,
     private val log: Log,
-    private val onReported: () -> Unit,
+    private val onNextClicked: (reportType: ReportType) -> Unit,
     private val onClose: () -> Unit,
     private val reportAccountId: String,
+    private val reportAccountHandle: String,
     private val reportStatusId: String?,
 ) : ViewModel(), ReportInteractions {
 
@@ -38,6 +39,9 @@ class ReportScreen1ViewModel(
 
     private val _additionCommentText = MutableStateFlow("")
     val additionalCommentText = _additionCommentText.asStateFlow()
+
+    private val _sendToExternalServerChecked = MutableStateFlow(false)
+    val sendToExternalServerChecked = _sendToExternalServerChecked.asStateFlow()
 
     private val _errorToastMessage = MutableSharedFlow<StringFactory>(extraBufferCapacity = 1)
     val errorToastMessage = _errorToastMessage.asSharedFlow()
@@ -61,24 +65,25 @@ class ReportScreen1ViewModel(
         onClose()
     }
 
+    //TODO move this to screen 2
     override fun onReportClicked() {
-        viewModelScope.launch {
-            try {
-                reportRepository.report(
-                    accountId = reportAccountId,
-                    statusIds = buildList {
-                        reportStatusId?.let { add(it) }
-                    },
-                    comment = additionalCommentText.value,
-                    category = selectedReportType.value?.stringValue,
-                    ruleViolations = instanceRules.value.map { it.id }
-                )
-            } catch (e: Exception) {
-                log.e(e)
-                _errorToastMessage.emit(StringFactory.resource(R.string.error_sending_report_toast))
-            }
-            onReported()
-        }
+//        viewModelScope.launch {
+//            try {
+//                reportRepository.report(
+//                    accountId = reportAccountId,
+//                    statusIds = buildList {
+//                        reportStatusId?.let { add(it) }
+//                    },
+//                    comment = additionalCommentText.value,
+//                    category = selectedReportType.value?.stringValue,
+//                    ruleViolations = instanceRules.value.map { it.id }
+//                )
+//            } catch (e: Exception) {
+//                log.e(e)
+//                _errorToastMessage.emit(StringFactory.resource(R.string.error_sending_report_toast))
+//            }
+//            onReported()
+//        }
     }
 
     override fun onReportTypeSelected(reportType: ReportType) {
@@ -103,5 +108,9 @@ class ReportScreen1ViewModel(
 
     override fun onAdditionCommentTextChanged(text: String) {
         _additionCommentText.edit { text }
+    }
+
+    override fun onSendToExternalServerClicked() {
+        _sendToExternalServerChecked.edit { !sendToExternalServerChecked.value }
     }
 }

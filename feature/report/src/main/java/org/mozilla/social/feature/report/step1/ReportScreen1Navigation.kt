@@ -27,7 +27,6 @@ internal fun NavGraphBuilder.reportScreen1(
             return@composable
         }
         ReportScreen1(
-            onDoneClicked,
             onCloseClicked,
             onNextClicked,
             reportAccountId = reportAccountId,

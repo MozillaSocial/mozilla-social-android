@@ -16,6 +16,7 @@ val reportModule = module {
             parametersHolder[1],
             parametersHolder[2],
             parametersHolder[3],
+            parametersHolder[4],
         )
     }
     viewModel { parametersHolder ->

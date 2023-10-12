@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.exclude
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
@@ -27,6 +28,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -53,7 +56,6 @@ import org.mozilla.social.model.InstanceRule
 
 @Composable
 internal fun ReportScreen1(
-    onReported: () -> Unit,
     onCloseClicked: () -> Unit,
     onNextClicked: (reportType: ReportType) -> Unit,
     reportAccountId: String,
@@ -61,13 +63,25 @@ internal fun ReportScreen1(
     reportStatusId: String?,
     viewModel: ReportScreen1ViewModel = koinViewModel(parameters = {
         parametersOf(
-            onReported,
+            onNextClicked,
             onCloseClicked,
             reportAccountId,
+            reportAccountHandle,
             reportStatusId,
         )
     })
 ) {
+    // will be null if the user is on the same instance as you
+    val usersExternalInstance = remember(reportAccountHandle) {
+        mutableStateOf(
+            if (reportAccountHandle.contains("@")) {
+                reportAccountHandle.substringAfterLast("@")
+            } else {
+                null
+            }
+        )
+    }
+
     ReportScreen1(
         reportTarget = if (reportStatusId != null) {
             ReportTarget.POST
@@ -78,6 +92,8 @@ internal fun ReportScreen1(
         selectedReportType = viewModel.selectedReportType.collectAsState().value,
         checkedRules = viewModel.checkedRules.collectAsState().value,
         additionalCommentText = viewModel.additionalCommentText.collectAsState().value,
+        externalInstance = usersExternalInstance.value,
+        sendToExternalServer = viewModel.sendToExternalServerChecked.collectAsState().value,
         reportInteractions = viewModel
     )
 
@@ -91,6 +107,8 @@ private fun ReportScreen1(
     selectedReportType: ReportType?,
     checkedRules: List<InstanceRule>,
     additionalCommentText: String,
+    externalInstance: String?,
+    sendToExternalServer: Boolean,
     reportInteractions: ReportInteractions,
 ) {
     Box(
@@ -112,6 +130,8 @@ private fun ReportScreen1(
                 selectedReportType = selectedReportType,
                 checkedRules = checkedRules,
                 additionalCommentText = additionalCommentText,
+                externalInstance = externalInstance,
+                sendToExternalServer = sendToExternalServer,
                 reportInteractions = reportInteractions,
             )
         }
@@ -125,6 +145,8 @@ private fun MainContent(
     selectedReportType: ReportType?,
     checkedRules: List<InstanceRule>,
     additionalCommentText: String,
+    externalInstance: String?,
+    sendToExternalServer: Boolean,
     reportInteractions: ReportInteractions,
 ) {
     Column(
@@ -132,7 +154,7 @@ private fun MainContent(
             .padding(start = 16.dp, end = 16.dp)
             .verticalScroll(rememberScrollState())
     ) {
-        Spacer(modifier = Modifier.padding(8.dp))
+        Spacer(modifier = Modifier.height(16.dp))
         Text(
             text = stringResource(id = if (reportTarget == ReportTarget.POST) {
                 R.string.report_instructions_for_post
@@ -141,13 +163,13 @@ private fun MainContent(
             }),
             fontSize = 24.sp
         )
-        Spacer(modifier = Modifier.padding(8.dp))
+        Spacer(modifier = Modifier.height(16.dp))
         Text(
             text = stringResource(id = R.string.choose_best_match),
             fontSize = 18.sp,
             fontWeight = FontWeight.Medium,
         )
-        Spacer(modifier = Modifier.padding(4.dp))
+        Spacer(modifier = Modifier.height(8.dp))
         SelectableReportType(
             reportType = ReportType.DO_NOT_LIKE,
             title = stringResource(id = R.string.report_reason_do_not_like),
@@ -191,9 +213,9 @@ private fun MainContent(
             Text(text = stringResource(id = R.string.report_reason_other_description))
         }
 
-        Spacer(modifier = Modifier.padding(16.dp))
+        Spacer(modifier = Modifier.height(32.dp))
         Text(text = stringResource(id = R.string.extra_info_prompt))
-        Spacer(modifier = Modifier.padding(8.dp))
+        Spacer(modifier = Modifier.height(16.dp))
         TextField(
             modifier = Modifier
                 .fillMaxWidth()
@@ -209,7 +231,14 @@ private fun MainContent(
             },
             onValueChange = { reportInteractions.onAdditionCommentTextChanged(it) },
         )
-        Spacer(modifier = Modifier.padding(8.dp))
+        Spacer(modifier = Modifier.height(16.dp))
+        externalInstance?.let {
+            SendToOtherServerOption(
+                checked = sendToExternalServer,
+                reportInteractions = reportInteractions,
+            )
+        }
+        Spacer(modifier = Modifier.height(16.dp))
 
         MoSoButton(
             modifier = Modifier
@@ -219,7 +248,7 @@ private fun MainContent(
         ) {
             Text(text = stringResource(id = R.string.next_button))
         }
-        Spacer(modifier = Modifier.padding(16.dp))
+        Spacer(modifier = Modifier.height(32.dp))
     }
 }
 
@@ -283,6 +312,45 @@ private fun CheckableInstanceRule(
     }
 }
 
+@Composable
+private fun SendToOtherServerOption(
+    checked: Boolean,
+    reportInteractions: ReportInteractions,
+) {
+    Column {
+        Text(
+            text = stringResource(id = R.string.external_instance_title),
+            style = MoSoTheme.typography.titleMedium,
+        )
+        Spacer(modifier = Modifier.height(4.dp))
+        Text(
+            text = stringResource(id = R.string.external_instance_description),
+            style = MoSoTheme.typography.bodyMedium,
+        )
+        Spacer(modifier = Modifier.height(4.dp))
+
+        Row(
+            Modifier
+                .clickable { reportInteractions.onSendToExternalServerClicked() }
+                .padding(4.dp)
+                .fillMaxWidth(),
+        ) {
+            MoSoCheckBox(
+                modifier = Modifier
+                    .size(20.dp),
+                checked = checked,
+                onCheckedChange = { reportInteractions.onSendToExternalServerClicked() }
+            )
+            Spacer(modifier = Modifier.padding(4.dp))
+            Text(
+                modifier = Modifier.align(Alignment.CenterVertically),
+                text = stringResource(id = R.string.external_instance_option),
+                style = MoSoTheme.typography.bodyMedium
+            )
+        }
+    }
+}
+
 @Preview
 @Composable
 private fun ReportScreenPreview() {
@@ -306,7 +374,9 @@ private fun ReportScreenPreview() {
                 noDogs,
             ),
             additionalCommentText = "",
-            reportInteractions = object : ReportInteractions {}
+            externalInstance = "mozilla.com",
+            sendToExternalServer = false,
+            reportInteractions = object : ReportInteractions {},
         )
     }
 }
@@ -336,7 +406,9 @@ private fun ReportScreenPreviewDarkMode() {
                 noDogs,
             ),
             additionalCommentText = "",
-            reportInteractions = object : ReportInteractions {}
+            externalInstance = "mozilla.com",
+            sendToExternalServer = false,
+            reportInteractions = object : ReportInteractions {},
         )
     }
 }
