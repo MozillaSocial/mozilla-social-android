@@ -72,13 +72,19 @@ object MoSoIcons {
     fun bookmarkBorder() = rememberVectorPainter(image = Icons.Rounded.BookmarkBorder)
 
     @Composable
-    fun reply() = painterResource(id = R.drawable.chat_bubbles)
+    fun chatBubbles() = painterResource(id = R.drawable.chat_bubbles)
+
+    @Composable
+    fun chatBubblesFilled() = painterResource(id = R.drawable.chat_bubbles_filled)
 
     @Composable
     fun boost() = painterResource(id = R.drawable.repeat)
 
     @Composable
     fun heart() = painterResource(id = R.drawable.heart)
+
+    @Composable
+    fun heartFilled() = painterResource(id = R.drawable.heart_filled)
 
     @Composable
     fun public() = rememberVectorPainter(image = Icons.Rounded.Public)

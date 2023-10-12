@@ -469,7 +469,7 @@ private fun InReplyToText(
                 modifier = Modifier
                     .size(20.dp)
                     .align(Alignment.CenterVertically),
-                painter = MoSoIcons.reply(),
+                painter = MoSoIcons.chatBubbles(),
                 contentDescription = ""
             )
             Spacer(modifier = Modifier.padding(start = 8.dp))

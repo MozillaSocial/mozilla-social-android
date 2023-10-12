@@ -30,10 +30,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat.startActivity
 import coil.compose.AsyncImage
 import kotlinx.datetime.Instant
@@ -89,7 +87,7 @@ private fun TopRowMetaData(
                 .align(Alignment.CenterVertically),
             painter = when(topRowMetaDataUiState.iconType) {
                 TopRowIconType.BOOSTED -> MoSoIcons.boost()
-                TopRowIconType.REPLY -> MoSoIcons.reply()
+                TopRowIconType.REPLY -> MoSoIcons.chatBubbles()
             },
             contentDescription = ""
         )
@@ -222,7 +220,7 @@ private fun BottomRow(
     ) {
         BottomIconButton(
             onClick = { postCardInteractions.onReplyClicked(post.statusId) },
-            painter = MoSoIcons.reply(),
+            painter = MoSoIcons.chatBubbles(),
             count = post.replyCount,
         )
         Spacer(modifier = Modifier.weight(1f))
@@ -235,10 +233,10 @@ private fun BottomRow(
         Spacer(modifier = Modifier.weight(1f))
         BottomIconButton(
             onClick = { postCardInteractions.onFavoriteClicked(post.statusId, !post.isFavorited) },
-            painter = MoSoIcons.heart(),
+            painter = if (post.isFavorited) MoSoIcons.heartFilled() else MoSoIcons.heart(),
             count = post.favoriteCount,
             highlighted = post.isFavorited,
-            highlightColor = FirefoxColor.Yellow40
+            highlightColor = MoSoTheme.colors.textWarning
         )
         Spacer(modifier = Modifier.weight(1f))
         BottomIconButton(
@@ -266,7 +264,7 @@ private fun BottomIconButton(
     painter: Painter,
     count: Long,
     highlighted: Boolean = false,
-    highlightColor: Color = MaterialTheme.colorScheme.primary,
+    highlightColor: Color = MoSoTheme.colors.iconAccentViolet,
 ) {
     Row(
         modifier = modifier,
