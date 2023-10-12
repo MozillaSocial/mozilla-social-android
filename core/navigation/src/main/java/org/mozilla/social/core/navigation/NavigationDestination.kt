@@ -94,11 +94,11 @@ sealed class NavigationDestination(
     )
 
     data object ReportScreen2: NavigationDestination(
-        route = "report1"
+        route = "report2"
     )
 
     data object ReportScreen3: NavigationDestination(
-        route = "report1"
+        route = "report3"
     )
 
     data object Search: NavigationDestination(
