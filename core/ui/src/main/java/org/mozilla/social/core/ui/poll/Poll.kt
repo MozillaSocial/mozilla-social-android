@@ -5,12 +5,14 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
@@ -66,7 +68,10 @@ fun Poll(
             )
             Spacer(modifier = Modifier.padding(top = 4.dp))
         }
-        Text(text = pollUiState.pollInfoText.build(LocalContext.current))
+        Text(
+            text = pollUiState.pollInfoText.build(LocalContext.current),
+            style = MoSoTheme.typography.bodyMedium,
+        )
         if (pollUiState.canVote) {
             Button(
                 modifier = Modifier
@@ -148,7 +153,7 @@ private fun PollOptionText(
     onOptionSelected: (index: Int) -> Unit,
 ) {
     NoRipple {
-        Box(
+        Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(height)
@@ -158,37 +163,37 @@ private fun PollOptionText(
                     onOptionSelected(optionIndex)
                 },
         ) {
-            Box(
+            Row(
                 modifier = Modifier
-                    .align(Alignment.CenterStart)
-                    .padding(end = 50.dp)
+                    .align(Alignment.CenterVertically)
+                    .weight(1f)
             ) {
                 Text(
                     modifier = Modifier
                         .padding(
                             start = 12.dp,
-                            end = 26.dp,
                         )
-                        .align(Alignment.CenterStart),
+                        .align(Alignment.CenterVertically)
+                        .weight(1f),
                     text = pollOptionUiState.title,
                     style = MoSoTheme.typography.labelMedium,
                 )
                 if (userVotes.value.contains(optionIndex)) {
                     Icon(
                         modifier = Modifier
-                            .align(Alignment.CenterEnd)
-                            .padding(start = 8.dp),
+                            .align(Alignment.CenterVertically)
+                            .padding(horizontal = 8.dp),
                         painter = MoSoIcons.check(),
                         contentDescription = ""
                     )
                 }
             }
-//            Spacer(modifier = Modifier.weight(1f))
+
             if (pollUiState.showResults) {
                 Text(
                     modifier = Modifier
                         .padding(8.dp)
-                        .align(Alignment.CenterEnd),
+                        .align(Alignment.CenterVertically),
                     text = pollOptionUiState.voteInfo.build(LocalContext.current),
                     style = MoSoTheme.typography.labelMedium,
                 )
@@ -212,7 +217,7 @@ private fun PollPreview() {
                         ),
                         PollOptionUiState(
                             fillFraction = 0.25f,
-                            title = "option 2 jfkdlsa jfdlsa jfd sjaf io jfkdlsj afod",
+                            title = "option 2 jfkdlsa jfdlsa jfd sjaf io jfkdlsj afod aj fid jifd",
                             voteInfo = StringFactory.literal("25%")
                         ),
                         PollOptionUiState(
