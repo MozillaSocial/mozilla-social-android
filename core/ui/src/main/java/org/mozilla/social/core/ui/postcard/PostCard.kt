@@ -44,6 +44,7 @@ import org.mozilla.social.core.designsystem.component.MoSoSurface
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.designsystem.theme.FirefoxColor
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
+import org.mozilla.social.core.designsystem.utils.NoRipple
 import org.mozilla.social.core.ui.DropDownItem
 import org.mozilla.social.core.ui.R
 import org.mozilla.social.core.ui.getMaxWidth
@@ -56,19 +57,21 @@ fun PostCard(
     post: PostCardUiState,
     postCardInteractions: PostCardInteractions,
 ) {
-    Column(
-        Modifier
-            .padding(8.dp)
-            .fillMaxSize()
-            .clickable { postCardInteractions.onPostCardClicked(post.mainPostCardUiState.statusId) }
-    ) {
-        post.topRowMetaDataUiState?.let {
-            TopRowMetaData(
-                topRowMetaDataUiState = it
-            )
-            Spacer(modifier = Modifier.height(8.dp))
+    NoRipple {
+        Column(
+            Modifier
+                .padding(8.dp)
+                .fillMaxSize()
+                .clickable { postCardInteractions.onPostCardClicked(post.mainPostCardUiState.statusId) }
+        ) {
+            post.topRowMetaDataUiState?.let {
+                TopRowMetaData(
+                    topRowMetaDataUiState = it
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+            }
+            MainPost(post.mainPostCardUiState, postCardInteractions)
         }
-        MainPost(post.mainPostCardUiState, postCardInteractions)
     }
 }
 
