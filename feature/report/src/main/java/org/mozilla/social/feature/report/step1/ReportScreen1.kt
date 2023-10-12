@@ -57,6 +57,7 @@ internal fun ReportScreen1(
     onCloseClicked: () -> Unit,
     onNextClicked: (reportType: ReportType) -> Unit,
     reportAccountId: String,
+    reportAccountHandle: String,
     reportStatusId: String?,
     viewModel: ReportScreen1ViewModel = koinViewModel(parameters = {
         parametersOf(

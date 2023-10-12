@@ -162,7 +162,13 @@ private fun MetaData(
                 DropDownItem(
                     text = stringResource(id = R.string.report_user, post.username),
                     expanded = overflowMenuExpanded,
-                    onClick = { postCardInteractions.onOverflowReportClicked(post.accountId, post.statusId) }
+                    onClick = {
+                        postCardInteractions.onOverflowReportClicked(
+                            post.accountId,
+                            post.accountName.build(context),
+                            post.statusId,
+                        )
+                    }
                 )
             }
         }

@@ -15,9 +15,17 @@ import org.mozilla.social.feature.report.step3.reportScreen3
 fun NavController.navigateToReport(
     navOptions: NavOptions? = null,
     reportAccountId: String,
+    reportAccountHandle: String,
     reportStatusId: String? = null,
 ) {
-    navigate(NavigationDestination.Report.route(reportAccountId, reportStatusId), navOptions)
+    navigate(
+        NavigationDestination.Report.route(
+            reportAccountId = reportAccountId,
+            reportAccountHandle = reportAccountHandle,
+            reportStatusId = reportStatusId,
+        ),
+        navOptions
+    )
 }
 
 fun NavGraphBuilder.reportFlow(

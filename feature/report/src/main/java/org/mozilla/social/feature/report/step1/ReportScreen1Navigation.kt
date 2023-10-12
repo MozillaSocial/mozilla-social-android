@@ -16,17 +16,23 @@ internal fun NavGraphBuilder.reportScreen1(
         val reportAccountId: String? = it.arguments?.getString(
             NavigationDestination.Report.NAV_PARAM_REPORT_ACCOUNT_ID
         )
+        val reportAccountHandle: String? = it.arguments?.getString(
+            NavigationDestination.Report.NAV_PARAM_REPORT_ACCOUNT_HANDLE
+        )
         val reportStatusId: String? = it.arguments?.getString(
             NavigationDestination.Report.NAV_PARAM_REPORT_STATUS_ID
         )
-        reportAccountId?.let {
-            ReportScreen1(
-                onDoneClicked,
-                onCloseClicked,
-                onNextClicked,
-                reportAccountId = reportAccountId,
-                reportStatusId = reportStatusId,
-            )
-        } ?: onCloseClicked()
+        if (reportAccountId == null || reportAccountHandle == null) {
+            onCloseClicked()
+            return@composable
+        }
+        ReportScreen1(
+            onDoneClicked,
+            onCloseClicked,
+            onNextClicked,
+            reportAccountId = reportAccountId,
+            reportAccountHandle = reportAccountHandle,
+            reportStatusId = reportStatusId,
+        )
     }
 }
