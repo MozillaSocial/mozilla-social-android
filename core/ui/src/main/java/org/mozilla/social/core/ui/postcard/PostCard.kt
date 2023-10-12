@@ -8,8 +8,9 @@ import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
@@ -44,6 +45,7 @@ import org.mozilla.social.core.designsystem.theme.FirefoxColor
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.ui.DropDownItem
 import org.mozilla.social.core.ui.R
+import org.mozilla.social.core.ui.getMaxWidth
 import org.mozilla.social.core.ui.media.MediaDisplay
 import org.mozilla.social.core.ui.poll.Poll
 import org.mozilla.social.core.ui.htmlcontent.HtmlContent
@@ -95,24 +97,52 @@ private fun MainPost(
     post: MainPostCardUiState,
     postCardInteractions: PostCardInteractions,
 ) {
-    MetaData(
-        post = post,
-        postCardInteractions = postCardInteractions,
-    )
-    HtmlContent(
-        mentions = post.mentions,
-        htmlText = post.statusTextHtml,
-        htmlContentInteractions = postCardInteractions,
-    )
-    Spacer(modifier = Modifier.padding(top = 4.dp))
-    MediaDisplay(attachments = post.mediaAttachments)
-    post.pollUiState?.let { Poll(it, postCardInteractions) }
+    Row {
+        Avatar(post = post, postCardInteractions = postCardInteractions)
+        Spacer(modifier = Modifier.padding(start = 8.dp))
+        Column {
+            MetaData(
+                post = post,
+                postCardInteractions = postCardInteractions,
+            )
+            HtmlContent(
+                mentions = post.mentions,
+                htmlText = post.statusTextHtml,
+                htmlContentInteractions = postCardInteractions,
+            )
+            Spacer(modifier = Modifier.padding(top = 4.dp))
+            MediaDisplay(attachments = post.mediaAttachments)
+            post.pollUiState?.let { Poll(it, postCardInteractions) }
 
-    BottomRow(post, postCardInteractions)
+            BottomRow(
+                modifier = Modifier,
+                post = post,
+                postCardInteractions = postCardInteractions
+            )
+        }
+    }
+}
+
+@Composable
+private fun Avatar(
+    modifier: Modifier = Modifier,
+    post: MainPostCardUiState,
+    postCardInteractions: PostCardInteractions,
+) {
+    AsyncImage(
+        modifier = modifier
+            .size(36.dp)
+            .clip(CircleShape)
+            .background(MoSoTheme.colors.layer2)
+            .clickable { postCardInteractions.onAccountImageClicked(post.accountId) },
+        model = post.profilePictureUrl,
+        contentDescription = "",
+    )
 }
 
 @Composable
 private fun MetaData(
+    modifier: Modifier = Modifier,
     post: MainPostCardUiState,
     postCardInteractions: PostCardInteractions,
 ) {
@@ -120,21 +150,10 @@ private fun MetaData(
 
     val context = LocalContext.current
 
-    Row {
-        AsyncImage(
-            modifier = Modifier
-                .size(36.dp)
-                .clip(CircleShape)
-                .align(Alignment.CenterVertically)
-                .background(MoSoTheme.colors.layer2)
-                .clickable { postCardInteractions.onAccountImageClicked(post.accountId) },
-            model = post.profilePictureUrl,
-            contentDescription = "",
-        )
-        Spacer(modifier = Modifier.padding(start = 8.dp))
-        Column(
-            modifier = Modifier.align(Alignment.CenterVertically),
-        ) {
+    Row(
+        modifier = modifier,
+    ) {
+        Column {
             Text(
                 text = post.username,
                 fontSize = 16.sp,
@@ -180,12 +199,15 @@ private fun MetaData(
 
 @Composable
 private fun BottomRow(
+    modifier: Modifier = Modifier,
     post: MainPostCardUiState,
     postCardInteractions: PostCardInteractions,
 ) {
     val context = LocalContext.current
+
     Row(
-        modifier = Modifier.fillMaxWidth()
+        modifier = modifier
+            .requiredWidth(getMaxWidth() + 20.dp)
     ) {
         BottomIconButton(
             onClick = { postCardInteractions.onReplyClicked(post.statusId) },
@@ -228,13 +250,16 @@ private fun BottomRow(
 
 @Composable
 private fun BottomIconButton(
+    modifier: Modifier = Modifier,
     onClick: () -> Unit,
     painter: Painter,
     count: Long,
     highlighted: Boolean = false,
     highlightColor: Color = MaterialTheme.colorScheme.primary,
 ) {
-    Row {
+    Row(
+        modifier = modifier,
+    ) {
         IconButton(
             modifier = Modifier
                 .width(IntrinsicSize.Max)
@@ -253,7 +278,9 @@ private fun BottomIconButton(
         }
         if (count > 0) {
             Text(
-                modifier = Modifier.align(Alignment.CenterVertically),
+                modifier = Modifier
+                    .align(Alignment.CenterVertically)
+                    .offset(x = -6.dp),
                 text = "$count"
             )
         }
