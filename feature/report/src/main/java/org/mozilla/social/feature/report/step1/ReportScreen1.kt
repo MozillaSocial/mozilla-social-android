@@ -148,6 +148,14 @@ private fun MainContent(
         )
         Spacer(modifier = Modifier.padding(4.dp))
         SelectableReportType(
+            reportType = ReportType.DO_NOT_LIKE,
+            title = stringResource(id = R.string.report_reason_do_not_like),
+            selectedReportType = selectedReportType,
+            reportInteractions = reportInteractions,
+        ) {
+            Text(text = stringResource(id = R.string.report_reason_do_not_like_description))
+        }
+        SelectableReportType(
             reportType = ReportType.SPAM,
             title = stringResource(id = R.string.report_reason_spam),
             selectedReportType = selectedReportType,
@@ -208,7 +216,7 @@ private fun MainContent(
             enabled = selectedReportType != null,
             onClick = { reportInteractions.onReportClicked() }
         ) {
-            Text(text = stringResource(id = R.string.report_button))
+            Text(text = stringResource(id = R.string.next_button))
         }
         Spacer(modifier = Modifier.padding(16.dp))
     }
