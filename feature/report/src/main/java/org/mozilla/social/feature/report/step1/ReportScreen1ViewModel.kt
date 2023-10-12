@@ -1,4 +1,4 @@
-package org.mozilla.social.feature.report
+package org.mozilla.social.feature.report.step1
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -12,9 +12,12 @@ import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.common.utils.edit
 import org.mozilla.social.core.data.repository.InstanceRepository
 import org.mozilla.social.core.data.repository.ReportRepository
+import org.mozilla.social.feature.report.R
+import org.mozilla.social.feature.report.ReportInteractions
+import org.mozilla.social.feature.report.ReportType
 import org.mozilla.social.model.InstanceRule
 
-class ReportViewModel(
+class ReportScreen1ViewModel(
     private val reportRepository: ReportRepository,
     private val instanceRepository: InstanceRepository,
     private val log: Log,

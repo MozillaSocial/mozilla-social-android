@@ -89,6 +89,18 @@ sealed class NavigationDestination(
             }
     }
 
+    data object ReportScreen1: NavigationDestination(
+        route = "report1"
+    )
+
+    data object ReportScreen2: NavigationDestination(
+        route = "report1"
+    )
+
+    data object ReportScreen3: NavigationDestination(
+        route = "report1"
+    )
+
     data object Search: NavigationDestination(
         route = "search"
     )

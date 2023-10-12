@@ -1,4 +1,4 @@
-package org.mozilla.social.feature.report
+package org.mozilla.social.feature.report.step1
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -42,15 +42,20 @@ import org.mozilla.social.core.designsystem.component.MoSoToast
 import org.mozilla.social.core.designsystem.component.MoSoTopBar
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.ui.transparentTextFieldColors
+import org.mozilla.social.feature.report.R
+import org.mozilla.social.feature.report.ReportInteractions
+import org.mozilla.social.feature.report.ReportTarget
+import org.mozilla.social.feature.report.ReportType
 import org.mozilla.social.model.InstanceRule
 
 @Composable
-internal fun ReportScreen(
+internal fun ReportScreen1(
     onReported: () -> Unit,
     onCloseClicked: () -> Unit,
+    onNextClicked: (reportType: ReportType) -> Unit,
     reportAccountId: String,
     reportStatusId: String?,
-    viewModel: ReportViewModel = koinViewModel(parameters = {
+    viewModel: ReportScreen1ViewModel = koinViewModel(parameters = {
         parametersOf(
             onReported,
             onCloseClicked,
@@ -59,7 +64,7 @@ internal fun ReportScreen(
         )
     })
 ) {
-    ReportScreen(
+    ReportScreen1(
         reportTarget = if (reportStatusId != null) {
             ReportTarget.POST
         } else {
@@ -76,7 +81,7 @@ internal fun ReportScreen(
 }
 
 @Composable
-private fun ReportScreen(
+private fun ReportScreen1(
     reportTarget: ReportTarget,
     instanceRules: List<InstanceRule>,
     selectedReportType: ReportType?,
@@ -279,7 +284,7 @@ private fun CheckableInstanceRule(
 @Composable
 private fun ReportScreenPreview() {
     MoSoTheme {
-        ReportScreen(
+        ReportScreen1(
             reportTarget = ReportTarget.POST,
             instanceRules = listOf(
                 InstanceRule(
