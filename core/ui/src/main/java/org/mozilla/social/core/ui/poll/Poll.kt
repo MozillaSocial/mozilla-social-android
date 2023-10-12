@@ -28,6 +28,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import org.mozilla.social.common.utils.StringFactory
+import org.mozilla.social.core.designsystem.component.MoSoSurface
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.designsystem.utils.NoRipple
@@ -146,7 +148,7 @@ private fun PollOptionText(
     onOptionSelected: (index: Int) -> Unit,
 ) {
     NoRipple {
-        Row(
+        Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(height)
@@ -156,28 +158,39 @@ private fun PollOptionText(
                     onOptionSelected(optionIndex)
                 },
         ) {
-            Text(
+            Box(
                 modifier = Modifier
-                    .padding(start = 12.dp)
-                    .align(Alignment.CenterVertically),
-                text = pollOptionUiState.title
-            )
-            if (userVotes.value.contains(optionIndex)) {
-                Icon(
+                    .align(Alignment.CenterStart)
+                    .padding(end = 50.dp)
+            ) {
+                Text(
                     modifier = Modifier
-                        .align(Alignment.CenterVertically)
-                        .padding(start = 8.dp),
-                    painter = MoSoIcons.check(),
-                    contentDescription = ""
+                        .padding(
+                            start = 12.dp,
+                            end = 26.dp,
+                        )
+                        .align(Alignment.CenterStart),
+                    text = pollOptionUiState.title,
+                    style = MoSoTheme.typography.labelMedium,
                 )
+                if (userVotes.value.contains(optionIndex)) {
+                    Icon(
+                        modifier = Modifier
+                            .align(Alignment.CenterEnd)
+                            .padding(start = 8.dp),
+                        painter = MoSoIcons.check(),
+                        contentDescription = ""
+                    )
+                }
             }
-            Spacer(modifier = Modifier.weight(1f))
+//            Spacer(modifier = Modifier.weight(1f))
             if (pollUiState.showResults) {
                 Text(
                     modifier = Modifier
                         .padding(8.dp)
-                        .align(Alignment.CenterVertically),
-                    text = pollOptionUiState.voteInfo.build(LocalContext.current)
+                        .align(Alignment.CenterEnd),
+                    text = pollOptionUiState.voteInfo.build(LocalContext.current),
+                    style = MoSoTheme.typography.labelMedium,
                 )
             }
         }
@@ -188,27 +201,37 @@ private fun PollOptionText(
 @Composable
 private fun PollPreview() {
     MoSoTheme {
-//        Poll(
-//            isUserCreatedPoll = false,
-//            poll = Poll(
-//                pollId = "1",
-//                isExpired = false,
-//                allowsMultipleChoices = false,
-//                votesCount = 4,
-//                options = listOf(
-//                    PollOption(
-//                        title = "option 1",
-//                        votesCount = 1L
-//                    ),
-//                    PollOption(
-//                        title = "option 2",
-//                        votesCount = 3L
-//                    )
-//                ),
-//                emojis = listOf(),
-//                hasVoted = true,
-//            ),
-//            pollInteractions = object : PollInteractions {},
-//        )
+        MoSoSurface {
+            Poll(
+                pollUiState = PollUiState(
+                    pollOptions = listOf(
+                        PollOptionUiState(
+                            fillFraction = 0.5f,
+                            title = "option 1",
+                            voteInfo = StringFactory.literal("50%")
+                        ),
+                        PollOptionUiState(
+                            fillFraction = 0.25f,
+                            title = "option 2 jfkdlsa jfdlsa jfd sjaf io jfkdlsj afod",
+                            voteInfo = StringFactory.literal("25%")
+                        ),
+                        PollOptionUiState(
+                            fillFraction = 0.25f,
+                            title = "option 3 with a really really long title that extends just too far",
+                            voteInfo = StringFactory.literal("25%")
+                        ),
+                    ),
+                    pollInfoText = StringFactory.literal("3 votes - 5 hours left"),
+                    isUserCreatedPoll = false,
+                    showResults = true,
+                    pollId = "",
+                    isMultipleChoice = true,
+                    usersVotes = listOf(0, 1, 2),
+                    isExpired = false,
+                    canVote = true
+                ),
+                pollInteractions = object : PollInteractions {},
+            )
+        }
     }
 }

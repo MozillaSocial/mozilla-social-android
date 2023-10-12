@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredWidth
@@ -61,17 +62,23 @@ fun PostCard(
             .fillMaxSize()
             .clickable { postCardInteractions.onPostCardClicked(post.mainPostCardUiState.statusId) }
     ) {
-        post.topRowMetaDataUiState?.let { TopRowMetaData(it) }
+        post.topRowMetaDataUiState?.let {
+            TopRowMetaData(
+                topRowMetaDataUiState = it
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+        }
         MainPost(post.mainPostCardUiState, postCardInteractions)
     }
 }
 
 @Composable
 private fun TopRowMetaData(
+    modifier: Modifier = Modifier,
     topRowMetaDataUiState: TopRowMetaDataUiState,
 ) {
     Row(
-        modifier = Modifier.padding(bottom = 8.dp)
+        modifier = modifier,
     ) {
         Icon(
             modifier = Modifier
@@ -87,7 +94,7 @@ private fun TopRowMetaData(
         Text(
             modifier = Modifier.align(Alignment.CenterVertically),
             text = topRowMetaDataUiState.text.build(LocalContext.current),
-            fontSize = 14.sp
+            style = MoSoTheme.typography.bodyMedium
         )
     }
 }
@@ -109,6 +116,7 @@ private fun MainPost(
                 mentions = post.mentions,
                 htmlText = post.statusTextHtml,
                 htmlContentInteractions = postCardInteractions,
+                textStyle = MoSoTheme.typography.bodyMedium,
             )
             Spacer(modifier = Modifier.padding(top = 4.dp))
             MediaDisplay(attachments = post.mediaAttachments)
@@ -156,12 +164,12 @@ private fun MetaData(
         Column {
             Text(
                 text = post.username,
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Medium
+                style = MoSoTheme.typography.labelMedium,
             )
             Text(
                 text = "${post.postTimeSince.build(context)} - @${post.accountName.build(context)}",
-                fontSize = 12.sp
+                style = MoSoTheme.typography.bodyMedium,
+                color = MoSoTheme.colors.textSecondary,
             )
         }
         Spacer(modifier = Modifier.weight(1f))
@@ -298,7 +306,7 @@ private fun PostCardPreview() {
                     statusId = "",
                     topRowMetaDataUiState = TopRowMetaDataUiState(
                         TopRowIconType.REPLY,
-                        StringFactory.literal("")
+                        StringFactory.literal("in reply to Other person")
                     ),
                     mainPostCardUiState = MainPostCardUiState(
                         url = "",
