@@ -9,8 +9,10 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ButtonElevation
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
@@ -79,10 +81,10 @@ fun MoSoButtonSecondary(
 object MoSoButtonPrimaryDefaults {
     @Composable
     fun colors(): ButtonColors = ButtonDefaults.buttonColors(
-        containerColor = MoSoTheme.colors.layerAccent,
+        containerColor = MoSoTheme.colors.layerActionPrimaryEnabled,
         contentColor = MoSoTheme.colors.textActionPrimary,
-        disabledContainerColor = MoSoTheme.colors.layer2,
-        disabledContentColor = MoSoTheme.colors.textActionSecondary,
+        disabledContainerColor = MoSoTheme.colors.layerActionDisabled,
+        disabledContentColor = MoSoTheme.colors.textActionPrimary,
     )
 }
 
@@ -92,20 +94,55 @@ object MoSoButtonSecondaryDefaults {
         containerColor = MoSoTheme.colors.layer1,
         contentColor = MoSoTheme.colors.textActionSecondary,
         disabledContainerColor = MoSoTheme.colors.layer2,
-        disabledContentColor = MoSoTheme.colors.textActionSecondary,
+        disabledContentColor = MoSoTheme.colors.textActionDisabled,
     )
 }
 
 @Preview
 @Composable
 private fun ButtonPreview() {
-    MoSoTheme {
-        Column {
+    Column {
+        MoSoTheme {
             MoSoButton(onClick = { /*TODO*/ }) {
                 Text(text = "Primary")
             }
+            MoSoButton(
+                enabled = false,
+                onClick = { /*TODO*/ }
+            ) {
+                Text(text = "Primary Disabled")
+            }
             MoSoButtonSecondary(onClick = { /*TODO*/ }) {
                 Text(text = "Secondary")
+            }
+            MoSoButtonSecondary(
+                enabled = false,
+                onClick = { /*TODO*/ }
+            ) {
+                Text(text = "Secondary Disabled")
+            }
+        }
+
+        MoSoTheme(
+            darkTheme = true
+        ) {
+            MoSoButton(onClick = { /*TODO*/ }) {
+                Text(text = "Dark mode Primary")
+            }
+            MoSoButton(
+                enabled = false,
+                onClick = { /*TODO*/ }
+            ) {
+                Text(text = "Dark mode Primary Disabled")
+            }
+            MoSoButtonSecondary(onClick = { /*TODO*/ }) {
+                Text(text = "Dark mode Secondary")
+            }
+            MoSoButtonSecondary(
+                enabled = false,
+                onClick = { /*TODO*/ }
+            ) {
+                Text(text = "Dark mode Secondary Disabled")
             }
         }
     }
