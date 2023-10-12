@@ -82,6 +82,8 @@ private val darkColorPalette = MoSoColors(
     iconPrimary = FirefoxColor.LightGrey05,
     iconSecondary = FirefoxColor.LightGrey40,
     iconAccent = FirefoxColor.Violet30,
+    iconActionActive = FirefoxColor.Violet20,
+    iconActionDisabled = FirefoxColor.LightGrey70,
 
     borderPrimary = FirefoxColor.DarkGrey05,
     borderForm = FirefoxColor.LightGrey05,
@@ -106,6 +108,8 @@ private val lightColorPalette = MoSoColors(
     iconPrimary = FirefoxColor.DarkGrey90,
     iconSecondary = FirefoxColor.DarkGrey05,
     iconAccent = FirefoxColor.Violet60,
+    iconActionActive = FirefoxColor.Violet60,
+    iconActionDisabled = FirefoxColor.LightGrey70,
 
     borderPrimary = FirefoxColor.LightGrey40,
     borderForm = FirefoxColor.DarkGrey90,
@@ -135,6 +139,8 @@ class MoSoColors(
     iconPrimary: Color,
     iconSecondary: Color,
     iconAccent: Color,
+    iconActionActive: Color,
+    iconActionDisabled: Color,
     borderPrimary: Color,
     borderForm: Color,
     borderAccent: Color,
@@ -212,6 +218,12 @@ class MoSoColors(
     var iconAccentViolet by mutableStateOf(iconAccent)
         private set
 
+    var iconActionActive by mutableStateOf(iconActionActive)
+        private set
+
+    var iconActionDisabled by mutableStateOf(iconActionDisabled)
+        private set
+
     // Border
 
     // Default, Divider, Dotted
@@ -246,6 +258,8 @@ class MoSoColors(
         iconPrimary = other.iconPrimary
         iconSecondary = other.iconSecondary
         iconAccentViolet = other.iconAccentViolet
+        iconActionActive = other.iconActionActive
+        iconActionDisabled = other.iconActionDisabled
         borderPrimary = other.borderPrimary
         borderFormDefault = other.borderFormDefault
         borderAccent = other.borderAccent
@@ -271,6 +285,8 @@ class MoSoColors(
         iconPrimary: Color = this.iconPrimary,
         iconSecondary: Color = this.iconSecondary,
         iconAccentViolet: Color = this.iconAccentViolet,
+        iconActionActive: Color = this.iconActionActive,
+        iconActionDisabled: Color = this.iconActionDisabled,
         borderPrimary: Color = this.borderPrimary,
         borderFormDefault: Color = this.borderFormDefault,
         borderAccent: Color = this.borderAccent,
@@ -291,6 +307,8 @@ class MoSoColors(
         iconPrimary = iconPrimary,
         iconSecondary = iconSecondary,
         iconAccent = iconAccentViolet,
+        iconActionActive = iconActionActive,
+        iconActionDisabled = iconActionDisabled,
         borderPrimary = borderPrimary,
         borderForm = borderFormDefault,
         borderAccent = borderAccent,

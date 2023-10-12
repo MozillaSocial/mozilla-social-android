@@ -37,7 +37,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
+import org.mozilla.social.core.designsystem.component.MoSoButton
+import org.mozilla.social.core.designsystem.component.MoSoCheckBox
 import org.mozilla.social.core.designsystem.component.MoSoDivider
+import org.mozilla.social.core.designsystem.component.MoSoRadioButton
 import org.mozilla.social.core.designsystem.component.MoSoToast
 import org.mozilla.social.core.designsystem.component.MoSoTopBar
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
@@ -159,13 +162,14 @@ private fun MainContent(
             selectedReportType = selectedReportType,
             reportInteractions = reportInteractions,
         ) {
-            instanceRules.forEach { instanceRule ->
-                CheckableInstanceRule(
-                    enabled = selectedReportType == ReportType.VIOLATION,
-                    checked = checkedRules.contains(instanceRule),
-                    instanceRule = instanceRule,
-                    reportInteractions = reportInteractions,
-                )
+            if (selectedReportType == ReportType.VIOLATION) {
+                instanceRules.forEach { instanceRule ->
+                    CheckableInstanceRule(
+                        checked = checkedRules.contains(instanceRule),
+                        instanceRule = instanceRule,
+                        reportInteractions = reportInteractions,
+                    )
+                }
             }
         }
 
@@ -198,7 +202,7 @@ private fun MainContent(
         )
         Spacer(modifier = Modifier.padding(8.dp))
 
-        Button(
+        MoSoButton(
             modifier = Modifier
                 .fillMaxWidth(),
             enabled = selectedReportType != null,
@@ -223,7 +227,7 @@ private fun SelectableReportType(
             .padding(4.dp)
             .clickable { reportInteractions.onReportTypeSelected(reportType) }
     ) {
-        RadioButton(
+        MoSoRadioButton(
             modifier = Modifier
                 .size(20.dp),
             selected = selectedReportType == reportType,
@@ -244,25 +248,21 @@ private fun SelectableReportType(
 
 @Composable
 private fun CheckableInstanceRule(
-    enabled: Boolean,
     checked: Boolean,
     instanceRule: InstanceRule,
     reportInteractions: ReportInteractions,
 ) {
     Row(
         Modifier
-            .clickable(
-                enabled = enabled
-            ) {
+            .clickable {
                 reportInteractions.onServerRuleClicked(instanceRule)
             }
             .padding(4.dp)
             .fillMaxWidth(),
     ) {
-        Checkbox(
+        MoSoCheckBox(
             modifier = Modifier
                 .size(20.dp),
-            enabled = enabled,
             checked = checked,
             onCheckedChange = { reportInteractions.onServerRuleClicked(instanceRule) }
         )
@@ -270,12 +270,6 @@ private fun CheckableInstanceRule(
         Text(
             modifier = Modifier.align(Alignment.CenterVertically),
             text = instanceRule.text,
-            color = if (enabled) {
-                Color.Unspecified
-            } else {
-                // same alpha as the disabled checkbox
-                Color.Unspecified.copy(alpha = 0.38f)
-            }
         )
     }
 }
@@ -283,17 +277,55 @@ private fun CheckableInstanceRule(
 @Preview
 @Composable
 private fun ReportScreenPreview() {
+    val noDummies = InstanceRule(
+        1,
+        "no dummies"
+    )
+    val noDogs = InstanceRule(
+        2,
+        "no dogs"
+    )
     MoSoTheme {
         ReportScreen1(
             reportTarget = ReportTarget.POST,
             instanceRules = listOf(
-                InstanceRule(
-                    1,
-                    "no dummies"
-                )
+                noDummies,
+                noDogs
             ),
-            selectedReportType = null,
-            checkedRules = listOf(),
+            selectedReportType = ReportType.VIOLATION,
+            checkedRules = listOf(
+                noDogs,
+            ),
+            additionalCommentText = "",
+            reportInteractions = object : ReportInteractions {}
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun ReportScreenPreviewDarkMode() {
+    val noDummies = InstanceRule(
+        1,
+        "no dummies"
+    )
+    val noDogs = InstanceRule(
+        2,
+        "no dogs"
+    )
+    MoSoTheme(
+        darkTheme = true
+    ) {
+        ReportScreen1(
+            reportTarget = ReportTarget.POST,
+            instanceRules = listOf(
+                noDummies,
+                noDogs
+            ),
+            selectedReportType = ReportType.VIOLATION,
+            checkedRules = listOf(
+                noDogs,
+            ),
             additionalCommentText = "",
             reportInteractions = object : ReportInteractions {}
         )
