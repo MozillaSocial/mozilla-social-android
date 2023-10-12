@@ -1,17 +1,9 @@
-buildscript {
-    dependencies {
-        classpath(libs.glean.gradlePlugin)
-        classpath(libs.jetbrains.python.gradlePlugin)
-    }
-}
-
 plugins {
     id("org.mozilla.social.android.library")
     id("org.mozilla.social.android.library.secrets")
+    alias(libs.plugins.jetbrains.python)
+    alias(libs.plugins.glean)
 }
-
-apply(plugin = libs.plugins.jetbrains.python.get().pluginId)
-apply(plugin = libs.plugins.glean.gradle.plugin.get().pluginId)
 
 android {
     namespace = "org.mozilla.social.core.analytics"

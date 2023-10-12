@@ -7,5 +7,7 @@ plugins {
     alias(libs.plugins.android.library) apply false
     alias(libs.plugins.android.secrets) apply false
     alias(libs.plugins.kotlin.android) apply false
+    alias(libs.plugins.glean) apply false
+    alias(libs.plugins.jetbrains.python) apply false
     alias(libs.plugins.detekt) apply false
 }
