@@ -73,21 +73,37 @@ sealed class NavigationDestination(
     ) {
         const val NAV_PARAM_REPORT_STATUS_ID = "reportStatusId"
         const val NAV_PARAM_REPORT_ACCOUNT_ID = "reportAccountId"
+        const val NAV_PARAM_REPORT_ACCOUNT_HANDLE = "reportAccountHandle"
         val fullRoute = "$route?" +
                 "$NAV_PARAM_REPORT_STATUS_ID={$NAV_PARAM_REPORT_STATUS_ID}" +
-                "&$NAV_PARAM_REPORT_ACCOUNT_ID={$NAV_PARAM_REPORT_ACCOUNT_ID}"
+                "&$NAV_PARAM_REPORT_ACCOUNT_ID={$NAV_PARAM_REPORT_ACCOUNT_ID}" +
+                "&$NAV_PARAM_REPORT_ACCOUNT_HANDLE={$NAV_PARAM_REPORT_ACCOUNT_HANDLE}"
 
         fun route(
             reportAccountId: String,
+            reportAccountHandle: String,
             reportStatusId: String? = null,
-        ): String =
-            when {
-                reportStatusId != null -> "$route?" +
-                        "$NAV_PARAM_REPORT_STATUS_ID=$reportStatusId" +
-                        "&$NAV_PARAM_REPORT_ACCOUNT_ID=$reportAccountId"
-                else -> "$route?$NAV_PARAM_REPORT_ACCOUNT_ID=$reportAccountId"
-            }
+        ): String = "$route?" +
+                "$NAV_PARAM_REPORT_ACCOUNT_ID=$reportAccountId" +
+                "&$NAV_PARAM_REPORT_ACCOUNT_HANDLE=$reportAccountHandle" +
+                if (reportStatusId != null) {
+                    "&$NAV_PARAM_REPORT_STATUS_ID=$reportStatusId"
+                } else {
+                    ""
+                }
     }
+
+    data object ReportScreen1: NavigationDestination(
+        route = "report1"
+    )
+
+    data object ReportScreen2: NavigationDestination(
+        route = "report2"
+    )
+
+    data object ReportScreen3: NavigationDestination(
+        route = "report3"
+    )
 
     data object Search: NavigationDestination(
         route = "search"

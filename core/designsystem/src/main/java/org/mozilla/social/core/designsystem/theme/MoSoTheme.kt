@@ -82,11 +82,14 @@ private val darkColorPalette = MoSoColors(
     iconPrimary = FirefoxColor.LightGrey05,
     iconSecondary = FirefoxColor.LightGrey40,
     iconAccent = FirefoxColor.Violet30,
+    iconActionActive = FirefoxColor.Violet20,
+    iconActionDisabled = FirefoxColor.LightGrey70,
 
     borderPrimary = FirefoxColor.DarkGrey05,
     borderForm = FirefoxColor.LightGrey05,
     borderAccent = FirefoxColor.Violet30,
     borderWarning = FirefoxColor.Red20,
+    borderInputEnabled = FirefoxColor.DarkGrey05,
 )
 
 private val lightColorPalette = MoSoColors(
@@ -106,11 +109,14 @@ private val lightColorPalette = MoSoColors(
     iconPrimary = FirefoxColor.DarkGrey90,
     iconSecondary = FirefoxColor.DarkGrey05,
     iconAccent = FirefoxColor.Violet60,
+    iconActionActive = FirefoxColor.Violet60,
+    iconActionDisabled = FirefoxColor.LightGrey70,
 
     borderPrimary = FirefoxColor.LightGrey40,
     borderForm = FirefoxColor.DarkGrey90,
     borderAccent = FirefoxColor.Violet60,
     borderWarning = FirefoxColor.Red70,
+    borderInputEnabled = FirefoxColor.LightGrey60,
 )
 
 
@@ -135,10 +141,13 @@ class MoSoColors(
     iconPrimary: Color,
     iconSecondary: Color,
     iconAccent: Color,
+    iconActionActive: Color,
+    iconActionDisabled: Color,
     borderPrimary: Color,
     borderForm: Color,
     borderAccent: Color,
     borderWarning: Color,
+    borderInputEnabled: Color,
 ) {
     // Layers
 
@@ -212,6 +221,12 @@ class MoSoColors(
     var iconAccentViolet by mutableStateOf(iconAccent)
         private set
 
+    var iconActionActive by mutableStateOf(iconActionActive)
+        private set
+
+    var iconActionDisabled by mutableStateOf(iconActionDisabled)
+        private set
+
     // Border
 
     // Default, Divider, Dotted
@@ -230,6 +245,9 @@ class MoSoColors(
     var borderWarning by mutableStateOf(borderWarning)
         private set
 
+    var borderInputEnabled by mutableStateOf(borderInputEnabled)
+        private set
+
     fun update(other: MoSoColors) {
         layer1 = other.layer1
         layer2 = other.layer2
@@ -246,10 +264,13 @@ class MoSoColors(
         iconPrimary = other.iconPrimary
         iconSecondary = other.iconSecondary
         iconAccentViolet = other.iconAccentViolet
+        iconActionActive = other.iconActionActive
+        iconActionDisabled = other.iconActionDisabled
         borderPrimary = other.borderPrimary
         borderFormDefault = other.borderFormDefault
         borderAccent = other.borderAccent
         borderWarning = other.borderWarning
+        borderInputEnabled = other.borderInputEnabled
     }
 
     /**
@@ -271,10 +292,13 @@ class MoSoColors(
         iconPrimary: Color = this.iconPrimary,
         iconSecondary: Color = this.iconSecondary,
         iconAccentViolet: Color = this.iconAccentViolet,
+        iconActionActive: Color = this.iconActionActive,
+        iconActionDisabled: Color = this.iconActionDisabled,
         borderPrimary: Color = this.borderPrimary,
         borderFormDefault: Color = this.borderFormDefault,
         borderAccent: Color = this.borderAccent,
         borderWarning: Color = this.borderWarning,
+        borderInputEnabled: Color = this.borderInputEnabled,
     ): MoSoColors = MoSoColors(
         layer1 = layer1,
         layer2 = layer2,
@@ -291,10 +315,13 @@ class MoSoColors(
         iconPrimary = iconPrimary,
         iconSecondary = iconSecondary,
         iconAccent = iconAccentViolet,
+        iconActionActive = iconActionActive,
+        iconActionDisabled = iconActionDisabled,
         borderPrimary = borderPrimary,
         borderForm = borderFormDefault,
         borderAccent = borderAccent,
         borderWarning = borderWarning,
+        borderInputEnabled = borderInputEnabled,
     )
 }
 
