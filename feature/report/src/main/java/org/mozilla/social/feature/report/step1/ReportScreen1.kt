@@ -1,13 +1,12 @@
 package org.mozilla.social.feature.report.step1
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.exclude
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -20,10 +19,7 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
-import androidx.compose.material3.Checkbox
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -32,7 +28,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -44,6 +39,8 @@ import org.mozilla.social.core.designsystem.component.MoSoButton
 import org.mozilla.social.core.designsystem.component.MoSoCheckBox
 import org.mozilla.social.core.designsystem.component.MoSoDivider
 import org.mozilla.social.core.designsystem.component.MoSoRadioButton
+import org.mozilla.social.core.designsystem.component.MoSoSurface
+import org.mozilla.social.core.designsystem.component.MoSoTextField
 import org.mozilla.social.core.designsystem.component.MoSoToast
 import org.mozilla.social.core.designsystem.component.MoSoTopBar
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
@@ -71,17 +68,6 @@ internal fun ReportScreen1(
         )
     })
 ) {
-    // will be null if the user is on the same instance as you
-    val usersExternalInstance = remember(reportAccountHandle) {
-        mutableStateOf(
-            if (reportAccountHandle.contains("@")) {
-                reportAccountHandle.substringAfterLast("@")
-            } else {
-                null
-            }
-        )
-    }
-
     ReportScreen1(
         reportTarget = if (reportStatusId != null) {
             ReportTarget.POST
@@ -92,7 +78,7 @@ internal fun ReportScreen1(
         selectedReportType = viewModel.selectedReportType.collectAsState().value,
         checkedRules = viewModel.checkedRules.collectAsState().value,
         additionalCommentText = viewModel.additionalCommentText.collectAsState().value,
-        externalInstance = usersExternalInstance.value,
+        reportAccountHandle = reportAccountHandle,
         sendToExternalServer = viewModel.sendToExternalServerChecked.collectAsState().value,
         reportInteractions = viewModel
     )
@@ -107,14 +93,13 @@ private fun ReportScreen1(
     selectedReportType: ReportType?,
     checkedRules: List<InstanceRule>,
     additionalCommentText: String,
-    externalInstance: String?,
+    reportAccountHandle: String,
     sendToExternalServer: Boolean,
     reportInteractions: ReportInteractions,
 ) {
-    Box(
+    MoSoSurface(
         modifier = Modifier
-            .windowInsetsPadding(WindowInsets.ime.exclude(WindowInsets.navigationBars))
-            .background(MaterialTheme.colorScheme.background),
+            .windowInsetsPadding(WindowInsets.ime.exclude(WindowInsets.navigationBars)),
     ) {
         Column(
             modifier = Modifier.fillMaxHeight()
@@ -130,7 +115,7 @@ private fun ReportScreen1(
                 selectedReportType = selectedReportType,
                 checkedRules = checkedRules,
                 additionalCommentText = additionalCommentText,
-                externalInstance = externalInstance,
+                reportAccountHandle = reportAccountHandle,
                 sendToExternalServer = sendToExternalServer,
                 reportInteractions = reportInteractions,
             )
@@ -145,10 +130,21 @@ private fun MainContent(
     selectedReportType: ReportType?,
     checkedRules: List<InstanceRule>,
     additionalCommentText: String,
-    externalInstance: String?,
+    reportAccountHandle: String,
     sendToExternalServer: Boolean,
     reportInteractions: ReportInteractions,
 ) {
+    // will be null if the user is on the same instance as you
+    val externalInstance = remember(reportAccountHandle) {
+        mutableStateOf(
+            if (reportAccountHandle.contains("@")) {
+                reportAccountHandle.substringAfterLast("@")
+            } else {
+                null
+            }
+        )
+    }
+
     Column(
         modifier = Modifier
             .padding(start = 16.dp, end = 16.dp)
@@ -156,83 +152,38 @@ private fun MainContent(
     ) {
         Spacer(modifier = Modifier.height(16.dp))
         Text(
+            text = stringResource(id = R.string.report_prompt, "@$reportAccountHandle"),
+            style = MoSoTheme.typography.bodyMedium,
+        )
+        Spacer(modifier = Modifier.height(4.dp))
+        Text(
             text = stringResource(id = if (reportTarget == ReportTarget.POST) {
                 R.string.report_instructions_for_post
             } else {
                 R.string.report_instructions_for_account
             }),
-            fontSize = 24.sp
+            style = MoSoTheme.typography.titleMedium,
         )
         Spacer(modifier = Modifier.height(16.dp))
         Text(
             text = stringResource(id = R.string.choose_best_match),
-            fontSize = 18.sp,
-            fontWeight = FontWeight.Medium,
+            style = MoSoTheme.typography.titleMedium,
         )
         Spacer(modifier = Modifier.height(8.dp))
-        SelectableReportType(
-            reportType = ReportType.DO_NOT_LIKE,
-            title = stringResource(id = R.string.report_reason_do_not_like),
+        ReportOptions(
+            instanceRules = instanceRules,
             selectedReportType = selectedReportType,
-            reportInteractions = reportInteractions,
-        ) {
-            Text(text = stringResource(id = R.string.report_reason_do_not_like_description))
-        }
-        SelectableReportType(
-            reportType = ReportType.SPAM,
-            title = stringResource(id = R.string.report_reason_spam),
-            selectedReportType = selectedReportType,
-            reportInteractions = reportInteractions,
-        ) {
-            Text(text = stringResource(id = R.string.report_reason_spam_description))
-        }
-
-        SelectableReportType(
-            reportType = ReportType.VIOLATION,
-            title = stringResource(id = R.string.report_reason_violation),
-            selectedReportType = selectedReportType,
-            reportInteractions = reportInteractions,
-        ) {
-            if (selectedReportType == ReportType.VIOLATION) {
-                instanceRules.forEach { instanceRule ->
-                    CheckableInstanceRule(
-                        checked = checkedRules.contains(instanceRule),
-                        instanceRule = instanceRule,
-                        reportInteractions = reportInteractions,
-                    )
-                }
-            }
-        }
-
-        SelectableReportType(
-            reportType = ReportType.OTHER,
-            title = stringResource(id = R.string.report_reason_other),
-            selectedReportType = selectedReportType,
-            reportInteractions = reportInteractions,
-        ) {
-            Text(text = stringResource(id = R.string.report_reason_other_description))
-        }
+            checkedRules = checkedRules,
+            reportInteractions = reportInteractions
+        )
 
         Spacer(modifier = Modifier.height(32.dp))
-        Text(text = stringResource(id = R.string.extra_info_prompt))
-        Spacer(modifier = Modifier.height(16.dp))
-        TextField(
-            modifier = Modifier
-                .fillMaxWidth()
-                .border(
-                    width = 1.dp,
-                    color = MaterialTheme.colorScheme.onSurface,
-                    shape = RoundedCornerShape(4.dp)
-                ),
-            value = additionalCommentText,
-            colors = transparentTextFieldColors(),
-            label = {
-                Text(text = stringResource(id = R.string.extra_info_text_field_label))
-            },
-            onValueChange = { reportInteractions.onAdditionCommentTextChanged(it) },
+        AdditionalComments(
+            additionalCommentText = additionalCommentText,
+            reportInteractions = reportInteractions,
         )
         Spacer(modifier = Modifier.height(16.dp))
-        externalInstance?.let {
+        externalInstance.value?.let {
             SendToOtherServerOption(
                 checked = sendToExternalServer,
                 reportInteractions = reportInteractions,
@@ -249,6 +200,70 @@ private fun MainContent(
             Text(text = stringResource(id = R.string.next_button))
         }
         Spacer(modifier = Modifier.height(32.dp))
+    }
+}
+
+@Composable
+private fun ReportOptions(
+    instanceRules: List<InstanceRule>,
+    selectedReportType: ReportType?,
+    checkedRules: List<InstanceRule>,
+    reportInteractions: ReportInteractions,
+) {
+    SelectableReportType(
+        reportType = ReportType.DO_NOT_LIKE,
+        title = stringResource(id = R.string.report_reason_do_not_like),
+        selectedReportType = selectedReportType,
+        reportInteractions = reportInteractions,
+    ) {
+        Text(
+            text = stringResource(id = R.string.report_reason_do_not_like_description),
+            style = MoSoTheme.typography.bodyMedium,
+        )
+    }
+    SelectableReportType(
+        reportType = ReportType.SPAM,
+        title = stringResource(id = R.string.report_reason_spam),
+        selectedReportType = selectedReportType,
+        reportInteractions = reportInteractions,
+    ) {
+        Text(
+            text = stringResource(id = R.string.report_reason_spam_description),
+            style = MoSoTheme.typography.bodyMedium,
+        )
+    }
+
+    SelectableReportType(
+        reportType = ReportType.VIOLATION,
+        title = stringResource(id = R.string.report_reason_violation),
+        selectedReportType = selectedReportType,
+        reportInteractions = reportInteractions,
+    ) {
+        if (selectedReportType == ReportType.VIOLATION) {
+            Text(
+                text = stringResource(id = R.string.report_reason_violation_description),
+                style = MoSoTheme.typography.bodyMedium,
+            )
+            instanceRules.forEach { instanceRule ->
+                CheckableInstanceRule(
+                    checked = checkedRules.contains(instanceRule),
+                    instanceRule = instanceRule,
+                    reportInteractions = reportInteractions,
+                )
+            }
+        }
+    }
+
+    SelectableReportType(
+        reportType = ReportType.OTHER,
+        title = stringResource(id = R.string.report_reason_other),
+        selectedReportType = selectedReportType,
+        reportInteractions = reportInteractions,
+    ) {
+        Text(
+            text = stringResource(id = R.string.report_reason_other_description),
+            style = MoSoTheme.typography.bodyMedium,
+        )
     }
 }
 
@@ -275,8 +290,8 @@ private fun SelectableReportType(
         Column {
             Text(
                 text = title,
-                fontWeight = FontWeight.Medium,
-                fontSize = 18.sp,
+                style = MoSoTheme.typography.bodyMedium,
+                fontWeight = FontWeight(700)
             )
             content()
         }
@@ -310,6 +325,28 @@ private fun CheckableInstanceRule(
             text = instanceRule.text,
         )
     }
+}
+
+@Composable
+private fun AdditionalComments(
+    additionalCommentText: String,
+    reportInteractions: ReportInteractions,
+) {
+    Text(
+        text = stringResource(id = R.string.extra_info_prompt),
+        style = MoSoTheme.typography.titleMedium,
+    )
+    Spacer(modifier = Modifier.height(16.dp))
+    MoSoTextField(
+        modifier = Modifier
+            .fillMaxWidth()
+            .defaultMinSize(minHeight = 150.dp),
+        value = additionalCommentText,
+        label = {
+            Text(text = stringResource(id = R.string.extra_info_text_field_label))
+        },
+        onValueChange = { reportInteractions.onAdditionCommentTextChanged(it) },
+    )
 }
 
 @Composable
@@ -374,7 +411,7 @@ private fun ReportScreenPreview() {
                 noDogs,
             ),
             additionalCommentText = "",
-            externalInstance = "mozilla.com",
+            reportAccountHandle = "john@mozilla.com",
             sendToExternalServer = false,
             reportInteractions = object : ReportInteractions {},
         )
@@ -406,7 +443,7 @@ private fun ReportScreenPreviewDarkMode() {
                 noDogs,
             ),
             additionalCommentText = "",
-            externalInstance = "mozilla.com",
+            reportAccountHandle = "john@mozilla.com",
             sendToExternalServer = false,
             reportInteractions = object : ReportInteractions {},
         )

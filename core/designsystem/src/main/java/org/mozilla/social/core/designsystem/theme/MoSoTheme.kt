@@ -89,6 +89,7 @@ private val darkColorPalette = MoSoColors(
     borderForm = FirefoxColor.LightGrey05,
     borderAccent = FirefoxColor.Violet30,
     borderWarning = FirefoxColor.Red20,
+    borderInputEnabled = FirefoxColor.DarkGrey05,
 )
 
 private val lightColorPalette = MoSoColors(
@@ -115,6 +116,7 @@ private val lightColorPalette = MoSoColors(
     borderForm = FirefoxColor.DarkGrey90,
     borderAccent = FirefoxColor.Violet60,
     borderWarning = FirefoxColor.Red70,
+    borderInputEnabled = FirefoxColor.LightGrey60,
 )
 
 
@@ -145,6 +147,7 @@ class MoSoColors(
     borderForm: Color,
     borderAccent: Color,
     borderWarning: Color,
+    borderInputEnabled: Color,
 ) {
     // Layers
 
@@ -242,6 +245,9 @@ class MoSoColors(
     var borderWarning by mutableStateOf(borderWarning)
         private set
 
+    var borderInputEnabled by mutableStateOf(borderInputEnabled)
+        private set
+
     fun update(other: MoSoColors) {
         layer1 = other.layer1
         layer2 = other.layer2
@@ -264,6 +270,7 @@ class MoSoColors(
         borderFormDefault = other.borderFormDefault
         borderAccent = other.borderAccent
         borderWarning = other.borderWarning
+        borderInputEnabled = other.borderInputEnabled
     }
 
     /**
@@ -291,6 +298,7 @@ class MoSoColors(
         borderFormDefault: Color = this.borderFormDefault,
         borderAccent: Color = this.borderAccent,
         borderWarning: Color = this.borderWarning,
+        borderInputEnabled: Color = this.borderInputEnabled,
     ): MoSoColors = MoSoColors(
         layer1 = layer1,
         layer2 = layer2,
@@ -313,6 +321,7 @@ class MoSoColors(
         borderForm = borderFormDefault,
         borderAccent = borderAccent,
         borderWarning = borderWarning,
+        borderInputEnabled = borderInputEnabled,
     )
 }
 

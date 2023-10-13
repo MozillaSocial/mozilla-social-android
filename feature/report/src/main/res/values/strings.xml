@@ -3,6 +3,8 @@
     <string name="report">Report</string>
     <string name="report_screen_title">@string/report</string>
 
+    <string name="report_prompt">Reporting %s</string>
+
     <string name="report_instructions_for_post">Tell us what\'s wrong with this post</string>
     <string name="report_instructions_for_account">Tell us what\'s wrong with this account</string>
 
@@ -15,6 +17,7 @@
     <string name="report_reason_spam_description">Malicious links, fake engagement, or repetitive replies.</string>
 
     <string name="report_reason_violation">It violates one or more of the server rules</string>
+    <string name="report_reason_violation_description">Select all that apply</string>
 
     <string name="report_reason_other">It\'s something else</string>
     <string name="report_reason_other_description">The issue does not fit into other categories.</string>
