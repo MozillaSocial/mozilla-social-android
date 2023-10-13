@@ -25,6 +25,7 @@ import org.mozilla.social.R
 import org.mozilla.social.core.designsystem.component.MoSoAppBar
 import org.mozilla.social.core.designsystem.component.MoSoBottomNavigationBar
 import org.mozilla.social.core.designsystem.component.MoSoDivider
+import org.mozilla.social.core.designsystem.component.MoSoFloatingActionButton
 import org.mozilla.social.core.designsystem.component.MoSoScaffold
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.designsystem.icon.mozillaLogo
@@ -45,7 +46,7 @@ fun MainActivityScreen() {
         modifier = Modifier.nestedScroll(appState.topAppBarScrollBehavior.nestedScrollConnection),
         snackbarHost = { appState.snackbarHostState },
         floatingActionButton = {
-            FloatingActionButton(
+            MoSoFloatingActionButton(
                 currentDestination = currentRoute,
                 onClick = appState::navigateToNewPost
             )
@@ -88,7 +89,7 @@ private fun FloatingActionButton(
 ) {
     when (currentDestination) {
         NavigationDestination.Feed -> {
-            androidx.compose.material3.FloatingActionButton(onClick = onClick) {
+            MoSoFloatingActionButton(onClick = onClick) {
                 Icon(
                     MoSoIcons.Add,
                     stringResource(id = R.string.feed_fab_content_description)

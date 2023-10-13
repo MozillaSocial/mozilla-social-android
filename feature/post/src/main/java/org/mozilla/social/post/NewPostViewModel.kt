@@ -2,6 +2,7 @@ package org.mozilla.social.post
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -19,19 +20,21 @@ import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.core.data.repository.MediaRepository
 import org.mozilla.social.core.data.repository.SearchRepository
 import org.mozilla.social.core.data.repository.StatusRepository
+import org.mozilla.social.core.domain.AccountFlow
 import org.mozilla.social.feature.post.R
 import org.mozilla.social.model.StatusVisibility
 import org.mozilla.social.model.request.PollCreate
-import org.mozilla.social.post.status.ContentWarningInteractions
-import org.mozilla.social.post.media.MediaInteractions
-import org.mozilla.social.post.poll.PollInteractions
 import org.mozilla.social.post.media.MediaDelegate
+import org.mozilla.social.post.media.MediaInteractions
 import org.mozilla.social.post.poll.PollDelegate
+import org.mozilla.social.post.poll.PollInteractions
 import org.mozilla.social.post.poll.PollStyle
+import org.mozilla.social.post.status.ContentWarningInteractions
 import org.mozilla.social.post.status.StatusDelegate
 import org.mozilla.social.post.status.StatusInteractions
 
 class NewPostViewModel(
+    accountFlow: AccountFlow,
     private val statusRepository: StatusRepository,
     mediaRepository: MediaRepository,
     searchRepository: SearchRepository,
@@ -80,7 +83,7 @@ class NewPostViewModel(
             initialValue = false,
         )
 
-    val addImageButtonEnabled : StateFlow<Boolean> =
+    val addImageButtonEnabled: StateFlow<Boolean> =
         combine(imageStates, poll) { imageStates, poll ->
             imageStates.size < MAX_IMAGES && poll == null
         }.stateIn(
@@ -89,7 +92,7 @@ class NewPostViewModel(
             initialValue = true
         )
 
-    val pollButtonEnabled : StateFlow<Boolean> =
+    val pollButtonEnabled: StateFlow<Boolean> =
         imageStates.map {
             it.isEmpty()
         }.stateIn(
@@ -106,6 +109,10 @@ class NewPostViewModel(
 
     private val _visibility = MutableStateFlow(StatusVisibility.Public)
     val visibility = _visibility.asStateFlow()
+
+    val userHeaderState: Flow<UserHeaderState> = accountFlow().map { account ->
+        UserHeaderState(avatarUrl = account.avatarUrl, displayName = account.displayName)
+    }
 
     fun onVisibilitySelected(statusVisibility: StatusVisibility) {
         _visibility.update { statusVisibility }

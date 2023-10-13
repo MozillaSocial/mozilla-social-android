@@ -49,12 +49,13 @@ object MoSoIcons {
 
     @Composable
     fun house() = painterResource(R.drawable.house)
+
     @Composable
     fun compass() = painterResource(R.drawable.compass)
 
     @Composable
     fun bookmark() = painterResource(R.drawable.bookmark_simple)
-    
+
     @Composable
     fun userCircle() = painterResource(id = R.drawable.user_circle)
 
@@ -63,6 +64,21 @@ object MoSoIcons {
 
     @Composable
     fun userJoin() = painterResource(id = R.drawable.user_join)
+
+    @Composable
+    fun chartBar() = painterResource(id = R.drawable.chart_bar)
+
+    @Composable
+    fun caret_down() = painterResource(id = R.drawable.caret_down)
+
+    @Composable
+    fun imagePlus() = painterResource(id = R.drawable.image_plus)
+
+    @Composable
+    fun warning() = painterResource(id = R.drawable.warning)
+
+    @Composable
+    fun x() = painterResource(id = R.drawable.x)
 
 
     val Add = Icons.Rounded.Add
@@ -104,4 +120,10 @@ object MoSoIcons {
     val AddCircleOutline = Icons.Rounded.AddCircleOutline
     val Home = Icons.Rounded.Home
     val AccountCircle = Icons.Rounded.AccountCircle
+
+    // This isn't part of the design system
+    object Sizes {
+        val small = 16.dp // Used for smaller icons
+        val normal = 24.dp // used for most icons, and the navigation icons
+    }
 }
