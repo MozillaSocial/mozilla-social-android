@@ -307,7 +307,7 @@ private fun TopBar(
 
         Spacer(modifier = Modifier.padding(start = 16.dp))
         val keyboard = LocalSoftwareKeyboardController.current
-        MoSoButton(onClick = onPostClicked) {
+        MoSoButton(onClick = onPostClicked, enabled = sendButtonEnabled) {
             Text(
                 text = stringResource(id = R.string.post),
                 style = MoSoTheme.typography.labelSmall
