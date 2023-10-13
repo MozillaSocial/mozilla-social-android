@@ -5,8 +5,6 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 import org.mozilla.social.common.utils.edit
 import org.mozilla.social.core.data.repository.InstanceRepository
 import org.mozilla.social.feature.report.ReportDataBundle
@@ -16,7 +14,7 @@ import timber.log.Timber
 
 class ReportScreen1ViewModel(
     private val instanceRepository: InstanceRepository,
-    private val onNextClicked: (reportType: ReportType, serializedReportData: String) -> Unit,
+    private val onNextClicked: (bundle: ReportDataBundle) -> Unit,
     private val onClose: () -> Unit,
     private val reportAccountId: String,
     private val reportAccountHandle: String,
@@ -86,15 +84,22 @@ class ReportScreen1ViewModel(
     }
 
     override fun onNextClicked() {
-        val bundle = ReportDataBundle(
-            reportAccountId = reportAccountId,
-            reportAccountHandle = reportAccountHandle,
-            reportStatusId = reportStatusId,
-            reportType = selectedReportType.value ?: ReportType.DO_NOT_LIKE,
-            checkedInstanceRules = checkedRules.value,
-            additionalText = additionalCommentText.value,
-            sendToExternalServer = sendToExternalServerChecked.value,
-        )
-        onNextClicked(bundle.reportType, Json.encodeToString(bundle))
+        val bundle = when (selectedReportType.value) {
+            ReportType.DO_NOT_LIKE -> ReportDataBundle.ReportDataBundleForScreen3(
+                reportAccountId = reportAccountId,
+                reportAccountHandle = reportAccountHandle,
+                didUserReportAccount = false,
+            )
+            else -> ReportDataBundle.ReportDataBundleForScreen2(
+                reportAccountId = reportAccountId,
+                reportAccountHandle = reportAccountHandle,
+                reportStatusId = reportStatusId,
+                reportType = selectedReportType.value ?: ReportType.DO_NOT_LIKE,
+                checkedInstanceRules = checkedRules.value,
+                additionalText = additionalCommentText.value,
+                sendToExternalServer = sendToExternalServerChecked.value,
+            )
+        }
+        onNextClicked(bundle)
     }
 }

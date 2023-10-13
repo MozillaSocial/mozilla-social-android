@@ -5,6 +5,8 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.navigation
 import androidx.navigation.navArgument
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import org.mozilla.social.core.navigation.NavigationDestination
 import org.mozilla.social.feature.report.step1.reportScreen1
 import org.mozilla.social.feature.report.step2.navigateToReportScreen2
@@ -47,16 +49,21 @@ fun NavGraphBuilder.reportFlow(
     ) {
         reportScreen1(
             onCloseClicked,
-            onNextClicked = { reportType, bundle ->
-                when (reportType) {
-                    ReportType.DO_NOT_LIKE -> navController.navigateToReportScreen3()
-                    else -> bundle?.let { navController.navigateToReportScreen2(it) }
+            onNextClicked = { bundle ->
+                when (bundle) {
+                    is ReportDataBundle.ReportDataBundleForScreen2 -> {
+                        navController.navigateToReportScreen2(Json.encodeToString(bundle))
+                    }
+                    is ReportDataBundle.ReportDataBundleForScreen3 -> {
+                        navController.navigateToReportScreen3(Json.encodeToString(bundle))
+                    }
                 }
             }
         )
         reportScreen2(
             onReportSubmitted = {
-                navController.navigateToReportScreen3()
+                //TODO
+//                navController.navigateToReportScreen3()
             },
             onCloseClicked = {
                 navController.popBackStack()
@@ -64,6 +71,7 @@ fun NavGraphBuilder.reportFlow(
         )
         reportScreen3(
             onDoneClicked = onDoneClicked,
+            onCloseClicked = onCloseClicked,
         )
     }
 }

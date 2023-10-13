@@ -32,7 +32,7 @@ internal fun NavGraphBuilder.reportScreen2(
             NavigationDestination.ReportScreen2.NAV_PARAM_BUNDLE
         )!!
 
-        val deserializedBundle: ReportDataBundle = Json.decodeFromString(bundle)
+        val deserializedBundle: ReportDataBundle.ReportDataBundleForScreen2 = Json.decodeFromString(bundle)
 
         ReportScreen2(
             onCloseClicked = onCloseClicked,

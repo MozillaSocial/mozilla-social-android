@@ -41,6 +41,7 @@ import org.mozilla.social.core.designsystem.component.MoSoTopBar
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.ui.animation.ExpandingAnimation
 import org.mozilla.social.feature.report.R
+import org.mozilla.social.feature.report.ReportDataBundle
 import org.mozilla.social.feature.report.ReportTarget
 import org.mozilla.social.feature.report.ReportType
 import org.mozilla.social.model.InstanceRule
@@ -48,7 +49,7 @@ import org.mozilla.social.model.InstanceRule
 @Composable
 internal fun ReportScreen1(
     onCloseClicked: () -> Unit,
-    onNextClicked: (reportType: ReportType, serializedReportData: String) -> Unit,
+    onNextClicked: (bundle: ReportDataBundle) -> Unit,
     reportAccountId: String,
     reportAccountHandle: String,
     reportStatusId: String?,
