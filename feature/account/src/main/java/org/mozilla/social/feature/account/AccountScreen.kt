@@ -78,6 +78,7 @@ import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.designsystem.utils.NoRipple
 import org.mozilla.social.core.ui.DropDownItem
+import org.mozilla.social.core.ui.animation.expandingTransitionSpec
 import org.mozilla.social.core.ui.error.GenericError
 import org.mozilla.social.core.ui.htmlcontent.HtmlContent
 import org.mozilla.social.core.ui.htmlcontent.HtmlContentInteractions
@@ -470,27 +471,7 @@ private fun UserBio(
                     .padding(end = 32.dp),
                 targetState = expanded,
                 label = "",
-                transitionSpec = {
-                    // expanding
-                    if (targetState) {
-                        EnterTransition.None togetherWith ExitTransition.None using
-                                SizeTransform { _, _ ->
-                                    keyframes {
-                                        durationMillis = animationDuration
-                                    }
-                                }
-                    } else { // shrinking
-                        fadeIn(animationSpec = tween(0, 0)) togetherWith
-                                fadeOut(animationSpec = tween(animationDuration)) using
-                                SizeTransform { _, _ ->
-                                    keyframes {
-                                        durationMillis = animationDuration
-                                    }
-                                }
-                    }
-
-                }
-
+                transitionSpec = expandingTransitionSpec(animationDuration)
             ) { targetState ->
                 Column {
                     HtmlContent(
@@ -498,7 +479,7 @@ private fun UserBio(
                         htmlText = account.bio,
                         htmlContentInteractions = htmlContentInteractions,
                         textStyle = MoSoTheme.typography.bodyMedium,
-                        maximumLineCount = if (targetState) Int.MAX_VALUE else 3,
+                        maximumLineCount = if (targetState) Int.MAX_VALUE else BIO_MAX_LINES_NOT_EXPANDED,
                     )
                     if (targetState) {
                         Spacer(modifier = Modifier.height(8.dp))
@@ -707,6 +688,8 @@ private fun HeaderLayout(
         }
     }
 }
+
+private const val BIO_MAX_LINES_NOT_EXPANDED = 3
 
 @Preview
 @Composable
