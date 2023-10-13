@@ -10,6 +10,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 
+/**
+ * Expands content in and out.  If the content is not visible, it will be completely hidden
+ */
 @Composable
 fun ExpandingAnimation(
     modifier: Modifier = Modifier,

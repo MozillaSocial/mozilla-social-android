@@ -78,7 +78,6 @@ import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.designsystem.utils.NoRipple
 import org.mozilla.social.core.ui.DropDownItem
-import org.mozilla.social.core.ui.animation.expandingTransitionSpec
 import org.mozilla.social.core.ui.error.GenericError
 import org.mozilla.social.core.ui.htmlcontent.HtmlContent
 import org.mozilla.social.core.ui.htmlcontent.HtmlContentInteractions
@@ -471,7 +470,25 @@ private fun UserBio(
                     .padding(end = 32.dp),
                 targetState = expanded,
                 label = "",
-                transitionSpec = expandingTransitionSpec(animationDuration)
+                transitionSpec = {
+                    // expanding
+                    if (targetState) {
+                        EnterTransition.None togetherWith ExitTransition.None using
+                                SizeTransform { _, _ ->
+                                    keyframes {
+                                        durationMillis = animationDuration
+                                    }
+                                }
+                    } else { // shrinking
+                        fadeIn(animationSpec = tween(0, 0)) togetherWith
+                                fadeOut(animationSpec = tween(animationDuration)) using
+                                SizeTransform { _, _ ->
+                                    keyframes {
+                                        durationMillis = animationDuration
+                                    }
+                                }
+                    }
+                }
             ) { targetState ->
                 Column {
                     HtmlContent(
