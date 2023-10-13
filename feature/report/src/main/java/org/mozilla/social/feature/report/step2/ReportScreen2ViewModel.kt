@@ -15,7 +15,7 @@ import timber.log.Timber
 
 class ReportScreen2ViewModel(
     private val reportRepository: ReportRepository,
-    private val onCloseClicked: () -> Unit,
+    private val onClose: () -> Unit,
     private val onReportSubmitted: () -> Unit,
     private val reportAccountId: String,
     private val reportAccountHandle: String,
@@ -24,12 +24,12 @@ class ReportScreen2ViewModel(
     private val checkedInstanceRules: List<InstanceRule>,
     private val additionalText: String,
     private val sendToExternalServer: Boolean,
-) : ViewModel() {
+) : ViewModel(), ReportScreen2Interactions {
 
     private val _errorToastMessage = MutableSharedFlow<StringFactory>(extraBufferCapacity = 1)
     val errorToastMessage = _errorToastMessage.asSharedFlow()
 
-    fun onReportClicked() {
+    override fun onReportClicked() {
         viewModelScope.launch {
             try {
                 reportRepository.report(
@@ -48,5 +48,9 @@ class ReportScreen2ViewModel(
             }
             onReportSubmitted()
         }
+    }
+
+    override fun onCloseClicked() {
+        onClose()
     }
 }
