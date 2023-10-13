@@ -1,7 +1,6 @@
 package org.mozilla.social.core.designsystem.icon
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.AddCircleOutline
 import androidx.compose.material.icons.rounded.AddPhotoAlternate
 import androidx.compose.material.icons.rounded.ArrowDropDown
@@ -21,10 +20,10 @@ import androidx.compose.material.icons.rounded.Public
 import androidx.compose.material.icons.rounded.Send
 import androidx.compose.material.icons.rounded.VolumeMute
 import androidx.compose.material.icons.rounded.VolumeUp
-import androidx.compose.material.icons.rounded.Warning
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
 import org.mozilla.social.core.designsystem.R
 
 object MoSoIcons {
@@ -37,7 +36,7 @@ object MoSoIcons {
 
     @Composable
     fun bookmark() = painterResource(R.drawable.bookmark_simple)
-    
+
     @Composable
     fun userCircle() = painterResource(id = R.drawable.user_circle)
 
@@ -48,7 +47,22 @@ object MoSoIcons {
     fun userJoin() = painterResource(id = R.drawable.user_join)
 
     @Composable
-    fun add() = rememberVectorPainter(image = Icons.Rounded.Add)
+    fun chartBar() = painterResource(id = R.drawable.chart_bar)
+
+    @Composable
+    fun caret_down() = painterResource(id = R.drawable.caret_down)
+
+    @Composable
+    fun imagePlus() = painterResource(id = R.drawable.image_plus)
+
+    @Composable
+    fun warning() = painterResource(id = R.drawable.warning)
+
+    @Composable
+    fun x() = painterResource(id = R.drawable.x)
+
+    @Composable
+    fun plus() = painterResource(id = R.drawable.plus)
 
     @Composable
     fun check() = rememberVectorPainter(image = Icons.Rounded.Check)
@@ -86,6 +100,7 @@ object MoSoIcons {
     @Composable
     fun heartFilled() = painterResource(id = R.drawable.heart_filled)
 
+    // Material- avoid using these, and instead use the drawable based resources
     @Composable
     fun public() = rememberVectorPainter(image = Icons.Rounded.Public)
 
@@ -120,9 +135,6 @@ object MoSoIcons {
     fun poll() = rememberVectorPainter(image = Icons.Rounded.Poll)
 
     @Composable
-    fun warning() = rememberVectorPainter(image = Icons.Rounded.Warning)
-
-    @Composable
     fun delete() = rememberVectorPainter(image = Icons.Rounded.Delete)
 
     @Composable
@@ -131,4 +143,10 @@ object MoSoIcons {
     @Composable
     fun addCircleOutline() = rememberVectorPainter(image = Icons.Rounded.AddCircleOutline)
 
+
+    // This isn't part of the design system
+    object Sizes {
+        val small = 16.dp // Used for smaller icons
+        val normal = 24.dp // used for most icons, and the navigation icons
+    }
 }

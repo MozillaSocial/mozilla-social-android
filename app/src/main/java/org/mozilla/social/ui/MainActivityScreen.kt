@@ -25,6 +25,7 @@ import org.mozilla.social.R
 import org.mozilla.social.core.designsystem.component.MoSoAppBar
 import org.mozilla.social.core.designsystem.component.MoSoBottomNavigationBar
 import org.mozilla.social.core.designsystem.component.MoSoDivider
+import org.mozilla.social.core.designsystem.component.MoSoFloatingActionButton
 import org.mozilla.social.core.designsystem.component.MoSoScaffold
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.designsystem.icon.mozillaLogo
@@ -45,10 +46,18 @@ fun MainActivityScreen() {
         modifier = Modifier.nestedScroll(appState.topAppBarScrollBehavior.nestedScrollConnection),
         snackbarHost = { appState.snackbarHostState },
         floatingActionButton = {
-            FloatingActionButton(
-                currentDestination = currentRoute,
-                onClick = appState::navigateToNewPost
-            )
+
+            when (currentRoute) {
+                NavigationDestination.Feed -> {
+                    MoSoFloatingActionButton(onClick = appState::navigateToNewPost) {
+                        Icon(
+                            MoSoIcons.plus(),
+                            stringResource(id = R.string.feed_fab_content_description)
+                        )
+                    }
+                }
+                else -> {}
+            }
         },
         bottomBar = {
             BottomBar(
@@ -79,24 +88,6 @@ fun MainActivityScreen() {
             }
         }
     )
-}
-
-@Composable
-private fun FloatingActionButton(
-    currentDestination: NavigationDestination?,
-    onClick: () -> Unit,
-) {
-    when (currentDestination) {
-        NavigationDestination.Feed -> {
-            androidx.compose.material3.FloatingActionButton(onClick = onClick) {
-                Icon(
-                    MoSoIcons.add(),
-                    stringResource(id = R.string.feed_fab_content_description)
-                )
-            }
-        }
-        else -> {}
-    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
