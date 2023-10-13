@@ -1,4 +1,3 @@
-@file:Suppress("detekt:all")
 package org.mozilla.social.feature.report.step1
 
 import androidx.navigation.NavGraphBuilder
@@ -7,7 +6,6 @@ import org.mozilla.social.core.navigation.NavigationDestination
 import org.mozilla.social.feature.report.ReportType
 
 internal fun NavGraphBuilder.reportScreen1(
-    onDoneClicked: () -> Unit,
     onCloseClicked: () -> Unit,
     onNextClicked: (reportType: ReportType, serializedReportData: String?) -> Unit,
 ) {

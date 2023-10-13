@@ -46,7 +46,6 @@ fun NavGraphBuilder.reportFlow(
         ),
     ) {
         reportScreen1(
-            onDoneClicked,
             onCloseClicked,
             onNextClicked = { reportType, bundle ->
                 when (reportType) {
