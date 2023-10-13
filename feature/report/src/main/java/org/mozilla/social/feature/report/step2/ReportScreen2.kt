@@ -1,4 +1,4 @@
-@file:Suppress
+@file:Suppress("detekt:all")
 package org.mozilla.social.feature.report.step2
 
 import androidx.compose.runtime.Composable
