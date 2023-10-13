@@ -1,4 +1,4 @@
-@file:Suppress
+@file:Suppress("detekt:all")
 package org.mozilla.social.feature.report.step1
 
 import androidx.navigation.NavGraphBuilder
