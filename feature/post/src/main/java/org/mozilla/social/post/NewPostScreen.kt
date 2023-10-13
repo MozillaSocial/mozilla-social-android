@@ -13,6 +13,7 @@ import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -29,6 +30,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CircularProgressIndicator
@@ -36,7 +38,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
@@ -62,16 +63,19 @@ import androidx.compose.ui.text.input.TransformedText
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 import org.mozilla.social.common.LoadState
 import org.mozilla.social.common.utils.buildAnnotatedStringForAccountsAndHashtags
 import org.mozilla.social.common.utils.toFile
+import org.mozilla.social.core.designsystem.component.MoSoButton
 import org.mozilla.social.core.designsystem.component.MoSoDivider
 import org.mozilla.social.core.designsystem.component.MoSoSurface
 import org.mozilla.social.core.designsystem.component.MoSoToast
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.designsystem.theme.FirefoxColor
+import org.mozilla.social.core.designsystem.theme.MoSoSpacing
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.designsystem.utils.NoIndication
 import org.mozilla.social.core.ui.TransparentNoTouchOverlay
@@ -130,10 +134,13 @@ internal fun NewPostScreen(
         accounts = viewModel.accountList.collectAsState().value,
         hashTags = viewModel.hashtagList.collectAsState().value,
         inReplyToAccountName = viewModel.inReplyToAccountName.collectAsState().value,
+        userHeaderState = viewModel.userHeaderState.collectAsState(initial = null).value,
     )
 
     MoSoToast(toastMessage = viewModel.errorToastMessage)
 }
+
+data class UserHeaderState(val avatarUrl: String, val displayName: String)
 
 @Composable
 private fun NewPostScreen(
@@ -156,6 +163,7 @@ private fun NewPostScreen(
     accounts: List<Account>?,
     hashTags: List<String>?,
     inReplyToAccountName: String?,
+    userHeaderState: UserHeaderState?,
 ) {
     val context = LocalContext.current
     val multipleMediaLauncher = rememberLauncherForActivityResult(
@@ -175,16 +183,21 @@ private fun NewPostScreen(
     Box(
         modifier = Modifier
             .windowInsetsPadding(WindowInsets.ime.exclude(WindowInsets.navigationBars))
-            .background(MaterialTheme.colorScheme.surface)
+            .background(MoSoTheme.colors.layer1)
     ) {
         Column {
             TopBar(
                 onPostClicked = onPostClicked,
                 onCloseClicked = onCloseClicked,
                 sendButtonEnabled = sendButtonEnabled,
-                visibility = visibility,
-                onVisibilitySelected = onVisibilitySelected,
             )
+            userHeaderState?.let { userHeaderState ->
+                UserHeader(
+                    userHeaderState = userHeaderState,
+                    visibility = visibility,
+                    onVisibilitySelected = onVisibilitySelected,
+                )
+            }
             Box(
                 modifier = Modifier
                     .weight(1f)
@@ -235,52 +248,70 @@ private fun NewPostScreen(
 }
 
 @Composable
+fun UserHeader(
+    userHeaderState: UserHeaderState,
+    visibility: StatusVisibility,
+    onVisibilitySelected: (StatusVisibility) -> Unit
+) {
+    Row {
+        AsyncImage(
+            modifier = Modifier
+                .padding(horizontal = MoSoSpacing.sm)
+                .size(92.dp)
+                .clip(CircleShape)
+                .border(
+                    width = 3.dp,
+                    color = MoSoTheme.colors.layer1,
+                    shape = CircleShape
+                ),
+            model = userHeaderState.avatarUrl,
+            contentDescription = null,
+        )
+
+        Column {
+            Text(text = userHeaderState.displayName, style = MoSoTheme.typography.labelMedium)
+
+            VisibilityDropDownButton(
+                visibility = visibility,
+                onVisibilitySelected = onVisibilitySelected,
+            )
+        }
+
+    }
+}
+
+@Composable
 private fun TopBar(
     onPostClicked: () -> Unit,
     onCloseClicked: () -> Unit,
     sendButtonEnabled: Boolean,
-    visibility: StatusVisibility,
-    onVisibilitySelected: (StatusVisibility) -> Unit,
 ) {
-    Column {
-        Box(
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            // left side
-            IconButton(
-                onClick = { onCloseClicked() },
-            ) {
-                Icon(
-                    MoSoIcons.close(),
-                    "close",
-                    tint = MaterialTheme.colorScheme.onSurface,
-                )
-            }
+    Row(
+        Modifier
+            .fillMaxWidth()
+            .padding(MoSoSpacing.sm),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
 
-            // right side
-            Row(
-                modifier = Modifier.align(Alignment.CenterEnd),
-            ) {
-                VisibilityDropDownButton(
-                    visibility = visibility,
-                    onVisibilitySelected = onVisibilitySelected,
-                )
-                Spacer(modifier = Modifier.padding(start = 16.dp))
-                val keyboard = LocalSoftwareKeyboardController.current
-                IconButton(
-                    enabled = sendButtonEnabled,
-                    onClick = {
-                        onPostClicked()
-                        keyboard?.hide()
-                    },
-                ) {
-                    Icon(
-                        MoSoIcons.send(),
-                        stringResource(id = R.string.send_post_button_content_description),
-                        tint = MaterialTheme.colorScheme.onSurface,
-                    )
-                }
-            }
+        // left side
+        IconButton(
+            onClick = { onCloseClicked() },
+        ) {
+            Icon(
+                MoSoIcons.x(),
+                "close",
+                tint = MoSoTheme.colors.textPrimary,
+            )
+        }
+
+        Spacer(modifier = Modifier.padding(start = 16.dp))
+        val keyboard = LocalSoftwareKeyboardController.current
+        MoSoButton(onClick = onPostClicked, enabled = sendButtonEnabled) {
+            Text(
+                text = stringResource(id = R.string.post),
+                style = MoSoTheme.typography.labelSmall
+            )
         }
     }
 }
@@ -306,7 +337,7 @@ private fun BottomBar(
             modifier = Modifier
                 .height(60.dp)
                 .fillMaxWidth()
-                .background(MaterialTheme.colorScheme.background)
+                .background(MoSoTheme.colors.layer1)
         ) {
             // left row
             Row(
@@ -317,9 +348,9 @@ private fun BottomBar(
                     enabled = addImageButtonEnabled,
                 ) {
                     Icon(
-                        MoSoIcons.addPhotoAlternate(),
+                        MoSoIcons.imagePlus(),
                         stringResource(id = R.string.attach_image_button_content_description),
-                        tint = MaterialTheme.colorScheme.onSurface,
+                        tint = MoSoTheme.colors.textPrimary,
                     )
                 }
                 IconButton(
@@ -327,9 +358,9 @@ private fun BottomBar(
                     enabled = pollButtonEnabled,
                 ) {
                     Icon(
-                        MoSoIcons.poll(),
+                        MoSoIcons.chartBar(),
                         stringResource(id = R.string.add_poll_button_content_description),
-                        tint = MaterialTheme.colorScheme.onSurface,
+                        tint = MoSoTheme.colors.textPrimary,
                     )
                 }
                 IconButton(
@@ -341,7 +372,7 @@ private fun BottomBar(
                         tint = if (contentWarningText == null) {
                             LocalContentColor.current
                         } else {
-                            MaterialTheme.colorScheme.error
+                            MoSoTheme.colors.textWarning
                         },
                     )
                 }
@@ -350,11 +381,13 @@ private fun BottomBar(
             Row(
                 modifier = Modifier
                     .align(Alignment.CenterEnd)
-                    .padding(end = 16.dp)
+                    .padding(end = MoSoSpacing.md)
             ) {
+
                 Text(
                     text = characterCountText,
-                    color = MaterialTheme.colorScheme.onSurface,
+                    style = MoSoTheme.typography.labelSmall,
+                    color = MoSoTheme.colors.textSecondary,
                 )
             }
         }
@@ -497,11 +530,11 @@ private fun ContentWarningEntry(
         onValueChange = { contentWarningInteractions.onContentWarningTextChanged(it) },
         label = { Text(text = stringResource(id = R.string.content_warning_label)) },
         colors = OutlinedTextFieldDefaults.colors(
-            unfocusedBorderColor = MaterialTheme.colorScheme.error,
-            focusedBorderColor = MaterialTheme.colorScheme.error,
-            focusedLabelColor = MaterialTheme.colorScheme.error,
-            unfocusedLabelColor = MaterialTheme.colorScheme.error,
-            cursorColor = MaterialTheme.colorScheme.error,
+            unfocusedBorderColor = MoSoTheme.colors.borderWarning,
+            focusedBorderColor = MoSoTheme.colors.borderWarning,
+            focusedLabelColor = MoSoTheme.colors.textWarning,
+            unfocusedLabelColor = MoSoTheme.colors.textWarning,
+            cursorColor = MoSoTheme.colors.textWarning,
         )
     )
 }
@@ -688,6 +721,37 @@ private fun NewPostScreenPreview() {
             isSendingPost = false,
             visibility = StatusVisibility.Private,
             onVisibilitySelected = {},
+            poll = null,
+            pollInteractions = object : PollInteractions {},
+            pollButtonEnabled = true,
+            contentWarningText = null,
+            contentWarningInteractions = object : ContentWarningInteractions {},
+            accounts = null,
+            hashTags = null,
+            inReplyToAccountName = null,
+            userHeaderState = UserHeaderState("", "Barack Obama")
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun NewPostScreenWithPollPreview() {
+    MoSoTheme(
+        false
+    ) {
+        NewPostScreen(
+            statusText = TextFieldValue(),
+            statusInteractions = object : StatusInteractions {},
+            onPostClicked = {},
+            onCloseClicked = {},
+            sendButtonEnabled = true,
+            imageStates = mapOf(),
+            addImageButtonEnabled = true,
+            mediaInteractions = object : MediaInteractions {},
+            isSendingPost = false,
+            visibility = StatusVisibility.Private,
+            onVisibilitySelected = {},
             poll = Poll(
                 options = listOf("option 1", "option 2"),
                 style = PollStyle.SINGLE_CHOICE,
@@ -696,11 +760,43 @@ private fun NewPostScreenPreview() {
             ),
             pollInteractions = object : PollInteractions {},
             pollButtonEnabled = true,
+            contentWarningText = null,
+            contentWarningInteractions = object : ContentWarningInteractions {},
+            accounts = null,
+            hashTags = null,
+            inReplyToAccountName = null,
+            userHeaderState = UserHeaderState("", "Barack Obama"),
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun NewPostScreenWithContentWarningPreview() {
+    MoSoTheme(
+        false
+    ) {
+        NewPostScreen(
+            statusText = TextFieldValue(),
+            statusInteractions = object : StatusInteractions {},
+            onPostClicked = {},
+            onCloseClicked = {},
+            sendButtonEnabled = true,
+            imageStates = mapOf(),
+            addImageButtonEnabled = true,
+            mediaInteractions = object : MediaInteractions {},
+            isSendingPost = false,
+            visibility = StatusVisibility.Private,
+            onVisibilitySelected = {},
+            poll = null,
+            pollInteractions = object : PollInteractions {},
+            pollButtonEnabled = true,
             contentWarningText = "Content is bad",
             contentWarningInteractions = object : ContentWarningInteractions {},
             accounts = null,
             hashTags = null,
-            inReplyToAccountName = null
+            inReplyToAccountName = null,
+            userHeaderState = UserHeaderState("", "Barack Obama"),
         )
     }
 }

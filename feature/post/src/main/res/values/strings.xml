@@ -31,4 +31,5 @@
     <string name="media_alt_text_label">Add a description</string>
 
     <string name="error_sending_post_toast">Error sending post</string>
+    <string name="post">Post</string>
 </resources>
