@@ -69,6 +69,7 @@ import org.koin.core.parameter.parametersOf
 import org.mozilla.social.common.LoadState
 import org.mozilla.social.common.utils.buildAnnotatedStringForAccountsAndHashtags
 import org.mozilla.social.common.utils.toFile
+import org.mozilla.social.core.designsystem.component.MoSoButton
 import org.mozilla.social.core.designsystem.component.MoSoDivider
 import org.mozilla.social.core.designsystem.component.MoSoSurface
 import org.mozilla.social.core.designsystem.component.MoSoToast
@@ -306,17 +307,10 @@ private fun TopBar(
 
         Spacer(modifier = Modifier.padding(start = 16.dp))
         val keyboard = LocalSoftwareKeyboardController.current
-        IconButton(
-            enabled = sendButtonEnabled,
-            onClick = {
-                onPostClicked()
-                keyboard?.hide()
-            },
-        ) {
-            Icon(
-                MoSoIcons.send(),
-                stringResource(id = R.string.send_post_button_content_description),
-                tint = MoSoTheme.colors.textPrimary,
+        MoSoButton(onClick = onPostClicked) {
+            Text(
+                text = stringResource(id = R.string.post),
+                style = MoSoTheme.typography.labelSmall
             )
         }
     }
