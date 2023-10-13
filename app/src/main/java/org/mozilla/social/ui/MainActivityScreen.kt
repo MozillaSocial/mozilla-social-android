@@ -46,10 +46,18 @@ fun MainActivityScreen() {
         modifier = Modifier.nestedScroll(appState.topAppBarScrollBehavior.nestedScrollConnection),
         snackbarHost = { appState.snackbarHostState },
         floatingActionButton = {
-            MoSoFloatingActionButton(
-                currentDestination = currentRoute,
-                onClick = appState::navigateToNewPost
-            )
+
+            when (currentRoute) {
+                NavigationDestination.Feed -> {
+                    MoSoFloatingActionButton(onClick = appState::navigateToNewPost) {
+                        Icon(
+                            MoSoIcons.plus(),
+                            stringResource(id = R.string.feed_fab_content_description)
+                        )
+                    }
+                }
+                else -> {}
+            }
         },
         bottomBar = {
             BottomBar(
@@ -80,24 +88,6 @@ fun MainActivityScreen() {
             }
         }
     )
-}
-
-@Composable
-private fun FloatingActionButton(
-    currentDestination: NavigationDestination?,
-    onClick: () -> Unit,
-) {
-    when (currentDestination) {
-        NavigationDestination.Feed -> {
-            MoSoFloatingActionButton(onClick = onClick) {
-                Icon(
-                    MoSoIcons.add(),
-                    stringResource(id = R.string.feed_fab_content_description)
-                )
-            }
-        }
-        else -> {}
-    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
