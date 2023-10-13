@@ -4,9 +4,12 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
@@ -14,6 +17,7 @@ import androidx.core.net.toUri
 import coil.compose.AsyncImage
 import org.mozilla.social.common.utils.FileType
 import org.mozilla.social.common.utils.getFileType
+import org.mozilla.social.core.designsystem.theme.MoSoRadius
 import org.mozilla.social.model.Attachment
 
 @Composable
@@ -64,7 +68,9 @@ private fun Attachment(
     attachment: Attachment
 ) {
     AsyncImage(
-        modifier = modifier.padding(2.dp),
+        modifier = modifier
+            .padding(2.dp)
+            .clip(RoundedCornerShape(MoSoRadius.lg)),
         model = attachment.previewUrl,
         contentDescription = attachment.description,
         contentScale = ContentScale.Crop,

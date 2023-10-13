@@ -48,11 +48,11 @@ private fun Status.toTopRowMetaDataUiState(): TopRowMetaDataUiState? =
     if (boostedStatus != null) {
         TopRowMetaDataUiState(
             text = StringFactory.resource(R.string.user_has_boosted_post, account.username),
-            icon = MoSoIcons.Repeat
+            iconType = TopRowIconType.BOOSTED
         )
     } else if (inReplyToAccountName != null) {
         TopRowMetaDataUiState(
             text = StringFactory.resource(R.string.post_is_in_reply_to_user, inReplyToAccountName!!),
-            icon = MoSoIcons.Reply
+            iconType = TopRowIconType.REPLY
         )
     } else null

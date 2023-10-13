@@ -90,7 +90,7 @@ private fun FloatingActionButton(
         NavigationDestination.Feed -> {
             androidx.compose.material3.FloatingActionButton(onClick = onClick) {
                 Icon(
-                    MoSoIcons.Add,
+                    MoSoIcons.add(),
                     stringResource(id = R.string.feed_fab_content_description)
                 )
             }

@@ -1,6 +1,5 @@
 package org.mozilla.social.core.ui.postcard
 
-import androidx.compose.ui.graphics.vector.ImageVector
 import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.core.ui.poll.PollUiState
 import org.mozilla.social.model.Attachment
@@ -32,6 +31,11 @@ data class MainPostCardUiState(
 )
 
 data class TopRowMetaDataUiState(
-    val icon: ImageVector,
+    val iconType: TopRowIconType,
     val text: StringFactory,
 )
+
+enum class TopRowIconType {
+    REPLY,
+    BOOSTED,
+}

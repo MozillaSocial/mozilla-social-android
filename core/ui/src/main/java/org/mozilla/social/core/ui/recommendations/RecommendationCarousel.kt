@@ -49,7 +49,7 @@ fun RecommendationCarousel(reccs: List<Recommendation>, onMoreInfoClicked: () ->
             Spacer(modifier = Modifier.weight(1f))
             IconButton(onClick = onMoreInfoClicked) {
                 Icon(
-                    imageVector = MoSoIcons.Info,
+                    painter = MoSoIcons.info(),
                     contentDescription = stringResource(id = R.string.more_info_content_description),
                     tint = MaterialTheme.colorScheme.onPrimary,
                 )
@@ -77,7 +77,7 @@ fun RecommendationCarousel(reccs: List<Recommendation>, onMoreInfoClicked: () ->
                     color = MoSoTheme.colors.actionPrimary
                 )
                 Icon(
-                    imageVector = MoSoIcons.ChevronRight,
+                    painter = MoSoIcons.chevronRight(),
                     tint = MoSoTheme.colors.actionPrimary,
                     contentDescription = null
                 )

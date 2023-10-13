@@ -7,6 +7,7 @@ package org.mozilla.social.core.designsystem.theme
 
 import android.app.Activity
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -69,6 +70,9 @@ private val darkColorPalette = MoSoColors(
     layer1 = FirefoxColor.DarkGrey70,
     layer2 = FirefoxColor.DarkGrey40,
     layerAccent = FirefoxColor.Violet60,
+    layerActionPrimaryEnabled = FirefoxColor.Violet60,
+    layerActionSecondaryEnabled = FirefoxColor.White,
+    layerActionDisabled = FirefoxColor.LightGrey70,
     scrim = FirefoxColor.DarkGrey90,
     actionPrimary = FirefoxColor.Violet60,
     actionSecondary = FirefoxColor.LightGrey30,
@@ -77,7 +81,8 @@ private val darkColorPalette = MoSoColors(
     textLink = FirefoxColor.Violet20,
     textWarning = FirefoxColor.Red20,
     textActionPrimary = FirefoxColor.LightGrey05,
-    textActionSecondary = FirefoxColor.DarkGrey90,
+    textActionSecondary = FirefoxColor.White,
+    textActionDisabled = FirefoxColor.LightGrey90,
 
     iconPrimary = FirefoxColor.LightGrey05,
     iconSecondary = FirefoxColor.LightGrey40,
@@ -95,6 +100,9 @@ private val darkColorPalette = MoSoColors(
 private val lightColorPalette = MoSoColors(
     layer1 = FirefoxColor.White,
     layer2 = FirefoxColor.LightGrey20,
+    layerActionPrimaryEnabled = FirefoxColor.Violet70,
+    layerActionSecondaryEnabled = FirefoxColor.White,
+    layerActionDisabled = FirefoxColor.LightGrey70,
     layerAccent = FirefoxColor.Violet60,
     scrim = FirefoxColor.DarkGrey20,
     actionPrimary = FirefoxColor.Violet60,
@@ -105,6 +113,7 @@ private val lightColorPalette = MoSoColors(
     textWarning = FirefoxColor.Red70,
     textActionPrimary = FirefoxColor.White,
     textActionSecondary = FirefoxColor.DarkGrey90,
+    textActionDisabled = FirefoxColor.LightGrey90,
 
     iconPrimary = FirefoxColor.DarkGrey90,
     iconSecondary = FirefoxColor.DarkGrey05,
@@ -129,6 +138,9 @@ class MoSoColors(
     layer1: Color,
     layer2: Color,
     layerAccent: Color,
+    layerActionPrimaryEnabled: Color,
+    layerActionSecondaryEnabled: Color,
+    layerActionDisabled: Color,
     scrim: Color,
     actionPrimary: Color,
     actionSecondary: Color,
@@ -138,6 +150,7 @@ class MoSoColors(
     textWarning: Color,
     textActionPrimary: Color,
     textActionSecondary: Color,
+    textActionDisabled: Color,
     iconPrimary: Color,
     iconSecondary: Color,
     iconAccent: Color,
@@ -162,6 +175,15 @@ class MoSoColors(
 
     // App Bar Top (edit), Text Cursor, Selected Tab Check
     var layerAccent by mutableStateOf(layerAccent)
+        private set
+
+    var layerActionPrimaryEnabled by mutableStateOf(layerActionPrimaryEnabled)
+        private set
+
+    var layerActionSecondaryEnabled by mutableStateOf(layerActionSecondaryEnabled)
+        private set
+
+    var layerActionDisabled by mutableStateOf(layerActionDisabled)
         private set
 
     var scrim by mutableStateOf(scrim)
@@ -206,6 +228,8 @@ class MoSoColors(
     var textActionSecondary by mutableStateOf(textActionSecondary)
         private set
 
+    var textActionDisabled by mutableStateOf(textActionDisabled)
+        private set
 
     // Icon
 
@@ -252,6 +276,9 @@ class MoSoColors(
         layer1 = other.layer1
         layer2 = other.layer2
         layerAccent = other.layerAccent
+        layerActionPrimaryEnabled = other.layerActionPrimaryEnabled
+        layerActionSecondaryEnabled = other.layerActionSecondaryEnabled
+        layerActionDisabled = other.layerActionDisabled
         scrim = other.scrim
         actionPrimary = other.actionPrimary
         actionSecondary = other.actionSecondary
@@ -261,6 +288,7 @@ class MoSoColors(
         textWarning = other.textWarning
         textActionPrimary = other.textActionPrimary
         textActionSecondary = other.textActionSecondary
+        textActionDisabled = other.textActionDisabled
         iconPrimary = other.iconPrimary
         iconSecondary = other.iconSecondary
         iconAccentViolet = other.iconAccentViolet
@@ -280,6 +308,9 @@ class MoSoColors(
         layer1: Color = this.layer1,
         layer2: Color = this.layer2,
         layerAccent: Color = this.layerAccent,
+        layerActionPrimaryEnabled: Color = this.layerActionPrimaryEnabled,
+        layerActionSecondaryEnabled: Color = this.layerActionSecondaryEnabled,
+        layerActionDisabled: Color = this.layerActionDisabled,
         scrim: Color = this.scrim,
         actionPrimary: Color = this.actionPrimary,
         actionSecondary: Color = this.actionSecondary,
@@ -289,6 +320,7 @@ class MoSoColors(
         textWarning: Color = this.textWarning,
         textActionPrimary: Color = this.textActionPrimary,
         textActionSecondary: Color = this.textActionSecondary,
+        textOnActionDisabled: Color = this.textActionDisabled,
         iconPrimary: Color = this.iconPrimary,
         iconSecondary: Color = this.iconSecondary,
         iconAccentViolet: Color = this.iconAccentViolet,
@@ -303,6 +335,9 @@ class MoSoColors(
         layer1 = layer1,
         layer2 = layer2,
         layerAccent = layerAccent,
+        layerActionPrimaryEnabled = layerActionPrimaryEnabled,
+        layerActionSecondaryEnabled = layerActionSecondaryEnabled,
+        layerActionDisabled = layerActionDisabled,
         scrim = scrim,
         actionPrimary = actionPrimary,
         actionSecondary = actionSecondary,
@@ -312,6 +347,7 @@ class MoSoColors(
         textWarning = textWarning,
         textActionPrimary = textActionPrimary,
         textActionSecondary = textActionSecondary,
+        textActionDisabled = textOnActionDisabled,
         iconPrimary = iconPrimary,
         iconSecondary = iconSecondary,
         iconAccent = iconAccentViolet,
@@ -348,9 +384,8 @@ fun ProvideMoSoTextStyle(
     content: @Composable () -> Unit,
 ) {
     CompositionLocalProvider(
-        LocalTextStyle provides MoSoTheme.typography.bodyMedium.copy(
-            color = MoSoTheme.colors.textPrimary
-        ),
+        LocalContentColor provides MoSoTheme.colors.textPrimary,
+        LocalTextStyle provides MoSoTheme.typography.bodyMedium,
         content = content
     )
 }

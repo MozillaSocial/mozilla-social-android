@@ -251,7 +251,7 @@ private fun TopBar(
                 onClick = { onCloseClicked() },
             ) {
                 Icon(
-                    MoSoIcons.Close,
+                    MoSoIcons.close(),
                     "close",
                     tint = MaterialTheme.colorScheme.onSurface,
                 )
@@ -275,7 +275,7 @@ private fun TopBar(
                     },
                 ) {
                     Icon(
-                        MoSoIcons.Send,
+                        MoSoIcons.send(),
                         stringResource(id = R.string.send_post_button_content_description),
                         tint = MaterialTheme.colorScheme.onSurface,
                     )
@@ -317,7 +317,7 @@ private fun BottomBar(
                     enabled = addImageButtonEnabled,
                 ) {
                     Icon(
-                        MoSoIcons.AddPhotoAlternate,
+                        MoSoIcons.addPhotoAlternate(),
                         stringResource(id = R.string.attach_image_button_content_description),
                         tint = MaterialTheme.colorScheme.onSurface,
                     )
@@ -327,7 +327,7 @@ private fun BottomBar(
                     enabled = pollButtonEnabled,
                 ) {
                     Icon(
-                        MoSoIcons.Poll,
+                        MoSoIcons.poll(),
                         stringResource(id = R.string.add_poll_button_content_description),
                         tint = MaterialTheme.colorScheme.onSurface,
                     )
@@ -336,7 +336,7 @@ private fun BottomBar(
                     onClick = { contentWarningInteractions.onContentWarningClicked() },
                 ) {
                     Icon(
-                        MoSoIcons.Warning,
+                        MoSoIcons.warning(),
                         stringResource(id = R.string.content_warning_button_content_description),
                         tint = if (contentWarningText == null) {
                             LocalContentColor.current
@@ -469,7 +469,7 @@ private fun InReplyToText(
                 modifier = Modifier
                     .size(20.dp)
                     .align(Alignment.CenterVertically),
-                imageVector = MoSoIcons.Reply,
+                painter = MoSoIcons.chatBubbles(),
                 contentDescription = ""
             )
             Spacer(modifier = Modifier.padding(start = 8.dp))
@@ -559,7 +559,7 @@ private fun ImageUploadBox(
                 }
             ) {
                 Icon(
-                    MoSoIcons.Delete,
+                    MoSoIcons.delete(),
                     stringResource(id = R.string.delete_button_content_description)
                 )
             }
@@ -602,7 +602,7 @@ private fun PollChoice(
                 modifier = Modifier
                     .width(40.dp)
                     .height(40.dp),
-                imageVector = MoSoIcons.DeleteOutline,
+                painter = MoSoIcons.deleteOutline(),
                 contentDescription = stringResource(id = R.string.remove_poll_option_button_content_description),
             )
         }
@@ -629,7 +629,7 @@ private fun PollSettings(
                 modifier = Modifier
                     .width(40.dp)
                     .height(40.dp),
-                imageVector = MoSoIcons.AddCircleOutline,
+                painter = MoSoIcons.addCircleOutline(),
                 contentDescription = stringResource(id = R.string.add_poll_option_button_content_description),
             )
         }
