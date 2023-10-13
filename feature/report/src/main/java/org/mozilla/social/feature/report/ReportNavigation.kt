@@ -48,16 +48,19 @@ fun NavGraphBuilder.reportFlow(
         reportScreen1(
             onDoneClicked,
             onCloseClicked,
-            onNextClicked = { reportType ->
+            onNextClicked = { reportType, bundle ->
                 when (reportType) {
                     ReportType.DO_NOT_LIKE -> navController.navigateToReportScreen3()
-                    else -> navController.navigateToReportScreen2()
+                    else -> bundle?.let { navController.navigateToReportScreen2(it) }
                 }
             }
         )
         reportScreen2(
             onReportSubmitted = {
                 navController.navigateToReportScreen3()
+            },
+            onCloseClicked = {
+                navController.popBackStack()
             }
         )
         reportScreen3(

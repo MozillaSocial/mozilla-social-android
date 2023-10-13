@@ -10,8 +10,6 @@ val reportModule = module {
     viewModel { parametersHolder ->
         ReportScreen1ViewModel(
             get(),
-            get(),
-            get(),
             parametersHolder[0],
             parametersHolder[1],
             parametersHolder[2],
@@ -21,6 +19,16 @@ val reportModule = module {
     }
     viewModel { parametersHolder ->
         ReportScreen2ViewModel(
+            get(),
+            parametersHolder[0],
+            parametersHolder[1],
+            parametersHolder[2],
+            parametersHolder[3],
+            parametersHolder[4],
+            parametersHolder[5],
+            parametersHolder[6],
+            parametersHolder[7],
+            parametersHolder[8],
         )
     }
     viewModel { parametersHolder ->

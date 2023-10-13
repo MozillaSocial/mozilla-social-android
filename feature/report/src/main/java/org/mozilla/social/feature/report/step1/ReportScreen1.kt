@@ -37,12 +37,10 @@ import org.mozilla.social.core.designsystem.component.MoSoDivider
 import org.mozilla.social.core.designsystem.component.MoSoRadioButton
 import org.mozilla.social.core.designsystem.component.MoSoSurface
 import org.mozilla.social.core.designsystem.component.MoSoTextField
-import org.mozilla.social.core.designsystem.component.MoSoToast
 import org.mozilla.social.core.designsystem.component.MoSoTopBar
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.ui.animation.ExpandingAnimation
 import org.mozilla.social.feature.report.R
-import org.mozilla.social.feature.report.ReportInteractions
 import org.mozilla.social.feature.report.ReportTarget
 import org.mozilla.social.feature.report.ReportType
 import org.mozilla.social.model.InstanceRule
@@ -50,7 +48,7 @@ import org.mozilla.social.model.InstanceRule
 @Composable
 internal fun ReportScreen1(
     onCloseClicked: () -> Unit,
-    onNextClicked: (reportType: ReportType) -> Unit,
+    onNextClicked: (reportType: ReportType, serializedReportData: String) -> Unit,
     reportAccountId: String,
     reportAccountHandle: String,
     reportStatusId: String?,
@@ -78,8 +76,6 @@ internal fun ReportScreen1(
         sendToExternalServer = viewModel.sendToExternalServerChecked.collectAsState().value,
         reportInteractions = viewModel
     )
-
-    MoSoToast(toastMessage = viewModel.errorToastMessage)
 }
 
 @Composable
@@ -91,7 +87,7 @@ private fun ReportScreen1(
     additionalCommentText: String,
     reportAccountHandle: String,
     sendToExternalServer: Boolean,
-    reportInteractions: ReportInteractions,
+    reportInteractions: ReportScreen1Interactions,
 ) {
     MoSoSurface(
         modifier = Modifier
@@ -128,7 +124,7 @@ private fun MainContent(
     additionalCommentText: String,
     reportAccountHandle: String,
     sendToExternalServer: Boolean,
-    reportInteractions: ReportInteractions,
+    reportInteractions: ReportScreen1Interactions,
 ) {
     Column(
         modifier = Modifier
@@ -175,7 +171,7 @@ private fun MainContent(
             modifier = Modifier
                 .fillMaxWidth(),
             enabled = selectedReportType != null,
-            onClick = { reportInteractions.onReportClicked() }
+            onClick = { reportInteractions.onNextClicked() }
         ) {
             Text(text = stringResource(id = R.string.next_button))
         }
@@ -188,7 +184,7 @@ private fun ReportOptions(
     instanceRules: List<InstanceRule>,
     selectedReportType: ReportType?,
     checkedRules: List<InstanceRule>,
-    reportInteractions: ReportInteractions,
+    reportInteractions: ReportScreen1Interactions,
 ) {
     SelectableReportType(
         reportType = ReportType.DO_NOT_LIKE,
@@ -254,7 +250,7 @@ private fun SelectableReportType(
     reportType: ReportType,
     title: String,
     selectedReportType: ReportType?,
-    reportInteractions: ReportInteractions,
+    reportInteractions: ReportScreen1Interactions,
     content: @Composable () -> Unit,
 ) {
     Row(
@@ -285,7 +281,7 @@ private fun SelectableReportType(
 private fun CheckableInstanceRule(
     checked: Boolean,
     instanceRule: InstanceRule,
-    reportInteractions: ReportInteractions,
+    reportInteractions: ReportScreen1Interactions,
 ) {
     Row(
         Modifier
@@ -315,7 +311,7 @@ private fun AdditionalReportFields(
     additionalCommentText: String,
     reportAccountHandle: String,
     sendToExternalServer: Boolean,
-    reportInteractions: ReportInteractions,
+    reportInteractions: ReportScreen1Interactions,
 ) {
     // will be null if the user is on the same instance as you
     val externalInstance = remember(reportAccountHandle) {
@@ -360,7 +356,7 @@ private fun AdditionalReportFields(
 @Composable
 private fun AdditionalComments(
     additionalCommentText: String,
-    reportInteractions: ReportInteractions,
+    reportInteractions: ReportScreen1Interactions,
 ) {
     Text(
         text = stringResource(id = R.string.extra_info_prompt),
@@ -382,7 +378,7 @@ private fun AdditionalComments(
 @Composable
 private fun SendToOtherServerOption(
     checked: Boolean,
-    reportInteractions: ReportInteractions,
+    reportInteractions: ReportScreen1Interactions,
 ) {
     Column {
         Text(
@@ -443,7 +439,7 @@ private fun ReportScreenPreview() {
             additionalCommentText = "",
             reportAccountHandle = "john@mozilla.com",
             sendToExternalServer = false,
-            reportInteractions = object : ReportInteractions {},
+            reportInteractions = object : ReportScreen1Interactions {},
         )
     }
 }
@@ -475,7 +471,7 @@ private fun ReportScreenPreviewDarkMode() {
             additionalCommentText = "",
             reportAccountHandle = "john@mozilla.com",
             sendToExternalServer = false,
-            reportInteractions = object : ReportInteractions {},
+            reportInteractions = object : ReportScreen1Interactions {},
         )
     }
 }

@@ -9,7 +9,7 @@ import org.mozilla.social.feature.report.ReportType
 internal fun NavGraphBuilder.reportScreen1(
     onDoneClicked: () -> Unit,
     onCloseClicked: () -> Unit,
-    onNextClicked: (reportType: ReportType) -> Unit,
+    onNextClicked: (reportType: ReportType, serializedReportData: String?) -> Unit,
 ) {
     composable(
         route = NavigationDestination.ReportScreen1.route,
@@ -27,6 +27,7 @@ internal fun NavGraphBuilder.reportScreen1(
             onCloseClicked()
             return@composable
         }
+
         ReportScreen1(
             onCloseClicked,
             onNextClicked,

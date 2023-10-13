@@ -1,6 +1,7 @@
 plugins {
     id("org.mozilla.social.android.library")
     id("org.mozilla.social.android.library.compose")
+    alias(libs.plugins.kotlinx.serialization)
 }
 
 android {
@@ -49,4 +50,7 @@ dependencies {
     implementation(libs.androidx.compose.ui.ui)
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
+
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.jakewharton.timber)
 }

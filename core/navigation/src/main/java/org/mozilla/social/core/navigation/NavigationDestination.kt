@@ -99,7 +99,16 @@ sealed class NavigationDestination(
 
     data object ReportScreen2: NavigationDestination(
         route = "report2"
-    )
+    ) {
+        const val NAV_PARAM_BUNDLE = "reportDataBundle"
+        val fullRoute = "$route?" +
+                "$NAV_PARAM_BUNDLE={$NAV_PARAM_BUNDLE}"
+
+        fun route(
+            bundle: String
+        ): String = "$route?" +
+                "$NAV_PARAM_BUNDLE=$bundle"
+    }
 
     data object ReportScreen3: NavigationDestination(
         route = "report3"
