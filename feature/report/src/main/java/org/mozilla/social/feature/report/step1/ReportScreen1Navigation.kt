@@ -1,3 +1,4 @@
+@file:Suppress
 package org.mozilla.social.feature.report.step1
 
 import androidx.navigation.NavGraphBuilder

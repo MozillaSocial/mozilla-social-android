@@ -1,3 +1,4 @@
+@file:Suppress
 package org.mozilla.social.feature.report.step3
 
 import androidx.lifecycle.ViewModel

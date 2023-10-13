@@ -285,7 +285,7 @@ private fun SelectableReportType(
             Text(
                 text = title,
                 style = MoSoTheme.typography.bodyMedium,
-                fontWeight = FontWeight(700)
+                fontWeight = FontWeight.W700
             )
             content()
         }
