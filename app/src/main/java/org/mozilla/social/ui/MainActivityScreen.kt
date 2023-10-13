@@ -91,7 +91,7 @@ private fun FloatingActionButton(
         NavigationDestination.Feed -> {
             MoSoFloatingActionButton(onClick = onClick) {
                 Icon(
-                    MoSoIcons.Add,
+                    MoSoIcons.add(),
                     stringResource(id = R.string.feed_fab_content_description)
                 )
             }

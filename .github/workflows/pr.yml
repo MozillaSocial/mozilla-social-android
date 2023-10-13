@@ -18,10 +18,10 @@ jobs:
       uses: ./.github/actions/setup-environment
     - name: Verify KSP version
       run: ci/verify-ksp-version.sh
-    - name: Compile a debug build
+    - name: Compile a release build
       env:
         GRADLE_OPTS: -Dorg.gradle.daemon=false
-      run: ci/debug-build.sh
+      run: ci/unsigned-release-build.sh
 
   detekt:
     runs-on: ubuntu-latest

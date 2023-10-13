@@ -99,8 +99,15 @@ class AppState(
     val postCardNavigation = object : PostCardNavigation {
         override fun onReplyClicked(statusId: String) = navigateToNewPost(statusId)
         override fun onPostClicked(statusId: String) = navigateToThread(statusId)
-        override fun onReportClicked(accountId: String, statusId: String) =
-            navigateToReport(accountId, statusId)
+        override fun onReportClicked(
+            accountId: String,
+            accountHandle: String,
+            statusId: String,
+        ) = navigateToReport(
+            accountId = accountId,
+            accountHandle = accountHandle,
+            statusId = statusId,
+        )
 
         override fun onAccountClicked(accountId: String) = navigateToAccount(accountId)
         override fun onHashTagClicked(hashTag: String) = navigateToHashTag(hashTag)
@@ -120,7 +127,13 @@ class AppState(
         override fun onFollowersClicked(accountId: String) =
             navigateToAccountFollowers(accountId)
         override fun onCloseClicked() = popBackStack()
-        override fun onReportClicked(accountId: String) = navigateToReport(accountId)
+        override fun onReportClicked(
+            accountId: String,
+            accountHandle: String,
+        ) = navigateToReport(
+            accountId = accountId,
+            accountHandle = accountHandle
+        )
     }
 
     val followersNavigation = object : FollowersNavigationCallbacks {
@@ -200,9 +213,14 @@ class AppState(
 
     fun navigateToReport(
         accountId: String,
+        accountHandle: String,
         statusId: String? = null
     ) {
-        navController.navigateToReport(reportAccountId = accountId, reportStatusId = statusId)
+        navController.navigateToReport(
+            reportAccountId = accountId,
+            reportAccountHandle = accountHandle,
+            reportStatusId = statusId,
+        )
     }
 
     fun navigateToHashTag(hashTag: String) {

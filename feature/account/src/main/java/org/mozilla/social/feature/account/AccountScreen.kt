@@ -138,7 +138,7 @@ private fun AccountScreen(
                 is Resource.Loading -> {
                     MoSoTopBar(
                         icon = if (closeButtonVisible) {
-                            MoSoIcons.Close
+                            MoSoIcons.close()
                         } else {
                             null
                         },
@@ -159,7 +159,7 @@ private fun AccountScreen(
                     MoSoTopBar(
                         title = resource.data.displayName,
                         icon = if (closeButtonVisible) {
-                            MoSoIcons.Close
+                            MoSoIcons.close()
                         } else {
                             null
                         },
@@ -189,7 +189,7 @@ private fun AccountScreen(
                 is Resource.Error -> {
                     MoSoTopBar(
                         icon = if (closeButtonVisible) {
-                            MoSoIcons.Close
+                            MoSoIcons.close()
                         } else {
                             null
                         },
@@ -296,7 +296,7 @@ private fun OverflowMenu(
         modifier = Modifier.width(IntrinsicSize.Max),
         onClick = { overflowMenuExpanded.value = true }
     ) {
-        Icon(imageVector = MoSoIcons.MoreVert, contentDescription = null)
+        Icon(painter = MoSoIcons.moreVertical(), contentDescription = null)
 
         MoSoDropdownMenu(
             expanded = overflowMenuExpanded.value,
@@ -535,7 +535,7 @@ private fun UserBio(
                 modifier = Modifier
                     .rotate(rotation)
                     .align(Alignment.TopEnd),
-                imageVector = MoSoIcons.Caret,
+                painter = MoSoIcons.caret(),
                 contentDescription = null,
             )
         }

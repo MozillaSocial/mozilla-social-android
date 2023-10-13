@@ -168,7 +168,12 @@ class AccountViewModel(
     }
 
     override fun onOverflowReportClicked() {
-        accountNavigationCallbacks.onReportClicked(accountId)
+        (uiState.value as? Resource.Loaded)?.data?.webFinger?.let { webFinger ->
+            accountNavigationCallbacks.onReportClicked(
+                accountId,
+                webFinger,
+            )
+        }
     }
 
     override fun onFollowersClicked() {

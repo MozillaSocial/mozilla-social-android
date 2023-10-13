@@ -8,4 +8,5 @@ interface ReportInteractions {
     fun onReportTypeSelected(reportType: ReportType) = Unit
     fun onServerRuleClicked(rule: InstanceRule) = Unit
     fun onAdditionCommentTextChanged(text: String) = Unit
+    fun onSendToExternalServerClicked() = Unit
 }

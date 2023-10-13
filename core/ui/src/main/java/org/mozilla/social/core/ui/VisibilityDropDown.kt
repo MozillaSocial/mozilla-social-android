@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -16,14 +15,13 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.mozilla.social.core.designsystem.component.MoSoDropdownMenu
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
-import org.mozilla.social.core.designsystem.theme.MoSoTypography
 import org.mozilla.social.model.StatusVisibility
 
 @Composable
@@ -45,22 +43,22 @@ fun VisibilityDropDownButton(
         ) {
             when (visibility) {
                 StatusVisibility.Public -> ButtonContent(
-                    icon = MoSoIcons.Public,
+                    icon = MoSoIcons.public(),
                     text = stringResource(id = R.string.visibility_public)
                 )
 
                 StatusVisibility.Unlisted -> ButtonContent(
-                    icon = MoSoIcons.LockOpen,
+                    icon = MoSoIcons.lockOpen(),
                     text = stringResource(id = R.string.visibility_unlisted)
                 )
 
                 StatusVisibility.Private -> ButtonContent(
-                    icon = MoSoIcons.Lock,
+                    icon = MoSoIcons.lock(),
                     text = stringResource(id = R.string.visibility_private)
                 )
 
                 StatusVisibility.Direct -> ButtonContent(
-                    icon = MoSoIcons.Message,
+                    icon = MoSoIcons.message(),
                     text = stringResource(id = R.string.visibility_direct)
                 )
             }
@@ -80,28 +78,28 @@ fun VisibilityDropDownButton(
         ) {
             DropDownItem(
                 type = StatusVisibility.Public,
-                icon = MoSoIcons.Public,
+                icon = MoSoIcons.public(),
                 text = stringResource(id = R.string.visibility_public),
                 expanded = expanded,
                 onVisibilitySelected = onVisibilitySelected
             )
             DropDownItem(
                 type = StatusVisibility.Unlisted,
-                icon = MoSoIcons.LockOpen,
+                icon = MoSoIcons.lockOpen(),
                 text = stringResource(id = R.string.visibility_unlisted),
                 expanded = expanded,
                 onVisibilitySelected = onVisibilitySelected
             )
             DropDownItem(
                 type = StatusVisibility.Private,
-                icon = MoSoIcons.Lock,
+                icon = MoSoIcons.lock(),
                 text = stringResource(id = R.string.visibility_private),
                 expanded = expanded,
                 onVisibilitySelected = onVisibilitySelected
             )
             DropDownItem(
                 type = StatusVisibility.Direct,
-                icon = MoSoIcons.Message,
+                icon = MoSoIcons.message(),
                 text = stringResource(id = R.string.visibility_direct),
                 expanded = expanded,
                 onVisibilitySelected = onVisibilitySelected
@@ -112,7 +110,7 @@ fun VisibilityDropDownButton(
 
 @Composable
 private fun ButtonContent(
-    icon: ImageVector,
+    icon: Painter,
     text: String,
 ) {
     Icon(
@@ -132,7 +130,7 @@ private fun ButtonContent(
 @Composable
 private fun DropDownItem(
     type: StatusVisibility,
-    icon: ImageVector,
+    icon: Painter,
     text: String,
     expanded: MutableState<Boolean>,
     onVisibilitySelected: (StatusVisibility) -> Unit,
