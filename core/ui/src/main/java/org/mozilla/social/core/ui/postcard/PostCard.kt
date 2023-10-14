@@ -162,7 +162,9 @@ private fun MetaData(
     Row(
         modifier = modifier,
     ) {
-        Column {
+        Column(
+            modifier = Modifier.weight(1f)
+        ) {
             Text(
                 text = post.username,
                 style = MoSoTheme.typography.labelMedium,
@@ -173,7 +175,6 @@ private fun MetaData(
                 color = MoSoTheme.colors.textSecondary,
             )
         }
-        Spacer(modifier = Modifier.weight(1f))
         IconButton(
             modifier = Modifier.width(IntrinsicSize.Max),
             onClick = { overflowMenuExpanded.value = true }
