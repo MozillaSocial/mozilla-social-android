@@ -55,3 +55,7 @@
 #-renamesourcefileattribute SourceFile
 
 -keep class org.mozilla.social.core.navigation.** { *; }
+
+# This is required for retrofit.  It's merged into retrofit's master branch, but not released yet
+# https://github.com/square/retrofit/pull/3910/files/9831d5c3f9d28c61d29078d89645bce8ea258366#diff-50d428633d98e235831f5f9b75d7aa48897d5edc2bed30c55c9bb9ec20b36f82
+-keep,allowobfuscation,allowshrinking class retrofit2.Response
