@@ -3,6 +3,7 @@ package org.mozilla.social.feature.report.step2
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -37,6 +38,9 @@ class ReportScreen2ViewModel(
     private val _statuses = MutableStateFlow<Resource<List<ReportStatusUiState>>>(Resource.Loading())
     val statuses = _statuses.asStateFlow()
 
+    private val _reportIsSending = MutableStateFlow(false)
+    val reportIsSending = _reportIsSending.asStateFlow()
+
     init {
         getStatuses()
     }
@@ -65,6 +69,7 @@ class ReportScreen2ViewModel(
     }
 
     override fun onReportClicked() {
+        _reportIsSending.edit { true }
         viewModelScope.launch {
             try {
                 reportRepository.report(
@@ -80,11 +85,12 @@ class ReportScreen2ViewModel(
                     ruleViolations = checkedInstanceRules.map { it.id },
                     forward = sendToExternalServer,
                 )
+                onReportSubmitted()
             } catch (e: Exception) {
                 Timber.e(e)
                 _errorToastMessage.emit(StringFactory.resource(R.string.error_sending_report_toast))
+                _reportIsSending.edit { false }
             }
-            onReportSubmitted()
         }
     }
 

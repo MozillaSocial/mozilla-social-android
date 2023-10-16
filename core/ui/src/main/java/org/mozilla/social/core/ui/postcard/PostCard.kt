@@ -117,7 +117,6 @@ private fun MainPost(
                 mentions = post.mentions,
                 htmlText = post.statusTextHtml,
                 htmlContentInteractions = postCardInteractions,
-                textStyle = MoSoTheme.typography.bodyMedium,
             )
             Spacer(modifier = Modifier.padding(top = 4.dp))
             MediaDisplay(attachments = post.mediaAttachments)

@@ -32,7 +32,7 @@ fun HtmlContent(
     htmlText: String,
     htmlContentInteractions: HtmlContentInteractions,
     maximumLineCount: Int = Int.MAX_VALUE,
-    textStyle: TextStyle? = null,
+    textStyle: TextStyle = MoSoTheme.typography.bodyMedium,
     clickableLinks: Boolean = true,
 ) {
     val linkColor: Color = MoSoTheme.colors.textLink

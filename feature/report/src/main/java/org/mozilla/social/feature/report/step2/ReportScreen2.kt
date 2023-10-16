@@ -22,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import org.koin.androidx.compose.koinViewModel
@@ -29,14 +30,17 @@ import org.koin.core.parameter.parametersOf
 import org.mozilla.social.common.Resource
 import org.mozilla.social.core.designsystem.component.MoSoButton
 import org.mozilla.social.core.designsystem.component.MoSoCheckBox
+import org.mozilla.social.core.designsystem.component.MoSoCircularProgressIndicator
 import org.mozilla.social.core.designsystem.component.MoSoDivider
 import org.mozilla.social.core.designsystem.component.MoSoSurface
 import org.mozilla.social.core.designsystem.component.MoSoToast
 import org.mozilla.social.core.designsystem.component.MoSoTopBar
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.designsystem.utils.NoRipple
+import org.mozilla.social.core.ui.error.GenericError
 import org.mozilla.social.core.ui.htmlcontent.HtmlContent
 import org.mozilla.social.core.ui.htmlcontent.HtmlContentInteractions
+import org.mozilla.social.core.ui.loading.GenericLoading
 import org.mozilla.social.feature.report.R
 import org.mozilla.social.feature.report.ReportType
 import org.mozilla.social.model.InstanceRule
@@ -69,6 +73,7 @@ internal fun ReportScreen2(
     ReportScreen2(
         reportAccountHandle = reportAccountHandle,
         uiState = viewModel.statuses.collectAsState().value,
+        reportIsSending = viewModel.reportIsSending.collectAsState().value,
         reportInteractions = viewModel
     )
 
@@ -79,6 +84,7 @@ internal fun ReportScreen2(
 private fun ReportScreen2(
     reportAccountHandle: String,
     uiState: Resource<List<ReportStatusUiState>>,
+    reportIsSending: Boolean,
     reportInteractions: ReportScreen2Interactions,
 ) {
     MoSoSurface {
@@ -103,6 +109,7 @@ private fun ReportScreen2(
             MoSoDivider()
 
             BottomContent(
+                reportIsSending = reportIsSending,
                 reportInteractions = reportInteractions,
             )
         }
@@ -138,8 +145,14 @@ private fun MiddleContent(
         modifier = modifier
     ) {
         when (uiState) {
-            is Resource.Loading -> {}
-            is Resource.Error -> {}
+            is Resource.Loading -> {
+                GenericLoading()
+            }
+            is Resource.Error -> {
+                GenericError(
+                    onRetryClicked = { reportInteractions.onRetryClicked() }
+                )
+            }
             is Resource.Loaded -> {
                 LazyColumn(
                     modifier = Modifier.fillMaxSize()
@@ -171,15 +184,23 @@ private fun MiddleContent(
 
 @Composable
 private fun BottomContent(
+    reportIsSending: Boolean,
     reportInteractions: ReportScreen2Interactions,
 ) {
     MoSoButton(
         modifier = Modifier
             .padding(16.dp)
             .fillMaxWidth(),
-        onClick = { reportInteractions.onReportClicked() }
+        onClick = { reportInteractions.onReportClicked() },
+        enabled = !reportIsSending,
     ) {
-        Text(text = stringResource(id = R.string.submit_report_button))
+        if (reportIsSending) {
+            MoSoCircularProgressIndicator(
+                modifier = Modifier.size(24.dp)
+            )
+        } else {
+            Text(text = stringResource(id = R.string.submit_report_button))
+        }
     }
 }
 
@@ -193,7 +214,7 @@ private fun SelectableStatusCard(
     NoRipple {
         Row(
             modifier = Modifier
-                .padding(16.dp)
+                .padding(start = 8.dp, end = 16.dp, top = 16.dp, bottom = 16.dp)
                 .clickable { reportInteractions.onStatusClicked(uiState.statusId) }
         ) {
             MoSoCheckBox(
@@ -201,8 +222,6 @@ private fun SelectableStatusCard(
                 checked = uiState.checked,
                 onCheckedChange = { reportInteractions.onStatusClicked(uiState.statusId) }
             )
-
-            Spacer(modifier = Modifier.width(8.dp))
 
             AsyncImage(
                 modifier = Modifier
@@ -220,18 +239,32 @@ private fun SelectableStatusCard(
                 modifier = Modifier.align(Alignment.CenterVertically),
             ) {
                 Row {
-                    Column {
-                        Text(text = uiState.userName)
-                        Text(text = "@${uiState.handle}")
+                    Column(
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Text(
+                            text = uiState.userName,
+                            style = MoSoTheme.typography.labelMedium,
+                            fontWeight = FontWeight.W600,
+                        )
+                        Text(
+                            text = "@${uiState.handle}",
+                            style = MoSoTheme.typography.bodySmall,
+                            color = MoSoTheme.colors.textSecondary,
+                        )
                     }
-                    Text(text = uiState.postTimeSince.build(context))
+                    Text(
+                        text = uiState.postTimeSince.build(context),
+                        style = MoSoTheme.typography.bodySmall,
+                        color = MoSoTheme.colors.textSecondary,
+                    )
                 }
 
                 HtmlContent(
                     mentions = emptyList(),
                     htmlText = uiState.htmlStatusText,
                     htmlContentInteractions = object : HtmlContentInteractions {},
-                    maximumLineCount = 1,
+                    maximumLineCount = 2,
                     clickableLinks = false
                 )
             }

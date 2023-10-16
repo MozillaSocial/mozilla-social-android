@@ -495,7 +495,6 @@ private fun UserBio(
                         mentions = emptyList(),
                         htmlText = account.bio,
                         htmlContentInteractions = htmlContentInteractions,
-                        textStyle = MoSoTheme.typography.bodyMedium,
                         maximumLineCount = if (targetState) Int.MAX_VALUE else BIO_MAX_LINES_NOT_EXPANDED,
                     )
                     if (targetState) {
