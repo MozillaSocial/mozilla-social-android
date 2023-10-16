@@ -40,14 +40,17 @@ import org.mozilla.social.ui.navigationdrawer.NavigationDrawer
 fun MainActivityScreen() {
     val appState = rememberAppState()
 
-    val currentRoute = appState.currentNavigationDestination.collectAsState().value
+    val currentDestination = appState.currentNavigationDestination.collectAsState().value
 
     MoSoScaffold(
-        modifier = Modifier.nestedScroll(appState.topAppBarScrollBehavior.nestedScrollConnection),
+        modifier = if (AppState.shouldShowTopBar(currentDestination)) {
+            Modifier.nestedScroll(appState.topAppBarScrollBehavior.nestedScrollConnection)
+        } else {
+            Modifier
+        },
         snackbarHost = { appState.snackbarHostState },
         floatingActionButton = {
-
-            when (currentRoute) {
+            when (currentDestination) {
                 NavigationDestination.Feed -> {
                     MoSoFloatingActionButton(onClick = appState::navigateToNewPost) {
                         Icon(
@@ -61,18 +64,17 @@ fun MainActivityScreen() {
         },
         bottomBar = {
             BottomBar(
-                currentDestination = currentRoute,
+                currentDestination = currentDestination,
                 navigateToTopLevelDestination = appState::navigateToTopLevelDestination
             )
         },
         topBar = {
             TopBar(
-                currentDestination = currentRoute,
+                currentDestination = currentDestination,
                 topAppBarScrollBehavior = appState.topAppBarScrollBehavior,
                 navigationDrawerState = appState.navigationDrawerState,
             )
         },
-        topAppBarScrollBehavior = appState.topAppBarScrollBehavior,
         navigationDrawerState = appState.navigationDrawerState,
         navigationDrawerContent = {
             NavigationDrawer(
@@ -99,43 +101,38 @@ private fun TopBar(
 ) {
     val coroutineScope = rememberCoroutineScope()
 
-    when (currentDestination) {
-        NavigationDestination.Feed,
-        NavigationDestination.Search,
-        NavigationDestination.Bookmarks -> {
-            Column {
-                MoSoAppBar(
-                    scrollBehavior = topAppBarScrollBehavior,
-                    title = {
-                        Image(
-                            painter = mozillaLogo(),
-                            contentDescription = "mozilla logo"
-                        )
-                    },
-                    navigationIcon = {
-                        IconButton(onClick = {
-                            coroutineScope.launch {
-                                navigationDrawerState.open()
-                            }
-                        }) {
-                            Icon(
-                                painter = MoSoIcons.list(),
-                                modifier = Modifier.size(24.dp),
-                                contentDescription = stringResource(id = R.string.navigation_menu_content_description),
-                            )
+    if (AppState.shouldShowTopBar(currentDestination)) {
+        Column {
+            MoSoAppBar(
+                scrollBehavior = topAppBarScrollBehavior,
+                title = {
+                    Image(
+                        painter = mozillaLogo(),
+                        contentDescription = "mozilla logo"
+                    )
+                },
+                navigationIcon = {
+                    IconButton(onClick = {
+                        coroutineScope.launch {
+                            navigationDrawerState.open()
                         }
-                    },
-                    actions = {}
-                )
+                    }) {
+                        Icon(
+                            painter = MoSoIcons.list(),
+                            modifier = Modifier.size(24.dp),
+                            contentDescription = stringResource(id = R.string.navigation_menu_content_description),
+                        )
+                    }
+                },
+                actions = {}
+            )
 
-                MoSoDivider(
-                    modifier = Modifier
-                        .height(1.dp)
-                        .background(MoSoTheme.colors.borderPrimary)
-                )
-            }
+            MoSoDivider(
+                modifier = Modifier
+                    .height(1.dp)
+                    .background(MoSoTheme.colors.borderPrimary)
+            )
         }
-        else -> {}
     }
 }
 

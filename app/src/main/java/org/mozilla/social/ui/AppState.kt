@@ -89,7 +89,9 @@ class AppState(
     @OptIn(ExperimentalCoroutinesApi::class)
     val currentNavigationDestination: StateFlow<NavigationDestination?> =
         navController.currentBackStackEntryFlow.mapLatest { backStackEntry ->
-            NavigationDestination::class.sealedSubclasses.firstOrNull { it.objectInstance?.route == backStackEntry.destination.route }?.objectInstance
+            NavigationDestination::class.sealedSubclasses.firstOrNull {
+                it.objectInstance?.route == backStackEntry.destination.route
+            }?.objectInstance
         }.stateIn(
             coroutineScope,
             started = SharingStarted.WhileSubscribed(),
@@ -240,5 +242,16 @@ class AppState(
         }
 
         navController.navigate(destination, navOptions)
+    }
+
+    companion object {
+        fun shouldShowTopBar(
+            currentDestination: NavigationDestination?
+        ): Boolean = when (currentDestination) {
+            NavigationDestination.Feed,
+            NavigationDestination.Search,
+            NavigationDestination.Bookmarks -> true
+            else -> false
+        }
     }
 }
