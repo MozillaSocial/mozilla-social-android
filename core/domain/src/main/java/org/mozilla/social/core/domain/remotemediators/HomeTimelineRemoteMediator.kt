@@ -24,6 +24,15 @@ class HomeTimelineRemoteMediator(
     private val socialDatabase: SocialDatabase,
 ) : RemoteMediator<Int, HomeTimelineStatusWrapper>() {
 
+    override suspend fun initialize(): InitializeAction {
+        return if (hasInitialized) {
+            InitializeAction.SKIP_INITIAL_REFRESH
+        } else {
+            hasInitialized = true
+            InitializeAction.LAUNCH_INITIAL_REFRESH
+        }
+    }
+
     override suspend fun load(
         loadType: LoadType,
         state: PagingState<Int, HomeTimelineStatusWrapper>
@@ -32,6 +41,7 @@ class HomeTimelineRemoteMediator(
             var pageSize: Int = state.config.pageSize
             val response = when (loadType) {
                 LoadType.REFRESH -> {
+                    println("johnny loading refresh")
                     pageSize = state.config.initialLoadSize
                     timelineRepository.getHomeTimeline(
                         olderThanId = null,
@@ -41,6 +51,7 @@ class HomeTimelineRemoteMediator(
                 }
 
                 LoadType.PREPEND -> {
+                    println("johnny loading prepend")
                     val firstItem = state.firstItemOrNull()
                         ?: return MediatorResult.Success(endOfPaginationReached = true)
                     timelineRepository.getHomeTimeline(
@@ -51,6 +62,7 @@ class HomeTimelineRemoteMediator(
                 }
 
                 LoadType.APPEND -> {
+                    println("johnny loading append")
                     val lastItem = state.lastItemOrNull()
                         ?: return MediatorResult.Success(endOfPaginationReached = true)
                     timelineRepository.getHomeTimeline(
@@ -98,5 +110,9 @@ class HomeTimelineRemoteMediator(
         } catch (e: Exception) {
             MediatorResult.Error(e)
         }
+    }
+
+    companion object {
+        var hasInitialized = false
     }
 }

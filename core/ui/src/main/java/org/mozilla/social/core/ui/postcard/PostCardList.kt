@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -25,10 +26,12 @@ import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.core.designsystem.component.MoSoCircularProgressIndicator
 import org.mozilla.social.core.designsystem.component.MoSoDivider
 import org.mozilla.social.core.designsystem.component.MoSoToast
+import org.mozilla.social.core.ui.LazyListStateKey
 import org.mozilla.social.core.ui.error.GenericError
 import org.mozilla.social.core.ui.pullrefresh.PullRefreshIndicator
 import org.mozilla.social.core.ui.pullrefresh.pullRefresh
 import org.mozilla.social.core.ui.pullrefresh.rememberPullRefreshState
+import org.mozilla.social.core.ui.rememberLazyListStateForever
 
 /**
  * Shows a list of post cards and various loading and error states.
@@ -50,6 +53,7 @@ fun PostCardList(
     postCardInteractions: PostCardInteractions,
     pullToRefreshEnabled: Boolean = false,
     isFullScreenLoading: Boolean = false,
+    stateKey: LazyListStateKey? = null,
     headerContent: @Composable () -> Unit = {},
 ) {
 
@@ -74,9 +78,16 @@ fun PostCardList(
             ),
     ) {
 
+        val defaultListState = rememberLazyListState()
+
         LazyColumn(
             Modifier
                 .fillMaxSize(),
+            state = if (lazyingPagingItems.itemCount == 0) {
+                defaultListState
+            } else {
+                   stateKey?.let { rememberLazyListStateForever(key = it) } ?: defaultListState
+            },
         ) {
 
             item { headerContent() }
