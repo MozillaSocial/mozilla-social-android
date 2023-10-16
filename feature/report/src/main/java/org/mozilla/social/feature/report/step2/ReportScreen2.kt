@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -127,6 +128,8 @@ private fun TopContent(
             text = stringResource(id = R.string.report_prompt, "@$reportAccountHandle"),
             style = MoSoTheme.typography.bodyMedium,
         )
+
+        Spacer(modifier = Modifier.height(4.dp))
 
         Text(
             text = stringResource(id = R.string.screen_2_prompt),
