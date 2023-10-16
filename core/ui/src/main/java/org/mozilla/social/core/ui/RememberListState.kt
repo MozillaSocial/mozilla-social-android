@@ -6,7 +6,7 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 
-private val savedStates = mutableMapOf<LazyListStateKey, LazyListState>()
+private val savedStates = mutableMapOf<LazyListStateKey, ListStateParameters>()
 
 /**
  * Remembers a lazy list state, based on a given key, even after the composable is destroyed.
@@ -19,12 +19,20 @@ fun rememberLazyListStateForever(
     key: LazyListStateKey,
 ): LazyListState {
     val state = rememberSaveable(stateSaver = LazyListState.Saver) {
-        val savedState = savedStates[key] ?: LazyListState()
-        mutableStateOf(savedState)
+        val savedState = savedStates[key]
+        mutableStateOf(
+            LazyListState(
+                savedState?.itemIndex ?: 0,
+                savedState?.scrollOffset ?: 0,
+            )
+        )
     }
     DisposableEffect(Unit) {
         onDispose {
-            savedStates[key] = state.value
+            savedStates[key] = ListStateParameters(
+                state.value.firstVisibleItemIndex,
+                state.value.firstVisibleItemScrollOffset,
+            )
         }
     }
     return state.value
@@ -36,3 +44,8 @@ fun rememberLazyListStateForever(
 enum class LazyListStateKey {
     FEED,
 }
+
+private data class ListStateParameters(
+    val itemIndex: Int,
+    val scrollOffset: Int,
+)
