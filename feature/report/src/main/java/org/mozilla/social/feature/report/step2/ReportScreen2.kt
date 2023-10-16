@@ -38,7 +38,6 @@ internal fun ReportScreen2(
             onCloseClicked,
             onReportSubmitted,
             reportAccountId,
-            reportAccountHandle,
             reportStatusId,
             reportType,
             checkedInstanceRules,

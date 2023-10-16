@@ -4,9 +4,14 @@ package org.mozilla.social.feature.report.step2
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import org.mozilla.social.common.Resource
 import org.mozilla.social.common.utils.StringFactory
+import org.mozilla.social.common.utils.edit
+import org.mozilla.social.core.data.repository.AccountRepository
 import org.mozilla.social.core.data.repository.ReportRepository
 import org.mozilla.social.feature.report.R
 import org.mozilla.social.feature.report.ReportType
@@ -14,11 +19,11 @@ import org.mozilla.social.model.InstanceRule
 import timber.log.Timber
 
 class ReportScreen2ViewModel(
+    private val accountRepository: AccountRepository,
     private val reportRepository: ReportRepository,
     private val onClose: () -> Unit,
     private val onReportSubmitted: () -> Unit,
     private val reportAccountId: String,
-    private val reportAccountHandle: String,
     private val reportStatusId: String?,
     private val reportType: ReportType,
     private val checkedInstanceRules: List<InstanceRule>,
@@ -29,6 +34,35 @@ class ReportScreen2ViewModel(
     private val _errorToastMessage = MutableSharedFlow<StringFactory>(extraBufferCapacity = 1)
     val errorToastMessage = _errorToastMessage.asSharedFlow()
 
+    private val _statuses = MutableStateFlow<Resource<List<ReportStatusUiState>>>(Resource.Loading())
+    val statuses = _statuses.asStateFlow()
+
+    init {
+        getStatuses()
+    }
+
+    private fun getStatuses() {
+        _statuses.edit { Resource.Loading() }
+        viewModelScope.launch {
+            try {
+                val uiStateList = accountRepository.getAccountStatuses(
+                    accountId = reportAccountId,
+                    loadSize = 40,
+                ).map {
+                    it.toReportStatusUiState()
+                }.filterNot {
+                    it.statusId == reportStatusId
+                }
+                _statuses.edit {
+                    Resource.Loaded(uiStateList)
+                }
+            } catch (e: Exception) {
+                Timber.e(e)
+                _statuses.edit { Resource.Error(e) }
+            }
+        }
+    }
+
     override fun onReportClicked() {
         viewModelScope.launch {
             try {
@@ -36,6 +70,9 @@ class ReportScreen2ViewModel(
                     accountId = reportAccountId,
                     statusIds = buildList {
                         reportStatusId?.let { add(it) }
+                        (statuses.value as? Resource.Loaded)?.data?.forEach {
+                            if (it.checked) add(it.statusId)
+                        }
                     },
                     comment = additionalText,
                     category = reportType.stringValue,
@@ -52,5 +89,25 @@ class ReportScreen2ViewModel(
 
     override fun onCloseClicked() {
         onClose()
+    }
+
+    override fun onStatusClicked(statusId: String) {
+        _statuses.edit {
+            Resource.Loaded(
+                data = (statuses.value as Resource.Loaded).data.map {
+                    if (it.statusId == statusId) {
+                        it.copy(
+                            checked = !it.checked
+                        )
+                    } else {
+                        it
+                    }
+                }
+            )
+        }
+    }
+
+    override fun onRetryClicked() {
+        getStatuses()
     }
 }
