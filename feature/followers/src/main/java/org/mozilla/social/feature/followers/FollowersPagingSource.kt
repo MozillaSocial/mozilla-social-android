@@ -6,6 +6,7 @@ import org.mozilla.social.common.Rel
 import org.mozilla.social.common.parseMastodonLinkHeader
 import org.mozilla.social.core.data.repository.AccountRepository
 import org.mozilla.social.model.Account
+import timber.log.Timber
 
 class FollowersPagingSource(
     private val accountRepository: AccountRepository,
@@ -43,6 +44,7 @@ class FollowersPagingSource(
                     ?.substringBefore(">")
             )
         } catch (e: Exception) {
+            Timber.e(e)
             LoadResult.Error(e)
         }
     }
