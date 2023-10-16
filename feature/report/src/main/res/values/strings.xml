@@ -35,6 +35,7 @@
     <string name="error_sending_report_toast">Error sending report</string>
 
     <string name="screen_2_prompt">Are there any other posts that back up this report?</string>
+    <string name="select_all_that_apply">Select all that apply:</string>
 
     <string name="submit_report_button">Submit report</string>
 </resources>

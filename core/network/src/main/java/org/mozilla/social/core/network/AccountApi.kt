@@ -59,6 +59,7 @@ interface AccountApi {
         @Query("limit") limit: Int? = null,
         @Query("only_media") onlyMedia: Boolean = false,
         @Query("exclude_replies") excludeReplies: Boolean = false,
+        @Query("exclude_reblogs") excludeBoosts: Boolean = false,
     ): List<NetworkStatus>
 
     @GET("/api/v1/bookmarks")

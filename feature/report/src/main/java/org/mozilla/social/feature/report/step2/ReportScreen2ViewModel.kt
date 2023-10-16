@@ -48,6 +48,7 @@ class ReportScreen2ViewModel(
                 val uiStateList = accountRepository.getAccountStatuses(
                     accountId = reportAccountId,
                     loadSize = 40,
+                    excludeBoosts = true,
                 ).map {
                     it.toReportStatusUiState()
                 }.filterNot {
