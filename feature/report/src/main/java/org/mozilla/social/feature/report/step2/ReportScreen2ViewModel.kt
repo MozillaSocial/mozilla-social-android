@@ -15,6 +15,7 @@ import org.mozilla.social.common.utils.edit
 import org.mozilla.social.core.data.repository.AccountRepository
 import org.mozilla.social.core.data.repository.ReportRepository
 import org.mozilla.social.feature.report.R
+import org.mozilla.social.feature.report.ReportDataBundle
 import org.mozilla.social.feature.report.ReportType
 import org.mozilla.social.model.InstanceRule
 import timber.log.Timber
@@ -23,8 +24,9 @@ class ReportScreen2ViewModel(
     private val accountRepository: AccountRepository,
     private val reportRepository: ReportRepository,
     private val onClose: () -> Unit,
-    private val onReportSubmitted: () -> Unit,
+    private val onReportSubmitted: (bundle: ReportDataBundle.ReportDataBundleForScreen3) -> Unit,
     private val reportAccountId: String,
+    private val reportAccountHandle: String,
     private val reportStatusId: String?,
     private val reportType: ReportType,
     private val checkedInstanceRules: List<InstanceRule>,
@@ -85,7 +87,13 @@ class ReportScreen2ViewModel(
                     ruleViolations = checkedInstanceRules.map { it.id },
                     forward = sendToExternalServer,
                 )
-                onReportSubmitted()
+                onReportSubmitted(
+                    ReportDataBundle.ReportDataBundleForScreen3(
+                        reportAccountId = reportAccountId,
+                        reportAccountHandle = reportAccountHandle,
+                        didUserReportAccount = true,
+                    )
+                )
             } catch (e: Exception) {
                 Timber.e(e)
                 _errorToastMessage.emit(StringFactory.resource(R.string.error_sending_report_toast))

@@ -43,13 +43,14 @@ import org.mozilla.social.core.ui.htmlcontent.HtmlContent
 import org.mozilla.social.core.ui.htmlcontent.HtmlContentInteractions
 import org.mozilla.social.core.ui.loading.GenericLoading
 import org.mozilla.social.feature.report.R
+import org.mozilla.social.feature.report.ReportDataBundle
 import org.mozilla.social.feature.report.ReportType
 import org.mozilla.social.model.InstanceRule
 
 @Composable
 internal fun ReportScreen2(
     onCloseClicked: () -> Unit,
-    onReportSubmitted: () -> Unit,
+    onReportSubmitted: (bundle: ReportDataBundle.ReportDataBundleForScreen3) -> Unit,
     reportAccountId: String,
     reportAccountHandle: String,
     reportStatusId: String?,
@@ -62,6 +63,7 @@ internal fun ReportScreen2(
             onCloseClicked,
             onReportSubmitted,
             reportAccountId,
+            reportAccountHandle,
             reportStatusId,
             reportType,
             checkedInstanceRules,
@@ -75,6 +77,7 @@ internal fun ReportScreen2(
         reportAccountHandle = reportAccountHandle,
         uiState = viewModel.statuses.collectAsState().value,
         reportIsSending = viewModel.reportIsSending.collectAsState().value,
+        hasPreAttachedStatus = reportStatusId != null,
         reportInteractions = viewModel
     )
 
@@ -86,6 +89,7 @@ private fun ReportScreen2(
     reportAccountHandle: String,
     uiState: Resource<List<ReportStatusUiState>>,
     reportIsSending: Boolean,
+    hasPreAttachedStatus: Boolean,
     reportInteractions: ReportScreen2Interactions,
 ) {
     MoSoSurface {
@@ -97,7 +101,10 @@ private fun ReportScreen2(
                 onIconClicked = { reportInteractions.onCloseClicked() }
             )
 
-            TopContent(reportAccountHandle = reportAccountHandle)
+            TopContent(
+                reportAccountHandle = reportAccountHandle,
+                hasPreAttachedStatus = hasPreAttachedStatus,
+            )
 
             MoSoDivider()
 
@@ -120,6 +127,7 @@ private fun ReportScreen2(
 @Composable
 private fun TopContent(
     reportAccountHandle: String,
+    hasPreAttachedStatus: Boolean,
 ) {
     Column(
         modifier = Modifier.padding(16.dp)
@@ -132,7 +140,13 @@ private fun TopContent(
         Spacer(modifier = Modifier.height(4.dp))
 
         Text(
-            text = stringResource(id = R.string.screen_2_prompt),
+            text = stringResource(
+                id = if (hasPreAttachedStatus) {
+                    R.string.screen_2_prompt_with_attached_status
+                } else {
+                    R.string.screen_2_prompt
+                }
+            ),
             style = MoSoTheme.typography.titleMedium,
         )
     }
