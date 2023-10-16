@@ -30,8 +30,10 @@
 -keep,allowoptimization,allowshrinking,allowobfuscation class <3>
 -dontwarn androidx.work.testing.TestDriver
 -dontwarn androidx.work.testing.WorkManagerTestInitHelper
+# R8 full mode strips generic signatures from return types if not kept.
+-keep,allowobfuscation,allowshrinking class retrofit2.Response
 
-# End of Retrofit rules from https://github.com/square/retrofit/blob/029cbb419553d6d9f5fc642a2c716556d630b4d4/retrofit/src/main/resources/META-INF/proguard/retrofit2.pro
+# End of Retrofit rules from https://github.com/square/retrofit/blob/ef8d867ffb34b419355a323e11ba89db1904f8c2/retrofit/src/main/resources/META-INF/proguard/retrofit2.pro
 
 # You can control the set of applied configuration files using the
 # proguardFiles setting in build.gradle.
@@ -55,7 +57,3 @@
 #-renamesourcefileattribute SourceFile
 
 -keep class org.mozilla.social.core.navigation.** { *; }
-
-# This is required for retrofit.  It's merged into retrofit's master branch, but not released yet
-# https://github.com/square/retrofit/pull/3910/files/9831d5c3f9d28c61d29078d89645bce8ea258366#diff-50d428633d98e235831f5f9b75d7aa48897d5edc2bed30c55c9bb9ec20b36f82
--keep,allowobfuscation,allowshrinking class retrofit2.Response
