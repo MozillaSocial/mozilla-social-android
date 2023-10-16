@@ -41,7 +41,6 @@ class HomeTimelineRemoteMediator(
             var pageSize: Int = state.config.pageSize
             val response = when (loadType) {
                 LoadType.REFRESH -> {
-                    println("johnny loading refresh")
                     pageSize = state.config.initialLoadSize
                     timelineRepository.getHomeTimeline(
                         olderThanId = null,
@@ -51,7 +50,6 @@ class HomeTimelineRemoteMediator(
                 }
 
                 LoadType.PREPEND -> {
-                    println("johnny loading prepend")
                     val firstItem = state.firstItemOrNull()
                         ?: return MediatorResult.Success(endOfPaginationReached = true)
                     timelineRepository.getHomeTimeline(
@@ -62,7 +60,6 @@ class HomeTimelineRemoteMediator(
                 }
 
                 LoadType.APPEND -> {
-                    println("johnny loading append")
                     val lastItem = state.lastItemOrNull()
                         ?: return MediatorResult.Success(endOfPaginationReached = true)
                     timelineRepository.getHomeTimeline(
