@@ -1,10 +1,11 @@
-package org.mozilla.social.feature.report
+package org.mozilla.social.feature.report.step1
 
+import org.mozilla.social.feature.report.ReportType
 import org.mozilla.social.model.InstanceRule
 
-interface ReportInteractions {
+interface ReportScreen1Interactions {
     fun onCloseClicked() = Unit
-    fun onReportClicked() = Unit
+    fun onNextClicked() = Unit
     fun onReportTypeSelected(reportType: ReportType) = Unit
     fun onServerRuleClicked(rule: InstanceRule) = Unit
     fun onAdditionCommentTextChanged(text: String) = Unit

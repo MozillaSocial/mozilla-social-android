@@ -488,9 +488,7 @@ private fun UserBio(
                                     }
                                 }
                     }
-
                 }
-
             ) { targetState ->
                 Column {
                     HtmlContent(
@@ -498,7 +496,7 @@ private fun UserBio(
                         htmlText = account.bio,
                         htmlContentInteractions = htmlContentInteractions,
                         textStyle = MoSoTheme.typography.bodyMedium,
-                        maximumLineCount = if (targetState) Int.MAX_VALUE else 3,
+                        maximumLineCount = if (targetState) Int.MAX_VALUE else BIO_MAX_LINES_NOT_EXPANDED,
                     )
                     if (targetState) {
                         Spacer(modifier = Modifier.height(8.dp))
@@ -707,6 +705,8 @@ private fun HeaderLayout(
         }
     }
 }
+
+private const val BIO_MAX_LINES_NOT_EXPANDED = 3
 
 @Preview
 @Composable

@@ -1,5 +1,6 @@
 package org.mozilla.social.feature.report.step1
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -36,11 +37,11 @@ import org.mozilla.social.core.designsystem.component.MoSoDivider
 import org.mozilla.social.core.designsystem.component.MoSoRadioButton
 import org.mozilla.social.core.designsystem.component.MoSoSurface
 import org.mozilla.social.core.designsystem.component.MoSoTextField
-import org.mozilla.social.core.designsystem.component.MoSoToast
 import org.mozilla.social.core.designsystem.component.MoSoTopBar
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
+import org.mozilla.social.core.ui.animation.ExpandingAnimation
 import org.mozilla.social.feature.report.R
-import org.mozilla.social.feature.report.ReportInteractions
+import org.mozilla.social.feature.report.ReportDataBundle
 import org.mozilla.social.feature.report.ReportTarget
 import org.mozilla.social.feature.report.ReportType
 import org.mozilla.social.model.InstanceRule
@@ -48,7 +49,7 @@ import org.mozilla.social.model.InstanceRule
 @Composable
 internal fun ReportScreen1(
     onCloseClicked: () -> Unit,
-    onNextClicked: (reportType: ReportType) -> Unit,
+    onNextClicked: (bundle: ReportDataBundle) -> Unit,
     reportAccountId: String,
     reportAccountHandle: String,
     reportStatusId: String?,
@@ -76,8 +77,6 @@ internal fun ReportScreen1(
         sendToExternalServer = viewModel.sendToExternalServerChecked.collectAsState().value,
         reportInteractions = viewModel
     )
-
-    MoSoToast(toastMessage = viewModel.errorToastMessage)
 }
 
 @Composable
@@ -89,7 +88,7 @@ private fun ReportScreen1(
     additionalCommentText: String,
     reportAccountHandle: String,
     sendToExternalServer: Boolean,
-    reportInteractions: ReportInteractions,
+    reportInteractions: ReportScreen1Interactions,
 ) {
     MoSoSurface(
         modifier = Modifier
@@ -126,19 +125,8 @@ private fun MainContent(
     additionalCommentText: String,
     reportAccountHandle: String,
     sendToExternalServer: Boolean,
-    reportInteractions: ReportInteractions,
+    reportInteractions: ReportScreen1Interactions,
 ) {
-    // will be null if the user is on the same instance as you
-    val externalInstance = remember(reportAccountHandle) {
-        mutableStateOf(
-            if (reportAccountHandle.contains("@")) {
-                reportAccountHandle.substringAfterLast("@")
-            } else {
-                null
-            }
-        )
-    }
-
     Column(
         modifier = Modifier
             .padding(start = 16.dp, end = 16.dp)
@@ -172,24 +160,19 @@ private fun MainContent(
         )
 
         Spacer(modifier = Modifier.height(32.dp))
-        AdditionalComments(
+        AdditionalReportFields(
+            selectedReportType = selectedReportType,
             additionalCommentText = additionalCommentText,
+            reportAccountHandle = reportAccountHandle,
+            sendToExternalServer = sendToExternalServer,
             reportInteractions = reportInteractions,
         )
-        Spacer(modifier = Modifier.height(16.dp))
-        externalInstance.value?.let {
-            SendToOtherServerOption(
-                checked = sendToExternalServer,
-                reportInteractions = reportInteractions,
-            )
-        }
-        Spacer(modifier = Modifier.height(16.dp))
 
         MoSoButton(
             modifier = Modifier
                 .fillMaxWidth(),
             enabled = selectedReportType != null,
-            onClick = { reportInteractions.onReportClicked() }
+            onClick = { reportInteractions.onNextClicked() }
         ) {
             Text(text = stringResource(id = R.string.next_button))
         }
@@ -202,7 +185,7 @@ private fun ReportOptions(
     instanceRules: List<InstanceRule>,
     selectedReportType: ReportType?,
     checkedRules: List<InstanceRule>,
-    reportInteractions: ReportInteractions,
+    reportInteractions: ReportScreen1Interactions,
 ) {
     SelectableReportType(
         reportType = ReportType.DO_NOT_LIKE,
@@ -233,17 +216,19 @@ private fun ReportOptions(
         selectedReportType = selectedReportType,
         reportInteractions = reportInteractions,
     ) {
-        if (selectedReportType == ReportType.VIOLATION) {
-            Text(
-                text = stringResource(id = R.string.report_reason_violation_description),
-                style = MoSoTheme.typography.bodyMedium,
-            )
-            instanceRules.forEach { instanceRule ->
-                CheckableInstanceRule(
-                    checked = checkedRules.contains(instanceRule),
-                    instanceRule = instanceRule,
-                    reportInteractions = reportInteractions,
+        ExpandingAnimation(visible = selectedReportType == ReportType.VIOLATION) {
+            Column {
+                Text(
+                    text = stringResource(id = R.string.report_reason_violation_description),
+                    style = MoSoTheme.typography.bodyMedium,
                 )
+                instanceRules.forEach { instanceRule ->
+                    CheckableInstanceRule(
+                        checked = checkedRules.contains(instanceRule),
+                        instanceRule = instanceRule,
+                        reportInteractions = reportInteractions,
+                    )
+                }
             }
         }
     }
@@ -266,7 +251,7 @@ private fun SelectableReportType(
     reportType: ReportType,
     title: String,
     selectedReportType: ReportType?,
-    reportInteractions: ReportInteractions,
+    reportInteractions: ReportScreen1Interactions,
     content: @Composable () -> Unit,
 ) {
     Row(
@@ -297,7 +282,7 @@ private fun SelectableReportType(
 private fun CheckableInstanceRule(
     checked: Boolean,
     instanceRule: InstanceRule,
-    reportInteractions: ReportInteractions,
+    reportInteractions: ReportScreen1Interactions,
 ) {
     Row(
         Modifier
@@ -322,9 +307,57 @@ private fun CheckableInstanceRule(
 }
 
 @Composable
+private fun AdditionalReportFields(
+    selectedReportType: ReportType?,
+    additionalCommentText: String,
+    reportAccountHandle: String,
+    sendToExternalServer: Boolean,
+    reportInteractions: ReportScreen1Interactions,
+) {
+    // will be null if the user is on the same instance as you
+    val externalInstance = remember(reportAccountHandle) {
+        mutableStateOf(
+            if (reportAccountHandle.contains("@")) {
+                reportAccountHandle.substringAfterLast("@")
+            } else {
+                null
+            }
+        )
+    }
+
+    val showAdditionalFields = remember(selectedReportType) {
+        mutableStateOf(
+            selectedReportType != null
+                    && selectedReportType != ReportType.DO_NOT_LIKE
+        )
+    }
+
+    ExpandingAnimation(
+        visible = showAdditionalFields.value,
+    ) {
+        Column(
+            modifier = Modifier.animateContentSize()
+        ) {
+            AdditionalComments(
+                additionalCommentText = additionalCommentText,
+                reportInteractions = reportInteractions,
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            externalInstance.value?.let {
+                SendToOtherServerOption(
+                    checked = sendToExternalServer,
+                    reportInteractions = reportInteractions,
+                )
+            }
+            Spacer(modifier = Modifier.height(16.dp))
+        }
+    }
+}
+
+@Composable
 private fun AdditionalComments(
     additionalCommentText: String,
-    reportInteractions: ReportInteractions,
+    reportInteractions: ReportScreen1Interactions,
 ) {
     Text(
         text = stringResource(id = R.string.extra_info_prompt),
@@ -346,7 +379,7 @@ private fun AdditionalComments(
 @Composable
 private fun SendToOtherServerOption(
     checked: Boolean,
-    reportInteractions: ReportInteractions,
+    reportInteractions: ReportScreen1Interactions,
 ) {
     Column {
         Text(
@@ -407,7 +440,7 @@ private fun ReportScreenPreview() {
             additionalCommentText = "",
             reportAccountHandle = "john@mozilla.com",
             sendToExternalServer = false,
-            reportInteractions = object : ReportInteractions {},
+            reportInteractions = object : ReportScreen1Interactions {},
         )
     }
 }
@@ -439,7 +472,7 @@ private fun ReportScreenPreviewDarkMode() {
             additionalCommentText = "",
             reportAccountHandle = "john@mozilla.com",
             sendToExternalServer = false,
-            reportInteractions = object : ReportInteractions {},
+            reportInteractions = object : ReportScreen1Interactions {},
         )
     }
 }
