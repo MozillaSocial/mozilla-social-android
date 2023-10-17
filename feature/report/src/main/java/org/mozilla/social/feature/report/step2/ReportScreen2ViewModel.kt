@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.mozilla.social.common.Resource
 import org.mozilla.social.common.utils.StringFactory
@@ -47,7 +48,7 @@ class ReportScreen2ViewModel(
     }
 
     private fun getStatuses() {
-        _statuses.edit { Resource.Loading() }
+        _statuses.update { Resource.Loading() }
         viewModelScope.launch {
             try {
                 val uiStateList = accountRepository.getAccountStatuses(
@@ -59,18 +60,18 @@ class ReportScreen2ViewModel(
                 }.filterNot {
                     it.statusId == reportStatusId
                 }
-                _statuses.edit {
+                _statuses.update {
                     Resource.Loaded(uiStateList)
                 }
             } catch (e: Exception) {
                 Timber.e(e)
-                _statuses.edit { Resource.Error(e) }
+                _statuses.update { Resource.Error(e) }
             }
         }
     }
 
     override fun onReportClicked() {
-        _reportIsSending.edit { true }
+        _reportIsSending.update { true }
         viewModelScope.launch {
             try {
                 reportRepository.report(
@@ -96,7 +97,7 @@ class ReportScreen2ViewModel(
             } catch (e: Exception) {
                 Timber.e(e)
                 _errorToastMessage.emit(StringFactory.resource(R.string.error_sending_report_toast))
-                _reportIsSending.edit { false }
+                _reportIsSending.update { false }
             }
         }
     }
@@ -106,7 +107,7 @@ class ReportScreen2ViewModel(
     }
 
     override fun onStatusClicked(statusId: String) {
-        _statuses.edit {
+        _statuses.update {
             Resource.Loaded(
                 data = (statuses.value as Resource.Loaded).data.map {
                     if (it.statusId == statusId) {

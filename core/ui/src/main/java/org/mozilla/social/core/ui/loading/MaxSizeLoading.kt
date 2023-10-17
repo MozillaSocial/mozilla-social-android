@@ -9,7 +9,7 @@ import androidx.compose.ui.Modifier
 import org.mozilla.social.core.designsystem.component.MoSoCircularProgressIndicator
 
 @Composable
-fun GenericLoading() {
+fun MaxSizeLoading() {
     Box(
         modifier = Modifier
             .fillMaxSize()

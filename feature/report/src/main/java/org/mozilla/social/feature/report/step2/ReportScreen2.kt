@@ -41,7 +41,7 @@ import org.mozilla.social.core.designsystem.utils.NoRipple
 import org.mozilla.social.core.ui.error.GenericError
 import org.mozilla.social.core.ui.htmlcontent.HtmlContent
 import org.mozilla.social.core.ui.htmlcontent.HtmlContentInteractions
-import org.mozilla.social.core.ui.loading.GenericLoading
+import org.mozilla.social.core.ui.loading.MaxSizeLoading
 import org.mozilla.social.feature.report.R
 import org.mozilla.social.feature.report.ReportDataBundle
 import org.mozilla.social.feature.report.ReportType
@@ -163,7 +163,7 @@ private fun MiddleContent(
     ) {
         when (uiState) {
             is Resource.Loading -> {
-                GenericLoading()
+                MaxSizeLoading()
             }
             is Resource.Error -> {
                 GenericError(
