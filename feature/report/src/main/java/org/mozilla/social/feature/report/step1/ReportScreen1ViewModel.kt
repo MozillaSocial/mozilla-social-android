@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.mozilla.social.common.utils.edit
 import org.mozilla.social.core.data.repository.InstanceRepository
@@ -56,14 +57,14 @@ class ReportScreen1ViewModel(
     }
 
     override fun onReportTypeSelected(reportType: ReportType) {
-        _selectedReportType.edit { reportType }
+        _selectedReportType.update { reportType }
         if (reportType != ReportType.VIOLATION) {
-            _checkedRules.edit { emptyList() }
+            _checkedRules.update { emptyList() }
         }
     }
 
     override fun onServerRuleClicked(rule: InstanceRule) {
-        _checkedRules.edit {
+        _checkedRules.update {
             buildList {
                 addAll(checkedRules.value)
                 if (checkedRules.value.contains(rule)) {
@@ -76,11 +77,11 @@ class ReportScreen1ViewModel(
     }
 
     override fun onAdditionCommentTextChanged(text: String) {
-        _additionCommentText.edit { text }
+        _additionCommentText.update { text }
     }
 
     override fun onSendToExternalServerClicked() {
-        _sendToExternalServerChecked.edit { !sendToExternalServerChecked.value }
+        _sendToExternalServerChecked.update { !sendToExternalServerChecked.value }
     }
 
     override fun onNextClicked() {

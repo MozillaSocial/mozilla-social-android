@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
@@ -27,6 +26,7 @@ import org.mozilla.social.core.designsystem.component.MoSoCircularProgressIndica
 import org.mozilla.social.core.designsystem.component.MoSoDivider
 import org.mozilla.social.core.designsystem.component.MoSoToast
 import org.mozilla.social.core.ui.error.GenericError
+import org.mozilla.social.core.ui.loading.MaxSizeLoading
 import org.mozilla.social.core.ui.pullrefresh.PullRefreshIndicator
 import org.mozilla.social.core.ui.pullrefresh.pullRefresh
 import org.mozilla.social.core.ui.pullrefresh.rememberPullRefreshState
@@ -162,13 +162,7 @@ fun PostCardList(
         }
 
         if (lazyingPagingItems.loadState.refresh is LoadState.Loading && !pullToRefreshEnabled && isFullScreenLoading) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .wrapContentSize(Alignment.Center)
-            ) {
-                MoSoCircularProgressIndicator()
-            }
+            MaxSizeLoading()
         }
 
         if (pullToRefreshEnabled) {

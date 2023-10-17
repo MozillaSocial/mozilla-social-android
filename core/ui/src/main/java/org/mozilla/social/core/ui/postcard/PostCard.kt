@@ -18,7 +18,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -40,7 +39,6 @@ import org.mozilla.social.common.utils.timeSinceNow
 import org.mozilla.social.core.designsystem.component.MoSoDropdownMenu
 import org.mozilla.social.core.designsystem.component.MoSoSurface
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
-import org.mozilla.social.core.designsystem.theme.FirefoxColor
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.designsystem.utils.NoRipple
 import org.mozilla.social.core.ui.DropDownItem
@@ -117,7 +115,6 @@ private fun MainPost(
                 mentions = post.mentions,
                 htmlText = post.statusTextHtml,
                 htmlContentInteractions = postCardInteractions,
-                textStyle = MoSoTheme.typography.bodyMedium,
             )
             Spacer(modifier = Modifier.padding(top = 4.dp))
             MediaDisplay(attachments = post.mediaAttachments)
@@ -271,7 +268,7 @@ private fun BottomIconButton(
     painter: Painter,
     count: Long,
     highlighted: Boolean = false,
-    highlightColor: Color = MoSoTheme.colors.iconAccentViolet,
+    highlightColor: Color = MoSoTheme.colors.iconAccent,
 ) {
     Row(
         modifier = modifier,
