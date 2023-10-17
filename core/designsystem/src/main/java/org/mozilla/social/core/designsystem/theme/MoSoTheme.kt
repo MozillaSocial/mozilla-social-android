@@ -14,10 +14,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.Stable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
@@ -134,245 +130,41 @@ private val lightColorPalette = MoSoColors(
  */
 @Suppress("LargeClass", "LongParameterList")
 @Stable
-class MoSoColors(
-    layer1: Color,
-    layer2: Color,
-    layerAccent: Color,
-    layerActionPrimaryEnabled: Color,
-    layerActionSecondaryEnabled: Color,
-    layerActionDisabled: Color,
-    scrim: Color,
-    actionPrimary: Color,
-    actionSecondary: Color,
-    textPrimary: Color,
-    textSecondary: Color,
-    textLink: Color,
-    textWarning: Color,
-    textActionPrimary: Color,
-    textActionSecondary: Color,
-    textActionDisabled: Color,
-    iconPrimary: Color,
-    iconSecondary: Color,
-    iconAccent: Color,
-    iconActionActive: Color,
-    iconActionDisabled: Color,
-    borderPrimary: Color,
-    borderForm: Color,
-    borderAccent: Color,
-    borderWarning: Color,
-    borderInputEnabled: Color,
-) {
-    // Layers
-
-    // Default Screen background, Frontlayer background, App Bar Top, App Bar Bottom, Frontlayer header
-    var layer1 by mutableStateOf(layer1)
-        private set
-
-    // Card background, Menu background, Dialog, Banner
-    var layer2 by mutableStateOf(layer2)
-        private set
-
-
-    // App Bar Top (edit), Text Cursor, Selected Tab Check
-    var layerAccent by mutableStateOf(layerAccent)
-        private set
-
-    var layerActionPrimaryEnabled by mutableStateOf(layerActionPrimaryEnabled)
-        private set
-
-    var layerActionSecondaryEnabled by mutableStateOf(layerActionSecondaryEnabled)
-        private set
-
-    var layerActionDisabled by mutableStateOf(layerActionDisabled)
-        private set
-
-    var scrim by mutableStateOf(scrim)
-        private set
-
-    // Actions
-
-    // Primary button, Snackbar, Floating action button, Chip selected
-    var actionPrimary by mutableStateOf(actionPrimary)
-        private set
-
-    // Secondary button
-    var actionSecondary by mutableStateOf(actionSecondary)
-        private set
-
-    // Text
-
-    // Primary text
-    var textPrimary by mutableStateOf(textPrimary)
-        private set
-
-    // Secondary text
-    var textSecondary by mutableStateOf(textSecondary)
-        private set
-
-    var textLink by mutableStateOf(textLink)
-        private set
-
-    // Disabled text
-    var textDisabled by mutableStateOf(textLink)
-        private set
-
-    // Warning text
-    var textWarning by mutableStateOf(textWarning)
-        private set
-
-    // Action Primary text
-    var textActionPrimary by mutableStateOf(textActionPrimary)
-        private set
-
-    // Action Secondary text
-    var textActionSecondary by mutableStateOf(textActionSecondary)
-        private set
-
-    var textActionDisabled by mutableStateOf(textActionDisabled)
-        private set
-
-    // Icon
-
-    // Primary icon
-    var iconPrimary by mutableStateOf(iconPrimary)
-        private set
-
-
-    // Secondary icon
-    var iconSecondary by mutableStateOf(iconSecondary)
-        private set
-
-    var iconAccentViolet by mutableStateOf(iconAccent)
-        private set
-
-    var iconActionActive by mutableStateOf(iconActionActive)
-        private set
-
-    var iconActionDisabled by mutableStateOf(iconActionDisabled)
-        private set
-
-    // Border
-
-    // Default, Divider, Dotted
-    var borderPrimary by mutableStateOf(borderPrimary)
-        private set
-
-    // Form parts
-    var borderFormDefault by mutableStateOf(borderForm)
-        private set
-
-    // Active tab (Nav), Selected tab, Active form
-    var borderAccent by mutableStateOf(borderAccent)
-        private set
-
-    // Form parts
-    var borderWarning by mutableStateOf(borderWarning)
-        private set
-
-    var borderInputEnabled by mutableStateOf(borderInputEnabled)
-        private set
-
-    fun update(other: MoSoColors) {
-        layer1 = other.layer1
-        layer2 = other.layer2
-        layerAccent = other.layerAccent
-        layerActionPrimaryEnabled = other.layerActionPrimaryEnabled
-        layerActionSecondaryEnabled = other.layerActionSecondaryEnabled
-        layerActionDisabled = other.layerActionDisabled
-        scrim = other.scrim
-        actionPrimary = other.actionPrimary
-        actionSecondary = other.actionSecondary
-        textPrimary = other.textPrimary
-        textSecondary = other.textSecondary
-        textDisabled = other.textDisabled
-        textWarning = other.textWarning
-        textActionPrimary = other.textActionPrimary
-        textActionSecondary = other.textActionSecondary
-        textActionDisabled = other.textActionDisabled
-        iconPrimary = other.iconPrimary
-        iconSecondary = other.iconSecondary
-        iconAccentViolet = other.iconAccentViolet
-        iconActionActive = other.iconActionActive
-        iconActionDisabled = other.iconActionDisabled
-        borderPrimary = other.borderPrimary
-        borderFormDefault = other.borderFormDefault
-        borderAccent = other.borderAccent
-        borderWarning = other.borderWarning
-        borderInputEnabled = other.borderInputEnabled
-    }
-
-    /**
-     * Return a copy of this [MoSoColors] and optionally overriding any of the provided values.
-     */
-    internal fun copy(
-        layer1: Color = this.layer1,
-        layer2: Color = this.layer2,
-        layerAccent: Color = this.layerAccent,
-        layerActionPrimaryEnabled: Color = this.layerActionPrimaryEnabled,
-        layerActionSecondaryEnabled: Color = this.layerActionSecondaryEnabled,
-        layerActionDisabled: Color = this.layerActionDisabled,
-        scrim: Color = this.scrim,
-        actionPrimary: Color = this.actionPrimary,
-        actionSecondary: Color = this.actionSecondary,
-        textPrimary: Color = this.textPrimary,
-        textSecondary: Color = this.textSecondary,
-        textDisabled: Color = this.textDisabled,
-        textWarning: Color = this.textWarning,
-        textActionPrimary: Color = this.textActionPrimary,
-        textActionSecondary: Color = this.textActionSecondary,
-        textOnActionDisabled: Color = this.textActionDisabled,
-        iconPrimary: Color = this.iconPrimary,
-        iconSecondary: Color = this.iconSecondary,
-        iconAccentViolet: Color = this.iconAccentViolet,
-        iconActionActive: Color = this.iconActionActive,
-        iconActionDisabled: Color = this.iconActionDisabled,
-        borderPrimary: Color = this.borderPrimary,
-        borderFormDefault: Color = this.borderFormDefault,
-        borderAccent: Color = this.borderAccent,
-        borderWarning: Color = this.borderWarning,
-        borderInputEnabled: Color = this.borderInputEnabled,
-    ): MoSoColors = MoSoColors(
-        layer1 = layer1,
-        layer2 = layer2,
-        layerAccent = layerAccent,
-        layerActionPrimaryEnabled = layerActionPrimaryEnabled,
-        layerActionSecondaryEnabled = layerActionSecondaryEnabled,
-        layerActionDisabled = layerActionDisabled,
-        scrim = scrim,
-        actionPrimary = actionPrimary,
-        actionSecondary = actionSecondary,
-        textPrimary = textPrimary,
-        textSecondary = textSecondary,
-        textLink = textDisabled,
-        textWarning = textWarning,
-        textActionPrimary = textActionPrimary,
-        textActionSecondary = textActionSecondary,
-        textActionDisabled = textOnActionDisabled,
-        iconPrimary = iconPrimary,
-        iconSecondary = iconSecondary,
-        iconAccent = iconAccentViolet,
-        iconActionActive = iconActionActive,
-        iconActionDisabled = iconActionDisabled,
-        borderPrimary = borderPrimary,
-        borderForm = borderFormDefault,
-        borderAccent = borderAccent,
-        borderWarning = borderWarning,
-        borderInputEnabled = borderInputEnabled,
-    )
-}
+data class MoSoColors(
+    val layer1: Color,
+    val layer2: Color,
+    val layerAccent: Color,
+    val layerActionPrimaryEnabled: Color,
+    val layerActionSecondaryEnabled: Color,
+    val layerActionDisabled: Color,
+    val scrim: Color,
+    val actionPrimary: Color,
+    val actionSecondary: Color,
+    val textPrimary: Color,
+    val textSecondary: Color,
+    val textLink: Color,
+    val textWarning: Color,
+    val textActionPrimary: Color,
+    val textActionSecondary: Color,
+    val textActionDisabled: Color,
+    val iconPrimary: Color,
+    val iconSecondary: Color,
+    val iconAccent: Color,
+    val iconActionActive: Color,
+    val iconActionDisabled: Color,
+    val borderPrimary: Color,
+    val borderForm: Color,
+    val borderAccent: Color,
+    val borderWarning: Color,
+    val borderInputEnabled: Color,
+)
 
 @Composable
 fun ProvideMoSoColors(
     colors: MoSoColors,
     content: @Composable () -> Unit,
 ) {
-    val colorPalette = remember {
-        // Explicitly creating a new object here so we don't mutate the initial [colors]
-        // provided, and overwrite the values set in it.
-        colors.copy()
-    }
-    colorPalette.update(colors)
-    CompositionLocalProvider(localMoSoColors provides colorPalette, content = content)
+    CompositionLocalProvider(localMoSoColors provides colors, content = content)
 }
 
 private val localMoSoColors = staticCompositionLocalOf<MoSoColors> {
