@@ -120,7 +120,6 @@ class AccountViewModel(
                 accountId = accountId,
                 coroutineScope = viewModelScope,
             ) { account, relationship ->
-                impressionAnalytics(account)
                 account.toUiState(relationship)
             }.collect {
                 _uiState.edit { it }
@@ -128,14 +127,10 @@ class AccountViewModel(
         }
     }
 
-    private fun impressionAnalytics(account: Account) {
+    fun onAccountScreenShown() {
         analytics.uiImpression(
-            mastodonAccountHandle = account.username,
-            mastodonAccountId = account.accountId,
-            mastodonStatusId = null,
-            recommendationId = null,
-            null,
-            null,
+            mastodonAccountId = accountId,
+            uiIdentifier = "account.screen.impression",
         )
     }
 

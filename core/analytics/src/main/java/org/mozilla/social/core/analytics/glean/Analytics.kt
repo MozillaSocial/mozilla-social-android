@@ -11,22 +11,22 @@ interface Analytics {
     fun initialize(context: Context)
 
     fun uiEngagement(
-        engagementType: String?,
-        engagementValue: String?,
-        mastodonAccountHandle: String?,
-        mastodonAccountId: String?,
-        recommendationId: String?,
-        uiAdditionalDetail: String?,
-        uiIdentifier: String?
+        engagementType: String? = null,
+        engagementValue: String? = null,
+        mastodonAccountHandle: String? = null,
+        mastodonAccountId: String? = null,
+        recommendationId: String? = null,
+        uiAdditionalDetail: String? = null,
+        uiIdentifier: String? = null
     )
 
     fun uiImpression(
-        mastodonAccountHandle: String?,
-        mastodonAccountId: String?,
-        mastodonStatusId: String?,
-        recommendationId: String?,
-        uiAdditionalDetail: String?,
-        uiIdentifier: String?
+        mastodonAccountHandle: String? = null,
+        mastodonAccountId: String? = null,
+        mastodonStatusId: String? = null,
+        recommendationId: String? = null,
+        uiAdditionalDetail: String? = null,
+        uiIdentifier: String? = null
     )
 
     fun setAdjustDeviceId(adjustDeviceId: String)
