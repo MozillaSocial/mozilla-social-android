@@ -1,6 +1,7 @@
 package org.mozilla.social.core.data.repository
 
 import org.mozilla.social.core.network.ReportApi
+import org.mozilla.social.core.network.model.request.NetworkReportCreate
 
 class ReportRepository(
     private val reportApi: ReportApi,
@@ -14,11 +15,13 @@ class ReportRepository(
         category: String? = null,
         ruleViolations: List<Int>? = null,
     ) = reportApi.report(
-        accountId = accountId,
-        statusIds = statusIds,
-        comment = comment,
-        forward = forward,
-        category = category,
-        ruleViolations = ruleViolations
+        body = NetworkReportCreate(
+            accountId = accountId,
+            statusIds = statusIds,
+            comment = comment,
+            forward = forward,
+            category = category,
+            ruleViolations = ruleViolations
+        )
     )
 }

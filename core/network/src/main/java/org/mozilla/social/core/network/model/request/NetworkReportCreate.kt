@@ -1,29 +1,20 @@
 package org.mozilla.social.core.network.model.request
 
-/**
- * Object used to submit a new report.
- */
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class NetworkReportCreate(
-
-    /**
-     * ID of the account to report.
-     */
+    @SerialName("account_id")
     val accountId: String,
-
-    /**
-     * ID of statuses to attach to the report, for context.
-     */
+    @SerialName("status_ids")
     val statusIds: List<String>?,
-
-    /**
-     * Reason for the report.
-     *
-     * Max 1000 characters by default.
-     */
+    @SerialName("comment")
     val comment: String?,
-
-    /**
-     * If the account is remote, should the report be forwarded to the remote admin?
-     */
-    val forwardToRemoteAdmin: Boolean?
+    @SerialName("forward")
+    val forward: Boolean?,
+    @SerialName("category")
+    val category: String?,
+    @SerialName("rule_ids")
+    val ruleViolations: List<Int>?,
 )
