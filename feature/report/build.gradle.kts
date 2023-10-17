@@ -53,4 +53,6 @@ dependencies {
 
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.jakewharton.timber)
+
+    implementation(libs.kotlinx.datetime)
 }

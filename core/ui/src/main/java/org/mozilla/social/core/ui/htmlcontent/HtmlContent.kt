@@ -32,7 +32,8 @@ fun HtmlContent(
     htmlText: String,
     htmlContentInteractions: HtmlContentInteractions,
     maximumLineCount: Int = Int.MAX_VALUE,
-    textStyle: TextStyle? = null,
+    textStyle: TextStyle = MoSoTheme.typography.bodyMedium,
+    clickableLinks: Boolean = true,
 ) {
     val linkColor: Color = MoSoTheme.colors.textLink
     val textContent = remember(htmlText) {
@@ -68,7 +69,9 @@ fun HtmlContent(
                     }
                 }
 
-                movementMethod = HtmlContentMovementMethod
+                if (clickableLinks) {
+                    movementMethod = HtmlContentMovementMethod
+                }
                 isClickable = false
                 isLongClickable = false
                 maxLines = maximumLineCount

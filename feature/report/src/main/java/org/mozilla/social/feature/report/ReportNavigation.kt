@@ -62,8 +62,7 @@ fun NavGraphBuilder.reportFlow(
         )
         reportScreen2(
             onReportSubmitted = {
-                //TODO
-//                navController.navigateToReportScreen3()
+                navController.navigateToReportScreen3(Json.encodeToString(it))
             },
             onCloseClicked = {
                 navController.popBackStack()

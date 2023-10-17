@@ -129,7 +129,7 @@ private fun MainContent(
 ) {
     Column(
         modifier = Modifier
-            .padding(start = 16.dp, end = 16.dp)
+            .padding(horizontal = 16.dp)
             .verticalScroll(rememberScrollState())
     ) {
         Spacer(modifier = Modifier.height(16.dp))
@@ -343,8 +343,9 @@ private fun AdditionalReportFields(
                 reportInteractions = reportInteractions,
             )
             Spacer(modifier = Modifier.height(16.dp))
-            externalInstance.value?.let {
+            externalInstance.value?.let { externalInstance ->
                 SendToOtherServerOption(
+                    externalInstance = externalInstance,
                     checked = sendToExternalServer,
                     reportInteractions = reportInteractions,
                 )
@@ -378,6 +379,7 @@ private fun AdditionalComments(
 
 @Composable
 private fun SendToOtherServerOption(
+    externalInstance: String,
     checked: Boolean,
     reportInteractions: ReportScreen1Interactions,
 ) {
@@ -408,7 +410,7 @@ private fun SendToOtherServerOption(
             Spacer(modifier = Modifier.padding(4.dp))
             Text(
                 modifier = Modifier.align(Alignment.CenterVertically),
-                text = stringResource(id = R.string.external_instance_option),
+                text = stringResource(id = R.string.external_instance_option, externalInstance),
                 style = MoSoTheme.typography.bodyMedium
             )
         }

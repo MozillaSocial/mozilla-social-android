@@ -17,7 +17,7 @@ internal fun NavController.navigateToReportScreen2(
 }
 
 internal fun NavGraphBuilder.reportScreen2(
-    onReportSubmitted: () -> Unit,
+    onReportSubmitted: (bundle: ReportDataBundle.ReportDataBundleForScreen3) -> Unit,
     onCloseClicked: () -> Unit,
 ) {
     composable(
