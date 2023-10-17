@@ -72,6 +72,7 @@ import org.mozilla.social.common.utils.toFile
 import org.mozilla.social.core.designsystem.component.MoSoButton
 import org.mozilla.social.core.designsystem.component.MoSoDivider
 import org.mozilla.social.core.designsystem.component.MoSoSurface
+import org.mozilla.social.core.designsystem.component.MoSoTextField
 import org.mozilla.social.core.designsystem.component.MoSoToast
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.designsystem.theme.FirefoxColor
@@ -438,7 +439,7 @@ private fun MainBox(
 
                     item {
                         val highlightColor = FirefoxColor.Blue60
-                        TextField(
+                        MoSoTextField(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .focusRequester(textFieldFocusRequester),
@@ -449,7 +450,6 @@ private fun MainBox(
                                     text = stringResource(id = R.string.new_post_text_field_label)
                                 )
                             },
-                            colors = transparentTextFieldColors(),
                             visualTransformation = {
                                 TransformedText(
                                     buildAnnotatedStringForAccountsAndHashtags(
