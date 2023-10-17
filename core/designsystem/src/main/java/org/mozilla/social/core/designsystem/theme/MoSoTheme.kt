@@ -85,7 +85,6 @@ private val darkColorPalette = MoSoColors(
     iconAccent = FirefoxColor.Violet30,
     iconActionActive = FirefoxColor.Violet20,
     iconActionDisabled = FirefoxColor.LightGrey70,
-    iconAccentViolet = FirefoxColor.Violet30,
 
     borderPrimary = FirefoxColor.DarkGrey05,
     borderForm = FirefoxColor.LightGrey05,
@@ -117,7 +116,6 @@ private val lightColorPalette = MoSoColors(
     iconAccent = FirefoxColor.Violet60,
     iconActionActive = FirefoxColor.Violet60,
     iconActionDisabled = FirefoxColor.LightGrey70,
-    iconAccentViolet = FirefoxColor.Violet60,
 
     borderPrimary = FirefoxColor.LightGrey40,
     borderForm = FirefoxColor.DarkGrey90,
@@ -154,7 +152,6 @@ data class MoSoColors(
     val iconAccent: Color,
     val iconActionActive: Color,
     val iconActionDisabled: Color,
-    val iconAccentViolet: Color,
     val borderPrimary: Color,
     val borderForm: Color,
     val borderAccent: Color,
