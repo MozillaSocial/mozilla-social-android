@@ -75,16 +75,16 @@ fun PostCardList(
             ),
     ) {
 
-        val defaultListState = rememberLazyListState()
-        val otherState = rememberLazyListState()
+        val emptyListState = rememberLazyListState()
+        val realState = rememberLazyListState()
 
         LazyColumn(
             Modifier
                 .fillMaxSize(),
             state = if (lazyingPagingItems.itemCount == 0) {
-                defaultListState
+                emptyListState
             } else {
-                otherState
+                realState
             },
         ) {
 
