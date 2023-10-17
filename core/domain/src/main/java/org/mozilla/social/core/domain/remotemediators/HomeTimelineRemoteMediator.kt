@@ -5,8 +5,6 @@ import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import androidx.room.withTransaction
-import kotlinx.coroutines.async
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import org.mozilla.social.core.data.repository.AccountRepository
 import org.mozilla.social.core.data.repository.StatusRepository
@@ -14,7 +12,6 @@ import org.mozilla.social.core.data.repository.TimelineRepository
 import org.mozilla.social.core.database.SocialDatabase
 import org.mozilla.social.core.database.model.statusCollections.HomeTimelineStatus
 import org.mozilla.social.core.database.model.statusCollections.HomeTimelineStatusWrapper
-import org.mozilla.social.model.Status
 
 @OptIn(ExperimentalPagingApi::class)
 class HomeTimelineRemoteMediator(
@@ -23,15 +20,6 @@ class HomeTimelineRemoteMediator(
     private val statusRepository: StatusRepository,
     private val socialDatabase: SocialDatabase,
 ) : RemoteMediator<Int, HomeTimelineStatusWrapper>() {
-
-    override suspend fun initialize(): InitializeAction {
-        return if (hasInitialized) {
-            InitializeAction.SKIP_INITIAL_REFRESH
-        } else {
-            hasInitialized = true
-            InitializeAction.LAUNCH_INITIAL_REFRESH
-        }
-    }
 
     override suspend fun load(
         loadType: LoadType,
@@ -107,9 +95,5 @@ class HomeTimelineRemoteMediator(
         } catch (e: Exception) {
             MediatorResult.Error(e)
         }
-    }
-
-    companion object {
-        var hasInitialized = false
     }
 }
