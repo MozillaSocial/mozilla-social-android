@@ -32,7 +32,7 @@ fun MoSoBottomNavigationBar(
     modifier: Modifier = Modifier,
     currentDestination: NavigationDestination,
     bottomBarTabs: List<BottomBarTab>,
-    navigateTo: (route: String) -> Unit,
+    navigateTo: (route: NavigationDestination) -> Unit,
     containerColor: Color = MoSoNavigationBarDefaults.containerColor,
     contentColor: Color = MoSoTheme.colors.iconPrimary,
     tonalElevation: Dp = NavigationBarDefaults.Elevation,
@@ -88,12 +88,12 @@ fun RowScope.MoSoNavigationBarItem(
     modifier: Modifier = Modifier,
     destination: BottomBarTab,
     isSelected: Boolean,
-    navigateTo: (route: String) -> Unit
+    navigateTo: (route: NavigationDestination) -> Unit
 ) {
     NavigationBarItem(
         modifier = modifier.height(48.dp),
         selected = isSelected,
-        onClick = { navigateTo(destination.navigationDestination.route) },
+        onClick = { navigateTo(destination.navigationDestination) },
         colors = MoSoNavigationBarItemDefaults.colors(),
         icon = {
             MoSoIcon(

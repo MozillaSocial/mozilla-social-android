@@ -21,7 +21,6 @@ import org.koin.core.parameter.parametersOf
 import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.core.designsystem.component.MoSoSurface
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
-import org.mozilla.social.core.ui.LazyListStateKey
 import org.mozilla.social.core.ui.R
 import org.mozilla.social.core.ui.postcard.PostCardInteractions
 import org.mozilla.social.core.ui.postcard.PostCardList
@@ -82,7 +81,6 @@ private fun FeedScreen(
                         RecommendationCarousel(reccs = it) { openAlertDialog.value = true }
                     }
                 },
-                stateKey = LazyListStateKey.FEED
             )
         }
     }

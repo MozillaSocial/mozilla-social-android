@@ -139,7 +139,7 @@ private fun TopBar(
 @Composable
 private fun BottomBar(
     currentDestination: NavigationDestination?,
-    navigateToTopLevelDestination: (route: String) -> Unit,
+    navigateToTopLevelDestination: (route: NavigationDestination) -> Unit,
 ) {
     // don't show bottom bar if our current route is not one of the bottom nav options
     if (BottomBarTabs.values().find { it.bottomBarTab.navigationDestination == currentDestination } == null) {

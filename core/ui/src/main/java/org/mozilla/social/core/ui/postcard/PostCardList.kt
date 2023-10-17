@@ -26,12 +26,10 @@ import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.core.designsystem.component.MoSoCircularProgressIndicator
 import org.mozilla.social.core.designsystem.component.MoSoDivider
 import org.mozilla.social.core.designsystem.component.MoSoToast
-import org.mozilla.social.core.ui.LazyListStateKey
 import org.mozilla.social.core.ui.error.GenericError
 import org.mozilla.social.core.ui.pullrefresh.PullRefreshIndicator
 import org.mozilla.social.core.ui.pullrefresh.pullRefresh
 import org.mozilla.social.core.ui.pullrefresh.rememberPullRefreshState
-import org.mozilla.social.core.ui.rememberLazyListStateForever
 
 /**
  * Shows a list of post cards and various loading and error states.
@@ -53,7 +51,6 @@ fun PostCardList(
     postCardInteractions: PostCardInteractions,
     pullToRefreshEnabled: Boolean = false,
     isFullScreenLoading: Boolean = false,
-    stateKey: LazyListStateKey? = null,
     headerContent: @Composable () -> Unit = {},
 ) {
 
@@ -79,6 +76,7 @@ fun PostCardList(
     ) {
 
         val defaultListState = rememberLazyListState()
+        val otherState = rememberLazyListState()
 
         LazyColumn(
             Modifier
@@ -86,7 +84,7 @@ fun PostCardList(
             state = if (lazyingPagingItems.itemCount == 0) {
                 defaultListState
             } else {
-                   stateKey?.let { rememberLazyListStateForever(key = it) } ?: defaultListState
+                otherState
             },
         ) {
 
