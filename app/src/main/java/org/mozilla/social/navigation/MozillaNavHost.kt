@@ -75,8 +75,6 @@ private fun NavGraphBuilder.mainGraph(
             postCardNavigation = appState.postCardNavigation,
         )
         reportFlow(
-            onDoneClicked = { appState.popBackStack() },
-            onCloseClicked = { appState.popBackStack() },
             navController = appState.navController,
         )
         hashTagScreen(

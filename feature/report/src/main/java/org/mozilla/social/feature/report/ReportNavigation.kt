@@ -5,6 +5,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.navigation
 import androidx.navigation.navArgument
+import androidx.navigation.navOptions
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.mozilla.social.core.navigation.NavigationDestination
@@ -31,8 +32,6 @@ fun NavController.navigateToReport(
 }
 
 fun NavGraphBuilder.reportFlow(
-    onDoneClicked: () -> Unit,
-    onCloseClicked: () -> Unit,
     navController: NavController,
 ) {
     navigation(
@@ -48,7 +47,7 @@ fun NavGraphBuilder.reportFlow(
         ),
     ) {
         reportScreen1(
-            onCloseClicked,
+            onCloseClicked = navController::popBackStack,
             onNextClicked = { bundle ->
                 when (bundle) {
                     is ReportDataBundle.ReportDataBundleForScreen2 -> {
@@ -62,15 +61,24 @@ fun NavGraphBuilder.reportFlow(
         )
         reportScreen2(
             onReportSubmitted = {
-                navController.navigateToReportScreen3(Json.encodeToString(it))
+                navController.navigateToReportScreen3(
+                    Json.encodeToString(it),
+                    navOptions {
+                        // once a report is submitted, there is no going back.
+                        // remove the previous report screens from the back stack
+                        popUpTo(NavigationDestination.Report.fullRoute) {
+                            inclusive = true
+                        }
+                    }
+                )
             },
-            onCloseClicked = {
-                navController.popBackStack()
-            }
+            onCloseClicked = navController::popBackStack
         )
         reportScreen3(
-            onDoneClicked = onDoneClicked,
-            onCloseClicked = onCloseClicked,
+            onDoneClicked = {
+                navController.popBackStack(NavigationDestination.Report.fullRoute, true)
+            },
+            onCloseClicked = navController::popBackStack,
         )
     }
 }
