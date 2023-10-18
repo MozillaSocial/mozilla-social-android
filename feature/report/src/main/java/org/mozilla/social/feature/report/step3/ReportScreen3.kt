@@ -1,4 +1,3 @@
-@file:Suppress("detekt:all")
 package org.mozilla.social.feature.report.step3
 
 import androidx.compose.foundation.border
@@ -165,7 +164,10 @@ private fun MiddleContent(
                 Column {
                     ActionableOption(
                         onClick = { reportInteractions.onUnfollowClicked() },
-                        buttonText = stringResource(id = R.string.unfollow_user, "@$reportAccountHandle"),
+                        buttonText = stringResource(
+                            id = R.string.unfollow_user,
+                            "@$reportAccountHandle"
+                        ),
                         description = stringResource(id = R.string.unfollow_user_description)
                     )
 
@@ -177,7 +179,10 @@ private fun MiddleContent(
                 Column {
                     ActionableOption(
                         onClick = { reportInteractions.onMuteClicked() },
-                        buttonText = stringResource(id = R.string.mute_user, "@$reportAccountHandle"),
+                        buttonText = stringResource(
+                            id = R.string.mute_user,
+                            "@$reportAccountHandle"
+                        ),
                         description = stringResource(id = R.string.mute_user_description)
                     )
 
@@ -188,7 +193,10 @@ private fun MiddleContent(
             ExpandingAnimation(visible = blockVisible) {
                 ActionableOption(
                     onClick = { reportInteractions.onBlockClicked() },
-                    buttonText = stringResource(id = R.string.block_user, "@$reportAccountHandle"),
+                    buttonText = stringResource(
+                        id = R.string.block_user,
+                        "@$reportAccountHandle"
+                    ),
                     description = stringResource(id = R.string.block_user_description)
                 )
             }
