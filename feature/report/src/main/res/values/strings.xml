@@ -39,4 +39,25 @@
     <string name="select_all_that_apply">Select all that apply:</string>
 
     <string name="submit_report_button">Submit report</string>
+
+    <string name="limiting_user_title">Limiting %s</string>
+    <string name="limiting_user_description">Don\'t want to see this?</string>
+    <string name="limiting_user_options">Here are some options for controlling what you see:</string>
+
+    <string name="reported_user_title">Reporting %s</string>
+    <string name="reported_user_description">Thanks for reporting.</string>
+    <string name="reported_user_options">While this is being reviewed, here are actions you can take:</string>
+
+    <string name="unfollow_user">Unfollow %s</string>
+    <string name="unfollow_user_description">You will no longer see posts from this user in your home feed. You may still see posts from them elsewhere.</string>
+    <string name="mute_user">Mute %s</string>
+    <string name="mute_user_description">You will no longer see any posts from this user. They can still follow you and see your posts. They will not know that they are muted.</string>
+    <string name="block_user">Block %s</string>
+    <string name="block_user_description">You will no longer see any posts from this user. They will not be able to see your posts or follow you. They will be able to tell that they are blocked.</string>
+
+    <string name="done_button">Done</string>
+
+    <string name="error_unfollowing">Error unfollowing account</string>
+    <string name="error_muting">Error muting account</string>
+    <string name="error_blocking">Error blocking account</string>
 </resources>

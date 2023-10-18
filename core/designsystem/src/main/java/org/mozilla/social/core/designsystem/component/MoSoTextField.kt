@@ -134,7 +134,7 @@ fun MoSoTextField(
 object MoSoTextFieldDefaults {
     @Composable
     fun colors(): TextFieldColors = TextFieldDefaults.colors(
-        cursorColor = MoSoTheme.colors.textActionPrimary,
+        cursorColor = MoSoTheme.colors.textPrimary,
         unfocusedLabelColor = MoSoTheme.colors.textSecondary,
         focusedLabelColor = MoSoTheme.colors.textSecondary,
         disabledLabelColor = MoSoTheme.colors.textSecondary,

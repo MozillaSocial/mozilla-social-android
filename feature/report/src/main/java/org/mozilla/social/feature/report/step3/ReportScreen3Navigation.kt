@@ -1,4 +1,3 @@
-@file:Suppress("detekt:all")
 package org.mozilla.social.feature.report.step3
 
 import androidx.navigation.NavController
@@ -38,6 +37,9 @@ internal fun NavGraphBuilder.reportScreen3(
         ReportScreen3(
             onDoneClicked = onDoneClicked,
             onCloseClicked = onCloseClicked,
+            reportAccountId = deserializedBundle.reportAccountId,
+            reportAccountHandle = deserializedBundle.reportAccountHandle,
+            didUserReportAccount = deserializedBundle.didUserReportAccount,
         )
     }
 }

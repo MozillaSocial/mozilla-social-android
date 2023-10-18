@@ -39,6 +39,7 @@ import org.mozilla.social.core.designsystem.component.MoSoSurface
 import org.mozilla.social.core.designsystem.component.MoSoTextField
 import org.mozilla.social.core.designsystem.component.MoSoTopBar
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
+import org.mozilla.social.core.designsystem.utils.NoRipple
 import org.mozilla.social.core.ui.animation.ExpandingAnimation
 import org.mozilla.social.feature.report.R
 import org.mozilla.social.feature.report.ReportDataBundle
@@ -254,27 +255,28 @@ private fun SelectableReportType(
     reportInteractions: ReportScreen1Interactions,
     content: @Composable () -> Unit,
 ) {
-    Row(
-        modifier = Modifier
-            .padding(4.dp)
-            .clickable { reportInteractions.onReportTypeSelected(reportType) }
-    ) {
-        MoSoRadioButton(
+    NoRipple {
+        Row(
             modifier = Modifier
-                .size(20.dp),
-            selected = selectedReportType == reportType,
-            onClick = { reportInteractions.onReportTypeSelected(reportType) }
-        )
-        Spacer(modifier = Modifier.padding(4.dp))
-        Column {
-            Text(
-                text = title,
-                style = MoSoTheme.typography.bodyMedium,
-                fontWeight = FontWeight.W700
+                .padding(4.dp)
+                .clickable { reportInteractions.onReportTypeSelected(reportType) }
+        ) {
+            MoSoRadioButton(
+                modifier = Modifier
+                    .size(20.dp),
+                selected = selectedReportType == reportType,
+                onClick = { reportInteractions.onReportTypeSelected(reportType) }
             )
-            content()
+            Spacer(modifier = Modifier.padding(4.dp))
+            Column {
+                Text(
+                    text = title,
+                    style = MoSoTheme.typography.bodyMedium,
+                    fontWeight = FontWeight.W700
+                )
+                content()
+            }
         }
-
     }
 }
 
