@@ -4,7 +4,7 @@ import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 val discoverModule = module {
-    viewModel { parametersHolder ->
+    viewModel {
         DiscoverViewModel()
     }
 }

@@ -17,6 +17,6 @@ fun NavGraphBuilder.discoverScreen(
     composable(
         route = NavigationDestination.Discover.route
     ) {
-
+        DiscoverScreen()
     }
 }

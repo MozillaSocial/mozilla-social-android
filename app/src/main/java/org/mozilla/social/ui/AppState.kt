@@ -255,7 +255,7 @@ class AppState(
             currentDestination: NavigationDestination?
         ): Boolean = when (currentDestination) {
             NavigationDestination.Feed,
-            NavigationDestination.Search,
+            NavigationDestination.Discover,
             NavigationDestination.Bookmarks -> true
             else -> false
         }
