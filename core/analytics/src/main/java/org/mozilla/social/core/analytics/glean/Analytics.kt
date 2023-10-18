@@ -45,16 +45,19 @@ interface Analytics {
 
 class GleanAnalytics : Analytics {
     override fun initialize(context: Context) {
-        val buildInfo = BuildInfo("1", "1", Calendar.getInstance())
-
-        Glean.setLogPings(true)
-        Glean.setDebugViewTag("moso-android-debug")
-
-        Glean.initialize(
-            applicationContext = context,
-            uploadEnabled = true,
-            buildInfo = buildInfo
-        )
+//
+//        This will be re-added when settings for tracking is done
+//
+//        val buildInfo = BuildInfo("1", "1", Calendar.getInstance())
+//
+//        Glean.setLogPings(true)
+//        Glean.setDebugViewTag("moso-android-debug")
+//
+//        Glean.initialize(
+//            applicationContext = context,
+//            uploadEnabled = true,
+//            buildInfo = buildInfo
+//        )
     }
 
     override fun uiEngagement(
