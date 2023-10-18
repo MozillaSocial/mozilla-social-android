@@ -7,9 +7,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -74,9 +76,25 @@ fun PostCardList(
             ),
     ) {
 
+        // When navigating back to a list, the lazyPagingItems seem to have a list size of 0
+        // for a split second before going back to where it was.  This causes the list scroll state
+        // to reset at 0, losing the scroll position.  The realState variable fixes this by
+        // only being in use when the item count is greater than 0.
+        // There is an issue in google issue tracker
+        // https://issuetracker.google.com/issues/177245496
+        // It is "fixed", but we still run into the issue when going multiple screens deep, then
+        // navigating back
+        val emptyListState = rememberLazyListState()
+        val realState = rememberLazyListState()
+
         LazyColumn(
             Modifier
                 .fillMaxSize(),
+            state = if (lazyingPagingItems.itemCount == 0) {
+                emptyListState
+            } else {
+                realState
+            },
         ) {
 
             item { headerContent() }

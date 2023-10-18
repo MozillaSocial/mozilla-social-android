@@ -80,7 +80,7 @@ private fun FeedScreen(
                     reccs?.let {
                         RecommendationCarousel(reccs = it) { openAlertDialog.value = true }
                     }
-                }
+                },
             )
         }
     }

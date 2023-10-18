@@ -232,16 +232,22 @@ class AppState(
     /**
      * Used by bottom bar navigation
      */
-    fun navigateToTopLevelDestination(destination: String) {
+    fun navigateToTopLevelDestination(destination: NavigationDestination) {
+        // If navigating to the feed, just pop up to the feed.  Don't start a new instance
+        // of it.  If a new instance is started, we don't retain scroll position!
+        if (destination == NavigationDestination.Feed) {
+            navController.popBackStack(NavigationDestination.Feed.route, false)
+            return
+        }
         val navOptions = navOptions {
-            popUpTo(navController.graph.findStartDestination().id) {
+            popUpTo(NavigationDestination.Feed.route) {
                 saveState = true
             }
             launchSingleTop = true
             restoreState = true
         }
 
-        navController.navigate(destination, navOptions)
+        navController.navigate(destination.route, navOptions)
     }
 
     companion object {
