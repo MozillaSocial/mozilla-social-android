@@ -5,8 +5,6 @@ import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import androidx.room.withTransaction
-import kotlinx.coroutines.async
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import org.mozilla.social.core.data.repository.AccountRepository
 import org.mozilla.social.core.data.repository.StatusRepository
@@ -14,7 +12,6 @@ import org.mozilla.social.core.data.repository.TimelineRepository
 import org.mozilla.social.core.database.SocialDatabase
 import org.mozilla.social.core.database.model.statusCollections.HomeTimelineStatus
 import org.mozilla.social.core.database.model.statusCollections.HomeTimelineStatusWrapper
-import org.mozilla.social.model.Status
 
 @OptIn(ExperimentalPagingApi::class)
 class HomeTimelineRemoteMediator(

@@ -1,6 +1,7 @@
 package org.mozilla.social.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.ViewModel
@@ -23,13 +24,13 @@ fun SplashScreen(
         }
 
         true -> {
-            SideEffect {
+            LaunchedEffect(Unit) {
                 navigateToLoggedInGraph()
             }
         }
 
         false -> {
-            SideEffect {
+            LaunchedEffect(Unit) {
                 navigateToLogin()
             }
         }
