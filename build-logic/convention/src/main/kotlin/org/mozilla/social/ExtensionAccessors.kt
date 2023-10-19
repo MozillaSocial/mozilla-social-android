@@ -17,6 +17,3 @@ fun Project.detekt(configure: Action<DetektExtension>) {
 fun Project.secrets(configure: Action<SecretsPluginExtension>) {
     extensions.configure("secrets", configure)
 }
-
-fun Project.androidLib(configure: Action<com.android.build.gradle.LibraryExtension>): Unit =
-    (this as org.gradle.api.plugins.ExtensionAware).extensions.configure("android", configure)
