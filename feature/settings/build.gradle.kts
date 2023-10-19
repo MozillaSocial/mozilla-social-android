@@ -14,9 +14,6 @@ dependencies {
     implementation(project(":core:domain"))
     implementation(project(":core:navigation"))
 
-    implementation(libs.androidx.lifecycle.viewmodel)
-    implementation(libs.androidx.lifecycle.viewmodel.compose)
-
     implementation(libs.koin)
 
     implementation(libs.androidx.datastore)

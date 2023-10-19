@@ -25,9 +25,6 @@ dependencies {
 
     implementation(libs.androidx.browser)
 
-    implementation(libs.androidx.lifecycle.viewmodel)
-    implementation(libs.androidx.lifecycle.viewmodel.compose)
-
     implementation(libs.koin)
 
     implementation(libs.square.okhttp)

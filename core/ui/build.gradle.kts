@@ -27,7 +27,5 @@ dependencies {
 
     implementation(libs.jakewharton.timber)
 
-    // compose
-    implementation(libs.androidx.compose.material.iconsExtended)
     implementation(libs.androidx.browser)
 }

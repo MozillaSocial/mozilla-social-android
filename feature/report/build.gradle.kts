@@ -21,15 +21,9 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.google.material)
 
-    implementation(libs.androidx.lifecycle.viewmodel)
-    implementation(libs.androidx.lifecycle.viewmodel.compose)
-
     implementation(libs.koin)
 
     implementation(libs.coil)
-
-    // compose
-    implementation(libs.androidx.compose.material.iconsExtended)
 
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.jakewharton.timber)

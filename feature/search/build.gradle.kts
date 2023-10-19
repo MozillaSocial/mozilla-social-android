@@ -18,10 +18,6 @@ dependencies {
 
     implementation(libs.google.material)
 
-    //compose
-    implementation(libs.androidx.activity.compose)
-    implementation(libs.androidx.navigation.compose)
-
     implementation(libs.koin)
 
     implementation(libs.androidx.datastore)
