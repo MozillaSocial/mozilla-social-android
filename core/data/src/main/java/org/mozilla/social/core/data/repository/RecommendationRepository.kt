@@ -12,10 +12,7 @@ class RecommendationRepository(
 
     suspend fun getRecommendations(): List<Recommendation> =
         recommendationApi.getRecommendations(
-            locale = when (Locale.getDefault()) {
-                Locale.GERMANY -> "de"
-                else -> "en-US"
-            },
+            locale = Locale.getDefault().language,
             consumerKey = BuildConfig.newTabConsumerKey,
         ).recommendations.map { it.toExternalModel() }
 }
