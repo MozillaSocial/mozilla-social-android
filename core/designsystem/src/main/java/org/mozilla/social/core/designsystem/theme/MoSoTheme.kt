@@ -70,8 +70,10 @@ private val darkColorPalette = MoSoColors(
     layerActionSecondaryEnabled = FirefoxColor.White,
     layerActionDisabled = FirefoxColor.LightGrey70,
     scrim = FirefoxColor.DarkGrey90,
+
     actionPrimary = FirefoxColor.Violet60,
     actionSecondary = FirefoxColor.LightGrey30,
+
     textPrimary = FirefoxColor.LightGrey05,
     textSecondary = FirefoxColor.LightGrey40,
     textLink = FirefoxColor.Violet20,
@@ -91,6 +93,12 @@ private val darkColorPalette = MoSoColors(
     borderAccent = FirefoxColor.Violet30,
     borderWarning = FirefoxColor.Red20,
     borderInputEnabled = FirefoxColor.DarkGrey05,
+    snackbarBkgSuccess = FirefoxColor.Violet05,
+    snackbarBorderSuccess = FirefoxColor.Violet60,
+    snackbarTextSuccess = FirefoxColor.Violet80,
+    snackbarBkgError = FirefoxColor.Red05,
+    snackbarBorderError = FirefoxColor.Red70,
+    snackbarTextError = FirefoxColor.Red80,
 )
 
 private val lightColorPalette = MoSoColors(
@@ -122,6 +130,13 @@ private val lightColorPalette = MoSoColors(
     borderAccent = FirefoxColor.Violet60,
     borderWarning = FirefoxColor.Red70,
     borderInputEnabled = FirefoxColor.LightGrey60,
+
+    snackbarBkgSuccess = FirefoxColor.Violet05,
+    snackbarBorderSuccess = FirefoxColor.Violet60,
+    snackbarTextSuccess = FirefoxColor.Violet80,
+    snackbarBkgError = FirefoxColor.Red05,
+    snackbarBorderError = FirefoxColor.Red70,
+    snackbarTextError = FirefoxColor.Red80,
 )
 
 
@@ -131,6 +146,7 @@ private val lightColorPalette = MoSoColors(
 @Suppress("LargeClass", "LongParameterList")
 @Stable
 data class MoSoColors(
+    // General background colors
     val layer1: Color,
     val layer2: Color,
     val layerAccent: Color,
@@ -140,6 +156,8 @@ data class MoSoColors(
     val scrim: Color,
     val actionPrimary: Color,
     val actionSecondary: Color,
+
+    // General text colors
     val textPrimary: Color,
     val textSecondary: Color,
     val textLink: Color,
@@ -147,16 +165,28 @@ data class MoSoColors(
     val textActionPrimary: Color,
     val textActionSecondary: Color,
     val textActionDisabled: Color,
+
+    // General icon colors
     val iconPrimary: Color,
     val iconSecondary: Color,
     val iconAccent: Color,
     val iconActionActive: Color,
     val iconActionDisabled: Color,
+
+    // General border colors
     val borderPrimary: Color,
     val borderForm: Color,
     val borderAccent: Color,
     val borderWarning: Color,
     val borderInputEnabled: Color,
+
+    // Snackbar colors - NOTE these are the same for light and dark mode
+    val snackbarBkgSuccess: Color,
+    val snackbarBorderSuccess: Color,
+    val snackbarTextSuccess: Color,
+    val snackbarBkgError: Color,
+    val snackbarBorderError: Color,
+    val snackbarTextError: Color,
 )
 
 @Composable

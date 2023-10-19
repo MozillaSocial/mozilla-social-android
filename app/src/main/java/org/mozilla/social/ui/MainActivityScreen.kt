@@ -27,6 +27,8 @@ import org.mozilla.social.core.designsystem.component.MoSoBottomNavigationBar
 import org.mozilla.social.core.designsystem.component.MoSoDivider
 import org.mozilla.social.core.designsystem.component.MoSoFloatingActionButton
 import org.mozilla.social.core.designsystem.component.MoSoScaffold
+import org.mozilla.social.core.designsystem.component.MoSoSnackbar
+import org.mozilla.social.core.designsystem.component.MoSoSnackbarHost
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.designsystem.icon.mozillaLogo
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
@@ -48,7 +50,11 @@ fun MainActivityScreen() {
         } else {
             Modifier
         },
-        snackbarHost = { appState.snackbarHostState },
+        snackbarHost = {
+            MoSoSnackbarHost(appState.snackbarHostState) { snackbarData, snackbarType ->
+                MoSoSnackbar(snackbarData = snackbarData, snackbarType = snackbarType)
+            }
+        },
         floatingActionButton = {
             when (currentDestination) {
                 NavigationDestination.Feed -> {
