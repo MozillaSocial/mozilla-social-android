@@ -29,6 +29,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import org.mozilla.social.core.designsystem.component.MoSoSnackbarHostState
 import org.mozilla.social.core.navigation.NavigationDestination
 import org.mozilla.social.core.ui.postcard.PostCardNavigation
 import org.mozilla.social.feature.account.AccountNavigationCallbacks
@@ -50,7 +51,7 @@ import timber.log.Timber
 fun rememberAppState(
     navController: NavHostController = rememberNavController(),
     coroutineScope: CoroutineScope = rememberCoroutineScope(),
-    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
+    snackbarHostState: MoSoSnackbarHostState = remember { MoSoSnackbarHostState() },
     topAppBarScrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(
         rememberTopAppBarState()
     ),
@@ -82,7 +83,7 @@ class AppState(
     val navigationDrawerState: DrawerState,
     val coroutineScope: CoroutineScope,
     val bottomSheetVisible: MutableState<Boolean>,
-    val snackbarHostState: SnackbarHostState,
+    val snackbarHostState: MoSoSnackbarHostState,
     val context: Context,
 ) {
 
