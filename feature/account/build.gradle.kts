@@ -19,8 +19,6 @@ dependencies {
     implementation(project(":core:database"))
     implementation(project(":core:navigation"))
 
-    implementation(libs.google.material)
-
     implementation(libs.coil)
     implementation(libs.androidx.media3.exoplayer)
     implementation(libs.androidx.media3.ui)

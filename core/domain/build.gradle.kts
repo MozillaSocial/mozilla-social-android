@@ -7,15 +7,16 @@ android {
 }
 
 dependencies {
-    implementation(libs.jakewharton.timber)
-    implementation(libs.koin)
-    implementation(libs.kotlinx.datetime)
     implementation(project(":core:data"))
     implementation(project(":core:network"))
     implementation(project(":core:datastore"))
     implementation(project(":core:model"))
     implementation(project(":core:database"))
     implementation(project(":core:common"))
+
+    implementation(libs.jakewharton.timber)
+    implementation(libs.koin)
+    implementation(libs.kotlinx.datetime)
 
     implementation(libs.androidx.room)
 

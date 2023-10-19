@@ -18,8 +18,6 @@ dependencies {
     implementation(project(":core:common"))
     implementation(project(":core:navigation"))
 
-    implementation(libs.google.material)
-
     implementation(libs.androidx.paging.runtime)
 
     implementation(libs.koin)

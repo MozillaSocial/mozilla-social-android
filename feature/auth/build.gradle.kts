@@ -17,12 +17,6 @@ dependencies {
     implementation(project(":core:model"))
     implementation(project(":core:navigation"))
 
-    implementation("androidx.security:security-crypto:1.0.0")
-
-    implementation(libs.androidx.core)
-    implementation(libs.androidx.appcompat)
-    implementation(libs.google.material)
-
     implementation(libs.androidx.browser)
 
     implementation(libs.koin)

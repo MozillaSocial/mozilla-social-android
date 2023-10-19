@@ -11,8 +11,6 @@ dependencies {
     implementation(project(":core:model"))
     implementation(project(":core:common"))
     implementation(project(":core:navigation"))
-    implementation("com.google.android.material:material:1.9.0")
 
-    // compose
     implementation(libs.androidx.compose.material.iconsExtended)
 }

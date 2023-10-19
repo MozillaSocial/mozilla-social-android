@@ -13,8 +13,6 @@ dependencies {
     implementation(project(":core:common"))
     implementation(project(":core:data"))
 
-    implementation(libs.google.material)
-
     implementation(libs.androidx.paging.compose)
 
     implementation(libs.koin)

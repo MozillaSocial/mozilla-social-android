@@ -20,8 +20,6 @@ dependencies {
     implementation(project(":core:database"))
     implementation(project(":core:navigation"))
 
-    implementation(libs.google.material)
-
     implementation(libs.androidx.paging.runtime)
 
     implementation(libs.koin)

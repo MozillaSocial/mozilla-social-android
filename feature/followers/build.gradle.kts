@@ -17,8 +17,6 @@ dependencies {
     implementation(project(":core:domain"))
     implementation(project(":core:navigation"))
 
-    implementation(libs.google.material)
-
     implementation(libs.coil)
 
     implementation(libs.koin)

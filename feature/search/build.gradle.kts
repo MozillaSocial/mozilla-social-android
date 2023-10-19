@@ -16,8 +16,6 @@ dependencies {
     implementation(project(":core:ui"))
     implementation(project(":core:navigation"))
 
-    implementation(libs.google.material)
-
     implementation(libs.koin)
 
     implementation(libs.androidx.datastore)

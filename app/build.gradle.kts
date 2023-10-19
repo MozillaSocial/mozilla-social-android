@@ -66,15 +66,6 @@ dependencies {
 
     implementation(kotlin("reflect"))
 
-    // android
-    implementation(libs.androidx.core)
-    implementation(libs.androidx.appcompat)
-    implementation(libs.androidx.lifecycle.runtime)
-    implementation(libs.google.material)
-
-    implementation(libs.androidx.lifecycle.viewmodel)
-    implementation(libs.androidx.lifecycle.viewmodel.compose)
-
     implementation(libs.androidx.datastore)
     implementation(libs.protobuf.kotlin.lite)
 
@@ -89,8 +80,6 @@ dependencies {
     implementation(libs.coil.gif)
     implementation(libs.coil.video)
 
-    //compose
-    implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.navigation.compose)
 
     // testing
