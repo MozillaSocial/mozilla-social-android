@@ -18,6 +18,7 @@ import com.android.build.api.dsl.LibraryExtension
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
+import org.mozilla.social.androidLib
 import org.mozilla.social.configureKotlinAndroid
 
 class AndroidLibraryConventionPlugin : Plugin<Project> {
@@ -31,6 +32,23 @@ class AndroidLibraryConventionPlugin : Plugin<Project> {
 
             extensions.configure<LibraryExtension> {
                 configureKotlinAndroid(this)
+
+                androidLib {
+                    defaultConfig {
+                        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+                        consumerProguardFiles("consumer-rules.pro")
+                    }
+
+                    buildTypes {
+                        release {
+                            isMinifyEnabled = true
+                            proguardFiles(
+                                getDefaultProguardFile("proguard-android-optimize.txt"),
+                                "proguard-rules.pro"
+                            )
+                        }
+                    }
+                }
             }
         }
     }
