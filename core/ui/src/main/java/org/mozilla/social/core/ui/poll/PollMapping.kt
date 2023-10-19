@@ -37,7 +37,7 @@ fun Poll.toPollUiState(
                 )
             } else StringFactory.literal("")
         ),
-        showResults = hasVoted ?: false,
+        showResults = hasVoted ?: false || isExpired,
         pollId = pollId,
         isMultipleChoice = allowsMultipleChoices,
         usersVotes = ownVotes ?: emptyList(),

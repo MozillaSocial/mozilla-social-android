@@ -1,10 +1,12 @@
 package org.mozilla.social.core.data.repository
 
 import androidx.room.withTransaction
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.withContext
 import org.mozilla.social.core.data.repository.model.context.toExternalModel
 import org.mozilla.social.core.data.repository.model.status.toDatabaseModel
 import org.mozilla.social.core.data.repository.model.status.toExternalModel
@@ -15,6 +17,7 @@ import org.mozilla.social.core.network.StatusApi
 import org.mozilla.social.core.network.model.NetworkStatusVisibility
 import org.mozilla.social.core.network.model.request.NetworkMediaUpdate
 import org.mozilla.social.core.network.model.request.NetworkPollCreate
+import org.mozilla.social.core.network.model.request.NetworkPollVote
 import org.mozilla.social.core.network.model.request.NetworkStatusCreate
 import org.mozilla.social.model.Context
 import org.mozilla.social.model.ImageState
@@ -94,12 +97,12 @@ class StatusRepository(
     suspend fun voteOnPoll(
         pollId: String,
         pollChoices: List<Int>,
-    ) {
+    ) = withContext(Dispatchers.IO) {
         socialDatabase.pollDao().updateOwnVotes(pollId, pollChoices)
         try {
             val poll = statusApi.voteOnPoll(
                 pollId,
-                pollChoices,
+                NetworkPollVote(pollChoices),
             ).toExternalModel()
             socialDatabase.pollDao().update(poll.toDatabaseModel())
         } catch (e: Exception) {
