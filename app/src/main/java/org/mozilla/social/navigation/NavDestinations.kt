@@ -35,8 +35,8 @@ enum class BottomBarTabs(
                 return MoSoIcons.compass()
             }
 
-            override val tabText = StringFactory.resource(R.string.search_tab_text)
-            override val navigationDestination: NavigationDestination = NavigationDestination.Search
+            override val tabText = StringFactory.resource(R.string.discover_tab_text)
+            override val navigationDestination: NavigationDestination = NavigationDestination.Discover
         }
     ),
     BOOKMARKS(

@@ -13,6 +13,9 @@ kotlin = "1.9.10"
 kotlin-ksp = "1.9.10-1.0.13" # Used only once, but keeping this definition makes the KSP version check at ci/verify-ksp-version.sh simpler.
 okhttp = "4.10.0"
 protobuf = "3.23.0"
+junit = "4.13.2"
+androidx-test-ext-junit = "1.1.5"
+espresso-core = "3.5.1"
 
 
 [libraries]
@@ -71,6 +74,9 @@ android-gradlePlugin = { module = "com.android.tools.build:gradle", version.ref 
 android-secrets-gradlePlugin = { module = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin:secrets-gradle-plugin", version.ref = "android-secrets-plugin" }
 detekt-gradlePlugin = { module = "io.gitlab.arturbosch.detekt:io.gitlab.arturbosch.detekt.gradle.plugin", version.ref = "detekt" }
 kotlin-gradlePlugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
+junit = { group = "junit", name = "junit", version.ref = "junit" }
+androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidx-test-ext-junit" }
+espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espresso-core" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "android-gradle-plugin" }
