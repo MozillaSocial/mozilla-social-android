@@ -1,6 +1,7 @@
 package org.mozilla.social.core.ui.postcard
 
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
@@ -22,7 +23,7 @@ class PostCardDelegate(
     val errorToastMessage = _errorToastMessage.asSharedFlow()
 
     override fun onVoteClicked(pollId: String, choices: List<Int>) {
-        coroutineScope.launch {
+        coroutineScope.launch(Dispatchers.IO) {
             try {
                 statusRepository.voteOnPoll(pollId, choices)
             } catch (e: Exception) {

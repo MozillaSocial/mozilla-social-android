@@ -15,6 +15,7 @@ import org.mozilla.social.core.network.StatusApi
 import org.mozilla.social.core.network.model.NetworkStatusVisibility
 import org.mozilla.social.core.network.model.request.NetworkMediaUpdate
 import org.mozilla.social.core.network.model.request.NetworkPollCreate
+import org.mozilla.social.core.network.model.request.NetworkPollVote
 import org.mozilla.social.core.network.model.request.NetworkStatusCreate
 import org.mozilla.social.model.Context
 import org.mozilla.social.model.ImageState
@@ -99,7 +100,7 @@ class StatusRepository(
         try {
             val poll = statusApi.voteOnPoll(
                 pollId,
-                pollChoices,
+                NetworkPollVote(pollChoices),
             ).toExternalModel()
             socialDatabase.pollDao().update(poll.toDatabaseModel())
         } catch (e: Exception) {
