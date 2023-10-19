@@ -11,13 +11,11 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import org.mozilla.social.common.logging.Log
 import org.mozilla.social.core.data.repository.AccountRepository
-import org.mozilla.social.core.data.repository.RecommendationRepository
 import org.mozilla.social.core.data.repository.StatusRepository
 import org.mozilla.social.core.data.repository.model.status.toExternalModel
 import org.mozilla.social.core.database.SocialDatabase
@@ -35,7 +33,6 @@ class FeedViewModel(
     homeTimelineRemoteMediator: HomeTimelineRemoteMediator,
     accountIdFlow: AccountIdFlow,
     statusRepository: StatusRepository,
-    recommendationRepository: RecommendationRepository,
     accountRepository: AccountRepository,
     private val socialDatabase: SocialDatabase,
     log: Log,
@@ -65,13 +62,6 @@ class FeedViewModel(
         }
     }.cachedIn(viewModelScope)
 
-    val reccs = flow {
-        try {
-            emit(recommendationRepository.getRecommendations())
-        } catch (exception: Exception) {
-        }
-    }
-
     val postCardDelegate = PostCardDelegate(
         coroutineScope = viewModelScope,
         statusRepository = statusRepository,
@@ -80,6 +70,8 @@ class FeedViewModel(
         postCardNavigation = postCardNavigation,
     )
 
+    //TODO
+    @Suppress("UnusedPrivateMember")
     private val currentFeedType = MutableStateFlow(INITIAL_FEED).also {
         viewModelScope.launch {
             it.collect { feedType ->
