@@ -66,6 +66,8 @@ dependencies {
 
     implementation(kotlin("reflect"))
 
+    implementation(libs.google.material)
+
     implementation(libs.androidx.datastore)
     implementation(libs.protobuf.kotlin.lite)
 
