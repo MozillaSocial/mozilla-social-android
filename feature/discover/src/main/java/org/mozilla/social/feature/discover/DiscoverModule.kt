@@ -5,6 +5,8 @@ import org.koin.dsl.module
 
 val discoverModule = module {
     viewModel {
-        DiscoverViewModel()
+        DiscoverViewModel(
+            get(),
+        )
     }
 }
