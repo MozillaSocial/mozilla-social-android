@@ -18,6 +18,7 @@ package org.mozilla.social
 
 import com.android.build.api.dsl.CommonExtension
 import org.gradle.api.Project
+import org.gradle.kotlin.dsl.dependencies
 
 internal fun Project.configureAndroidCompose(
     commonExtension: CommonExtension<*, *, *, *, *>,
@@ -28,6 +29,16 @@ internal fun Project.configureAndroidCompose(
         }
         composeOptions {
             kotlinCompilerExtensionVersion = libs.findLibrary("androidx-compose-compiler").get().get().version
+        }
+
+        dependencies {
+            add("implementation", platform(libs.findLibrary("androidx-compose-bom").get()))
+            add("implementation", libs.findLibrary("androidx-compose-material3").get())
+            add("implementation", libs.findLibrary("androidx-compose-ui-ui").get())
+            add("implementation", libs.findLibrary("androidx-compose-ui-graphics").get())
+            add("implementation", libs.findLibrary("androidx-compose-ui-tooling-preview").get())
+            add("implementation", libs.findLibrary("androidx-compose-ui-tooling").get())
+            add("implementation", libs.findLibrary("androidx-compose-ui-test-manifest").get())
         }
     }
 }
