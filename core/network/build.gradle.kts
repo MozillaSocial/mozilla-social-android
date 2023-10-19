@@ -1,7 +1,6 @@
 plugins {
     id("org.mozilla.social.android.library")
     alias(libs.plugins.kotlinx.serialization)
-    id("org.mozilla.social.android.library.secrets")
 }
 
 android {
