@@ -1,5 +1,6 @@
 package org.mozilla.social.core.data.repository
 
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.mozilla.social.core.data.repository.model.status.toExternalModel
@@ -11,6 +12,7 @@ import org.mozilla.social.model.Status
 class TimelineRepository internal constructor(
     private val timelineApi: TimelineApi,
     private val socialDatabase: SocialDatabase,
+    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) {
 
     suspend fun getHomeTimeline(
@@ -41,7 +43,7 @@ class TimelineRepository internal constructor(
         ).map { it.toExternalModel() }
 
     suspend fun insertStatus(status: Status)
-        = withContext(Dispatchers.IO) {
+        = withContext(ioDispatcher) {
             socialDatabase.homeTimelineDao().insert(
                 HomeTimelineStatus(
                     statusId = status.statusId,
