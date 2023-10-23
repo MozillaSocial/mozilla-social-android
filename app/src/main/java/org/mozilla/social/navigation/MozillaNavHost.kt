@@ -6,6 +6,9 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import org.mozilla.social.core.designsystem.component.SnackbarType
 import org.mozilla.social.core.navigation.NavigationDestination
 import org.mozilla.social.feature.account.accountScreen
 import org.mozilla.social.feature.account.myAccountScreen
@@ -67,7 +70,15 @@ private fun NavGraphBuilder.mainGraph(
         followersScreen(followersNavigationCallbacks = appState.followersNavigation)
         followingScreen(followersNavigationCallbacks = appState.followersNavigation)
         newPostScreen(
-            onStatusPosted = { appState.popBackStack() },
+            onStatusPosted = {
+                appState.popBackStack()
+                GlobalScope.launch {
+                    appState.snackbarHostState.showSnackbar(
+                        snackbarType = SnackbarType.SUCCESS,
+                        message = "Your status has been posted"
+                    )
+                }
+            },
             onCloseClicked = { appState.popBackStack() },
         )
         threadScreen(

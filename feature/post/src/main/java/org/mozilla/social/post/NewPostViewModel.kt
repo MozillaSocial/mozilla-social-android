@@ -20,6 +20,7 @@ import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.core.data.repository.MediaRepository
 import org.mozilla.social.core.data.repository.SearchRepository
 import org.mozilla.social.core.data.repository.StatusRepository
+import org.mozilla.social.core.data.repository.TimelineRepository
 import org.mozilla.social.core.domain.AccountFlow
 import org.mozilla.social.feature.post.R
 import org.mozilla.social.model.StatusVisibility
@@ -38,6 +39,7 @@ class NewPostViewModel(
     private val statusRepository: StatusRepository,
     mediaRepository: MediaRepository,
     searchRepository: SearchRepository,
+    private val timelineRepository: TimelineRepository,
     private val log: Log,
     private val onStatusPosted: () -> Unit,
     private val replyStatusId: String?,
@@ -122,7 +124,7 @@ class NewPostViewModel(
         viewModelScope.launch {
             _isSendingPost.update { true }
             try {
-                statusRepository.sendPost(
+                val status = statusRepository.sendPost(
                     statusText = statusText.value.text,
                     imageStates = imageStates.value.values.toList(),
                     visibility = visibility.value,
@@ -137,6 +139,9 @@ class NewPostViewModel(
                     contentWarningText = contentWarningText.value,
                     inReplyToId = replyStatusId,
                 )
+                statusRepository.saveStatusToDatabase(status)
+                timelineRepository.insertStatus(status)
+
                 onStatusPosted()
             } catch (e: Exception) {
                 log.e(e)

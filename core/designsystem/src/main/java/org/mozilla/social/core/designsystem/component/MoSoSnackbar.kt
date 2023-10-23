@@ -45,6 +45,15 @@ import org.mozilla.social.core.designsystem.theme.MoSoRadius
 import org.mozilla.social.core.designsystem.theme.MoSoSpacing
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 
+
+/**
+ * Wrapper for [Snackbar] which takes in a [SnackbarType], which is used to determine the styling
+ * of the resulting snackbar. Note that this implementation does not include an action button
+ */
+@Composable
+fun MoSoSnackbar(snackbarState: MoSoSnackbarState) =
+    with(snackbarState) { MoSoSnackbar(snackbarData = snackbarData, snackbarType = snackbarType) }
+
 /**
  * Wrapper for [Snackbar] which takes in a [SnackbarType], which is used to determine the styling
  * of the resulting snackbar. Note that this implementation does not include an action button
@@ -128,6 +137,10 @@ private fun MoSoSnackbar(
 enum class SnackbarType {
     SUCCESS, ERROR
 }
+
+data class MoSoSnackbarState(
+    val snackbarType: SnackbarType, val snackbarData: SnackbarData
+)
 
 @Preview
 @Composable

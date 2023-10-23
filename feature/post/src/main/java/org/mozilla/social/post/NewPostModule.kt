@@ -10,6 +10,7 @@ val newPostModule = module {
         get(),
         get(),
         get(),
+        get(),
         parametersHolder.get(),
         parametersHolder.getOrNull(),
     ) }

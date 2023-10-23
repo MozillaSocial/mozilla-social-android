@@ -16,7 +16,7 @@ interface StatusApi {
     @POST("api/v1/statuses")
     suspend fun postStatus(
         @Body status: NetworkStatusCreate
-    )
+    ): NetworkStatus
 
     /**
      * @param choices Array of Integer. Provide your own votes as an index for each option (starting from 0).

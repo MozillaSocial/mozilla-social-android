@@ -56,9 +56,10 @@ class FeedViewModel(
             pageSize = 20,
             initialLoadSize = 40
         ),
-        remoteMediator = homeTimelineRemoteMediator
+        remoteMediator = homeTimelineRemoteMediator,
     ) {
         socialDatabase.homeTimelineDao().homeTimelinePagingSource()
+
     }.flow.map { pagingData ->
         pagingData.map {
             it.toStatusWrapper().toExternalModel().toPostCardUiState(currentUserAccountId.value)
