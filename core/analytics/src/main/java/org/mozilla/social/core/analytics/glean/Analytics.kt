@@ -11,22 +11,22 @@ interface Analytics {
     fun initialize(context: Context)
 
     fun uiEngagement(
-        engagementType: String?,
-        engagementValue: String?,
-        mastodonAccountHandle: String?,
-        mastodonAccountId: String?,
-        recommendationId: String?,
-        uiAdditionalDetail: String?,
-        uiIdentifier: String?
+        engagementType: String? = null,
+        engagementValue: String? = null,
+        mastodonAccountHandle: String? = null,
+        mastodonAccountId: String? = null,
+        recommendationId: String? = null,
+        uiAdditionalDetail: String? = null,
+        uiIdentifier: String? = null
     )
 
     fun uiImpression(
-        mastodonAccountHandle: String?,
-        mastodonAccountId: String?,
-        mastodonStatusId: String?,
-        recommendationId: String?,
-        uiAdditionalDetail: String?,
-        uiIdentifier: String?
+        mastodonAccountHandle: String? = null,
+        mastodonAccountId: String? = null,
+        mastodonStatusId: String? = null,
+        recommendationId: String? = null,
+        uiAdditionalDetail: String? = null,
+        uiIdentifier: String? = null
     )
 
     fun setAdjustDeviceId(adjustDeviceId: String)
@@ -35,23 +35,29 @@ interface Analytics {
 
     fun setMastodonAccountHandle(mastodonAccountHandle: String)
 
+
     fun setMastodonAccountId(mastodonAccountId: String)
 
     fun setUserAgent(userAgent: String)
+
+    fun clearLoggedInIdentifiers()
 }
 
 class GleanAnalytics : Analytics {
     override fun initialize(context: Context) {
-        val buildInfo = BuildInfo("1", "1", Calendar.getInstance())
-
-        Glean.setLogPings(true)
-        Glean.setDebugViewTag("Android-Test")
-
-        Glean.initialize(
-            applicationContext = context,
-            uploadEnabled = true,
-            buildInfo = buildInfo
-        )
+//
+//        This will be re-added when settings for tracking is done
+//
+//        val buildInfo = BuildInfo("1", "1", Calendar.getInstance())
+//
+//        Glean.setLogPings(true)
+//        Glean.setDebugViewTag("moso-android-debug")
+//
+//        Glean.initialize(
+//            applicationContext = context,
+//            uploadEnabled = true,
+//            buildInfo = buildInfo
+//        )
     }
 
     override fun uiEngagement(
@@ -110,5 +116,10 @@ class GleanAnalytics : Analytics {
 
     override fun setUserAgent(userAgent: String) {
         Identifiers.userAgent.set(userAgent)
+    }
+
+    override fun clearLoggedInIdentifiers() {
+        Identifiers.mastodonAccountHandle.destroy()
+        Identifiers.mastodonAccountId.destroy()
     }
 }
