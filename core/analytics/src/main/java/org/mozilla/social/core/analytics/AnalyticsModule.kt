@@ -6,7 +6,7 @@ import org.mozilla.social.core.analytics.glean.GleanAnalytics
 val analyticsModule = module {
     single<Analytics> {
         object : Analytics {}
-        // use glean when we have setting ready
+        // use glean when we have the analytics opt-out setting ready
 //        GleanAnalytics()
     }
 }
