@@ -17,4 +17,7 @@ dependencies {
 
     implementation(libs.koin)
     implementation(libs.jakewharton.timber)
+
+    implementation(libs.coil)
+    implementation(libs.androidx.browser)
 }

@@ -9,7 +9,7 @@ interface RecommendationApi {
     suspend fun getRecommendations(
         @Query("locale") locale: String,
         @Query("count") count: Int = 24,
-        @Query("image_sizes[]") imageSizes: String = "202x"
+        @Query("image_sizes[]") imageSizes: String = "200x"
 //        @Query("consumer_key") consumerKey: String,
     ): NetworkRecommendations
 }

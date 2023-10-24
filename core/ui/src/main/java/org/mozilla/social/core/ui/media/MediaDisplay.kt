@@ -70,7 +70,7 @@ private fun Attachment(
     AsyncImage(
         modifier = modifier
             .padding(2.dp)
-            .clip(RoundedCornerShape(MoSoRadius.lg)),
+            .clip(RoundedCornerShape(MoSoRadius.media)),
         model = attachment.previewUrl,
         contentDescription = attachment.description,
         contentScale = ContentScale.Crop,

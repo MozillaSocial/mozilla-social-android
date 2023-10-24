@@ -7,4 +7,7 @@ object MoSoRadius {
     val md = 8.dp
     val lg = 16.dp
     val full = 360.dp
+
+    // radius for image and video previews
+    val media = 16.dp
 }
