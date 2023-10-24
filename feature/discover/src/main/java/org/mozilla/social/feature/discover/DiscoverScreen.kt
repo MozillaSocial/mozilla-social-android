@@ -22,6 +22,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.isTraversalGroup
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
@@ -34,6 +36,7 @@ import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.designsystem.theme.MoSoRadius
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.designsystem.utils.NoRipple
+import org.mozilla.social.core.ui.Radius
 import org.mozilla.social.core.ui.shareUrl
 import org.mozilla.social.model.Recommendation
 
@@ -121,7 +124,8 @@ private fun Recommendation(
             Row {
                 Column(
                     modifier = Modifier
-                        .weight(2f),
+                        .weight(2f)
+                        .semantics { isTraversalGroup = true },
                 ) {
                     Text(
                         text = recommendation.publisher,
@@ -142,9 +146,9 @@ private fun Recommendation(
                     modifier = Modifier
                         .padding(start = 16.dp)
                         .weight(1f)
-                        .clip(RoundedCornerShape(MoSoRadius.media)),
+                        .clip(RoundedCornerShape(Radius.media)),
                     model = recommendation.image.firstOrNull()?.url,
-                    contentDescription = recommendation.title,
+                    contentDescription = null,
                     contentScale = ContentScale.Crop,
                 )
             }

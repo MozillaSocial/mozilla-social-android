@@ -18,6 +18,7 @@ import coil.compose.AsyncImage
 import org.mozilla.social.common.utils.FileType
 import org.mozilla.social.common.utils.getFileType
 import org.mozilla.social.core.designsystem.theme.MoSoRadius
+import org.mozilla.social.core.ui.Radius
 import org.mozilla.social.model.Attachment
 
 @Composable
@@ -70,7 +71,7 @@ private fun Attachment(
     AsyncImage(
         modifier = modifier
             .padding(2.dp)
-            .clip(RoundedCornerShape(MoSoRadius.media)),
+            .clip(RoundedCornerShape(Radius.media)),
         model = attachment.previewUrl,
         contentDescription = attachment.description,
         contentScale = ContentScale.Crop,

@@ -11,6 +11,6 @@ class RecommendationRepository(
 
     suspend fun getRecommendations(): List<Recommendation> =
         recommendationApi.getRecommendations(
-            locale = "${Locale.getDefault().language}-${Locale.getDefault().country}",
+            locale = Locale.getDefault().toLanguageTag(),
         ).recommendations.map { it.toExternalModel() }
 }

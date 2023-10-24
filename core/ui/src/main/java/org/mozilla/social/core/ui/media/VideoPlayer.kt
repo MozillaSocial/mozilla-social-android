@@ -30,6 +30,7 @@ import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.designsystem.theme.FirefoxColor
 import org.mozilla.social.core.designsystem.theme.MoSoRadius
 import org.mozilla.social.core.ui.NoTouchOverlay
+import org.mozilla.social.core.ui.Radius
 import timber.log.Timber
 
 private const val TAG = "VideoPlayer"
@@ -44,7 +45,7 @@ fun VideoPlayer(
     Box(
         modifier = Modifier
             .aspectRatio(1f)
-            .clip(RoundedCornerShape(MoSoRadius.media))
+            .clip(RoundedCornerShape(Radius.media))
     ) {
         val context = LocalContext.current
 
