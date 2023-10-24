@@ -1,6 +1,5 @@
 package org.mozilla.social.core.data.repository
 
-import org.mozilla.social.core.data.BuildConfig
 import org.mozilla.social.core.data.repository.model.recommendations.toExternalModel
 import org.mozilla.social.core.network.RecommendationApi
 import org.mozilla.social.model.Recommendation
@@ -12,7 +11,6 @@ class RecommendationRepository(
 
     suspend fun getRecommendations(): List<Recommendation> =
         recommendationApi.getRecommendations(
-            locale = Locale.getDefault().language,
-            consumerKey = BuildConfig.newTabConsumerKey,
+            locale = "${Locale.getDefault().language}-${Locale.getDefault().country}",
         ).recommendations.map { it.toExternalModel() }
 }
