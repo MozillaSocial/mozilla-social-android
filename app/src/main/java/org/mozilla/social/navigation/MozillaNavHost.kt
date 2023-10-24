@@ -15,6 +15,7 @@ import org.mozilla.social.core.navigation.NavigationDestination
 import org.mozilla.social.feature.account.accountScreen
 import org.mozilla.social.feature.account.myAccountScreen
 import org.mozilla.social.feature.auth.loginScreen
+import org.mozilla.social.feature.discover.discoverScreen
 import org.mozilla.social.feature.followers.followersScreen
 import org.mozilla.social.feature.followers.followingScreen
 import org.mozilla.social.feature.hashtag.hashTagScreen
@@ -62,6 +63,7 @@ private fun NavGraphBuilder.mainGraph(
             postCardNavigation = appState.postCardNavigation,
         )
         searchScreen()
+        discoverScreen()
         settingsScreen(onLogout = appState::navigateToLoginScreen)
         accountScreen(
             accountNavigationCallbacks = appState.accountNavigation,

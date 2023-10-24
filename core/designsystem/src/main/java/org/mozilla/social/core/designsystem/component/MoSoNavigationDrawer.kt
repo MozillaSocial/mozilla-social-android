@@ -19,6 +19,7 @@ fun MoSoNavigationDrawer(
         drawerContent = drawerContent,
         drawerState = drawerState,
         content = content,
+        gesturesEnabled = drawerState.isOpen
     )
 
 }

@@ -18,6 +18,7 @@ dependencies {
     implementation(project(":core:common"))
     implementation(project(":core:database"))
     implementation(project(":core:navigation"))
+    implementation(project(":core:analytics"))
 
     implementation(libs.coil)
     implementation(libs.androidx.media3.exoplayer)
