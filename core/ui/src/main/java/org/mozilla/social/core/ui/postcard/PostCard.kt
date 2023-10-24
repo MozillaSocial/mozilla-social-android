@@ -50,7 +50,7 @@ import org.mozilla.social.core.ui.htmlcontent.HtmlContent
 
 /**
  * @param threadId if viewing this post from a thread, pass the threadId in to prevent
- * the user from being able to click on the same status as the root thread status
+ * the user from being able to click on the same status as the thread's root status
  */
 @Composable
 fun PostCard(

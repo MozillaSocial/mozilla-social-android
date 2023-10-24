@@ -197,6 +197,10 @@ private fun LazyListScope.listContent(
     }
 }
 
+/**
+ * @param threadId if viewing a thread, pass the threadId in to prevent
+ * the user from being able to click on the same status as the thread's root status
+ */
 @Composable
 fun PostCardList(
     items: List<PostCardUiState>,
