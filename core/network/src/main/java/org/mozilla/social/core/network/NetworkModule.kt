@@ -48,7 +48,7 @@ fun networkModule(isDebug: Boolean) = module {
         named(RECCS_SERVICE)
     ) {
         Retrofit.Builder()
-            .baseUrl("https://firefox-api-proxy.cdn.mozilla.net/")
+            .baseUrl("https://firefox-api-proxy.readitlater.com/")
             .client(get(qualifier = named(RECCS_CLIENT)))
             .addConverterFactory(json.asConverterFactory(contentType = "application/json".toMediaType()))
             .build()
