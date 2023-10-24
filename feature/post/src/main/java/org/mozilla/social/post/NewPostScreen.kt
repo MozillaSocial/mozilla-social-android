@@ -29,6 +29,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -46,7 +47,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -71,6 +75,8 @@ import org.mozilla.social.common.utils.buildAnnotatedStringForAccountsAndHashtag
 import org.mozilla.social.common.utils.toFile
 import org.mozilla.social.core.designsystem.component.MoSoButton
 import org.mozilla.social.core.designsystem.component.MoSoDivider
+import org.mozilla.social.core.designsystem.component.MoSoDropdownMenu
+import org.mozilla.social.core.designsystem.component.MoSoDropdownMenuItem
 import org.mozilla.social.core.designsystem.component.MoSoSurface
 import org.mozilla.social.core.designsystem.component.MoSoTextField
 import org.mozilla.social.core.designsystem.component.MoSoToast
@@ -224,7 +230,16 @@ private fun NewPostScreen(
             BottomBar(
                 onUploadImageClicked = {
                     val mediaRequest =
-                        PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageAndVideo)
+                        PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                    if (NewPostViewModel.MAX_IMAGES - imageStates.size <= 1) {
+                        singleMediaLauncher.launch(mediaRequest)
+                    } else {
+                        multipleMediaLauncher.launch(mediaRequest)
+                    }
+                },
+                onUploadVideoClicked = {
+                    val mediaRequest =
+                        PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.VideoOnly)
                     if (NewPostViewModel.MAX_IMAGES - imageStates.size <= 1) {
                         singleMediaLauncher.launch(mediaRequest)
                     } else {
@@ -307,7 +322,6 @@ private fun TopBar(
         }
 
         Spacer(modifier = Modifier.padding(start = 16.dp))
-        val keyboard = LocalSoftwareKeyboardController.current
         MoSoButton(onClick = onPostClicked, enabled = sendButtonEnabled) {
             Text(
                 text = stringResource(id = R.string.post),
@@ -320,6 +334,7 @@ private fun TopBar(
 @Composable
 private fun BottomBar(
     onUploadImageClicked: () -> Unit,
+    onUploadVideoClicked: () -> Unit,
     addImageButtonEnabled: Boolean,
     statusText: String,
     contentWarningText: String?,
@@ -334,65 +349,143 @@ private fun BottomBar(
         MoSoDivider(
             color = MoSoTheme.colors.borderPrimary
         )
-        Box(
+        Row(
             modifier = Modifier
                 .height(60.dp)
                 .fillMaxWidth()
-                .background(MoSoTheme.colors.layer1)
+                .background(MoSoTheme.colors.layer1),
+            verticalAlignment = Alignment.CenterVertically,
         ) {
-            // left row
-            Row(
-                modifier = Modifier.align(Alignment.CenterStart)
-            ) {
-                IconButton(
-                    onClick = { onUploadImageClicked() },
-                    enabled = addImageButtonEnabled,
-                ) {
-                    Icon(
-                        MoSoIcons.imagePlus(),
-                        stringResource(id = R.string.attach_image_button_content_description),
-                        tint = MoSoTheme.colors.textPrimary,
-                    )
-                }
-                IconButton(
-                    onClick = { pollInteractions.onNewPollClicked() },
-                    enabled = pollButtonEnabled,
-                ) {
-                    Icon(
-                        MoSoIcons.chartBar(),
-                        stringResource(id = R.string.add_poll_button_content_description),
-                        tint = MoSoTheme.colors.textPrimary,
-                    )
-                }
-                IconButton(
-                    onClick = { contentWarningInteractions.onContentWarningClicked() },
-                ) {
-                    Icon(
-                        MoSoIcons.warning(),
-                        stringResource(id = R.string.content_warning_button_content_description),
-                        tint = if (contentWarningText == null) {
-                            LocalContentColor.current
-                        } else {
-                            MoSoTheme.colors.textWarning
-                        },
-                    )
-                }
-            }
-            // right row
-            Row(
-                modifier = Modifier
-                    .align(Alignment.CenterEnd)
-                    .padding(end = MoSoSpacing.md)
-            ) {
-
-                Text(
-                    text = characterCountText,
-                    style = MoSoTheme.typography.labelSmall,
-                    color = MoSoTheme.colors.textSecondary,
-                )
-            }
+            PhotoVideoImportButton(
+                addImageButtonEnabled = addImageButtonEnabled,
+                onUploadImageClicked = onUploadImageClicked
+            )
+            Spacer(modifier = Modifier.width(MoSoSpacing.sm))
+            AddPollButton(
+                pollInteractions = pollInteractions,
+                pollButtonEnabled = pollButtonEnabled
+            )
+            Spacer(modifier = Modifier.width(MoSoSpacing.sm))
+            ContentWarningButton(
+                contentWarningInteractions = contentWarningInteractions,
+                contentWarningText = contentWarningText,
+            )
+            Spacer(modifier = Modifier.weight(1f))
+            CharacterCountLabel(characterCountText = characterCountText)
         }
     }
+}
+
+@Composable
+fun PhotoVideoImportButton(addImageButtonEnabled: Boolean, onUploadImageClicked: () -> Unit) {
+    var expanded by remember { mutableStateOf(false) }
+
+    Box {
+        MoSoDropdownMenu(
+            expanded = expanded,
+            onDismissRequest = {
+                expanded = false
+            },
+        ) {
+            MoSoDropdownMenuItem(
+                text = {
+                    Row(Modifier.wrapContentSize()) {
+                        Icon(
+                            MoSoIcons.image(),
+                            contentDescription = stringResource(id = R.string.add_photos_content_description),
+                        )
+                        Spacer(modifier = Modifier.width(MoSoSpacing.sm))
+                        Text(text = stringResource(id = R.string.photo))
+                    }
+                },
+                onClick = {
+                    expanded = false
+                    onUploadImageClicked()
+                }
+            )
+
+            MoSoDropdownMenuItem(
+                text = {
+                    Row(Modifier.wrapContentSize()) {
+                        Icon(
+                            MoSoIcons.monitorPlay(),
+                            contentDescription = stringResource(id = R.string.add_video_content_description),
+                        )
+
+                        Spacer(modifier = Modifier.width(MoSoSpacing.sm))
+                        Text(text = stringResource(id = R.string.video))
+                    }
+                },
+                onClick = {
+                    expanded = false
+                    onUploadImageClicked()
+                }
+            )
+
+        }
+
+
+        IconButton(
+            onClick = {
+                expanded = true
+            },
+
+            enabled = addImageButtonEnabled,
+        ) {
+            Icon(
+                MoSoIcons.imagePlus(),
+                stringResource(id = R.string.attach_image_button_content_description),
+                tint = MoSoTheme.colors.textPrimary,
+            )
+        }
+    }
+}
+
+@Composable
+fun AddPollButton(pollInteractions: PollInteractions, pollButtonEnabled: Boolean) {
+    IconButton(
+        onClick = { pollInteractions.onNewPollClicked() },
+        enabled = pollButtonEnabled,
+    ) {
+        Icon(
+            MoSoIcons.chartBar(),
+            stringResource(id = R.string.add_poll_button_content_description),
+            tint = MoSoTheme.colors.textPrimary,
+        )
+    }
+}
+
+@Composable
+fun ContentWarningButton(
+    contentWarningInteractions: ContentWarningInteractions,
+    contentWarningText: String?,
+) {
+    IconButton(
+        onClick = { contentWarningInteractions.onContentWarningClicked() },
+    ) {
+        Icon(
+            MoSoIcons.warning(),
+            stringResource(id = R.string.content_warning_button_content_description),
+            tint = if (contentWarningText == null) {
+                LocalContentColor.current
+            } else {
+                MoSoTheme.colors.textWarning
+            },
+        )
+    }
+}
+
+@Composable
+fun CharacterCountLabel(characterCountText: String) {
+    Text(
+        modifier = Modifier
+            .wrapContentSize()
+            .padding(MoSoSpacing.md),
+        text = characterCountText,
+        style = MoSoTheme.typography.labelSmall,
+        color = MoSoTheme.colors.textSecondary,
+    )
+
 }
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -414,6 +507,7 @@ private fun MainBox(
         LocalIndication provides NoIndication
     ) {
         val keyboard = LocalSoftwareKeyboardController.current
+
         val textFieldFocusRequester = remember { FocusRequester() }
         MoSoSurface(
             modifier = Modifier

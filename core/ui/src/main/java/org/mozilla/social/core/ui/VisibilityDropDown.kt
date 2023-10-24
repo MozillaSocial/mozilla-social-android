@@ -20,6 +20,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.mozilla.social.core.designsystem.component.MoSoDropdownMenu
+import org.mozilla.social.core.designsystem.component.MoSoDropdownMenuItem
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.model.StatusVisibility
@@ -136,7 +137,7 @@ private fun DropDownItem(
     onVisibilitySelected: (StatusVisibility) -> Unit,
     contentDescription: String = "",
 ) {
-    DropdownMenuItem(
+    MoSoDropdownMenuItem(
         text = {
             Row {
                 Icon(icon, contentDescription)

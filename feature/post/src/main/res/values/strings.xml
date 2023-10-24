@@ -32,4 +32,9 @@
 
     <string name="error_sending_post_toast">Error sending post</string>
     <string name="post">Post</string>
+
+    <string name="add_video_content_description">Add video</string>
+    <string name="add_photos_content_description">Add photos</string>
+    <string name="photo">Photo</string>
+    <string name="video">Video</string>
 </resources>

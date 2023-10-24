@@ -84,7 +84,7 @@ private fun TopRowMetaData(
                 .size(20.dp)
                 .align(Alignment.CenterVertically),
             painter = when(topRowMetaDataUiState.iconType) {
-                TopRowIconType.BOOSTED -> MoSoIcons.boost()
+                TopRowIconType.BOOSTED -> MoSoIcons.repeat()
                 TopRowIconType.REPLY -> MoSoIcons.chatBubbles()
             },
             contentDescription = ""
@@ -230,7 +230,7 @@ private fun BottomRow(
         Spacer(modifier = Modifier.weight(1f))
         BottomIconButton(
             onClick = { postCardInteractions.onBoostClicked(post.statusId, !post.userBoosted) },
-            painter = MoSoIcons.boost(),
+            painter = MoSoIcons.repeat(),
             count = post.boostCount,
             highlighted = post.userBoosted,
         )
