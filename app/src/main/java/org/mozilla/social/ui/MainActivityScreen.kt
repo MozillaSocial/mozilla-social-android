@@ -1,5 +1,6 @@
 package org.mozilla.social.ui
 
+import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -39,7 +40,7 @@ import org.mozilla.social.ui.navigationdrawer.NavigationDrawer
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainActivityScreen() {
+fun MainActivityScreen(context: Context) {
     val appState = rememberAppState()
 
     val currentDestination = appState.currentNavigationDestination.collectAsState().value
@@ -92,7 +93,7 @@ fun MainActivityScreen() {
         bottomSheetVisible = appState.bottomSheetVisible.value,
         content = {
             Box(modifier = Modifier.padding(it)) {
-                MozillaNavHost(appState = appState)
+                MozillaNavHost(appState = appState, context = context)
             }
         }
     )

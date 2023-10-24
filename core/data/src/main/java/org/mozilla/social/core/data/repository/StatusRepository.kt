@@ -38,8 +38,8 @@ class StatusRepository(
         pollCreate: PollCreate?,
         contentWarningText: String?,
         inReplyToId: String?,
-    ) {
-        coroutineScope {
+    ): Status {
+        return coroutineScope {
             // asynchronously update all attachment descriptions before sending post
             imageStates.map { imageState ->
                 if (imageState.attachmentId != null && imageState.description.isNotBlank()) {
@@ -81,8 +81,8 @@ class StatusRepository(
         poll: NetworkPollCreate? = null,
         contentWarningText: String? = null,
         inReplyToId: String?,
-    ) {
-        statusApi.postStatus(
+    ): Status {
+        return statusApi.postStatus(
             NetworkStatusCreate(
                 status = status,
                 mediaIds = mediaIds,
@@ -91,7 +91,7 @@ class StatusRepository(
                 contentWarningText = contentWarningText,
                 inReplyToId = inReplyToId,
             )
-        )
+        ).toExternalModel()
     }
 
     suspend fun voteOnPoll(
