@@ -4,10 +4,9 @@ import android.content.Context
 import android.content.Intent
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.net.toUri
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import okhttp3.HttpUrl
-import org.mozilla.social.core.analytics.glean.Analytics
+import org.mozilla.social.core.analytics.Analytics
 import org.mozilla.social.core.data.repository.AccountRepository
 import org.mozilla.social.core.data.repository.AppRepository
 import org.mozilla.social.core.data.repository.OauthRepository

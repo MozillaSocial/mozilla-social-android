@@ -2,7 +2,7 @@ package org.mozilla.social.core.domain
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import org.mozilla.social.core.analytics.glean.Analytics
+import org.mozilla.social.core.analytics.Analytics
 import org.mozilla.social.core.database.SocialDatabase
 import org.mozilla.social.core.datastore.UserPreferencesDatastore
 
