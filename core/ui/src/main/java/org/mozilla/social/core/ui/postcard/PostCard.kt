@@ -48,17 +48,28 @@ import org.mozilla.social.core.ui.media.MediaDisplay
 import org.mozilla.social.core.ui.poll.Poll
 import org.mozilla.social.core.ui.htmlcontent.HtmlContent
 
+/**
+ * @param threadId if viewing this post from a thread, pass the threadId in to prevent
+ * the user from being able to click on the same status as the root thread status
+ */
 @Composable
 fun PostCard(
     post: PostCardUiState,
     postCardInteractions: PostCardInteractions,
+    threadId: String? = null
 ) {
     NoRipple {
         Column(
             Modifier
                 .padding(8.dp)
                 .fillMaxSize()
-                .clickable { postCardInteractions.onPostCardClicked(post.mainPostCardUiState.statusId) }
+                .clickable {
+                    // prevent the user from being able to click on the same status
+                    // as the root thread status
+                    if (post.mainPostCardUiState.statusId != threadId) {
+                        postCardInteractions.onPostCardClicked(post.mainPostCardUiState.statusId)
+                    }
+                }
         ) {
             post.topRowMetaDataUiState?.let {
                 TopRowMetaData(

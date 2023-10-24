@@ -11,7 +11,6 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -203,6 +202,7 @@ fun PostCardList(
     items: List<PostCardUiState>,
     errorToastMessage: SharedFlow<StringFactory>,
     postCardInteractions: PostCardInteractions,
+    threadId: String? = null,
 ) {
 
     LazyColumn(
@@ -215,7 +215,11 @@ fun PostCardList(
             key = { items[it].statusId }
         ) { index ->
             val item = items[index]
-            PostCard(post = item, postCardInteractions)
+            PostCard(
+                post = item,
+                postCardInteractions = postCardInteractions,
+                threadId = threadId
+            )
             if (index < items.count()) {
                 MoSoDivider()
             }
