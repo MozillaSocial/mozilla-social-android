@@ -11,11 +11,13 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.mozilla.social.common.LoadState
 import org.mozilla.social.common.logging.Log
+import org.mozilla.social.common.utils.FileType
 import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.core.data.repository.MediaRepository
 import org.mozilla.social.core.data.repository.SearchRepository
@@ -24,6 +26,7 @@ import org.mozilla.social.core.domain.AccountFlow
 import org.mozilla.social.feature.post.R
 import org.mozilla.social.model.StatusVisibility
 import org.mozilla.social.model.request.PollCreate
+import org.mozilla.social.post.bottombar.BottomBarState
 import org.mozilla.social.post.media.MediaDelegate
 import org.mozilla.social.post.media.MediaInteractions
 import org.mozilla.social.post.poll.PollDelegate
@@ -68,10 +71,13 @@ class NewPostViewModel(
         log,
     )
     val mediaInteractions: MediaInteractions = mediaDelegate
-    val imageStates = mediaDelegate.imageStates
+    val mediaStates = mediaDelegate.imageStates
+
+    private val images = mediaStates.mapLatest { it.values.filter { it.fileType == FileType.IMAGE } }
+    private val videos = mediaStates.mapLatest { it.values.filter { it.fileType == FileType.VIDEO } }
 
     val sendButtonEnabled: StateFlow<Boolean> =
-        combine(statusText, imageStates, poll) { statusText, imageStates, poll ->
+        combine(statusText, mediaStates, poll) { statusText, imageStates, poll ->
             (statusText.text.isNotBlank() || imageStates.isNotEmpty())
                     // all images are loaded
                     && imageStates.values.find { it.loadState != LoadState.LOADED } == null
@@ -83,23 +89,21 @@ class NewPostViewModel(
             initialValue = false,
         )
 
-    val addImageButtonEnabled: StateFlow<Boolean> =
-        combine(imageStates, poll) { imageStates, poll ->
-            imageStates.size < MAX_IMAGES && poll == null
-        }.stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.Lazily,
-            initialValue = true
+    val bottomBarState: StateFlow<BottomBarState> = combine(
+        images,
+        videos,
+        poll,
+        contentWarningText,
+        statusText
+    ) { images, videos, poll, contentWarningText, statusText ->
+        BottomBarState(
+            imageButtonEnabled = videos.isEmpty() && images.size < MAX_IMAGES && poll == null,
+            videoButtonEnabled = images.isEmpty() && poll == null,
+            pollButtonEnabled = images.isEmpty() && videos.isEmpty(),
+            contentWarningText = contentWarningText,
+            characterCountText = "${MAX_POST_LENGTH - statusText.text.length - (contentWarningText?.length ?: 0)}"
         )
-
-    val pollButtonEnabled: StateFlow<Boolean> =
-        imageStates.map {
-            it.isEmpty()
-        }.stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.Lazily,
-            initialValue = true
-        )
+    }.stateIn(viewModelScope, SharingStarted.Eagerly, BottomBarState())
 
     private val _errorToastMessage = MutableSharedFlow<StringFactory>(extraBufferCapacity = 1)
     val errorToastMessage = _errorToastMessage.asSharedFlow()
@@ -124,7 +128,7 @@ class NewPostViewModel(
             try {
                 statusRepository.sendPost(
                     statusText = statusText.value.text,
-                    imageStates = imageStates.value.values.toList(),
+                    imageStates = mediaStates.value.values.toList(),
                     visibility = visibility.value,
                     pollCreate = poll.value?.let { poll ->
                         PollCreate(

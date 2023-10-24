@@ -9,6 +9,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.mozilla.social.common.LoadState
 import org.mozilla.social.common.logging.Log
+import org.mozilla.social.common.utils.FileType
+import org.mozilla.social.common.utils.getFileType
 import org.mozilla.social.core.data.repository.MediaRepository
 import org.mozilla.social.model.ImageState
 import org.mozilla.social.post.NewPostViewModel
@@ -30,6 +32,7 @@ class MediaDelegate(
         text: String,
     ) {
         if (text.length > NewPostViewModel.MAX_IMAGE_DESCRIPTION_LENGTH) return
+        val oldState = _imageStates.value[uri]
         updateImageState(uri, description = text)
     }
 
@@ -47,6 +50,7 @@ class MediaDelegate(
     override fun onMediaInserted(
         uri: Uri,
         file: File,
+        fileType: FileType,
     ) {
         // if the image was already uploaded, just return
         imageStates.value[uri]?.let {
@@ -68,7 +72,7 @@ class MediaDelegate(
                 )
             } catch (e: Exception) {
                 log.e(e)
-                updateImageState(uri, loadState = LoadState.ERROR)
+                updateImageState(uri, loadState = LoadState.ERROR, fileType = fileType)
             }
         }
         uploadJobs[uri]?.invokeOnCompletion {
@@ -79,6 +83,7 @@ class MediaDelegate(
 
     private fun updateImageState(
         uri: Uri,
+        fileType: FileType? = null,
         loadState: LoadState? = null,
         attachmentId: String? = null,
         description: String? = null,
@@ -86,6 +91,7 @@ class MediaDelegate(
         val oldState = _imageStates.value[uri]
         val newState = ImageState(
             loadState = loadState ?: oldState?.loadState ?: LoadState.LOADING,
+            fileType = fileType ?: oldState?.fileType ?: FileType.UNKNOWN,
             attachmentId = attachmentId ?: oldState?.attachmentId,
             description = description ?: oldState?.description ?: "",
         )

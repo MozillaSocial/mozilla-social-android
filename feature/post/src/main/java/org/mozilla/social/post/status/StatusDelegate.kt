@@ -18,6 +18,7 @@ import org.mozilla.social.common.utils.replaceHashtag
 import org.mozilla.social.core.data.repository.SearchRepository
 import org.mozilla.social.core.data.repository.StatusRepository
 import org.mozilla.social.post.NewPostViewModel
+import org.mozilla.social.post.bottombar.BottomBarState
 
 class StatusDelegate(
     private val coroutineScope: CoroutineScope,
@@ -41,6 +42,8 @@ class StatusDelegate(
 
     private val _inReplyToAccountName = MutableStateFlow<String?>(null)
     val inReplyToAccountName = _inReplyToAccountName.asStateFlow()
+
+
 
     private var searchJob: Job? = null
 
