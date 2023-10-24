@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="discover_title">Today\'s Top Picks</string>
+
+    <string name="share_content_description">share</string>
+    <string name="bookmark_content_description">bookmark</string>
+    <string name="repost_content_description">repost</string>
+</resources>

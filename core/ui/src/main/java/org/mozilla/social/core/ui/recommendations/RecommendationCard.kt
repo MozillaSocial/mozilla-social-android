@@ -78,7 +78,7 @@ fun RecommendationCarouselCard(modifier: Modifier, recommendation: Recommendatio
                         modifier = Modifier
                             .weight(1f)
                             .clip(RoundedCornerShape(4.dp)),
-                        model = recommendation.imageUrl,
+                        model = recommendation.image.first().url,
                         contentDescription = "",
                         contentScale = ContentScale.Crop,
                     )

@@ -5,10 +5,11 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface RecommendationApi {
-    @GET("/desktop/v1/recommendations/")
+    @GET("/content-feed/moso/v1/discover/")
     suspend fun getRecommendations(
         @Query("locale") locale: String,
         @Query("count") count: Int = 24,
-        @Query("consumer_key") consumerKey: String,
+        @Query("image_sizes[]") imageSizes: String = "200x"
+//        @Query("consumer_key") consumerKey: String,
     ): NetworkRecommendations
 }
