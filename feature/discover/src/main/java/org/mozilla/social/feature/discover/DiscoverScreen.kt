@@ -33,6 +33,7 @@ import org.mozilla.social.core.designsystem.component.MoSoSurface
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.designsystem.theme.MoSoRadius
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
+import org.mozilla.social.core.designsystem.utils.NoRipple
 import org.mozilla.social.core.ui.shareUrl
 import org.mozilla.social.model.Recommendation
 
@@ -103,70 +104,73 @@ private fun Recommendation(
     discoverInteractions: DiscoverInteractions,
 ) {
     val context = LocalContext.current
-    Column(
-        modifier = Modifier
-            .padding(16.dp)
-            .clickable {
-                CustomTabsIntent.Builder()
-                    .build()
-                    .launchUrl(
-                        context,
-                        recommendation.url.toUri(),
+    NoRipple {
+        Column(
+            modifier = Modifier
+                .padding(16.dp)
+                .clickable {
+                    CustomTabsIntent
+                        .Builder()
+                        .build()
+                        .launchUrl(
+                            context,
+                            recommendation.url.toUri(),
+                        )
+                }
+        ) {
+            Row {
+                Column(
+                    modifier = Modifier
+                        .weight(2f),
+                ) {
+                    Text(
+                        text = recommendation.publisher,
+                        style = MoSoTheme.typography.bodySmall,
                     )
-            }
-    ) {
-        Row {
-            Column(
-                modifier = Modifier
-                    .weight(2f),
-            ) {
-                Text(
-                    text = recommendation.publisher,
-                    style = MoSoTheme.typography.bodySmall,
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = recommendation.title,
-                    style = MoSoTheme.typography.titleMedium,
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = recommendation.excerpt,
-                    style = MoSoTheme.typography.bodyMedium,
-                )
-            }
-            AsyncImage(
-                modifier = Modifier
-                    .padding(start = 16.dp)
-                    .weight(1f)
-                    .clip(RoundedCornerShape(MoSoRadius.media)),
-                model = recommendation.image.firstOrNull()?.url,
-                contentDescription = recommendation.title,
-                contentScale = ContentScale.Crop,
-            )
-        }
-        Row {
-            Spacer(modifier = Modifier.weight(1f))
-            IconButton(onClick = { discoverInteractions.onRepostClicked() }) {
-                Icon(
-                    painter = MoSoIcons.boost(),
-                    contentDescription = stringResource(id = R.string.repost_content_description),
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        text = recommendation.title,
+                        style = MoSoTheme.typography.titleMedium,
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        text = recommendation.excerpt,
+                        style = MoSoTheme.typography.bodyMedium,
+                    )
+                }
+                AsyncImage(
+                    modifier = Modifier
+                        .padding(start = 16.dp)
+                        .weight(1f)
+                        .clip(RoundedCornerShape(MoSoRadius.media)),
+                    model = recommendation.image.firstOrNull()?.url,
+                    contentDescription = recommendation.title,
+                    contentScale = ContentScale.Crop,
                 )
             }
-            IconButton(onClick = { discoverInteractions.onBookmarkClicked() }) {
-                Icon(
-                    painter = MoSoIcons.bookmarkBorder(),
-                    contentDescription = stringResource(id = R.string.bookmark_content_description),
-                )
-            }
-            IconButton(onClick = {
-                shareUrl(recommendation.url, context)
-                discoverInteractions.onShareClicked()
-            }) {
-                Icon(
-                    painter = MoSoIcons.share(),
-                    contentDescription = stringResource(id = R.string.share_content_description),
-                )
+            Row {
+                Spacer(modifier = Modifier.weight(1f))
+                IconButton(onClick = { discoverInteractions.onRepostClicked() }) {
+                    Icon(
+                        painter = MoSoIcons.boost(),
+                        contentDescription = stringResource(id = R.string.repost_content_description),
+                    )
+                }
+                IconButton(onClick = { discoverInteractions.onBookmarkClicked() }) {
+                    Icon(
+                        painter = MoSoIcons.bookmarkBorder(),
+                        contentDescription = stringResource(id = R.string.bookmark_content_description),
+                    )
+                }
+                IconButton(onClick = {
+                    shareUrl(recommendation.url, context)
+                    discoverInteractions.onShareClicked()
+                }) {
+                    Icon(
+                        painter = MoSoIcons.share(),
+                        contentDescription = stringResource(id = R.string.share_content_description),
+                    )
+                }
             }
         }
     }
