@@ -91,7 +91,8 @@ class NewPostViewModel(
             videoButtonEnabled = images.isEmpty() && poll == null,
             pollButtonEnabled = images.isEmpty() && videos.isEmpty() && poll == null,
             contentWarningText = contentWarningText,
-            characterCountText = "${MAX_POST_LENGTH - statusText.text.length - (contentWarningText?.length ?: 0)}"
+            characterCountText = "${MAX_POST_LENGTH - statusText.text.length - (contentWarningText?.length ?: 0)}",
+            maxImages = MAX_IMAGES - images.size,
         )
     }.stateIn(viewModelScope, SharingStarted.Eagerly, BottomBarState())
 

@@ -44,9 +44,10 @@ internal fun BottomBar(
     onMediaInserted: (Uri, File, FileType) -> Unit,
 ) {
     val context = LocalContext.current
+
     val multipleMediaLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.PickMultipleVisualMedia(
-            maxItems = NewPostViewModel.MAX_IMAGES,
+            maxItems = bottomBarState.maxImages.coerceAtLeast(2),
         )
     ) { uris ->
         uris.forEach {
@@ -62,9 +63,20 @@ internal fun BottomBar(
     BottomBar(
         bottomBarState = bottomBarState,
         onUploadImageClicked = {
-            multipleMediaLauncher.launch(
-                PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
-            )
+            when (bottomBarState.maxImages) {
+                1 -> {
+                    singleMediaLauncher.launch(
+                        PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                    )
+                }
+                in 2..NewPostViewModel.MAX_IMAGES -> {
+                    multipleMediaLauncher.launch(
+                        PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                    )
+                }
+                else -> {}
+            }
+
         },
         onUploadVideoClicked = {
             singleMediaLauncher.launch(
@@ -74,7 +86,6 @@ internal fun BottomBar(
         pollInteractions = pollInteractions,
         contentWarningInteractions = contentWarningInteractions,
     )
-
 }
 
 @Composable
@@ -210,4 +221,5 @@ data class BottomBarState(
     val pollButtonEnabled: Boolean = false,
     val contentWarningText: String? = null,
     val characterCountText: String = "",
+    val maxImages: Int = NewPostViewModel.MAX_IMAGES,
 )
