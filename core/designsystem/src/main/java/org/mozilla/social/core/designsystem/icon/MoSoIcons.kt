@@ -26,34 +26,70 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import org.mozilla.social.core.designsystem.R
 
+/**
+ * Other than aliases, these names should correspond to the icons in the
+ * [phosphor library](https://phosphoricons.com/).
+ * TODO@release update material icons with phosphor icons
+ */
 object MoSoIcons {
-
-    @Composable
-    fun house() = painterResource(R.drawable.house)
-
-    @Composable
-    fun compass() = painterResource(R.drawable.compass)
 
     @Composable
     fun bookmark() = painterResource(R.drawable.bookmark_simple)
 
     @Composable
-    fun userCircle() = painterResource(id = R.drawable.user_circle)
-
-    @Composable
-    fun list() = painterResource(id = R.drawable.list)
-
-    @Composable
-    fun userJoin() = painterResource(id = R.drawable.user_join)
+    fun caret_down() = painterResource(id = R.drawable.caret_down)
 
     @Composable
     fun chartBar() = painterResource(id = R.drawable.chart_bar)
 
     @Composable
-    fun caret_down() = painterResource(id = R.drawable.caret_down)
+    fun chatBubbles() = painterResource(id = R.drawable.chat_bubbles)
+
+    @Composable
+    fun chatBubblesFilled() = painterResource(id = R.drawable.chat_bubbles_filled)
+
+    @Composable
+    fun compass() = painterResource(R.drawable.compass)
+
+    @Composable
+    fun heart() = painterResource(id = R.drawable.heart)
+
+    @Composable
+    fun heartFilled() = painterResource(id = R.drawable.heart_filled)
+
+    @Composable
+    fun house() = painterResource(R.drawable.house)
+
+    @Composable
+    fun image() = painterResource(id = R.drawable.image)
 
     @Composable
     fun imagePlus() = painterResource(id = R.drawable.image_plus)
+
+    @Composable
+    fun list() = painterResource(id = R.drawable.list)
+
+    @Composable
+    fun monitorPlay() = painterResource(id = R.drawable.monitor_play)
+    @Composable
+    fun moreVertical() = painterResource(id = R.drawable.more_vertical)
+    @Composable
+    fun plus() = painterResource(id = R.drawable.plus)
+
+    @Composable
+    fun boost() = repeat()
+
+    @Composable
+    fun repeat() = painterResource(id = R.drawable.repeat)
+
+    @Composable
+    fun share() = painterResource(id = R.drawable.share)
+
+    @Composable
+    fun userCircle() = painterResource(id = R.drawable.user_circle)
+
+    @Composable
+    fun userJoin() = painterResource(id = R.drawable.user_join)
 
     @Composable
     fun warning() = painterResource(id = R.drawable.warning)
@@ -61,20 +97,12 @@ object MoSoIcons {
     @Composable
     fun x() = painterResource(id = R.drawable.x)
 
-    @Composable
-    fun plus() = painterResource(id = R.drawable.plus)
-
+    // Material- avoid using these, and instead use the drawable based resources
     @Composable
     fun check() = rememberVectorPainter(image = Icons.Rounded.Check)
 
     @Composable
-    fun moreVertical() = painterResource(id = R.drawable.more_vertical)
-
-    @Composable
     fun info() = rememberVectorPainter(image = Icons.Rounded.Info)
-
-    @Composable
-    fun share() = painterResource(id = R.drawable.share)
 
     @Composable
     fun chevronRight() = rememberVectorPainter(image = Icons.Rounded.ChevronRight)
@@ -85,22 +113,6 @@ object MoSoIcons {
     @Composable
     fun bookmarkBorder() = rememberVectorPainter(image = Icons.Rounded.BookmarkBorder)
 
-    @Composable
-    fun chatBubbles() = painterResource(id = R.drawable.chat_bubbles)
-
-    @Composable
-    fun chatBubblesFilled() = painterResource(id = R.drawable.chat_bubbles_filled)
-
-    @Composable
-    fun boost() = painterResource(id = R.drawable.repeat)
-
-    @Composable
-    fun heart() = painterResource(id = R.drawable.heart)
-
-    @Composable
-    fun heartFilled() = painterResource(id = R.drawable.heart_filled)
-
-    // Material- avoid using these, and instead use the drawable based resources
     @Composable
     fun public() = rememberVectorPainter(image = Icons.Rounded.Public)
 

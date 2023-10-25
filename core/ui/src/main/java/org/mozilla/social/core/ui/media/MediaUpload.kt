@@ -30,7 +30,7 @@ import java.io.File
 fun MediaUpload(
     uri: Uri,
     loadState: LoadState,
-    onRetryClicked: (Uri, File) -> Unit,
+    onRetryClicked: (Uri, File, FileType) -> Unit,
 ) {
     Box {
         val context = LocalContext.current
@@ -78,7 +78,7 @@ fun MediaUpload(
                             .align(Alignment.CenterHorizontally)
                             .padding(16.dp),
                         onClick = {
-                            onRetryClicked(uri, uri.toFile(context))
+                            onRetryClicked(uri, uri.toFile(context), fileType)
                         }
                     ) {
                         Text(

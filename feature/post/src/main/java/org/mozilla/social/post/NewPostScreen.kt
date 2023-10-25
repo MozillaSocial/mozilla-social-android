@@ -5,10 +5,6 @@
 
 package org.mozilla.social.post
 
-import android.net.Uri
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.PickVisualMediaRequest
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -37,7 +33,6 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
@@ -53,7 +48,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
@@ -68,9 +62,7 @@ import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 import org.mozilla.social.common.LoadState
 import org.mozilla.social.common.utils.buildAnnotatedStringForAccountsAndHashtags
-import org.mozilla.social.common.utils.toFile
 import org.mozilla.social.core.designsystem.component.MoSoButton
-import org.mozilla.social.core.designsystem.component.MoSoDivider
 import org.mozilla.social.core.designsystem.component.MoSoSurface
 import org.mozilla.social.core.designsystem.component.MoSoTextField
 import org.mozilla.social.core.designsystem.component.MoSoToast
@@ -88,8 +80,9 @@ import org.mozilla.social.feature.post.R
 import org.mozilla.social.model.ImageState
 import org.mozilla.social.model.StatusVisibility
 import org.mozilla.social.post.NewPostViewModel.Companion.MAX_POLL_COUNT
-import org.mozilla.social.post.NewPostViewModel.Companion.MAX_POST_LENGTH
 import org.mozilla.social.post.NewPostViewModel.Companion.MIN_POLL_COUNT
+import org.mozilla.social.post.bottombar.BottomBar
+import org.mozilla.social.post.bottombar.BottomBarState
 import org.mozilla.social.post.media.MediaInteractions
 import org.mozilla.social.post.poll.Poll
 import org.mozilla.social.post.poll.PollDuration
@@ -121,21 +114,20 @@ internal fun NewPostScreen(
         onPostClicked = viewModel::onPostClicked,
         onCloseClicked = onCloseClicked,
         sendButtonEnabled = viewModel.sendButtonEnabled.collectAsState().value,
-        imageStates = viewModel.imageStates.collectAsState().value,
-        addImageButtonEnabled = viewModel.addImageButtonEnabled.collectAsState().value,
+        imageStates = viewModel.mediaStates.collectAsState().value,
         mediaInteractions = viewModel.mediaInteractions,
         isSendingPost = viewModel.isSendingPost.collectAsState().value,
         visibility = viewModel.visibility.collectAsState().value,
         onVisibilitySelected = viewModel::onVisibilitySelected,
         poll = viewModel.poll.collectAsState().value,
         pollInteractions = viewModel.pollInteractions,
-        pollButtonEnabled = viewModel.pollButtonEnabled.collectAsState().value,
         contentWarningText = viewModel.contentWarningText.collectAsState().value,
         contentWarningInteractions = viewModel.contentWarningInteractions,
         accounts = viewModel.accountList.collectAsState().value,
         hashTags = viewModel.hashtagList.collectAsState().value,
         inReplyToAccountName = viewModel.inReplyToAccountName.collectAsState().value,
         userHeaderState = viewModel.userHeaderState.collectAsState(initial = null).value,
+        bottomBarState = viewModel.bottomBarState.collectAsState().value,
     )
 
     MoSoToast(toastMessage = viewModel.errorToastMessage)
@@ -145,20 +137,19 @@ data class UserHeaderState(val avatarUrl: String, val displayName: String)
 
 @Composable
 private fun NewPostScreen(
+    bottomBarState: BottomBarState,
     statusText: TextFieldValue,
     statusInteractions: StatusInteractions,
     onPostClicked: () -> Unit,
     onCloseClicked: () -> Unit,
     sendButtonEnabled: Boolean,
-    imageStates: Map<Uri, ImageState>,
-    addImageButtonEnabled: Boolean,
+    imageStates: List<ImageState>,
     mediaInteractions: MediaInteractions,
     isSendingPost: Boolean,
     visibility: StatusVisibility,
     onVisibilitySelected: (StatusVisibility) -> Unit,
     poll: Poll?,
     pollInteractions: PollInteractions,
-    pollButtonEnabled: Boolean,
     contentWarningText: String?,
     contentWarningInteractions: ContentWarningInteractions,
     accounts: List<Account>?,
@@ -166,21 +157,7 @@ private fun NewPostScreen(
     inReplyToAccountName: String?,
     userHeaderState: UserHeaderState?,
 ) {
-    val context = LocalContext.current
-    val multipleMediaLauncher = rememberLauncherForActivityResult(
-        ActivityResultContracts.PickMultipleVisualMedia(
-            maxItems = (NewPostViewModel.MAX_IMAGES - imageStates.size).coerceAtLeast(2)
-        )
-    ) { uris ->
-        uris.forEach {
-            mediaInteractions.onMediaInserted(it, it.toFile(context))
-        }
-    }
-    val singleMediaLauncher = rememberLauncherForActivityResult(
-        ActivityResultContracts.PickVisualMedia()
-    ) { uri ->
-        uri?.let { mediaInteractions.onMediaInserted(it, it.toFile(context)) }
-    }
+
     Box(
         modifier = Modifier
             .windowInsetsPadding(WindowInsets.ime.exclude(WindowInsets.navigationBars))
@@ -222,20 +199,9 @@ private fun NewPostScreen(
                 HashtagSearchBar(hashTags = hashTags, statusInteractions = statusInteractions)
             }
             BottomBar(
-                onUploadImageClicked = {
-                    val mediaRequest =
-                        PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageAndVideo)
-                    if (NewPostViewModel.MAX_IMAGES - imageStates.size <= 1) {
-                        singleMediaLauncher.launch(mediaRequest)
-                    } else {
-                        multipleMediaLauncher.launch(mediaRequest)
-                    }
-                },
-                addImageButtonEnabled = addImageButtonEnabled,
-                statusText = statusText.text,
-                contentWarningText = contentWarningText,
+                bottomBarState = bottomBarState,
+                onMediaInserted = mediaInteractions::onMediaInserted,
                 pollInteractions = pollInteractions,
-                pollButtonEnabled = pollButtonEnabled,
                 contentWarningInteractions = contentWarningInteractions,
             )
         }
@@ -307,7 +273,6 @@ private fun TopBar(
         }
 
         Spacer(modifier = Modifier.padding(start = 16.dp))
-        val keyboard = LocalSoftwareKeyboardController.current
         MoSoButton(onClick = onPostClicked, enabled = sendButtonEnabled) {
             Text(
                 text = stringResource(id = R.string.post),
@@ -317,90 +282,13 @@ private fun TopBar(
     }
 }
 
-@Composable
-private fun BottomBar(
-    onUploadImageClicked: () -> Unit,
-    addImageButtonEnabled: Boolean,
-    statusText: String,
-    contentWarningText: String?,
-    pollInteractions: PollInteractions,
-    pollButtonEnabled: Boolean,
-    contentWarningInteractions: ContentWarningInteractions,
-) {
-    val characterCountText = remember(statusText, contentWarningText) {
-        "${MAX_POST_LENGTH - statusText.length - (contentWarningText?.length ?: 0)}"
-    }
-    Column {
-        MoSoDivider(
-            color = MoSoTheme.colors.borderPrimary
-        )
-        Box(
-            modifier = Modifier
-                .height(60.dp)
-                .fillMaxWidth()
-                .background(MoSoTheme.colors.layer1)
-        ) {
-            // left row
-            Row(
-                modifier = Modifier.align(Alignment.CenterStart)
-            ) {
-                IconButton(
-                    onClick = { onUploadImageClicked() },
-                    enabled = addImageButtonEnabled,
-                ) {
-                    Icon(
-                        MoSoIcons.imagePlus(),
-                        stringResource(id = R.string.attach_image_button_content_description),
-                        tint = MoSoTheme.colors.textPrimary,
-                    )
-                }
-                IconButton(
-                    onClick = { pollInteractions.onNewPollClicked() },
-                    enabled = pollButtonEnabled,
-                ) {
-                    Icon(
-                        MoSoIcons.chartBar(),
-                        stringResource(id = R.string.add_poll_button_content_description),
-                        tint = MoSoTheme.colors.textPrimary,
-                    )
-                }
-                IconButton(
-                    onClick = { contentWarningInteractions.onContentWarningClicked() },
-                ) {
-                    Icon(
-                        MoSoIcons.warning(),
-                        stringResource(id = R.string.content_warning_button_content_description),
-                        tint = if (contentWarningText == null) {
-                            LocalContentColor.current
-                        } else {
-                            MoSoTheme.colors.textWarning
-                        },
-                    )
-                }
-            }
-            // right row
-            Row(
-                modifier = Modifier
-                    .align(Alignment.CenterEnd)
-                    .padding(end = MoSoSpacing.md)
-            ) {
-
-                Text(
-                    text = characterCountText,
-                    style = MoSoTheme.typography.labelSmall,
-                    color = MoSoTheme.colors.textSecondary,
-                )
-            }
-        }
-    }
-}
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 private fun MainBox(
     statusText: TextFieldValue,
     statusInteractions: StatusInteractions,
-    imageStates: Map<Uri, ImageState>,
+    imageStates: List<ImageState>,
     mediaInteractions: MediaInteractions,
     poll: Poll?,
     pollInteractions: PollInteractions,
@@ -414,6 +302,7 @@ private fun MainBox(
         LocalIndication provides NoIndication
     ) {
         val keyboard = LocalSoftwareKeyboardController.current
+
         val textFieldFocusRequester = remember { FocusRequester() }
         MoSoSurface(
             modifier = Modifier
@@ -480,7 +369,7 @@ private fun MainBox(
 
                     items(imageStates.size) { index ->
                         ImageUploadBox(
-                            imageState = imageStates.entries.elementAt(index),
+                            imageState = imageStates[index],
                             mediaInteractions = mediaInteractions,
                         )
                     }
@@ -541,7 +430,7 @@ private fun ContentWarningEntry(
 
 @Composable
 private fun ImageUploadBox(
-    imageState: Map.Entry<Uri, ImageState>,
+    imageState: ImageState,
     mediaInteractions: MediaInteractions,
 ) {
     val outlineShape = RoundedCornerShape(12.dp)
@@ -559,20 +448,20 @@ private fun ImageUploadBox(
             .fillMaxWidth(),
     ) {
         MediaUpload(
-            uri = imageState.key,
-            loadState = imageState.value.loadState,
+            uri = imageState.uri,
+            loadState = imageState.loadState,
             onRetryClicked = mediaInteractions::onMediaInserted,
         )
         Row(
             modifier = Modifier.fillMaxWidth(),
         ) {
-            if (imageState.value.loadState == LoadState.LOADED) {
+            if (imageState.loadState == LoadState.LOADED) {
                 TextField(
                     modifier = Modifier.weight(1f),
-                    value = imageState.value.description,
+                    value = imageState.description,
                     onValueChange = {
                         mediaInteractions.onMediaDescriptionTextUpdated(
-                            imageState.key,
+                            imageState.uri,
                             it
                         )
                     },
@@ -588,7 +477,7 @@ private fun ImageUploadBox(
             }
             IconButton(
                 onClick = {
-                    mediaInteractions.onDeleteMediaClicked(imageState.key)
+                    mediaInteractions.onDeleteMediaClicked(imageState.uri)
                 }
             ) {
                 Icon(
@@ -715,21 +604,20 @@ private fun NewPostScreenPreview() {
             onPostClicked = {},
             onCloseClicked = {},
             sendButtonEnabled = true,
-            imageStates = mapOf(),
-            addImageButtonEnabled = true,
+            imageStates = listOf(),
             mediaInteractions = object : MediaInteractions {},
             isSendingPost = false,
             visibility = StatusVisibility.Private,
             onVisibilitySelected = {},
             poll = null,
             pollInteractions = object : PollInteractions {},
-            pollButtonEnabled = true,
             contentWarningText = null,
             contentWarningInteractions = object : ContentWarningInteractions {},
             accounts = null,
             hashTags = null,
             inReplyToAccountName = null,
-            userHeaderState = UserHeaderState("", "Barack Obama")
+            userHeaderState = UserHeaderState("", "Barack Obama"),
+            bottomBarState = BottomBarState()
         )
     }
 }
@@ -746,8 +634,7 @@ private fun NewPostScreenWithPollPreview() {
             onPostClicked = {},
             onCloseClicked = {},
             sendButtonEnabled = true,
-            imageStates = mapOf(),
-            addImageButtonEnabled = true,
+            imageStates = listOf(),
             mediaInteractions = object : MediaInteractions {},
             isSendingPost = false,
             visibility = StatusVisibility.Private,
@@ -759,13 +646,13 @@ private fun NewPostScreenWithPollPreview() {
                 hideTotals = false
             ),
             pollInteractions = object : PollInteractions {},
-            pollButtonEnabled = true,
             contentWarningText = null,
             contentWarningInteractions = object : ContentWarningInteractions {},
             accounts = null,
             hashTags = null,
             inReplyToAccountName = null,
             userHeaderState = UserHeaderState("", "Barack Obama"),
+            bottomBarState = BottomBarState(),
         )
     }
 }
@@ -782,21 +669,20 @@ private fun NewPostScreenWithContentWarningPreview() {
             onPostClicked = {},
             onCloseClicked = {},
             sendButtonEnabled = true,
-            imageStates = mapOf(),
-            addImageButtonEnabled = true,
+            imageStates = listOf(),
             mediaInteractions = object : MediaInteractions {},
             isSendingPost = false,
             visibility = StatusVisibility.Private,
             onVisibilitySelected = {},
             poll = null,
             pollInteractions = object : PollInteractions {},
-            pollButtonEnabled = true,
             contentWarningText = "Content is bad",
             contentWarningInteractions = object : ContentWarningInteractions {},
             accounts = null,
             hashTags = null,
             inReplyToAccountName = null,
             userHeaderState = UserHeaderState("", "Barack Obama"),
+            bottomBarState = BottomBarState(),
         )
     }
 }
