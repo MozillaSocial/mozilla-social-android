@@ -95,6 +95,8 @@ fun MainActivityScreen(context: Context) {
         bottomSheetContent = { BottomSheetContent() },
         bottomSheetVisible = appState.bottomSheetVisible.value,
         content = { paddingValues ->
+            // This reduces screen transition animation jank when going between a screen
+            // that shows the top / bottom bar and a screen that doesn't
             val padding = if (AppState.shouldShowTopBar(currentDestination)) {
                 paddingValues
             } else {
