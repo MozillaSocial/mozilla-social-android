@@ -14,6 +14,7 @@ dependencies {
     implementation(project(":core:common"))
     implementation(project(":core:navigation"))
     implementation(project(":core:model"))
+    implementation(project(":core:analytics"))
 
     implementation(libs.koin)
     implementation(libs.jakewharton.timber)

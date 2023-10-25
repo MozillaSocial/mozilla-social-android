@@ -7,6 +7,7 @@ val discoverModule = module {
     viewModel {
         DiscoverViewModel(
             get(),
+            get(),
         )
     }
 }

@@ -4,6 +4,7 @@ import android.content.Context
 import mozilla.telemetry.glean.BuildInfo
 import mozilla.telemetry.glean.Glean
 import org.mozilla.social.core.analytics.Analytics
+import org.mozilla.social.core.analytics.EngagementType
 import org.mozilla.social.core.analytics.GleanMetrics.Identifiers
 import org.mozilla.social.core.analytics.GleanMetrics.Ui
 import java.util.Calendar
@@ -23,22 +24,24 @@ class GleanAnalytics : Analytics {
     }
 
     override fun uiEngagement(
-        engagementType: String?,
+        engagementType: EngagementType?,
         engagementValue: String?,
         mastodonAccountHandle: String?,
         mastodonAccountId: String?,
+        mastodonStatusId: String?,
         recommendationId: String?,
         uiAdditionalDetail: String?,
         uiIdentifier: String?
     ) {
         Ui.engagement.record(extra = Ui.EngagementExtra(
-            engagementType,
-            engagementValue,
-            mastodonAccountHandle,
-            mastodonAccountId,
-            recommendationId,
-            uiAdditionalDetail,
-            uiIdentifier
+            engagementType = engagementType?.value,
+            engagementValue = engagementValue,
+            mastodonAccountHandle = mastodonAccountHandle,
+            mastodonAccountId = mastodonAccountId,
+            mastodonStatusId = mastodonStatusId,
+            recommendationId = recommendationId,
+            uiAdditionalDetail = uiAdditionalDetail,
+            uiIdentifier = uiIdentifier,
         ))
     }
 
@@ -51,12 +54,12 @@ class GleanAnalytics : Analytics {
         uiIdentifier: String?
     ) {
         Ui.impression.record(extra = Ui.ImpressionExtra(
-            mastodonAccountHandle,
-            mastodonAccountId,
-            mastodonStatusId,
-            recommendationId,
-            uiAdditionalDetail,
-            uiIdentifier
+            mastodonAccountHandle = mastodonAccountHandle,
+            mastodonAccountId = mastodonAccountId,
+            mastodonStatusId = mastodonStatusId,
+            recommendationId = recommendationId,
+            uiAdditionalDetail = uiAdditionalDetail,
+            uiIdentifier = uiIdentifier
         ))
     }
 

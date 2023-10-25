@@ -1,7 +1,6 @@
 @file:Suppress("detekt:all")
 package org.mozilla.social.feature.discover
 
-import android.content.Intent
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -16,6 +15,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -25,7 +25,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.isTraversalGroup
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import coil.compose.AsyncImage
 import org.koin.androidx.compose.koinViewModel
@@ -33,7 +32,6 @@ import org.mozilla.social.common.Resource
 import org.mozilla.social.core.designsystem.component.MoSoDivider
 import org.mozilla.social.core.designsystem.component.MoSoSurface
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
-import org.mozilla.social.core.designsystem.theme.MoSoRadius
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.designsystem.utils.NoRipple
 import org.mozilla.social.core.ui.Radius
@@ -48,6 +46,10 @@ internal fun DiscoverScreen(
         recommendations = viewModel.recommendations.collectAsState().value,
         discoverInteractions = viewModel,
     )
+
+    LaunchedEffect(Unit) {
+        viewModel.onScreenViewed()
+    }
 }
 
 @Composable
@@ -107,11 +109,15 @@ private fun Recommendation(
     discoverInteractions: DiscoverInteractions,
 ) {
     val context = LocalContext.current
+    LaunchedEffect(Unit) {
+        discoverInteractions.onRecommendationViewed(recommendationId = recommendation.id)
+    }
     NoRipple {
         Column(
             modifier = Modifier
                 .padding(16.dp)
                 .clickable {
+                    discoverInteractions.onRecommendationClicked(recommendation.id)
                     CustomTabsIntent
                         .Builder()
                         .build()

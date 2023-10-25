@@ -7,16 +7,28 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.mozilla.social.common.Resource
+import org.mozilla.social.core.analytics.Analytics
+import org.mozilla.social.core.analytics.AnalyticsIdentifiers
+import org.mozilla.social.core.analytics.EngagementType
+import org.mozilla.social.core.analytics.utils.ImpressionTracker
 import org.mozilla.social.core.data.repository.RecommendationRepository
 import org.mozilla.social.model.Recommendation
 import timber.log.Timber
 
 class DiscoverViewModel(
     private val recommendationRepository: RecommendationRepository,
+    private val analytics: Analytics,
 ) : ViewModel(), DiscoverInteractions {
 
     private val _recommendations = MutableStateFlow<Resource<List<Recommendation>>>(Resource.Loading())
     val recommendations = _recommendations.asStateFlow()
+
+    private val recommendationImpressionTracker = ImpressionTracker<String> { recommendationId ->
+        analytics.uiImpression(
+            uiIdentifier = AnalyticsIdentifiers.DISCOVER_RECOMMENDATION_IMPRESSION,
+            recommendationId = recommendationId,
+        )
+    }
 
     init {
         getRecs()
@@ -38,5 +50,23 @@ class DiscoverViewModel(
 
     override fun onRetryClicked() {
         getRecs()
+    }
+
+    override fun onRecommendationClicked(recommendationId: String) {
+        analytics.uiEngagement(
+            engagementType = EngagementType.GENERAL,
+            uiIdentifier = AnalyticsIdentifiers.DISCOVER_RECOMMENDATION_OPEN,
+            recommendationId = recommendationId,
+        )
+    }
+
+    override fun onScreenViewed() {
+        analytics.uiImpression(
+            uiIdentifier = AnalyticsIdentifiers.DISCOVER_SCREEN_IMPRESSION,
+        )
+    }
+
+    override fun onRecommendationViewed(recommendationId: String) {
+        recommendationImpressionTracker.track(recommendationId)
     }
 }
