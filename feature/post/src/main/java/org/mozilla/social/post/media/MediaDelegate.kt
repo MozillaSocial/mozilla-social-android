@@ -33,7 +33,7 @@ class MediaDelegate(
     ) {
         if (text.length > NewPostViewModel.MAX_IMAGE_DESCRIPTION_LENGTH) return
 
-        updateState(uri = uri) { copy(description = text) }
+        updateImageState(uri = uri) { copy(description = text) }
     }
 
     override fun onDeleteMediaClicked(uri: Uri) {
@@ -63,7 +63,7 @@ class MediaDelegate(
             it.toMutableList()
                 .apply { add(ImageState(uri, loadState = LoadState.LOADING, fileType = fileType)) }
         }
-        updateState(uri) { copy(loadState = LoadState.LOADING) }
+        updateImageState(uri) { copy(loadState = LoadState.LOADING) }
         uploadJobs[uri] = coroutineScope.launch {
             try {
                 val imageId = mediaRepository.uploadImage(
@@ -71,7 +71,7 @@ class MediaDelegate(
                     description = imageStates.value.firstOrNull { it.uri == uri }
                         ?.description?.ifBlank { null }
                 ).attachmentId
-                updateState(uri) {
+                updateImageState(uri) {
                     copy(
                         attachmentId = imageId,
                         loadState = LoadState.LOADED
@@ -79,7 +79,7 @@ class MediaDelegate(
                 }
             } catch (e: Exception) {
                 log.e(e)
-                updateState(uri) { copy(loadState = LoadState.ERROR) }
+                updateImageState(uri) { copy(loadState = LoadState.ERROR) }
             }
         }
         uploadJobs[uri]?.invokeOnCompletion {
@@ -91,10 +91,11 @@ class MediaDelegate(
     /**
      * Updates the state with the given uri with the given transform function
      */
-    private inline fun updateState(uri: Uri, transform: ImageState.() -> ImageState) {
+    private inline fun updateImageState(uri: Uri, transform: ImageState.() -> ImageState) {
         _imageStates.update {
             it.toMutableList().apply {
-                val oldState = firstOrNull { it.uri == uri } ?: throw IllegalStateException()
+                val oldState = firstOrNull { it.uri == uri }
+                    ?: error("The media isn't in the list yet")
                 this[this.indexOf(oldState)] = transform(oldState)
             }
         }
