@@ -35,6 +35,8 @@ import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.designsystem.utils.NoRipple
 import org.mozilla.social.core.ui.Radius
+import org.mozilla.social.core.ui.error.GenericError
+import org.mozilla.social.core.ui.loading.MaxSizeLoading
 import org.mozilla.social.core.ui.shareUrl
 import org.mozilla.social.model.Recommendation
 
@@ -67,8 +69,16 @@ private fun DiscoverScreen(
                     discoverInteractions = discoverInteractions,
                 )
             }
-            is Resource.Loading -> {}
-            is Resource.Error -> {}
+            is Resource.Loading -> {
+                MaxSizeLoading()
+            }
+            is Resource.Error -> {
+                GenericError(
+                    onRetryClicked = {
+                        discoverInteractions.onRetryClicked()
+                    }
+                )
+            }
         }
 
     }
