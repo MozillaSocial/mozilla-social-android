@@ -30,6 +30,7 @@ internal fun ThreadScreen(
             items = viewModel.statuses.collectAsState(emptyList()).value,
             errorToastMessage = viewModel.postCardDelegate.errorToastMessage,
             postCardInteractions = viewModel.postCardDelegate,
+            threadId = threadStatusId,
         )
     }
 }
