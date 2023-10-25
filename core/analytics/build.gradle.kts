@@ -25,4 +25,6 @@ dependencies {
     implementation(libs.protobuf.kotlin.lite)
 
     testImplementation(libs.glean.forUnitTests)
+
+    implementation(libs.jakewharton.timber)
 }

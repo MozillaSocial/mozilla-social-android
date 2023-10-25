@@ -44,7 +44,7 @@ class DiscoverViewModel(
         getRecs()
     }
 
-    override fun onArticleClicked(recommendationId: String) {
+    override fun onRecommendationClicked(recommendationId: String) {
         analytics.uiEngagement(
             engagementType = EngagementType.GENERAL,
             uiIdentifier = AnalyticsIdentifiers.DISCOVER_RECOMMENDATION_OPEN,
@@ -55,6 +55,13 @@ class DiscoverViewModel(
     override fun onScreenViewed() {
         analytics.uiImpression(
             uiIdentifier = AnalyticsIdentifiers.DISCOVER_SCREEN_IMPRESSION,
+        )
+    }
+
+    override fun onRecommendationViewed(recommendationId: String) {
+        analytics.uiImpression(
+            uiIdentifier = AnalyticsIdentifiers.DISCOVER_RECOMMENDATION_IMPRESSION,
+            recommendationId = recommendationId,
         )
     }
 }
