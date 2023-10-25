@@ -112,6 +112,7 @@ private fun Recommendation(
             modifier = Modifier
                 .padding(16.dp)
                 .clickable {
+                    discoverInteractions.onArticleClicked()
                     CustomTabsIntent
                         .Builder()
                         .build()

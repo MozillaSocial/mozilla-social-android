@@ -5,4 +5,5 @@ interface DiscoverInteractions {
     fun onRepostClicked() = Unit
     fun onBookmarkClicked() = Unit
     fun onShareClicked() = Unit
+    fun onArticleClicked() = Unit
 }
