@@ -168,7 +168,6 @@ private fun AddPollButton(pollInteractions: PollInteractions, pollButtonEnabled:
         Icon(
             MoSoIcons.chartBar(),
             stringResource(id = R.string.add_poll_button_content_description),
-            tint = MoSoTheme.colors.textPrimary,
         )
     }
 }

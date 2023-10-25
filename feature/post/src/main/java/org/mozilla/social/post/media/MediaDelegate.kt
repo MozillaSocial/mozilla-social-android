@@ -4,13 +4,13 @@ import android.net.Uri
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.mozilla.social.common.LoadState
 import org.mozilla.social.common.logging.Log
 import org.mozilla.social.common.utils.FileType
-import org.mozilla.social.common.utils.getFileType
 import org.mozilla.social.core.data.repository.MediaRepository
 import org.mozilla.social.model.ImageState
 import org.mozilla.social.post.NewPostViewModel
@@ -22,8 +22,8 @@ class MediaDelegate(
     private val log: Log,
 ) : MediaInteractions {
 
-    private val _imageStates = MutableStateFlow<Map<Uri, ImageState>>(emptyMap())
-    val imageStates = _imageStates.asStateFlow()
+    private val _imageStates = MutableStateFlow<List<ImageState>>(emptyList())
+    val imageStates: StateFlow<List<ImageState>> = _imageStates.asStateFlow()
 
     private val uploadJobs = mutableMapOf<Uri, Job>()
 
@@ -32,14 +32,14 @@ class MediaDelegate(
         text: String,
     ) {
         if (text.length > NewPostViewModel.MAX_IMAGE_DESCRIPTION_LENGTH) return
-        val oldState = _imageStates.value[uri]
-        updateImageState(uri, description = text)
+
+        updateState(uri = uri) { copy(description = text) }
     }
 
     override fun onDeleteMediaClicked(uri: Uri) {
         uploadJobs[uri]?.cancel()
         _imageStates.update {
-            _imageStates.value.toMutableMap().apply { remove(uri) }
+            _imageStates.value.toMutableList().apply { removeIf { it.uri == uri } }
         }
     }
 
@@ -53,26 +53,33 @@ class MediaDelegate(
         fileType: FileType,
     ) {
         // if the image was already uploaded, just return
-        imageStates.value[uri]?.let {
-            if (it.loadState == LoadState.LOADED) {
-                return
+        imageStates.value.firstOrNull { it.uri == uri }
+            ?.let {
+                if (it.loadState == LoadState.LOADED) {
+                    return
+                }
             }
+        _imageStates.update {
+            it.toMutableList()
+                .apply { add(ImageState(uri, loadState = LoadState.LOADING, fileType = fileType)) }
         }
-        updateImageState(uri, loadState = LoadState.LOADING)
+        updateState(uri) { copy(loadState = LoadState.LOADING) }
         uploadJobs[uri] = coroutineScope.launch {
             try {
                 val imageId = mediaRepository.uploadImage(
-                    file,
-                    imageStates.value[uri]?.description?.ifBlank { null }
+                    file = file,
+                    description = imageStates.value.firstOrNull { it.uri == uri }
+                        ?.description?.ifBlank { null }
                 ).attachmentId
-                updateImageState(
-                    uri,
-                    loadState = LoadState.LOADED,
-                    attachmentId = imageId
-                )
+                updateState(uri) {
+                    copy(
+                        attachmentId = imageId,
+                        loadState = LoadState.LOADED
+                    )
+                }
             } catch (e: Exception) {
                 log.e(e)
-                updateImageState(uri, loadState = LoadState.ERROR, fileType = fileType)
+                updateState(uri) { copy(loadState = LoadState.ERROR) }
             }
         }
         uploadJobs[uri]?.invokeOnCompletion {
@@ -81,24 +88,14 @@ class MediaDelegate(
         }
     }
 
-    private fun updateImageState(
-        uri: Uri,
-        fileType: FileType? = null,
-        loadState: LoadState? = null,
-        attachmentId: String? = null,
-        description: String? = null,
-    ) {
-        val oldState = _imageStates.value[uri]
-        val newState = ImageState(
-            loadState = loadState ?: oldState?.loadState ?: LoadState.LOADING,
-            fileType = fileType ?: oldState?.fileType ?: FileType.UNKNOWN,
-            attachmentId = attachmentId ?: oldState?.attachmentId,
-            description = description ?: oldState?.description ?: "",
-        )
-
+    /**
+     * Updates the state with the given uri with the given transform function
+     */
+    private inline fun updateState(uri: Uri, transform: ImageState.() -> ImageState) {
         _imageStates.update {
-            _imageStates.value.toMutableMap().apply {
-                put(uri, newState)
+            it.toMutableList().apply {
+                val oldState = firstOrNull { it.uri == uri } ?: throw IllegalStateException()
+                this[this.indexOf(oldState)] = transform(oldState)
             }
         }
     }

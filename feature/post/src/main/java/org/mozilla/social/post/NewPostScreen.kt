@@ -5,9 +5,6 @@
 
 package org.mozilla.social.post
 
-import android.net.Uri
-import androidx.activity.result.PickVisualMediaRequest
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -146,7 +143,7 @@ private fun NewPostScreen(
     onPostClicked: () -> Unit,
     onCloseClicked: () -> Unit,
     sendButtonEnabled: Boolean,
-    imageStates: Map<Uri, ImageState>,
+    imageStates: List<ImageState>,
     mediaInteractions: MediaInteractions,
     isSendingPost: Boolean,
     visibility: StatusVisibility,
@@ -291,7 +288,7 @@ private fun TopBar(
 private fun MainBox(
     statusText: TextFieldValue,
     statusInteractions: StatusInteractions,
-    imageStates: Map<Uri, ImageState>,
+    imageStates: List<ImageState>,
     mediaInteractions: MediaInteractions,
     poll: Poll?,
     pollInteractions: PollInteractions,
@@ -372,7 +369,7 @@ private fun MainBox(
 
                     items(imageStates.size) { index ->
                         ImageUploadBox(
-                            imageState = imageStates.entries.elementAt(index),
+                            imageState = imageStates[index],
                             mediaInteractions = mediaInteractions,
                         )
                     }
@@ -433,7 +430,7 @@ private fun ContentWarningEntry(
 
 @Composable
 private fun ImageUploadBox(
-    imageState: Map.Entry<Uri, ImageState>,
+    imageState: ImageState,
     mediaInteractions: MediaInteractions,
 ) {
     val outlineShape = RoundedCornerShape(12.dp)
@@ -451,20 +448,20 @@ private fun ImageUploadBox(
             .fillMaxWidth(),
     ) {
         MediaUpload(
-            uri = imageState.key,
-            loadState = imageState.value.loadState,
+            uri = imageState.uri,
+            loadState = imageState.loadState,
             onRetryClicked = mediaInteractions::onMediaInserted,
         )
         Row(
             modifier = Modifier.fillMaxWidth(),
         ) {
-            if (imageState.value.loadState == LoadState.LOADED) {
+            if (imageState.loadState == LoadState.LOADED) {
                 TextField(
                     modifier = Modifier.weight(1f),
-                    value = imageState.value.description,
+                    value = imageState.description,
                     onValueChange = {
                         mediaInteractions.onMediaDescriptionTextUpdated(
-                            imageState.key,
+                            imageState.uri,
                             it
                         )
                     },
@@ -480,7 +477,7 @@ private fun ImageUploadBox(
             }
             IconButton(
                 onClick = {
-                    mediaInteractions.onDeleteMediaClicked(imageState.key)
+                    mediaInteractions.onDeleteMediaClicked(imageState.uri)
                 }
             ) {
                 Icon(
@@ -607,7 +604,7 @@ private fun NewPostScreenPreview() {
             onPostClicked = {},
             onCloseClicked = {},
             sendButtonEnabled = true,
-            imageStates = mapOf(),
+            imageStates = listOf(),
             mediaInteractions = object : MediaInteractions {},
             isSendingPost = false,
             visibility = StatusVisibility.Private,
@@ -637,7 +634,7 @@ private fun NewPostScreenWithPollPreview() {
             onPostClicked = {},
             onCloseClicked = {},
             sendButtonEnabled = true,
-            imageStates = mapOf(),
+            imageStates = listOf(),
             mediaInteractions = object : MediaInteractions {},
             isSendingPost = false,
             visibility = StatusVisibility.Private,
@@ -672,7 +669,7 @@ private fun NewPostScreenWithContentWarningPreview() {
             onPostClicked = {},
             onCloseClicked = {},
             sendButtonEnabled = true,
-            imageStates = mapOf(),
+            imageStates = listOf(),
             mediaInteractions = object : MediaInteractions {},
             isSendingPost = false,
             visibility = StatusVisibility.Private,
