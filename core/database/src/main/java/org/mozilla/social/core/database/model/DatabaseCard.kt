@@ -77,6 +77,7 @@ sealed class DatabaseCard {
      */
     abstract val html: String?
 
+    @Serializable
     data class Video(
         override val url: String,
         override val title: String,
@@ -94,6 +95,7 @@ sealed class DatabaseCard {
 
     ) : DatabaseCard()
 
+    @Serializable
     data class Photo(
         override val url: String,
         override val title: String,
@@ -110,6 +112,7 @@ sealed class DatabaseCard {
         override val blurHash: String? = null
     ) : DatabaseCard()
 
+    @Serializable
     data class Link(
         override val url: String,
         override val title: String,
@@ -126,6 +129,7 @@ sealed class DatabaseCard {
         override val blurHash: String? = null
     ) : DatabaseCard()
 
+    @Serializable
     data class Rich(
         override val url: String,
         override val title: String,

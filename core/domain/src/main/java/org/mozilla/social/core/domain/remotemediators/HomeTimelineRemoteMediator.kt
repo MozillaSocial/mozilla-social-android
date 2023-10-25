@@ -12,6 +12,7 @@ import org.mozilla.social.core.data.repository.TimelineRepository
 import org.mozilla.social.core.database.SocialDatabase
 import org.mozilla.social.core.database.model.statusCollections.HomeTimelineStatus
 import org.mozilla.social.core.database.model.statusCollections.HomeTimelineStatusWrapper
+import timber.log.Timber
 
 @OptIn(ExperimentalPagingApi::class)
 class HomeTimelineRemoteMediator(
@@ -93,6 +94,7 @@ class HomeTimelineRemoteMediator(
                 endOfPaginationReached = response.size != pageSize
             )
         } catch (e: Exception) {
+            Timber.e(e)
             MediatorResult.Error(e)
         }
     }

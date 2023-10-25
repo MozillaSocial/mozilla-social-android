@@ -3,6 +3,7 @@ package org.mozilla.social.core.data.repository.model.status
 import org.mozilla.social.core.database.model.DatabaseAccount
 import org.mozilla.social.core.database.model.DatabaseApplication
 import org.mozilla.social.core.database.model.DatabaseAttachment
+import org.mozilla.social.core.database.model.DatabaseCard
 import org.mozilla.social.core.database.model.DatabaseEmoji
 import org.mozilla.social.core.database.model.DatabaseField
 import org.mozilla.social.core.database.model.DatabaseHashTag
@@ -16,6 +17,7 @@ import org.mozilla.social.core.database.model.DatabaseStatusVisibility
 import org.mozilla.social.model.Account
 import org.mozilla.social.model.Application
 import org.mozilla.social.model.Attachment
+import org.mozilla.social.model.Card
 import org.mozilla.social.model.Emoji
 import org.mozilla.social.model.Field
 import org.mozilla.social.model.HashTag
@@ -52,8 +54,7 @@ fun Status.toDatabaseModel(): DatabaseStatus =
         boostedStatusId = boostedStatus?.statusId,
         boostedStatusAccountId = boostedStatus?.account?.accountId,
         pollId = poll?.pollId,
-        //TODO map this if we ever need it
-        card = null,
+        card = card?.toDatabaseModel(),
         language = language,
         plainText = plainText,
         isFavorited = isFavourited,
@@ -229,3 +230,67 @@ fun Source.toDatabaseModel(): DatabaseSource =
         defaultLanguage = defaultLanguage,
         followRequestsCount = followRequestsCount
     )
+
+fun Card.toDatabaseModel(): DatabaseCard =
+    when (this) {
+        is Card.Video -> DatabaseCard.Video(
+            url = url,
+            title = title,
+            description = description,
+            authorName = authorName,
+            authorUrl = authorUrl,
+            providerName = providerName,
+            providerUrl = providerUrl,
+            html = html,
+            width = width,
+            height = height,
+            image = image,
+            embedUrl = embedUrl,
+            blurHash = blurHash
+        )
+        is Card.Link -> DatabaseCard.Link(
+            url = url,
+            title = title,
+            description = description,
+            authorName = authorName,
+            authorUrl = authorUrl,
+            providerName = providerName,
+            providerUrl = providerUrl,
+            html = html,
+            width = width,
+            height = height,
+            image = image,
+            embedUrl = embedUrl,
+            blurHash = blurHash
+        )
+        is Card.Photo -> DatabaseCard.Photo(
+            url = url,
+            title = title,
+            description = description,
+            authorName = authorName,
+            authorUrl = authorUrl,
+            providerName = providerName,
+            providerUrl = providerUrl,
+            html = html,
+            width = width,
+            height = height,
+            image = image,
+            embedUrl = embedUrl,
+            blurHash = blurHash
+        )
+        is Card.Rich -> DatabaseCard.Rich(
+            url = url,
+            title = title,
+            description = description,
+            authorName = authorName,
+            authorUrl = authorUrl,
+            providerName = providerName,
+            providerUrl = providerUrl,
+            html = html,
+            width = width,
+            height = height,
+            image = image,
+            embedUrl = embedUrl,
+            blurHash = blurHash
+        )
+    }

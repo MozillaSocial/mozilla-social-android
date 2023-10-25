@@ -8,254 +8,46 @@ import kotlinx.serialization.Serializable
  * using OpenGraph tags from a URL.
  */
 @Serializable
-sealed class NetworkCard {
+class NetworkCard(
+    @SerialName("url")
+    val url: String,
 
-    /**
-     * URL of linked resource.
-     */
-    abstract val url: String
+    @SerialName("title")
+    val title: String,
 
-    /**
-     * Title of linked resource.
-     */
-    abstract val title: String
+    @SerialName("description")
+    val description: String,
 
-    /**
-     * Description of preview.
-     */
-    abstract val description: String
+    @SerialName("type")
+    val type: String,
 
-    /**
-     * The author of the original resource.
-     */
-    abstract val authorName: String?
+    @SerialName("author_name")
+    val authorName: String? = null,
 
-    /**
-     * URL to the author of the original resource.
-     */
-    abstract val authorUrl: String?
+    @SerialName("author_url")
+    val authorUrl: String? = null,
 
-    /**
-     * The provider of the original resource.
-     */
-    abstract val providerName: String?
+    @SerialName("provider_name")
+    val providerName: String? = null,
 
-    /**
-     * URL to the provider of the original resource.
-     */
-    abstract val providerUrl: String?
+    @SerialName("provider_url")
+    val providerUrl: String? = null,
 
-    /**
-     * Width of preview, in pixels.
-     */
-    abstract val width: Long?
+    @SerialName("html")
+    val html: String? = null,
 
-    /**
-     * Height of preview, in pixels.
-     */
-    abstract val height: Long?
+    @SerialName("width")
+    val width: Long? = null,
 
-    /**
-     * URL of a preview thumbnail.
-     */
-    abstract val image: String?
+    @SerialName("height")
+    val height: Long? = null,
 
-    /**
-     * URL used for photo embeds, instead of custom HTML.
-     */
-    abstract val embedUrl: String?
+    @SerialName("image")
+    val image: String? = null,
 
-    /**
-     * A hash computed by the BlurHash algorithm.
-     *
-     * For generating colorful preview thumbnails when media
-     * has not been downloaded yet.
-     */
-    abstract val blurHash: String?
+    @SerialName("embed_url")
+    val embedUrl: String? = null,
 
-    /**
-     * HTML to be used for generating the preview card.
-     */
-    abstract val html: String?
-
-    @Serializable
-    @SerialName("video")
-    data class Video(
-
-        @SerialName("url")
-        override val url: String,
-
-        @SerialName("title")
-        override val title: String,
-
-        @SerialName("description")
-        override val description: String,
-
-        @SerialName("author_name")
-        override val authorName: String? = null,
-
-        @SerialName("author_url")
-        override val authorUrl: String? = null,
-
-        @SerialName("provider_name")
-        override val providerName: String? = null,
-
-        @SerialName("provider_url")
-        override val providerUrl: String? = null,
-
-        @SerialName("html")
-        override val html: String? = null,
-
-        @SerialName("width")
-        override val width: Long? = null,
-
-        @SerialName("height")
-        override val height: Long? = null,
-
-        @SerialName("image")
-        override val image: String? = null,
-
-        @SerialName("embed_url")
-        override val embedUrl: String? = null,
-
-        @SerialName("blurhash")
-        override val blurHash: String? = null
-
-    ) : NetworkCard()
-
-
-    @Serializable
-    @SerialName("photo")
-    data class Photo(
-
-        @SerialName("url")
-        override val url: String,
-
-        @SerialName("title")
-        override val title: String,
-
-        @SerialName("description")
-        override val description: String,
-
-        @SerialName("author_name")
-        override val authorName: String? = null,
-
-        @SerialName("author_url")
-        override val authorUrl: String? = null,
-
-        @SerialName("provider_name")
-        override val providerName: String? = null,
-
-        @SerialName("provider_url")
-        override val providerUrl: String? = null,
-
-        @SerialName("html")
-        override val html: String? = null,
-
-        @SerialName("width")
-        override val width: Long? = null,
-
-        @SerialName("height")
-        override val height: Long? = null,
-
-        @SerialName("image")
-        override val image: String? = null,
-
-        @SerialName("embed_url")
-        override val embedUrl: String? = null,
-
-        @SerialName("blurhash")
-        override val blurHash: String? = null
-
-    ) : NetworkCard()
-
-    @Serializable
-    @SerialName("link")
-    data class Link(
-
-        @SerialName("url")
-        override val url: String,
-
-        @SerialName("title")
-        override val title: String,
-
-        @SerialName("description")
-        override val description: String,
-
-        @SerialName("author_name")
-        override val authorName: String? = null,
-
-        @SerialName("author_url")
-        override val authorUrl: String? = null,
-
-        @SerialName("provider_name")
-        override val providerName: String? = null,
-
-        @SerialName("provider_url")
-        override val providerUrl: String? = null,
-
-        @SerialName("html")
-        override val html: String? = null,
-
-        @SerialName("width")
-        override val width: Long? = null,
-
-        @SerialName("height")
-        override val height: Long? = null,
-
-        @SerialName("image")
-        override val image: String? = null,
-
-        @SerialName("embed_url")
-        override val embedUrl: String? = null,
-
-        @SerialName("blurhash")
-        override val blurHash: String? = null
-
-    ) : NetworkCard()
-
-    @Serializable
-    @SerialName("rich")
-    data class Rich(
-
-        @SerialName("url")
-        override val url: String,
-
-        @SerialName("title")
-        override val title: String,
-
-        @SerialName("description")
-        override val description: String,
-
-        @SerialName("author_name")
-        override val authorName: String? = null,
-
-        @SerialName("author_url")
-        override val authorUrl: String? = null,
-
-        @SerialName("provider_name")
-        override val providerName: String? = null,
-
-        @SerialName("provider_url")
-        override val providerUrl: String? = null,
-
-        @SerialName("html")
-        override val html: String? = null,
-
-        @SerialName("width")
-        override val width: Long? = null,
-
-        @SerialName("height")
-        override val height: Long? = null,
-
-        @SerialName("image")
-        override val image: String? = null,
-
-        @SerialName("embed_url")
-        override val embedUrl: String? = null,
-
-        @SerialName("blurhash")
-        override val blurHash: String? = null
-
-    ) : NetworkCard()
-}
+    @SerialName("blurhash")
+    val blurHash: String? = null,
+)
