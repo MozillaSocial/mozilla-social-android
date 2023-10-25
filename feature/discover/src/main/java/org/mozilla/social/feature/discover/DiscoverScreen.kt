@@ -46,6 +46,10 @@ internal fun DiscoverScreen(
         recommendations = viewModel.recommendations.collectAsState().value,
         discoverInteractions = viewModel,
     )
+
+    LaunchedEffect(Unit) {
+        viewModel.onScreenViewed()
+    }
 }
 
 @Composable
@@ -105,7 +109,7 @@ private fun Recommendation(
     discoverInteractions: DiscoverInteractions,
 ) {
     val context = LocalContext.current
-    LaunchedEffect(recommendation) {
+    LaunchedEffect(Unit) {
         discoverInteractions.onRecommendationViewed(recommendationId = recommendation.id)
     }
     NoRipple {

@@ -10,6 +10,7 @@ import org.mozilla.social.common.Resource
 import org.mozilla.social.core.analytics.Analytics
 import org.mozilla.social.core.analytics.AnalyticsIdentifiers
 import org.mozilla.social.core.analytics.EngagementType
+import org.mozilla.social.core.analytics.utils.ImpressionTracker
 import org.mozilla.social.core.data.repository.RecommendationRepository
 import org.mozilla.social.model.Recommendation
 import timber.log.Timber
@@ -21,6 +22,13 @@ class DiscoverViewModel(
 
     private val _recommendations = MutableStateFlow<Resource<List<Recommendation>>>(Resource.Loading())
     val recommendations = _recommendations.asStateFlow()
+
+    private val recommendationImpressionTracker = ImpressionTracker<String> { recommendationId ->
+        analytics.uiImpression(
+            uiIdentifier = AnalyticsIdentifiers.DISCOVER_RECOMMENDATION_IMPRESSION,
+            recommendationId = recommendationId,
+        )
+    }
 
     init {
         getRecs()
@@ -59,9 +67,6 @@ class DiscoverViewModel(
     }
 
     override fun onRecommendationViewed(recommendationId: String) {
-        analytics.uiImpression(
-            uiIdentifier = AnalyticsIdentifiers.DISCOVER_RECOMMENDATION_IMPRESSION,
-            recommendationId = recommendationId,
-        )
+        recommendationImpressionTracker.track(recommendationId)
     }
 }
