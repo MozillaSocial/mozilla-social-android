@@ -1,6 +1,5 @@
 package org.mozilla.social.core.ui.postcard
 
-import android.content.Intent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -31,7 +30,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat.startActivity
 import coil.compose.AsyncImage
 import kotlinx.datetime.Instant
 import org.mozilla.social.common.utils.StringFactory
@@ -85,7 +83,7 @@ private fun TopRowMetaData(
                 .size(20.dp)
                 .align(Alignment.CenterVertically),
             painter = when(topRowMetaDataUiState.iconType) {
-                TopRowIconType.BOOSTED -> MoSoIcons.repeat()
+                TopRowIconType.BOOSTED -> MoSoIcons.boost()
                 TopRowIconType.REPLY -> MoSoIcons.chatBubbles()
             },
             contentDescription = ""
@@ -231,7 +229,7 @@ private fun BottomRow(
         Spacer(modifier = Modifier.weight(1f))
         BottomIconButton(
             onClick = { postCardInteractions.onBoostClicked(post.statusId, !post.userBoosted) },
-            painter = MoSoIcons.repeat(),
+            painter = MoSoIcons.boost(),
             count = post.boostCount,
             highlighted = post.userBoosted,
         )

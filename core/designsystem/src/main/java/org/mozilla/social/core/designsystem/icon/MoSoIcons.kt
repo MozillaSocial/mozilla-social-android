@@ -27,7 +27,8 @@ import androidx.compose.ui.unit.dp
 import org.mozilla.social.core.designsystem.R
 
 /**
- * These names should correspond to the icons in the [phosphor library](https://phosphoricons.com/).
+ * Other than aliases, these names should correspond to the icons in the
+ * [phosphor library](https://phosphoricons.com/).
  * TODO@release update material icons with phosphor icons
  */
 object MoSoIcons {
@@ -74,6 +75,9 @@ object MoSoIcons {
     fun moreVertical() = painterResource(id = R.drawable.more_vertical)
     @Composable
     fun plus() = painterResource(id = R.drawable.plus)
+
+    @Composable
+    fun boost() = repeat()
 
     @Composable
     fun repeat() = painterResource(id = R.drawable.repeat)
