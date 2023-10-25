@@ -4,7 +4,6 @@ import android.content.res.Configuration
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -27,8 +26,6 @@ import org.mozilla.social.core.ui.postcard.PostCardList
 import org.mozilla.social.core.ui.postcard.PostCardNavigation
 import org.mozilla.social.core.ui.postcard.PostCardUiState
 import org.mozilla.social.core.ui.recommendations.MoreInfoDialog
-import org.mozilla.social.core.ui.recommendations.RecommendationCarousel
-import org.mozilla.social.model.Recommendation
 
 @Composable
 internal fun FeedScreen(
@@ -43,7 +40,6 @@ internal fun FeedScreen(
         feed = viewModel.feed,
         errorToastMessage = viewModel.postCardDelegate.errorToastMessage,
         postCardInteractions = viewModel.postCardDelegate,
-        reccs = viewModel.reccs.collectAsState(initial = emptyList()).value
     )
 }
 
@@ -51,7 +47,6 @@ internal fun FeedScreen(
 private fun FeedScreen(
     feed: Flow<PagingData<PostCardUiState>>,
     errorToastMessage: SharedFlow<StringFactory>,
-    reccs: List<Recommendation>? = null,
     postCardInteractions: PostCardInteractions,
 ) {
     MoSoSurface {
@@ -76,11 +71,6 @@ private fun FeedScreen(
                 postCardInteractions = postCardInteractions,
                 pullToRefreshEnabled = true,
                 isFullScreenLoading = true,
-                headerContent = {
-                    reccs?.let {
-                        RecommendationCarousel(reccs = it) { openAlertDialog.value = true }
-                    }
-                },
             )
         }
     }
@@ -93,7 +83,6 @@ private fun FeedScreenPreviewLight() {
         FeedScreen(
             feed = flowOf(),
             errorToastMessage = MutableSharedFlow(),
-            reccs = null,
             postCardInteractions = object : PostCardInteractions {},
         )
     }
@@ -106,7 +95,6 @@ private fun FeedScreenPreviewDark() {
         FeedScreen(
             feed = flowOf(),
             errorToastMessage = MutableSharedFlow(),
-            reccs = null,
             postCardInteractions = object : PostCardInteractions {},
         )
     }

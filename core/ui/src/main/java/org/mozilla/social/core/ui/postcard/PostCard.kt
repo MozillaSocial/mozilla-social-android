@@ -47,6 +47,7 @@ import org.mozilla.social.core.ui.getMaxWidth
 import org.mozilla.social.core.ui.media.MediaDisplay
 import org.mozilla.social.core.ui.poll.Poll
 import org.mozilla.social.core.ui.htmlcontent.HtmlContent
+import org.mozilla.social.core.ui.shareUrl
 
 @Composable
 fun PostCard(
@@ -246,13 +247,7 @@ private fun BottomRow(
         BottomIconButton(
             onClick = {
                 post.url?.let { url ->
-                    val sendIntent: Intent = Intent().apply {
-                        action = Intent.ACTION_SEND
-                        putExtra(Intent.EXTRA_TEXT, url)
-                        type = "text/plain"
-                    }
-
-                    startActivity(context, Intent.createChooser(sendIntent, null), null)
+                    shareUrl(url, context)
                 }
             },
             painter = MoSoIcons.share(),

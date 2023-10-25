@@ -33,9 +33,10 @@ fun HtmlContent(
     htmlContentInteractions: HtmlContentInteractions,
     maximumLineCount: Int = Int.MAX_VALUE,
     textStyle: TextStyle = MoSoTheme.typography.bodyMedium,
+    textColor: Color = MoSoTheme.colors.textPrimary,
+    linkColor: Color = MoSoTheme.colors.textLink,
     clickableLinks: Boolean = true,
 ) {
-    val linkColor: Color = MoSoTheme.colors.textLink
     val textContent = remember(htmlText) {
         val spannable = htmlText.htmlToSpannable(
             mentions = mentions,
@@ -49,23 +50,19 @@ fun HtmlContent(
         )
     }
 
-    val textColor = MoSoTheme.colors.textPrimary
-
     AndroidView(
         modifier = modifier,
         factory = { context ->
             TextView(context).apply {
-                textStyle?.let {  textStyle ->
-                    textSize = textStyle.fontSize.value
-                    setTextColor(textColor.toArgb())
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                        typeface = textStyle.fontWeight?.let { fontWeight ->
-                            Typeface.create(
-                                typeface,
-                                fontWeight.weight,
-                                false
-                            )
-                        }
+                textSize = textStyle.fontSize.value
+                setTextColor(textColor.toArgb())
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                    typeface = textStyle.fontWeight?.let { fontWeight ->
+                        Typeface.create(
+                            typeface,
+                            fontWeight.weight,
+                            false
+                        )
                     }
                 }
 

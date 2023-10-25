@@ -28,7 +28,9 @@ import androidx.media3.ui.PlayerView
 import org.mozilla.social.common.LoadState
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.designsystem.theme.FirefoxColor
+import org.mozilla.social.core.designsystem.theme.MoSoRadius
 import org.mozilla.social.core.ui.NoTouchOverlay
+import org.mozilla.social.core.ui.Radius
 import timber.log.Timber
 
 private const val TAG = "VideoPlayer"
@@ -43,7 +45,7 @@ fun VideoPlayer(
     Box(
         modifier = Modifier
             .aspectRatio(1f)
-            .clip(RoundedCornerShape(16.dp))
+            .clip(RoundedCornerShape(Radius.media))
     ) {
         val context = LocalContext.current
 

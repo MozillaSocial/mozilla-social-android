@@ -4,7 +4,7 @@
     <string name="title_activity_main">MainActivity</string>
 
     <string name="feed_tab_text">Feed</string>
-    <string name="search_tab_text">Search</string>
+    <string name="discover_tab_text">Discover</string>
     <string name="settings_tab_text">Settings</string>
     <string name="account_tab_text">Account</string>
 
@@ -21,5 +21,6 @@
     <string name="navigation_drawer_item_settings">Settings</string>
 
     <string name="logout">Logout</string>
+    <string name="your_post_was_published">Your post was published</string>
 
 </resources>

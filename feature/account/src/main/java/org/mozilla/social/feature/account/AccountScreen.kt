@@ -35,6 +35,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -45,11 +46,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.font.FontWeight.Companion.W700
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
@@ -115,6 +118,10 @@ internal fun AccountScreen(
         postCardInteractions = viewModel.postCardDelegate,
         accountInteractions = viewModel
     )
+
+    LaunchedEffect(Unit) {
+        viewModel.onAccountScreenShown()
+    }
 
     MoSoToast(toastMessage = viewModel.errorToastMessage)
 }
@@ -252,11 +259,6 @@ private fun MainContent(
                 htmlContentInteractions = htmlContentInteractions,
             )
             Spacer(modifier = Modifier.height(12.dp))
-            //TODO add these back in when there are designs
-//            UserFields(
-//                account = account,
-//                htmlContentInteractions = htmlContentInteractions,
-//            )
             UserFollow(
                 account = account,
                 accountInteractions = accountInteractions,
@@ -499,24 +501,22 @@ private fun UserBio(
                     )
                     if (targetState) {
                         Spacer(modifier = Modifier.height(8.dp))
-                        Row {
-                            Icon(
-                                modifier = Modifier
-                                    .size(16.dp),
-                                painter = MoSoIcons.userJoin(),
-                                contentDescription = null,
-                                tint = MoSoTheme.colors.textSecondary,
-                            )
-                            Spacer(modifier = Modifier.width(4.dp))
-                            Text(
-                                text = stringResource(
-                                    id = R.string.joined_date,
-                                    DateTimeFormatters.standard.format(account.joinDate.toJavaLocalDateTime())
-                                ),
-                                style = MoSoTheme.typography.bodySmall,
-                                color = MoSoTheme.colors.textSecondary,
+                        account.fields.forEach { field ->
+                            UserLabel(
+                                label = field.name,
+                                text = field.value,
+                                htmlContentInteractions = htmlContentInteractions
                             )
                         }
+                        UserLabel(
+                            icon = MoSoIcons.userJoin(),
+                            label = "",
+                            text = stringResource(
+                                id = R.string.joined_date,
+                                DateTimeFormatters.standard.format(account.joinDate.toJavaLocalDateTime())
+                            ),
+                            htmlContentInteractions = htmlContentInteractions
+                        )
                     }
                 }
             }
@@ -539,52 +539,47 @@ private fun UserBio(
     }
 }
 
-//TODO add this back in when we have designs
-@Suppress("UnusedPrivateMember")
 @Composable
-private fun UserFields(
-    account: AccountUiState,
+private fun UserLabel(
+    icon: Painter? = null,
+    label: String? = null,
+    text: String,
     htmlContentInteractions: HtmlContentInteractions,
 ) {
-    Column(
-        verticalArrangement = Arrangement.SpaceEvenly,
-        modifier = Modifier
-            .fillMaxWidth()
-            .width(IntrinsicSize.Max)
-            .padding(start = 8.dp, end = 8.dp)
-            .border(
-                border = BorderStroke(2.dp, Color.Gray),
-                shape = RoundedCornerShape(8.dp)
-            )
-    ) {
-        account.fields.forEachIndexed { index, field ->
-            Column(
+    Row {
+        icon?.let {
+            Icon(
                 modifier = Modifier
-                    .padding(2.dp)
-                    .fillMaxWidth()
-                    .wrapContentHeight()
-                    .padding(8.dp),
-                verticalArrangement = Arrangement.SpaceEvenly,
-            ) {
-                Text(
-                    text = field.name,
-                    style = MaterialTheme.typography.bodyMedium
-                )
-                HtmlContent(
-                    mentions = emptyList(),
-                    htmlText = field.value,
-                    htmlContentInteractions = htmlContentInteractions,
-                )
-            }
-            if (index < (account.fields.size) - 1) {
-                MoSoDivider(
-                    color = Color.Gray,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(1.dp)
-                )
-            }
+                    .size(16.dp),
+                painter = icon,
+                contentDescription = null,
+                tint = MoSoTheme.colors.textSecondary,
+            )
+            Spacer(modifier = Modifier.width(4.dp))
         }
+
+        if (!label.isNullOrBlank()) {
+            Text(
+                text = label,
+                style = MoSoTheme.typography.bodySmall,
+                color = MoSoTheme.colors.textSecondary,
+                fontWeight = W700,
+                maxLines = 1,
+            )
+            Spacer(modifier = Modifier.width(4.dp))
+        }
+
+        HtmlContent(
+            modifier = Modifier
+                .weight(1f),
+            mentions = emptyList(),
+            htmlText = text,
+            htmlContentInteractions = htmlContentInteractions,
+            textStyle = MoSoTheme.typography.bodySmall,
+            textColor = MoSoTheme.colors.textSecondary,
+            linkColor = MoSoTheme.colors.textSecondary,
+            maximumLineCount = 1,
+        )
     }
 }
 

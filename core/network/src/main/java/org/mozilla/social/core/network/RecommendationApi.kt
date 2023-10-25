@@ -1,32 +1,15 @@
 package org.mozilla.social.core.network
 
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
+import org.mozilla.social.core.network.model.NetworkRecommendations
 import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface RecommendationApi {
-    @GET("/desktop/v1/recommendations/")
+    @GET("/content-feed/moso/v1/discover/")
     suspend fun getRecommendations(
         @Query("locale") locale: String,
-        @Query("region") region: String,
-        @Query("consumer_key") consumerKey: String,
-        @Query("count") count: Int,
-    ): RecommendationResponse
-
+        @Query("count") count: Int = 24,
+        @Query("image_sizes[]") imageSizes: String = "200x"
+//        @Query("consumer_key") consumerKey: String,
+    ): NetworkRecommendations
 }
-
-@Serializable
-data class RecommendationResponse(
-    @SerialName("data") val recommendations: List<NetworkRecommendation>,
-)
-
-@Serializable
-data class NetworkRecommendation(
-    @SerialName("url") val url: String,
-    @SerialName("title") val title: String,
-    @SerialName("excerpt") val excerpt: String,
-    @SerialName("publisher") val publisher: String,
-    @SerialName("imageUrl") val imageUrl: String,
-    @SerialName("timeToRead") val timeToRead: Int? = null,
-)
