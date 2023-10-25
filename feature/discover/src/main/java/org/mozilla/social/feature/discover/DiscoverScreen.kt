@@ -1,7 +1,6 @@
 @file:Suppress("detekt:all")
 package org.mozilla.social.feature.discover
 
-import android.content.Intent
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -25,7 +24,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.isTraversalGroup
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import coil.compose.AsyncImage
 import org.koin.androidx.compose.koinViewModel
@@ -33,10 +31,11 @@ import org.mozilla.social.common.Resource
 import org.mozilla.social.core.designsystem.component.MoSoDivider
 import org.mozilla.social.core.designsystem.component.MoSoSurface
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
-import org.mozilla.social.core.designsystem.theme.MoSoRadius
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.designsystem.utils.NoRipple
 import org.mozilla.social.core.ui.Radius
+import org.mozilla.social.core.ui.error.GenericError
+import org.mozilla.social.core.ui.loading.MaxSizeLoading
 import org.mozilla.social.core.ui.shareUrl
 import org.mozilla.social.model.Recommendation
 
@@ -65,8 +64,16 @@ private fun DiscoverScreen(
                     discoverInteractions = discoverInteractions,
                 )
             }
-            is Resource.Loading -> {}
-            is Resource.Error -> {}
+            is Resource.Loading -> {
+                MaxSizeLoading()
+            }
+            is Resource.Error -> {
+                GenericError(
+                    onRetryClicked = {
+                        discoverInteractions.onRetryClicked()
+                    }
+                )
+            }
         }
 
     }
