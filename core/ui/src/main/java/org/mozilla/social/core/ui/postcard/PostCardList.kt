@@ -54,11 +54,23 @@ fun PostCardList(
     headerContent: @Composable () -> Unit = {},
 ) {
 
+    // When navigating back to a list, the lazyPagingItems seem to have a list size of 0
+    // for a split second before going back to where it was.  This causes the list scroll state
+    // to reset at 0, losing the scroll position.  The realState variable fixes this by
+    // only being in use when the item count is greater than 0.
+    // There is an issue in google issue tracker
+    // https://issuetracker.google.com/issues/177245496
+    // It is "fixed", but we still run into the issue when going multiple screens deep, then
+    // navigating back
+    val emptyListState = rememberLazyListState()
+    val realState = rememberLazyListState()
+
     val lazyingPagingItems: LazyPagingItems<PostCardUiState> = feed.collectAsLazyPagingItems()
 
     LaunchedEffect(Unit) {
         refreshSignalFlow?.collect {
             lazyingPagingItems.refresh()
+            realState.scrollToItem(0)
         }
     }
 
@@ -74,18 +86,6 @@ fun PostCardList(
                 enabled = pullToRefreshEnabled,
             ),
     ) {
-
-        // When navigating back to a list, the lazyPagingItems seem to have a list size of 0
-        // for a split second before going back to where it was.  This causes the list scroll state
-        // to reset at 0, losing the scroll position.  The realState variable fixes this by
-        // only being in use when the item count is greater than 0.
-        // There is an issue in google issue tracker
-        // https://issuetracker.google.com/issues/177245496
-        // It is "fixed", but we still run into the issue when going multiple screens deep, then
-        // navigating back
-        val emptyListState = rememberLazyListState()
-        val realState = rememberLazyListState()
-
         LazyColumn(
             Modifier
                 .fillMaxSize(),
