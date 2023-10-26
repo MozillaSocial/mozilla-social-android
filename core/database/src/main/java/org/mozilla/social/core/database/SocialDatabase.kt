@@ -32,6 +32,7 @@ import org.mozilla.social.core.database.model.statusCollections.AccountTimelineS
 import org.mozilla.social.core.database.model.statusCollections.HashTagTimelineStatus
 import org.mozilla.social.core.database.model.statusCollections.HomeTimelineStatus
 
+@Suppress("MagicNumber")
 @Database(
     entities = [
         DatabaseStatus::class,

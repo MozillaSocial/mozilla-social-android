@@ -3,6 +3,7 @@ package org.mozilla.social.core.ui.htmlcontent
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
+@Suppress("MaxLineLength")
 class ReduceHtmlLinksTest {
 
     @Test
