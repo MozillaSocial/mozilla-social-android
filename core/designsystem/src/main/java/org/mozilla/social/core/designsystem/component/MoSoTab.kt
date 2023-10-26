@@ -52,7 +52,7 @@ fun MoSoTab(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
-    selectedContentColor: Color = MoSoTheme.colors.textPrimary,
+    selectedContentColor: Color = MoSoTheme.colors.textLink,
     unselectedContentColor: Color = MoSoTheme.colors.textPrimary,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     content: @Composable ColumnScope.() -> Unit

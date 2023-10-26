@@ -26,8 +26,22 @@ class TimelineRepository internal constructor(
             limit = loadSize,
         ).map { it.toExternalModel() }
 
-    suspend fun getPublicTimeline(): List<Status> =
-        timelineApi.getPublicTimeline().map { it.toExternalModel() }
+    suspend fun getPublicTimeline(
+        localOnly: Boolean? = null,
+        federatedOnly: Boolean? = null,
+        mediaOnly: Boolean? = null,
+        olderThanId: String? = null,
+        immediatelyNewerThanId: String? = null,
+        loadSize: Int? = null,
+    ): List<Status> =
+        timelineApi.getPublicTimeline(
+            localOnly = localOnly,
+            federatedOnly = federatedOnly,
+            mediaOnly = mediaOnly,
+            olderThanId = olderThanId,
+            newerThanId = immediatelyNewerThanId,
+            limit = loadSize,
+        ).map { it.toExternalModel() }
 
     suspend fun getHashtagTimeline(
         hashTag: String,
