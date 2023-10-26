@@ -71,6 +71,7 @@ fun PostCardList(
         refreshSignalFlow?.collect {
             lazyingPagingItems.refresh()
             realState.scrollToItem(0)
+            println("johnny refresh signal")
         }
     }
 

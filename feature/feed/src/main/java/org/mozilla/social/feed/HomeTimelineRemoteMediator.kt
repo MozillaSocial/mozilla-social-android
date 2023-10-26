@@ -24,35 +24,19 @@ class HomeTimelineRemoteMediator(
     private val accountRepository: AccountRepository,
     private val statusRepository: StatusRepository,
     private val socialDatabase: SocialDatabase,
-    private val timelineType: StateFlow<TimelineType>,
 ) : RemoteMediator<Int, HomeTimelineStatusWrapper>() {
-
-    private var currentTimelineType = timelineType.value
-
-    private val mutex = Mutex()
 
     @Suppress("ReturnCount", "MagicNumber")
     override suspend fun load(
         loadType: LoadType,
         state: PagingState<Int, HomeTimelineStatusWrapper>
     ): MediatorResult {
-        mutex.lock()
-        val newTimelineType = timelineType.value
         return try {
-            println("johnny start ${timelineType.value}")
-            socialDatabase.withTransaction {
-                if (loadType == LoadType.REFRESH && currentTimelineType != newTimelineType) {
-                    socialDatabase.homeTimelineDao().deleteHomeTimeline()
-                }
-                currentTimelineType = newTimelineType
-            }
-
             var pageSize: Int = state.config.pageSize
             val response = when (loadType) {
                 LoadType.REFRESH -> {
                     pageSize = state.config.initialLoadSize
-                    fetchTimeline(
-                        timelineType = newTimelineType,
+                    timelineRepository.getHomeTimeline(
                         olderThanId = null,
                         immediatelyNewerThanId = null,
                         loadSize = pageSize,
@@ -62,8 +46,7 @@ class HomeTimelineRemoteMediator(
                 LoadType.PREPEND -> {
                     val firstItem = state.firstItemOrNull()
                         ?: return MediatorResult.Success(endOfPaginationReached = true)
-                    fetchTimeline(
-                        timelineType = newTimelineType,
+                    timelineRepository.getHomeTimeline(
                         olderThanId = null,
                         immediatelyNewerThanId = firstItem.status.statusId,
                         loadSize = pageSize,
@@ -73,8 +56,7 @@ class HomeTimelineRemoteMediator(
                 LoadType.APPEND -> {
                     val lastItem = state.lastItemOrNull()
                         ?: return MediatorResult.Success(endOfPaginationReached = true)
-                    fetchTimeline(
-                        timelineType = newTimelineType,
+                    timelineRepository.getHomeTimeline(
                         olderThanId = lastItem.status.statusId,
                         immediatelyNewerThanId = null,
                         loadSize = pageSize,
@@ -119,35 +101,6 @@ class HomeTimelineRemoteMediator(
         } catch (e: Exception) {
             Timber.e(e)
             MediatorResult.Error(e)
-        } finally {
-            println("johnny stop $newTimelineType")
-            mutex.unlock()
         }
     }
-
-    private suspend fun fetchTimeline(
-        timelineType: TimelineType,
-        olderThanId: String? = null,
-        immediatelyNewerThanId: String? = null,
-        loadSize: Int? = null,
-    ): List<Status> =
-        when (timelineType) {
-            TimelineType.FOR_YOU -> timelineRepository.getHomeTimeline(
-                olderThanId = olderThanId,
-                immediatelyNewerThanId = immediatelyNewerThanId,
-                loadSize = loadSize,
-            )
-            TimelineType.LOCAL -> timelineRepository.getPublicTimeline(
-                localOnly = true,
-                olderThanId = olderThanId,
-                immediatelyNewerThanId = immediatelyNewerThanId,
-                loadSize = loadSize,
-            )
-            TimelineType.FEDERATED -> timelineRepository.getPublicTimeline(
-                federatedOnly = true,
-                olderThanId = olderThanId,
-                immediatelyNewerThanId = immediatelyNewerThanId,
-                loadSize = loadSize,
-            )
-        }
 }
