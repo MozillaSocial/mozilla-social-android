@@ -1,6 +1,7 @@
 package org.mozilla.social.core.ui.media
 
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -21,6 +22,7 @@ import org.mozilla.social.core.designsystem.theme.MoSoRadius
 import org.mozilla.social.core.ui.Radius
 import org.mozilla.social.model.Attachment
 
+@Suppress("MagicNumber")
 @Composable
 fun MediaDisplay(
     attachments: List<Attachment>
@@ -31,19 +33,14 @@ fun MediaDisplay(
         1 -> {
             val attachment = attachments.first()
             val uri = attachment.url?.toUri() ?: return
-            val fileType = remember(uri) {
-                uri.getFileType()
-            }
-            when (fileType) {
-                FileType.VIDEO -> {
-                    VideoPlayer(uri = uri)
-                }
-                FileType.IMAGE -> Attachment(
+            when (attachment) {
+                is Attachment.Image,
+                is Attachment.Gifv -> Attachment(
                     modifier = Modifier.fillMaxWidth(),
                     attachment = attachment
                 )
-                FileType.UNKNOWN -> {
-                }
+                is Attachment.Video -> VideoPlayer(uri = uri)
+                else -> {}
             }
         }
         2 -> {
@@ -68,8 +65,14 @@ private fun Attachment(
     modifier: Modifier = Modifier,
     attachment: Attachment
 ) {
+    val aspectRatio = when (attachment) {
+        is Attachment.Gifv -> attachment.meta.aspect?.toFloat()
+        is Attachment.Image -> attachment.meta.aspect?.toFloat()
+        else -> null
+    }
     AsyncImage(
         modifier = modifier
+            .aspectRatio(aspectRatio ?: 2f)
             .padding(2.dp)
             .clip(RoundedCornerShape(Radius.media)),
         model = attachment.previewUrl,
