@@ -22,5 +22,5 @@ interface HomeTimelineStatusDao : BaseDao<HomeTimelineStatus> {
         "WHERE accountId = :accountId " +
         "OR boostedStatusAccountId = :accountId"
     )
-    suspend fun remotePostsFromAccount(accountId: String)
+    suspend fun removePostsFromAccount(accountId: String)
 }
