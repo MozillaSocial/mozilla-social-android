@@ -58,10 +58,12 @@ private fun Status.toTopRowMetaDataUiState(): TopRowMetaDataUiState? =
         )
     } else null
 
-private fun Card.toPreviewCard(): PreviewCard =
-    PreviewCard(
-        url = url,
-        title = title,
-        imageUrl = image,
-        providerName = providerName,
-    )
+private fun Card.toPreviewCard(): PreviewCard? =
+    image?.let {
+        PreviewCard(
+            url = url,
+            title = title,
+            imageUrl = it,
+            providerName = providerName,
+        )
+    }

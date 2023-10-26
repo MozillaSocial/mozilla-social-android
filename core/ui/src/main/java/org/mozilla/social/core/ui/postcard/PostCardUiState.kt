@@ -44,6 +44,6 @@ enum class TopRowIconType {
 data class PreviewCard(
     val url: String,
     val title: String,
-    val imageUrl: String?,
+    val imageUrl: String,
     val providerName: String?
 )

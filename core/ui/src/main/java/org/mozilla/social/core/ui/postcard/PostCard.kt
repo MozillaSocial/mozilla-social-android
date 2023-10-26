@@ -126,18 +126,14 @@ private fun MainPost(
                 htmlText = post.statusTextHtml,
                 htmlContentInteractions = postCardInteractions,
             )
-            Spacer(modifier = Modifier.padding(top = 4.dp))
+            Spacer(modifier = Modifier.padding(top = 8.dp))
 
-            // only display media if a post has no preview card image.  Sometimes the api
-            // will return both for some reason
-            if (post.previewCard?.imageUrl == null) {
-                MediaDisplay(attachments = post.mediaAttachments)
-            }
+            MediaDisplay(attachments = post.mediaAttachments)
 
             post.pollUiState?.let { Poll(it, postCardInteractions) }
 
-            // only display the preview card if there is an image url
-            post.previewCard?.imageUrl?.let {
+            // only display preview card if there are no other media attachments
+            if (post.previewCard != null && post.mediaAttachments.isEmpty()) {
                 PreviewCard(
                     previewCard = post.previewCard,
                     postCardInteractions = postCardInteractions,
