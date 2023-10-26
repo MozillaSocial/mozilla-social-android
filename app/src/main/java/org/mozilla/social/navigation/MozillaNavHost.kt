@@ -1,8 +1,14 @@
 package org.mozilla.social.navigation
 
 import android.content.Context
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -10,6 +16,7 @@ import androidx.navigation.navigation
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.mozilla.social.R
+import org.mozilla.social.core.designsystem.component.MoSoSurface
 import org.mozilla.social.core.designsystem.component.SnackbarType
 import org.mozilla.social.core.navigation.NavigationDestination
 import org.mozilla.social.feature.account.accountScreen
@@ -27,9 +34,46 @@ import org.mozilla.social.post.newPostScreen
 import org.mozilla.social.search.searchScreen
 import org.mozilla.social.ui.AppState
 
+private const val SCREEN_ANIMATION_DURATION = 500
+
 @Composable
 fun MozillaNavHost(appState: AppState, context: Context) {
-    NavHost(navController = appState.navController, startDestination = Routes.SPLASH) {
+    NavHost(
+        navController = appState.navController,
+        startDestination = Routes.SPLASH,
+        enterTransition = {
+            fadeIn(
+                animationSpec = tween(SCREEN_ANIMATION_DURATION)
+            ) +
+            slideIntoContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.Right
+            )
+        },
+        exitTransition = {
+            fadeOut(
+                animationSpec = tween(SCREEN_ANIMATION_DURATION)
+            ) +
+            slideOutOfContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.Right
+            )
+        },
+        popEnterTransition = {
+            fadeIn(
+                animationSpec = tween(SCREEN_ANIMATION_DURATION)
+            ) +
+            slideIntoContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.Left
+            )
+        },
+        popExitTransition = {
+            fadeOut(
+                animationSpec = tween(SCREEN_ANIMATION_DURATION)
+            ) +
+            slideOutOfContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.Left
+            )
+        }
+    ) {
         splashScreen(
             navigateToLogin = appState::navigateToLoginScreen,
             navigateToLoggedInGraph = appState::navigateToLoggedInGraph,
@@ -99,6 +143,10 @@ private fun NavGraphBuilder.mainGraph(
             postCardNavigation = appState.postCardNavigation,
         )
 
-        composable(route = NavigationDestination.Bookmarks.route) { Text(text = "bookmarks") }
+        composable(route = NavigationDestination.Bookmarks.route) {
+            MoSoSurface(modifier = Modifier.fillMaxSize()) {
+                Text(text = "bookmarks")
+            }
+        }
     }
 }

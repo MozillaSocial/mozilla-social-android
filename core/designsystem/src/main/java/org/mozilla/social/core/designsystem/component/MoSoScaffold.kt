@@ -40,7 +40,7 @@ fun MoSoScaffold(
             ) {
                 Box(
                     modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.BottomCenter
+                    contentAlignment = Alignment.TopStart
                 ) {
                     content(it)
                     MosSoBottomSheet(visible = bottomSheetVisible, content = bottomSheetContent)
