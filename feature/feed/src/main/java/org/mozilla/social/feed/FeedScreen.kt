@@ -1,18 +1,14 @@
 package org.mozilla.social.feed
 
 import android.content.res.Configuration
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.paging.PagingData
@@ -29,12 +25,10 @@ import org.mozilla.social.core.designsystem.component.MoSoSurface
 import org.mozilla.social.core.designsystem.component.MoSoTab
 import org.mozilla.social.core.designsystem.component.MoSoTabRow
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
-import org.mozilla.social.core.ui.R
 import org.mozilla.social.core.ui.postcard.PostCardInteractions
 import org.mozilla.social.core.ui.postcard.PostCardList
 import org.mozilla.social.core.ui.postcard.PostCardNavigation
 import org.mozilla.social.core.ui.postcard.PostCardUiState
-import org.mozilla.social.core.ui.recommendations.MoreInfoDialog
 
 @Composable
 internal fun FeedScreen(
@@ -46,7 +40,9 @@ internal fun FeedScreen(
     })
 ) {
     FeedScreen(
-        feed = viewModel.feed,
+        homeFeed = viewModel.homeFeed,
+        localFeed = viewModel.localFeed,
+        federatedFeed = viewModel.federatedFeed,
         timelineTypeFlow = viewModel.timelineType,
         errorToastMessage = viewModel.postCardDelegate.errorToastMessage,
         postCardInteractions = viewModel.postCardDelegate,
@@ -56,7 +52,9 @@ internal fun FeedScreen(
 
 @Composable
 private fun FeedScreen(
-    feed: Flow<PagingData<PostCardUiState>>,
+    homeFeed: Flow<PagingData<PostCardUiState>>,
+    localFeed: Flow<PagingData<PostCardUiState>>,
+    federatedFeed: Flow<PagingData<PostCardUiState>>,
     timelineTypeFlow: StateFlow<TimelineType>,
     errorToastMessage: SharedFlow<StringFactory>,
     postCardInteractions: PostCardInteractions,
@@ -87,13 +85,26 @@ private fun FeedScreen(
                 }
             }
 
+            val forYouScrollState = rememberLazyListState()
+            val localScrollState = rememberLazyListState()
+            val federatedScrollState = rememberLazyListState()
+
             PostCardList(
-                feed = feed,
+                feed = when (selectedTimelineType) {
+                    TimelineType.FOR_YOU -> homeFeed
+                    TimelineType.LOCAL -> localFeed
+                    TimelineType.FEDERATED -> federatedFeed
+                },
                 errorToastMessage = errorToastMessage,
                 postCardInteractions = postCardInteractions,
                 pullToRefreshEnabled = true,
                 isFullScreenLoading = true,
                 refreshSignalFlow = timelineTypeFlow,
+                scrollState = when (selectedTimelineType) {
+                    TimelineType.FOR_YOU -> forYouScrollState
+                    TimelineType.LOCAL -> localScrollState
+                    TimelineType.FEDERATED -> federatedScrollState
+                }
             )
         }
     }
@@ -104,11 +115,13 @@ private fun FeedScreen(
 private fun FeedScreenPreviewLight() {
     MoSoTheme(darkTheme = false) {
         FeedScreen(
-            feed = flowOf(),
+            homeFeed = flowOf(),
             errorToastMessage = MutableSharedFlow(),
             postCardInteractions = object : PostCardInteractions {},
             timelineTypeFlow = MutableStateFlow(TimelineType.FOR_YOU),
             feedInteractions = object : FeedInteractions {},
+            localFeed = flowOf(),
+            federatedFeed = flowOf(),
         )
     }
 }
@@ -118,11 +131,13 @@ private fun FeedScreenPreviewLight() {
 private fun FeedScreenPreviewDark() {
     MoSoTheme(darkTheme = true) {
         FeedScreen(
-            feed = flowOf(),
+            homeFeed = flowOf(),
             errorToastMessage = MutableSharedFlow(),
             postCardInteractions = object : PostCardInteractions {},
             timelineTypeFlow = MutableStateFlow(TimelineType.FOR_YOU),
             feedInteractions = object : FeedInteractions {},
+            localFeed = flowOf(),
+            federatedFeed = flowOf(),
         )
     }
 }

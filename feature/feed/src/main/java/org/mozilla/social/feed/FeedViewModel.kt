@@ -15,8 +15,6 @@ import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
-import org.koin.core.parameter.parametersOf
-import org.koin.java.KoinJavaComponent
 import org.mozilla.social.common.logging.Log
 import org.mozilla.social.core.data.repository.AccountRepository
 import org.mozilla.social.core.data.repository.StatusRepository
@@ -27,11 +25,17 @@ import org.mozilla.social.core.domain.AccountIdFlow
 import org.mozilla.social.core.ui.postcard.PostCardDelegate
 import org.mozilla.social.core.ui.postcard.PostCardNavigation
 import org.mozilla.social.core.ui.postcard.toPostCardUiState
+import org.mozilla.social.feed.remoteMediators.FederatedTimelineRemoteMediator
+import org.mozilla.social.feed.remoteMediators.HomeTimelineRemoteMediator
+import org.mozilla.social.feed.remoteMediators.LocalTimelineRemoteMediator
 
 /**
  * Produces a flow of pages of statuses for a feed
  */
 class FeedViewModel(
+    homeTimelineRemoteMediator: HomeTimelineRemoteMediator,
+    localTimelineRemoteMediator: LocalTimelineRemoteMediator,
+    federatedTimelineRemoteMediator: FederatedTimelineRemoteMediator,
     accountIdFlow: AccountIdFlow,
     statusRepository: StatusRepository,
     accountRepository: AccountRepository,
@@ -43,12 +47,6 @@ class FeedViewModel(
     private val _timelineType = MutableStateFlow(TimelineType.FOR_YOU)
     val timelineType = _timelineType.asStateFlow()
 
-    private val homeTimelineRemoteMediator: HomeTimelineRemoteMediator by KoinJavaComponent.inject(
-        HomeTimelineRemoteMediator::class.java
-    ) { parametersOf(
-        timelineType,
-    ) }
-
     private val currentUserAccountId: StateFlow<String> =
         accountIdFlow().filterNotNull()
             .stateIn(
@@ -58,7 +56,7 @@ class FeedViewModel(
             )
 
     @OptIn(ExperimentalPagingApi::class)
-    val feed = Pager(
+    val homeFeed = Pager(
         config = PagingConfig(
             pageSize = 20,
             initialLoadSize = 40
@@ -66,6 +64,36 @@ class FeedViewModel(
         remoteMediator = homeTimelineRemoteMediator,
     ) {
         socialDatabase.homeTimelineDao().homeTimelinePagingSource()
+    }.flow.map { pagingData ->
+        pagingData.map {
+            it.toStatusWrapper().toExternalModel().toPostCardUiState(currentUserAccountId.value)
+        }
+    }.cachedIn(viewModelScope)
+
+    @OptIn(ExperimentalPagingApi::class)
+    val localFeed = Pager(
+        config = PagingConfig(
+            pageSize = 20,
+            initialLoadSize = 40
+        ),
+        remoteMediator = localTimelineRemoteMediator,
+    ) {
+        socialDatabase.localTimelineDao().localTimelinePagingSource()
+    }.flow.map { pagingData ->
+        pagingData.map {
+            it.toStatusWrapper().toExternalModel().toPostCardUiState(currentUserAccountId.value)
+        }
+    }.cachedIn(viewModelScope)
+
+    @OptIn(ExperimentalPagingApi::class)
+    val federatedFeed = Pager(
+        config = PagingConfig(
+            pageSize = 20,
+            initialLoadSize = 40
+        ),
+        remoteMediator = federatedTimelineRemoteMediator,
+    ) {
+        socialDatabase.federatedTimelineDao().federatedTimelinePagingSource()
     }.flow.map { pagingData ->
         pagingData.map {
             it.toStatusWrapper().toExternalModel().toPostCardUiState(currentUserAccountId.value)

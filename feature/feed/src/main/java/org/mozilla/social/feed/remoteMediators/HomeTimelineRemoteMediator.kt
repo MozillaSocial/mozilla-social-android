@@ -1,4 +1,4 @@
-package org.mozilla.social.feed
+package org.mozilla.social.feed.remoteMediators
 
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType

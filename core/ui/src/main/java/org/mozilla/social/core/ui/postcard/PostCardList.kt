@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
@@ -51,6 +52,7 @@ fun PostCardList(
     postCardInteractions: PostCardInteractions,
     pullToRefreshEnabled: Boolean = false,
     isFullScreenLoading: Boolean = false,
+    scrollState: LazyListState = rememberLazyListState(),
     headerContent: @Composable () -> Unit = {},
 ) {
 
@@ -63,15 +65,13 @@ fun PostCardList(
     // It is "fixed", but we still run into the issue when going multiple screens deep, then
     // navigating back
     val emptyListState = rememberLazyListState()
-    val realState = rememberLazyListState()
 
     val lazyingPagingItems: LazyPagingItems<PostCardUiState> = feed.collectAsLazyPagingItems()
 
     LaunchedEffect(Unit) {
         refreshSignalFlow?.collect {
+            scrollState.scrollToItem(0)
             lazyingPagingItems.refresh()
-            realState.scrollToItem(0)
-            println("johnny refresh signal")
         }
     }
 
@@ -93,7 +93,7 @@ fun PostCardList(
             state = if (lazyingPagingItems.itemCount == 0) {
                 emptyListState
             } else {
-                realState
+                scrollState
             },
         ) {
 
