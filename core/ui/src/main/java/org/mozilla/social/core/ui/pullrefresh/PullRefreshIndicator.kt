@@ -31,8 +31,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.LocalAbsoluteTonalElevation
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
@@ -99,6 +97,7 @@ fun PullRefreshIndicator(
             .pullRefreshIndicatorTransform(state, scale),
         shape = SpinnerShape,
         color = backgroundColor,
+        contentColor = contentColor,
         shadowElevation = if (showElevation) Elevation else 0.dp,
     ) {
         Crossfade(
@@ -134,8 +133,8 @@ fun PullRefreshIndicator(
 private fun PullRefreshSurface(
     modifier: Modifier = Modifier,
     shape: Shape = RectangleShape,
-    color: Color = MaterialTheme.colorScheme.surface,
-    contentColor: Color = contentColorFor(color),
+    color: Color,
+    contentColor: Color,
     tonalElevation: Dp = 0.dp,
     shadowElevation: Dp = 0.dp,
     border: BorderStroke? = null,
