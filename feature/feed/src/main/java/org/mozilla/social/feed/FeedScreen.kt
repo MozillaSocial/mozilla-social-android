@@ -66,11 +66,8 @@ private fun FeedScreen(
     val context = LocalContext.current
 
     MoSoSurface {
-        Column(
-            modifier = Modifier.padding(horizontal = 4.dp)
-        ) {
+        Column {
             MoSoTabRow(
-                modifier = Modifier.padding(top = 20.dp),
                 selectedTabIndex = selectedTimelineType.ordinal,
                 divider = {},
             ) {

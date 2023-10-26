@@ -20,32 +20,46 @@ import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.LocalAbsoluteTonalElevation
+import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.NonRestartableComposable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.center
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.PathFillType
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.rotate
+import androidx.compose.ui.semantics.isContainer
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import org.mozilla.social.core.designsystem.component.MoSoSurface
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import kotlin.math.abs
 import kotlin.math.max
@@ -79,7 +93,7 @@ fun PullRefreshIndicator(
         derivedStateOf { refreshing || state.position > 0.5f }
     }
 
-    MoSoSurface(
+    PullRefreshSurface(
         modifier = modifier
             .size(IndicatorSize)
             .pullRefreshIndicatorTransform(state, scale),
@@ -110,6 +124,55 @@ fun PullRefreshIndicator(
         }
     }
 }
+
+/**
+ * A custom Surface copied from [androidx.compose.material3.Surface] that removes the pointer
+ * input so that it doesn't intercept touches
+ */
+@Composable
+@NonRestartableComposable
+private fun PullRefreshSurface(
+    modifier: Modifier = Modifier,
+    shape: Shape = RectangleShape,
+    color: Color = MaterialTheme.colorScheme.surface,
+    contentColor: Color = contentColorFor(color),
+    tonalElevation: Dp = 0.dp,
+    shadowElevation: Dp = 0.dp,
+    border: BorderStroke? = null,
+    content: @Composable () -> Unit
+) {
+    val absoluteElevation = LocalAbsoluteTonalElevation.current + tonalElevation
+    CompositionLocalProvider(
+        LocalContentColor provides contentColor,
+        LocalAbsoluteTonalElevation provides absoluteElevation
+    ) {
+        Box(
+            modifier = modifier
+                .surface(
+                    shape = shape,
+                    backgroundColor = color,
+                    border = border,
+                    shadowElevation = shadowElevation
+                )
+                .semantics(mergeDescendants = false) {
+                    isContainer = true
+                },
+            propagateMinConstraints = true
+        ) {
+            content()
+        }
+    }
+}
+
+private fun Modifier.surface(
+    shape: Shape,
+    backgroundColor: Color,
+    border: BorderStroke?,
+    shadowElevation: Dp
+) = this.shadow(shadowElevation, shape, clip = false)
+    .then(if (border != null) Modifier.border(border, shape) else Modifier)
+    .background(color = backgroundColor, shape = shape)
+    .clip(shape)
 
 /**
  * Modifier.size MUST be specified.
