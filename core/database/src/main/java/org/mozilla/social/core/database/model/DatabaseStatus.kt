@@ -123,7 +123,6 @@ data class DatabaseStatus(
     /**
      * Preview card for links included within status content.
      */
-    @Embedded(prefix = "card_")
     val card: DatabaseCard? = null,
 
     /**

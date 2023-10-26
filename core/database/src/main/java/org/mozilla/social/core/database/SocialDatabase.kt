@@ -5,6 +5,7 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import org.mozilla.social.core.database.converters.AttachmentConverter
+import org.mozilla.social.core.database.converters.CardConverter
 import org.mozilla.social.core.database.converters.EmojiConverter
 import org.mozilla.social.core.database.converters.FieldConverter
 import org.mozilla.social.core.database.converters.HashtagConverter
@@ -31,6 +32,7 @@ import org.mozilla.social.core.database.model.statusCollections.AccountTimelineS
 import org.mozilla.social.core.database.model.statusCollections.HashTagTimelineStatus
 import org.mozilla.social.core.database.model.statusCollections.HomeTimelineStatus
 
+@Suppress("MagicNumber")
 @Database(
     entities = [
         DatabaseStatus::class,
@@ -42,12 +44,13 @@ import org.mozilla.social.core.database.model.statusCollections.HomeTimelineStat
         AccountTimelineStatus::class,
         DatabaseRelationship::class,
     ],
-    version = 5,
+    version = 6,
     autoMigrations = [
         AutoMigration(1, 2, DatabaseMigrations.Schema1to2::class),
         AutoMigration(2, 3),
         AutoMigration(3, 4),
         AutoMigration(4, 5),
+        AutoMigration(5, 6),
     ],
     exportSchema = true
 )
@@ -62,6 +65,7 @@ import org.mozilla.social.core.database.model.statusCollections.HomeTimelineStat
     HistoryConverter::class,
     PollOptionConverter::class,
     IntListConverter::class,
+    CardConverter::class,
 )
 abstract class SocialDatabase : RoomDatabase() {
     abstract fun statusDao(): StatusDao
