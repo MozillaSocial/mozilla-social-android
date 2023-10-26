@@ -23,7 +23,7 @@ class ReduceHtmlLinksTest {
                     "This is a test\n" +
                     "<a href=\"https://mozilla.social/test/stuff\" rel=\"nofollow noopener noreferrer\" translate=\"no\" target=\"_blank\">\n" +
                     "\n" +
-                    "<span class=\"ellipsis\">mozilla.social/test...</span>\n" +
+                    "<span class=\"ellipsis\">mozilla.social/test…</span>\n" +
                     "\n" +
                     "</a>\n" +
                     "</p>"

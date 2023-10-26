@@ -10,8 +10,6 @@ complexity:
 exceptions:
   TooGenericExceptionCaught:
     active: false # Carried over from Pocket configuration.
-  TooGenericExceptionThrown:
-    active: false
 
 naming:
   FunctionNaming:

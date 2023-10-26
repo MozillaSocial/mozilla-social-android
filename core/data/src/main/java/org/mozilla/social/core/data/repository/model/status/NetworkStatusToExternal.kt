@@ -290,5 +290,5 @@ fun NetworkCard.toExternalModel(): Card =
             embedUrl = embedUrl,
             blurHash = blurHash
         )
-        else -> throw Exception("type value is incorrect")
+        else -> error("type value is incorrect")
     }
