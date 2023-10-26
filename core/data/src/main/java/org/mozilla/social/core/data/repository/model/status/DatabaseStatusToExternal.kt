@@ -3,6 +3,7 @@ package org.mozilla.social.core.data.repository.model.status
 import org.mozilla.social.core.database.model.DatabaseAccount
 import org.mozilla.social.core.database.model.DatabaseApplication
 import org.mozilla.social.core.database.model.DatabaseAttachment
+import org.mozilla.social.core.database.model.DatabaseCard
 import org.mozilla.social.core.database.model.DatabaseEmoji
 import org.mozilla.social.core.database.model.DatabaseField
 import org.mozilla.social.core.database.model.DatabaseHashTag
@@ -17,6 +18,7 @@ import org.mozilla.social.core.database.model.wrappers.StatusWrapper
 import org.mozilla.social.model.Account
 import org.mozilla.social.model.Application
 import org.mozilla.social.model.Attachment
+import org.mozilla.social.model.Card
 import org.mozilla.social.model.Emoji
 import org.mozilla.social.model.Field
 import org.mozilla.social.model.HashTag
@@ -52,8 +54,7 @@ fun StatusWrapper.toExternalModel(): Status =
         inReplyToAccountName = status.inReplyToAccountName,
         boostedStatus = boostedAccount?.let { boostedStatus?.toExternalModel(it, boostedPoll) },
         poll = poll?.toExternalModel(),
-        //TODO map this if we ever need it
-        card = null,
+        card = status.card?.toExternalModel(),
         language = status.language,
         plainText = status.plainText,
         isFavourited = status.isFavorited,
@@ -89,8 +90,7 @@ fun DatabaseStatus.toExternalModel(
         inReplyToAccountId = inReplyToAccountId,
         inReplyToAccountName = inReplyToAccountName,
         poll = poll?.toExternalModel(),
-        //TODO map this if we ever need it
-        card = null,
+        card = card?.toExternalModel(),
         language = language,
         plainText = plainText,
         isFavourited = isFavorited,
@@ -266,3 +266,67 @@ fun DatabaseSource.toExternalModel(): Source =
         defaultLanguage = defaultLanguage,
         followRequestsCount = followRequestsCount
     )
+
+fun DatabaseCard.toExternalModel(): Card =
+    when (this) {
+        is DatabaseCard.Video -> Card.Video(
+            url = url,
+            title = title,
+            description = description,
+            authorName = authorName,
+            authorUrl = authorUrl,
+            providerName = providerName,
+            providerUrl = providerUrl,
+            html = html,
+            width = width,
+            height = height,
+            image = image,
+            embedUrl = embedUrl,
+            blurHash = blurHash
+        )
+        is DatabaseCard.Link -> Card.Link(
+            url = url,
+            title = title,
+            description = description,
+            authorName = authorName,
+            authorUrl = authorUrl,
+            providerName = providerName,
+            providerUrl = providerUrl,
+            html = html,
+            width = width,
+            height = height,
+            image = image,
+            embedUrl = embedUrl,
+            blurHash = blurHash
+        )
+        is DatabaseCard.Photo -> Card.Photo(
+            url = url,
+            title = title,
+            description = description,
+            authorName = authorName,
+            authorUrl = authorUrl,
+            providerName = providerName,
+            providerUrl = providerUrl,
+            html = html,
+            width = width,
+            height = height,
+            image = image,
+            embedUrl = embedUrl,
+            blurHash = blurHash
+        )
+        is DatabaseCard.Rich -> Card.Rich(
+            url = url,
+            title = title,
+            description = description,
+            authorName = authorName,
+            authorUrl = authorUrl,
+            providerName = providerName,
+            providerUrl = providerUrl,
+            html = html,
+            width = width,
+            height = height,
+            image = image,
+            embedUrl = embedUrl,
+            blurHash = blurHash
+        )
+    }

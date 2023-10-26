@@ -3,6 +3,7 @@ package org.mozilla.social.core.data.repository.model.status
 import org.mozilla.social.core.network.model.NetworkAccount
 import org.mozilla.social.core.network.model.NetworkApplication
 import org.mozilla.social.core.network.model.NetworkAttachment
+import org.mozilla.social.core.network.model.NetworkCard
 import org.mozilla.social.core.network.model.NetworkEmoji
 import org.mozilla.social.core.network.model.NetworkField
 import org.mozilla.social.core.network.model.NetworkHashTag
@@ -16,6 +17,7 @@ import org.mozilla.social.core.network.model.NetworkStatusVisibility
 import org.mozilla.social.model.Account
 import org.mozilla.social.model.Application
 import org.mozilla.social.model.Attachment
+import org.mozilla.social.model.Card
 import org.mozilla.social.model.Emoji
 import org.mozilla.social.model.Field
 import org.mozilla.social.model.HashTag
@@ -50,8 +52,7 @@ fun NetworkStatus.toExternalModel(): Status =
         inReplyToAccountId = inReplyToAccountId,
         boostedStatus = boostedStatus?.toExternalModel(),
         poll = poll?.toExternalModel(),
-        //TODO map this if we ever need it
-        card = null,
+        card = card?.toExternalModel(),
         language = language,
         plainText = plainText,
         isFavourited = isFavourited,
@@ -226,3 +227,68 @@ fun NetworkSource.toExternalModel(): Source =
         defaultLanguage = defaultLanguage,
         followRequestsCount = followRequestsCount
     )
+
+fun NetworkCard.toExternalModel(): Card =
+    when (type) {
+        "video" -> Card.Video(
+            url = url,
+            title = title,
+            description = description,
+            authorName = authorName,
+            authorUrl = authorUrl,
+            providerName = providerName,
+            providerUrl = providerUrl,
+            html = html,
+            width = width,
+            height = height,
+            image = image,
+            embedUrl = embedUrl,
+            blurHash = blurHash
+        )
+        "link" -> Card.Link(
+            url = url,
+            title = title,
+            description = description,
+            authorName = authorName,
+            authorUrl = authorUrl,
+            providerName = providerName,
+            providerUrl = providerUrl,
+            html = html,
+            width = width,
+            height = height,
+            image = image,
+            embedUrl = embedUrl,
+            blurHash = blurHash
+        )
+        "photo" -> Card.Photo(
+            url = url,
+            title = title,
+            description = description,
+            authorName = authorName,
+            authorUrl = authorUrl,
+            providerName = providerName,
+            providerUrl = providerUrl,
+            html = html,
+            width = width,
+            height = height,
+            image = image,
+            embedUrl = embedUrl,
+            blurHash = blurHash
+        )
+        "rich" -> Card.Rich(
+            url = url,
+            title = title,
+            description = description,
+            authorName = authorName,
+            authorUrl = authorUrl,
+            providerName = providerName,
+            providerUrl = providerUrl,
+            html = html,
+            width = width,
+            height = height,
+            image = image,
+            embedUrl = embedUrl,
+            blurHash = blurHash
+        )
+        else -> error("type value is incorrect")
+    }

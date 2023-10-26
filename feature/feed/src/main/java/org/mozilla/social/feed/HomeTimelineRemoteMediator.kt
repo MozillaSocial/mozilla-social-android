@@ -6,8 +6,6 @@ import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import androidx.room.withTransaction
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.sync.Mutex
 import org.mozilla.social.core.data.repository.AccountRepository
 import org.mozilla.social.core.data.repository.StatusRepository
 import org.mozilla.social.core.data.repository.TimelineRepository
@@ -15,7 +13,6 @@ import org.mozilla.social.core.database.SocialDatabase
 import org.mozilla.social.core.database.model.statusCollections.HomeTimelineStatus
 import org.mozilla.social.core.database.model.statusCollections.HomeTimelineStatusWrapper
 import org.mozilla.social.core.domain.remotemediators.getInReplyToAccountNames
-import org.mozilla.social.model.Status
 import timber.log.Timber
 
 @OptIn(ExperimentalPagingApi::class)

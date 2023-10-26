@@ -126,9 +126,19 @@ private fun MainPost(
                 htmlText = post.statusTextHtml,
                 htmlContentInteractions = postCardInteractions,
             )
-            Spacer(modifier = Modifier.padding(top = 4.dp))
+            Spacer(modifier = Modifier.padding(top = 8.dp))
+
             MediaDisplay(attachments = post.mediaAttachments)
+
             post.pollUiState?.let { Poll(it, postCardInteractions) }
+
+            // only display preview card if there are no other media attachments
+            if (post.previewCard != null && post.mediaAttachments.isEmpty()) {
+                PreviewCard(
+                    previewCard = post.previewCard,
+                    postCardInteractions = postCardInteractions,
+                )
+            }
 
             BottomRow(
                 modifier = Modifier,
@@ -333,7 +343,8 @@ private fun PostCardPreview() {
                         userBoosted = false,
                         isFavorited = false,
                         accountId = "",
-                        mentions = emptyList()
+                        mentions = emptyList(),
+                        previewCard = null,
                     )
                 ),
                 postCardInteractions = object : PostCardInteractions {},
