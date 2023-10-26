@@ -127,8 +127,22 @@ private fun MainPost(
                 htmlContentInteractions = postCardInteractions,
             )
             Spacer(modifier = Modifier.padding(top = 4.dp))
-            MediaDisplay(attachments = post.mediaAttachments)
+
+            // only display media if a post has no preview card image.  Sometimes the api
+            // will return both for some reason
+            if (post.previewCard?.imageUrl == null) {
+                MediaDisplay(attachments = post.mediaAttachments)
+            }
+
             post.pollUiState?.let { Poll(it, postCardInteractions) }
+
+            // only display the preview card if there is an image url
+            post.previewCard?.imageUrl?.let {
+                PreviewCard(
+                    previewCard = post.previewCard,
+                    postCardInteractions = postCardInteractions,
+                )
+            }
 
             BottomRow(
                 modifier = Modifier,
@@ -333,7 +347,8 @@ private fun PostCardPreview() {
                         userBoosted = false,
                         isFavorited = false,
                         accountId = "",
-                        mentions = emptyList()
+                        mentions = emptyList(),
+                        previewCard = null,
                     )
                 ),
                 postCardInteractions = object : PostCardInteractions {},

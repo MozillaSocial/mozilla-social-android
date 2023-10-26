@@ -2,9 +2,9 @@ package org.mozilla.social.core.ui.postcard
 
 import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.common.utils.timeSinceNow
-import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.ui.R
 import org.mozilla.social.core.ui.poll.toPollUiState
+import org.mozilla.social.model.Card
 import org.mozilla.social.model.Status
 
 /**
@@ -42,6 +42,7 @@ private fun Status.toMainPostCardUiState(
         isFavorited = isFavourited ?: false,
         accountId = account.accountId,
         mentions = mentions,
+        previewCard = card?.toPreviewCard(),
     )
 
 private fun Status.toTopRowMetaDataUiState(): TopRowMetaDataUiState? =
@@ -56,3 +57,11 @@ private fun Status.toTopRowMetaDataUiState(): TopRowMetaDataUiState? =
             iconType = TopRowIconType.REPLY
         )
     } else null
+
+private fun Card.toPreviewCard(): PreviewCard =
+    PreviewCard(
+        url = url,
+        title = title,
+        imageUrl = image,
+        providerName = providerName,
+    )

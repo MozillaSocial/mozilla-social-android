@@ -28,6 +28,7 @@ data class MainPostCardUiState(
     val isFavorited: Boolean,
     val accountId: String,
     val mentions: List<Mention>,
+    val previewCard: PreviewCard?,
 )
 
 data class TopRowMetaDataUiState(
@@ -39,3 +40,10 @@ enum class TopRowIconType {
     REPLY,
     BOOSTED,
 }
+
+data class PreviewCard(
+    val url: String,
+    val title: String,
+    val imageUrl: String?,
+    val providerName: String?
+)
