@@ -1,5 +1,6 @@
 package org.mozilla.social.feature.thread
 
+import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
@@ -25,7 +26,13 @@ fun NavGraphBuilder.threadScreen(
             navArgument(NavigationDestination.Thread.NAV_PARAM_STATUS_ID) {
                 nullable = true
             }
-        )
+        ),
+        enterTransition = {
+            slideIntoContainer(towards = AnimatedContentTransitionScope.SlideDirection.Up)
+        },
+        exitTransition = {
+            slideOutOfContainer(towards = AnimatedContentTransitionScope.SlideDirection.Down)
+        },
     ) {
         val threadStatusId: String? = it.arguments?.getString(NavigationDestination.Thread.NAV_PARAM_STATUS_ID)
         threadStatusId?.let {

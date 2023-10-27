@@ -1,11 +1,15 @@
 package org.mozilla.social.feature.thread
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
+import org.mozilla.social.core.designsystem.component.MoSoSurface
 import org.mozilla.social.core.designsystem.component.MoSoTopBar
 import org.mozilla.social.core.ui.postcard.PostCardList
 import org.mozilla.social.core.ui.postcard.PostCardNavigation
@@ -20,17 +24,19 @@ internal fun ThreadScreen(
         postCardNavigation,
     ) })
 ) {
-    Column {
-        MoSoTopBar(
-            title = stringResource(id = R.string.thread_screen_title),
-            onIconClicked = onCloseClicked,
-        )
+    MoSoSurface {
+        Column(Modifier.systemBarsPadding()) {
+            MoSoTopBar(
+                title = stringResource(id = R.string.thread_screen_title),
+                onIconClicked = onCloseClicked,
+            )
 
-        PostCardList(
-            items = viewModel.statuses.collectAsState(emptyList()).value,
-            errorToastMessage = viewModel.postCardDelegate.errorToastMessage,
-            postCardInteractions = viewModel.postCardDelegate,
-            threadId = threadStatusId,
-        )
+            PostCardList(
+                items = viewModel.statuses.collectAsState(emptyList()).value,
+                errorToastMessage = viewModel.postCardDelegate.errorToastMessage,
+                postCardInteractions = viewModel.postCardDelegate,
+                threadId = threadStatusId,
+            )
+        }
     }
 }

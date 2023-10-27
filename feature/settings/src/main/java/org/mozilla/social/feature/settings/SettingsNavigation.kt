@@ -7,11 +7,11 @@ import androidx.navigation.compose.composable
 import org.mozilla.social.core.navigation.NavigationDestination
 
 fun NavController.navigateToSettings(navOptions: NavOptions? = null) {
-    this.navigate(NavigationDestination.Settings.route, navOptions)
+    navigate(NavigationDestination.Settings.route, navOptions)
 }
 
-fun NavGraphBuilder.settingsScreen(onLogout: () -> Unit) {
+fun NavGraphBuilder.settingsScreen() {
     composable(route = NavigationDestination.Settings.route) {
-        SettingsScreen(onLogout = onLogout)
+        SettingsScreen()
     }
 }

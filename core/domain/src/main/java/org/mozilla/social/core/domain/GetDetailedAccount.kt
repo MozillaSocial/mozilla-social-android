@@ -18,6 +18,7 @@ import org.mozilla.social.core.data.repository.model.status.toExternalModel
 import org.mozilla.social.core.database.SocialDatabase
 import org.mozilla.social.model.Account
 import org.mozilla.social.model.Relationship
+import timber.log.Timber
 
 class GetDetailedAccount(
     private val accountRepository: AccountRepository,
@@ -59,14 +60,23 @@ class GetDetailedAccount(
 
         exception?.let {
             emit(Resource.Error(it))
-        } ?: emitAll(
-            socialDatabase.accountsDao().getAccountFlow(accountId).combine(
-                socialDatabase.relationshipsDao().getRelationshipFlow(accountId)
-            ) { databaseAccount, databaseRelationship ->
-                Resource.Loaded(
-                    transform(databaseAccount.toExternalModel(), databaseRelationship.toExternal())
-                )
-            }
-        )
+        } ?: try { // TODO@John
+            emitAll(
+                socialDatabase.accountsDao().getAccountFlow(accountId).combine(
+                    socialDatabase.relationshipsDao().getRelationshipFlow(accountId)
+                ) { databaseAccount, databaseRelationship ->
+                    Resource.Loaded(
+                        transform(
+                            databaseAccount.toExternalModel(),
+                            databaseRelationship.toExternal()
+                        )
+                    )
+
+                }
+
+            )
+        } catch (exception: Exception) {
+            Timber.e(exception)
+        }
     }
 }
