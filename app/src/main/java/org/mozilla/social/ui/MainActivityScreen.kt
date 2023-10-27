@@ -1,6 +1,7 @@
 package org.mozilla.social.ui
 
 import android.content.Context
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -75,7 +76,11 @@ fun MainActivityScreen(context: Context, navigationEvents: SharedFlow<Navigation
         bottomSheetContent = { BottomSheetContent() },
         bottomSheetVisible = appState.bottomSheetVisible.value,
         content = {
-            MozillaNavHost(appState = appState, context = context)
+            MozillaNavHost(
+                appState = appState,
+                context = context,
+                modifier = Modifier.padding(bottom = it.calculateBottomPadding())
+            )
         }
     )
 }
