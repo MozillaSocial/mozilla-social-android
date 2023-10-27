@@ -6,6 +6,7 @@ import org.mozilla.social.core.database.model.DatabaseAttachment
 import org.mozilla.social.core.database.model.DatabaseCard
 import org.mozilla.social.core.database.model.DatabaseEmoji
 import org.mozilla.social.core.database.model.DatabaseField
+import org.mozilla.social.core.database.model.DatabaseFocalPoint
 import org.mozilla.social.core.database.model.DatabaseHashTag
 import org.mozilla.social.core.database.model.DatabaseHistory
 import org.mozilla.social.core.database.model.DatabaseMention
@@ -20,6 +21,7 @@ import org.mozilla.social.model.Attachment
 import org.mozilla.social.model.Card
 import org.mozilla.social.model.Emoji
 import org.mozilla.social.model.Field
+import org.mozilla.social.model.FocalPoint
 import org.mozilla.social.model.HashTag
 import org.mozilla.social.model.History
 import org.mozilla.social.model.Mention
@@ -111,7 +113,8 @@ fun Attachment.toDatabaseModel(): DatabaseAttachment =
             previewRemoteUrl = previewRemoteUrl,
             textUrl = textUrl,
             description = description,
-            blurHash = blurHash
+            blurHash = blurHash,
+            meta = meta.toDatabaseModel(),
         )
         is Attachment.Gifv -> DatabaseAttachment.Gifv(
             attachmentId = attachmentId,
@@ -120,7 +123,8 @@ fun Attachment.toDatabaseModel(): DatabaseAttachment =
             remoteUrl = remoteUrl,
             previewRemoteUrl = previewRemoteUrl,
             textUrl = textUrl,
-            description = description
+            description = description,
+            meta = meta.toDatabaseModel(),
         )
         is Attachment.Video -> DatabaseAttachment.Video(
             attachmentId = attachmentId,
@@ -130,7 +134,8 @@ fun Attachment.toDatabaseModel(): DatabaseAttachment =
             previewRemoteUrl = previewRemoteUrl,
             textUrl = textUrl,
             description = description,
-            blurHash = blurHash
+            blurHash = blurHash,
+            meta = meta.toDatabaseModel(),
         )
         is Attachment.Audio -> DatabaseAttachment.Audio(
             attachmentId = attachmentId,
@@ -140,7 +145,8 @@ fun Attachment.toDatabaseModel(): DatabaseAttachment =
             previewRemoteUrl = previewRemoteUrl,
             textUrl = textUrl,
             description = description,
-            blurHash = blurHash
+            blurHash = blurHash,
+            meta = meta.toDatabaseModel(),
         )
         is Attachment.Unknown -> DatabaseAttachment.Unknown(
             attachmentId = attachmentId,
@@ -153,6 +159,77 @@ fun Attachment.toDatabaseModel(): DatabaseAttachment =
             blurHash = blurHash
         )
     }
+
+fun Attachment.Audio.Meta.toDatabaseModel(): DatabaseAttachment.Audio.Meta =
+    DatabaseAttachment.Audio.Meta(
+        durationSeconds = durationSeconds,
+        audioCodec = audioCodec,
+        audioBitrate = audioBitrate,
+        audioChannels = audioChannels,
+        original = original?.toDatabaseModel()
+    )
+
+fun Attachment.Audio.Meta.AudioInfo.toDatabaseModel(): DatabaseAttachment.Audio.Meta.AudioInfo =
+    DatabaseAttachment.Audio.Meta.AudioInfo(
+        bitrate = bitrate,
+    )
+
+fun Attachment.Video.Meta.toDatabaseModel(): DatabaseAttachment.Video.Meta =
+    DatabaseAttachment.Video.Meta(
+        aspectRatio = aspectRatio,
+        durationSeconds = durationSeconds,
+        fps = fps,
+        audioCodec = audioCodec,
+        audioBitrate = audioBitrate,
+        audioChannels = audioChannels,
+        original = original?.toDatabaseModel(),
+        small = small?.toDatabaseModel(),
+    )
+
+fun Attachment.Video.Meta.VideoInfo.toDatabaseModel(): DatabaseAttachment.Video.Meta.VideoInfo =
+    DatabaseAttachment.Video.Meta.VideoInfo(
+        width = width,
+        height = height,
+        bitrate = bitrate,
+    )
+
+fun Attachment.Image.Meta.toDatabaseModel(): DatabaseAttachment.Image.Meta =
+    DatabaseAttachment.Image.Meta(
+        focalPoint = focalPoint?.toDatabaseModel(),
+        original = original?.toDatabaseModel(),
+        small = small?.toDatabaseModel(),
+    )
+
+fun Attachment.Image.Meta.ImageInfo.toDatabaseModel(): DatabaseAttachment.Image.Meta.ImageInfo =
+    DatabaseAttachment.Image.Meta.ImageInfo(
+        width = width,
+        height = height,
+        size = size,
+        aspectRatio = aspectRatio,
+    )
+
+fun Attachment.Gifv.Meta.toDatabaseModel(): DatabaseAttachment.Gifv.Meta =
+    DatabaseAttachment.Gifv.Meta(
+        aspectRatio = aspectRatio,
+        durationSeconds = durationSeconds,
+        fps = fps,
+        bitrate = bitrate,
+        original = original?.toDatabaseModel(),
+        small = small?.toDatabaseModel(),
+    )
+
+fun Attachment.Gifv.Meta.GifvInfo.toDatabaseModel(): DatabaseAttachment.Gifv.Meta.GifvInfo =
+    DatabaseAttachment.Gifv.Meta.GifvInfo(
+        width = width,
+        height = height,
+        bitrate = bitrate,
+    )
+
+fun FocalPoint.toDatabaseModel(): DatabaseFocalPoint =
+    DatabaseFocalPoint(
+        x = x,
+        y = y,
+    )
 
 fun Mention.toDatabaseModel(): DatabaseMention =
     DatabaseMention(

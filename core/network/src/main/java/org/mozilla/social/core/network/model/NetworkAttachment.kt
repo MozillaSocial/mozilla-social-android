@@ -73,19 +73,25 @@ sealed class NetworkAttachment {
     ) : NetworkAttachment() {
         @Serializable
         data class Meta(
-            @SerialName("width")
-            val width: Long? = null,
-            @SerialName("height")
-            val height: Long? = null,
-            @SerialName("aspect")
-            val aspect: Double? = null,
             @SerialName("focus")
             val focalPoint: NetworkFocalPoint? = null,
             @SerialName("original")
-            val original: Meta? = null,
+            val original: ImageInfo? = null,
             @SerialName("small")
-            val small: Meta? = null,
-        )
+            val small: ImageInfo? = null,
+        ) {
+            @Serializable
+            data class ImageInfo(
+                @SerialName("width")
+                val width: Int? = null,
+                @SerialName("height")
+                val height: Int? = null,
+                @SerialName("size")
+                val size: String? = null,
+                @SerialName("aspect")
+                val aspectRatio: Float? = null,
+            )
+        }
     }
 
     @Serializable
@@ -112,12 +118,8 @@ sealed class NetworkAttachment {
     ) : NetworkAttachment() {
         @Serializable
         data class Meta(
-            @SerialName("width")
-            val width: Long? = null,
-            @SerialName("height")
-            val height: Long? = null,
             @SerialName("aspect")
-            val aspect: Double? = null,
+            val aspectRatio: Float? = null,
             @SerialName("duration")
             val durationSeconds: Double? = null,
             @SerialName("fps")
@@ -128,13 +130,21 @@ sealed class NetworkAttachment {
             val audioBitrate: String? = null,
             @SerialName("audio_channels")
             val audioChannels: String? = null,
-            @SerialName("bitrate")
-            val bitrate: Long? = null,
             @SerialName("original")
-            val original: Meta? = null,
+            val original: VideoInfo? = null,
             @SerialName("small")
-            val small: Meta? = null,
-        )
+            val small: VideoInfo? = null,
+        ) {
+            @Serializable
+            data class VideoInfo(
+                @SerialName("width")
+                val width: Long? = null,
+                @SerialName("height")
+                val height: Long? = null,
+                @SerialName("bitrate")
+                val bitrate: Long? = null,
+            )
+        }
     }
 
     @Serializable
@@ -161,12 +171,8 @@ sealed class NetworkAttachment {
     ) : NetworkAttachment() {
         @Serializable
         data class Meta(
-            @SerialName("width")
-            val width: Long? = null,
-            @SerialName("height")
-            val height: Long? = null,
             @SerialName("aspect")
-            val aspect: Double? = null,
+            val aspectRatio: Float? = null,
             @SerialName("duration")
             val durationSeconds: Double? = null,
             @SerialName("fps")
@@ -174,10 +180,20 @@ sealed class NetworkAttachment {
             @SerialName("bitrate")
             val bitrate: Long? = null,
             @SerialName("original")
-            val original: Meta? = null,
+            val original: GifvInfo? = null,
             @SerialName("small")
-            val small: Meta? = null,
-        )
+            val small: GifvInfo? = null,
+        ) {
+            @Serializable
+            data class GifvInfo(
+                @SerialName("width")
+                val width: Long? = null,
+                @SerialName("height")
+                val height: Long? = null,
+                @SerialName("bitrate")
+                val bitrate: Long? = null,
+            )
+        }
     }
 
     @Serializable
@@ -212,11 +228,15 @@ sealed class NetworkAttachment {
             val audioBitrate: String? = null,
             @SerialName("audio_channels")
             val audioChannels: String? = null,
-            @SerialName("bitrate")
-            val bitrate: Long? = null,
             @SerialName("original")
-            val original: Meta? = null,
-        )
+            val original: AudioInfo? = null,
+        ) {
+            @Serializable
+            data class AudioInfo(
+                @SerialName("bitrate")
+                val bitrate: Long? = null,
+            )
+        }
     }
 
     @Serializable
