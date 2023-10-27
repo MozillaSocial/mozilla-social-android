@@ -17,6 +17,8 @@ import androidx.navigation.navigation
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.mozilla.social.R
+import org.mozilla.social.common.utils.mosoFadeIn
+import org.mozilla.social.common.utils.mosoFadeOut
 import org.mozilla.social.core.designsystem.component.MoSoSurface
 import org.mozilla.social.core.designsystem.component.SnackbarType
 import org.mozilla.social.core.navigation.NavigationDestination
@@ -35,17 +37,16 @@ import org.mozilla.social.post.newPostScreen
 import org.mozilla.social.search.searchScreen
 import org.mozilla.social.ui.AppState
 
-private const val SCREEN_ANIMATION_DURATION = 500
-
 @Composable
-fun MozillaNavHost(appState: AppState, context: Context) {
+fun MozillaNavHost(appState: AppState, context: Context, modifier: Modifier) {
     NavHost(
+        modifier = modifier,
         navController = appState.navController,
         startDestination = Routes.SPLASH,
-        enterTransition = { fadeIn(tween(durationMillis = 500, delayMillis = 500)) },
-        exitTransition = { fadeOut(tween(durationMillis = 500)) },
-        popEnterTransition = { fadeIn(tween(durationMillis = 500, delayMillis = 500)) },
-        popExitTransition = { fadeOut(tween(durationMillis = 500)) },
+        enterTransition = { mosoFadeIn() },
+        exitTransition = { mosoFadeOut() },
+        popEnterTransition = { mosoFadeIn() },
+        popExitTransition = { mosoFadeOut() },
     ) {
         splashScreen(
             navigateToLogin = appState::navigateToLoginScreen,

@@ -1,12 +1,12 @@
 package org.mozilla.social.post
 
-import androidx.compose.animation.AnimatedContentTransitionScope
-import androidx.compose.animation.core.tween
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import org.mozilla.social.common.utils.mosoSlideIn
+import org.mozilla.social.common.utils.mosoSlideOut
 import org.mozilla.social.core.navigation.NavigationDestination
 
 fun NavController.navigateToNewPost(
@@ -27,18 +27,8 @@ fun NavGraphBuilder.newPostScreen(
                 nullable = true
             }
         ),
-        enterTransition = {
-            slideIntoContainer(
-                towards = AnimatedContentTransitionScope.SlideDirection.Up,
-                animationSpec = tween(500)
-            )
-        },
-        exitTransition = {
-            slideOutOfContainer(
-                towards = AnimatedContentTransitionScope.SlideDirection.Down,
-                animationSpec = tween(500),
-            )
-        }
+        enterTransition = { mosoSlideIn() },
+        exitTransition = { mosoSlideOut() }
     ) {
         val replyStatusId: String? =
             it.arguments?.getString(NavigationDestination.NewPost.NAV_PARAM_REPLY_STATUS_ID)
