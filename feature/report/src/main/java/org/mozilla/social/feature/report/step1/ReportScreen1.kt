@@ -12,9 +12,11 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.ime
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -91,12 +93,12 @@ private fun ReportScreen1(
     sendToExternalServer: Boolean,
     reportInteractions: ReportScreen1Interactions,
 ) {
-    MoSoSurface(
-        modifier = Modifier
-            .windowInsetsPadding(WindowInsets.ime.exclude(WindowInsets.navigationBars)),
-    ) {
+    MoSoSurface {
         Column(
-            modifier = Modifier.fillMaxHeight()
+            modifier = Modifier
+                .fillMaxHeight()
+                .systemBarsPadding()
+                .imePadding(),
         ) {
             MoSoTopBar(
                 title = stringResource(id = R.string.report_screen_title),
