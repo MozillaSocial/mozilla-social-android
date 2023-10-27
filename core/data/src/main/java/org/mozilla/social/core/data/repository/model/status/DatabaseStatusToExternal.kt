@@ -3,8 +3,10 @@ package org.mozilla.social.core.data.repository.model.status
 import org.mozilla.social.core.database.model.DatabaseAccount
 import org.mozilla.social.core.database.model.DatabaseApplication
 import org.mozilla.social.core.database.model.DatabaseAttachment
+import org.mozilla.social.core.database.model.DatabaseCard
 import org.mozilla.social.core.database.model.DatabaseEmoji
 import org.mozilla.social.core.database.model.DatabaseField
+import org.mozilla.social.core.database.model.DatabaseFocalPoint
 import org.mozilla.social.core.database.model.DatabaseHashTag
 import org.mozilla.social.core.database.model.DatabaseHistory
 import org.mozilla.social.core.database.model.DatabaseMention
@@ -17,8 +19,10 @@ import org.mozilla.social.core.database.model.wrappers.StatusWrapper
 import org.mozilla.social.model.Account
 import org.mozilla.social.model.Application
 import org.mozilla.social.model.Attachment
+import org.mozilla.social.model.Card
 import org.mozilla.social.model.Emoji
 import org.mozilla.social.model.Field
+import org.mozilla.social.model.FocalPoint
 import org.mozilla.social.model.HashTag
 import org.mozilla.social.model.History
 import org.mozilla.social.model.Mention
@@ -52,8 +56,7 @@ fun StatusWrapper.toExternalModel(): Status =
         inReplyToAccountName = status.inReplyToAccountName,
         boostedStatus = boostedAccount?.let { boostedStatus?.toExternalModel(it, boostedPoll) },
         poll = poll?.toExternalModel(),
-        //TODO map this if we ever need it
-        card = null,
+        card = status.card?.toExternalModel(),
         language = status.language,
         plainText = status.plainText,
         isFavourited = status.isFavorited,
@@ -89,8 +92,7 @@ fun DatabaseStatus.toExternalModel(
         inReplyToAccountId = inReplyToAccountId,
         inReplyToAccountName = inReplyToAccountName,
         poll = poll?.toExternalModel(),
-        //TODO map this if we ever need it
-        card = null,
+        card = card?.toExternalModel(),
         language = language,
         plainText = plainText,
         isFavourited = isFavorited,
@@ -147,7 +149,8 @@ fun DatabaseAttachment.toExternalModel(): Attachment =
             previewRemoteUrl = previewRemoteUrl,
             textUrl = textUrl,
             description = description,
-            blurHash = blurHash
+            blurHash = blurHash,
+            meta = meta.toExternalModel(),
         )
         is DatabaseAttachment.Gifv -> Attachment.Gifv(
             attachmentId = attachmentId,
@@ -156,7 +159,8 @@ fun DatabaseAttachment.toExternalModel(): Attachment =
             remoteUrl = remoteUrl,
             previewRemoteUrl = previewRemoteUrl,
             textUrl = textUrl,
-            description = description
+            description = description,
+            meta = meta.toExternalModel(),
         )
         is DatabaseAttachment.Video -> Attachment.Video(
             attachmentId = attachmentId,
@@ -166,7 +170,8 @@ fun DatabaseAttachment.toExternalModel(): Attachment =
             previewRemoteUrl = previewRemoteUrl,
             textUrl = textUrl,
             description = description,
-            blurHash = blurHash
+            blurHash = blurHash,
+            meta = meta.toExternalModel(),
         )
         is DatabaseAttachment.Audio -> Attachment.Audio(
             attachmentId = attachmentId,
@@ -176,7 +181,8 @@ fun DatabaseAttachment.toExternalModel(): Attachment =
             previewRemoteUrl = previewRemoteUrl,
             textUrl = textUrl,
             description = description,
-            blurHash = blurHash
+            blurHash = blurHash,
+            meta = meta.toExternalModel(),
         )
         is DatabaseAttachment.Unknown -> Attachment.Unknown(
             attachmentId = attachmentId,
@@ -186,9 +192,80 @@ fun DatabaseAttachment.toExternalModel(): Attachment =
             previewRemoteUrl = previewRemoteUrl,
             textUrl = textUrl,
             description = description,
-            blurHash = blurHash
+            blurHash = blurHash,
         )
     }
+
+fun DatabaseAttachment.Audio.Meta.toExternalModel(): Attachment.Audio.Meta =
+    Attachment.Audio.Meta(
+        durationSeconds = durationSeconds,
+        audioCodec = audioCodec,
+        audioBitrate = audioBitrate,
+        audioChannels = audioChannels,
+        original = original?.toExternalModel()
+    )
+
+fun DatabaseAttachment.Audio.Meta.AudioInfo.toExternalModel(): Attachment.Audio.Meta.AudioInfo =
+    Attachment.Audio.Meta.AudioInfo(
+        bitrate = bitrate,
+    )
+
+fun DatabaseAttachment.Video.Meta.toExternalModel(): Attachment.Video.Meta =
+    Attachment.Video.Meta(
+        aspectRatio = aspectRatio,
+        durationSeconds = durationSeconds,
+        fps = fps,
+        audioCodec = audioCodec,
+        audioBitrate = audioBitrate,
+        audioChannels = audioChannels,
+        original = original?.toExternalModel(),
+        small = small?.toExternalModel(),
+    )
+
+fun DatabaseAttachment.Video.Meta.VideoInfo.toExternalModel(): Attachment.Video.Meta.VideoInfo =
+    Attachment.Video.Meta.VideoInfo(
+        width = width,
+        height = height,
+        bitrate = bitrate,
+    )
+
+fun DatabaseAttachment.Image.Meta.toExternalModel(): Attachment.Image.Meta =
+    Attachment.Image.Meta(
+        focalPoint = focalPoint?.toExternalModel(),
+        original = original?.toExternalModel(),
+        small = small?.toExternalModel(),
+    )
+
+fun DatabaseAttachment.Image.Meta.ImageInfo.toExternalModel(): Attachment.Image.Meta.ImageInfo =
+    Attachment.Image.Meta.ImageInfo(
+        width = width,
+        height = height,
+        size = size,
+        aspectRatio = aspectRatio,
+    )
+
+fun DatabaseAttachment.Gifv.Meta.toExternalModel(): Attachment.Gifv.Meta =
+    Attachment.Gifv.Meta(
+        aspectRatio = aspectRatio,
+        durationSeconds = durationSeconds,
+        fps = fps,
+        bitrate = bitrate,
+        original = original?.toExternalModel(),
+        small = small?.toExternalModel(),
+    )
+
+fun DatabaseAttachment.Gifv.Meta.GifvInfo.toExternalModel(): Attachment.Gifv.Meta.GifvInfo =
+    Attachment.Gifv.Meta.GifvInfo(
+        width = width,
+        height = height,
+        bitrate = bitrate,
+    )
+
+fun DatabaseFocalPoint.toExternalModel(): FocalPoint =
+    FocalPoint(
+        x = x,
+        y = y,
+    )
 
 fun DatabaseMention.toExternalModel(): Mention =
     Mention(
@@ -266,3 +343,67 @@ fun DatabaseSource.toExternalModel(): Source =
         defaultLanguage = defaultLanguage,
         followRequestsCount = followRequestsCount
     )
+
+fun DatabaseCard.toExternalModel(): Card =
+    when (this) {
+        is DatabaseCard.Video -> Card.Video(
+            url = url,
+            title = title,
+            description = description,
+            authorName = authorName,
+            authorUrl = authorUrl,
+            providerName = providerName,
+            providerUrl = providerUrl,
+            html = html,
+            width = width,
+            height = height,
+            image = image,
+            embedUrl = embedUrl,
+            blurHash = blurHash
+        )
+        is DatabaseCard.Link -> Card.Link(
+            url = url,
+            title = title,
+            description = description,
+            authorName = authorName,
+            authorUrl = authorUrl,
+            providerName = providerName,
+            providerUrl = providerUrl,
+            html = html,
+            width = width,
+            height = height,
+            image = image,
+            embedUrl = embedUrl,
+            blurHash = blurHash
+        )
+        is DatabaseCard.Photo -> Card.Photo(
+            url = url,
+            title = title,
+            description = description,
+            authorName = authorName,
+            authorUrl = authorUrl,
+            providerName = providerName,
+            providerUrl = providerUrl,
+            html = html,
+            width = width,
+            height = height,
+            image = image,
+            embedUrl = embedUrl,
+            blurHash = blurHash
+        )
+        is DatabaseCard.Rich -> Card.Rich(
+            url = url,
+            title = title,
+            description = description,
+            authorName = authorName,
+            authorUrl = authorUrl,
+            providerName = providerName,
+            providerUrl = providerUrl,
+            html = html,
+            width = width,
+            height = height,
+            image = image,
+            embedUrl = embedUrl,
+            blurHash = blurHash
+        )
+    }

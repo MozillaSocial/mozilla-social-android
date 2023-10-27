@@ -1,12 +1,15 @@
 package org.mozilla.social.core.ui.media
 
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -15,53 +18,109 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import coil.compose.AsyncImage
-import org.mozilla.social.common.utils.FileType
-import org.mozilla.social.common.utils.getFileType
-import org.mozilla.social.core.designsystem.theme.MoSoRadius
 import org.mozilla.social.core.ui.Radius
 import org.mozilla.social.model.Attachment
 
+@Suppress("MagicNumber")
 @Composable
 fun MediaDisplay(
     attachments: List<Attachment>
 ) {
-    // there can be a maximum of 4 attachments.
-    // videos must be the only attachment
     when (attachments.size) {
         1 -> {
-            val attachment = attachments.first()
-            val uri = attachment.url?.toUri() ?: return
-            val fileType = remember(uri) {
-                uri.getFileType()
-            }
-            when (fileType) {
-                FileType.VIDEO -> {
-                    VideoPlayer(uri = uri)
-                }
-                FileType.IMAGE -> Attachment(
-                    modifier = Modifier.fillMaxWidth(),
-                    attachment = attachment
-                )
-                FileType.UNKNOWN -> {
-                }
-            }
+            SingleAttachment(attachment = attachments.first())
         }
         2 -> {
-            AttachmentRow(attachment1 = attachments.first(), attachment2 = attachments[1])
+            AttachmentRow(
+                attachment1 = attachments.first(),
+                attachment2 = attachments[1]
+            )
         }
         3 -> {
-            Attachment(
-                modifier = Modifier.fillMaxWidth(),
-                attachment = attachments.first()
+            SingleAttachment(attachment = attachments.first())
+            AttachmentRow(
+                attachment1 = attachments[1],
+                attachment2 = attachments[2]
             )
-            AttachmentRow(attachment1 = attachments[1], attachment2 = attachments[2])
         }
         4 -> {
-            AttachmentRow(attachment1 = attachments.first(), attachment2 = attachments[1])
-            AttachmentRow(attachment1 = attachments[2], attachment2 = attachments[3])
+            AttachmentRow(
+                attachment1 = attachments.first(),
+                attachment2 = attachments[1]
+            )
+            AttachmentRow(
+                attachment1 = attachments[2],
+                attachment2 = attachments[3]
+            )
         }
     }
 }
+
+@Composable
+private fun SingleAttachment(
+    attachment: Attachment,
+) {
+    when (attachment) {
+        is Attachment.Image -> {
+            Attachment(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .aspectRatio(attachment.meta.calculateAspectRatio()),
+                attachment = attachment
+            )
+        }
+        is Attachment.Gifv -> {
+            val aspectRatio by remember {
+                mutableFloatStateOf(attachment.meta.calculateAspectRatio())
+            }
+            attachment.url?.toUri()?.let {
+                VideoPlayer(
+                    uri = it,
+                    aspectRatio = aspectRatio,
+                )
+            }
+        }
+        is Attachment.Video -> {
+            val aspectRatio by remember {
+                mutableFloatStateOf(attachment.meta.calculateAspectRatio())
+            }
+            attachment.url?.toUri()?.let {
+                VideoPlayer(
+                    uri = it,
+                    aspectRatio = aspectRatio
+                )
+            }
+        }
+        else -> {}
+    }
+}
+
+/**
+ * For some reason the server might not return an aspect ratio
+ */
+private fun Attachment.Gifv.Meta.calculateAspectRatio(): Float =
+    when {
+        aspectRatio != null -> aspectRatio!!
+        original?.width != null && original?.height != null ->
+            (original!!.width!!.toFloat() / original!!.height!!.toFloat())
+        else -> 1f
+    }
+
+private fun Attachment.Image.Meta.calculateAspectRatio(): Float =
+    when {
+        original?.aspectRatio != null -> original!!.aspectRatio!!
+        original?.width != null && original?.height != null ->
+            (original!!.width!!.toFloat() / original!!.height!!.toFloat())
+        else -> 1f
+    }
+
+private fun Attachment.Video.Meta.calculateAspectRatio(): Float =
+    when {
+        aspectRatio != null -> aspectRatio!!
+        original?.width != null && original?.height != null ->
+            (original!!.width!!.toFloat() / original!!.height!!.toFloat())
+        else -> 1f
+    }
 
 @Composable
 private fun Attachment(
@@ -83,14 +142,17 @@ private fun AttachmentRow(
     attachment1: Attachment,
     attachment2: Attachment,
 ) {
-    val imageHeight = LocalConfiguration.current.screenWidthDp / 2
     Row {
         Attachment(
-            modifier = Modifier.weight(1f).height(imageHeight.dp),
+            modifier = Modifier
+                .weight(1f)
+                .aspectRatio(1f),
             attachment = attachment1
         )
         Attachment(
-            modifier = Modifier.weight(1f).height(imageHeight.dp),
+            modifier = Modifier
+                .weight(1f)
+                .aspectRatio(1f),
             attachment = attachment2
         )
     }

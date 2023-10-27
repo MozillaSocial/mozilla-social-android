@@ -62,13 +62,18 @@ sealed class DatabaseAttachment {
     ) : DatabaseAttachment() {
         @Serializable
         data class Meta(
-            val width: Long? = null,
-            val height: Long? = null,
-            val aspect: Double? = null,
             val focalPoint: DatabaseFocalPoint? = null,
-            val original: Meta? = null,
-            val small: Meta? = null,
-        )
+            val original: ImageInfo? = null,
+            val small: ImageInfo? = null,
+        ) {
+            @Serializable
+            data class ImageInfo(
+                val width: Int? = null,
+                val height: Int? = null,
+                val size: String? = null,
+                val aspectRatio: Float? = null,
+            )
+        }
     }
 
     @Serializable
@@ -85,18 +90,22 @@ sealed class DatabaseAttachment {
     ) : DatabaseAttachment() {
         @Serializable
         data class Meta(
-            val width: Long? = null,
-            val height: Long? = null,
-            val aspect: Double? = null,
+            val aspectRatio: Float? = null,
             val durationSeconds: Double? = null,
             val fps: Long? = null,
             val audioCodec: String? = null,
             val audioBitrate: String? = null,
             val audioChannels: String? = null,
-            val bitrate: Long? = null,
-            val original: Meta? = null,
-            val small: Meta? = null,
-        )
+            val original: VideoInfo? = null,
+            val small: VideoInfo? = null,
+        ) {
+            @Serializable
+            data class VideoInfo(
+                val width: Long? = null,
+                val height: Long? = null,
+                val bitrate: Long? = null,
+            )
+        }
     }
 
     @Serializable
@@ -113,15 +122,20 @@ sealed class DatabaseAttachment {
     ) : DatabaseAttachment() {
         @Serializable
         data class Meta(
-            val width: Long? = null,
-            val height: Long? = null,
-            val aspect: Double? = null,
+            val aspectRatio: Float? = null,
             val durationSeconds: Double? = null,
             val fps: Long? = null,
             val bitrate: Long? = null,
-            val original: Meta? = null,
-            val small: Meta? = null,
-        )
+            val original: GifvInfo? = null,
+            val small: GifvInfo? = null,
+        ) {
+            @Serializable
+            data class GifvInfo(
+                val width: Long? = null,
+                val height: Long? = null,
+                val bitrate: Long? = null,
+            )
+        }
     }
 
     @Serializable
@@ -142,9 +156,13 @@ sealed class DatabaseAttachment {
             val audioCodec: String? = null,
             val audioBitrate: String? = null,
             val audioChannels: String? = null,
-            val bitrate: Long? = null,
-            val original: Meta? = null,
-        )
+            val original: AudioInfo? = null,
+        ) {
+            @Serializable
+            data class AudioInfo(
+                val bitrate: Long? = null,
+            )
+        }
     }
 
     @Serializable
