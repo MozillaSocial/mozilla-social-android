@@ -1,5 +1,7 @@
 package org.mozilla.social.core.data.repository
 
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import org.mozilla.social.core.data.repository.model.account.toExternal
 import org.mozilla.social.core.data.repository.model.followers.FollowersPagingWrapper
 import org.mozilla.social.core.data.repository.model.status.toDatabaseModel
@@ -174,7 +176,7 @@ class AccountRepository internal constructor(
     suspend fun updateMyAccount(
         displayName: String? = null,
         bio: String? = null,
-    ) {
+    ) = withContext(Dispatchers.IO) {
         val updatedAccount = accountApi.updateAccount(
             NetworkAccountUpdate(
                 displayName = displayName,

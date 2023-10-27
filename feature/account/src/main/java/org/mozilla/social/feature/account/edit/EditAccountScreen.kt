@@ -1,5 +1,7 @@
 package org.mozilla.social.feature.account.edit
 
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -7,9 +9,12 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -59,7 +64,8 @@ fun EditAccountScreen(
     ) {
         Box(
             modifier = Modifier
-                .windowInsetsPadding(WindowInsets.systemBars),
+                .systemBarsPadding()
+                .imePadding(),
         ) {
             when (editAccountUiState) {
                 is Resource.Loading -> {}
@@ -108,34 +114,34 @@ private fun LoadedState(
             //TODO bot and lock
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Column(
-            modifier = Modifier.padding(horizontal = 8.dp)
-        ) {
-            MoSoTextField(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                value = uiState.displayName,
-                onValueChange = editAccountInteractions::onDisplayNameTextChanged,
-                label = {
-                    Text(text = stringResource(id = R.string.edit_account_display_name_label))
-                }
-            )
-
             Spacer(modifier = Modifier.height(16.dp))
 
-            MoSoTextField(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                value = uiState.bio,
-                onValueChange = editAccountInteractions::onBioTextChanged,
-                label = {
-                    Text(text = stringResource(id = R.string.edit_account_bio_label))
-                }
-            )
+            Column(
+                modifier = Modifier.padding(horizontal = 8.dp)
+            ) {
+                MoSoTextField(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    value = uiState.displayName,
+                    onValueChange = editAccountInteractions::onDisplayNameTextChanged,
+                    label = {
+                        Text(text = stringResource(id = R.string.edit_account_display_name_label))
+                    }
+                )
 
-            Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(16.dp))
+
+                MoSoTextField(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    value = uiState.bio,
+                    onValueChange = editAccountInteractions::onBioTextChanged,
+                    label = {
+                        Text(text = stringResource(id = R.string.edit_account_bio_label))
+                    }
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
 
             Text(
                 modifier = Modifier.align(Alignment.End),
