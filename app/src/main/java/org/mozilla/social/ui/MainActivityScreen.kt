@@ -12,7 +12,6 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import org.mozilla.social.R
-import org.mozilla.social.common.utils.launchedEffectCollect
 import org.mozilla.social.core.designsystem.component.MoSoBottomNavigationBar
 import org.mozilla.social.core.designsystem.component.MoSoFloatingActionButton
 import org.mozilla.social.core.designsystem.component.MoSoScaffold
@@ -29,11 +28,14 @@ import org.mozilla.social.ui.navigationdrawer.NavigationDrawer
 fun MainActivityScreen(context: Context, navigationEvents: SharedFlow<NavigationEvent>) {
 
     val appState = rememberAppState()
-    navigationEvents.launchedEffectCollect {
-        when (it) {
-            NavigationEvent.NavigateToLogin -> appState.navigateToLoginScreen()
-        }
+    LaunchedEffect(key1 = Unit) {
+        navigationEvents.onEach {
+            when (it) {
+                NavigationEvent.NavigateToLogin -> appState.navigateToLoginScreen()
+            }
+        }.launchIn(this)
     }
+
     val currentDestination = appState.currentNavigationDestination.collectAsState().value
 
     MoSoScaffold(
