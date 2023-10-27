@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
@@ -51,9 +52,9 @@ fun PostCardList(
     postCardInteractions: PostCardInteractions,
     pullToRefreshEnabled: Boolean = false,
     isFullScreenLoading: Boolean = false,
+    scrollState: LazyListState = rememberLazyListState(),
     headerContent: @Composable () -> Unit = {},
 ) {
-
     val lazyingPagingItems: LazyPagingItems<PostCardUiState> = feed.collectAsLazyPagingItems()
 
     LaunchedEffect(Unit) {
@@ -75,86 +76,15 @@ fun PostCardList(
             ),
     ) {
 
-        // When navigating back to a list, the lazyPagingItems seem to have a list size of 0
-        // for a split second before going back to where it was.  This causes the list scroll state
-        // to reset at 0, losing the scroll position.  The realState variable fixes this by
-        // only being in use when the item count is greater than 0.
-        // There is an issue in google issue tracker
-        // https://issuetracker.google.com/issues/177245496
-        // It is "fixed", but we still run into the issue when going multiple screens deep, then
-        // navigating back
-        val emptyListState = rememberLazyListState()
-        val realState = rememberLazyListState()
-
-        LazyColumn(
-            Modifier
-                .fillMaxSize(),
-            state = if (lazyingPagingItems.itemCount == 0) {
-                emptyListState
-            } else {
-                realState
-            },
-        ) {
-
-            item { headerContent() }
-
-            when (lazyingPagingItems.loadState.refresh) {
-                is LoadState.Error -> {
-                    if (!isFullScreenLoading) {
-                        item {
-                            GenericError(
-                                modifier = Modifier
-                                    .fillMaxSize(),
-                                onRetryClicked = { lazyingPagingItems.refresh() }
-                            )
-                        }
-                    }
-                }
-                is LoadState.Loading -> {
-                    if (!isFullScreenLoading && !pullToRefreshEnabled) {
-                        item {
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .wrapContentWidth(Alignment.CenterHorizontally)
-                                    .padding(top = 40.dp)
-                            ) {
-                                MoSoCircularProgressIndicator()
-                            }
-                        }
-                    }
-                    if (pullToRefreshEnabled) {
-                        listContent(lazyingPagingItems, postCardInteractions)
-                    }
-                }
-                is LoadState.NotLoading -> {
-                    listContent(lazyingPagingItems, postCardInteractions)
-                }
-            }
-
-            when (lazyingPagingItems.loadState.append) {
-                is LoadState.Loading -> {
-                    item {
-                        CircularProgressIndicator(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .wrapContentWidth(Alignment.CenterHorizontally)
-                                .padding(16.dp)
-                        )
-                    }
-                }
-
-                is LoadState.Error -> {
-                    item {
-                        GenericError(
-                            onRetryClicked = { lazyingPagingItems.retry() }
-                        )
-                    }
-                }
-
-                is LoadState.NotLoading -> {}
-            }
-        }
+        PostCardLazyColumn(
+            lazyingPagingItems = lazyingPagingItems,
+            postCardInteractions = postCardInteractions,
+            pullToRefreshEnabled = pullToRefreshEnabled,
+            isFullScreenLoading = isFullScreenLoading,
+            scrollState = scrollState,
+            emptyListState = rememberLazyListState(),
+            headerContent = headerContent,
+        )
 
         if (lazyingPagingItems.loadState.refresh is LoadState.Error && isFullScreenLoading) {
             GenericError(
@@ -178,6 +108,97 @@ fun PostCardList(
     }
 
     MoSoToast(toastMessage = errorToastMessage)
+}
+
+@Composable
+private fun PostCardLazyColumn(
+    lazyingPagingItems: LazyPagingItems<PostCardUiState>,
+    postCardInteractions: PostCardInteractions,
+    pullToRefreshEnabled: Boolean,
+    isFullScreenLoading: Boolean,
+    scrollState: LazyListState,
+    emptyListState: LazyListState,
+    headerContent: @Composable () -> Unit,
+) {
+
+    // When navigating back to a list, the lazyPagingItems seem to have a list size of 0
+    // for a split second before going back to where it was.  This causes the list scroll state
+    // to reset at 0, losing the scroll position.  The emptyListState variable fixes this by
+    // only being in use when the item count is 0.
+    // There is an issue in google issue tracker
+    // https://issuetracker.google.com/issues/179397301
+    // There is also a fixed issue that is related to this
+    // https://issuetracker.google.com/issues/177245496
+
+    LazyColumn(
+        Modifier
+            .fillMaxSize(),
+        state = if (lazyingPagingItems.itemCount == 0) {
+            emptyListState
+        } else {
+            scrollState
+        },
+    ) {
+
+        item { headerContent() }
+
+        when (lazyingPagingItems.loadState.refresh) {
+            is LoadState.Error -> {
+                if (!isFullScreenLoading) {
+                    item {
+                        GenericError(
+                            modifier = Modifier
+                                .fillMaxSize(),
+                            onRetryClicked = { lazyingPagingItems.refresh() }
+                        )
+                    }
+                }
+            }
+            is LoadState.Loading -> {
+                if (!isFullScreenLoading && !pullToRefreshEnabled) {
+                    item {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .wrapContentWidth(Alignment.CenterHorizontally)
+                                .padding(top = 40.dp)
+                        ) {
+                            MoSoCircularProgressIndicator()
+                        }
+                    }
+                }
+                if (pullToRefreshEnabled) {
+                    listContent(lazyingPagingItems, postCardInteractions)
+                }
+            }
+            is LoadState.NotLoading -> {
+                listContent(lazyingPagingItems, postCardInteractions)
+            }
+        }
+
+        when (lazyingPagingItems.loadState.append) {
+            is LoadState.Loading -> {
+                item {
+                    CircularProgressIndicator(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .wrapContentWidth(Alignment.CenterHorizontally)
+                            .padding(16.dp)
+                    )
+                }
+            }
+
+            is LoadState.Error -> {
+                item {
+                    GenericError(
+                        onRetryClicked = { lazyingPagingItems.retry() }
+                    )
+                }
+            }
+
+            is LoadState.NotLoading -> {}
+        }
+    }
 }
 
 private fun LazyListScope.listContent(

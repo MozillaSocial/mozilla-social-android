@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tab_for_you">For You</string>
+    <string name="tab_local">Local</string>
+    <string name="tab_federated">Federated</string>
+</resources>

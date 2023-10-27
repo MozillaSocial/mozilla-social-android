@@ -30,4 +30,6 @@ dependencies {
     implementation(libs.androidx.room)
 
     implementation(libs.androidx.browser)
+    implementation(libs.kotlinx.datetime)
+    implementation(libs.jakewharton.timber)
 }
