@@ -65,7 +65,7 @@ private fun SingleAttachment(
             Attachment(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .aspectRatio(attachment.meta.original?.aspectRatio ?: 1f),
+                    .aspectRatio(attachment.meta.calculateAspectRatio()),
                 attachment = attachment
             )
         }
@@ -82,7 +82,7 @@ private fun SingleAttachment(
         }
         is Attachment.Video -> {
             val aspectRatio by remember {
-                mutableFloatStateOf(attachment.meta.aspectRatio ?: 1f)
+                mutableFloatStateOf(attachment.meta.calculateAspectRatio())
             }
             attachment.url?.toUri()?.let {
                 VideoPlayer(
@@ -99,6 +99,22 @@ private fun SingleAttachment(
  * For some reason the server might not return an aspect ratio
  */
 private fun Attachment.Gifv.Meta.calculateAspectRatio(): Float =
+    when {
+        aspectRatio != null -> aspectRatio!!
+        original?.width != null && original?.height != null ->
+            (original!!.width!!.toFloat() / original!!.height!!.toFloat())
+        else -> 1f
+    }
+
+private fun Attachment.Image.Meta.calculateAspectRatio(): Float =
+    when {
+        original?.aspectRatio != null -> original!!.aspectRatio!!
+        original?.width != null && original?.height != null ->
+            (original!!.width!!.toFloat() / original!!.height!!.toFloat())
+        else -> 1f
+    }
+
+private fun Attachment.Video.Meta.calculateAspectRatio(): Float =
     when {
         aspectRatio != null -> aspectRatio!!
         original?.width != null && original?.height != null ->
