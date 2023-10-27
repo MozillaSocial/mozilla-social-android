@@ -82,7 +82,7 @@ private fun NavGraphBuilder.mainGraph(
         )
         searchScreen()
         discoverScreen()
-        settingsScreen(onLogout = appState::navigateToLoginScreen)
+        settingsScreen()
         accountScreen(
             accountNavigationCallbacks = appState.accountNavigation,
             postCardNavigation = appState.postCardNavigation,
