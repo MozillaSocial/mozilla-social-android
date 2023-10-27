@@ -1,13 +1,14 @@
 package org.mozilla.social.navigation
 
 import android.content.Context
-import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.NavHost
@@ -16,6 +17,8 @@ import androidx.navigation.navigation
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.mozilla.social.R
+import org.mozilla.social.common.utils.mosoFadeIn
+import org.mozilla.social.common.utils.mosoFadeOut
 import org.mozilla.social.core.designsystem.component.MoSoSurface
 import org.mozilla.social.core.designsystem.component.SnackbarType
 import org.mozilla.social.core.navigation.NavigationDestination
@@ -35,45 +38,16 @@ import org.mozilla.social.post.newPostScreen
 import org.mozilla.social.search.searchScreen
 import org.mozilla.social.ui.AppState
 
-private const val SCREEN_ANIMATION_DURATION = 500
-
 @Composable
-fun MozillaNavHost(appState: AppState, context: Context) {
+fun MozillaNavHost(appState: AppState, context: Context, modifier: Modifier = Modifier) {
     NavHost(
+        modifier = modifier,
         navController = appState.navController,
         startDestination = Routes.SPLASH,
-        enterTransition = {
-            fadeIn(
-                animationSpec = tween(SCREEN_ANIMATION_DURATION)
-            ) +
-            slideIntoContainer(
-                towards = AnimatedContentTransitionScope.SlideDirection.Right
-            )
-        },
-        exitTransition = {
-            fadeOut(
-                animationSpec = tween(SCREEN_ANIMATION_DURATION)
-            ) +
-            slideOutOfContainer(
-                towards = AnimatedContentTransitionScope.SlideDirection.Right
-            )
-        },
-        popEnterTransition = {
-            fadeIn(
-                animationSpec = tween(SCREEN_ANIMATION_DURATION)
-            ) +
-            slideIntoContainer(
-                towards = AnimatedContentTransitionScope.SlideDirection.Left
-            )
-        },
-        popExitTransition = {
-            fadeOut(
-                animationSpec = tween(SCREEN_ANIMATION_DURATION)
-            ) +
-            slideOutOfContainer(
-                towards = AnimatedContentTransitionScope.SlideDirection.Left
-            )
-        }
+        enterTransition = { mosoFadeIn() },
+        exitTransition = { mosoFadeOut() },
+        popEnterTransition = { mosoFadeIn() },
+        popExitTransition = { mosoFadeOut() },
     ) {
         splashScreen(
             navigateToLogin = appState::navigateToLoginScreen,
@@ -109,14 +83,16 @@ private fun NavGraphBuilder.mainGraph(
         )
         searchScreen()
         discoverScreen()
-        settingsScreen(onLogout = appState::navigateToLoginScreen)
+        settingsScreen()
         accountScreen(
             accountNavigationCallbacks = appState.accountNavigation,
             postCardNavigation = appState.postCardNavigation,
+            navigateToSettings = appState::navigateToSettings,
         )
         myAccountScreen(
             accountNavigationCallbacks = appState.accountNavigation,
             postCardNavigation = appState.postCardNavigation,
+            navigateToSettings = appState::navigateToSettings,
         )
         editAccountScreen(
             onDone = { appState.popBackStack() }
@@ -149,7 +125,11 @@ private fun NavGraphBuilder.mainGraph(
 
         composable(route = NavigationDestination.Bookmarks.route) {
             MoSoSurface(modifier = Modifier.fillMaxSize()) {
-                Text(text = "bookmarks")
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    Text(
+                        text = "bookmarks coming soon :)"
+                    )
+                }
             }
         }
     }

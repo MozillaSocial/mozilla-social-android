@@ -17,13 +17,16 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -81,6 +84,7 @@ internal fun AccountScreen(
     accountId: String?,
     accountNavigationCallbacks: AccountNavigationCallbacks,
     postCardNavigation: PostCardNavigation,
+    navigateToSettings: () -> Unit,
     viewModel: AccountViewModel = koinViewModel(
         parameters = {
             parametersOf(
@@ -102,6 +106,7 @@ internal fun AccountScreen(
         accountNavigationCallbacks = accountNavigationCallbacks,
         htmlContentInteractions = viewModel.postCardDelegate,
         postCardInteractions = viewModel.postCardDelegate,
+        navigateToSettings = navigateToSettings,
         accountInteractions = viewModel,
     )
 
@@ -124,9 +129,10 @@ private fun AccountScreen(
     htmlContentInteractions: HtmlContentInteractions,
     postCardInteractions: PostCardInteractions,
     accountInteractions: AccountInteractions,
+    navigateToSettings: () -> Unit,
 ) {
     MoSoSurface {
-        Column {
+        Column(Modifier.windowInsetsPadding(WindowInsets.systemBars)) {
             when (resource) {
                 is Resource.Loading -> {
                     MoSoTopBar(
@@ -162,6 +168,7 @@ private fun AccountScreen(
                                 account = resource.data,
                                 isUsersProfile = isUsersProfile,
                                 overflowInteractions = accountInteractions,
+                                navigateToSettings = navigateToSettings,
                             )
                         },
                         showDivider = false,
@@ -306,6 +313,7 @@ private fun OverflowMenu(
     account: AccountUiState,
     isUsersProfile: Boolean,
     overflowInteractions: OverflowInteractions,
+    navigateToSettings: () -> Unit,
 ) {
     val overflowMenuExpanded = remember { mutableStateOf(false) }
     val context = LocalContext.current
@@ -338,6 +346,12 @@ private fun OverflowMenu(
                     )
                 }
             )
+            DropDownItem(
+                text = stringResource(R.string.settings),
+                expanded = overflowMenuExpanded,
+                onClick = navigateToSettings,
+            )
+
             if (!isUsersProfile) {
                 if (account.isMuted) {
                     DropDownItem(

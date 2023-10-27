@@ -6,7 +6,7 @@ import org.mozilla.social.navigation.SplashViewModel
 import org.mozilla.social.ui.navigationdrawer.NavigationDrawerViewModel
 
 val mainModule = module {
-    viewModel { MainViewModel(get()) }
+    viewModel { MainViewModel(get(), get(), get()) }
     viewModel { SplashViewModel(get()) }
     viewModel { parametersHolder ->
         NavigationDrawerViewModel(

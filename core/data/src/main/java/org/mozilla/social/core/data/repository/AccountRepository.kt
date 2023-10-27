@@ -110,6 +110,7 @@ class AccountRepository internal constructor(
 
     suspend fun unfollowAccount(accountId: String) {
         try {
+            socialDatabase.homeTimelineDao().removePostsFromAccount(accountId)
             socialDatabase.relationshipsDao().updateFollowing(accountId, false)
             accountApi.unfollowAccount(accountId)
         } catch (e: Exception) {
@@ -123,7 +124,9 @@ class AccountRepository internal constructor(
      */
     suspend fun blockAccount(accountId: String) {
         try {
-            socialDatabase.homeTimelineDao().remotePostsFromAccount(accountId)
+            socialDatabase.homeTimelineDao().removePostsFromAccount(accountId)
+            socialDatabase.localTimelineDao().removePostsFromAccount(accountId)
+            socialDatabase.federatedTimelineDao().removePostsFromAccount(accountId)
             socialDatabase.relationshipsDao().updateBlocked(accountId, true)
             accountApi.blockAccount(accountId)
         } catch (e: Exception) {
@@ -147,7 +150,9 @@ class AccountRepository internal constructor(
      */
     suspend fun muteAccount(accountId: String) {
         try {
-            socialDatabase.homeTimelineDao().remotePostsFromAccount(accountId)
+            socialDatabase.homeTimelineDao().removePostsFromAccount(accountId)
+            socialDatabase.localTimelineDao().removePostsFromAccount(accountId)
+            socialDatabase.federatedTimelineDao().removePostsFromAccount(accountId)
             socialDatabase.relationshipsDao().updateMuted(accountId, true)
             accountApi.muteAccount(accountId)
         } catch (e: Exception) {
