@@ -1,11 +1,15 @@
 package org.mozilla.social.feature.account.edit
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -50,18 +54,25 @@ fun EditAccountScreen(
     editAccountUiState: Resource<EditAccountUiState>,
 ) {
     MoSoSurface(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize(),
     ) {
-        when (editAccountUiState) {
-            is Resource.Loading -> {}
-            is Resource.Loaded -> {
-                LoadedState(
-                    onCloseClicked = onCloseClicked,
-                    editAccountInteractions = editAccountInteractions,
-                    uiState = editAccountUiState.data,
-                )
+        Box(
+            modifier = Modifier
+                .windowInsetsPadding(WindowInsets.systemBars),
+        ) {
+            when (editAccountUiState) {
+                is Resource.Loading -> {}
+                is Resource.Loaded -> {
+                    LoadedState(
+                        onCloseClicked = onCloseClicked,
+                        editAccountInteractions = editAccountInteractions,
+                        uiState = editAccountUiState.data,
+                    )
+                }
+
+                is Resource.Error -> {}
             }
-            is Resource.Error -> {}
         }
     }
 }
