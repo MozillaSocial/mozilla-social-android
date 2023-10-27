@@ -7,6 +7,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
@@ -22,52 +26,93 @@ import org.mozilla.social.model.Attachment
 fun MediaDisplay(
     attachments: List<Attachment>
 ) {
-    // there can be a maximum of 4 attachments.
-    // videos must be the only attachment
     when (attachments.size) {
         1 -> {
-            val attachment = attachments.first()
-            val uri = attachment.url?.toUri() ?: return
-            when (attachment) {
-                is Attachment.Image,
-                is Attachment.Gifv -> Attachment(
-                    modifier = Modifier.fillMaxWidth(),
-                    attachment = attachment
-                )
-                is Attachment.Video -> VideoPlayer(uri = uri)
-                else -> {}
-            }
+            SingleAttachment(attachment = attachments.first())
         }
         2 -> {
-            AttachmentRow(attachment1 = attachments.first(), attachment2 = attachments[1])
+            AttachmentRow(
+                attachment1 = attachments.first(),
+                attachment2 = attachments[1]
+            )
         }
         3 -> {
-            Attachment(
-                modifier = Modifier.fillMaxWidth(),
-                attachment = attachments.first()
+            SingleAttachment(attachment = attachments.first())
+            AttachmentRow(
+                attachment1 = attachments[1],
+                attachment2 = attachments[2]
             )
-            AttachmentRow(attachment1 = attachments[1], attachment2 = attachments[2])
         }
         4 -> {
-            AttachmentRow(attachment1 = attachments.first(), attachment2 = attachments[1])
-            AttachmentRow(attachment1 = attachments[2], attachment2 = attachments[3])
+            AttachmentRow(
+                attachment1 = attachments.first(),
+                attachment2 = attachments[1]
+            )
+            AttachmentRow(
+                attachment1 = attachments[2],
+                attachment2 = attachments[3]
+            )
         }
     }
 }
+
+@Composable
+private fun SingleAttachment(
+    attachment: Attachment,
+) {
+    when (attachment) {
+        is Attachment.Image -> {
+            Attachment(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .aspectRatio(attachment.meta.original?.aspectRatio ?: 1f),
+                attachment = attachment
+            )
+        }
+        is Attachment.Gifv -> {
+            val aspectRatio by remember {
+                mutableFloatStateOf(attachment.meta.calculateAspectRatio())
+            }
+            attachment.url?.toUri()?.let {
+                VideoPlayer(
+                    uri = it,
+                    aspectRatio = aspectRatio,
+                )
+            }
+        }
+        is Attachment.Video -> {
+            val aspectRatio by remember {
+                mutableFloatStateOf(attachment.meta.aspectRatio ?: 1f)
+            }
+            attachment.url?.toUri()?.let {
+                VideoPlayer(
+                    uri = it,
+                    aspectRatio = aspectRatio
+                )
+            }
+        }
+        else -> {}
+    }
+}
+
+/**
+ * For some reason the server might not return an aspect ratio
+ */
+private fun Attachment.Gifv.Meta.calculateAspectRatio(): Float =
+    when {
+        aspectRatio != null -> aspectRatio!!
+        original?.width != null && original?.height != null ->
+            (original!!.width!!.toFloat() / original!!.height!!.toFloat())
+        else -> 1f
+    }
 
 @Composable
 private fun Attachment(
     modifier: Modifier = Modifier,
     attachment: Attachment
 ) {
-    val aspectRatio = when (attachment) {
-        is Attachment.Gifv -> attachment.meta.aspectRatio
-        is Attachment.Image -> attachment.meta.original?.aspectRatio
-        else -> null
-    }
     AsyncImage(
         modifier = modifier
-            .aspectRatio(aspectRatio ?: 2f)
             .padding(2.dp)
             .clip(RoundedCornerShape(Radius.media)),
         model = attachment.previewUrl,
@@ -81,14 +126,17 @@ private fun AttachmentRow(
     attachment1: Attachment,
     attachment2: Attachment,
 ) {
-    val imageHeight = LocalConfiguration.current.screenWidthDp / 2
     Row {
         Attachment(
-            modifier = Modifier.weight(1f).height(imageHeight.dp),
+            modifier = Modifier
+                .weight(1f)
+                .aspectRatio(1f),
             attachment = attachment1
         )
         Attachment(
-            modifier = Modifier.weight(1f).height(imageHeight.dp),
+            modifier = Modifier
+                .weight(1f)
+                .aspectRatio(1f),
             attachment = attachment2
         )
     }

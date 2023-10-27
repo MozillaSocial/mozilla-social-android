@@ -40,11 +40,11 @@ private const val TAG = "VideoPlayer"
 fun VideoPlayer(
     uri: Uri,
     loadState: LoadState = LoadState.LOADED,
+    aspectRatio: Float = 1f,
 ) {
-
     Box(
         modifier = Modifier
-            .aspectRatio(1f)
+            .aspectRatio(aspectRatio)
             .clip(RoundedCornerShape(Radius.media))
     ) {
         val context = LocalContext.current
