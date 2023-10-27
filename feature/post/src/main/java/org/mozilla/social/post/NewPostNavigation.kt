@@ -1,5 +1,7 @@
 package org.mozilla.social.post
 
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.core.tween
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
@@ -24,9 +26,22 @@ fun NavGraphBuilder.newPostScreen(
             navArgument(NavigationDestination.NewPost.NAV_PARAM_REPLY_STATUS_ID) {
                 nullable = true
             }
-        )
+        ),
+        enterTransition = {
+            slideIntoContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.Up,
+                animationSpec = tween(500)
+            )
+        },
+        exitTransition = {
+            slideOutOfContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.Down,
+                animationSpec = tween(500),
+            )
+        }
     ) {
-        val replyStatusId: String? = it.arguments?.getString(NavigationDestination.NewPost.NAV_PARAM_REPLY_STATUS_ID)
+        val replyStatusId: String? =
+            it.arguments?.getString(NavigationDestination.NewPost.NAV_PARAM_REPLY_STATUS_ID)
         NewPostScreen(
             onStatusPosted,
             onCloseClicked,

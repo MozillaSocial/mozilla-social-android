@@ -17,7 +17,6 @@ import org.mozilla.social.core.designsystem.icon.MosSoBottomSheet
 @Composable
 fun MoSoScaffold(
     modifier: Modifier = Modifier,
-    topBar: @Composable () -> Unit = {},
     bottomBar: @Composable () -> Unit = {},
     snackbarHost: @Composable () -> Unit = {},
     floatingActionButton: @Composable () -> Unit = {},
@@ -36,7 +35,6 @@ fun MoSoScaffold(
                 snackbarHost = snackbarHost,
                 floatingActionButton = { floatingActionButton() },
                 bottomBar = bottomBar,
-                topBar = topBar,
             ) {
                 Box(
                     modifier = Modifier.fillMaxSize(),

@@ -11,28 +11,26 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -45,7 +43,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.Layout
@@ -70,7 +67,6 @@ import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.core.designsystem.component.MoSoButton
 import org.mozilla.social.core.designsystem.component.MoSoButtonSecondary
 import org.mozilla.social.core.designsystem.component.MoSoCircularProgressIndicator
-import org.mozilla.social.core.designsystem.component.MoSoDivider
 import org.mozilla.social.core.designsystem.component.MoSoDropdownMenu
 import org.mozilla.social.core.designsystem.component.MoSoSurface
 import org.mozilla.social.core.designsystem.component.MoSoTab
@@ -95,6 +91,7 @@ internal fun AccountScreen(
     accountId: String?,
     accountNavigationCallbacks: AccountNavigationCallbacks,
     postCardNavigation: PostCardNavigation,
+    navigateToSettings: () -> Unit,
     viewModel: AccountViewModel = koinViewModel(
         parameters = {
             parametersOf(
@@ -116,7 +113,8 @@ internal fun AccountScreen(
         accountNavigationCallbacks = accountNavigationCallbacks,
         htmlContentInteractions = viewModel.postCardDelegate,
         postCardInteractions = viewModel.postCardDelegate,
-        accountInteractions = viewModel
+        navigateToSettings = navigateToSettings,
+        accountInteractions = viewModel,
     )
 
     LaunchedEffect(Unit) {
@@ -138,9 +136,10 @@ private fun AccountScreen(
     htmlContentInteractions: HtmlContentInteractions,
     postCardInteractions: PostCardInteractions,
     accountInteractions: AccountInteractions,
+    navigateToSettings: () -> Unit,
 ) {
     MoSoSurface {
-        Column {
+        Column(Modifier.windowInsetsPadding(WindowInsets.systemBars)) {
             when (resource) {
                 is Resource.Loading -> {
                     MoSoTopBar(
@@ -176,6 +175,7 @@ private fun AccountScreen(
                                 account = resource.data,
                                 isUsersProfile = isUsersProfile,
                                 overflowInteractions = accountInteractions,
+                                navigateToSettings = navigateToSettings,
                             )
                         },
                         showDivider = false,
@@ -291,6 +291,7 @@ private fun OverflowMenu(
     account: AccountUiState,
     isUsersProfile: Boolean,
     overflowInteractions: OverflowInteractions,
+    navigateToSettings: () -> Unit,
 ) {
     val overflowMenuExpanded = remember { mutableStateOf(false) }
     val context = LocalContext.current
@@ -323,6 +324,12 @@ private fun OverflowMenu(
                     )
                 }
             )
+            DropDownItem(
+                text = stringResource(R.string.settings),
+                expanded = overflowMenuExpanded,
+                onClick = navigateToSettings,
+            )
+
             if (!isUsersProfile) {
                 if (account.isMuted) {
                     DropDownItem(

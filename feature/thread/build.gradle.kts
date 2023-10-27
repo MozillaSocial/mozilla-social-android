@@ -26,4 +26,5 @@ dependencies {
     implementation(libs.protobuf.kotlin.lite)
 
     implementation(libs.jakewharton.timber)
+    implementation(libs.androidx.navigation.compose)
 }

@@ -19,6 +19,7 @@ fun NavController.navigateToAccount(
 fun NavGraphBuilder.accountScreen(
     accountNavigationCallbacks: AccountNavigationCallbacks,
     postCardNavigation: PostCardNavigation,
+    navigateToSettings: () -> Unit,
 ) {
     composable(
         route = NavigationDestination.Account.fullRoute,
@@ -33,6 +34,7 @@ fun NavGraphBuilder.accountScreen(
             accountId = accountId,
             accountNavigationCallbacks = accountNavigationCallbacks,
             postCardNavigation = postCardNavigation,
+            navigateToSettings = navigateToSettings,
         )
     }
 }
