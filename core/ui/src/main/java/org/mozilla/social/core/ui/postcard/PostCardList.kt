@@ -126,9 +126,9 @@ private fun PostCardLazyColumn(
     // to reset at 0, losing the scroll position.  The emptyListState variable fixes this by
     // only being in use when the item count is 0.
     // There is an issue in google issue tracker
+    // https://issuetracker.google.com/issues/179397301
+    // There is also a fixed issue that is related to this
     // https://issuetracker.google.com/issues/177245496
-    // It is "fixed" according to google, but we still run into the issue when going multiple screens deep, then
-    // navigating back
 
     LazyColumn(
         Modifier
