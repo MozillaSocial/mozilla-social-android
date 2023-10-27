@@ -33,6 +33,7 @@ import org.mozilla.social.core.designsystem.component.MoSoSnackbarHostState
 import org.mozilla.social.core.navigation.NavigationDestination
 import org.mozilla.social.core.ui.postcard.PostCardNavigation
 import org.mozilla.social.feature.account.AccountNavigationCallbacks
+import org.mozilla.social.feature.account.edit.navigateToEditAccount
 import org.mozilla.social.feature.account.navigateToAccount
 import org.mozilla.social.feature.auth.navigateToLoginScreen
 import org.mozilla.social.feature.followers.FollowersNavigationCallbacks
@@ -137,6 +138,7 @@ class AppState(
             accountId = accountId,
             accountHandle = accountHandle
         )
+        override fun onEditProfileClicked() = navigateToEditAccount()
     }
 
     val followersNavigation = object : FollowersNavigationCallbacks {
@@ -194,6 +196,10 @@ class AppState(
         navController.navigateToAccount(
             accountId = accountId,
         )
+    }
+
+    fun navigateToEditAccount() {
+        navController.navigateToEditAccount()
     }
 
     fun navigateToAccountFollowing(accountId: String) {

@@ -20,6 +20,7 @@ import org.mozilla.social.core.designsystem.component.MoSoSurface
 import org.mozilla.social.core.designsystem.component.SnackbarType
 import org.mozilla.social.core.navigation.NavigationDestination
 import org.mozilla.social.feature.account.accountScreen
+import org.mozilla.social.feature.account.edit.editAccountScreen
 import org.mozilla.social.feature.account.myAccountScreen
 import org.mozilla.social.feature.auth.loginScreen
 import org.mozilla.social.feature.discover.discoverScreen
@@ -116,6 +117,9 @@ private fun NavGraphBuilder.mainGraph(
         myAccountScreen(
             accountNavigationCallbacks = appState.accountNavigation,
             postCardNavigation = appState.postCardNavigation,
+        )
+        editAccountScreen(
+            onDone = { appState.popBackStack() }
         )
         followersScreen(followersNavigationCallbacks = appState.followersNavigation)
         followingScreen(followersNavigationCallbacks = appState.followersNavigation)

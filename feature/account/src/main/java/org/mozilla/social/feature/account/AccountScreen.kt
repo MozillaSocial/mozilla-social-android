@@ -11,10 +11,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -26,13 +23,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -43,12 +36,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -57,7 +46,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.paging.PagingData
-import coil.compose.AsyncImage
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -70,7 +58,6 @@ import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.core.designsystem.component.MoSoButton
 import org.mozilla.social.core.designsystem.component.MoSoButtonSecondary
 import org.mozilla.social.core.designsystem.component.MoSoCircularProgressIndicator
-import org.mozilla.social.core.designsystem.component.MoSoDivider
 import org.mozilla.social.core.designsystem.component.MoSoDropdownMenu
 import org.mozilla.social.core.designsystem.component.MoSoSurface
 import org.mozilla.social.core.designsystem.component.MoSoTab
@@ -88,7 +75,6 @@ import org.mozilla.social.core.ui.postcard.PostCardInteractions
 import org.mozilla.social.core.ui.postcard.PostCardList
 import org.mozilla.social.core.ui.postcard.PostCardNavigation
 import org.mozilla.social.core.ui.postcard.PostCardUiState
-import kotlin.math.max
 
 @Composable
 internal fun AccountScreen(
@@ -116,7 +102,7 @@ internal fun AccountScreen(
         accountNavigationCallbacks = accountNavigationCallbacks,
         htmlContentInteractions = viewModel.postCardDelegate,
         postCardInteractions = viewModel.postCardDelegate,
-        accountInteractions = viewModel
+        accountInteractions = viewModel,
     )
 
     LaunchedEffect(Unit) {
@@ -247,10 +233,38 @@ private fun MainContent(
             postCardInteractions = postCardInteractions
         ) {
             Header(
-                isUsersProfile = isUsersProfile,
-                accountUiState = account,
-                accountInteractions = accountInteractions,
-            )
+                headerUrl = account.headerUrl,
+                avatarUrl = account.avatarUrl,
+            ) {
+                val buttonModifier = Modifier.padding(end = 8.dp)
+                if (isUsersProfile) {
+                    MoSoButtonSecondary(
+                        modifier = buttonModifier,
+                        onClick = { accountInteractions.onEditAccountClicked() }
+                    ) {
+                        Text(text = stringResource(id = R.string.edit_button))
+                    }
+                } else {
+                    MoSoButton(
+                        modifier = buttonModifier,
+                        onClick = {
+                            if (account.isFollowing) {
+                                accountInteractions.onUnfollowClicked()
+                            } else {
+                                accountInteractions.onFollowClicked()
+                            }
+                        }
+                    ) {
+                        Text(
+                            text = if (account.isFollowing) {
+                                stringResource(id = R.string.unfollow_button)
+                            } else {
+                                stringResource(id = R.string.follow_button)
+                            }
+                        )
+                    }
+                }
+            }
 
             UserInfo(account = account)
             Spacer(modifier = Modifier.height(12.dp))
@@ -580,123 +594,6 @@ private fun UserLabel(
             linkColor = MoSoTheme.colors.textSecondary,
             maximumLineCount = 1,
         )
-    }
-}
-
-@Composable
-private fun Header(
-    modifier: Modifier = Modifier,
-    isUsersProfile: Boolean,
-    accountUiState: AccountUiState,
-    accountInteractions: AccountInteractions,
-) {
-    HeaderLayout(
-        modifier = modifier.fillMaxWidth(),
-        headerImage = {
-            AsyncImage(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(120.dp),
-                model = accountUiState.headerUrl,
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
-            )
-        },
-        profileImage = {
-            AsyncImage(
-                modifier = Modifier
-                    .padding(start = 8.dp)
-                    .size(92.dp)
-                    .clip(CircleShape)
-                    .border(
-                        width = 3.dp,
-                        color = MoSoTheme.colors.layer1,
-                        shape = CircleShape
-                    ),
-                model = accountUiState.avatarUrl,
-                contentDescription = null,
-            )
-        },
-        rightSideContent = {
-            val buttonModifier = Modifier.padding(end = 8.dp)
-            if (isUsersProfile) {
-                MoSoButtonSecondary(
-                    modifier = buttonModifier,
-                    onClick = { /*TODO*/ }
-                ) {
-                    Text(text = stringResource(id = R.string.edit_button))
-                }
-            } else {
-                MoSoButton(
-                    modifier = buttonModifier,
-                    onClick = {
-                        if (accountUiState.isFollowing) {
-                            accountInteractions.onUnfollowClicked()
-                        } else {
-                            accountInteractions.onFollowClicked()
-                        }
-                    }
-                ) {
-                    Text(
-                        text = if (accountUiState.isFollowing) {
-                            stringResource(id = R.string.unfollow_button)
-                        } else {
-                            stringResource(id = R.string.follow_button)
-                        }
-                    )
-                }
-            }
-        }
-    )
-}
-
-/**
- * Layout for the header images and edit / follow buttons
- * Using a layout is nice because it automatically calculates the spacing for the
- * avatar image so you don't have to calculate the value yourself if the avatar size changes.
- */
-@Composable
-private fun HeaderLayout(
-    modifier: Modifier = Modifier,
-    headerImage: @Composable () -> Unit,
-    profileImage: @Composable () -> Unit,
-    rightSideContent: @Composable () -> Unit,
-) {
-    Layout(
-        modifier = modifier,
-        content = {
-            Box { headerImage() }
-            Box { profileImage() }
-            Box { rightSideContent() }
-        },
-    ) { measurables, constraints ->
-        val placeables = measurables.map {
-            it.measure(constraints.copy(
-                minWidth = 0,
-                minHeight = 0,
-            ))
-        }
-        val headerImagePlaceable = placeables[0]
-        val profileImagePlaceable = placeables[1]
-        val rightSideContentPlaceable = placeables[2]
-        layout(
-            width = constraints.maxWidth,
-            height = headerImagePlaceable.height
-                    + max(profileImagePlaceable.height / 2, rightSideContentPlaceable.height),
-        ) {
-            headerImagePlaceable.placeRelative(
-                x = 0,
-                y = 0,
-            )
-            profileImagePlaceable.placeRelative(
-                x = 0,
-                y = headerImagePlaceable.height - profileImagePlaceable.height / 2
-            )
-            rightSideContentPlaceable.placeRelative(
-                x = (constraints.maxWidth - rightSideContentPlaceable.width),
-                y = headerImagePlaceable.height
-            )
-        }
     }
 }
 

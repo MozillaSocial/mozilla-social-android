@@ -21,4 +21,7 @@
     <string name="tab_media">Media</string>
 
     <string name="joined_date">Joined %s</string>
+
+    <string name="edit_account_display_name_label">Display Name</string>
+    <string name="edit_account_bio_label">Bio</string>
 </resources>

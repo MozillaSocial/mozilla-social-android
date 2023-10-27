@@ -222,4 +222,8 @@ class AccountViewModel(
     override fun onTabClicked(timelineType: TimelineType) {
         _timelineType.edit { timelineType }
     }
+
+    override fun onEditAccountClicked() {
+        accountNavigationCallbacks.onEditProfileClicked()
+    }
 }

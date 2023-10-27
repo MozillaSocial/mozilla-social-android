@@ -8,4 +8,5 @@ interface AccountNavigationCallbacks {
         accountId: String,
         accountHandle: String,
     ) = Unit
+    fun onEditProfileClicked() = Unit
 }
