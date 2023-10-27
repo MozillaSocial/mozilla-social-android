@@ -40,30 +40,43 @@ internal fun SettingsScreen(
     onLogout: () -> Unit,
     viewModel: SettingsViewModel = koinViewModel(parameters = { parametersOf(onLogout) })
 ) {
-    val isToggled = viewModel.isToggled.collectAsState()
+    val isAnalyticsToggled = viewModel.isAnalyticsToggledOn.collectAsState()
 
     SettingsScreen(
-        isToggled = isToggled.value,
-        viewModel::toggleSwitch,
+        isAnalyticsToggledOn = isAnalyticsToggled.value,
+        viewModel::toggleAnalytics,
         viewModel::logoutUser
     )
 }
 
 @Composable
 internal fun SettingsScreen(
-    isToggled: Boolean,
-    onSwitchToggled: () -> Unit,
+    isAnalyticsToggledOn: Boolean,
+    toggleAnalyticsSwitch: () -> Unit,
     logUserOut: () -> Unit
 ) {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        contentAlignment = Alignment.Center,
+    Column(
+        Modifier
+            .padding(start = 16.dp, end = 16.dp)
     ) {
-        SettingsGroup(name = R.string.account_options) {
-            LogoutText(name = R.string.logout) {
-                logUserOut()
+        SettingsGroup(name = R.string.analytics_group) {
+            SettingsSwitch(
+                name = R.string.analytics_opt_in_name,
+                subtitle = R.string.analytics_opt_in_subtitle,
+                state = isAnalyticsToggledOn,
+                onClick = toggleAnalyticsSwitch
+            )
+        }
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp),
+            contentAlignment = Alignment.Center,
+        ) {
+            SettingsGroup(name = R.string.account_options) {
+                LogoutText(name = R.string.logout) {
+                    logUserOut()
+                }
             }
         }
     }
@@ -88,11 +101,13 @@ fun SettingsGroup(
     }
 }
 
+@Suppress("LongParameterList")
 @Composable
 fun SettingsSwitch(
-    @DrawableRes icon: Int,
-    @StringRes iconDesc: Int,
+    @DrawableRes icon: Int? = null,
+    @StringRes iconDesc: Int? = null,
     @StringRes name: Int,
+    @StringRes subtitle: Int? = null,
     state: Boolean,
     onClick: () -> Unit
 ) {
@@ -108,25 +123,45 @@ fun SettingsSwitch(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(
-                        painterResource(id = icon),
-                        contentDescription = stringResource(id = iconDesc),
-                        modifier = Modifier.size(24.dp)
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(
-                        text = stringResource(id = name),
-                        modifier = Modifier.padding(16.dp),
-                        style = MaterialTheme.typography.bodyMedium,
-                        textAlign = TextAlign.Start,
+                Row {
+                    Column(
+                        modifier = Modifier
+                            .weight(9f)
+                            .padding(bottom = 8.dp)
+                    ) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            if (icon != null) {
+                                Icon(
+                                    painterResource(id = icon),
+                                    contentDescription = iconDesc?.let { stringResource(id = it) },
+                                    modifier = Modifier.size(24.dp)
+                                )
+                                Spacer(modifier = Modifier.width(8.dp))
+                            }
+                            Text(
+                                text = stringResource(id = name),
+                                modifier = Modifier.padding(top = 8.dp),
+                                style = MaterialTheme.typography.bodyMedium,
+                                textAlign = TextAlign.Start,
+                            )
+                        }
+                        if (subtitle != null) {
+                            Text(
+                                text = stringResource(id = subtitle),
+                                modifier = Modifier.padding(top = 8.dp),
+                                style = MaterialTheme.typography.bodySmall,
+                                textAlign = TextAlign.Start,
+                            )
+                        }
+                    }
+                    Spacer(modifier = Modifier.weight(1f))
+                    Switch(
+                        checked = state,
+                        onCheckedChange = { onClick() },
+                        modifier = Modifier
+                            .padding(end = 16.dp)
                     )
                 }
-                Spacer(modifier = Modifier.weight(1f))
-                Switch(
-                    checked = state,
-                    onCheckedChange = { onClick() }
-                )
             }
            MoSoDivider()
         }

@@ -18,7 +18,7 @@ class GleanAnalytics : Analytics {
 
         Glean.initialize(
             applicationContext = context,
-            uploadEnabled = true,
+            uploadEnabled = false,
             buildInfo = buildInfo
         )
     }
@@ -86,5 +86,9 @@ class GleanAnalytics : Analytics {
     override fun clearLoggedInIdentifiers() {
         Identifiers.mastodonAccountHandle.destroy()
         Identifiers.mastodonAccountId.destroy()
+    }
+
+    override fun toggleAnalyticsTracking(toggleTracking: Boolean) {
+        Glean.setUploadEnabled(toggleTracking)
     }
 }

@@ -8,5 +8,11 @@
     <string name="group_1">Group 1</string>
     <string name="group_2">Group 2</string>
     <string name="account_options">Account Options</string>
+
+    <string name="analytics_group">Data collection and use</string>
+    <string name="analytics_icon">Analytics Icon</string>
+    <string name="analytics_opt_in_name">Help improve Mozilla.social</string>
+    <string name="analytics_opt_in_subtitle">Allow technical, interaction, campaign and referral data to be sent to Mozilla. With this data you will have a personalized experience.</string>
+
     <string name="logout">Logout</string>
 </resources>

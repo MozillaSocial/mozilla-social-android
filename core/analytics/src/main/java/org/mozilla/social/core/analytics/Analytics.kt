@@ -135,4 +135,9 @@ interface Analytics {
      * Clear the set identifiers.  Call this on logout.
      */
     fun clearLoggedInIdentifiers() = Unit
+
+    /**
+     * @param toggleTracking Toggle user data tracking.
+     */
+    fun toggleAnalyticsTracking(toggleTracking: Boolean) = Unit
 }
