@@ -34,10 +34,10 @@ class EditAccountViewModel(
                 _editAccountUiState.update {
                     Resource.Loaded(
                         data = EditAccountUiState(
-                            userName = account.displayName,
+                            topBarTitle = account.displayName,
                             headerUrl = account.headerUrl,
                             avatarUrl = account.avatarUrl,
-                            handle = account.acct,
+                            handle = "@${account.acct}",
                             displayName = account.displayName,
                             bio = bio,
                             bioCharacterCount = bio.length,
@@ -73,6 +73,12 @@ class EditAccountViewModel(
                     )
                 )
             }
+        }
+    }
+
+    override fun onSaveClicked() {
+        viewModelScope.launch {
+
         }
     }
 

@@ -235,6 +235,8 @@ private fun MainContent(
             Header(
                 headerUrl = account.headerUrl,
                 avatarUrl = account.avatarUrl,
+                displayName = account.displayName,
+                handle = "@${account.webFinger}",
             ) {
                 val buttonModifier = Modifier.padding(end = 8.dp)
                 if (isUsersProfile) {
@@ -266,7 +268,6 @@ private fun MainContent(
                 }
             }
 
-            UserInfo(account = account)
             Spacer(modifier = Modifier.height(12.dp))
             UserBio(
                 account = account,

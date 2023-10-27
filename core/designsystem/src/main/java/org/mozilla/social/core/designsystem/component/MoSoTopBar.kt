@@ -25,6 +25,7 @@ import org.mozilla.social.core.designsystem.theme.MoSoTheme
 
 @Composable
 fun MoSoTopBar(
+    modifier: Modifier = Modifier,
     title: String = "",
     icon: Painter? = MoSoIcons.close(),
     onIconClicked: () -> Unit,
@@ -33,7 +34,7 @@ fun MoSoTopBar(
     showDivider: Boolean = true,
 ) {
     Column(
-        modifier = Modifier.fillMaxWidth()
+        modifier = modifier.fillMaxWidth()
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically

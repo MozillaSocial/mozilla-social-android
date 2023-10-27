@@ -1,12 +1,15 @@
 package org.mozilla.social.feature.account
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -22,37 +25,67 @@ internal fun Header(
     modifier: Modifier = Modifier,
     headerUrl: String,
     avatarUrl: String,
+    displayName: String,
+    handle: String,
     rightSideContent: @Composable () -> Unit,
 ) {
-    HeaderLayout(
-        modifier = modifier.fillMaxWidth(),
-        headerImage = {
-            AsyncImage(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(120.dp),
-                model = headerUrl,
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
-            )
-        },
-        profileImage = {
-            AsyncImage(
-                modifier = Modifier
-                    .padding(start = 8.dp)
-                    .size(92.dp)
-                    .clip(CircleShape)
-                    .border(
-                        width = 3.dp,
-                        color = MoSoTheme.colors.layer1,
-                        shape = CircleShape
-                    ),
-                model = avatarUrl,
-                contentDescription = null,
-            )
-        },
-        rightSideContent = rightSideContent,
-    )
+    Column {
+        HeaderLayout(
+            modifier = modifier.fillMaxWidth(),
+            headerImage = {
+                AsyncImage(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(120.dp)
+                        .background(MoSoTheme.colors.layer2),
+                    model = headerUrl,
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                )
+            },
+            profileImage = {
+                AsyncImage(
+                    modifier = Modifier
+                        .padding(start = 8.dp)
+                        .size(92.dp)
+                        .clip(CircleShape)
+                        .border(
+                            width = 3.dp,
+                            color = MoSoTheme.colors.layer1,
+                            shape = CircleShape
+                        )
+                        .background(MoSoTheme.colors.layer2),
+                    model = avatarUrl,
+                    contentDescription = null,
+                )
+            },
+            rightSideContent = rightSideContent,
+        )
+
+        UserInfo(displayName = displayName, handle = handle)
+    }
+}
+
+@Composable
+private fun UserInfo(
+    displayName: String,
+    handle: String,
+) {
+    Column(
+        modifier = Modifier
+            .padding(start = 8.dp, top = 8.dp)
+            .fillMaxWidth()
+    ) {
+        Text(
+            text = displayName,
+            style = MoSoTheme.typography.titleLarge
+        )
+        Text(
+            text = handle,
+            style = MoSoTheme.typography.labelMedium,
+            color = MoSoTheme.colors.textSecondary,
+        )
+    }
 }
 
 /**

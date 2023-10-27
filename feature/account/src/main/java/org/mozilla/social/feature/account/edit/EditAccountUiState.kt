@@ -1,7 +1,7 @@
 package org.mozilla.social.feature.account.edit
 
 data class EditAccountUiState(
-    val userName: String,
+    val topBarTitle: String,
     val headerUrl: String,
     val avatarUrl: String,
     val handle: String,
