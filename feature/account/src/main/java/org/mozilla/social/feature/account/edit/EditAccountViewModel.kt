@@ -77,8 +77,18 @@ class EditAccountViewModel(
     }
 
     override fun onSaveClicked() {
-        viewModelScope.launch {
-
+        with(_editAccountUiState.value as? Resource.Loaded ?: return) {
+            viewModelScope.launch {
+                try {
+                    accountRepository.updateMyAccount(
+                        displayName = data.displayName,
+                        bio = data.bio
+                    )
+                } catch (e: Exception) {
+                    //TODO show toast
+                    Timber.e(e)
+                }
+            }
         }
     }
 

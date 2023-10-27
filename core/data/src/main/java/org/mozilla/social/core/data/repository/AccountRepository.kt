@@ -2,9 +2,11 @@ package org.mozilla.social.core.data.repository
 
 import org.mozilla.social.core.data.repository.model.account.toExternal
 import org.mozilla.social.core.data.repository.model.followers.FollowersPagingWrapper
+import org.mozilla.social.core.data.repository.model.status.toDatabaseModel
 import org.mozilla.social.core.data.repository.model.status.toExternalModel
 import org.mozilla.social.core.database.SocialDatabase
 import org.mozilla.social.core.network.AccountApi
+import org.mozilla.social.core.network.model.request.NetworkAccountUpdate
 import org.mozilla.social.model.Account
 import org.mozilla.social.model.Relationship
 import org.mozilla.social.model.Status
@@ -162,5 +164,18 @@ class AccountRepository internal constructor(
             socialDatabase.relationshipsDao().updateMuted(accountId, true)
             throw e
         }
+    }
+
+    suspend fun updateMyAccount(
+        displayName: String? = null,
+        bio: String? = null,
+    ) {
+        val updatedAccount = accountApi.updateAccount(
+            NetworkAccountUpdate(
+                displayName = displayName,
+                bio = bio,
+            )
+        ).toExternalModel()
+        socialDatabase.accountsDao().insert(updatedAccount.toDatabaseModel())
     }
 }
