@@ -23,7 +23,10 @@ class MainActivity : ComponentActivity() {
         setContent {
             MoSoTheme {
                 MoSoSurface(modifier = Modifier.fillMaxSize()) {
-                    MainActivityScreen(context = this)
+                    MainActivityScreen(
+                        context = this,
+                        navigationEvents = viewModel.navigationEvents,
+                    )
                 }
             }
         }

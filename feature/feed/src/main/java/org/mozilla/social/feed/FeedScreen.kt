@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
+
 package org.mozilla.social.feed
 
 import android.content.res.Configuration
@@ -5,9 +7,16 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Text
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TopAppBarScrollBehavior
+import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -21,9 +30,12 @@ import kotlinx.coroutines.flow.flowOf
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 import org.mozilla.social.common.utils.StringFactory
+import org.mozilla.social.core.designsystem.component.MoSoAppBar
+import org.mozilla.social.core.designsystem.component.MoSoDivider
 import org.mozilla.social.core.designsystem.component.MoSoSurface
 import org.mozilla.social.core.designsystem.component.MoSoTab
 import org.mozilla.social.core.designsystem.component.MoSoTabRow
+import org.mozilla.social.core.designsystem.icon.mozillaLogo
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.ui.postcard.PostCardInteractions
 import org.mozilla.social.core.ui.postcard.PostCardList
@@ -50,6 +62,7 @@ internal fun FeedScreen(
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun FeedScreen(
     homeFeed: Flow<PagingData<PostCardUiState>>,
@@ -59,12 +72,30 @@ private fun FeedScreen(
     errorToastMessage: SharedFlow<StringFactory>,
     postCardInteractions: PostCardInteractions,
     feedInteractions: FeedInteractions,
+    topAppBarScrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(
+        rememberTopAppBarState()
+    ),
 ) {
     val selectedTimelineType = timelineTypeFlow.collectAsState().value
     val context = LocalContext.current
 
     MoSoSurface {
-        Column {
+        Column(
+            modifier =
+            Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection)
+        ) {
+
+            MoSoAppBar(
+                scrollBehavior = topAppBarScrollBehavior,
+                title = {
+                    Image(
+                        painter = mozillaLogo(),
+                        contentDescription = "mozilla logo"
+                    )
+                },
+                actions = {}
+            )
+
             MoSoTabRow(
                 selectedTabIndex = selectedTimelineType.ordinal,
                 divider = {},

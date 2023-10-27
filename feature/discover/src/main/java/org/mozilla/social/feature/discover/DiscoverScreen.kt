@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
@@ -60,7 +61,7 @@ private fun DiscoverScreen(
     discoverInteractions: DiscoverInteractions,
 ) {
     MoSoSurface(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier.fillMaxSize().systemBarsPadding()
     ) {
         when (recommendations) {
             is Resource.Loaded -> {
