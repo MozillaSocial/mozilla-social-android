@@ -1,32 +1,39 @@
 package org.mozilla.social.ui
 
 import android.content.Context
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.consumeWindowInsets
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import org.mozilla.social.R
+import org.mozilla.social.common.utils.launchedEffectCollect
 import org.mozilla.social.core.designsystem.component.MoSoBottomNavigationBar
 import org.mozilla.social.core.designsystem.component.MoSoFloatingActionButton
 import org.mozilla.social.core.designsystem.component.MoSoScaffold
 import org.mozilla.social.core.designsystem.component.MoSoSnackbar
 import org.mozilla.social.core.designsystem.component.MoSoSnackbarHost
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
+import org.mozilla.social.core.domain.NavigationEvent
 import org.mozilla.social.core.navigation.NavigationDestination
 import org.mozilla.social.navigation.BottomBarTabs
 import org.mozilla.social.navigation.MozillaNavHost
 import org.mozilla.social.ui.navigationdrawer.NavigationDrawer
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
-fun MainActivityScreen(context: Context) {
-    val appState = rememberAppState()
+fun MainActivityScreen(context: Context, navigationEvents: SharedFlow<NavigationEvent>) {
 
+    val appState = rememberAppState()
+    navigationEvents.launchedEffectCollect {
+        when (it) {
+            NavigationEvent.NavigateToLogin -> appState.navigateToLoginScreen()
+        }
+    }
     val currentDestination = appState.currentNavigationDestination.collectAsState().value
 
     MoSoScaffold(
@@ -66,7 +73,7 @@ fun MainActivityScreen(context: Context) {
         bottomSheetContent = { BottomSheetContent() },
         bottomSheetVisible = appState.bottomSheetVisible.value,
         content = {
-            MozillaNavHost(appState = appState, context = context, Modifier.consumeWindowInsets(it))
+            MozillaNavHost(appState = appState, context = context)
         }
     )
 }

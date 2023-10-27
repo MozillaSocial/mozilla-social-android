@@ -30,6 +30,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import org.koin.androidx.compose.koinViewModel
 import org.mozilla.social.core.designsystem.component.MoSoButtonSecondary
 import org.mozilla.social.core.designsystem.component.MoSoDivider
 import org.mozilla.social.core.designsystem.component.MoSoSurface
@@ -38,6 +39,7 @@ import org.mozilla.social.core.designsystem.theme.MoSoTheme
 @Composable
 internal fun SettingsScreen(
     onLogout: () -> Unit,
+    settingsViewModel: SettingsViewModel = koinViewModel()
 ) {
 
     MoSoSurface(
@@ -50,7 +52,7 @@ internal fun SettingsScreen(
                     .wrapContentHeight()
                     .fillMaxWidth()
                     .padding(8.dp),
-                onClick = onLogout
+                onClick = { settingsViewModel.onLogoutClicked() }
             ) { Text(text = "logout") }
         }
     }

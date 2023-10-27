@@ -38,7 +38,7 @@ import org.mozilla.social.search.searchScreen
 import org.mozilla.social.ui.AppState
 
 @Composable
-fun MozillaNavHost(appState: AppState, context: Context, modifier: Modifier) {
+fun MozillaNavHost(appState: AppState, context: Context, modifier: Modifier = Modifier) {
     NavHost(
         modifier = modifier,
         navController = appState.navController,

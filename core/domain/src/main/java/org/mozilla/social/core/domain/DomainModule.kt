@@ -23,4 +23,5 @@ val domainModule = module {
     single { GetDetailedAccount(get(), get()) }
     single { AccountIdBlocking(get()) }
     single { AccountFlow(get(), get()) }
+    single { NavigationRelay() }
 }
