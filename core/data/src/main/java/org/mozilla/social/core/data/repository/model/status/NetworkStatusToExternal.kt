@@ -6,6 +6,7 @@ import org.mozilla.social.core.network.model.NetworkAttachment
 import org.mozilla.social.core.network.model.NetworkCard
 import org.mozilla.social.core.network.model.NetworkEmoji
 import org.mozilla.social.core.network.model.NetworkField
+import org.mozilla.social.core.network.model.NetworkFocalPoint
 import org.mozilla.social.core.network.model.NetworkHashTag
 import org.mozilla.social.core.network.model.NetworkHistory
 import org.mozilla.social.core.network.model.NetworkMention
@@ -20,6 +21,7 @@ import org.mozilla.social.model.Attachment
 import org.mozilla.social.model.Card
 import org.mozilla.social.model.Emoji
 import org.mozilla.social.model.Field
+import org.mozilla.social.model.FocalPoint
 import org.mozilla.social.model.HashTag
 import org.mozilla.social.model.History
 import org.mozilla.social.model.Mention
@@ -108,7 +110,8 @@ fun NetworkAttachment.toExternalModel(): Attachment =
             previewRemoteUrl = previewRemoteUrl,
             textUrl = textUrl,
             description = description,
-            blurHash = blurHash
+            blurHash = blurHash,
+            meta = meta.toExternalModel(),
         )
         is NetworkAttachment.Gifv -> Attachment.Gifv(
             attachmentId = attachmentId,
@@ -117,7 +120,8 @@ fun NetworkAttachment.toExternalModel(): Attachment =
             remoteUrl = remoteUrl,
             previewRemoteUrl = previewRemoteUrl,
             textUrl = textUrl,
-            description = description
+            description = description,
+            meta = meta.toExternalModel(),
         )
         is NetworkAttachment.Video -> Attachment.Video(
             attachmentId = attachmentId,
@@ -127,7 +131,8 @@ fun NetworkAttachment.toExternalModel(): Attachment =
             previewRemoteUrl = previewRemoteUrl,
             textUrl = textUrl,
             description = description,
-            blurHash = blurHash
+            blurHash = blurHash,
+            meta = meta.toExternalModel(),
         )
         is NetworkAttachment.Audio -> Attachment.Audio(
             attachmentId = attachmentId,
@@ -137,7 +142,8 @@ fun NetworkAttachment.toExternalModel(): Attachment =
             previewRemoteUrl = previewRemoteUrl,
             textUrl = textUrl,
             description = description,
-            blurHash = blurHash
+            blurHash = blurHash,
+            meta = meta.toExternalModel(),
         )
         is NetworkAttachment.Unknown -> Attachment.Unknown(
             attachmentId = attachmentId,
@@ -150,6 +156,77 @@ fun NetworkAttachment.toExternalModel(): Attachment =
             blurHash = blurHash
         )
     }
+
+fun NetworkAttachment.Audio.Meta.toExternalModel(): Attachment.Audio.Meta =
+    Attachment.Audio.Meta(
+        durationSeconds = durationSeconds,
+        audioCodec = audioCodec,
+        audioBitrate = audioBitrate,
+        audioChannels = audioChannels,
+        original = original?.toExternalModel()
+    )
+
+fun NetworkAttachment.Audio.Meta.AudioInfo.toExternalModel(): Attachment.Audio.Meta.AudioInfo =
+    Attachment.Audio.Meta.AudioInfo(
+        bitrate = bitrate,
+    )
+
+fun NetworkAttachment.Video.Meta.toExternalModel(): Attachment.Video.Meta =
+    Attachment.Video.Meta(
+        aspectRatio = aspectRatio,
+        durationSeconds = durationSeconds,
+        fps = fps,
+        audioCodec = audioCodec,
+        audioBitrate = audioBitrate,
+        audioChannels = audioChannels,
+        original = original?.toExternalModel(),
+        small = small?.toExternalModel(),
+    )
+
+fun NetworkAttachment.Video.Meta.VideoInfo.toExternalModel(): Attachment.Video.Meta.VideoInfo =
+    Attachment.Video.Meta.VideoInfo(
+        width = width,
+        height = height,
+        bitrate = bitrate,
+    )
+
+fun NetworkAttachment.Image.Meta.toExternalModel(): Attachment.Image.Meta =
+    Attachment.Image.Meta(
+        focalPoint = focalPoint?.toExternalModel(),
+        original = original?.toExternalModel(),
+        small = small?.toExternalModel(),
+    )
+
+fun NetworkAttachment.Image.Meta.ImageInfo.toExternalModel(): Attachment.Image.Meta.ImageInfo =
+    Attachment.Image.Meta.ImageInfo(
+        width = width,
+        height = height,
+        size = size,
+        aspectRatio = aspectRatio,
+    )
+
+fun NetworkAttachment.Gifv.Meta.toExternalModel(): Attachment.Gifv.Meta =
+    Attachment.Gifv.Meta(
+        aspectRatio = aspectRatio,
+        durationSeconds = durationSeconds,
+        fps = fps,
+        bitrate = bitrate,
+        original = original?.toExternalModel(),
+        small = small?.toExternalModel(),
+    )
+
+fun NetworkAttachment.Gifv.Meta.GifvInfo.toExternalModel(): Attachment.Gifv.Meta.GifvInfo =
+    Attachment.Gifv.Meta.GifvInfo(
+        width = width,
+        height = height,
+        bitrate = bitrate,
+    )
+
+fun NetworkFocalPoint.toExternalModel(): FocalPoint =
+    FocalPoint(
+        x = x,
+        y = y,
+    )
 
 fun NetworkMention.toExternalModel(): Mention =
     Mention(

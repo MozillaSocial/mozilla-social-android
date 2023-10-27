@@ -5,10 +5,8 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
@@ -16,9 +14,6 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import coil.compose.AsyncImage
-import org.mozilla.social.common.utils.FileType
-import org.mozilla.social.common.utils.getFileType
-import org.mozilla.social.core.designsystem.theme.MoSoRadius
 import org.mozilla.social.core.ui.Radius
 import org.mozilla.social.model.Attachment
 
@@ -66,8 +61,8 @@ private fun Attachment(
     attachment: Attachment
 ) {
     val aspectRatio = when (attachment) {
-        is Attachment.Gifv -> attachment.meta.aspect?.toFloat()
-        is Attachment.Image -> attachment.meta.aspect?.toFloat()
+        is Attachment.Gifv -> attachment.meta.aspectRatio
+        is Attachment.Image -> attachment.meta.original?.aspectRatio
         else -> null
     }
     AsyncImage(
