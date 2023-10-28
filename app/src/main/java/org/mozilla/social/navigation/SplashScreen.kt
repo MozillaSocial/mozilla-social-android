@@ -24,6 +24,7 @@ fun SplashScreen(
         }
 
         true -> {
+            // TODO@DA remove these
             LaunchedEffect(Unit) {
                 navigateToLoggedInGraph()
             }

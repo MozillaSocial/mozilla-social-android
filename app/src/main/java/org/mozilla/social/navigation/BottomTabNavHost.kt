@@ -30,17 +30,10 @@ fun BottomTabNavHost(appState: AppState, context: Context, modifier: Modifier = 
         popEnterTransition = { mosoFadeIn() },
         popExitTransition = { mosoFadeOut() },
     ) {
-        feedScreen(
-            postCardNavigation = appState.postCardNavigation,
-        )
+        feedScreen()
         discoverScreen()
-        myAccountScreen(
-            accountNavigationCallbacks = appState.accountNavigation,
-            postCardNavigation = appState.postCardNavigation,
-            navigateToSettings = appState::navigateToSettings,
-        )
+        myAccountScreen()
         bookmarkScreen()
-
     }
 }
 

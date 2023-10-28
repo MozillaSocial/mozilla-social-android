@@ -1,14 +1,14 @@
 package org.mozilla.social.core.ui.postcard
 
 interface PostCardNavigation {
-    fun onReplyClicked(statusId: String) = Unit
-    fun onPostClicked(statusId: String) = Unit
+    fun onReplyClicked(statusId: String)
+    fun onPostClicked(statusId: String)
     fun onReportClicked(
         accountId: String,
         accountHandle: String,
         statusId: String,
-    ) = Unit
-    fun onAccountClicked(accountId: String) = Unit
-    fun onHashTagClicked(hashTag: String) = Unit
-    fun onLinkClicked(url: String) = Unit
+    )
+    fun onAccountClicked(accountId: String)
+    fun onHashTagClicked(hashTag: String)
+    fun onLinkClicked(url: String)
 }

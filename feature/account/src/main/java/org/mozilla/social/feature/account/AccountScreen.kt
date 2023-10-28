@@ -25,7 +25,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBars
-import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.layout.wrapContentSize
@@ -83,27 +82,18 @@ import org.mozilla.social.core.ui.htmlcontent.HtmlContent
 import org.mozilla.social.core.ui.htmlcontent.HtmlContentInteractions
 import org.mozilla.social.core.ui.postcard.PostCardInteractions
 import org.mozilla.social.core.ui.postcard.PostCardList
-import org.mozilla.social.core.ui.postcard.PostCardNavigation
 import org.mozilla.social.core.ui.postcard.PostCardUiState
 import kotlin.math.max
 
 @Composable
 internal fun AccountScreen(
     accountId: String?,
-    accountNavigationCallbacks: AccountNavigationCallbacks,
-    postCardNavigation: PostCardNavigation,
-    navigateToSettings: () -> Unit,
     viewModel: AccountViewModel = koinViewModel(
         parameters = {
-            parametersOf(
-                accountId,
-                postCardNavigation,
-                accountNavigationCallbacks,
-            )
+            parametersOf(accountId)
         }
     ),
 ) {
-
     AccountScreen(
         resource = viewModel.uiState.collectAsState().value,
         closeButtonVisible = viewModel.shouldShowCloseButton,
@@ -111,11 +101,10 @@ internal fun AccountScreen(
         feed = viewModel.feed,
         errorToastMessage = viewModel.postCardDelegate.errorToastMessage,
         timelineTypeFlow = viewModel.timelineType,
-        accountNavigationCallbacks = accountNavigationCallbacks,
         htmlContentInteractions = viewModel.postCardDelegate,
         postCardInteractions = viewModel.postCardDelegate,
-        navigateToSettings = navigateToSettings,
         accountInteractions = viewModel,
+        accountNavigationCallbacks = viewModel.accountNavigationCallbacks,
     )
 
     LaunchedEffect(Unit) {
@@ -137,7 +126,6 @@ private fun AccountScreen(
     htmlContentInteractions: HtmlContentInteractions,
     postCardInteractions: PostCardInteractions,
     accountInteractions: AccountInteractions,
-    navigateToSettings: () -> Unit,
 ) {
     MoSoSurface {
         Column(Modifier.windowInsetsPadding(WindowInsets.systemBars)) {
@@ -176,7 +164,7 @@ private fun AccountScreen(
                                 account = resource.data,
                                 isUsersProfile = isUsersProfile,
                                 overflowInteractions = accountInteractions,
-                                navigateToSettings = navigateToSettings,
+                                navigateToSettings = accountNavigationCallbacks::navigateToSettings,
                             )
                         },
                         showDivider = false,

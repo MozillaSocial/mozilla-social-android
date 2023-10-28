@@ -18,8 +18,6 @@ fun NavController.navigateToAccount(
 // The custom screen here doesn't seem to be used anywhere, so I'm going to 
 fun NavGraphBuilder.accountScreen(
     accountNavigationCallbacks: AccountNavigationCallbacks,
-    postCardNavigation: PostCardNavigation,
-    navigateToSettings: () -> Unit,
 ) {
     composable(
         route = NavigationDestination.Account.fullRoute,
@@ -32,9 +30,6 @@ fun NavGraphBuilder.accountScreen(
         val accountId: String? = it.arguments?.getString(NavigationDestination.Account.NAV_PARAM_ACCOUNT_ID)
         AccountScreen(
             accountId = accountId,
-            accountNavigationCallbacks = accountNavigationCallbacks,
-            postCardNavigation = postCardNavigation,
-            navigateToSettings = navigateToSettings,
         )
     }
 }

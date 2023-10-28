@@ -12,9 +12,8 @@ fun NavController.navigateToFeed(navOptions: NavOptions? = null) {
 }
 
 fun NavGraphBuilder.feedScreen(
-    postCardNavigation: PostCardNavigation,
 ) {
     composable(route = NavigationDestination.Feed.route) {
-        FeedScreen(postCardNavigation)
+        FeedScreen()
     }
 }

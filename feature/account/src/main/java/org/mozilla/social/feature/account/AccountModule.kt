@@ -6,25 +6,27 @@ import org.koin.dsl.module
 val accountModule = module {
     viewModel { parametersHolder ->
         AccountViewModel(
-            get(),
-            get(),
-            get(),
-            get(),
-            get(),
-            get(),
-            get(),
-            parametersHolder[0],
-            parametersHolder[1],
-            parametersHolder[2],
+            analytics = get(),
+            accountRepository = get(),
+            accountIdBlocking = get(),
+            log = get(),
+            statusRepository = get(),
+            socialDatabase = get(),
+            getDetailedAccount = get(),
+            postCardNavigation = get(),
+            accountNavigationCallbacks = get(),
+            initialAccountId = parametersHolder[0],
         )
     }
     factory { parametersHolder ->
         AccountTimelineRemoteMediator(
-            get(),
-            get(),
-            get(),
-            parametersHolder[0],
-            parametersHolder[1],
+            accountRepository = get(),
+            statusRepository = get(),
+            socialDatabase = get(),
+            accountId = parametersHolder[0],
+            timelineType = parametersHolder[1],
         )
     }
+
+    single<AccountNavigationCallbacks> { AccountNavigationCallbacksImpl(get()) }
 }

@@ -42,9 +42,9 @@ class AccountViewModel(
     statusRepository: StatusRepository,
     private val socialDatabase: SocialDatabase,
     private val getDetailedAccount: GetDetailedAccount,
-    initialAccountId: String?,
     postCardNavigation: PostCardNavigation,
-    private val accountNavigationCallbacks: AccountNavigationCallbacks,
+    val accountNavigationCallbacks: AccountNavigationCallbacks,
+    initialAccountId: String?,
 ) : ViewModel(), AccountInteractions {
 
     private val _errorToastMessage = MutableSharedFlow<StringFactory>(extraBufferCapacity = 1)

@@ -44,12 +44,7 @@ import org.mozilla.social.core.ui.postcard.PostCardUiState
 
 @Composable
 internal fun FeedScreen(
-    postCardNavigation: PostCardNavigation,
-    viewModel: FeedViewModel = koinViewModel(parameters = {
-        parametersOf(
-            postCardNavigation
-        )
-    })
+    viewModel: FeedViewModel = koinViewModel()
 ) {
     FeedScreen(
         homeFeed = viewModel.homeFeed,

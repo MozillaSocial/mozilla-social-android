@@ -2,13 +2,8 @@ package org.mozilla.social.ui
 
 import android.content.Context
 import androidx.browser.customtabs.CustomTabsIntent
-import androidx.compose.material3.DrawerState
-import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
@@ -22,8 +17,8 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.launch
 import org.mozilla.social.core.designsystem.component.MoSoSnackbarHostState
+import org.mozilla.social.core.navigation.NavDestination
 import org.mozilla.social.core.navigation.NavigationDestination
 import org.mozilla.social.core.ui.postcard.PostCardNavigation
 import org.mozilla.social.feature.account.AccountNavigationCallbacks
@@ -48,18 +43,13 @@ fun rememberAppState(
     tabbedNavController: NavHostController = rememberNavController(),
     coroutineScope: CoroutineScope = rememberCoroutineScope(),
     snackbarHostState: MoSoSnackbarHostState = remember { MoSoSnackbarHostState() },
-
-    navigationDrawerState: DrawerState = rememberDrawerState(DrawerValue.Closed),
-    bottomSheetVisible: MutableState<Boolean> = remember { mutableStateOf(false) }
 ): AppState {
     val context = LocalContext.current
     return remember(mainNavController) {
         AppState(
             mainNavController = mainNavController,
             tabbedNavController = tabbedNavController,
-            navigationDrawerState = navigationDrawerState,
             coroutineScope = coroutineScope,
-            bottomSheetVisible = bottomSheetVisible,
             snackbarHostState = snackbarHostState,
             context = context,
         )
@@ -74,12 +64,14 @@ class AppState(
     initialTopLevelDestination: NavigationDestination = NavigationDestination.Feed,
     val mainNavController: NavHostController,
     val tabbedNavController: NavHostController,
-    val navigationDrawerState: DrawerState,
     val coroutineScope: CoroutineScope,
-    val bottomSheetVisible: MutableState<Boolean>,
     val snackbarHostState: MoSoSnackbarHostState,
     val context: Context,
 ) {
+
+    init {
+
+    }
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val currentNavigationDestination: StateFlow<NavigationDestination?> =
@@ -118,11 +110,13 @@ class AppState(
         }
     }
 
-    val accountNavigation = object: AccountNavigationCallbacks {
+    val accountNavigation = object : AccountNavigationCallbacks {
         override fun onFollowingClicked(accountId: String) =
             navigateToAccountFollowing(accountId)
+
         override fun onFollowersClicked(accountId: String) =
             navigateToAccountFollowers(accountId)
+
         override fun onCloseClicked() = popBackStack()
         override fun onReportClicked(
             accountId: String,
@@ -131,6 +125,10 @@ class AppState(
             accountId = accountId,
             accountHandle = accountHandle
         )
+
+        override fun navigateToSettings() {
+//            navigateToSettings()
+        }
     }
 
     val followersNavigation = object : FollowersNavigationCallbacks {
@@ -148,11 +146,40 @@ class AppState(
         mainNavController.popBackStack()
     }
 
+    fun navigate(navDestination: NavDestination) {
+        with(navDestination) {
+            when (this) {
+                NavDestination.Login -> {
+                    navigateToLoginScreen()
+                }
+
+                is NavDestination.NewPost -> {
+                    navigateToNewPost(replyStatusId = replyId)
+                }
+
+                is NavDestination.Report -> {
+                    navigateToReport(
+                        accountId = accountId,
+                        accountHandle = accountHandle,
+                        statusId = statusId,
+                    )
+                }
+
+                is NavDestination.Thread -> {
+                    navigateToThread(statusId)
+                }
+
+                NavDestination.Feed -> {
+                    navigateToLoggedInGraph()
+                }
+            }
+        }
+    }
+
     /**
      * Navigate to the login screen when the user is logged out
      */
     fun navigateToLoginScreen() {
-        coroutineScope.launch { navigationDrawerState.close() }
         Timber.d("navigate to login screen")
         clearBackstack()
         mainNavController.navigateToLoginScreen()
@@ -179,26 +206,22 @@ class AppState(
     }
 
     fun navigateToSettings() {
-        coroutineScope.launch { navigationDrawerState.close() }
         mainNavController.navigateToSettings()
     }
 
     fun navigateToAccount(
         accountId: String,
     ) {
-        coroutineScope.launch { navigationDrawerState.close() }
         mainNavController.navigateToAccount(
             accountId = accountId,
         )
     }
 
     fun navigateToAccountFollowing(accountId: String) {
-        coroutineScope.launch { navigationDrawerState.close() }
         mainNavController.navigateToFollowing(accountId)
     }
 
     fun navigateToAccountFollowers(accountId: String) {
-        coroutineScope.launch { navigationDrawerState.close() }
         mainNavController.navigateToFollowers(accountId)
     }
 
@@ -254,6 +277,7 @@ class AppState(
             NavigationDestination.Feed,
             NavigationDestination.Discover,
             NavigationDestination.Bookmarks -> true
+
             else -> false
         }
     }

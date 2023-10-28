@@ -2,6 +2,7 @@ package org.mozilla.social.navigation
 
 import android.annotation.SuppressLint
 import android.content.Context
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -17,7 +18,6 @@ import kotlinx.coroutines.launch
 import org.mozilla.social.R
 import org.mozilla.social.common.utils.mosoFadeIn
 import org.mozilla.social.common.utils.mosoFadeOut
-import org.mozilla.social.core.designsystem.component.MoSoBottomNavigationBar
 import org.mozilla.social.core.designsystem.component.MoSoFloatingActionButton
 import org.mozilla.social.core.designsystem.component.MoSoSnackbar
 import org.mozilla.social.core.designsystem.component.MoSoSnackbarHost
@@ -57,8 +57,6 @@ fun MainNavHost(appState: AppState, context: Context, modifier: Modifier = Modif
         settingsScreen()
         accountScreen(
             accountNavigationCallbacks = appState.accountNavigation,
-            postCardNavigation = appState.postCardNavigation,
-            navigateToSettings = appState::navigateToSettings,
         )
         followersScreen(followersNavigationCallbacks = appState.followersNavigation)
         followingScreen(followersNavigationCallbacks = appState.followersNavigation)
@@ -103,7 +101,6 @@ fun NavGraphBuilder.splashScreen(
     }
 }
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 fun NavGraphBuilder.bottomTabScreen(appState: AppState) {
     composable(
         route = NavigationDestination.Feed.route,
@@ -140,6 +137,7 @@ fun NavGraphBuilder.bottomTabScreen(appState: AppState) {
             },
             content = {
                 BottomTabNavHost(
+                    modifier = Modifier.padding(bottom = it.calculateBottomPadding()),
                     appState = appState,
                     context = context,
                 )

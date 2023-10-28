@@ -25,7 +25,6 @@ class MainActivity : ComponentActivity() {
                 MoSoSurface(modifier = Modifier.fillMaxSize()) {
                     MainActivityScreen(
                         context = this,
-                        navigationEvents = viewModel.navigationEvents,
                     )
                 }
             }
