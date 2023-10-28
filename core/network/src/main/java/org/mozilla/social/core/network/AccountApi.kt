@@ -3,10 +3,13 @@ package org.mozilla.social.core.network
 import org.mozilla.social.core.network.model.NetworkAccount
 import org.mozilla.social.core.network.model.NetworkRelationship
 import org.mozilla.social.core.network.model.NetworkStatus
+import org.mozilla.social.core.network.model.request.NetworkAccountUpdate
 import retrofit2.Response
+import retrofit2.http.Body
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
+import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -107,4 +110,9 @@ interface AccountApi {
     suspend fun getRelationships(
         @Query("id") ids: Array<String>
     ): List<NetworkRelationship>
+
+    @PATCH("/api/v1/accounts/update_credentials")
+    suspend fun updateAccount(
+        @Body updateBody: NetworkAccountUpdate,
+    ): NetworkAccount
 }
