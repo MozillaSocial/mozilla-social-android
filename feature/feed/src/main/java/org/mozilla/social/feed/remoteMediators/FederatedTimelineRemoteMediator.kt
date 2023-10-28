@@ -28,7 +28,6 @@ class FederatedTimelineRemoteMediator(
         loadType: LoadType,
         state: PagingState<Int, FederatedTimelineStatusWrapper>
     ): MediatorResult {
-        println("johnny federated $loadType")
         return try {
             var pageSize: Int = state.config.pageSize
             val response = when (loadType) {
