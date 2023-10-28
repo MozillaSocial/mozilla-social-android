@@ -5,11 +5,7 @@ import androidx.browser.customtabs.CustomTabsIntent
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.rememberDrawerState
-import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
@@ -17,9 +13,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.net.toUri
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
-import androidx.navigation.NavOptions
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import kotlinx.coroutines.CoroutineScope
@@ -42,6 +36,7 @@ import org.mozilla.social.feature.hashtag.navigateToHashTag
 import org.mozilla.social.feature.report.navigateToReport
 import org.mozilla.social.feature.settings.navigateToSettings
 import org.mozilla.social.feature.thread.navigateToThread
+import org.mozilla.social.feed.navigateToFeed
 import org.mozilla.social.navigation.Routes
 import org.mozilla.social.post.navigateToNewPost
 import timber.log.Timber
@@ -49,7 +44,8 @@ import timber.log.Timber
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun rememberAppState(
-    navController: NavHostController = rememberNavController(),
+    mainNavController: NavHostController = rememberNavController(),
+    tabbedNavController: NavHostController = rememberNavController(),
     coroutineScope: CoroutineScope = rememberCoroutineScope(),
     snackbarHostState: MoSoSnackbarHostState = remember { MoSoSnackbarHostState() },
 
@@ -57,9 +53,10 @@ fun rememberAppState(
     bottomSheetVisible: MutableState<Boolean> = remember { mutableStateOf(false) }
 ): AppState {
     val context = LocalContext.current
-    return remember(navController) {
+    return remember(mainNavController) {
         AppState(
-            navController = navController,
+            mainNavController = mainNavController,
+            tabbedNavController = tabbedNavController,
             navigationDrawerState = navigationDrawerState,
             coroutineScope = coroutineScope,
             bottomSheetVisible = bottomSheetVisible,
@@ -75,7 +72,8 @@ fun rememberAppState(
 @OptIn(ExperimentalMaterial3Api::class)
 class AppState(
     initialTopLevelDestination: NavigationDestination = NavigationDestination.Feed,
-    val navController: NavHostController, // Don't access this other than for initializing the nav host
+    val mainNavController: NavHostController,
+    val tabbedNavController: NavHostController,
     val navigationDrawerState: DrawerState,
     val coroutineScope: CoroutineScope,
     val bottomSheetVisible: MutableState<Boolean>,
@@ -85,7 +83,7 @@ class AppState(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val currentNavigationDestination: StateFlow<NavigationDestination?> =
-        navController.currentBackStackEntryFlow.mapLatest { backStackEntry ->
+        tabbedNavController.currentBackStackEntryFlow.mapLatest { backStackEntry ->
             NavigationDestination::class.sealedSubclasses.firstOrNull {
                 it.objectInstance?.route == backStackEntry.destination.route
             }?.objectInstance
@@ -141,13 +139,13 @@ class AppState(
     }
 
     private fun clearBackstack() {
-        while (navController.currentBackStack.value.isNotEmpty()) {
-            navController.popBackStack()
+        while (mainNavController.currentBackStack.value.isNotEmpty()) {
+            mainNavController.popBackStack()
         }
     }
 
     fun popBackStack() {
-        navController.popBackStack()
+        mainNavController.popBackStack()
     }
 
     /**
@@ -157,7 +155,7 @@ class AppState(
         coroutineScope.launch { navigationDrawerState.close() }
         Timber.d("navigate to login screen")
         clearBackstack()
-        navController.navigateToLoginScreen()
+        mainNavController.navigateToLoginScreen()
     }
 
     /**
@@ -166,48 +164,50 @@ class AppState(
     fun navigateToLoggedInGraph() {
         Timber.d("navigate to login graph")
 
-        navController.navigate(
-            Routes.MAIN,
-            navOptions = NavOptions.Builder()
-                .setPopUpTo(NavigationDestination.Auth.route, true)
-                .build()
-        )
+        mainNavController.navigateToFeed()
+
+//        navController.navigate(
+//            Routes.MAIN,
+//            navOptions = NavOptions.Builder()
+//                .setPopUpTo(NavigationDestination.Auth.route, true)
+//                .build()
+//        )
     }
 
     fun navigateToSplashScreen() {
-        navController.navigate(Routes.SPLASH)
+        mainNavController.navigate(Routes.SPLASH)
     }
 
     fun navigateToSettings() {
         coroutineScope.launch { navigationDrawerState.close() }
-        navController.navigateToSettings()
+        mainNavController.navigateToSettings()
     }
 
     fun navigateToAccount(
         accountId: String,
     ) {
         coroutineScope.launch { navigationDrawerState.close() }
-        navController.navigateToAccount(
+        mainNavController.navigateToAccount(
             accountId = accountId,
         )
     }
 
     fun navigateToAccountFollowing(accountId: String) {
         coroutineScope.launch { navigationDrawerState.close() }
-        navController.navigateToFollowing(accountId)
+        mainNavController.navigateToFollowing(accountId)
     }
 
     fun navigateToAccountFollowers(accountId: String) {
         coroutineScope.launch { navigationDrawerState.close() }
-        navController.navigateToFollowers(accountId)
+        mainNavController.navigateToFollowers(accountId)
     }
 
     fun navigateToNewPost(replyStatusId: String? = null) {
-        navController.navigateToNewPost(replyStatusId = replyStatusId)
+        mainNavController.navigateToNewPost(replyStatusId = replyStatusId)
     }
 
     fun navigateToThread(statusId: String) {
-        navController.navigateToThread(threadStatusId = statusId)
+        mainNavController.navigateToThread(threadStatusId = statusId)
     }
 
     fun navigateToReport(
@@ -215,7 +215,7 @@ class AppState(
         accountHandle: String,
         statusId: String? = null
     ) {
-        navController.navigateToReport(
+        mainNavController.navigateToReport(
             reportAccountId = accountId,
             reportAccountHandle = accountHandle,
             reportStatusId = statusId,
@@ -223,17 +223,17 @@ class AppState(
     }
 
     fun navigateToHashTag(hashTag: String) {
-        navController.navigateToHashTag(hashTagValue = hashTag)
+        mainNavController.navigateToHashTag(hashTagValue = hashTag)
     }
 
     /**
      * Used by bottom bar navigation
      */
-    fun navigateToTopLevelDestination(destination: NavigationDestination) {
+    fun navigateToBottomBarDestination(destination: NavigationDestination) {
         // If navigating to the feed, just pop up to the feed.  Don't start a new instance
         // of it.  If a new instance is started, we don't retain scroll position!
         if (destination == NavigationDestination.Feed) {
-            navController.popBackStack(NavigationDestination.Feed.route, false)
+            tabbedNavController.popBackStack(NavigationDestination.Feed.route, false)
             return
         }
         val navOptions = navOptions {
@@ -244,7 +244,7 @@ class AppState(
             restoreState = true
         }
 
-        navController.navigate(destination.route, navOptions)
+        tabbedNavController.navigate(destination.route, navOptions)
     }
 
     companion object {
