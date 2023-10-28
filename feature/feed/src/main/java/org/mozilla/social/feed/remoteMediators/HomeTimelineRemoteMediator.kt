@@ -71,7 +71,6 @@ class HomeTimelineRemoteMediator(
                 socialDatabase.homeTimelineDao().insertAll(response.map {
                     HomeTimelineStatus(
                         statusId = it.statusId,
-                        createdAt = it.createdAt,
                         accountId = it.account.accountId,
                         pollId = it.poll?.pollId,
                         boostedStatusId = it.boostedStatus?.statusId,

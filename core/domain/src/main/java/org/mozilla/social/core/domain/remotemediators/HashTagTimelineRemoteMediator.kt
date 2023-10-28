@@ -73,7 +73,6 @@ class HashTagTimelineRemoteMediator(
                     HashTagTimelineStatus(
                         statusId = it.statusId,
                         hashTag = hashTag,
-                        createdAt = it.createdAt,
                         accountId = it.account.accountId,
                         pollId = it.poll?.pollId,
                         boostedStatusId = it.boostedStatus?.statusId,
