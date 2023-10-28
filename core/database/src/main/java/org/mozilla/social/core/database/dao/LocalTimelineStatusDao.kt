@@ -10,7 +10,7 @@ import org.mozilla.social.core.database.model.statusCollections.LocalTimelineSta
 interface LocalTimelineStatusDao : BaseDao<LocalTimelineStatus> {
     @Query(
         "SELECT * FROM localTimeline " +
-        "ORDER BY createdAt DESC"
+        "ORDER BY statusId DESC"
     )
     fun localTimelinePagingSource(): PagingSource<Int, LocalTimelineStatusWrapper>
 
