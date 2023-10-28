@@ -74,7 +74,6 @@ class FederatedTimelineRemoteMediator(
                 socialDatabase.federatedTimelineDao().insertAll(response.map {
                     FederatedTimelineStatus(
                         statusId = it.statusId,
-                        createdAt = it.createdAt,
                         accountId = it.account.accountId,
                         pollId = it.poll?.pollId,
                         boostedStatusId = it.boostedStatus?.statusId,

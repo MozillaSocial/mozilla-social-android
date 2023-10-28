@@ -18,7 +18,6 @@ import org.mozilla.social.core.database.model.wrappers.StatusWrapper
 )
 data class AccountTimelineStatus(
     val statusId: String,
-    val createdAt: Instant,
     val accountId: String,
     val pollId: String?,
     val boostedStatusId: String?,
