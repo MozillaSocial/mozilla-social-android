@@ -408,27 +408,6 @@ private fun OverflowMenu(
 }
 
 @Composable
-private fun UserInfo(
-    account: AccountUiState,
-) {
-    Column(
-        modifier = Modifier
-            .padding(start = 8.dp, top = 8.dp)
-            .fillMaxWidth()
-    ) {
-        Text(
-            text = account.displayName,
-            style = MoSoTheme.typography.titleLarge
-        )
-        Text(
-            text = "@${account.webFinger}",
-            style = MoSoTheme.typography.labelMedium,
-            color = MoSoTheme.colors.textSecondary,
-        )
-    }
-}
-
-@Composable
 private fun UserFollow(
     account: AccountUiState,
     accountInteractions: AccountInteractions,
