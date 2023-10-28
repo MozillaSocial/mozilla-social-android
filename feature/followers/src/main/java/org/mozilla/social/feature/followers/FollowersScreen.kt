@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.CircularProgressIndicator
@@ -23,6 +24,7 @@ import kotlinx.coroutines.flow.Flow
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 import org.mozilla.social.core.designsystem.component.MoSoDivider
+import org.mozilla.social.core.designsystem.component.MoSoSurface
 import org.mozilla.social.core.designsystem.component.MoSoTopBar
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.ui.account.quickview.AccountQuickView
@@ -58,97 +60,101 @@ private fun FollowersScreen(
     followers: Flow<PagingData<AccountQuickViewUiState>>,
     followersInteractions: FollowersInteractions,
 ) {
-    Column(
-        modifier = Modifier.fillMaxSize()
-    ) {
-        MoSoTopBar(
-            title = when (followersScreenType) {
-                FollowerScreenType.FOLLOWERS -> stringResource(id = R.string.followers)
-                FollowerScreenType.FOLLOWING -> stringResource(id = R.string.following)
-            },
-            onIconClicked = { followersInteractions.onCloseClicked() }
-        )
-
-        val lazyPagingItems = followers.collectAsLazyPagingItems()
-
-        val pullRefreshState = rememberPullRefreshState(
-            refreshing = lazyPagingItems.loadState.refresh == LoadState.Loading,
-            onRefresh = { lazyPagingItems.refresh() }
-        )
-
-        Box(
+    MoSoSurface {
+        Column(
             modifier = Modifier
-                .pullRefresh(pullRefreshState)
                 .fillMaxSize()
+                .systemBarsPadding()
         ) {
+            MoSoTopBar(
+                title = when (followersScreenType) {
+                    FollowerScreenType.FOLLOWERS -> stringResource(id = R.string.followers)
+                    FollowerScreenType.FOLLOWING -> stringResource(id = R.string.following)
+                },
+                onIconClicked = { followersInteractions.onCloseClicked() }
+            )
 
-            LazyColumn(
-                modifier = Modifier.fillMaxSize()
+            val lazyPagingItems = followers.collectAsLazyPagingItems()
+
+            val pullRefreshState = rememberPullRefreshState(
+                refreshing = lazyPagingItems.loadState.refresh == LoadState.Loading,
+                onRefresh = { lazyPagingItems.refresh() }
+            )
+
+            Box(
+                modifier = Modifier
+                    .pullRefresh(pullRefreshState)
+                    .fillMaxSize()
             ) {
-                when (lazyPagingItems.loadState.refresh) {
-                    is LoadState.Error -> {} // handle the error outside the lazy column
-                    else -> items(
-                        count = lazyPagingItems.itemCount,
-                        key = lazyPagingItems.itemKey { it.accountId }
-                    ) { index ->
-                        lazyPagingItems[index]?.let { uiState ->
-                            AccountQuickView(
-                                uiState = uiState,
-                                onClick = followersInteractions::onAccountClicked
-                            )
-                            MoSoDivider()
+
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    when (lazyPagingItems.loadState.refresh) {
+                        is LoadState.Error -> {} // handle the error outside the lazy column
+                        else -> items(
+                            count = lazyPagingItems.itemCount,
+                            key = lazyPagingItems.itemKey { it.accountId }
+                        ) { index ->
+                            lazyPagingItems[index]?.let { uiState ->
+                                AccountQuickView(
+                                    uiState = uiState,
+                                    onClick = followersInteractions::onAccountClicked
+                                )
+                                MoSoDivider()
+                            }
+                        }
+                    }
+
+                    when (lazyPagingItems.loadState.append) {
+                        is LoadState.Loading -> {
+                            item {
+                                CircularProgressIndicator(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .wrapContentWidth(Alignment.CenterHorizontally)
+                                        .padding(16.dp)
+                                )
+                            }
+                        }
+
+                        is LoadState.Error -> {
+                            item {
+                                GenericError(
+                                    onRetryClicked = { lazyPagingItems.retry() }
+                                )
+                            }
+                        }
+
+                        is LoadState.NotLoading -> {
+                            item {
+                                Text(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .wrapContentWidth(Alignment.CenterHorizontally)
+                                        .padding(16.dp),
+                                    text = stringResource(id = R.string.end_of_the_list)
+                                )
+                            }
                         }
                     }
                 }
 
-                when (lazyPagingItems.loadState.append) {
-                    is LoadState.Loading -> {
-                        item {
-                            CircularProgressIndicator(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .wrapContentWidth(Alignment.CenterHorizontally)
-                                    .padding(16.dp)
-                            )
-                        }
-                    }
-
-                    is LoadState.Error -> {
-                        item {
-                            GenericError(
-                                onRetryClicked = { lazyPagingItems.retry() }
-                            )
-                        }
-                    }
-
-                    is LoadState.NotLoading -> {
-                        item {
-                            Text(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .wrapContentWidth(Alignment.CenterHorizontally)
-                                    .padding(16.dp),
-                                text = stringResource(id = R.string.end_of_the_list)
-                            )
-                        }
-                    }
+                if (lazyPagingItems.loadState.refresh is LoadState.Error) {
+                    GenericError(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(MoSoTheme.colors.layer1),
+                        onRetryClicked = { lazyPagingItems.refresh() }
+                    )
                 }
-            }
 
-            if (lazyPagingItems.loadState.refresh is LoadState.Error) {
-                GenericError(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(MoSoTheme.colors.layer1),
-                    onRetryClicked = { lazyPagingItems.refresh() }
+                PullRefreshIndicator(
+                    modifier = Modifier.align(Alignment.TopCenter),
+                    refreshing = lazyPagingItems.loadState.refresh == LoadState.Loading,
+                    state = pullRefreshState,
                 )
             }
-
-            PullRefreshIndicator(
-                modifier = Modifier.align(Alignment.TopCenter),
-                refreshing = lazyPagingItems.loadState.refresh == LoadState.Loading,
-                state = pullRefreshState,
-            )
         }
     }
 }

@@ -81,8 +81,8 @@ private fun FeedScreen(
 
     MoSoSurface {
         Column(
-            modifier =
-            Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection)
+            modifier = Modifier
+                .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
         ) {
 
             MoSoAppBar(

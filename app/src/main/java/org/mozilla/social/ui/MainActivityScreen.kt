@@ -79,7 +79,6 @@ fun MainActivityScreen(context: Context, navigationEvents: SharedFlow<Navigation
             MozillaNavHost(
                 appState = appState,
                 context = context,
-                modifier = Modifier.padding(bottom = it.calculateBottomPadding())
             )
         }
     )
