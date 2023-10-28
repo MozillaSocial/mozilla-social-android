@@ -63,7 +63,6 @@ class TimelineRepository internal constructor(
         socialDatabase.homeTimelineDao().insert(
             HomeTimelineStatus(
                 statusId = status.statusId,
-                createdAt = status.createdAt,
                 accountId = status.account.accountId,
                 pollId = status.poll?.pollId,
                 boostedStatusId = status.boostedStatus?.statusId,
@@ -76,7 +75,6 @@ class TimelineRepository internal constructor(
             socialDatabase.localTimelineDao().insert(
                 LocalTimelineStatus(
                     statusId = status.statusId,
-                    createdAt = status.createdAt,
                     accountId = status.account.accountId,
                     pollId = status.poll?.pollId,
                     boostedStatusId = status.boostedStatus?.statusId,
@@ -87,7 +85,6 @@ class TimelineRepository internal constructor(
             socialDatabase.federatedTimelineDao().insert(
                 FederatedTimelineStatus(
                     statusId = status.statusId,
-                    createdAt = status.createdAt,
                     accountId = status.account.accountId,
                     pollId = status.poll?.pollId,
                     boostedStatusId = status.boostedStatus?.statusId,

@@ -50,7 +50,7 @@ import org.mozilla.social.core.database.model.statusCollections.LocalTimelineSta
         LocalTimelineStatus::class,
         FederatedTimelineStatus::class,
     ],
-    version = 7,
+    version = 8,
     autoMigrations = [
         AutoMigration(1, 2, DatabaseMigrations.Schema1to2::class),
         AutoMigration(2, 3),
@@ -58,6 +58,7 @@ import org.mozilla.social.core.database.model.statusCollections.LocalTimelineSta
         AutoMigration(4, 5),
         AutoMigration(5, 6),
         AutoMigration(6, 7),
+        AutoMigration(7, 8, DatabaseMigrations.Schema7to8::class),
     ],
     exportSchema = true
 )

@@ -22,7 +22,7 @@ fun networkModule(isDebug: Boolean) = module {
             .connectTimeout(30, TimeUnit.SECONDS)
             .addNetworkInterceptor(HttpLoggingInterceptor().apply {
                 level = if (isDebug) {
-                    HttpLoggingInterceptor.Level.BODY
+                    HttpLoggingInterceptor.Level.BASIC
                 } else {
                     HttpLoggingInterceptor.Level.NONE
                 }
@@ -37,7 +37,7 @@ fun networkModule(isDebug: Boolean) = module {
             .connectTimeout(30, TimeUnit.SECONDS)
             .addNetworkInterceptor(HttpLoggingInterceptor().apply {
                 level = if (isDebug) {
-                    HttpLoggingInterceptor.Level.BODY
+                    HttpLoggingInterceptor.Level.BASIC
                 } else {
                     HttpLoggingInterceptor.Level.NONE
                 }

@@ -13,7 +13,7 @@ interface HashTagTimelineStatusDao : BaseDao<HashTagTimelineStatus> {
     @Query(
         "SELECT * FROM hashTagTimeline " +
         "WHERE  hashTag = :hashTag " +
-        "ORDER BY createdAt DESC"
+        "ORDER BY statusId DESC"
     )
     fun hashTagTimelinePagingSource(
         hashTag: String,

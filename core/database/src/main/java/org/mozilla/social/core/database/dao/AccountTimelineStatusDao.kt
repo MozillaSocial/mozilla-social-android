@@ -12,7 +12,7 @@ interface AccountTimelineStatusDao : BaseDao<AccountTimelineStatus> {
     @Query(
         "SELECT * FROM accountTimeline " +
                 "WHERE  accountId = :accountId " +
-                "ORDER BY createdAt DESC"
+                "ORDER BY statusId DESC"
     )
     fun accountTimelinePagingSource(
         accountId: String,
