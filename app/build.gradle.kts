@@ -72,7 +72,9 @@ dependencies {
     implementation(libs.androidx.datastore)
     implementation(libs.protobuf.kotlin.lite)
 
-    implementation(libs.koin)
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.koin.core)
+    implementation(libs.koin.androidx.compose)
     implementation(libs.koin.android)
 
     implementation(libs.androidx.browser)

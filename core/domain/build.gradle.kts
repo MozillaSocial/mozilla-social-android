@@ -17,7 +17,9 @@ dependencies {
     implementation(project(":core:analytics"))
 
     implementation(libs.jakewharton.timber)
-    implementation(libs.koin)
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.koin.core)
+    implementation(libs.koin.androidx.compose)
     implementation(libs.kotlinx.datetime)
 
     implementation(libs.androidx.room)
