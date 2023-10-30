@@ -1,6 +1,5 @@
 package org.mozilla.social.navigation
 
-import android.annotation.SuppressLint
 import android.content.Context
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
@@ -37,7 +36,11 @@ import org.mozilla.social.search.searchScreen
 import org.mozilla.social.ui.AppState
 
 @Composable
-fun MainNavHost(appState: AppState, context: Context, modifier: Modifier = Modifier) {
+fun MainNavHost(
+    appState: AppState,
+    context: Context,
+    modifier: Modifier = Modifier,
+) {
     NavHost(
         modifier = modifier,
         navController = appState.mainNavController,
@@ -47,10 +50,7 @@ fun MainNavHost(appState: AppState, context: Context, modifier: Modifier = Modif
         popEnterTransition = { mosoFadeIn() },
         popExitTransition = { mosoFadeOut() },
     ) {
-        splashScreen(
-            navigateToLogin = appState::navigateToLoginScreen,
-            navigateToLoggedInGraph = appState::navigateToLoggedInGraph,
-        )
+        splashScreen()
         loginScreen(navigateToLoggedInGraph = appState::navigateToLoggedInGraph)
 
         searchScreen()
@@ -88,16 +88,9 @@ fun MainNavHost(appState: AppState, context: Context, modifier: Modifier = Modif
     }
 }
 
-fun NavGraphBuilder.splashScreen(
-    navigateToLogin: () -> Unit,
-    navigateToLoggedInGraph: () -> Unit
-) {
+fun NavGraphBuilder.splashScreen() {
     composable(route = Routes.SPLASH) {
-        SplashScreen(
-            navigateToLogin = navigateToLogin,
-            navigateToLoggedInGraph = navigateToLoggedInGraph
-        )
-
+        SplashScreen()
     }
 }
 

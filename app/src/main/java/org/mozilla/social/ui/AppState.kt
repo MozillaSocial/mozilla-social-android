@@ -12,12 +12,17 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
+import org.koin.compose.koinInject
 import org.mozilla.social.core.designsystem.component.MoSoSnackbarHostState
+import org.mozilla.social.core.navigation.MoSoNavigationRelay
 import org.mozilla.social.core.navigation.NavDestination
 import org.mozilla.social.core.navigation.NavigationDestination
 import org.mozilla.social.core.ui.postcard.PostCardNavigation
@@ -36,15 +41,17 @@ import org.mozilla.social.navigation.Routes
 import org.mozilla.social.post.navigateToNewPost
 import timber.log.Timber
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
+
 fun rememberAppState(
     mainNavController: NavHostController = rememberNavController(),
     tabbedNavController: NavHostController = rememberNavController(),
     coroutineScope: CoroutineScope = rememberCoroutineScope(),
     snackbarHostState: MoSoSnackbarHostState = remember { MoSoSnackbarHostState() },
+    moSoNavigationRelay: MoSoNavigationRelay = koinInject(),
 ): AppState {
     val context = LocalContext.current
+
     return remember(mainNavController) {
         AppState(
             mainNavController = mainNavController,
@@ -52,6 +59,7 @@ fun rememberAppState(
             coroutineScope = coroutineScope,
             snackbarHostState = snackbarHostState,
             context = context,
+            moSoNavigationRelay = moSoNavigationRelay,
         )
     }
 }
@@ -59,7 +67,6 @@ fun rememberAppState(
 /**
  * Class to encapsulate high-level app state
  */
-@OptIn(ExperimentalMaterial3Api::class)
 class AppState(
     initialTopLevelDestination: NavigationDestination = NavigationDestination.Feed,
     val mainNavController: NavHostController,
@@ -67,9 +74,15 @@ class AppState(
     val coroutineScope: CoroutineScope,
     val snackbarHostState: MoSoSnackbarHostState,
     val context: Context,
+    val moSoNavigationRelay: MoSoNavigationRelay,
 ) {
-
     init {
+        coroutineScope.launch(Dispatchers.Main) {
+            moSoNavigationRelay.navigationEvents.collectLatest {
+                println("navigate event consumed: $it")
+                navigate(it)
+            }
+        }
 
     }
 
@@ -148,6 +161,7 @@ class AppState(
 
     fun navigate(navDestination: NavDestination) {
         with(navDestination) {
+            println("nav consume $navDestination")
             when (this) {
                 NavDestination.Login -> {
                     navigateToLoginScreen()

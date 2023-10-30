@@ -10,32 +10,14 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.koinInject
 import org.mozilla.social.core.domain.IsSignedInFlow
+import org.mozilla.social.core.navigation.NavDestination
+import org.mozilla.social.core.navigation.NavigateTo
 
 @Composable
-fun SplashScreen(
-    viewModel: SplashViewModel = koinViewModel(),
-    navigateToLogin: () -> Unit,
-    navigateToLoggedInGraph: () -> Unit,
-) {
-    when (viewModel.isSignedIn.collectAsState(initial = null).value) {
-        null -> {
-            LoadingScreen()
-        }
-
-        true -> {
-            // TODO@DA remove these
-            LaunchedEffect(Unit) {
-                navigateToLoggedInGraph()
-            }
-        }
-
-        false -> {
-            LaunchedEffect(Unit) {
-                navigateToLogin()
-            }
-        }
-    }
+fun SplashScreen() {
+    LoadingScreen()
 }
 
 
@@ -43,12 +25,3 @@ fun SplashScreen(
 fun LoadingScreen() {
 
 }
-
-class SplashViewModel(isSignedInFlow: IsSignedInFlow) : ViewModel() {
-    val isSignedIn: Flow<Boolean> = isSignedInFlow().stateIn(
-        viewModelScope,
-        SharingStarted.WhileSubscribed(),
-        initialValue = false
-    )
-}
-
