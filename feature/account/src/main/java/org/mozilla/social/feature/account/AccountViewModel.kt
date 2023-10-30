@@ -46,7 +46,6 @@ class AccountViewModel(
     private val socialDatabase: SocialDatabase,
     private val getDetailedAccount: GetDetailedAccount,
     private val navigateTo: NavigateTo,
-    private val popNavBackstack: PopNavBackstack,
     openLink: OpenLink,
     initialAccountId: String?,
 ) : ViewModel(), AccountInteractions {
@@ -230,10 +229,6 @@ class AccountViewModel(
 
     override fun onTabClicked(timelineType: TimelineType) {
         _timelineType.edit { timelineType }
-    }
-
-    override fun onCloseClicked() {
-        popNavBackstack()
     }
 
     override fun onSettingsClicked() {

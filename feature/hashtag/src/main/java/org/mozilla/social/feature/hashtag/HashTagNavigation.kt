@@ -14,9 +14,7 @@ fun NavController.navigateToHashTag(
     navigate(NavigationDestination.HashTag.route(hashTagValue), navOptions)
 }
 
-fun NavGraphBuilder.hashTagScreen(
-    onCloseClicked: () -> Unit,
-) {
+fun NavGraphBuilder.hashTagScreen() {
     composable(
         route = NavigationDestination.HashTag.fullRoute,
         arguments = listOf(
@@ -29,7 +27,6 @@ fun NavGraphBuilder.hashTagScreen(
         hashTagValue?.let {
             HashTagScreen(
                 hashTag = hashTagValue,
-                onCloseClicked = onCloseClicked,
             )
         }
     }

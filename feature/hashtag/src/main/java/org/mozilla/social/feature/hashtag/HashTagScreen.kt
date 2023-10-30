@@ -11,7 +11,7 @@ import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.core.designsystem.component.MoSoSurface
-import org.mozilla.social.core.designsystem.component.MoSoTopBar
+import org.mozilla.social.core.ui.appbar.MoSoCloseableTopAppBar
 import org.mozilla.social.core.ui.postcard.PostCardInteractions
 import org.mozilla.social.core.ui.postcard.PostCardList
 import org.mozilla.social.core.ui.postcard.PostCardUiState
@@ -19,14 +19,12 @@ import org.mozilla.social.core.ui.postcard.PostCardUiState
 @Composable
 internal fun HashTagScreen(
     hashTag: String,
-    onCloseClicked: () -> Unit,
     viewModel: HashTagViewModel = koinViewModel(parameters = { parametersOf(hashTag) })
 ) {
     HashTagScreen(
         hashTag = hashTag,
         feed = viewModel.feed,
         errorToastMessage = viewModel.postCardDelegate.errorToastMessage,
-        onCloseClicked = onCloseClicked,
         postCardInteractions = viewModel.postCardDelegate,
     )
 }
@@ -36,16 +34,14 @@ private fun HashTagScreen(
     hashTag: String,
     feed: Flow<PagingData<PostCardUiState>>,
     errorToastMessage: SharedFlow<StringFactory>,
-    onCloseClicked: () -> Unit,
     postCardInteractions: PostCardInteractions,
 ) {
     MoSoSurface {
         Column(
             modifier = Modifier.systemBarsPadding()
         ) {
-            MoSoTopBar(
+            MoSoCloseableTopAppBar(
                 title = "#$hashTag",
-                onIconClicked = onCloseClicked,
             )
 
             PostCardList(

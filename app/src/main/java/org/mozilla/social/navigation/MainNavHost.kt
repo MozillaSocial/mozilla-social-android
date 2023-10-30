@@ -6,7 +6,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
@@ -29,6 +28,7 @@ import org.mozilla.social.feature.hashtag.hashTagScreen
 import org.mozilla.social.feature.report.reportFlow
 import org.mozilla.social.feature.settings.settingsScreen
 import org.mozilla.social.feature.thread.threadScreen
+import org.mozilla.social.post.navigateToNewPost
 import org.mozilla.social.post.newPostScreen
 import org.mozilla.social.search.searchScreen
 import org.mozilla.social.ui.AppState
@@ -54,21 +54,10 @@ fun MainNavHost(
         accountScreen()
         followersScreen()
         followingScreen()
-        newPostScreen(
-            onStatusPosted = {
-            },
-            onCloseClicked = { appState.popBackStack() },
-        )
-        threadScreen(
-            onCloseClicked = { appState.popBackStack() },
-        )
-        reportFlow(
-            navController = appState.mainNavController,
-        )
-        hashTagScreen(
-            onCloseClicked = { appState.popBackStack() },
-        )
-
+        newPostScreen()
+        threadScreen()
+        reportFlow(navController = appState.mainNavController)
+        hashTagScreen()
         bottomTabScreen(appState)
     }
 }
@@ -95,7 +84,9 @@ fun NavGraphBuilder.bottomTabScreen(appState: AppState) {
             floatingActionButton = {
                 when (currentDestination) {
                     NavigationDestination.Feed -> {
-                        MoSoFloatingActionButton(onClick = appState::navigateToNewPost) {
+                        MoSoFloatingActionButton(onClick = {
+                            appState.mainNavController.navigateToNewPost()
+                        }) {
                             Icon(
                                 MoSoIcons.plus(),
                                 stringResource(id = R.string.feed_fab_content_description)

@@ -6,7 +6,7 @@ import org.koin.dsl.module
 val newPostModule = module {
     viewModel { parametersHolder ->
         NewPostViewModel(
-            replyStatusId = parametersHolder.get(),
+            replyStatusId = parametersHolder.getOrNull(),
             accountFlow = get(),
             mediaRepository = get(),
             searchRepository = get(),

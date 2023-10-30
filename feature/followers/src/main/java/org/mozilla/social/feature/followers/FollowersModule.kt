@@ -8,7 +8,8 @@ val followersModule = module {
         FollowersViewModel(
             accountId = parameters[0],
             followerScreenType = parameters[1],
-            accountRepository = get(), popNavBackstack = get(), navigateTo = get(),
+            accountRepository = get(),
+            navigateTo = get(),
         )
     }
 }

@@ -14,7 +14,6 @@ class EventRelay {
     }
 
     fun emitEvent(event: Event) {
-        println("navrelay emit $event")
         _navigationEvents.tryEmit(event)
     }
 }

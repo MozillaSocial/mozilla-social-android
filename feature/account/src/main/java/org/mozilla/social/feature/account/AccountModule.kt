@@ -14,7 +14,6 @@ val accountModule = module {
             socialDatabase = get(),
             getDetailedAccount = get(),
             navigateTo = get(),
-            popNavBackstack = get(),
             openLink = get(),
             initialAccountId = parametersHolder[0],
         )

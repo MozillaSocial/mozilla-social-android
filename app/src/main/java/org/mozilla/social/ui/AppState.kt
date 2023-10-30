@@ -78,7 +78,6 @@ class AppState(
     init {
         coroutineScope.launch(Dispatchers.Main) {
             navigationEventFlow().collectLatest {
-                println("navigate event consumed: $it")
                 when (it) {
                     is Event.NavigateToDestination -> navigate(it.destination)
                     Event.PopBackStack -> popBackStack()
@@ -132,79 +131,36 @@ class AppState(
         mainNavController.popBackStack()
     }
 
-    fun navigate(navDestination: NavDestination) {
+    private fun navigate(navDestination: NavDestination) {
         with(navDestination) {
-            println("nav consume $navDestination")
             when (this) {
                 NavDestination.Login -> {
-                    Timber.d("navigate to login screen")
                     clearBackstack()
                     mainNavController.navigateToLoginScreen()
                 }
 
                 is NavDestination.NewPost -> {
-                    navigateToNewPost(replyStatusId = replyId)
+                    mainNavController.navigateToNewPost(replyStatusId = replyId)
                 }
 
                 is NavDestination.Report -> {
-                    navigateToReport(
-                        accountId = accountId,
-                        accountHandle = accountHandle,
-                        statusId = statusId,
+                    mainNavController.navigateToReport(
+                        reportAccountId = accountId,
+                        reportAccountHandle = accountHandle,
+                        reportStatusId = statusId,
                     )
                 }
 
-                is NavDestination.Thread -> {
-                    navigateToThread(statusId)
-                }
-
-
-                is NavDestination.Following -> {
-                    mainNavController.navigateToFollowing(accountId)
-                }
-                is NavDestination.MyAccount -> {
-                    tabbedNavController.navigateToMyAccount()
-                }
-
-                is NavDestination.Account -> {
-                    tabbedNavController.navigateToAccount(
-                        accountId = accountId,
-                    )
-                }
-
-                is NavDestination.Followers -> {
-                    mainNavController.navigateToFollowers(accountId)
-                }
-
+                is NavDestination.Thread -> mainNavController.navigateToThread(threadStatusId = statusId)
+                is NavDestination.Following -> mainNavController.navigateToFollowing(accountId)
+                is NavDestination.MyAccount -> tabbedNavController.navigateToMyAccount()
+                is NavDestination.Account -> tabbedNavController.navigateToAccount(accountId = accountId)
+                is NavDestination.Followers -> mainNavController.navigateToFollowers(accountId)
                 NavDestination.Settings -> mainNavController.navigateToSettings()
                 NavDestination.Tabs -> mainNavController.navigateToTabs()
                 is NavDestination.Hashtag -> mainNavController.navigateToHashTag(hashTagValue = hashtag)
             }
         }
-    }
-
-    fun navigateToNewPost(replyStatusId: String? = null) {
-        mainNavController.navigateToNewPost(replyStatusId = replyStatusId)
-    }
-
-    fun navigateToThread(statusId: String) {
-        mainNavController.navigateToThread(threadStatusId = statusId)
-    }
-
-    fun navigateToReport(
-        accountId: String,
-        accountHandle: String,
-        statusId: String? = null
-    ) {
-        mainNavController.navigateToReport(
-            reportAccountId = accountId,
-            reportAccountHandle = accountHandle,
-            reportStatusId = statusId,
-        )
-    }
-
-    fun navigateToHashTag(hashTag: String) {
-        mainNavController.navigateToHashTag(hashTagValue = hashTag)
     }
 
     /**

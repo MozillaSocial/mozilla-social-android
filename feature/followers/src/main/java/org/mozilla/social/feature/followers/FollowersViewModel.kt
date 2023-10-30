@@ -17,7 +17,6 @@ class FollowersViewModel(
     private val accountId: String,
     private val followerScreenType: FollowerScreenType,
     private val accountRepository: AccountRepository,
-    private val popNavBackstack: PopNavBackstack,
     private val navigateTo: NavigateTo,
 ) : ViewModel(), FollowersInteractions {
 
@@ -33,10 +32,6 @@ class FollowersViewModel(
             it.toQuickViewUiState()
         }
     }.cachedIn(viewModelScope)
-
-    override fun onCloseClicked() {
-        popNavBackstack()
-    }
 
     override fun onAccountClicked(accountId: String) {
         navigateTo(NavDestination.Account(accountId))

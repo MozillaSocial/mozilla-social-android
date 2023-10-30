@@ -72,11 +72,11 @@ import org.mozilla.social.core.designsystem.component.MoSoSurface
 import org.mozilla.social.core.designsystem.component.MoSoTab
 import org.mozilla.social.core.designsystem.component.MoSoTabRow
 import org.mozilla.social.core.designsystem.component.MoSoToast
-import org.mozilla.social.core.designsystem.component.MoSoTopBar
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.designsystem.utils.NoRipple
 import org.mozilla.social.core.ui.DropDownItem
+import org.mozilla.social.core.ui.appbar.MoSoCloseableTopAppBar
 import org.mozilla.social.core.ui.error.GenericError
 import org.mozilla.social.core.ui.htmlcontent.HtmlContent
 import org.mozilla.social.core.ui.htmlcontent.HtmlContentInteractions
@@ -125,14 +125,7 @@ private fun AccountScreen(
         Column(Modifier.windowInsetsPadding(WindowInsets.systemBars)) {
             when (resource) {
                 is Resource.Loading -> {
-                    MoSoTopBar(
-                        icon = if (closeButtonVisible) {
-                            MoSoIcons.close()
-                        } else {
-                            null
-                        },
-                        onIconClicked = { accountInteractions.onCloseClicked() },
-                    )
+                    MoSoCloseableTopAppBar(showCloseButton = closeButtonVisible)
                     Box(
                         modifier = Modifier
                             .fillMaxSize()
@@ -145,15 +138,10 @@ private fun AccountScreen(
                 }
 
                 is Resource.Loaded<AccountUiState> -> {
-                    MoSoTopBar(
+                    MoSoCloseableTopAppBar(
                         title = resource.data.displayName,
-                        icon = if (closeButtonVisible) {
-                            MoSoIcons.close()
-                        } else {
-                            null
-                        },
-                        onIconClicked = { accountInteractions.onCloseClicked() },
-                        rightSideContent = {
+                        showCloseButton = closeButtonVisible,
+                        actions = {
                             OverflowMenu(
                                 account = resource.data,
                                 isUsersProfile = isUsersProfile,
@@ -177,14 +165,7 @@ private fun AccountScreen(
                 }
 
                 is Resource.Error -> {
-                    MoSoTopBar(
-                        icon = if (closeButtonVisible) {
-                            MoSoIcons.close()
-                        } else {
-                            null
-                        },
-                        onIconClicked = { accountInteractions.onCloseClicked() },
-                    )
+                    MoSoCloseableTopAppBar(showCloseButton = closeButtonVisible)
                     Box(
                         modifier = Modifier
                             .fillMaxSize()

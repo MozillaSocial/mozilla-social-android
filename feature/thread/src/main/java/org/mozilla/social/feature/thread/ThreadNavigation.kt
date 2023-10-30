@@ -16,9 +16,7 @@ fun NavController.navigateToThread(
     navigate(NavigationDestination.Thread.route(threadStatusId), navOptions)
 }
 
-fun NavGraphBuilder.threadScreen(
-    onCloseClicked: () -> Unit,
-) {
+fun NavGraphBuilder.threadScreen() {
     composable(
         route = NavigationDestination.Thread.fullRoute,
         arguments = listOf(
@@ -37,7 +35,6 @@ fun NavGraphBuilder.threadScreen(
         threadStatusId?.let {
             ThreadScreen(
                 threadStatusId = threadStatusId,
-                onCloseClicked = onCloseClicked,
             )
         }
     }
