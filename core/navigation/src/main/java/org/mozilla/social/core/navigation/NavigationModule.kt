@@ -4,8 +4,8 @@ import org.koin.dsl.module
 
 
 val navigationModule = module {
-    single<MoSoNavigationRelay> { MoSoNavigationRelay() }
-    single { get<MoSoNavigationRelay>().navigationEvents }
+    single<NavigationRelay<NavDestination>> { NavigationRelay() }
+    single { NavigationEventFlow(get()) }
     single { NavigateTo(get()) }
 }
 

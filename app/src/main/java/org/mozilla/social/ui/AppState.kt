@@ -2,7 +2,6 @@ package org.mozilla.social.ui
 
 import android.content.Context
 import androidx.browser.customtabs.CustomTabsIntent
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -22,7 +21,6 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 import org.mozilla.social.core.designsystem.component.MoSoSnackbarHostState
-import org.mozilla.social.core.navigation.MoSoNavigationRelay
 import org.mozilla.social.core.navigation.NavDestination
 import org.mozilla.social.core.navigation.NavigationDestination
 import org.mozilla.social.core.ui.postcard.PostCardNavigation
@@ -37,6 +35,7 @@ import org.mozilla.social.feature.report.navigateToReport
 import org.mozilla.social.feature.settings.navigateToSettings
 import org.mozilla.social.feature.thread.navigateToThread
 import org.mozilla.social.feed.navigateToFeed
+import org.mozilla.social.core.navigation.NavigationEventFlow
 import org.mozilla.social.navigation.Routes
 import org.mozilla.social.post.navigateToNewPost
 import timber.log.Timber
@@ -48,7 +47,7 @@ fun rememberAppState(
     tabbedNavController: NavHostController = rememberNavController(),
     coroutineScope: CoroutineScope = rememberCoroutineScope(),
     snackbarHostState: MoSoSnackbarHostState = remember { MoSoSnackbarHostState() },
-    moSoNavigationRelay: MoSoNavigationRelay = koinInject(),
+    navigationEventFlow: NavigationEventFlow = koinInject(),
 ): AppState {
     val context = LocalContext.current
 
@@ -59,7 +58,7 @@ fun rememberAppState(
             coroutineScope = coroutineScope,
             snackbarHostState = snackbarHostState,
             context = context,
-            moSoNavigationRelay = moSoNavigationRelay,
+            navigationEventFlow = navigationEventFlow,
         )
     }
 }
@@ -74,11 +73,11 @@ class AppState(
     val coroutineScope: CoroutineScope,
     val snackbarHostState: MoSoSnackbarHostState,
     val context: Context,
-    val moSoNavigationRelay: MoSoNavigationRelay,
+    val navigationEventFlow: NavigationEventFlow,
 ) {
     init {
         coroutineScope.launch(Dispatchers.Main) {
-            moSoNavigationRelay.navigationEvents.collectLatest {
+            navigationEventFlow().collectLatest {
                 println("navigate event consumed: $it")
                 navigate(it)
             }
@@ -186,6 +185,8 @@ class AppState(
                 NavDestination.Feed -> {
                     navigateToLoggedInGraph()
                 }
+
+                is NavDestination.Following -> TODO()
             }
         }
     }

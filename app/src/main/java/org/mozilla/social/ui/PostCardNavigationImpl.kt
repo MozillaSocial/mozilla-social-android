@@ -14,7 +14,8 @@ class PostCardNavigationImpl(private val navigateTo: NavigateTo): PostCardNaviga
     }
 
     override fun onReportClicked(accountId: String, accountHandle: String, statusId: String) {
-        navigateTo(NavDestination.Report(
+        navigateTo(
+            NavDestination.Report(
             accountId = accountId,
             accountHandle = accountHandle,
             statusId = statusId

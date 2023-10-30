@@ -1,7 +1,6 @@
 package org.mozilla.social.feature.account
 
-import org.mozilla.social.core.navigation.NavDestination
-import org.mozilla.social.core.navigation.NavigateTo
+import androidx.navigation.NavDestination
 
 interface AccountNavigationCallbacks {
     fun onFollowingClicked(accountId: String)
@@ -15,7 +14,7 @@ interface AccountNavigationCallbacks {
     fun navigateToSettings()
 }
 
-class AccountNavigationCallbacksImpl(private val navigateTo: NavigateTo) : AccountNavigationCallbacks {
+class AccountNavigationCallbacksImpl(private val navigateTo: NavigateTo<NavDestination>) : AccountNavigationCallbacks {
     override fun onFollowingClicked(accountId: String) {
     }
 

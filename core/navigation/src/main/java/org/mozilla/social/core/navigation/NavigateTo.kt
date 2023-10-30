@@ -1,8 +1,9 @@
 package org.mozilla.social.core.navigation
 
-class NavigateTo(private val navigationRelay: MoSoNavigationRelay) {
+class NavigateTo(
+    private val navigationRelay: NavigationRelay<NavDestination>
+) {
     operator fun invoke(navDestination: NavDestination) {
-        println("navigate to $navDestination")
         navigationRelay.emitNavEvent(navDestination)
     }
 }
