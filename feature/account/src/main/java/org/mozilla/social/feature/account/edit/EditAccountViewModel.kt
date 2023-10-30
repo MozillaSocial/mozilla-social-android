@@ -97,7 +97,9 @@ class EditAccountViewModel(
                 try {
                     accountRepository.updateMyAccount(
                         displayName = data.displayName.trim(),
-                        bio = data.bio.trim()
+                        bio = data.bio.trim(),
+                        avatar = newAvatar,
+                        header = newHeader,
                     )
                     //TODO navigate back
                 } catch (e: Exception) {
