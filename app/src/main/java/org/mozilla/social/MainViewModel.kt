@@ -9,7 +9,7 @@ import kotlinx.coroutines.launch
 import org.mozilla.social.core.domain.IsSignedInFlow
 import org.mozilla.social.core.domain.Login
 import org.mozilla.social.core.navigation.NavDestination
-import org.mozilla.social.core.navigation.NavigateTo
+import org.mozilla.social.core.navigation.usecases.NavigateTo
 
 /**
  * Main view model- handles login logic and logout navigation
@@ -26,7 +26,7 @@ class MainViewModel(
                 if (!it) {
                     navigateTo(NavDestination.Login)
                 } else {
-                    navigateTo(NavDestination.Feed)
+                    navigateTo(NavDestination.Tabs)
                 }
             }
         }

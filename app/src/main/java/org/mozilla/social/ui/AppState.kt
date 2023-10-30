@@ -20,23 +20,23 @@ import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
+import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.core.designsystem.component.MoSoSnackbarHostState
+import org.mozilla.social.core.designsystem.component.SnackbarType
+import org.mozilla.social.core.navigation.Event
 import org.mozilla.social.core.navigation.NavDestination
 import org.mozilla.social.core.navigation.NavigationDestination
-import org.mozilla.social.core.ui.postcard.PostCardNavigation
-import org.mozilla.social.feature.account.AccountNavigationCallbacks
+import org.mozilla.social.core.navigation.NavigationEventFlow
 import org.mozilla.social.feature.account.navigateToAccount
+import org.mozilla.social.feature.account.navigateToMyAccount
 import org.mozilla.social.feature.auth.navigateToLoginScreen
-import org.mozilla.social.feature.followers.FollowersNavigationCallbacks
 import org.mozilla.social.feature.followers.navigateToFollowers
 import org.mozilla.social.feature.followers.navigateToFollowing
 import org.mozilla.social.feature.hashtag.navigateToHashTag
 import org.mozilla.social.feature.report.navigateToReport
 import org.mozilla.social.feature.settings.navigateToSettings
 import org.mozilla.social.feature.thread.navigateToThread
-import org.mozilla.social.feed.navigateToFeed
-import org.mozilla.social.core.navigation.NavigationEventFlow
-import org.mozilla.social.navigation.Routes
+import org.mozilla.social.navigation.navigateToTabs
 import org.mozilla.social.post.navigateToNewPost
 import timber.log.Timber
 
@@ -79,9 +79,34 @@ class AppState(
         coroutineScope.launch(Dispatchers.Main) {
             navigationEventFlow().collectLatest {
                 println("navigate event consumed: $it")
-                navigate(it)
+                when (it) {
+                    is Event.NavigateToDestination -> navigate(it.destination)
+                    Event.PopBackStack -> popBackStack()
+                    is Event.OpenLink -> openLink(it.url)
+                    is Event.ShowSnackbar -> {
+                        showSnackbar(it.text, it.isError)
+                    }
+                }
             }
         }
+    }
+
+    private fun showSnackbar(text: StringFactory, error: Boolean) {
+        coroutineScope.launch {
+            snackbarHostState.showSnackbar(
+                snackbarType = if (error) SnackbarType.ERROR else SnackbarType.SUCCESS,
+                message = text.build(context)
+            )
+        }
+    }
+
+    private fun openLink(url: String) {
+        CustomTabsIntent.Builder()
+            .build()
+            .launchUrl(
+                context,
+                url.toUri(),
+            )
 
     }
 
@@ -96,57 +121,6 @@ class AppState(
             started = SharingStarted.WhileSubscribed(),
             initialTopLevelDestination
         )
-
-    val postCardNavigation = object : PostCardNavigation {
-        override fun onReplyClicked(statusId: String) = navigateToNewPost(statusId)
-        override fun onPostClicked(statusId: String) = navigateToThread(statusId)
-        override fun onReportClicked(
-            accountId: String,
-            accountHandle: String,
-            statusId: String,
-        ) = navigateToReport(
-            accountId = accountId,
-            accountHandle = accountHandle,
-            statusId = statusId,
-        )
-
-        override fun onAccountClicked(accountId: String) = navigateToAccount(accountId)
-        override fun onHashTagClicked(hashTag: String) = navigateToHashTag(hashTag)
-        override fun onLinkClicked(url: String) {
-            CustomTabsIntent.Builder()
-                .build()
-                .launchUrl(
-                    context,
-                    url.toUri(),
-                )
-        }
-    }
-
-    val accountNavigation = object : AccountNavigationCallbacks {
-        override fun onFollowingClicked(accountId: String) =
-            navigateToAccountFollowing(accountId)
-
-        override fun onFollowersClicked(accountId: String) =
-            navigateToAccountFollowers(accountId)
-
-        override fun onCloseClicked() = popBackStack()
-        override fun onReportClicked(
-            accountId: String,
-            accountHandle: String,
-        ) = navigateToReport(
-            accountId = accountId,
-            accountHandle = accountHandle
-        )
-
-        override fun navigateToSettings() {
-//            navigateToSettings()
-        }
-    }
-
-    val followersNavigation = object : FollowersNavigationCallbacks {
-        override fun onCloseClicked() = popBackStack()
-        override fun onAccountClicked(accountId: String) = navigateToAccount(accountId)
-    }
 
     private fun clearBackstack() {
         while (mainNavController.currentBackStack.value.isNotEmpty()) {
@@ -163,7 +137,9 @@ class AppState(
             println("nav consume $navDestination")
             when (this) {
                 NavDestination.Login -> {
-                    navigateToLoginScreen()
+                    Timber.d("navigate to login screen")
+                    clearBackstack()
+                    mainNavController.navigateToLoginScreen()
                 }
 
                 is NavDestination.NewPost -> {
@@ -182,62 +158,29 @@ class AppState(
                     navigateToThread(statusId)
                 }
 
-                NavDestination.Feed -> {
-                    navigateToLoggedInGraph()
+
+                is NavDestination.Following -> {
+                    mainNavController.navigateToFollowing(accountId)
+                }
+                is NavDestination.MyAccount -> {
+                    tabbedNavController.navigateToMyAccount()
                 }
 
-                is NavDestination.Following -> TODO()
+                is NavDestination.Account -> {
+                    tabbedNavController.navigateToAccount(
+                        accountId = accountId,
+                    )
+                }
+
+                is NavDestination.Followers -> {
+                    mainNavController.navigateToFollowers(accountId)
+                }
+
+                NavDestination.Settings -> mainNavController.navigateToSettings()
+                NavDestination.Tabs -> mainNavController.navigateToTabs()
+                is NavDestination.Hashtag -> mainNavController.navigateToHashTag(hashTagValue = hashtag)
             }
         }
-    }
-
-    /**
-     * Navigate to the login screen when the user is logged out
-     */
-    fun navigateToLoginScreen() {
-        Timber.d("navigate to login screen")
-        clearBackstack()
-        mainNavController.navigateToLoginScreen()
-    }
-
-    /**
-     * Navigate to the main graph once the user is logged in
-     */
-    fun navigateToLoggedInGraph() {
-        Timber.d("navigate to login graph")
-
-        mainNavController.navigateToFeed()
-
-//        navController.navigate(
-//            Routes.MAIN,
-//            navOptions = NavOptions.Builder()
-//                .setPopUpTo(NavigationDestination.Auth.route, true)
-//                .build()
-//        )
-    }
-
-    fun navigateToSplashScreen() {
-        mainNavController.navigate(Routes.SPLASH)
-    }
-
-    fun navigateToSettings() {
-        mainNavController.navigateToSettings()
-    }
-
-    fun navigateToAccount(
-        accountId: String,
-    ) {
-        mainNavController.navigateToAccount(
-            accountId = accountId,
-        )
-    }
-
-    fun navigateToAccountFollowing(accountId: String) {
-        mainNavController.navigateToFollowing(accountId)
-    }
-
-    fun navigateToAccountFollowers(accountId: String) {
-        mainNavController.navigateToFollowers(accountId)
     }
 
     fun navigateToNewPost(replyStatusId: String? = null) {
@@ -268,6 +211,7 @@ class AppState(
      * Used by bottom bar navigation
      */
     fun navigateToBottomBarDestination(destination: NavigationDestination) {
+        Timber.e("nav to bottom bar dest: $destination")
         // If navigating to the feed, just pop up to the feed.  Don't start a new instance
         // of it.  If a new instance is started, we don't retain scroll position!
         if (destination == NavigationDestination.Feed) {

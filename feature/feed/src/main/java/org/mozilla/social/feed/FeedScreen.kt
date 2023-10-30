@@ -39,7 +39,7 @@ import org.mozilla.social.core.designsystem.icon.mozillaLogo
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.ui.postcard.PostCardInteractions
 import org.mozilla.social.core.ui.postcard.PostCardList
-import org.mozilla.social.core.ui.postcard.PostCardNavigation
+
 import org.mozilla.social.core.ui.postcard.PostCardUiState
 
 @Composable

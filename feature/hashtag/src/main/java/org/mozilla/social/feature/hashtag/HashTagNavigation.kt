@@ -6,7 +6,6 @@ import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import org.mozilla.social.core.navigation.NavigationDestination
-import org.mozilla.social.core.ui.postcard.PostCardNavigation
 
 fun NavController.navigateToHashTag(
     navOptions: NavOptions? = null,
@@ -17,7 +16,6 @@ fun NavController.navigateToHashTag(
 
 fun NavGraphBuilder.hashTagScreen(
     onCloseClicked: () -> Unit,
-    postCardNavigation: PostCardNavigation,
 ) {
     composable(
         route = NavigationDestination.HashTag.fullRoute,
@@ -31,7 +29,6 @@ fun NavGraphBuilder.hashTagScreen(
         hashTagValue?.let {
             HashTagScreen(
                 hashTag = hashTagValue,
-                postCardNavigation = postCardNavigation,
                 onCloseClicked = onCloseClicked,
             )
         }

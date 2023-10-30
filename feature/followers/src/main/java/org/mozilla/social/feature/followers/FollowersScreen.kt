@@ -37,12 +37,10 @@ import org.mozilla.social.core.ui.pullrefresh.rememberPullRefreshState
 @Composable
 internal fun FollowersScreen(
     accountId: String,
-    followersNavigationCallbacks: FollowersNavigationCallbacks,
     followersScreenType: FollowerScreenType,
     viewModel: FollowersViewModel = koinViewModel(
         parameters = { parametersOf(
             accountId,
-            followersNavigationCallbacks,
             followersScreenType,
         ) }
     )

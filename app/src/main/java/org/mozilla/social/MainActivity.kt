@@ -9,6 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.lifecycleScope
 import org.koin.androidx.compose.KoinAndroidContext
+import org.koin.androidx.viewmodel.ext.android.getViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.mozilla.social.core.designsystem.component.MoSoSurface
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
@@ -16,7 +17,7 @@ import org.mozilla.social.ui.MainActivityScreen
 
 class MainActivity : ComponentActivity() {
 
-    private val viewModel: MainViewModel by viewModel()
+    private lateinit var viewModel: MainViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,10 +27,8 @@ class MainActivity : ComponentActivity() {
             MoSoTheme {
                 MoSoSurface(modifier = Modifier.fillMaxSize()) {
                     KoinAndroidContext {
-                        MainActivityScreen(
-                            context = this,
-                            viewModel = viewModel,
-                        )
+                        viewModel = getViewModel()
+                        MainActivityScreen()
                     }
                 }
             }

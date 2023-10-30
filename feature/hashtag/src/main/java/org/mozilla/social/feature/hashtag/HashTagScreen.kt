@@ -14,18 +14,13 @@ import org.mozilla.social.core.designsystem.component.MoSoSurface
 import org.mozilla.social.core.designsystem.component.MoSoTopBar
 import org.mozilla.social.core.ui.postcard.PostCardInteractions
 import org.mozilla.social.core.ui.postcard.PostCardList
-import org.mozilla.social.core.ui.postcard.PostCardNavigation
 import org.mozilla.social.core.ui.postcard.PostCardUiState
 
 @Composable
 internal fun HashTagScreen(
     hashTag: String,
     onCloseClicked: () -> Unit,
-    postCardNavigation: PostCardNavigation,
-    viewModel: HashTagViewModel = koinViewModel(parameters = { parametersOf(
-        hashTag,
-        postCardNavigation,
-    ) } )
+    viewModel: HashTagViewModel = koinViewModel(parameters = { parametersOf(hashTag) })
 ) {
     HashTagScreen(
         hashTag = hashTag,

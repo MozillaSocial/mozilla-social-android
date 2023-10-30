@@ -6,10 +6,9 @@ import org.koin.dsl.module
 val followersModule = module {
     viewModel { parameters ->
         FollowersViewModel(
-            get(),
-            parameters[0],
-            parameters[1],
-            parameters[2],
+            accountId = parameters[0],
+            followerScreenType = parameters[1],
+            accountRepository = get(), popNavBackstack = get(), navigateTo = get(),
         )
     }
 }

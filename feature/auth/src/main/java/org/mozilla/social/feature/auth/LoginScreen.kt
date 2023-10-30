@@ -30,17 +30,9 @@ import org.mozilla.social.core.designsystem.theme.MoSoTheme
 @Composable
 internal fun LoginScreen(
     viewModel: AuthViewModel = koinViewModel(),
-    navigateToLoggedInGraph: () -> Unit,
 ) {
-    val isSignedIn = viewModel.isSignedIn.collectAsState(initial = false).value
     val defaultUrl = viewModel.defaultUrl.collectAsState().value
     val context = LocalContext.current
-
-    if (isSignedIn) {
-        SideEffect {
-            navigateToLoggedInGraph()
-        }
-    }
 
     LoginScreen(
         defaultUrl = defaultUrl,

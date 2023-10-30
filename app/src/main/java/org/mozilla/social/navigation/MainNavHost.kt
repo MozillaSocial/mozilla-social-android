@@ -1,6 +1,5 @@
 package org.mozilla.social.navigation
 
-import android.content.Context
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
@@ -9,18 +8,17 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavOptions
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import org.mozilla.social.R
 import org.mozilla.social.common.utils.mosoFadeIn
 import org.mozilla.social.common.utils.mosoFadeOut
 import org.mozilla.social.core.designsystem.component.MoSoFloatingActionButton
 import org.mozilla.social.core.designsystem.component.MoSoSnackbar
 import org.mozilla.social.core.designsystem.component.MoSoSnackbarHost
-import org.mozilla.social.core.designsystem.component.SnackbarType
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.navigation.NavigationDestination
 import org.mozilla.social.feature.account.accountScreen
@@ -38,7 +36,6 @@ import org.mozilla.social.ui.AppState
 @Composable
 fun MainNavHost(
     appState: AppState,
-    context: Context,
     modifier: Modifier = Modifier,
 ) {
     NavHost(
@@ -51,37 +48,25 @@ fun MainNavHost(
         popExitTransition = { mosoFadeOut() },
     ) {
         splashScreen()
-        loginScreen(navigateToLoggedInGraph = appState::navigateToLoggedInGraph)
-
+        loginScreen()
         searchScreen()
         settingsScreen()
-        accountScreen(
-            accountNavigationCallbacks = appState.accountNavigation,
-        )
-        followersScreen(followersNavigationCallbacks = appState.followersNavigation)
-        followingScreen(followersNavigationCallbacks = appState.followersNavigation)
+        accountScreen()
+        followersScreen()
+        followingScreen()
         newPostScreen(
             onStatusPosted = {
-                appState.popBackStack()
-                GlobalScope.launch {
-                    appState.snackbarHostState.showSnackbar(
-                        snackbarType = SnackbarType.SUCCESS,
-                        message = context.getString(R.string.your_post_was_published)
-                    )
-                }
             },
             onCloseClicked = { appState.popBackStack() },
         )
         threadScreen(
             onCloseClicked = { appState.popBackStack() },
-            postCardNavigation = appState.postCardNavigation,
         )
         reportFlow(
             navController = appState.mainNavController,
         )
         hashTagScreen(
             onCloseClicked = { appState.popBackStack() },
-            postCardNavigation = appState.postCardNavigation,
         )
 
         bottomTabScreen(appState)
@@ -96,9 +81,8 @@ fun NavGraphBuilder.splashScreen() {
 
 fun NavGraphBuilder.bottomTabScreen(appState: AppState) {
     composable(
-        route = NavigationDestination.Feed.route,
+        route = NavigationDestination.Tabs.route,
     ) {
-        val context = LocalContext.current
         val currentDestination = appState.currentNavigationDestination.collectAsState().value
 
         Scaffold(
@@ -132,13 +116,14 @@ fun NavGraphBuilder.bottomTabScreen(appState: AppState) {
                 BottomTabNavHost(
                     modifier = Modifier.padding(bottom = it.calculateBottomPadding()),
                     appState = appState,
-                    context = context,
                 )
             }
         )
-
-
     }
+}
+
+fun NavController.navigateToTabs(navOptions: NavOptions? = null) {
+    this.navigate(NavigationDestination.Tabs.route, navOptions)
 }
 
 @Composable

@@ -88,11 +88,7 @@ import kotlin.math.max
 @Composable
 internal fun AccountScreen(
     accountId: String?,
-    viewModel: AccountViewModel = koinViewModel(
-        parameters = {
-            parametersOf(accountId)
-        }
-    ),
+    viewModel: AccountViewModel = koinViewModel(parameters = { parametersOf(accountId) }),
 ) {
     AccountScreen(
         resource = viewModel.uiState.collectAsState().value,
@@ -104,7 +100,6 @@ internal fun AccountScreen(
         htmlContentInteractions = viewModel.postCardDelegate,
         postCardInteractions = viewModel.postCardDelegate,
         accountInteractions = viewModel,
-        accountNavigationCallbacks = viewModel.accountNavigationCallbacks,
     )
 
     LaunchedEffect(Unit) {
@@ -122,7 +117,6 @@ private fun AccountScreen(
     feed: Flow<PagingData<PostCardUiState>>,
     errorToastMessage: SharedFlow<StringFactory>,
     timelineTypeFlow: StateFlow<TimelineType>,
-    accountNavigationCallbacks: AccountNavigationCallbacks,
     htmlContentInteractions: HtmlContentInteractions,
     postCardInteractions: PostCardInteractions,
     accountInteractions: AccountInteractions,
@@ -137,7 +131,7 @@ private fun AccountScreen(
                         } else {
                             null
                         },
-                        onIconClicked = { accountNavigationCallbacks.onCloseClicked() },
+                        onIconClicked = { accountInteractions.onCloseClicked() },
                     )
                     Box(
                         modifier = Modifier
@@ -158,13 +152,13 @@ private fun AccountScreen(
                         } else {
                             null
                         },
-                        onIconClicked = { accountNavigationCallbacks.onCloseClicked() },
+                        onIconClicked = { accountInteractions.onCloseClicked() },
                         rightSideContent = {
                             OverflowMenu(
                                 account = resource.data,
                                 isUsersProfile = isUsersProfile,
                                 overflowInteractions = accountInteractions,
-                                navigateToSettings = accountNavigationCallbacks::navigateToSettings,
+                                navigateToSettings = accountInteractions::onSettingsClicked,
                             )
                         },
                         showDivider = false,
@@ -189,7 +183,7 @@ private fun AccountScreen(
                         } else {
                             null
                         },
-                        onIconClicked = { accountNavigationCallbacks.onCloseClicked() },
+                        onIconClicked = { accountInteractions.onCloseClicked() },
                     )
                     Box(
                         modifier = Modifier
@@ -667,10 +661,12 @@ private fun HeaderLayout(
         },
     ) { measurables, constraints ->
         val placeables = measurables.map {
-            it.measure(constraints.copy(
-                minWidth = 0,
-                minHeight = 0,
-            ))
+            it.measure(
+                constraints.copy(
+                    minWidth = 0,
+                    minHeight = 0,
+                )
+            )
         }
         val headerImagePlaceable = placeables[0]
         val profileImagePlaceable = placeables[1]

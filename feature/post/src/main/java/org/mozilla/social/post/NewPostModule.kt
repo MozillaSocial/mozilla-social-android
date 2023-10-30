@@ -4,14 +4,17 @@ import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 val newPostModule = module {
-    viewModel { parametersHolder ->  NewPostViewModel(
-        get(),
-        get(),
-        get(),
-        get(),
-        get(),
-        get(),
-        parametersHolder.get(),
-        parametersHolder.getOrNull(),
-    ) }
+    viewModel { parametersHolder ->
+        NewPostViewModel(
+            replyStatusId = parametersHolder.get(),
+            accountFlow = get(),
+            mediaRepository = get(),
+            searchRepository = get(),
+            log = get(),
+            statusRepository = get(),
+            timelineRepository = get(),
+            popNavBackstack = get(),
+            showSnackbar = get(),
+        )
+    }
 }

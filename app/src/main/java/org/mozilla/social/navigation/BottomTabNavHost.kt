@@ -20,7 +20,7 @@ import org.mozilla.social.feed.feedScreen
 import org.mozilla.social.ui.AppState
 
 @Composable
-fun BottomTabNavHost(appState: AppState, context: Context, modifier: Modifier = Modifier) {
+fun BottomTabNavHost(appState: AppState, modifier: Modifier = Modifier) {
     NavHost(
         modifier = modifier,
         navController = appState.tabbedNavController,

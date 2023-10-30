@@ -13,8 +13,9 @@ val accountModule = module {
             statusRepository = get(),
             socialDatabase = get(),
             getDetailedAccount = get(),
-            postCardNavigation = get(),
-            accountNavigationCallbacks = get(),
+            navigateTo = get(),
+            popNavBackstack = get(),
+            openLink = get(),
             initialAccountId = parametersHolder[0],
         )
     }
@@ -28,5 +29,4 @@ val accountModule = module {
         )
     }
 
-    single<AccountNavigationCallbacks> { AccountNavigationCallbacksImpl(get()) }
 }
