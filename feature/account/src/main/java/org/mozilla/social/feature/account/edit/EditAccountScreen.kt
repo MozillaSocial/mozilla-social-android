@@ -1,25 +1,24 @@
 package org.mozilla.social.feature.account.edit
 
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.scrollable
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
-import androidx.compose.foundation.layout.windowInsetsPadding
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -30,6 +29,7 @@ import org.mozilla.social.core.designsystem.component.MoSoButton
 import org.mozilla.social.core.designsystem.component.MoSoSurface
 import org.mozilla.social.core.designsystem.component.MoSoTextField
 import org.mozilla.social.core.designsystem.component.MoSoTopBar
+import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.feature.account.Header
 import org.mozilla.social.feature.account.R
@@ -110,9 +110,17 @@ private fun LoadedState(
             avatarUrl = uiState.avatarUrl,
             displayName = uiState.topBarTitle,
             handle = uiState.handle,
-        ) {
-            //TODO bot and lock
-        }
+            avatarOverlay = {
+                EditImageOverlay(
+                    onClick = {}
+                )
+            },
+            headerOverlay = {
+                EditImageOverlay(
+                    onClick = {}
+                )
+            }
+        )
 
             Spacer(modifier = Modifier.height(16.dp))
 
@@ -150,6 +158,25 @@ private fun LoadedState(
                 color = MoSoTheme.colors.textSecondary,
             )
         }
+    }
+}
+
+@Composable
+private fun EditImageOverlay(
+    onClick: () -> Unit,
+) {
+    Box(
+        modifier = Modifier
+            .size(48.dp)
+            .clip(CircleShape)
+            .background(MoSoTheme.colors.actionOverlay)
+    ) {
+        Icon(
+            modifier = Modifier
+                .align(Alignment.Center),
+            painter = MoSoIcons.image(),
+            contentDescription = "",
+        )
     }
 }
 

@@ -245,36 +245,37 @@ private fun MainContent(
                 avatarUrl = account.avatarUrl,
                 displayName = account.displayName,
                 handle = "@${account.webFinger}",
-            ) {
-                val buttonModifier = Modifier.padding(end = 8.dp)
-                if (isUsersProfile) {
-                    MoSoButtonSecondary(
-                        modifier = buttonModifier,
-                        onClick = { accountInteractions.onEditAccountClicked() }
-                    ) {
-                        Text(text = stringResource(id = R.string.edit_button))
-                    }
-                } else {
-                    MoSoButton(
-                        modifier = buttonModifier,
-                        onClick = {
-                            if (account.isFollowing) {
-                                accountInteractions.onUnfollowClicked()
-                            } else {
-                                accountInteractions.onFollowClicked()
-                            }
+                rightSideContent = {
+                    val buttonModifier = Modifier.padding(end = 8.dp)
+                    if (isUsersProfile) {
+                        MoSoButtonSecondary(
+                            modifier = buttonModifier,
+                            onClick = { accountInteractions.onEditAccountClicked() }
+                        ) {
+                            Text(text = stringResource(id = R.string.edit_button))
                         }
-                    ) {
-                        Text(
-                            text = if (account.isFollowing) {
-                                stringResource(id = R.string.unfollow_button)
-                            } else {
-                                stringResource(id = R.string.follow_button)
+                    } else {
+                        MoSoButton(
+                            modifier = buttonModifier,
+                            onClick = {
+                                if (account.isFollowing) {
+                                    accountInteractions.onUnfollowClicked()
+                                } else {
+                                    accountInteractions.onFollowClicked()
+                                }
                             }
-                        )
+                        ) {
+                            Text(
+                                text = if (account.isFollowing) {
+                                    stringResource(id = R.string.unfollow_button)
+                                } else {
+                                    stringResource(id = R.string.follow_button)
+                                }
+                            )
+                        }
                     }
-                }
-            }
+                },
+            )
 
             Spacer(modifier = Modifier.height(12.dp))
             UserBio(
