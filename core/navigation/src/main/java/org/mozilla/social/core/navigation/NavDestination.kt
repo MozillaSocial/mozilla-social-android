@@ -19,6 +19,7 @@ sealed class NavDestination {
 
     data object MyAccount : NavDestination()
     data class Account(val accountId: String) : NavDestination()
+    data object EditAccount : NavDestination()
     data object Tabs: NavDestination()
 
     data class Hashtag(val hashtag: String) : NavDestination()

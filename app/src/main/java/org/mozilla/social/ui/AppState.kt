@@ -160,6 +160,7 @@ class AppState(
                 NavDestination.Settings -> mainNavController.navigateToSettings()
                 NavDestination.Tabs -> mainNavController.navigateToTabs()
                 is NavDestination.Hashtag -> mainNavController.navigateToHashTag(hashTagValue = hashtag)
+                NavDestination.EditAccount -> mainNavController.navigateToEditAccount()
             }
         }
     }
@@ -168,7 +169,7 @@ class AppState(
      * Used by bottom bar navigation
      */
     fun navigateToBottomBarDestination(destination: NavigationDestination) {
-        Timber.e("nav to bottom bar dest: $destination")
+        Timber.d("Navigate to bottom bar destination: $destination")
         // If navigating to the feed, just pop up to the feed.  Don't start a new instance
         // of it.  If a new instance is started, we don't retain scroll position!
         if (destination == NavigationDestination.Feed) {

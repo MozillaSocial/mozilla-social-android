@@ -60,9 +60,7 @@ fun MainNavHost(
         reportFlow(navController = appState.mainNavController)
         hashTagScreen()
         bottomTabScreen(appState)
-        editAccountScreen(
-            onDone = { appState.popBackStack() }
-        )
+        editAccountScreen()
     }
 }
 

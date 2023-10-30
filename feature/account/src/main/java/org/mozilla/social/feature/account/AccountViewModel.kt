@@ -31,7 +31,6 @@ import org.mozilla.social.core.domain.GetDetailedAccount
 import org.mozilla.social.core.navigation.NavDestination
 import org.mozilla.social.core.navigation.usecases.NavigateTo
 import org.mozilla.social.core.navigation.usecases.OpenLink
-import org.mozilla.social.core.navigation.usecases.PopNavBackstack
 import org.mozilla.social.core.ui.R
 import org.mozilla.social.core.ui.postcard.PostCardDelegate
 import org.mozilla.social.core.ui.postcard.toPostCardUiState
@@ -236,6 +235,6 @@ class AccountViewModel(
     }
 
     override fun onEditAccountClicked() {
-        accountNavigationCallbacks.onEditProfileClicked()
+        navigateTo(NavDestination.EditAccount)
     }
 }
