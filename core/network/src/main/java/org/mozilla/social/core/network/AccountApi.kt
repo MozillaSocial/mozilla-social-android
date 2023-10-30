@@ -1,16 +1,18 @@
 package org.mozilla.social.core.network
 
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import org.mozilla.social.core.network.model.NetworkAccount
 import org.mozilla.social.core.network.model.NetworkRelationship
 import org.mozilla.social.core.network.model.NetworkStatus
-import org.mozilla.social.core.network.model.request.NetworkAccountUpdate
 import retrofit2.Response
-import retrofit2.http.Body
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
+import retrofit2.http.Multipart
 import retrofit2.http.PATCH
 import retrofit2.http.POST
+import retrofit2.http.Part
 import retrofit2.http.Path
 import retrofit2.http.Query
 
@@ -111,8 +113,12 @@ interface AccountApi {
         @Query("id") ids: Array<String>
     ): List<NetworkRelationship>
 
+    @Multipart
     @PATCH("/api/v1/accounts/update_credentials")
     suspend fun updateAccount(
-        @Body updateBody: NetworkAccountUpdate,
+        @Part("display_name") displayName: RequestBody? = null,
+        @Part("note") bio: RequestBody? = null,
+        @Part avatar: MultipartBody.Part? = null,
+        @Part header: MultipartBody.Part? = null,
     ): NetworkAccount
 }

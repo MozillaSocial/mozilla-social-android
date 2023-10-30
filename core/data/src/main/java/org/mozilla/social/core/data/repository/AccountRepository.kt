@@ -2,17 +2,22 @@ package org.mozilla.social.core.data.repository
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import org.mozilla.social.core.data.repository.model.account.toExternal
 import org.mozilla.social.core.data.repository.model.followers.FollowersPagingWrapper
 import org.mozilla.social.core.data.repository.model.status.toDatabaseModel
 import org.mozilla.social.core.data.repository.model.status.toExternalModel
 import org.mozilla.social.core.database.SocialDatabase
 import org.mozilla.social.core.network.AccountApi
-import org.mozilla.social.core.network.model.request.NetworkAccountUpdate
 import org.mozilla.social.model.Account
 import org.mozilla.social.model.Relationship
 import org.mozilla.social.model.Status
 import retrofit2.HttpException
+import java.io.File
 
 class AccountRepository internal constructor(
     private val accountApi: AccountApi,
@@ -176,12 +181,27 @@ class AccountRepository internal constructor(
     suspend fun updateMyAccount(
         displayName: String? = null,
         bio: String? = null,
+        avatar: File? = null,
+        header: File? = null,
     ) = withContext(Dispatchers.IO) {
+        println("johnny $displayName")
         val updatedAccount = accountApi.updateAccount(
-            NetworkAccountUpdate(
-                displayName = displayName,
-                bio = bio,
-            )
+            displayName = displayName?.toRequestBody(MultipartBody.FORM),
+            bio = bio?.toRequestBody(MultipartBody.FORM),
+            avatar = avatar?.let {
+                MultipartBody.Part.createFormData(
+                    "avatar",
+                    avatar.name,
+                    avatar.asRequestBody("image/png".toMediaTypeOrNull()),
+                )
+            },
+            header = header?.let {
+                MultipartBody.Part.createFormData(
+                    "header",
+                    header.name,
+                    header.asRequestBody("image/png".toMediaTypeOrNull()),
+                )
+            },
         ).toExternalModel()
         socialDatabase.accountsDao().insert(updatedAccount.toDatabaseModel())
     }

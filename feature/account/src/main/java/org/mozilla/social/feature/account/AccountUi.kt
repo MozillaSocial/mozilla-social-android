@@ -57,19 +57,19 @@ internal fun Header(
             },
             avatarImage = {
                 Box(
+                    // Don't use a border on the AsyncImage.  Some pixels of the image leak through
+                    // the edges.
                     modifier = Modifier
                         .padding(start = 8.dp)
                         .size(92.dp)
+                        .clip(CircleShape)
+                        .background(MoSoTheme.colors.layer1)
                 ) {
                     AsyncImage(
                         modifier = Modifier
-                            .fillMaxSize()
+                            .align(Alignment.Center)
+                            .size(86.dp)
                             .clip(CircleShape)
-                            .border(
-                                width = 3.dp,
-                                color = MoSoTheme.colors.layer1,
-                                shape = CircleShape
-                            )
                             .background(MoSoTheme.colors.layer2),
                         model = avatarUrl,
                         contentDescription = null,
