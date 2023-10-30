@@ -27,6 +27,7 @@ import org.mozilla.social.core.navigation.Event
 import org.mozilla.social.core.navigation.NavDestination
 import org.mozilla.social.core.navigation.NavigationDestination
 import org.mozilla.social.core.navigation.NavigationEventFlow
+import org.mozilla.social.feature.account.edit.navigateToEditAccount
 import org.mozilla.social.feature.account.navigateToAccount
 import org.mozilla.social.feature.account.navigateToMyAccount
 import org.mozilla.social.feature.auth.navigateToLoginScreen

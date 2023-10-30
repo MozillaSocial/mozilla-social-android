@@ -19,7 +19,6 @@ import org.mozilla.social.core.database.model.wrappers.StatusWrapper
 data class HashTagTimelineStatus(
     val statusId: String,
     val hashTag: String,
-    val createdAt: Instant,
     val accountId: String,
     val pollId: String?,
     val boostedStatusId: String?,

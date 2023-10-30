@@ -21,6 +21,7 @@ import org.mozilla.social.core.designsystem.component.MoSoSnackbarHost
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.navigation.NavigationDestination
 import org.mozilla.social.feature.account.accountScreen
+import org.mozilla.social.feature.account.edit.editAccountScreen
 import org.mozilla.social.feature.auth.loginScreen
 import org.mozilla.social.feature.followers.followersScreen
 import org.mozilla.social.feature.followers.followingScreen
@@ -59,6 +60,9 @@ fun MainNavHost(
         reportFlow(navController = appState.mainNavController)
         hashTagScreen()
         bottomTabScreen(appState)
+        editAccountScreen(
+            onDone = { appState.popBackStack() }
+        )
     }
 }
 

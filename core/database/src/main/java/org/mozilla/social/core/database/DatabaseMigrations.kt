@@ -1,5 +1,6 @@
 package org.mozilla.social.core.database
 
+import androidx.room.DeleteColumn
 import androidx.room.RenameColumn
 import androidx.room.migration.AutoMigrationSpec
 
@@ -10,4 +11,26 @@ object DatabaseMigrations {
         toColumnName = "isFavorited",
     )
     class Schema1to2 : AutoMigrationSpec
+
+    @DeleteColumn(
+        tableName = "homeTimeline",
+        columnName = "createdAt"
+    )
+    @DeleteColumn(
+        tableName = "localTimeline",
+        columnName = "createdAt"
+    )
+    @DeleteColumn(
+        tableName = "federatedTimeline",
+        columnName = "createdAt"
+    )
+    @DeleteColumn(
+        tableName = "hashTagTimeline",
+        columnName = "createdAt"
+    )
+    @DeleteColumn(
+        tableName = "accountTimeline",
+        columnName = "createdAt"
+    )
+    class Schema7to8 : AutoMigrationSpec
 }

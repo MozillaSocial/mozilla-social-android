@@ -234,4 +234,8 @@ class AccountViewModel(
     override fun onSettingsClicked() {
         navigateTo(NavDestination.Settings)
     }
+
+    override fun onEditAccountClicked() {
+        accountNavigationCallbacks.onEditProfileClicked()
+    }
 }

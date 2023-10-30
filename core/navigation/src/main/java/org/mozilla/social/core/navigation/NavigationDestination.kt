@@ -13,6 +13,10 @@ sealed class NavigationDestination(
         fun route(accountId: String): String = "$route?$NAV_PARAM_ACCOUNT_ID=$accountId"
     }
 
+    data object EditAccount: NavigationDestination(
+        route = "editAccount"
+    )
+
     data object Auth: NavigationDestination(
         route = "auth"
     )

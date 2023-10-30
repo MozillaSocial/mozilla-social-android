@@ -28,7 +28,6 @@ class FederatedTimelineRemoteMediator(
         loadType: LoadType,
         state: PagingState<Int, FederatedTimelineStatusWrapper>
     ): MediatorResult {
-        println("johnny federated $loadType")
         return try {
             var pageSize: Int = state.config.pageSize
             val response = when (loadType) {
@@ -75,7 +74,6 @@ class FederatedTimelineRemoteMediator(
                 socialDatabase.federatedTimelineDao().insertAll(response.map {
                     FederatedTimelineStatus(
                         statusId = it.statusId,
-                        createdAt = it.createdAt,
                         accountId = it.account.accountId,
                         pollId = it.poll?.pollId,
                         boostedStatusId = it.boostedStatus?.statusId,
