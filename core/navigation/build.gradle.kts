@@ -7,8 +7,6 @@ android {
 }
 
 dependencies {
-    implementation(project(":core:ui"))
-
     implementation(libs.androidx.navigation.compose)
     implementation(libs.koin.core)
     implementation(libs.koin.androidx.compose)
