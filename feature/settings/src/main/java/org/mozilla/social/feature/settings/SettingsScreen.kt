@@ -59,11 +59,13 @@ internal fun SettingsScreen(
         Modifier
             .fillMaxSize()
             .systemBarsPadding()) {
-        Column(verticalArrangement = Arrangement.Bottom) {
+        Column {
             SettingsAnalytics(
                 isAnalyticsToggledOn = isAnalyticsToggledOn,
                 toggleAnalyticsSwitch = toggleAnalyticsSwitch
             )
+        }
+        Column(verticalArrangement = Arrangement.Bottom) {
             MoSoButtonSecondary(
                 modifier = Modifier
                     .wrapContentHeight()
