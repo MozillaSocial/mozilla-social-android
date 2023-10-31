@@ -1,4 +1,4 @@
-package org.mozilla.social.core.domain.remotemediators
+package org.mozilla.social.feed.remoteMediators
 
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
@@ -12,26 +12,31 @@ import org.mozilla.social.core.data.repository.TimelineRepository
 import org.mozilla.social.core.database.SocialDatabase
 import org.mozilla.social.core.database.model.statusCollections.HomeTimelineStatus
 import org.mozilla.social.core.database.model.statusCollections.HomeTimelineStatusWrapper
+import org.mozilla.social.core.database.model.statusCollections.LocalTimelineStatus
+import org.mozilla.social.core.database.model.statusCollections.LocalTimelineStatusWrapper
+import org.mozilla.social.core.domain.remotemediators.getInReplyToAccountNames
 import timber.log.Timber
 
 @OptIn(ExperimentalPagingApi::class)
-class HomeTimelineRemoteMediator(
+class LocalTimelineRemoteMediator(
     private val timelineRepository: TimelineRepository,
     private val accountRepository: AccountRepository,
     private val statusRepository: StatusRepository,
     private val socialDatabase: SocialDatabase,
-) : RemoteMediator<Int, HomeTimelineStatusWrapper>() {
+) : RemoteMediator<Int, LocalTimelineStatusWrapper>() {
 
+    @Suppress("ReturnCount", "MagicNumber")
     override suspend fun load(
         loadType: LoadType,
-        state: PagingState<Int, HomeTimelineStatusWrapper>
+        state: PagingState<Int, LocalTimelineStatusWrapper>
     ): MediatorResult {
         return try {
             var pageSize: Int = state.config.pageSize
             val response = when (loadType) {
                 LoadType.REFRESH -> {
                     pageSize = state.config.initialLoadSize
-                    timelineRepository.getHomeTimeline(
+                    timelineRepository.getPublicTimeline(
+                        localOnly = true,
                         olderThanId = null,
                         immediatelyNewerThanId = null,
                         loadSize = pageSize,
@@ -41,7 +46,8 @@ class HomeTimelineRemoteMediator(
                 LoadType.PREPEND -> {
                     val firstItem = state.firstItemOrNull()
                         ?: return MediatorResult.Success(endOfPaginationReached = true)
-                    timelineRepository.getHomeTimeline(
+                    timelineRepository.getPublicTimeline(
+                        localOnly = true,
                         olderThanId = null,
                         immediatelyNewerThanId = firstItem.status.statusId,
                         loadSize = pageSize,
@@ -51,7 +57,8 @@ class HomeTimelineRemoteMediator(
                 LoadType.APPEND -> {
                     val lastItem = state.lastItemOrNull()
                         ?: return MediatorResult.Success(endOfPaginationReached = true)
-                    timelineRepository.getHomeTimeline(
+                    timelineRepository.getPublicTimeline(
+                        localOnly = true,
                         olderThanId = lastItem.status.statusId,
                         immediatelyNewerThanId = null,
                         loadSize = pageSize,
@@ -61,15 +68,14 @@ class HomeTimelineRemoteMediator(
 
             socialDatabase.withTransaction {
                 if (loadType == LoadType.REFRESH) {
-                    socialDatabase.homeTimelineDao().deleteHomeTimeline()
+                    socialDatabase.localTimelineDao().deleteLocalTimeline()
                 }
 
                 statusRepository.saveStatusesToDatabase(response)
 
-                socialDatabase.homeTimelineDao().insertAll(response.map {
-                    HomeTimelineStatus(
+                socialDatabase.localTimelineDao().insertAll(response.map {
+                    LocalTimelineStatus(
                         statusId = it.statusId,
-                        createdAt = it.createdAt,
                         accountId = it.account.accountId,
                         pollId = it.poll?.pollId,
                         boostedStatusId = it.boostedStatus?.statusId,

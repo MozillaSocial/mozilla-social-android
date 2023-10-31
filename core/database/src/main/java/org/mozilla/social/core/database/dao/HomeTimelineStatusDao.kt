@@ -10,7 +10,7 @@ import org.mozilla.social.core.database.model.statusCollections.HomeTimelineStat
 interface HomeTimelineStatusDao : BaseDao<HomeTimelineStatus> {
     @Query(
         "SELECT * FROM homeTimeline " +
-        "ORDER BY createdAt DESC"
+        "ORDER BY statusId DESC"
     )
     fun homeTimelinePagingSource(): PagingSource<Int, HomeTimelineStatusWrapper>
 
@@ -22,5 +22,5 @@ interface HomeTimelineStatusDao : BaseDao<HomeTimelineStatus> {
         "WHERE accountId = :accountId " +
         "OR boostedStatusAccountId = :accountId"
     )
-    suspend fun remotePostsFromAccount(accountId: String)
+    suspend fun removePostsFromAccount(accountId: String)
 }

@@ -13,4 +13,5 @@ dependencies {
 
     testImplementation(libs.kotlin.test)
     testImplementation(libs.kotlin.test.junit)
+    implementation(libs.androidx.navigation.compose)
 }

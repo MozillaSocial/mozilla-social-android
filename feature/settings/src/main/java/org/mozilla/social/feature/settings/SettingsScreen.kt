@@ -13,7 +13,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -30,22 +32,21 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.koin.androidx.compose.koinViewModel
-import org.koin.core.parameter.parametersOf
+import org.mozilla.social.core.designsystem.component.MoSoButtonSecondary
 import org.mozilla.social.core.designsystem.component.MoSoDivider
 import org.mozilla.social.core.designsystem.component.MoSoSurface
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 
 @Composable
 internal fun SettingsScreen(
-    onLogout: () -> Unit,
-    viewModel: SettingsViewModel = koinViewModel(parameters = { parametersOf(onLogout) })
+    settingsViewModel: SettingsViewModel = koinViewModel()
 ) {
-    val isAnalyticsToggled = viewModel.isAnalyticsToggledOn.collectAsState()
+    val isAnalyticsToggled = settingsViewModel.isAnalyticsToggledOn.collectAsState()
 
     SettingsScreen(
         isAnalyticsToggledOn = isAnalyticsToggled.value,
-        viewModel::toggleAnalytics,
-        viewModel::logoutUser
+        settingsViewModel::toggleAnalytics,
+        settingsViewModel::logoutUser
     )
 }
 
@@ -55,29 +56,22 @@ internal fun SettingsScreen(
     toggleAnalyticsSwitch: () -> Unit,
     logUserOut: () -> Unit
 ) {
-    Column(
+    MoSoSurface(
         Modifier
-            .padding(start = 16.dp, end = 16.dp)
-    ) {
-        SettingsGroup(name = R.string.analytics_group) {
-            SettingsSwitch(
-                name = R.string.analytics_opt_in_name,
-                subtitle = R.string.analytics_opt_in_subtitle,
-                state = isAnalyticsToggledOn,
-                onClick = toggleAnalyticsSwitch
+            .fillMaxSize()
+            .systemBarsPadding()) {
+        Column(verticalArrangement = Arrangement.Bottom) {
+            SettingsAnalytics(
+                isAnalyticsToggledOn = isAnalyticsToggledOn,
+                toggleAnalyticsSwitch = toggleAnalyticsSwitch
             )
-        }
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp),
-            contentAlignment = Alignment.Center,
-        ) {
-            SettingsGroup(name = R.string.account_options) {
-                LogoutText(name = R.string.logout) {
-                    logUserOut()
-                }
-            }
+            MoSoButtonSecondary(
+                modifier = Modifier
+                    .wrapContentHeight()
+                    .fillMaxWidth()
+                    .padding(8.dp),
+                onClick = { logUserOut }
+            ) { Text(text = "logout") }
         }
     }
 }
@@ -97,6 +91,26 @@ fun SettingsGroup(
             Column {
                 content()
             }
+        }
+    }
+}
+
+@Composable
+fun SettingsAnalytics(
+    isAnalyticsToggledOn: Boolean,
+    toggleAnalyticsSwitch: () -> Unit
+) {
+    Column(
+        Modifier
+            .padding(start = 16.dp, end = 16.dp)
+    ) {
+        SettingsGroup(name = R.string.analytics_group) {
+            SettingsSwitch(
+                name = R.string.analytics_opt_in_name,
+                subtitle = R.string.analytics_opt_in_subtitle,
+                state = isAnalyticsToggledOn,
+                onClick = toggleAnalyticsSwitch
+            )
         }
     }
 }

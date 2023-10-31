@@ -1,16 +1,18 @@
 package org.mozilla.social.core.data.repository
 
-import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import org.mozilla.social.core.data.repository.model.account.toExternal
 import org.mozilla.social.core.data.repository.model.followers.FollowersPagingWrapper
+import org.mozilla.social.core.data.repository.model.status.toDatabaseModel
 import org.mozilla.social.core.data.repository.model.status.toExternalModel
 import org.mozilla.social.core.database.SocialDatabase
 import org.mozilla.social.core.network.AccountApi
+import org.mozilla.social.core.network.model.request.NetworkAccountUpdate
 import org.mozilla.social.model.Account
 import org.mozilla.social.model.Relationship
 import org.mozilla.social.model.Status
 import retrofit2.HttpException
-import retrofit2.Response
 
 class AccountRepository internal constructor(
     private val accountApi: AccountApi,
@@ -22,9 +24,10 @@ class AccountRepository internal constructor(
     }
 
     suspend fun getAccount(accountId: String): Account =
-        coroutineScope {
-            accountApi.getAccount(accountId).toExternalModel()
-        }
+        accountApi.getAccount(accountId).toExternalModel()
+
+    suspend fun getAccountFromDatabase(accountId: String): Account? =
+        socialDatabase.accountsDao().getAccount(accountId)?.toExternalModel()
 
     suspend fun getAccountRelationships(
         accountIds: List<String>,
@@ -109,6 +112,7 @@ class AccountRepository internal constructor(
 
     suspend fun unfollowAccount(accountId: String) {
         try {
+            socialDatabase.homeTimelineDao().removePostsFromAccount(accountId)
             socialDatabase.relationshipsDao().updateFollowing(accountId, false)
             accountApi.unfollowAccount(accountId)
         } catch (e: Exception) {
@@ -122,7 +126,9 @@ class AccountRepository internal constructor(
      */
     suspend fun blockAccount(accountId: String) {
         try {
-            socialDatabase.homeTimelineDao().remotePostsFromAccount(accountId)
+            socialDatabase.homeTimelineDao().removePostsFromAccount(accountId)
+            socialDatabase.localTimelineDao().removePostsFromAccount(accountId)
+            socialDatabase.federatedTimelineDao().removePostsFromAccount(accountId)
             socialDatabase.relationshipsDao().updateBlocked(accountId, true)
             accountApi.blockAccount(accountId)
         } catch (e: Exception) {
@@ -146,7 +152,9 @@ class AccountRepository internal constructor(
      */
     suspend fun muteAccount(accountId: String) {
         try {
-            socialDatabase.homeTimelineDao().remotePostsFromAccount(accountId)
+            socialDatabase.homeTimelineDao().removePostsFromAccount(accountId)
+            socialDatabase.localTimelineDao().removePostsFromAccount(accountId)
+            socialDatabase.federatedTimelineDao().removePostsFromAccount(accountId)
             socialDatabase.relationshipsDao().updateMuted(accountId, true)
             accountApi.muteAccount(accountId)
         } catch (e: Exception) {
@@ -163,5 +171,18 @@ class AccountRepository internal constructor(
             socialDatabase.relationshipsDao().updateMuted(accountId, true)
             throw e
         }
+    }
+
+    suspend fun updateMyAccount(
+        displayName: String? = null,
+        bio: String? = null,
+    ) = withContext(Dispatchers.IO) {
+        val updatedAccount = accountApi.updateAccount(
+            NetworkAccountUpdate(
+                displayName = displayName,
+                bio = bio,
+            )
+        ).toExternalModel()
+        socialDatabase.accountsDao().insert(updatedAccount.toDatabaseModel())
     }
 }

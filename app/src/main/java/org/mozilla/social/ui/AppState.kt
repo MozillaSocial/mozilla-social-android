@@ -33,6 +33,7 @@ import org.mozilla.social.core.designsystem.component.MoSoSnackbarHostState
 import org.mozilla.social.core.navigation.NavigationDestination
 import org.mozilla.social.core.ui.postcard.PostCardNavigation
 import org.mozilla.social.feature.account.AccountNavigationCallbacks
+import org.mozilla.social.feature.account.edit.navigateToEditAccount
 import org.mozilla.social.feature.account.navigateToAccount
 import org.mozilla.social.feature.auth.navigateToLoginScreen
 import org.mozilla.social.feature.followers.FollowersNavigationCallbacks
@@ -52,9 +53,7 @@ fun rememberAppState(
     navController: NavHostController = rememberNavController(),
     coroutineScope: CoroutineScope = rememberCoroutineScope(),
     snackbarHostState: MoSoSnackbarHostState = remember { MoSoSnackbarHostState() },
-    topAppBarScrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(
-        rememberTopAppBarState()
-    ),
+
     navigationDrawerState: DrawerState = rememberDrawerState(DrawerValue.Closed),
     bottomSheetVisible: MutableState<Boolean> = remember { mutableStateOf(false) }
 ): AppState {
@@ -62,7 +61,6 @@ fun rememberAppState(
     return remember(navController) {
         AppState(
             navController = navController,
-            topAppBarScrollBehavior = topAppBarScrollBehavior,
             navigationDrawerState = navigationDrawerState,
             coroutineScope = coroutineScope,
             bottomSheetVisible = bottomSheetVisible,
@@ -79,7 +77,6 @@ fun rememberAppState(
 class AppState(
     initialTopLevelDestination: NavigationDestination = NavigationDestination.Feed,
     val navController: NavHostController, // Don't access this other than for initializing the nav host
-    val topAppBarScrollBehavior: TopAppBarScrollBehavior,
     val navigationDrawerState: DrawerState,
     val coroutineScope: CoroutineScope,
     val bottomSheetVisible: MutableState<Boolean>,
@@ -137,6 +134,7 @@ class AppState(
             accountId = accountId,
             accountHandle = accountHandle
         )
+        override fun onEditProfileClicked() = navigateToEditAccount()
     }
 
     val followersNavigation = object : FollowersNavigationCallbacks {
@@ -194,6 +192,10 @@ class AppState(
         navController.navigateToAccount(
             accountId = accountId,
         )
+    }
+
+    fun navigateToEditAccount() {
+        navController.navigateToEditAccount()
     }
 
     fun navigateToAccountFollowing(accountId: String) {

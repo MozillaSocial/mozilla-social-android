@@ -147,7 +147,7 @@ class NewPostViewModel(
                     inReplyToId = replyStatusId,
                 )
                 statusRepository.saveStatusToDatabase(status)
-                timelineRepository.insertStatus(status)
+                timelineRepository.insertStatusIntoTimelines(status)
 
                 onStatusPosted()
             } catch (e: Exception) {
