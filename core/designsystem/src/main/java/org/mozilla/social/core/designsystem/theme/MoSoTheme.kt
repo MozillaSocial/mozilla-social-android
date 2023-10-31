@@ -73,6 +73,7 @@ private val darkColorPalette = MoSoColors(
 
     actionPrimary = FirefoxColor.Violet60,
     actionSecondary = FirefoxColor.LightGrey30,
+    actionOverlay = FirefoxColor.DarkGrey90,
 
     textPrimary = FirefoxColor.LightGrey05,
     textSecondary = FirefoxColor.LightGrey40,
@@ -109,8 +110,11 @@ private val lightColorPalette = MoSoColors(
     layerActionDisabled = FirefoxColor.LightGrey70,
     layerAccent = FirefoxColor.Violet60,
     scrim = FirefoxColor.DarkGrey20,
+
     actionPrimary = FirefoxColor.Violet60,
     actionSecondary = FirefoxColor.LightGrey30,
+    actionOverlay = FirefoxColor.DarkGrey90A80,
+
     textPrimary = FirefoxColor.DarkGrey90,
     textSecondary = FirefoxColor.DarkGrey05,
     textLink = FirefoxColor.Violet60,
@@ -156,6 +160,7 @@ data class MoSoColors(
     val scrim: Color,
     val actionPrimary: Color,
     val actionSecondary: Color,
+    val actionOverlay: Color,
 
     // General text colors
     val textPrimary: Color,

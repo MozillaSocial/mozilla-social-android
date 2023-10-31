@@ -26,4 +26,5 @@
     <string name="edit_account_display_name_label">Display Name</string>
     <string name="edit_account_bio_label">Bio</string>
     <string name="edit_account_save_button">Save</string>
+    <string name="edit_account_save_failed">Failed to save changes</string>
 </resources>
