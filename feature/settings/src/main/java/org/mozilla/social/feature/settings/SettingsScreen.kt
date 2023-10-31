@@ -74,7 +74,7 @@ internal fun SettingsScreen(
                     .wrapContentHeight()
                     .fillMaxWidth()
                     .padding(8.dp),
-                onClick = { logUserOut }
+                onClick = logUserOut
             ) { Text(text = "logout") }
         }
     }
