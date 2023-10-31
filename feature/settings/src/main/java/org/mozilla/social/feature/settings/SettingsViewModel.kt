@@ -16,10 +16,6 @@ class SettingsViewModel(
     private val analytics: Analytics,
     private val logout: Logout,
 ) : ViewModel() {
-
-    private val _isToggled: MutableStateFlow<Boolean> = MutableStateFlow(false)
-    var isToggled = _isToggled.asStateFlow()
-
     private val _isAnalyticsToggledOn: MutableStateFlow<Boolean> = MutableStateFlow(false)
     var isAnalyticsToggledOn = _isAnalyticsToggledOn.asStateFlow()
 
@@ -31,13 +27,18 @@ class SettingsViewModel(
         }
     }
 
+    fun toggleAnalytics() {
+        viewModelScope.launch {
+            saveSettingsChanges(_isAnalyticsToggledOn.value.not())
+        }
+    }
+
     private suspend fun saveSettingsChanges(optToggle: Boolean) {
         appPreferencesDatastore.toggleTrackAnalytics(optToggle)
         analytics.toggleAnalyticsTracking(optToggle)
-    }
-
-    fun toggleSwitch() {
-        _isToggled.value = _isToggled.value.not()
+        appPreferencesDatastore.trackAnalytics.collectLatest {
+            _isAnalyticsToggledOn.value = it
+        }
     }
 
     fun logoutUser() {
