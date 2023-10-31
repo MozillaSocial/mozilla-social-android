@@ -7,6 +7,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,6 +16,7 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
@@ -33,6 +35,7 @@ import org.koin.core.parameter.parametersOf
 import org.mozilla.social.common.Resource
 import org.mozilla.social.common.utils.toFile
 import org.mozilla.social.core.designsystem.component.MoSoButton
+import org.mozilla.social.core.designsystem.component.MoSoCheckBox
 import org.mozilla.social.core.designsystem.component.MoSoSurface
 import org.mozilla.social.core.designsystem.component.MoSoTextField
 import org.mozilla.social.core.designsystem.component.MoSoToast
@@ -164,37 +167,43 @@ private fun LoadedState(
                         )
                     }
                 )
+            },
+            rightSideContent = {
+                BotAndLock(
+                    uiState = uiState,
+                    editAccountInteractions = editAccountInteractions,
+                )
             }
         )
 
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Column(
+            modifier = Modifier.padding(horizontal = 8.dp)
+        ) {
+            MoSoTextField(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                value = uiState.displayName,
+                onValueChange = editAccountInteractions::onDisplayNameTextChanged,
+                label = {
+                    Text(text = stringResource(id = R.string.edit_account_display_name_label))
+                }
+            )
+
             Spacer(modifier = Modifier.height(16.dp))
 
-            Column(
-                modifier = Modifier.padding(horizontal = 8.dp)
-            ) {
-                MoSoTextField(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    value = uiState.displayName,
-                    onValueChange = editAccountInteractions::onDisplayNameTextChanged,
-                    label = {
-                        Text(text = stringResource(id = R.string.edit_account_display_name_label))
-                    }
-                )
+            MoSoTextField(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                value = uiState.bio,
+                onValueChange = editAccountInteractions::onBioTextChanged,
+                label = {
+                    Text(text = stringResource(id = R.string.edit_account_bio_label))
+                }
+            )
 
-                Spacer(modifier = Modifier.height(16.dp))
-
-                MoSoTextField(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    value = uiState.bio,
-                    onValueChange = editAccountInteractions::onBioTextChanged,
-                    label = {
-                        Text(text = stringResource(id = R.string.edit_account_bio_label))
-                    }
-                )
-
-                Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(8.dp))
 
             Text(
                 modifier = Modifier.align(Alignment.End),
@@ -226,6 +235,49 @@ private fun EditImageOverlay(
     }
 }
 
+@Composable
+private fun BotAndLock(
+    editAccountInteractions: EditAccountInteractions,
+    uiState: EditAccountUiState,
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        MoSoCheckBox(
+            checked = uiState.lockChecked,
+            onCheckedChange = { editAccountInteractions.onLockClicked() }
+        )
+        Icon(
+            painter = MoSoIcons.profileLock(),
+            contentDescription = "",
+        )
+        Spacer(modifier = Modifier.width(8.dp))
+        Text(
+            text = stringResource(id = R.string.edit_account_lock),
+            style = MoSoTheme.typography.labelSmall,
+            color = MoSoTheme.colors.textSecondary,
+        )
+
+        Spacer(modifier = Modifier.width(16.dp))
+
+        MoSoCheckBox(
+            checked = uiState.botChecked,
+            onCheckedChange = { editAccountInteractions.onBotClicked() }
+        )
+        Icon(
+            painter = MoSoIcons.bot(),
+            contentDescription = "",
+        )
+        Spacer(modifier = Modifier.width(8.dp))
+        Text(
+            text = stringResource(id = R.string.edit_account_bot),
+            style = MoSoTheme.typography.labelSmall,
+            color = MoSoTheme.colors.textSecondary,
+        )
+        Spacer(modifier = Modifier.width(8.dp))
+    }
+}
+
 @Preview
 @Composable
 private fun PreviewEditAccountScreen() {
@@ -241,6 +293,8 @@ private fun PreviewEditAccountScreen() {
                     displayName = "John New",
                     bio = "I'm super cool",
                     bioCharacterCount = 20,
+                    lockChecked = false,
+                    botChecked = false,
                 )
             ),
             editAccountInteractions = object : EditAccountInteractions {},

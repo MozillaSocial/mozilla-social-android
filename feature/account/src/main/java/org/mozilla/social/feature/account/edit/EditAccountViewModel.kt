@@ -56,6 +56,8 @@ class EditAccountViewModel(
                             displayName = account.displayName,
                             bio = bio,
                             bioCharacterCount = bio.length,
+                            lockChecked = account.isLocked,
+                            botChecked = account.isBot ?: false,
                         )
                     )
                 }
@@ -101,6 +103,8 @@ class EditAccountViewModel(
                         bio = data.bio.trim(),
                         avatar = newAvatar,
                         header = newHeader,
+                        locked = data.lockChecked,
+                        bot = data.botChecked,
                     )
                     //TODO navigate back
                 } catch (e: Exception) {
@@ -136,6 +140,30 @@ class EditAccountViewModel(
             }
         }
         newHeader = file
+    }
+
+    override fun onLockClicked() {
+        with(_editAccountUiState.value as? Resource.Loaded ?: return) {
+            _editAccountUiState.update {
+                Resource.Loaded(
+                    data = data.copy(
+                        lockChecked = !data.lockChecked
+                    )
+                )
+            }
+        }
+    }
+
+    override fun onBotClicked() {
+        with(_editAccountUiState.value as? Resource.Loaded ?: return) {
+            _editAccountUiState.update {
+                Resource.Loaded(
+                    data = data.copy(
+                        botChecked = !data.botChecked
+                    )
+                )
+            }
+        }
     }
 
     companion object {

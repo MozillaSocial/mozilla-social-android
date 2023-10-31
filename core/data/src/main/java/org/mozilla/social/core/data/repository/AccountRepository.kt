@@ -181,12 +181,16 @@ class AccountRepository internal constructor(
     suspend fun updateMyAccount(
         displayName: String? = null,
         bio: String? = null,
+        locked: Boolean? = null,
+        bot: Boolean? = null,
         avatar: File? = null,
         header: File? = null,
     ) = withContext(Dispatchers.IO) {
         val updatedAccount = accountApi.updateAccount(
             displayName = displayName?.toRequestBody(MultipartBody.FORM),
             bio = bio?.toRequestBody(MultipartBody.FORM),
+            locked = locked?.toString()?.toRequestBody(MultipartBody.FORM),
+            bot = bot?.toString()?.toRequestBody(MultipartBody.FORM),
             avatar = avatar?.let {
                 MultipartBody.Part.createFormData(
                     "avatar",

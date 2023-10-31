@@ -27,4 +27,6 @@
     <string name="edit_account_bio_label">Bio</string>
     <string name="edit_account_save_button">Save</string>
     <string name="edit_account_save_failed">Failed to save changes</string>
+    <string name="edit_account_lock">Lock</string>
+    <string name="edit_account_bot">Bot</string>
 </resources>

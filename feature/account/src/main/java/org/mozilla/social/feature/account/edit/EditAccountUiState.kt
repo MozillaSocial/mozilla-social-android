@@ -8,5 +8,7 @@ data class EditAccountUiState(
     val displayName: String = "",
     val bio: String = "",
     val bioCharacterCount: Int = 0,
+    val lockChecked: Boolean,
+    val botChecked: Boolean,
 )
 

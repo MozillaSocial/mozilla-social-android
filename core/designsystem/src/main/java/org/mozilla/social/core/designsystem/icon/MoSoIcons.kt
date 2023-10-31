@@ -37,6 +37,9 @@ object MoSoIcons {
     fun bookmark() = painterResource(R.drawable.bookmark_simple)
 
     @Composable
+    fun bot() = painterResource(id = R.drawable.bot)
+
+    @Composable
     fun caret_down() = painterResource(id = R.drawable.caret_down)
 
     @Composable
@@ -96,6 +99,9 @@ object MoSoIcons {
 
     @Composable
     fun x() = painterResource(id = R.drawable.x)
+
+    @Composable
+    fun profileLock() = painterResource(id = R.drawable.lock)
 
     // Material- avoid using these, and instead use the drawable based resources
     @Composable
