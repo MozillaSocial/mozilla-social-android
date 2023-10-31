@@ -184,7 +184,6 @@ class AccountRepository internal constructor(
         avatar: File? = null,
         header: File? = null,
     ) = withContext(Dispatchers.IO) {
-        println("johnny $displayName")
         val updatedAccount = accountApi.updateAccount(
             displayName = displayName?.toRequestBody(MultipartBody.FORM),
             bio = bio?.toRequestBody(MultipartBody.FORM),
@@ -192,14 +191,14 @@ class AccountRepository internal constructor(
                 MultipartBody.Part.createFormData(
                     "avatar",
                     avatar.name,
-                    avatar.asRequestBody("image/png".toMediaTypeOrNull()),
+                    avatar.asRequestBody("image/*".toMediaTypeOrNull()),
                 )
             },
             header = header?.let {
                 MultipartBody.Part.createFormData(
                     "header",
                     header.name,
-                    header.asRequestBody("image/png".toMediaTypeOrNull()),
+                    header.asRequestBody("image/*".toMediaTypeOrNull()),
                 )
             },
         ).toExternalModel()
