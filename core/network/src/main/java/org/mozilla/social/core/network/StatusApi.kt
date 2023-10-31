@@ -5,10 +5,8 @@ import org.mozilla.social.core.network.model.NetworkPoll
 import org.mozilla.social.core.network.model.NetworkStatus
 import org.mozilla.social.core.network.model.request.NetworkPollVote
 import org.mozilla.social.core.network.model.request.NetworkStatusCreate
-import retrofit2.Response
 import retrofit2.http.Body
-import retrofit2.http.Field
-import retrofit2.http.FormUrlEncoded
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
@@ -19,9 +17,6 @@ interface StatusApi {
         @Body status: NetworkStatusCreate
     ): NetworkStatus
 
-    /**
-     * @param choices Array of Integer. Provide your own votes as an index for each option (starting from 0).
-     */
     @POST("/api/v1/polls/{pollId}/votes")
     suspend fun voteOnPoll(
         @Path("pollId") pollId: String,
@@ -52,4 +47,9 @@ interface StatusApi {
     suspend fun getStatusContext(
         @Path("statusId") statusId: String,
     ): NetworkContext
+
+    @DELETE("/api/v1/statuses/{statusId}")
+    suspend fun deleteStatus(
+        @Path("statusId") statusId: String,
+    )
 }

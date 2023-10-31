@@ -114,6 +114,20 @@ class PostCardDelegate(
         )
     }
 
+    override fun onOverflowDeleteClicked(
+        statusId: String,
+    ) {
+        coroutineScope.launch {
+            try {
+                println("johnny 0")
+                statusRepository.deleteStatus(statusId)
+            } catch (e: Exception) {
+                log.e(e)
+                _errorToastMessage.emit(StringFactory.resource(R.string.error_deleting_post))
+            }
+        }
+    }
+
     override fun onAccountImageClicked(accountId: String) {
         postCardNavigation.onAccountClicked(accountId)
     }

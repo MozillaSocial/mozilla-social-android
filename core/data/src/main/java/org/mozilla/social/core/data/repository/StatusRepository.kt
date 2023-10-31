@@ -4,6 +4,7 @@ import androidx.room.withTransaction
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
@@ -233,4 +234,30 @@ class StatusRepository(
 
     suspend fun getStatusContext(statusId: String): Context =
         statusApi.getStatusContext(statusId).toExternalModel()
+
+    suspend fun deleteStatus(
+        statusId: String,
+    ) = withContext(Dispatchers.IO) {
+        try {
+            println("johnny 1")
+            socialDatabase.statusDao().updateIsBeingDeleted(statusId, true)
+            delay(5000)
+            println("johnny 2")
+            statusApi.deleteStatus(statusId)
+            println("johnny 3")
+            socialDatabase.withTransaction {
+                socialDatabase.homeTimelineDao().deletePost(statusId)
+                socialDatabase.localTimelineDao().deletePost(statusId)
+                socialDatabase.federatedTimelineDao().deletePost(statusId)
+                socialDatabase.hashTagTimelineDao().deletePost(statusId)
+                socialDatabase.accountTimelineDao().deletePost(statusId)
+                socialDatabase.statusDao().deleteStatus(statusId)
+            }
+            println("johnny 4")
+        } catch (e: Exception) {
+            println("johnny 5")
+            socialDatabase.statusDao().updateIsBeingDeleted(statusId, false)
+            throw e
+        }
+    }
 }

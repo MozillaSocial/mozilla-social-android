@@ -64,6 +64,7 @@ fun StatusWrapper.toExternalModel(): Status =
         isMuted = status.isMuted,
         isBookmarked = status.isBookmarked,
         isPinned = status.isPinned,
+        isBeingDeleted = status.isBeingDeleted,
     )
 
 fun DatabaseStatus.toExternalModel(
