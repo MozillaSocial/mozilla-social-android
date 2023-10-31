@@ -59,7 +59,10 @@ internal fun SettingsScreen(
         Modifier
             .fillMaxSize()
             .systemBarsPadding()) {
-        Column {
+        Column(
+            modifier = Modifier
+                .padding(top = 24.dp)
+        ) {
             SettingsAnalytics(
                 isAnalyticsToggledOn = isAnalyticsToggledOn,
                 toggleAnalyticsSwitch = toggleAnalyticsSwitch
@@ -82,7 +85,9 @@ fun SettingsGroup(
     @StringRes name: Int,
     content: @Composable ColumnScope.() -> Unit
 ) {
-    Column(modifier = Modifier.padding(vertical = 8.dp)) {
+    Column(modifier = Modifier
+        .padding(start = 16.dp, top = 16.dp, bottom = 8.dp, end = 16.dp)
+    ) {
         Text(stringResource(id = name))
         Spacer(modifier = Modifier.height(8.dp))
         MoSoSurface(
@@ -101,10 +106,7 @@ fun SettingsAnalytics(
     isAnalyticsToggledOn: Boolean,
     toggleAnalyticsSwitch: () -> Unit
 ) {
-    Column(
-        Modifier
-            .padding(start = 16.dp, end = 16.dp)
-    ) {
+    Column {
         SettingsGroup(name = R.string.analytics_group) {
             SettingsSwitch(
                 name = R.string.analytics_opt_in_name,
@@ -129,8 +131,7 @@ fun SettingsSwitch(
     MoSoSurface(
         color = Color.Transparent,
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp),
+            .fillMaxWidth(),
         onClick = onClick,
     ) {
         Column {
