@@ -119,7 +119,6 @@ class PostCardDelegate(
     ) {
         coroutineScope.launch {
             try {
-                println("johnny 0")
                 statusRepository.deleteStatus(statusId)
             } catch (e: Exception) {
                 log.e(e)

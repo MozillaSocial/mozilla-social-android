@@ -239,12 +239,8 @@ class StatusRepository(
         statusId: String,
     ) = withContext(Dispatchers.IO) {
         try {
-            println("johnny 1")
             socialDatabase.statusDao().updateIsBeingDeleted(statusId, true)
-            delay(5000)
-            println("johnny 2")
             statusApi.deleteStatus(statusId)
-            println("johnny 3")
             socialDatabase.withTransaction {
                 socialDatabase.homeTimelineDao().deletePost(statusId)
                 socialDatabase.localTimelineDao().deletePost(statusId)
@@ -253,9 +249,7 @@ class StatusRepository(
                 socialDatabase.accountTimelineDao().deletePost(statusId)
                 socialDatabase.statusDao().deleteStatus(statusId)
             }
-            println("johnny 4")
         } catch (e: Exception) {
-            println("johnny 5")
             socialDatabase.statusDao().updateIsBeingDeleted(statusId, false)
             throw e
         }

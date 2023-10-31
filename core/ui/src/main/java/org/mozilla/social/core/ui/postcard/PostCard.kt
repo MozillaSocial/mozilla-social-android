@@ -1,7 +1,11 @@
 package org.mozilla.social.core.ui.postcard
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
@@ -55,34 +59,42 @@ import org.mozilla.social.core.ui.shareUrl
  */
 @Composable
 fun PostCard(
+    modifier: Modifier = Modifier,
     post: PostCardUiState,
     postCardInteractions: PostCardInteractions,
     threadId: String? = null
 ) {
     NoRipple {
-        Column(
-            Modifier
-                .padding(8.dp)
-                .fillMaxSize()
-                .clickable {
-                    // prevent the user from being able to click on the same status
-                    // as the root thread status
-                    if (post.mainPostCardUiState.statusId != threadId) {
-                        postCardInteractions.onPostCardClicked(post.mainPostCardUiState.statusId)
+        Box(modifier = modifier) {
+            Column(
+                Modifier
+                    .padding(8.dp)
+                    .fillMaxSize()
+                    .clickable {
+                        // prevent the user from being able to click on the same status
+                        // as the root thread status
+                        if (post.mainPostCardUiState.statusId != threadId) {
+                            postCardInteractions.onPostCardClicked(post.mainPostCardUiState.statusId)
+                        }
                     }
+            ) {
+                post.topRowMetaDataUiState?.let {
+                    TopRowMetaData(
+                        topRowMetaDataUiState = it
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
                 }
-        ) {
-            post.topRowMetaDataUiState?.let {
-                TopRowMetaData(
-                    topRowMetaDataUiState = it
-                )
-                Spacer(modifier = Modifier.height(8.dp))
+                MainPost(post.mainPostCardUiState, postCardInteractions)
             }
-            MainPost(post.mainPostCardUiState, postCardInteractions)
-        }
 
-        if (!post.mainPostCardUiState.isBeingDeleted) {
-//            TransparentNoTouchOverlay()
+            AnimatedVisibility(
+                modifier = Modifier.matchParentSize(),
+                visible = post.mainPostCardUiState.isBeingDeleted,
+                enter = fadeIn(),
+                exit = fadeOut(),
+            ) {
+                TransparentNoTouchOverlay()
+            }
         }
     }
 }
