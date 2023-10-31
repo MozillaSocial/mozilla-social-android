@@ -23,7 +23,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -39,9 +38,8 @@ import org.mozilla.social.core.designsystem.component.MoSoTextField
 import org.mozilla.social.core.designsystem.component.MoSoToast
 import org.mozilla.social.core.designsystem.component.MoSoTopBar
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
-import org.mozilla.social.core.designsystem.theme.FirefoxColor
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
-import org.mozilla.social.core.ui.TransparentOverlay
+import org.mozilla.social.core.ui.TransparentNoTouchOverlay
 import org.mozilla.social.feature.account.Header
 import org.mozilla.social.feature.account.R
 
@@ -77,30 +75,31 @@ fun EditAccountScreen(
         modifier = Modifier
             .fillMaxSize(),
     ) {
-        Box(
-            modifier = Modifier
-                .systemBarsPadding()
-                .imePadding(),
-        ) {
-            when (editAccountUiState) {
-                is Resource.Loading -> {}
-                is Resource.Loaded -> {
-                    LoadedState(
-                        onCloseClicked = onCloseClicked,
-                        editAccountInteractions = editAccountInteractions,
-                        uiState = editAccountUiState.data,
-                    )
-
-                    if (isUploading) {
-                        TransparentOverlay()
-                        CircularProgressIndicator(
-                            modifier = Modifier
-                                .align(Alignment.Center),
+        Box(modifier = Modifier.fillMaxSize()) {
+            Box(
+                modifier = Modifier
+                    .systemBarsPadding()
+                    .imePadding(),
+            ) {
+                when (editAccountUiState) {
+                    is Resource.Loading -> {}
+                    is Resource.Loaded -> {
+                        LoadedState(
+                            onCloseClicked = onCloseClicked,
+                            editAccountInteractions = editAccountInteractions,
+                            uiState = editAccountUiState.data,
                         )
                     }
-                }
 
-                is Resource.Error -> {}
+                    is Resource.Error -> {}
+                }
+            }
+
+            if (isUploading) {
+                TransparentNoTouchOverlay()
+                CircularProgressIndicator(
+                    modifier = Modifier.align(Alignment.Center),
+                )
             }
         }
     }

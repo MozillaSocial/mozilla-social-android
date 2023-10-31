@@ -14,6 +14,7 @@ import org.mozilla.social.common.Resource
 import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.core.data.repository.AccountRepository
 import org.mozilla.social.core.domain.AccountIdBlocking
+import org.mozilla.social.feature.account.R
 import timber.log.Timber
 import java.io.File
 
@@ -103,7 +104,7 @@ class EditAccountViewModel(
                     )
                     //TODO navigate back
                 } catch (e: Exception) {
-                    //TODO show toast
+                    _errorToastMessage.emit(StringFactory.resource(R.string.edit_account_save_failed))
                     Timber.e(e)
                     _isUploading.update { false }
                 }
@@ -139,9 +140,5 @@ class EditAccountViewModel(
 
     companion object {
         const val MAX_BIO_LENGTH = 500
-
-        const val AVATAR_SIZE = 400
-        const val HEADER_WIDTH = 1500
-        const val HEADER_HEIGHT = 500
     }
 }
