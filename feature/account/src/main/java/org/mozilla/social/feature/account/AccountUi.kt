@@ -73,6 +73,7 @@ internal fun Header(
                             .background(MoSoTheme.colors.layer2),
                         model = avatarUrl,
                         contentDescription = null,
+                        contentScale = ContentScale.Crop,
                     )
                     Box(modifier = Modifier.align(Alignment.Center)) {
                         avatarOverlay()
