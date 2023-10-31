@@ -80,6 +80,7 @@ internal fun SettingsScreen(
     }
 }
 
+@Suppress("MagicNumber")
 @Composable
 fun SettingsGroup(
     @StringRes name: Int,
@@ -118,7 +119,7 @@ fun SettingsAnalytics(
     }
 }
 
-@Suppress("LongParameterList")
+@Suppress("LongParameterList", "MagicNumber")
 @Composable
 fun SettingsSwitch(
     @DrawableRes icon: Int? = null,
@@ -221,37 +222,6 @@ private fun SettingsTextLink(
                 Spacer(modifier = Modifier.weight(1f))
             }
             MoSoDivider()
-        }
-    }
-}
-
-@Composable
-private fun LogoutText(
-    @StringRes name: Int,
-    onClick: () -> Unit
-) {
-
-    MoSoSurface(
-        color = MaterialTheme.colorScheme.error,
-        modifier = Modifier
-            .fillMaxWidth(),
-        shape = RoundedCornerShape(8.dp),
-        onClick = onClick,
-    ) {
-        Column {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center
-            ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(
-                        text = stringResource(id = name),
-                        style = MaterialTheme.typography.bodyLarge,
-                        modifier = Modifier.padding(start = 4.dp, top = 8.dp, bottom = 8.dp),
-                        textAlign = TextAlign.Center,
-                    )
-                }
-            }
         }
     }
 }
