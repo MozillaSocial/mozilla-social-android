@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+option java_package = "org.mozilla.social.core.datastore";
+option java_multiple_files = true;
+
+message AppPreferences {
+  bool track_analytics = 1;
+}
