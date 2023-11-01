@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
@@ -54,7 +53,7 @@ fun VisibilityDropDownButton(
                 )
 
                 StatusVisibility.Private -> ButtonContent(
-                    icon = MoSoIcons.lock(),
+                    icon = MoSoIcons.materialLock(),
                     text = stringResource(id = R.string.visibility_private)
                 )
 
@@ -93,7 +92,7 @@ fun VisibilityDropDownButton(
             )
             DropDownItem(
                 type = StatusVisibility.Private,
-                icon = MoSoIcons.lock(),
+                icon = MoSoIcons.materialLock(),
                 text = stringResource(id = R.string.visibility_private),
                 expanded = expanded,
                 onVisibilitySelected = onVisibilitySelected

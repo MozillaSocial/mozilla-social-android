@@ -9,4 +9,6 @@ interface EditAccountInteractions {
     fun onSaveClicked() = Unit
     fun onNewAvatarSelected(uri: Uri, file: File) = Unit
     fun onNewHeaderSelected(uri: Uri, file: File) = Unit
+    fun onLockClicked() = Unit
+    fun onBotClicked() = Unit
 }

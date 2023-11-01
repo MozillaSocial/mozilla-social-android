@@ -118,6 +118,8 @@ interface AccountApi {
     suspend fun updateAccount(
         @Part("display_name") displayName: RequestBody? = null,
         @Part("note") bio: RequestBody? = null,
+        @Part("locked") locked: RequestBody? = null,
+        @Part("bot") bot: RequestBody? = null,
         @Part avatar: MultipartBody.Part? = null,
         @Part header: MultipartBody.Part? = null,
     ): NetworkAccount
