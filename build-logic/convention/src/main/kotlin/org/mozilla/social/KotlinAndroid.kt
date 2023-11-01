@@ -40,13 +40,6 @@ internal fun Project.configureKotlinAndroid(
         }
 
         configureKotlin()
-
-        dependencies {
-            add("testImplementation", libs.findLibrary("mockk").get())
-            add("testImplementation", libs.findLibrary("kotlin-test").get())
-            add("testImplementation", libs.findLibrary("kotlin-test-junit").get())
-            add("testImplementation", libs.findLibrary("kotlinx-coroutines-test").get())
-        }
     }
 }
 
