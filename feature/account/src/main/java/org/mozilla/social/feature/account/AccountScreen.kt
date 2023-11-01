@@ -18,11 +18,9 @@ import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBars
@@ -43,7 +41,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -52,7 +49,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.paging.PagingData
-import coil.compose.AsyncImage
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -84,6 +80,7 @@ import org.mozilla.social.core.ui.postcard.PostCardUiState
 
 @Composable
 internal fun AccountScreen(
+    windowInsets: WindowInsets = WindowInsets.systemBars,
     accountId: String?,
     viewModel: AccountViewModel = koinViewModel(parameters = { parametersOf(accountId) }),
 ) {
@@ -97,6 +94,7 @@ internal fun AccountScreen(
         htmlContentInteractions = viewModel.postCardDelegate,
         postCardInteractions = viewModel.postCardDelegate,
         accountInteractions = viewModel,
+        windowInsets = windowInsets,
     )
 
     LaunchedEffect(Unit) {
@@ -117,11 +115,12 @@ private fun AccountScreen(
     htmlContentInteractions: HtmlContentInteractions,
     postCardInteractions: PostCardInteractions,
     accountInteractions: AccountInteractions,
+    windowInsets: WindowInsets,
 ) {
     MoSoSurface {
         Column(
             modifier = Modifier
-                .windowInsetsPadding(WindowInsets.systemBars.only(WindowInsetsSides.Top))
+                .windowInsetsPadding(windowInsets)
         ) {
             when (resource) {
                 is Resource.Loading -> {
