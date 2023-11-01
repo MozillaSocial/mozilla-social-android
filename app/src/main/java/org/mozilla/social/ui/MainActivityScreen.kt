@@ -5,6 +5,7 @@ import org.mozilla.social.MainViewModel
 import org.mozilla.social.navigation.MainNavHost
 
 @Composable
+@Suppress("UnusedParameter")
 fun MainActivityScreen(viewModel: MainViewModel) {
     val appState = rememberAppState()
 

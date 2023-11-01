@@ -46,7 +46,6 @@ import timber.log.Timber
 @Composable
 fun rememberAppState(
     mainNavController: NavHostController = rememberNavController(),
-    tabbedNavController: NavHostController = rememberNavController(),
     coroutineScope: CoroutineScope = rememberCoroutineScope(),
     snackbarHostState: MoSoSnackbarHostState = remember { MoSoSnackbarHostState() },
     navigationEventFlow: NavigationEventFlow = koinInject(),
@@ -56,7 +55,6 @@ fun rememberAppState(
     return remember(mainNavController) {
         AppState(
             mainNavController = mainNavController,
-//            tabbedNavController = tabbedNavController,
             coroutineScope = coroutineScope,
             snackbarHostState = snackbarHostState,
             context = context,
@@ -71,7 +69,6 @@ fun rememberAppState(
 class AppState(
     initialTopLevelDestination: NavigationDestination = NavigationDestination.Feed,
     val mainNavController: NavHostController,
-//    tabbedNavController: NavHostController,
     val coroutineScope: CoroutineScope,
     val snackbarHostState: MoSoSnackbarHostState,
     val context: Context,
