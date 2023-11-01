@@ -13,9 +13,12 @@ import androidx.navigation.navOptions
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -53,7 +56,7 @@ fun rememberAppState(
     return remember(mainNavController) {
         AppState(
             mainNavController = mainNavController,
-            tabbedNavController = tabbedNavController,
+//            tabbedNavController = tabbedNavController,
             coroutineScope = coroutineScope,
             snackbarHostState = snackbarHostState,
             context = context,
@@ -68,15 +71,32 @@ fun rememberAppState(
 class AppState(
     initialTopLevelDestination: NavigationDestination = NavigationDestination.Feed,
     val mainNavController: NavHostController,
-    val tabbedNavController: NavHostController,
+//    tabbedNavController: NavHostController,
     val coroutineScope: CoroutineScope,
     val snackbarHostState: MoSoSnackbarHostState,
     val context: Context,
     val navigationEventFlow: NavigationEventFlow,
 ) {
+    // The tabbedNavController is stored in a StateFlow so that we can make sure there's no
+    // requests to navigate until the BottomTabNavHost has reached composition
+    private val _tabbedNavControllerFlow = MutableStateFlow<NavHostController?>(null)
+    val tabbedNavControllerFlow: StateFlow<NavHostController?> =
+        _tabbedNavControllerFlow.asStateFlow()
+
+    // Convenience var for getting/setting value in flow
+     var tabbedNavController: NavHostController?
+        get() = tabbedNavControllerFlow.value
+        set(value) {
+            _tabbedNavControllerFlow.value = value
+        }
+
     init {
+        this.tabbedNavController = tabbedNavController
+
         coroutineScope.launch(Dispatchers.Main) {
+
             navigationEventFlow().collectLatest {
+                Timber.e("consuming event $it")
                 when (it) {
                     is Event.NavigateToDestination -> navigate(it.destination)
                     Event.PopBackStack -> popBackStack()
@@ -108,12 +128,15 @@ class AppState(
 
     }
 
+
     @OptIn(ExperimentalCoroutinesApi::class)
     val currentNavigationDestination: StateFlow<NavigationDestination?> =
-        tabbedNavController.currentBackStackEntryFlow.mapLatest { backStackEntry ->
-            NavigationDestination::class.sealedSubclasses.firstOrNull {
-                it.objectInstance?.route == backStackEntry.destination.route
-            }?.objectInstance
+        tabbedNavControllerFlow.flatMapLatest {
+            it?.currentBackStackEntryFlow?.mapLatest { backStackEntry ->
+                NavigationDestination::class.sealedSubclasses.firstOrNull {
+                    it.objectInstance?.route == backStackEntry.destination.route
+                }?.objectInstance
+            } ?: error("no matching nav destination")
         }.stateIn(
             coroutineScope,
             started = SharingStarted.WhileSubscribed(),
@@ -127,8 +150,7 @@ class AppState(
     }
 
     fun popBackStack() {
-        if (tabbedNavController.currentBackStackEntry != null) tabbedNavController.popBackStack()
-        else mainNavController.popBackStack()
+        if (tabbedNavController?.popBackStack() == false) mainNavController.popBackStack()
     }
 
     private fun navigate(navDestination: NavDestination) {
@@ -172,8 +194,7 @@ class AppState(
         // If navigating to the feed, just pop up to the feed.  Don't start a new instance
         // of it.  If a new instance is started, we don't retain scroll position!
         if (destination == NavigationDestination.Feed) {
-            tabbedNavController.popBackStack(NavigationDestination.Feed.route, false)
-            return
+            tabbedNavController?.popBackStack(NavigationDestination.Feed.route, false)
         }
         val navOptions = navOptions {
             popUpTo(NavigationDestination.Feed.route) {
@@ -183,18 +204,6 @@ class AppState(
             restoreState = true
         }
 
-        tabbedNavController.navigate(destination.route, navOptions)
-    }
-
-    companion object {
-        fun shouldShowTopBar(
-            currentDestination: NavigationDestination?
-        ): Boolean = when (currentDestination) {
-            NavigationDestination.Feed,
-            NavigationDestination.Discover,
-            NavigationDestination.Bookmarks -> true
-
-            else -> false
-        }
+        tabbedNavController?.navigate(destination.route, navOptions)
     }
 }

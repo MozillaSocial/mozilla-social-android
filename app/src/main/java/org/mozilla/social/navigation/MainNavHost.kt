@@ -12,6 +12,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import org.mozilla.social.R
 import org.mozilla.social.common.utils.mosoFadeIn
 import org.mozilla.social.common.utils.mosoFadeOut
@@ -74,6 +75,7 @@ fun NavGraphBuilder.bottomTabScreen(appState: AppState) {
     composable(
         route = NavigationDestination.Tabs.route,
     ) {
+        appState.tabbedNavController = rememberNavController()
         val currentDestination = appState.currentNavigationDestination.collectAsState().value
 
         Scaffold(
@@ -106,9 +108,14 @@ fun NavGraphBuilder.bottomTabScreen(appState: AppState) {
                 )
             },
             content = {
-                BottomTabNavHost(
-                    modifier = Modifier.padding(bottom = it.calculateBottomPadding()),
-                )
+                // This is in a state flow because the value needs to be set
+                val tabbedNavController = appState.tabbedNavControllerFlow.collectAsState().value
+                if (tabbedNavController != null) {
+                    BottomTabNavHost(
+                        modifier = Modifier.padding(bottom = it.calculateBottomPadding()),
+                        tabbedNavController = tabbedNavController,
+                    )
+                }
             }
         )
     }
