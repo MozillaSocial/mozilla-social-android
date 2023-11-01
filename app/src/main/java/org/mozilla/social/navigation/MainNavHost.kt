@@ -1,8 +1,10 @@
 package org.mozilla.social.navigation
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
@@ -16,6 +18,7 @@ import androidx.navigation.compose.rememberNavController
 import org.mozilla.social.R
 import org.mozilla.social.common.utils.mosoFadeIn
 import org.mozilla.social.common.utils.mosoFadeOut
+import org.mozilla.social.core.designsystem.component.MoSoDivider
 import org.mozilla.social.core.designsystem.component.MoSoFloatingActionButton
 import org.mozilla.social.core.designsystem.component.MoSoSnackbar
 import org.mozilla.social.core.designsystem.component.MoSoSnackbarHost
@@ -76,7 +79,7 @@ fun NavGraphBuilder.bottomTabScreen(appState: AppState) {
         route = NavigationDestination.Tabs.route,
     ) {
         appState.tabbedNavController = rememberNavController()
-        val currentDestination = appState.currentNavigationDestination.collectAsState().value
+        val currentDestination = appState.currentNavigationDestination.collectAsState().value!!
 
         Scaffold(
             modifier = Modifier,
@@ -127,17 +130,11 @@ fun NavController.navigateToTabs(navOptions: NavOptions? = null) {
 
 @Composable
 private fun BottomBar(
-    currentDestination: NavigationDestination?,
+    currentDestination: NavigationDestination,
     navigateToTopLevelDestination: (route: NavigationDestination) -> Unit,
 ) {
-    // don't show bottom bar if our current route is not one of the bottom nav options
-    if (BottomBarTabs.values()
-            .find { it.bottomBarTab.navigationDestination == currentDestination } == null
-    ) {
-        return
-    }
-
-    currentDestination?.let {
+    Column {
+        MoSoDivider()
         MoSoBottomNavigationBar(
             currentDestination = currentDestination,
             bottomBarTabs = BottomBarTabs.values().map { it.bottomBarTab },

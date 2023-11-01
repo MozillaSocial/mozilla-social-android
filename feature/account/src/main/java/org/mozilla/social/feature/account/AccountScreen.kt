@@ -18,9 +18,11 @@ import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBars
@@ -117,7 +119,10 @@ private fun AccountScreen(
     accountInteractions: AccountInteractions,
 ) {
     MoSoSurface {
-        Column(Modifier.windowInsetsPadding(WindowInsets.systemBars)) {
+        Column(
+            modifier = Modifier
+                .windowInsetsPadding(WindowInsets.systemBars.only(WindowInsetsSides.Top))
+        ) {
             when (resource) {
                 is Resource.Loading -> {
                     MoSoCloseableTopAppBar(showCloseButton = closeButtonVisible)
