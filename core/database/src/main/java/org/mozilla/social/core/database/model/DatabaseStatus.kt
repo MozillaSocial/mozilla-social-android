@@ -1,5 +1,6 @@
 package org.mozilla.social.core.database.model
 
+import androidx.room.ColumnInfo
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -168,4 +169,10 @@ data class DatabaseStatus(
      * Only appears if the status is pinnable.
      */
     val isPinned: Boolean? = null,
+
+    /**
+     * if the status is currently being deleted by the user
+     */
+    @ColumnInfo(defaultValue = "false")
+    val isBeingDeleted: Boolean = false,
 )

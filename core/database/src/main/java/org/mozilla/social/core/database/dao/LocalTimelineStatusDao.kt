@@ -23,4 +23,11 @@ interface LocalTimelineStatusDao : BaseDao<LocalTimelineStatus> {
         "OR boostedStatusAccountId = :accountId"
     )
     suspend fun removePostsFromAccount(accountId: String)
+
+    @Query(
+        "DELETE FROM localTimeline " +
+        "WHERE statusId = :statusId " +
+        "OR boostedStatusId = :statusId"
+    )
+    suspend fun deletePost(statusId: String)
 }

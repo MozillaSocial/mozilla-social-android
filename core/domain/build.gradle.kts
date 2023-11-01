@@ -26,7 +26,4 @@ dependencies {
 
     implementation(libs.androidx.paging.runtime)
     implementation(libs.androidx.browser)
-
-    testImplementation(libs.kotlin.test)
-    testImplementation(libs.kotlin.test.junit)
 }

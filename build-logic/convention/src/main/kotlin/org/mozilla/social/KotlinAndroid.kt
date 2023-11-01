@@ -17,8 +17,10 @@
 package org.mozilla.social
 
 import com.android.build.api.dsl.CommonExtension
+import gradle.kotlin.dsl.accessors._3ae4bec24491dd0ee17d4f2e112ade21.implementation
 import org.gradle.api.JavaVersion
 import org.gradle.api.Project
+import org.gradle.kotlin.dsl.dependencies
 import org.gradle.kotlin.dsl.withType
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
