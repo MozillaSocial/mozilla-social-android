@@ -9,6 +9,7 @@ import io.mockk.mockk
 import io.mockk.mockkStatic
 import io.mockk.slot
 import kotlinx.coroutines.test.runTest
+import org.mozilla.social.core.data.utils.TransactionUtils
 import org.mozilla.social.core.database.SocialDatabase
 import org.mozilla.social.core.database.dao.AccountTimelineStatusDao
 import org.mozilla.social.core.database.dao.FederatedTimelineStatusDao
@@ -52,11 +53,7 @@ class StatusRepositoryTest {
         every { socialDatabase.hashTagTimelineDao() } returns hashTagTimelineDao
         every { socialDatabase.accountTimelineDao() } returns accountTimelineDao
 
-        mockkStatic("androidx.room.RoomDatabaseKt")
-        val transactionLambda = slot<suspend () -> Any>()
-        coEvery { socialDatabase.withTransaction(capture(transactionLambda)) } coAnswers {
-            transactionLambda.captured.invoke()
-        }
+        TransactionUtils.setupTransactionMock(socialDatabase)
     }
 
     @Test
