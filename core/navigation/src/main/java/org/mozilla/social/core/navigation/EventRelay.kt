@@ -15,7 +15,7 @@ class EventRelay {
     }
 
     fun emitEvent(event: Event) {
-        Timber.e("NAVIGATION trying to emit $event")
+        Timber.d("NAVIGATION trying to emit $event")
         _navigationEvents.tryEmit(event)
     }
 }

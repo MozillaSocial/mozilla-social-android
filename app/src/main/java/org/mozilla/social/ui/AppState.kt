@@ -93,7 +93,7 @@ class AppState(
         coroutineScope.launch(Dispatchers.Main) {
 
             navigationEventFlow().collectLatest {
-                Timber.e("consuming event $it")
+                Timber.d("consuming event $it")
                 when (it) {
                     is Event.NavigateToDestination -> navigate(it.destination)
                     Event.PopBackStack -> popBackStack()
@@ -122,9 +122,7 @@ class AppState(
                 context,
                 url.toUri(),
             )
-
     }
-
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val currentNavigationDestination: StateFlow<NavigationDestination?> =
@@ -147,11 +145,11 @@ class AppState(
     }
 
     private fun popBackStack() {
-        if (tabbedNavController?.popBackStack() == false) mainNavController.popBackStack()
+        if (!mainNavController.popBackStack()) tabbedNavController?.popBackStack()
     }
 
     private fun navigate(navDestination: NavDestination) {
-        Timber.e("NAVIGATION consuming $navDestination")
+        Timber.d("NAVIGATION consuming $navDestination")
         with(navDestination) {
             when (this) {
                 NavDestination.Login -> {

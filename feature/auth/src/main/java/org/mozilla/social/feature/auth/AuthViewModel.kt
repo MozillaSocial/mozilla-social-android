@@ -10,7 +10,7 @@ import org.mozilla.social.core.domain.Login
 
 class AuthViewModel(private val login: Login) : ViewModel() {
 
-    val defaultUrl: StateFlow<String> = MutableStateFlow(if (BuildConfig.DEBUG) staging else prod)
+    val defaultUrl: StateFlow<String> = MutableStateFlow(if (BuildConfig.DEBUG) BuildConfig.stagingUrl else prod)
 
     fun onLoginClicked(context: Context, domain: String) {
         viewModelScope.launch {
@@ -19,7 +19,6 @@ class AuthViewModel(private val login: Login) : ViewModel() {
     }
 
     companion object {
-        private const val staging = "stage.moztodon.nonprod.webservices.mozgcp.net"
         private const val prod = "mozilla.social"
     }
 }
