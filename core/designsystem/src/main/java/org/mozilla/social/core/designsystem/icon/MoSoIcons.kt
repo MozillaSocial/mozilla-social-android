@@ -3,6 +3,7 @@ package org.mozilla.social.core.designsystem.icon
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.AddCircleOutline
 import androidx.compose.material.icons.rounded.AddPhotoAlternate
+import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.ArrowDropDown
 import androidx.compose.material.icons.rounded.BookmarkBorder
 import androidx.compose.material.icons.rounded.Check
@@ -105,6 +106,9 @@ object MoSoIcons {
     // Material- avoid using these, and instead use the drawable based resources
     @Composable
     fun check() = rememberVectorPainter(image = Icons.Rounded.Check)
+
+    @Composable
+    fun backArrow() = rememberVectorPainter(image = Icons.Rounded.ArrowBack)
 
     @Composable
     fun info() = rememberVectorPainter(image = Icons.Rounded.Info)
