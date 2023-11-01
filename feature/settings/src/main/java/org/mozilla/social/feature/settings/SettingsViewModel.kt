@@ -21,7 +21,7 @@ class SettingsViewModel(
     init {
         viewModelScope.launch {
             appPreferencesDatastore.trackAnalytics.collectLatest { enabled ->
-                saveSettingsChanges(enabled)
+                _isAnalyticsToggledOn.value = enabled
             }
         }
     }
@@ -35,9 +35,6 @@ class SettingsViewModel(
     private suspend fun saveSettingsChanges(optToggle: Boolean) {
         appPreferencesDatastore.toggleTrackAnalytics(optToggle)
         analytics.toggleAnalyticsTracking(optToggle)
-        appPreferencesDatastore.trackAnalytics.collectLatest {
-            _isAnalyticsToggledOn.value = it
-        }
     }
 
     fun logoutUser() {
