@@ -34,6 +34,7 @@ import org.koin.androidx.compose.koinViewModel
 import org.mozilla.social.core.designsystem.component.MoSoButtonSecondary
 import org.mozilla.social.core.designsystem.component.MoSoDivider
 import org.mozilla.social.core.designsystem.component.MoSoSurface
+import org.mozilla.social.core.designsystem.component.MoSoSwitch
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 
 @Composable
@@ -172,56 +173,15 @@ fun SettingsSwitch(
                         }
                     }
                     Spacer(modifier = Modifier.weight(1f))
-                    Switch(
+                    MoSoSwitch(
                         checked = state,
-                        onCheckedChange = { onClick() },
+                        onCheckChanged = { onClick() },
                         modifier = Modifier
                             .padding(end = 16.dp)
                     )
                 }
             }
            MoSoDivider()
-        }
-    }
-}
-
-@Composable
-private fun SettingsTextLink(
-    @DrawableRes icon: Int,
-    @StringRes iconDesc: Int,
-    @StringRes name: Int,
-    onClick: () -> Unit
-) {
-
-    MoSoSurface(
-        color = Color.Transparent,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp),
-        onClick = onClick,
-    ) {
-        Column {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(
-                        painterResource(id = icon),
-                        contentDescription = stringResource(id = iconDesc),
-                        modifier = Modifier.size(24.dp)
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(
-                        text = stringResource(id = name),
-                        modifier = Modifier.padding(16.dp),
-                        style = MaterialTheme.typography.bodyMedium,
-                        textAlign = TextAlign.Start,
-                    )
-                }
-                Spacer(modifier = Modifier.weight(1f))
-            }
-            MoSoDivider()
         }
     }
 }

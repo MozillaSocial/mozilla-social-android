@@ -2,7 +2,6 @@ package org.mozilla.social.feature.settings
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -20,7 +19,7 @@ class SettingsViewModel(
     var isAnalyticsToggledOn = _isAnalyticsToggledOn.asStateFlow()
 
     init {
-        GlobalScope.launch {
+        viewModelScope.launch {
             appPreferencesDatastore.trackAnalytics.collectLatest { enabled ->
                 saveSettingsChanges(enabled)
             }
