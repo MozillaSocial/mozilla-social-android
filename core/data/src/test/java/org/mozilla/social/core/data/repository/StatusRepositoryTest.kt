@@ -71,6 +71,7 @@ class StatusRepositoryTest {
 
     @Test
     fun deleteStatusNetworkFailureTest() = runTest {
+        throw Exception("testing unit test tests")
         coEvery { statusApi.deleteStatus("id") } throws Exception()
         var exception: Exception? = null
         try {
