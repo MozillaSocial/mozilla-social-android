@@ -9,26 +9,19 @@ import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.exclude
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.ime
-import androidx.compose.foundation.layout.imeNestedScroll
 import androidx.compose.foundation.layout.imePadding
-import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -78,6 +71,7 @@ import org.mozilla.social.core.designsystem.utils.NoIndication
 import org.mozilla.social.core.ui.TransparentNoTouchOverlay
 import org.mozilla.social.core.ui.VerticalDivider
 import org.mozilla.social.core.ui.VisibilityDropDownButton
+import org.mozilla.social.core.ui.appbar.MoSoCloseableTopAppBar
 import org.mozilla.social.core.ui.media.MediaUpload
 import org.mozilla.social.core.ui.transparentTextFieldColors
 import org.mozilla.social.feature.post.R
@@ -102,21 +96,13 @@ import org.mozilla.social.post.status.StatusInteractions
 
 @Composable
 internal fun NewPostScreen(
-    onStatusPosted: () -> Unit,
-    onCloseClicked: () -> Unit,
     replyStatusId: String?,
-    viewModel: NewPostViewModel = koinViewModel(parameters = {
-        parametersOf(
-            onStatusPosted,
-            replyStatusId,
-        )
-    })
+    viewModel: NewPostViewModel = koinViewModel(parameters = { parametersOf(replyStatusId) })
 ) {
     NewPostScreen(
         statusText = viewModel.statusText.collectAsState().value,
         statusInteractions = viewModel.statusInteractions,
         onPostClicked = viewModel::onPostClicked,
-        onCloseClicked = onCloseClicked,
         sendButtonEnabled = viewModel.sendButtonEnabled.collectAsState().value,
         imageStates = viewModel.mediaStates.collectAsState().value,
         mediaInteractions = viewModel.mediaInteractions,
@@ -139,14 +125,12 @@ internal fun NewPostScreen(
 
 data class UserHeaderState(val avatarUrl: String, val displayName: String)
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun NewPostScreen(
     bottomBarState: BottomBarState,
     statusText: TextFieldValue,
     statusInteractions: StatusInteractions,
     onPostClicked: () -> Unit,
-    onCloseClicked: () -> Unit,
     sendButtonEnabled: Boolean,
     imageStates: List<ImageState>,
     mediaInteractions: MediaInteractions,
@@ -172,7 +156,6 @@ private fun NewPostScreen(
         Column {
             TopBar(
                 onPostClicked = onPostClicked,
-                onCloseClicked = onCloseClicked,
                 sendButtonEnabled = sendButtonEnabled,
             )
             userHeaderState?.let { userHeaderState ->
@@ -256,36 +239,17 @@ fun UserHeader(
 @Composable
 private fun TopBar(
     onPostClicked: () -> Unit,
-    onCloseClicked: () -> Unit,
     sendButtonEnabled: Boolean,
 ) {
-    Row(
-        Modifier
-            .fillMaxWidth()
-            .padding(MoSoSpacing.sm),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-
-        // left side
-        IconButton(
-            onClick = { onCloseClicked() },
-        ) {
-            Icon(
-                MoSoIcons.x(),
-                "close",
-                tint = MoSoTheme.colors.textPrimary,
-            )
-        }
-
-        Spacer(modifier = Modifier.padding(start = 16.dp))
-        MoSoButton(onClick = onPostClicked, enabled = sendButtonEnabled) {
-            Text(
-                text = stringResource(id = R.string.post),
-                style = MoSoTheme.typography.labelSmall
-            )
-        }
-    }
+    MoSoCloseableTopAppBar(
+        actions = {
+            MoSoButton(onClick = onPostClicked, enabled = sendButtonEnabled) {
+                Text(
+                    text = stringResource(id = R.string.post),
+                    style = MoSoTheme.typography.labelSmall
+                )
+            }
+        })
 }
 
 
@@ -608,7 +572,6 @@ private fun NewPostScreenPreview() {
             statusText = TextFieldValue(),
             statusInteractions = object : StatusInteractions {},
             onPostClicked = {},
-            onCloseClicked = {},
             sendButtonEnabled = true,
             imageStates = listOf(),
             mediaInteractions = object : MediaInteractions {},
@@ -638,7 +601,6 @@ private fun NewPostScreenWithPollPreview() {
             statusText = TextFieldValue(),
             statusInteractions = object : StatusInteractions {},
             onPostClicked = {},
-            onCloseClicked = {},
             sendButtonEnabled = true,
             imageStates = listOf(),
             mediaInteractions = object : MediaInteractions {},
@@ -673,7 +635,6 @@ private fun NewPostScreenWithContentWarningPreview() {
             statusText = TextFieldValue(),
             statusInteractions = object : StatusInteractions {},
             onPostClicked = {},
-            onCloseClicked = {},
             sendButtonEnabled = true,
             imageStates = listOf(),
             mediaInteractions = object : MediaInteractions {},

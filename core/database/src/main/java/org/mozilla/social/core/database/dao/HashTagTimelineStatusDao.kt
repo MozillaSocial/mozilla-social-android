@@ -27,4 +27,11 @@ interface HashTagTimelineStatusDao : BaseDao<HashTagTimelineStatus> {
 
     @Query("DELETE FROM hashTagTimeline")
     fun deleteAllHashTagTimelines()
+
+    @Query(
+        "DELETE FROM hashTagTimeline " +
+        "WHERE statusId = :statusId " +
+        "OR boostedStatusId = :statusId"
+    )
+    suspend fun deletePost(statusId: String)
 }

@@ -31,7 +31,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.koin.androidx.compose.koinViewModel
-import org.koin.core.parameter.parametersOf
 import org.mozilla.social.common.Resource
 import org.mozilla.social.common.utils.toFile
 import org.mozilla.social.core.designsystem.component.MoSoButton
@@ -39,26 +38,18 @@ import org.mozilla.social.core.designsystem.component.MoSoCheckBox
 import org.mozilla.social.core.designsystem.component.MoSoSurface
 import org.mozilla.social.core.designsystem.component.MoSoTextField
 import org.mozilla.social.core.designsystem.component.MoSoToast
-import org.mozilla.social.core.designsystem.component.MoSoTopBar
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.ui.TransparentNoTouchOverlay
+import org.mozilla.social.core.ui.appbar.MoSoCloseableTopAppBar
 import org.mozilla.social.feature.account.Header
 import org.mozilla.social.feature.account.R
 
 @Composable
 internal fun EditAccountScreen(
-    onDone: () -> Unit,
-    viewModel: EditAccountViewModel = koinViewModel(
-        parameters = {
-            parametersOf(
-                onDone,
-            )
-        }
-    ),
+    viewModel: EditAccountViewModel = koinViewModel(),
 ) {
     EditAccountScreen(
-        onCloseClicked = onDone,
         editAccountInteractions = viewModel,
         editAccountUiState = viewModel.editAccountUiState.collectAsState().value,
         isUploading = viewModel.isUploading.collectAsState().value,
@@ -69,7 +60,6 @@ internal fun EditAccountScreen(
 
 @Composable
 fun EditAccountScreen(
-    onCloseClicked: () -> Unit,
     editAccountInteractions: EditAccountInteractions,
     editAccountUiState: Resource<EditAccountUiState>,
     isUploading: Boolean,
@@ -88,7 +78,6 @@ fun EditAccountScreen(
                     is Resource.Loading -> {}
                     is Resource.Loaded -> {
                         LoadedState(
-                            onCloseClicked = onCloseClicked,
                             editAccountInteractions = editAccountInteractions,
                             uiState = editAccountUiState.data,
                         )
@@ -110,17 +99,15 @@ fun EditAccountScreen(
 
 @Composable
 private fun LoadedState(
-    onCloseClicked: () -> Unit,
     editAccountInteractions: EditAccountInteractions,
     uiState: EditAccountUiState,
 ) {
     val context = LocalContext.current
 
     Column {
-        MoSoTopBar(
-            onIconClicked = { onCloseClicked() },
+        MoSoCloseableTopAppBar(
             title = uiState.topBarTitle,
-            rightSideContent = {
+            actions = {
                 MoSoButton(
                     modifier = Modifier
                         .padding(8.dp)
@@ -283,7 +270,6 @@ private fun BotAndLock(
 private fun PreviewEditAccountScreen() {
     MoSoTheme {
         EditAccountScreen(
-            onCloseClicked = { },
             editAccountUiState = Resource.Loaded(
                 data = EditAccountUiState(
                     topBarTitle = "John",

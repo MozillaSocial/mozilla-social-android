@@ -20,6 +20,7 @@ import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
 import org.mozilla.social.COMPILE_SDK
 import org.mozilla.social.configureKotlinAndroid
+import org.mozilla.social.configureUnitTests
 
 class AndroidApplicationConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) {
@@ -32,6 +33,7 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
 
             extensions.configure<ApplicationExtension> {
                 configureKotlinAndroid(this)
+                configureUnitTests(this)
                 defaultConfig.targetSdk = COMPILE_SDK
             }
         }

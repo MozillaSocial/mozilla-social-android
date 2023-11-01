@@ -3,13 +3,10 @@ package org.mozilla.social.core.navigation
 sealed class NavigationDestination(
     val route: String,
 ) {
-    data object MyAccount: NavigationDestination(
-        route = "myAccount"
-    )
+    data object MyAccount: NavigationDestination(route = "myAccount")
 
-    data object Account: NavigationDestination(
-        route = "account"
-    ) {
+    data object Account: NavigationDestination(route = "account") {
+
         const val NAV_PARAM_ACCOUNT_ID = "accountId"
         val fullRoute = "$route?$NAV_PARAM_ACCOUNT_ID={$NAV_PARAM_ACCOUNT_ID}"
 
@@ -30,6 +27,10 @@ sealed class NavigationDestination(
 
     data object Discover: NavigationDestination(
         route = "discover"
+    )
+
+    data object Tabs: NavigationDestination(
+        route = "tabs"
     )
 
     data object Feed: NavigationDestination(

@@ -26,4 +26,11 @@ interface AccountTimelineStatusDao : BaseDao<AccountTimelineStatus> {
 
     @Query("DELETE FROM accountTimeline")
     fun deleteAllAccountTimelines()
+
+    @Query(
+        "DELETE FROM accountTimeline " +
+        "WHERE statusId = :statusId " +
+        "OR boostedStatusId = :statusId"
+    )
+    suspend fun deletePost(statusId: String)
 }

@@ -27,31 +27,44 @@ interface StatusDao : BaseDao<DatabaseStatus> {
     @Query(
         "UPDATE statuses " +
         "SET isBoosted = :isBoosted " +
-        "WHERE statusID = :statusId"
+        "WHERE statusId = :statusId"
     )
     suspend fun updateBoosted(statusId: String, isBoosted: Boolean)
 
     @Query(
         "UPDATE statuses " +
         "SET boostsCount = boostsCount + :valueChange " +
-        "WHERE statusID = :statusId"
+        "WHERE statusId = :statusId"
     )
     suspend fun updateBoostCount(statusId: String, valueChange: Long)
 
     @Query(
         "UPDATE statuses " +
-                "SET isFavorited = :isFavorited " +
-        "WHERE statusID = :statusId"
+        "SET isFavorited = :isFavorited " +
+        "WHERE statusId = :statusId"
     )
     suspend fun updateFavorited(statusId: String, isFavorited: Boolean)
 
     @Query(
         "UPDATE statuses " +
         "SET favouritesCount = favouritesCount + :valueChange " +
-        "WHERE statusID = :statusId"
+        "WHERE statusId = :statusId"
     )
     suspend fun updateFavoriteCount(statusId: String, valueChange: Long)
 
     @Query("DELETE FROM statuses")
     fun deleteAll()
+
+    @Query(
+        "DELETE FROM statuses " +
+        "WHERE statusId = :statusId"
+    )
+    suspend fun deleteStatus(statusId: String)
+
+    @Query(
+        "UPDATE statuses " +
+        "SET isBeingDeleted = :isBeingDeleted " +
+        "WHERE statusId = :statusId"
+    )
+    suspend fun updateIsBeingDeleted(statusId: String, isBeingDeleted: Boolean)
 }

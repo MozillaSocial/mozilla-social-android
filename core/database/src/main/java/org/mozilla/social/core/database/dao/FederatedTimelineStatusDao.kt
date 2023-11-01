@@ -23,4 +23,11 @@ interface FederatedTimelineStatusDao : BaseDao<FederatedTimelineStatus> {
         "OR boostedStatusAccountId = :accountId"
     )
     suspend fun removePostsFromAccount(accountId: String)
+
+    @Query(
+        "DELETE FROM federatedTimeline " +
+        "WHERE statusId = :statusId " +
+        "OR boostedStatusId = :statusId"
+    )
+    suspend fun deletePost(statusId: String)
 }

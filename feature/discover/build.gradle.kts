@@ -16,7 +16,9 @@ dependencies {
     implementation(project(":core:model"))
     implementation(project(":core:analytics"))
 
-    implementation(libs.koin)
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.koin.core)
+    implementation(libs.koin.androidx.compose)
     implementation(libs.jakewharton.timber)
 
     implementation(libs.coil)

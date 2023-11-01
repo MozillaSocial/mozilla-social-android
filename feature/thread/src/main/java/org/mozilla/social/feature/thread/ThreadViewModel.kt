@@ -13,8 +13,9 @@ import org.mozilla.social.core.data.repository.AccountRepository
 import org.mozilla.social.core.data.repository.StatusRepository
 import org.mozilla.social.core.domain.AccountIdFlow
 import org.mozilla.social.core.domain.GetThreadUseCase
+import org.mozilla.social.core.navigation.usecases.NavigateTo
+import org.mozilla.social.core.navigation.usecases.OpenLink
 import org.mozilla.social.core.ui.postcard.PostCardDelegate
-import org.mozilla.social.core.ui.postcard.PostCardNavigation
 import org.mozilla.social.core.ui.postcard.PostCardUiState
 import org.mozilla.social.core.ui.postcard.toPostCardUiState
 import timber.log.Timber
@@ -26,7 +27,8 @@ class ThreadViewModel(
     accountIdFlow: AccountIdFlow,
     getThreadUseCase: GetThreadUseCase,
     mainStatusId: String,
-    postCardNavigation: PostCardNavigation,
+    openLink: OpenLink,
+    navigateTo: NavigateTo,
 ) : ViewModel() {
 
     private val currentUserAccountId: StateFlow<String> =
@@ -48,7 +50,7 @@ class ThreadViewModel(
         statusRepository = statusRepository,
         accountRepository = accountRepository,
         log = log,
-        postCardNavigation = postCardNavigation,
+        navigateTo = navigateTo,
+        openLink = openLink,
     )
-
 }

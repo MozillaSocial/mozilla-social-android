@@ -17,7 +17,7 @@ fun Status.toPostCardUiState(
         statusId = statusId,
         topRowMetaDataUiState = toTopRowMetaDataUiState(),
         mainPostCardUiState = boostedStatus?.toMainPostCardUiState(currentUserAccountId)
-            ?: toMainPostCardUiState(currentUserAccountId)
+            ?: toMainPostCardUiState(currentUserAccountId),
     )
 
 private fun Status.toMainPostCardUiState(
@@ -43,6 +43,8 @@ private fun Status.toMainPostCardUiState(
         accountId = account.accountId,
         mentions = mentions,
         previewCard = card?.toPreviewCard(),
+        isUsersPost = currentUserAccountId == account.accountId,
+        isBeingDeleted = isBeingDeleted,
     )
 
 private fun Status.toTopRowMetaDataUiState(): TopRowMetaDataUiState? =

@@ -1,7 +1,11 @@
 package org.mozilla.social.core.ui.postcard
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
@@ -34,6 +38,7 @@ import coil.compose.AsyncImage
 import kotlinx.datetime.Instant
 import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.common.utils.timeSinceNow
+import org.mozilla.social.core.designsystem.component.MoSoCircularProgressIndicator
 import org.mozilla.social.core.designsystem.component.MoSoDropdownMenu
 import org.mozilla.social.core.designsystem.component.MoSoSurface
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
@@ -41,6 +46,7 @@ import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.designsystem.utils.NoRipple
 import org.mozilla.social.core.ui.DropDownItem
 import org.mozilla.social.core.ui.R
+import org.mozilla.social.core.ui.TransparentNoTouchOverlay
 import org.mozilla.social.core.ui.getMaxWidth
 import org.mozilla.social.core.ui.media.MediaDisplay
 import org.mozilla.social.core.ui.poll.Poll
@@ -53,30 +59,42 @@ import org.mozilla.social.core.ui.shareUrl
  */
 @Composable
 fun PostCard(
+    modifier: Modifier = Modifier,
     post: PostCardUiState,
     postCardInteractions: PostCardInteractions,
     threadId: String? = null
 ) {
     NoRipple {
-        Column(
-            Modifier
-                .padding(8.dp)
-                .fillMaxSize()
-                .clickable {
-                    // prevent the user from being able to click on the same status
-                    // as the root thread status
-                    if (post.mainPostCardUiState.statusId != threadId) {
-                        postCardInteractions.onPostCardClicked(post.mainPostCardUiState.statusId)
+        Box(modifier = modifier) {
+            Column(
+                Modifier
+                    .padding(8.dp)
+                    .fillMaxSize()
+                    .clickable {
+                        // prevent the user from being able to click on the same status
+                        // as the root thread status
+                        if (post.mainPostCardUiState.statusId != threadId) {
+                            postCardInteractions.onPostCardClicked(post.mainPostCardUiState.statusId)
+                        }
                     }
+            ) {
+                post.topRowMetaDataUiState?.let {
+                    TopRowMetaData(
+                        topRowMetaDataUiState = it
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
                 }
-        ) {
-            post.topRowMetaDataUiState?.let {
-                TopRowMetaData(
-                    topRowMetaDataUiState = it
-                )
-                Spacer(modifier = Modifier.height(8.dp))
+                MainPost(post.mainPostCardUiState, postCardInteractions)
             }
-            MainPost(post.mainPostCardUiState, postCardInteractions)
+
+            AnimatedVisibility(
+                modifier = Modifier.matchParentSize(),
+                visible = post.mainPostCardUiState.isBeingDeleted,
+                enter = fadeIn(),
+                exit = fadeOut(),
+            ) {
+                TransparentNoTouchOverlay()
+            }
         }
     }
 }
@@ -172,8 +190,6 @@ private fun MetaData(
     post: MainPostCardUiState,
     postCardInteractions: PostCardInteractions,
 ) {
-    val overflowMenuExpanded = remember { mutableStateOf(false) }
-
     val context = LocalContext.current
 
     Row(
@@ -192,18 +208,47 @@ private fun MetaData(
                 color = MoSoTheme.colors.textSecondary,
             )
         }
-        IconButton(
-            modifier = Modifier.width(IntrinsicSize.Max),
-            onClick = { overflowMenuExpanded.value = true }
-        ) {
-            Icon(painter = MoSoIcons.moreVertical(), contentDescription = "")
+        OverflowMenu(
+            post = post,
+            postCardInteractions = postCardInteractions,
+        )
+    }
+}
 
-            MoSoDropdownMenu(
-                expanded = overflowMenuExpanded.value,
-                onDismissRequest = {
-                    overflowMenuExpanded.value = false
-                }
-            ) {
+@Composable
+private fun OverflowMenu(
+    post: MainPostCardUiState,
+    postCardInteractions: PostCardInteractions,
+) {
+    val overflowMenuExpanded = remember { mutableStateOf(false) }
+    val context = LocalContext.current
+
+    IconButton(
+        modifier = Modifier.width(IntrinsicSize.Max),
+        onClick = { overflowMenuExpanded.value = true }
+    ) {
+        if (post.isBeingDeleted) {
+            MoSoCircularProgressIndicator(
+                modifier = Modifier
+                    .size(26.dp)
+            )
+        } else {
+            Icon(painter = MoSoIcons.moreVertical(), contentDescription = "")
+        }
+
+        MoSoDropdownMenu(
+            expanded = overflowMenuExpanded.value,
+            onDismissRequest = {
+                overflowMenuExpanded.value = false
+            }
+        ) {
+            if (post.isUsersPost) {
+                DropDownItem(
+                    text = stringResource(id = R.string.delete_post),
+                    expanded = overflowMenuExpanded,
+                    onClick = { postCardInteractions.onOverflowDeleteClicked(post.statusId) }
+                )
+            } else {
                 DropDownItem(
                     text = stringResource(id = R.string.mute_user, post.username),
                     expanded = overflowMenuExpanded,
@@ -345,7 +390,9 @@ private fun PostCardPreview() {
                         accountId = "",
                         mentions = emptyList(),
                         previewCard = null,
-                    )
+                        isUsersPost = false,
+                        isBeingDeleted = false,
+                    ),
                 ),
                 postCardInteractions = object : PostCardInteractions {},
             )

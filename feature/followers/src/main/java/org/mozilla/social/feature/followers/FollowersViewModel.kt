@@ -8,13 +8,16 @@ import androidx.paging.cachedIn
 import androidx.paging.map
 import kotlinx.coroutines.flow.map
 import org.mozilla.social.core.data.repository.AccountRepository
+import org.mozilla.social.core.navigation.NavDestination
+import org.mozilla.social.core.navigation.usecases.NavigateTo
+import org.mozilla.social.core.navigation.usecases.PopNavBackstack
 import org.mozilla.social.core.ui.account.quickview.toQuickViewUiState
 
 class FollowersViewModel(
-    private val accountRepository: AccountRepository,
     private val accountId: String,
-    private val followersNavigationCallbacks: FollowersNavigationCallbacks,
     private val followerScreenType: FollowerScreenType,
+    private val accountRepository: AccountRepository,
+    private val navigateTo: NavigateTo,
 ) : ViewModel(), FollowersInteractions {
 
     val followers = Pager(
@@ -30,11 +33,7 @@ class FollowersViewModel(
         }
     }.cachedIn(viewModelScope)
 
-    override fun onCloseClicked() {
-        followersNavigationCallbacks.onCloseClicked()
-    }
-
     override fun onAccountClicked(accountId: String) {
-        followersNavigationCallbacks.onAccountClicked(accountId)
+        navigateTo(NavDestination.Account(accountId))
     }
 }

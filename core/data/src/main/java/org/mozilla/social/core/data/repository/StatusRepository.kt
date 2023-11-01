@@ -233,4 +233,24 @@ class StatusRepository(
 
     suspend fun getStatusContext(statusId: String): Context =
         statusApi.getStatusContext(statusId).toExternalModel()
+
+    suspend fun deleteStatus(
+        statusId: String,
+    ) = withContext(Dispatchers.IO) {
+        try {
+            socialDatabase.statusDao().updateIsBeingDeleted(statusId, true)
+            statusApi.deleteStatus(statusId)
+            socialDatabase.withTransaction {
+                socialDatabase.homeTimelineDao().deletePost(statusId)
+                socialDatabase.localTimelineDao().deletePost(statusId)
+                socialDatabase.federatedTimelineDao().deletePost(statusId)
+                socialDatabase.hashTagTimelineDao().deletePost(statusId)
+                socialDatabase.accountTimelineDao().deletePost(statusId)
+                socialDatabase.statusDao().deleteStatus(statusId)
+            }
+        } catch (e: Exception) {
+            socialDatabase.statusDao().updateIsBeingDeleted(statusId, false)
+            throw e
+        }
+    }
 }

@@ -11,6 +11,9 @@ data class PostCardUiState(
     val mainPostCardUiState: MainPostCardUiState,
 )
 
+/**
+ * @param isUsersPost true if the this status belongs to the logged in user
+ */
 data class MainPostCardUiState(
     val url: String?,
     val pollUiState: PollUiState?,
@@ -29,6 +32,8 @@ data class MainPostCardUiState(
     val accountId: String,
     val mentions: List<Mention>,
     val previewCard: PreviewCard?,
+    val isUsersPost: Boolean,
+    val isBeingDeleted: Boolean,
 )
 
 data class TopRowMetaDataUiState(

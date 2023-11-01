@@ -23,4 +23,11 @@ interface HomeTimelineStatusDao : BaseDao<HomeTimelineStatus> {
         "OR boostedStatusAccountId = :accountId"
     )
     suspend fun removePostsFromAccount(accountId: String)
+
+    @Query(
+        "DELETE FROM homeTimeline " +
+        "WHERE statusId = :statusId " +
+        "OR boostedStatusId = :statusId"
+    )
+    suspend fun deletePost(statusId: String)
 }
