@@ -101,7 +101,7 @@ object MoSoIcons {
     fun x() = painterResource(id = R.drawable.x)
 
     @Composable
-    fun profileLock() = painterResource(id = R.drawable.lock)
+    fun lock() = painterResource(id = R.drawable.lock)
 
     // Material- avoid using these, and instead use the drawable based resources
     @Composable
@@ -126,7 +126,7 @@ object MoSoIcons {
     fun lockOpen() = rememberVectorPainter(image = Icons.Rounded.LockOpen)
 
     @Composable
-    fun lock() = rememberVectorPainter(image = Icons.Rounded.Lock)
+    fun materialLock() = rememberVectorPainter(image = Icons.Rounded.Lock)
 
     @Composable
     fun message() = rememberVectorPainter(image = Icons.Rounded.Message)
