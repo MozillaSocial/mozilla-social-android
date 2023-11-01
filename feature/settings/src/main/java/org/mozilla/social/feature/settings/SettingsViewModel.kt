@@ -6,13 +6,11 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import org.mozilla.social.core.analytics.Analytics
 import org.mozilla.social.core.datastore.AppPreferencesDatastore
 import org.mozilla.social.core.domain.Logout
 
 class SettingsViewModel(
     private val appPreferencesDatastore: AppPreferencesDatastore,
-    private val analytics: Analytics,
     private val logout: Logout,
 ) : ViewModel() {
     private val _isAnalyticsToggledOn: MutableStateFlow<Boolean> = MutableStateFlow(false)
@@ -34,7 +32,6 @@ class SettingsViewModel(
 
     private suspend fun saveSettingsChanges(optToggle: Boolean) {
         appPreferencesDatastore.toggleTrackAnalytics(optToggle)
-        analytics.toggleAnalyticsTracking(optToggle)
     }
 
     fun logoutUser() {

@@ -1,15 +1,23 @@
 package org.mozilla.social.core.analytics.glean
 
 import android.content.Context
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import mozilla.telemetry.glean.BuildInfo
 import mozilla.telemetry.glean.Glean
 import org.mozilla.social.core.analytics.Analytics
 import org.mozilla.social.core.analytics.EngagementType
 import org.mozilla.social.core.analytics.GleanMetrics.Identifiers
 import org.mozilla.social.core.analytics.GleanMetrics.Ui
+import org.mozilla.social.core.datastore.AppPreferencesDatastore
 import java.util.Calendar
 
-class GleanAnalytics : Analytics {
+class GleanAnalytics(
+    private val appPreferencesDatastore: AppPreferencesDatastore,
+) : Analytics {
+    @OptIn(DelicateCoroutinesApi::class)
     override fun initialize(context: Context) {
         val buildInfo = BuildInfo("1", "1", Calendar.getInstance())
 
@@ -21,6 +29,12 @@ class GleanAnalytics : Analytics {
             uploadEnabled = false,
             buildInfo = buildInfo
         )
+
+        GlobalScope.launch {
+            appPreferencesDatastore.trackAnalytics.collectLatest {
+                Glean.setUploadEnabled(it)
+            }
+        }
     }
 
     override fun uiEngagement(
@@ -86,9 +100,5 @@ class GleanAnalytics : Analytics {
     override fun clearLoggedInIdentifiers() {
         Identifiers.mastodonAccountHandle.destroy()
         Identifiers.mastodonAccountId.destroy()
-    }
-
-    override fun toggleAnalyticsTracking(toggleTracking: Boolean) {
-        Glean.setUploadEnabled(toggleTracking)
     }
 }
