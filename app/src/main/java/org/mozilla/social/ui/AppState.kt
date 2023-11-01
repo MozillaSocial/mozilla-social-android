@@ -84,7 +84,7 @@ class AppState(
         _tabbedNavControllerFlow.asStateFlow()
 
     // Convenience var for getting/setting value in flow
-     var tabbedNavController: NavHostController?
+    var tabbedNavController: NavHostController?
         get() = tabbedNavControllerFlow.value
         set(value) {
             _tabbedNavControllerFlow.value = value
@@ -149,7 +149,7 @@ class AppState(
         }
     }
 
-    fun popBackStack() {
+    private fun popBackStack() {
         if (tabbedNavController?.popBackStack() == false) mainNavController.popBackStack()
     }
 
@@ -179,7 +179,11 @@ class AppState(
                 is NavDestination.Account -> mainNavController.navigateToAccount(accountId = accountId)
                 is NavDestination.Followers -> mainNavController.navigateToFollowers(accountId)
                 NavDestination.Settings -> mainNavController.navigateToSettings()
-                NavDestination.Tabs -> mainNavController.navigateToTabs()
+                NavDestination.Tabs -> {
+                    clearBackstack()
+                    mainNavController.navigateToTabs()
+                }
+
                 is NavDestination.Hashtag -> mainNavController.navigateToHashTag(hashTagValue = hashtag)
                 NavDestination.EditAccount -> mainNavController.navigateToEditAccount()
             }
