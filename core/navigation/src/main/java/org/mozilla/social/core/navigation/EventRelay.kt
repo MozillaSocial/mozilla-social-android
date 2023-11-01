@@ -6,7 +6,7 @@ import org.mozilla.social.common.utils.StringFactory
 import timber.log.Timber
 
 class EventRelay {
-    private val _navigationEvents = MutableSharedFlow<Event>(replay = 1)
+    private val _navigationEvents = MutableSharedFlow<Event>(extraBufferCapacity = 1)
     val navigationEvents: SharedFlow<Event>
         get() = _navigationEvents
 
