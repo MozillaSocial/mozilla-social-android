@@ -1,13 +1,10 @@
 package org.mozilla.social.core.data.repository
 
-import androidx.room.withTransaction
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.impl.annotations.SpyK
 import io.mockk.mockk
-import io.mockk.mockkStatic
-import io.mockk.slot
 import kotlinx.coroutines.test.runTest
 import org.mozilla.social.core.data.utils.TransactionUtils
 import org.mozilla.social.core.database.SocialDatabase
