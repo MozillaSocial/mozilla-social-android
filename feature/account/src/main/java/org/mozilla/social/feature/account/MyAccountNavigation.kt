@@ -1,5 +1,9 @@
 package org.mozilla.social.feature.account
 
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.only
+import androidx.compose.foundation.layout.systemBars
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
@@ -19,6 +23,7 @@ fun NavGraphBuilder.myAccountScreen(
     ) {
         AccountScreen(
             accountId = null,
+            windowInsets = WindowInsets.systemBars.only(WindowInsetsSides.Top),
         )
     }
 }

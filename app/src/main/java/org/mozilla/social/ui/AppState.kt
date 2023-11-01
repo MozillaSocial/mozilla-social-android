@@ -88,10 +88,7 @@ class AppState(
         }
 
     init {
-        this.tabbedNavController = tabbedNavController
-
         coroutineScope.launch(Dispatchers.Main) {
-
             navigationEventFlow().collectLatest {
                 Timber.d("consuming event $it")
                 when (it) {

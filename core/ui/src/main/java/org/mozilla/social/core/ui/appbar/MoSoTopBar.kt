@@ -47,7 +47,7 @@ fun MoSoCloseableTopAppBar(
 ) {
     MoSoTopBar(
         title = title,
-        icon = if (showCloseButton) MoSoIcons.x() else null,
+        icon = if (showCloseButton) MoSoIcons.backArrow() else null,
         onIconClicked = { popBackstack() },
         actions = actions,
         showDivider = showDivider
@@ -104,7 +104,7 @@ fun MoSoTopBar(
     navigationIcon: @Composable () -> Unit = {},
     actions: @Composable RowScope.() -> Unit = {},
     windowInsets: WindowInsets = TopAppBarDefaults.windowInsets,
-    colors: TopAppBarColors = TopAppBarDefaults.topAppBarColors(),
+    colors: TopAppBarColors = MoSoTopBarDefaults.colors(),
     scrollBehavior: TopAppBarScrollBehavior? = null
 ) {
     TopAppBar(
@@ -130,7 +130,18 @@ private fun TopBarIconButton(painter: Painter, onIconClicked: () -> Unit) {
             tint = MoSoTheme.colors.iconPrimary,
         )
     }
+}
 
+object MoSoTopBarDefaults {
+    @OptIn(ExperimentalMaterial3Api::class)
+    @Composable
+    fun colors(): TopAppBarColors = TopAppBarDefaults.topAppBarColors(
+        containerColor = MoSoTheme.colors.layer1,
+        scrolledContainerColor = MoSoTheme.colors.layer1,
+        navigationIconContentColor = MoSoTheme.colors.iconPrimary,
+        titleContentColor = MoSoTheme.colors.textPrimary,
+        actionIconContentColor = MoSoTheme.colors.iconPrimary,
+    )
 }
 
 @Preview

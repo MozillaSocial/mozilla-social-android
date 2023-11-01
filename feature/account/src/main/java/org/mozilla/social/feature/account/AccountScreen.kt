@@ -41,7 +41,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -50,7 +49,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.paging.PagingData
-import coil.compose.AsyncImage
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -82,6 +80,7 @@ import org.mozilla.social.core.ui.postcard.PostCardUiState
 
 @Composable
 internal fun AccountScreen(
+    windowInsets: WindowInsets = WindowInsets.systemBars,
     accountId: String?,
     viewModel: AccountViewModel = koinViewModel(parameters = { parametersOf(accountId) }),
 ) {
@@ -95,6 +94,7 @@ internal fun AccountScreen(
         htmlContentInteractions = viewModel.postCardDelegate,
         postCardInteractions = viewModel.postCardDelegate,
         accountInteractions = viewModel,
+        windowInsets = windowInsets,
     )
 
     LaunchedEffect(Unit) {
@@ -115,9 +115,13 @@ private fun AccountScreen(
     htmlContentInteractions: HtmlContentInteractions,
     postCardInteractions: PostCardInteractions,
     accountInteractions: AccountInteractions,
+    windowInsets: WindowInsets,
 ) {
     MoSoSurface {
-        Column(Modifier.windowInsetsPadding(WindowInsets.systemBars)) {
+        Column(
+            modifier = Modifier
+                .windowInsetsPadding(windowInsets)
+        ) {
             when (resource) {
                 is Resource.Loading -> {
                     MoSoCloseableTopAppBar(showCloseButton = closeButtonVisible)

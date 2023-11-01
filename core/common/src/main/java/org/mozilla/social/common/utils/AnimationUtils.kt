@@ -26,5 +26,4 @@ fun mosoFadeIn(): EnterTransition =
 fun mosoFadeOut(): ExitTransition =
     fadeOut(tween(durationMillis = TWEEN_DURATION))
 
-const val TWEEN_DURATION = 100
-const val FADE_IN_TWEEN_DELAY = 500
+const val TWEEN_DURATION = 250

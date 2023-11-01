@@ -13,9 +13,9 @@ import org.mozilla.social.core.designsystem.theme.MoSoTheme
 
 @Composable
 fun MoSoSwitch(
+    modifier: Modifier = Modifier,
     checked: Boolean = false,
     onCheckChanged: () -> Unit,
-    modifier: Modifier = Modifier,
     thumbContent: (@Composable () -> Unit)? = null,
     enabled: Boolean = true,
     colors: SwitchColors = MoSoSwitchPrimaryDefaults.colors(),
