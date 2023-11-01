@@ -24,7 +24,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBars
-import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.windowInsetsPadding
@@ -42,6 +41,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -50,6 +50,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.paging.PagingData
+import coil.compose.AsyncImage
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -67,36 +68,23 @@ import org.mozilla.social.core.designsystem.component.MoSoSurface
 import org.mozilla.social.core.designsystem.component.MoSoTab
 import org.mozilla.social.core.designsystem.component.MoSoTabRow
 import org.mozilla.social.core.designsystem.component.MoSoToast
-import org.mozilla.social.core.designsystem.component.MoSoTopBar
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.designsystem.utils.NoRipple
 import org.mozilla.social.core.ui.DropDownItem
+import org.mozilla.social.core.ui.appbar.MoSoCloseableTopAppBar
 import org.mozilla.social.core.ui.error.GenericError
 import org.mozilla.social.core.ui.htmlcontent.HtmlContent
 import org.mozilla.social.core.ui.htmlcontent.HtmlContentInteractions
 import org.mozilla.social.core.ui.postcard.PostCardInteractions
 import org.mozilla.social.core.ui.postcard.PostCardList
-import org.mozilla.social.core.ui.postcard.PostCardNavigation
 import org.mozilla.social.core.ui.postcard.PostCardUiState
 
 @Composable
 internal fun AccountScreen(
     accountId: String?,
-    accountNavigationCallbacks: AccountNavigationCallbacks,
-    postCardNavigation: PostCardNavigation,
-    navigateToSettings: () -> Unit,
-    viewModel: AccountViewModel = koinViewModel(
-        parameters = {
-            parametersOf(
-                accountId,
-                postCardNavigation,
-                accountNavigationCallbacks,
-            )
-        }
-    ),
+    viewModel: AccountViewModel = koinViewModel(parameters = { parametersOf(accountId) }),
 ) {
-
     AccountScreen(
         resource = viewModel.uiState.collectAsState().value,
         closeButtonVisible = viewModel.shouldShowCloseButton,
@@ -104,10 +92,8 @@ internal fun AccountScreen(
         feed = viewModel.feed,
         errorToastMessage = viewModel.postCardDelegate.errorToastMessage,
         timelineTypeFlow = viewModel.timelineType,
-        accountNavigationCallbacks = accountNavigationCallbacks,
         htmlContentInteractions = viewModel.postCardDelegate,
         postCardInteractions = viewModel.postCardDelegate,
-        navigateToSettings = navigateToSettings,
         accountInteractions = viewModel,
     )
 
@@ -126,24 +112,15 @@ private fun AccountScreen(
     feed: Flow<PagingData<PostCardUiState>>,
     errorToastMessage: SharedFlow<StringFactory>,
     timelineTypeFlow: StateFlow<TimelineType>,
-    accountNavigationCallbacks: AccountNavigationCallbacks,
     htmlContentInteractions: HtmlContentInteractions,
     postCardInteractions: PostCardInteractions,
     accountInteractions: AccountInteractions,
-    navigateToSettings: () -> Unit,
 ) {
     MoSoSurface {
         Column(Modifier.windowInsetsPadding(WindowInsets.systemBars)) {
             when (resource) {
                 is Resource.Loading -> {
-                    MoSoTopBar(
-                        icon = if (closeButtonVisible) {
-                            MoSoIcons.close()
-                        } else {
-                            null
-                        },
-                        onIconClicked = { accountNavigationCallbacks.onCloseClicked() },
-                    )
+                    MoSoCloseableTopAppBar(showCloseButton = closeButtonVisible)
                     Box(
                         modifier = Modifier
                             .fillMaxSize()
@@ -156,20 +133,15 @@ private fun AccountScreen(
                 }
 
                 is Resource.Loaded<AccountUiState> -> {
-                    MoSoTopBar(
+                    MoSoCloseableTopAppBar(
                         title = resource.data.displayName,
-                        icon = if (closeButtonVisible) {
-                            MoSoIcons.close()
-                        } else {
-                            null
-                        },
-                        onIconClicked = { accountNavigationCallbacks.onCloseClicked() },
-                        rightSideContent = {
+                        showCloseButton = closeButtonVisible,
+                        actions = {
                             OverflowMenu(
                                 account = resource.data,
                                 isUsersProfile = isUsersProfile,
                                 overflowInteractions = accountInteractions,
-                                navigateToSettings = navigateToSettings,
+                                navigateToSettings = accountInteractions::onSettingsClicked,
                             )
                         },
                         showDivider = false,
@@ -188,14 +160,7 @@ private fun AccountScreen(
                 }
 
                 is Resource.Error -> {
-                    MoSoTopBar(
-                        icon = if (closeButtonVisible) {
-                            MoSoIcons.close()
-                        } else {
-                            null
-                        },
-                        onIconClicked = { accountNavigationCallbacks.onCloseClicked() },
-                    )
+                    MoSoCloseableTopAppBar(showCloseButton = closeButtonVisible)
                     Box(
                         modifier = Modifier
                             .fillMaxSize()
@@ -245,36 +210,37 @@ private fun MainContent(
                 avatarUrl = account.avatarUrl,
                 displayName = account.displayName,
                 handle = "@${account.webFinger}",
-            ) {
-                val buttonModifier = Modifier.padding(end = 8.dp)
-                if (isUsersProfile) {
-                    MoSoButtonSecondary(
-                        modifier = buttonModifier,
-                        onClick = { accountInteractions.onEditAccountClicked() }
-                    ) {
-                        Text(text = stringResource(id = R.string.edit_button))
-                    }
-                } else {
-                    MoSoButton(
-                        modifier = buttonModifier,
-                        onClick = {
-                            if (account.isFollowing) {
-                                accountInteractions.onUnfollowClicked()
-                            } else {
-                                accountInteractions.onFollowClicked()
-                            }
+                rightSideContent = {
+                    val buttonModifier = Modifier.padding(end = 8.dp)
+                    if (isUsersProfile) {
+                        MoSoButtonSecondary(
+                            modifier = buttonModifier,
+                            onClick = { accountInteractions.onEditAccountClicked() }
+                        ) {
+                            Text(text = stringResource(id = R.string.edit_button))
                         }
-                    ) {
-                        Text(
-                            text = if (account.isFollowing) {
-                                stringResource(id = R.string.unfollow_button)
-                            } else {
-                                stringResource(id = R.string.follow_button)
+                    } else {
+                        MoSoButton(
+                            modifier = buttonModifier,
+                            onClick = {
+                                if (account.isFollowing) {
+                                    accountInteractions.onUnfollowClicked()
+                                } else {
+                                    accountInteractions.onFollowClicked()
+                                }
                             }
-                        )
+                        ) {
+                            Text(
+                                text = if (account.isFollowing) {
+                                    stringResource(id = R.string.unfollow_button)
+                                } else {
+                                    stringResource(id = R.string.follow_button)
+                                }
+                            )
+                        }
                     }
-                }
-            }
+                },
+            )
 
             Spacer(modifier = Modifier.height(12.dp))
             UserBio(

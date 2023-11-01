@@ -16,10 +16,7 @@ fun NavController.navigateToNewPost(
     navigate(NavigationDestination.NewPost.route(replyStatusId), navOptions)
 }
 
-fun NavGraphBuilder.newPostScreen(
-    onStatusPosted: () -> Unit,
-    onCloseClicked: () -> Unit,
-) {
+fun NavGraphBuilder.newPostScreen() {
     composable(
         route = NavigationDestination.NewPost.fullRoute,
         arguments = listOf(
@@ -32,10 +29,6 @@ fun NavGraphBuilder.newPostScreen(
     ) {
         val replyStatusId: String? =
             it.arguments?.getString(NavigationDestination.NewPost.NAV_PARAM_REPLY_STATUS_ID)
-        NewPostScreen(
-            onStatusPosted,
-            onCloseClicked,
-            replyStatusId = replyStatusId
-        )
+        NewPostScreen(replyStatusId = replyStatusId)
     }
 }

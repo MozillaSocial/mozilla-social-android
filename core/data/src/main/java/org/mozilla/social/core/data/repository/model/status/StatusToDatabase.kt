@@ -64,6 +64,7 @@ fun Status.toDatabaseModel(): DatabaseStatus =
         isMuted = isMuted,
         isBookmarked = isBookmarked,
         isPinned = isPinned,
+        isBeingDeleted = isBeingDeleted,
     )
 
 fun Account.toDatabaseModel(): DatabaseAccount = DatabaseAccount(

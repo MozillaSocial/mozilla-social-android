@@ -18,7 +18,6 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -63,6 +62,7 @@ internal fun SettingsScreen(
         Column(
             modifier = Modifier
                 .padding(top = 24.dp)
+                .systemBarsPadding()
         ) {
             SettingsAnalytics(
                 isAnalyticsToggledOn = isAnalyticsToggledOn,

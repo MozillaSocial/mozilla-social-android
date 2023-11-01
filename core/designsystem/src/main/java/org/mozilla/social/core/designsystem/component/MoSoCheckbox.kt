@@ -1,6 +1,7 @@
 package org.mozilla.social.core.designsystem.component
 
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxColors
 import androidx.compose.material3.CheckboxDefaults
@@ -33,7 +34,7 @@ object MoSoCheckboxDefaults {
     @Composable
     fun colors(): CheckboxColors = CheckboxDefaults.colors(
         checkedColor = MoSoTheme.colors.iconActionActive,
-        uncheckedColor = MoSoTheme.colors.iconActionDisabled,
+        uncheckedColor = MoSoTheme.colors.borderInputEnabled,
         checkmarkColor = MoSoTheme.colors.textActionPrimary,
         disabledCheckedColor = MoSoTheme.colors.iconActionActive,
         disabledUncheckedColor = MoSoTheme.colors.iconActionDisabled,
@@ -46,7 +47,10 @@ object MoSoCheckboxDefaults {
 private fun Preview() {
     MoSoTheme {
         MoSoSurface {
-            MoSoCheckBox(checked = true, onCheckedChange = {})
+            Column {
+                MoSoCheckBox(checked = true, onCheckedChange = {})
+                MoSoCheckBox(checked = false, onCheckedChange = {})
+            }
         }
     }
 }
@@ -58,7 +62,10 @@ private fun PreviewDarkMode() {
         darkTheme = true
     ) {
         MoSoSurface {
-            MoSoCheckBox(checked = true, onCheckedChange = {})
+            Column {
+                MoSoCheckBox(checked = true, onCheckedChange = {})
+                MoSoCheckBox(checked = false, onCheckedChange = {})
+            }
         }
     }
 }

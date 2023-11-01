@@ -1,4 +1,6 @@
-package org.mozilla.social.core.designsystem.component
+package org.mozilla.social.navigation
+
+import org.mozilla.social.core.designsystem.component.MoSoSurface
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row

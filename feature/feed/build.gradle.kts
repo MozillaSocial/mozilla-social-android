@@ -22,7 +22,9 @@ dependencies {
 
     implementation(libs.androidx.paging.runtime)
 
-    implementation(libs.koin)
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.koin.core)
+    implementation(libs.koin.androidx.compose)
 
     implementation(libs.androidx.datastore)
     implementation(libs.protobuf.kotlin.lite)

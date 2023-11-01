@@ -32,16 +32,18 @@ val feedModule = module {
             get(),
         )
     }
-    viewModel { parametersHolder -> FeedViewModel(
-        get(),
-        get(),
-        get(),
-        get(),
-        get(),
-        get(),
-        get(),
-        get(),
-        parametersHolder[0],
+    viewModel { _ -> FeedViewModel(
+        homeTimelineRemoteMediator = get(),
+        localTimelineRemoteMediator = get(),
+        federatedTimelineRemoteMediator = get(),
+        accountIdFlow = get(),
+        statusRepository = get(),
+        accountRepository = get(),
+        socialDatabase = get(),
+        log = get(),
+        navigateTo = get(),
+        openLink = get(),
     ) }
+    includes(domainModule)
     includes(domainModule)
 }

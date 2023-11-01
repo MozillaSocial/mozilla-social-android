@@ -121,6 +121,7 @@ object FirefoxColor {
     val DarkGrey90 = Color(0xFF15141A)
     val DarkGrey90A40 = Color(0x6615141A)
     val DarkGrey90A60 = Color(0x9915141A)
+    val DarkGrey90A80 = Color(0xCC15141A)
     val DarkGrey90A95 = Color(0xF215141A)
     val DarkGrey90A96 = Color(0xF515141A)
 

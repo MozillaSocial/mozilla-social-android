@@ -20,11 +20,11 @@ fun AnimatedContentTransitionScope<NavBackStackEntry>.mosoSlideOut(): ExitTransi
         animationSpec = tween(TWEEN_DURATION),
     )
 
-fun AnimatedContentTransitionScope<NavBackStackEntry>.mosoFadeIn(): EnterTransition =
-    fadeIn(tween(durationMillis = TWEEN_DURATION, delayMillis = FADE_IN_TWEEN_DELAY))
+fun mosoFadeIn(): EnterTransition =
+    fadeIn(tween(durationMillis = TWEEN_DURATION))
 
-fun AnimatedContentTransitionScope<NavBackStackEntry>.mosoFadeOut(): ExitTransition =
+fun mosoFadeOut(): ExitTransition =
     fadeOut(tween(durationMillis = TWEEN_DURATION))
 
-const val TWEEN_DURATION = 500
+const val TWEEN_DURATION = 100
 const val FADE_IN_TWEEN_DELAY = 500

@@ -4,7 +4,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.painter.Painter
 import org.mozilla.social.R
 import org.mozilla.social.common.utils.StringFactory
-import org.mozilla.social.core.designsystem.component.BottomBarTab
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.navigation.NavigationDestination
 

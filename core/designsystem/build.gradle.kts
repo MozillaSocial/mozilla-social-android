@@ -10,7 +10,7 @@ android {
 dependencies {
     implementation(project(":core:model"))
     implementation(project(":core:common"))
-    implementation(project(":core:navigation"))
+//    implementation(project(":core:navigation"))
 
     implementation(libs.androidx.compose.material.iconsExtended)
 }

@@ -22,8 +22,9 @@ import org.mozilla.social.core.data.repository.model.status.toExternalModel
 import org.mozilla.social.core.database.SocialDatabase
 import org.mozilla.social.core.database.model.statusCollections.toStatusWrapper
 import org.mozilla.social.core.domain.AccountIdFlow
+import org.mozilla.social.core.navigation.usecases.NavigateTo
+import org.mozilla.social.core.navigation.usecases.OpenLink
 import org.mozilla.social.core.ui.postcard.PostCardDelegate
-import org.mozilla.social.core.ui.postcard.PostCardNavigation
 import org.mozilla.social.core.ui.postcard.toPostCardUiState
 import org.mozilla.social.feed.remoteMediators.FederatedTimelineRemoteMediator
 import org.mozilla.social.feed.remoteMediators.HomeTimelineRemoteMediator
@@ -41,7 +42,8 @@ class FeedViewModel(
     accountRepository: AccountRepository,
     private val socialDatabase: SocialDatabase,
     log: Log,
-    postCardNavigation: PostCardNavigation,
+    openLink: OpenLink,
+    navigateTo: NavigateTo,
 ) : ViewModel(), FeedInteractions {
 
     private val _timelineType = MutableStateFlow(TimelineType.FOR_YOU)
@@ -105,7 +107,8 @@ class FeedViewModel(
         statusRepository = statusRepository,
         accountRepository = accountRepository,
         log = log,
-        postCardNavigation = postCardNavigation,
+        navigateTo = navigateTo,
+        openLink = openLink,
     )
 
     override fun onTabClicked(timelineType: TimelineType) {

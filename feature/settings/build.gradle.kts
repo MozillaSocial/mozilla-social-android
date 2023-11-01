@@ -15,7 +15,9 @@ dependencies {
     implementation(project(":core:navigation"))
     implementation(project(":core:analytics"))
 
-    implementation(libs.koin)
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.koin.core)
+    implementation(libs.koin.androidx.compose)
 
     implementation(libs.androidx.datastore)
     implementation(libs.protobuf.kotlin.lite)

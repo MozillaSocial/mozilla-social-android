@@ -7,7 +7,6 @@ import androidx.compose.material.icons.rounded.ArrowDropDown
 import androidx.compose.material.icons.rounded.BookmarkBorder
 import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material.icons.rounded.ChevronRight
-import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.DeleteOutline
 import androidx.compose.material.icons.rounded.Info
@@ -35,6 +34,9 @@ object MoSoIcons {
 
     @Composable
     fun bookmark() = painterResource(R.drawable.bookmark_simple)
+
+    @Composable
+    fun robot() = painterResource(id = R.drawable.robot)
 
     @Composable
     fun caret_down() = painterResource(id = R.drawable.caret_down)
@@ -97,6 +99,9 @@ object MoSoIcons {
     @Composable
     fun x() = painterResource(id = R.drawable.x)
 
+    @Composable
+    fun lock() = painterResource(id = R.drawable.lock)
+
     // Material- avoid using these, and instead use the drawable based resources
     @Composable
     fun check() = rememberVectorPainter(image = Icons.Rounded.Check)
@@ -120,7 +125,7 @@ object MoSoIcons {
     fun lockOpen() = rememberVectorPainter(image = Icons.Rounded.LockOpen)
 
     @Composable
-    fun lock() = rememberVectorPainter(image = Icons.Rounded.Lock)
+    fun materialLock() = rememberVectorPainter(image = Icons.Rounded.Lock)
 
     @Composable
     fun message() = rememberVectorPainter(image = Icons.Rounded.Message)
@@ -133,9 +138,6 @@ object MoSoIcons {
 
     @Composable
     fun volumeUp() = rememberVectorPainter(image = Icons.Rounded.VolumeUp)
-
-    @Composable
-    fun close() = rememberVectorPainter(image = Icons.Rounded.Close)
 
     @Composable
     fun send() = rememberVectorPainter(image = Icons.Rounded.Send)

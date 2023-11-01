@@ -72,8 +72,11 @@ dependencies {
     implementation(libs.androidx.datastore)
     implementation(libs.protobuf.kotlin.lite)
 
-    implementation(libs.koin)
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.koin.core)
+    implementation(libs.koin.androidx.compose)
     implementation(libs.koin.android)
+    implementation(libs.koin.compose)
 
     implementation(libs.androidx.browser)
 
@@ -85,10 +88,16 @@ dependencies {
 
     implementation(libs.androidx.navigation.compose)
 
-    // testing
-    testImplementation(libs.kotlin.test)
-    testImplementation(libs.kotlin.test.junit)
     testImplementation(libs.koin.test)
 
     implementation(libs.jakewharton.timber)
+
+    androidTestImplementation(platform("androidx.compose:compose-bom:2023.05.01"))
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4")
+    androidTestImplementation(libs.androidx.navigation.testing)
+    androidTestImplementation(libs.androidx.espresso.intents)
+    androidTestImplementation(libs.androidx.test.ext.junit)
+
+    debugImplementation("androidx.compose.ui:ui-test-manifest")
+    debugImplementation("androidx.compose.ui:ui-tooling")
 }

@@ -14,9 +14,7 @@ fun NavController.navigateToFollowers(
     navigate(NavigationDestination.Followers.route(accountId), navOptions)
 }
 
-fun NavGraphBuilder.followersScreen(
-    followersNavigationCallbacks: FollowersNavigationCallbacks,
-) {
+fun NavGraphBuilder.followersScreen() {
     composable(
         route = NavigationDestination.Followers.fullRoute,
         arguments = listOf(
@@ -28,7 +26,6 @@ fun NavGraphBuilder.followersScreen(
         val accountId: String = it.arguments?.getString(NavigationDestination.Followers.NAV_PARAM_ACCOUNT_ID)!!
         FollowersScreen(
             accountId = accountId,
-            followersNavigationCallbacks = followersNavigationCallbacks,
             followersScreenType = FollowerScreenType.FOLLOWERS,
         )
     }

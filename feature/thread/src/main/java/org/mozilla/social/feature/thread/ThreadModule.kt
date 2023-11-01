@@ -5,12 +5,13 @@ import org.koin.dsl.module
 
 val threadModule = module {
     viewModel { parametersHolder -> ThreadViewModel(
-        get(),
-        get(),
-        get(),
-        get(),
-        get(),
-        parametersHolder[0],
-        parametersHolder[1],
+        statusRepository = get(),
+        accountRepository = get(),
+        log = get(),
+        accountIdFlow = get(),
+        getThreadUseCase = get(),
+        openLink = get(),
+        navigateTo = get(),
+        mainStatusId = parametersHolder[0],
     ) }
 }
