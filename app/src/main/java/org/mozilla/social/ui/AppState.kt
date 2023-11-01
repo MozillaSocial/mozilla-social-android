@@ -29,7 +29,6 @@ import org.mozilla.social.core.navigation.NavigationDestination
 import org.mozilla.social.core.navigation.NavigationEventFlow
 import org.mozilla.social.feature.account.edit.navigateToEditAccount
 import org.mozilla.social.feature.account.navigateToAccount
-import org.mozilla.social.feature.account.navigateToMyAccount
 import org.mozilla.social.feature.auth.navigateToLoginScreen
 import org.mozilla.social.feature.followers.navigateToFollowers
 import org.mozilla.social.feature.followers.navigateToFollowing
@@ -128,7 +127,8 @@ class AppState(
     }
 
     fun popBackStack() {
-        mainNavController.popBackStack()
+        if (tabbedNavController.currentBackStackEntry != null) tabbedNavController.popBackStack()
+        else mainNavController.popBackStack()
     }
 
     private fun navigate(navDestination: NavDestination) {
