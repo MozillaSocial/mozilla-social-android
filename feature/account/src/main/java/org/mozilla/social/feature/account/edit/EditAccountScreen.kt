@@ -252,7 +252,7 @@ private fun BotAndLock(
             onCheckedChange = { editAccountInteractions.onBotClicked() }
         )
         Icon(
-            painter = MoSoIcons.bot(),
+            painter = MoSoIcons.robot(),
             contentDescription = "",
         )
         Spacer(modifier = Modifier.width(8.dp))

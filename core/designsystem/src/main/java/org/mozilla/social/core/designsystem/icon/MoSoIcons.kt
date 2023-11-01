@@ -7,7 +7,6 @@ import androidx.compose.material.icons.rounded.ArrowDropDown
 import androidx.compose.material.icons.rounded.BookmarkBorder
 import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material.icons.rounded.ChevronRight
-import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.DeleteOutline
 import androidx.compose.material.icons.rounded.Info
@@ -37,7 +36,7 @@ object MoSoIcons {
     fun bookmark() = painterResource(R.drawable.bookmark_simple)
 
     @Composable
-    fun bot() = painterResource(id = R.drawable.bot)
+    fun robot() = painterResource(id = R.drawable.robot)
 
     @Composable
     fun caret_down() = painterResource(id = R.drawable.caret_down)
