@@ -17,7 +17,6 @@ sealed class NavDestination {
     data class Followers(val accountId: String) : NavDestination()
     data object Settings : NavDestination()
 
-    data object MyAccount : NavDestination()
     data class Account(val accountId: String) : NavDestination()
     data object EditAccount : NavDestination()
     data object Tabs: NavDestination()

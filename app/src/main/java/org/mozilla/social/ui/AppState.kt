@@ -42,7 +42,6 @@ import org.mozilla.social.post.navigateToNewPost
 import timber.log.Timber
 
 @Composable
-
 fun rememberAppState(
     mainNavController: NavHostController = rememberNavController(),
     tabbedNavController: NavHostController = rememberNavController(),
@@ -133,6 +132,7 @@ class AppState(
     }
 
     private fun navigate(navDestination: NavDestination) {
+        Timber.e("NAVIGATION consuming $navDestination")
         with(navDestination) {
             when (this) {
                 NavDestination.Login -> {
@@ -154,8 +154,7 @@ class AppState(
 
                 is NavDestination.Thread -> mainNavController.navigateToThread(threadStatusId = statusId)
                 is NavDestination.Following -> mainNavController.navigateToFollowing(accountId)
-                is NavDestination.MyAccount -> tabbedNavController.navigateToMyAccount()
-                is NavDestination.Account -> tabbedNavController.navigateToAccount(accountId = accountId)
+                is NavDestination.Account -> mainNavController.navigateToAccount(accountId = accountId)
                 is NavDestination.Followers -> mainNavController.navigateToFollowers(accountId)
                 NavDestination.Settings -> mainNavController.navigateToSettings()
                 NavDestination.Tabs -> mainNavController.navigateToTabs()
@@ -169,7 +168,7 @@ class AppState(
      * Used by bottom bar navigation
      */
     fun navigateToBottomBarDestination(destination: NavigationDestination) {
-        Timber.d("Navigate to bottom bar destination: $destination")
+        Timber.d("NAVIGATION navigate to bottom bar destination: $destination")
         // If navigating to the feed, just pop up to the feed.  Don't start a new instance
         // of it.  If a new instance is started, we don't retain scroll position!
         if (destination == NavigationDestination.Feed) {

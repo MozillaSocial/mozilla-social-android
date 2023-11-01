@@ -3,6 +3,7 @@ package org.mozilla.social.core.navigation
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import org.mozilla.social.common.utils.StringFactory
+import timber.log.Timber
 
 class EventRelay {
     private val _navigationEvents = MutableSharedFlow<Event>(replay = 1)
@@ -14,6 +15,7 @@ class EventRelay {
     }
 
     fun emitEvent(event: Event) {
+        Timber.e("NAVIGATION trying to emit $event")
         _navigationEvents.tryEmit(event)
     }
 }

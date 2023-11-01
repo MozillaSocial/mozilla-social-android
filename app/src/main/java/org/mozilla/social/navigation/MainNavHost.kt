@@ -108,7 +108,6 @@ fun NavGraphBuilder.bottomTabScreen(appState: AppState) {
             content = {
                 BottomTabNavHost(
                     modifier = Modifier.padding(bottom = it.calculateBottomPadding()),
-                    appState = appState,
                 )
             }
         )
