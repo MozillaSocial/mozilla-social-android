@@ -6,13 +6,14 @@ import org.koin.dsl.module
 val hashTagModule = module {
     viewModel { parametersHolder ->
         HashTagViewModel(
-            get(),
-            get(),
-            get(),
-            get(),
-            get(),
-            parametersHolder[0],
-            parametersHolder[1],
+            hashTag = parametersHolder[0],
+            statusRepository = get(),
+            accountRepository = get(),
+            log = get(),
+            socialDatabase = get(),
+            accountIdFlow = get(),
+            navigateTo = get(),
+            openLink = get(),
         )
     }
 }

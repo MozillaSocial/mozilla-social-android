@@ -6,7 +6,6 @@ import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import org.mozilla.social.core.navigation.NavigationDestination
-import org.mozilla.social.core.ui.postcard.PostCardNavigation
 
 fun NavController.navigateToAccount(
     navOptions: NavOptions? = null,
@@ -16,11 +15,7 @@ fun NavController.navigateToAccount(
 }
 
 // The custom screen here doesn't seem to be used anywhere, so I'm going to 
-fun NavGraphBuilder.accountScreen(
-    accountNavigationCallbacks: AccountNavigationCallbacks,
-    postCardNavigation: PostCardNavigation,
-    navigateToSettings: () -> Unit,
-) {
+fun NavGraphBuilder.accountScreen() {
     composable(
         route = NavigationDestination.Account.fullRoute,
         arguments = listOf(
@@ -32,9 +27,6 @@ fun NavGraphBuilder.accountScreen(
         val accountId: String? = it.arguments?.getString(NavigationDestination.Account.NAV_PARAM_ACCOUNT_ID)
         AccountScreen(
             accountId = accountId,
-            accountNavigationCallbacks = accountNavigationCallbacks,
-            postCardNavigation = postCardNavigation,
-            navigateToSettings = navigateToSettings,
         )
     }
 }

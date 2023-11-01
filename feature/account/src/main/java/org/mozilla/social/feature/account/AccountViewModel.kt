@@ -28,9 +28,11 @@ import org.mozilla.social.core.database.SocialDatabase
 import org.mozilla.social.core.database.model.statusCollections.toStatusWrapper
 import org.mozilla.social.core.domain.AccountIdBlocking
 import org.mozilla.social.core.domain.GetDetailedAccount
+import org.mozilla.social.core.navigation.NavDestination
+import org.mozilla.social.core.navigation.usecases.NavigateTo
+import org.mozilla.social.core.navigation.usecases.OpenLink
 import org.mozilla.social.core.ui.R
 import org.mozilla.social.core.ui.postcard.PostCardDelegate
-import org.mozilla.social.core.ui.postcard.PostCardNavigation
 import org.mozilla.social.core.ui.postcard.toPostCardUiState
 import timber.log.Timber
 
@@ -42,9 +44,9 @@ class AccountViewModel(
     statusRepository: StatusRepository,
     private val socialDatabase: SocialDatabase,
     private val getDetailedAccount: GetDetailedAccount,
+    private val navigateTo: NavigateTo,
+    openLink: OpenLink,
     initialAccountId: String?,
-    postCardNavigation: PostCardNavigation,
-    private val accountNavigationCallbacks: AccountNavigationCallbacks,
 ) : ViewModel(), AccountInteractions {
 
     private val _errorToastMessage = MutableSharedFlow<StringFactory>(extraBufferCapacity = 1)
@@ -55,7 +57,8 @@ class AccountViewModel(
         statusRepository = statusRepository,
         accountRepository = accountRepository,
         log = log,
-        postCardNavigation = postCardNavigation,
+        navigateTo = navigateTo,
+        openLink = openLink,
     )
 
     /**
@@ -86,10 +89,12 @@ class AccountViewModel(
 
     private val accountTimelineRemoteMediator: AccountTimelineRemoteMediator by KoinJavaComponent.inject(
         AccountTimelineRemoteMediator::class.java
-    ) { parametersOf(
-        accountId,
-        timelineType,
-    ) }
+    ) {
+        parametersOf(
+            accountId,
+            timelineType,
+        )
+    }
 
     @OptIn(ExperimentalPagingApi::class)
     val feed = Pager(
@@ -178,19 +183,21 @@ class AccountViewModel(
 
     override fun onOverflowReportClicked() {
         (uiState.value as? Resource.Loaded)?.data?.webFinger?.let { webFinger ->
-            accountNavigationCallbacks.onReportClicked(
-                accountId,
-                webFinger,
+            navigateTo(
+                NavDestination.Report(
+                    accountId,
+                    webFinger,
+                )
             )
         }
     }
 
     override fun onFollowersClicked() {
-        accountNavigationCallbacks.onFollowersClicked(accountId)
+        navigateTo(NavDestination.Followers(accountId))
     }
 
     override fun onFollowingClicked() {
-        accountNavigationCallbacks.onFollowingClicked(accountId)
+        navigateTo(NavDestination.Following(accountId))
     }
 
     override fun onFollowClicked() {
@@ -223,7 +230,11 @@ class AccountViewModel(
         _timelineType.edit { timelineType }
     }
 
+    override fun onSettingsClicked() {
+        navigateTo(NavDestination.Settings)
+    }
+
     override fun onEditAccountClicked() {
-        accountNavigationCallbacks.onEditProfileClicked()
+        navigateTo(NavDestination.EditAccount)
     }
 }

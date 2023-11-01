@@ -25,10 +25,10 @@ import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 import org.mozilla.social.core.designsystem.component.MoSoDivider
 import org.mozilla.social.core.designsystem.component.MoSoSurface
-import org.mozilla.social.core.designsystem.component.MoSoTopBar
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.ui.account.quickview.AccountQuickView
 import org.mozilla.social.core.ui.account.quickview.AccountQuickViewUiState
+import org.mozilla.social.core.ui.appbar.MoSoCloseableTopAppBar
 import org.mozilla.social.core.ui.error.GenericError
 import org.mozilla.social.core.ui.pullrefresh.PullRefreshIndicator
 import org.mozilla.social.core.ui.pullrefresh.pullRefresh
@@ -37,14 +37,14 @@ import org.mozilla.social.core.ui.pullrefresh.rememberPullRefreshState
 @Composable
 internal fun FollowersScreen(
     accountId: String,
-    followersNavigationCallbacks: FollowersNavigationCallbacks,
     followersScreenType: FollowerScreenType,
     viewModel: FollowersViewModel = koinViewModel(
-        parameters = { parametersOf(
-            accountId,
-            followersNavigationCallbacks,
-            followersScreenType,
-        ) }
+        parameters = {
+            parametersOf(
+                accountId,
+                followersScreenType,
+            )
+        }
     )
 ) {
     FollowersScreen(
@@ -66,12 +66,11 @@ private fun FollowersScreen(
                 .fillMaxSize()
                 .systemBarsPadding()
         ) {
-            MoSoTopBar(
+            MoSoCloseableTopAppBar(
                 title = when (followersScreenType) {
                     FollowerScreenType.FOLLOWERS -> stringResource(id = R.string.followers)
                     FollowerScreenType.FOLLOWING -> stringResource(id = R.string.following)
                 },
-                onIconClicked = { followersInteractions.onCloseClicked() }
             )
 
             val lazyPagingItems = followers.collectAsLazyPagingItems()

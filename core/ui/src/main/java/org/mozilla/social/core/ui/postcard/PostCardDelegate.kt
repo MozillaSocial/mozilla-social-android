@@ -8,6 +8,9 @@ import org.mozilla.social.common.logging.Log
 import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.core.data.repository.AccountRepository
 import org.mozilla.social.core.data.repository.StatusRepository
+import org.mozilla.social.core.navigation.NavDestination
+import org.mozilla.social.core.navigation.usecases.NavigateTo
+import org.mozilla.social.core.navigation.usecases.OpenLink
 import org.mozilla.social.core.ui.R
 
 class PostCardDelegate(
@@ -15,7 +18,8 @@ class PostCardDelegate(
     private val statusRepository: StatusRepository,
     private val accountRepository: AccountRepository,
     private val log: Log,
-    private val postCardNavigation: PostCardNavigation,
+    private val navigateTo: NavigateTo,
+    private val openLink: OpenLink,
 ) : PostCardInteractions {
 
     private val _errorToastMessage = MutableSharedFlow<StringFactory>(extraBufferCapacity = 1)
@@ -33,7 +37,7 @@ class PostCardDelegate(
     }
 
     override fun onReplyClicked(statusId: String) {
-        postCardNavigation.onReplyClicked(statusId)
+        navigateTo(NavDestination.NewPost(replyId = statusId))
     }
 
     override fun onBoostClicked(statusId: String, isBoosting: Boolean) {
@@ -77,7 +81,7 @@ class PostCardDelegate(
     }
 
     override fun onPostCardClicked(statusId: String) {
-        postCardNavigation.onPostClicked(statusId)
+        navigateTo(NavDestination.Thread(statusId = statusId))
     }
 
     override fun onOverflowMuteClicked(accountId: String) {
@@ -107,11 +111,11 @@ class PostCardDelegate(
         accountHandle: String,
         statusId: String,
     ) {
-        postCardNavigation.onReportClicked(
+        navigateTo(NavDestination.Report(
             accountId = accountId,
             accountHandle = accountHandle,
             statusId = statusId,
-        )
+        ))
     }
 
     override fun onOverflowDeleteClicked(
@@ -128,18 +132,19 @@ class PostCardDelegate(
     }
 
     override fun onAccountImageClicked(accountId: String) {
-        postCardNavigation.onAccountClicked(accountId)
+        navigateTo(NavDestination.Account(accountId))
     }
 
     override fun onLinkClicked(url: String) {
-        postCardNavigation.onLinkClicked(url)
+        openLink(url)
     }
 
     override fun onAccountClicked(accountId: String) {
-        postCardNavigation.onAccountClicked(accountId)
+        navigateTo(NavDestination.Account(accountId))
+
     }
 
     override fun onHashTagClicked(hashTag: String) {
-        postCardNavigation.onHashTagClicked(hashTag)
+        navigateTo(NavDestination.Hashtag(hashTag))
     }
 }

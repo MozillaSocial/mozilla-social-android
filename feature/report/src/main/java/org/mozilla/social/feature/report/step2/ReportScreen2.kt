@@ -36,9 +36,10 @@ import org.mozilla.social.core.designsystem.component.MoSoCircularProgressIndica
 import org.mozilla.social.core.designsystem.component.MoSoDivider
 import org.mozilla.social.core.designsystem.component.MoSoSurface
 import org.mozilla.social.core.designsystem.component.MoSoToast
-import org.mozilla.social.core.designsystem.component.MoSoTopBar
+import org.mozilla.social.core.ui.appbar.MoSoTopBar
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.designsystem.utils.NoRipple
+import org.mozilla.social.core.ui.appbar.MoSoCloseableTopAppBar
 import org.mozilla.social.core.ui.error.GenericError
 import org.mozilla.social.core.ui.htmlcontent.HtmlContent
 import org.mozilla.social.core.ui.htmlcontent.HtmlContentInteractions
@@ -99,9 +100,8 @@ private fun ReportScreen2(
                 .fillMaxHeight()
                 .systemBarsPadding()
         ) {
-            MoSoTopBar(
+            MoSoCloseableTopAppBar(
                 title = stringResource(id = R.string.report_screen_title),
-                onIconClicked = { reportInteractions.onCloseClicked() }
             )
 
             TopContent(

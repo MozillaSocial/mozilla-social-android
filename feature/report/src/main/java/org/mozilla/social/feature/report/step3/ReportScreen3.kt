@@ -23,10 +23,10 @@ import org.mozilla.social.core.designsystem.component.MoSoButtonSecondary
 import org.mozilla.social.core.designsystem.component.MoSoDivider
 import org.mozilla.social.core.designsystem.component.MoSoSurface
 import org.mozilla.social.core.designsystem.component.MoSoToast
-import org.mozilla.social.core.designsystem.component.MoSoTopBar
 import org.mozilla.social.core.designsystem.theme.MoSoRadius
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.ui.animation.ExpandingAnimation
+import org.mozilla.social.core.ui.appbar.MoSoCloseableTopAppBar
 import org.mozilla.social.feature.report.R
 
 @Composable
@@ -71,10 +71,7 @@ private fun ReportScreen3(
                 .fillMaxHeight()
                 .systemBarsPadding()
         ) {
-            MoSoTopBar(
-                title = stringResource(id = R.string.report_screen_title),
-                onIconClicked = { reportInteractions.onCloseClicked() }
-            )
+            MoSoCloseableTopAppBar(title = stringResource(id = R.string.report_screen_title))
 
             TopContent(
                 reportAccountHandle = reportAccountHandle,
@@ -111,11 +108,13 @@ private fun TopContent(
         modifier = Modifier.padding(16.dp)
     ) {
         Text(
-            text = stringResource(id = if (didUserReportAccount) {
-                R.string.reported_user_title
-            } else {
-                R.string.limiting_user_title
-            }, "@$reportAccountHandle"),
+            text = stringResource(
+                id = if (didUserReportAccount) {
+                    R.string.reported_user_title
+                } else {
+                    R.string.limiting_user_title
+                }, "@$reportAccountHandle"
+            ),
             style = MoSoTheme.typography.bodyMedium,
         )
 
