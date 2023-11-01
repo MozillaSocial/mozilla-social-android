@@ -15,7 +15,9 @@ android {
 }
 
 dependencies {
-    implementation(libs.koin)
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.koin.core)
+    implementation(libs.koin.androidx.compose)
 
     implementation(libs.androidx.room.runtime)
     ksp(libs.androidx.room.compiler)

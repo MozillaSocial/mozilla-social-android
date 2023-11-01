@@ -12,10 +12,13 @@ dependencies {
     implementation(project(":core:designsystem"))
     implementation(project(":core:common"))
     implementation(project(":core:data"))
+    implementation(project(":core:navigation"))
 
     implementation(libs.androidx.paging.compose)
 
-    implementation(libs.koin)
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.koin.core)
+    implementation(libs.koin.androidx.compose)
 
     implementation(libs.kotlinx.datetime)
 

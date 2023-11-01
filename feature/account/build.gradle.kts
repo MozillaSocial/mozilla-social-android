@@ -24,7 +24,9 @@ dependencies {
     implementation(libs.androidx.media3.exoplayer)
     implementation(libs.androidx.media3.ui)
 
-    implementation(libs.koin)
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.koin.core)
+    implementation(libs.koin.androidx.compose)
 
     implementation(libs.androidx.datastore)
     implementation(libs.protobuf.kotlin.lite)

@@ -22,18 +22,20 @@ import org.mozilla.social.core.database.SocialDatabase
 import org.mozilla.social.core.database.model.statusCollections.toStatusWrapper
 import org.mozilla.social.core.domain.AccountIdFlow
 import org.mozilla.social.core.domain.remotemediators.HashTagTimelineRemoteMediator
+import org.mozilla.social.core.navigation.usecases.NavigateTo
+import org.mozilla.social.core.navigation.usecases.OpenLink
 import org.mozilla.social.core.ui.postcard.PostCardDelegate
-import org.mozilla.social.core.ui.postcard.PostCardNavigation
 import org.mozilla.social.core.ui.postcard.toPostCardUiState
 
 class HashTagViewModel(
+    hashTag: String,
     statusRepository: StatusRepository,
     accountRepository: AccountRepository,
     log: Log,
     socialDatabase: SocialDatabase,
     accountIdFlow: AccountIdFlow,
-    hashTag: String,
-    postCardNavigation: PostCardNavigation,
+    navigateTo: NavigateTo,
+    openLink: OpenLink,
 ) : ViewModel() {
 
     private val hashTagTimelineRemoteMediator: HashTagTimelineRemoteMediator by inject(
@@ -68,6 +70,7 @@ class HashTagViewModel(
         statusRepository = statusRepository,
         accountRepository = accountRepository,
         log = log,
-        postCardNavigation = postCardNavigation,
+        navigateTo = navigateTo,
+        openLink = openLink,
     )
 }

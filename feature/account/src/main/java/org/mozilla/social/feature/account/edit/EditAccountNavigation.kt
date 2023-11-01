@@ -12,12 +12,10 @@ fun NavController.navigateToEditAccount(
     navigate(NavigationDestination.EditAccount.route, navOptions)
 }
 
-fun NavGraphBuilder.editAccountScreen(
-    onDone: () -> Unit,
-) {
+fun NavGraphBuilder.editAccountScreen() {
     composable(
         route = NavigationDestination.EditAccount.route,
     ) {
-        EditAccountScreen(onDone = onDone)
+        EditAccountScreen()
     }
 }

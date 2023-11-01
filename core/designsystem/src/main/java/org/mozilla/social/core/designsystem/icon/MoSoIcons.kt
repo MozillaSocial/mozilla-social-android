@@ -135,9 +135,6 @@ object MoSoIcons {
     fun volumeUp() = rememberVectorPainter(image = Icons.Rounded.VolumeUp)
 
     @Composable
-    fun close() = rememberVectorPainter(image = Icons.Rounded.Close)
-
-    @Composable
     fun send() = rememberVectorPainter(image = Icons.Rounded.Send)
 
     @Composable

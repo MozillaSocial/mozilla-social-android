@@ -7,7 +7,7 @@ import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import org.mozilla.social.core.navigation.NavigationDestination
-import org.mozilla.social.core.ui.postcard.PostCardNavigation
+
 
 fun NavController.navigateToThread(
     navOptions: NavOptions? = null,
@@ -16,10 +16,7 @@ fun NavController.navigateToThread(
     navigate(NavigationDestination.Thread.route(threadStatusId), navOptions)
 }
 
-fun NavGraphBuilder.threadScreen(
-    onCloseClicked: () -> Unit,
-    postCardNavigation: PostCardNavigation,
-) {
+fun NavGraphBuilder.threadScreen() {
     composable(
         route = NavigationDestination.Thread.fullRoute,
         arguments = listOf(
@@ -38,8 +35,6 @@ fun NavGraphBuilder.threadScreen(
         threadStatusId?.let {
             ThreadScreen(
                 threadStatusId = threadStatusId,
-                onCloseClicked = onCloseClicked,
-                postCardNavigation = postCardNavigation,
             )
         }
     }

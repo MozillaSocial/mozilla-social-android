@@ -37,4 +37,6 @@
     <string name="add_photos_content_description">Add photos</string>
     <string name="photo">Photo</string>
     <string name="video">Video</string>
+
+    <string name="your_post_was_published">Your post was published</string>
 </resources>

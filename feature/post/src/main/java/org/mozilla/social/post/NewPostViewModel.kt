@@ -2,6 +2,7 @@ package org.mozilla.social.post
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,7 +24,10 @@ import org.mozilla.social.core.data.repository.MediaRepository
 import org.mozilla.social.core.data.repository.SearchRepository
 import org.mozilla.social.core.data.repository.StatusRepository
 import org.mozilla.social.core.data.repository.TimelineRepository
+import org.mozilla.social.core.designsystem.component.SnackbarType
 import org.mozilla.social.core.domain.AccountFlow
+import org.mozilla.social.core.navigation.usecases.PopNavBackstack
+import org.mozilla.social.core.navigation.usecases.ShowSnackbar
 import org.mozilla.social.feature.post.R
 import org.mozilla.social.model.ImageState
 import org.mozilla.social.model.StatusVisibility
@@ -39,14 +43,15 @@ import org.mozilla.social.post.status.StatusDelegate
 import org.mozilla.social.post.status.StatusInteractions
 
 class NewPostViewModel(
+    private val replyStatusId: String?,
     accountFlow: AccountFlow,
-    private val statusRepository: StatusRepository,
     mediaRepository: MediaRepository,
     searchRepository: SearchRepository,
-    private val timelineRepository: TimelineRepository,
     private val log: Log,
-    private val onStatusPosted: () -> Unit,
-    private val replyStatusId: String?,
+    private val statusRepository: StatusRepository,
+    private val timelineRepository: TimelineRepository,
+    private val popNavBackstack: PopNavBackstack,
+    private val showSnackbar: ShowSnackbar,
 ) : ViewModel() {
 
     private val statusDelegate: StatusDelegate = StatusDelegate(
@@ -156,6 +161,14 @@ class NewPostViewModel(
                 _isSendingPost.update { false }
             }
         }
+    }
+
+    private fun onStatusPosted() {
+        popNavBackstack()
+        showSnackbar(
+            text = StringFactory.resource(R.string.your_post_was_published),
+            isError = false
+        )
     }
 
     companion object {
