@@ -11,4 +11,5 @@ interface EditAccountInteractions {
     fun onNewHeaderSelected(uri: Uri, file: File) = Unit
     fun onLockClicked() = Unit
     fun onBotClicked() = Unit
+    fun onRetryClicked() = Unit
 }
