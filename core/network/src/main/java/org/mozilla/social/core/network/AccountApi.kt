@@ -122,5 +122,13 @@ interface AccountApi {
         @Part("bot") bot: RequestBody? = null,
         @Part avatar: MultipartBody.Part? = null,
         @Part header: MultipartBody.Part? = null,
+        @Part("fields_attributes[0][name]") fieldLabel0: RequestBody? = null,
+        @Part("fields_attributes[0][value]") fieldContent0: RequestBody? = null,
+        @Part("fields_attributes[1][name]") fieldLabel1: RequestBody? = null,
+        @Part("fields_attributes[1][value]") fieldContent1: RequestBody? = null,
+        @Part("fields_attributes[2][name]") fieldLabel2: RequestBody? = null,
+        @Part("fields_attributes[2][value]") fieldContent2: RequestBody? = null,
+        @Part("fields_attributes[3][name]") fieldLabel3: RequestBody? = null,
+        @Part("fields_attributes[3][value]") fieldContent3: RequestBody? = null,
     ): NetworkAccount
 }

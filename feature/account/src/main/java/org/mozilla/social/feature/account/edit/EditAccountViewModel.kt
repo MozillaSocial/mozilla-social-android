@@ -48,20 +48,9 @@ class EditAccountViewModel(
         viewModelScope.launch {
             try {
                 val account = accountRepository.getAccountFromDatabase(accountId)!!
-                val bio = HtmlCompat.fromHtml(account.bio, 0).toString()
                 _editAccountUiState.update {
                     Resource.Loaded(
-                        data = EditAccountUiState(
-                            topBarTitle = account.displayName,
-                            headerUrl = account.headerUrl,
-                            avatarUrl = account.avatarUrl,
-                            handle = "@${account.acct}",
-                            displayName = account.displayName,
-                            bio = bio,
-                            bioCharacterCount = bio.length,
-                            lockChecked = account.isLocked,
-                            botChecked = account.isBot ?: false,
-                        )
+                        data = account.toUiState()
                     )
                 }
             } catch (e: Exception) {
@@ -109,6 +98,12 @@ class EditAccountViewModel(
                         header = newHeader,
                         locked = data.lockChecked,
                         bot = data.botChecked,
+                        fields = data.fields.map {
+                            Pair(
+                                first = it.label,
+                                second = it.content,
+                            )
+                        }
                     )
                     popNavBackstack()
                 } catch (e: Exception) {
@@ -172,6 +167,30 @@ class EditAccountViewModel(
 
     override fun onRetryClicked() {
         loadAccount()
+    }
+
+    override fun onLabelTextChanged(index: Int, text: String) {
+        with(_editAccountUiState.value as? Resource.Loaded ?: return) {
+            _editAccountUiState.update {
+                Resource.Loaded(
+                    data = data.copy(
+                        fields = data.fields
+                    )
+                )
+            }
+        }
+    }
+
+    override fun onContentTextChanged(index: Int, text: String) {
+        super.onContentTextChanged(index, text)
+    }
+
+    override fun onFieldDeleteClicked(index: Int) {
+        super.onFieldDeleteClicked(index)
+    }
+
+    override fun onAddFieldClicked() {
+        super.onAddFieldClicked()
     }
 
     companion object {
