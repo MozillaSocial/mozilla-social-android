@@ -12,6 +12,7 @@ import org.mozilla.social.core.data.repository.model.followers.FollowersPagingWr
 import org.mozilla.social.core.data.repository.model.status.toDatabaseModel
 import org.mozilla.social.core.data.repository.model.status.toExternalModel
 import org.mozilla.social.core.database.SocialDatabase
+import org.mozilla.social.core.database.model.statusCollections.HomeTimelineStatus
 import org.mozilla.social.core.network.AccountApi
 import org.mozilla.social.model.Account
 import org.mozilla.social.model.Relationship
@@ -128,15 +129,18 @@ class AccountRepository internal constructor(
         accountId: String,
         loggedInUserAccountId: String,
     ) {
+        var timelinePosts: List<HomeTimelineStatus>? = null
         try {
             socialDatabase.withTransaction {
-                socialDatabase.accountsDao().updateFollowingCount(loggedInUserAccountId, -1)
+                timelinePosts = socialDatabase.homeTimelineDao().getPostsFromAccount(accountId)
                 socialDatabase.homeTimelineDao().removePostsFromAccount(accountId)
+                socialDatabase.accountsDao().updateFollowingCount(loggedInUserAccountId, -1)
                 socialDatabase.relationshipsDao().updateFollowing(accountId, false)
             }
             accountApi.unfollowAccount(accountId)
         } catch (e: Exception) {
             socialDatabase.withTransaction {
+                timelinePosts?.let { socialDatabase.homeTimelineDao().insertAll(it) }
                 socialDatabase.accountsDao().updateFollowingCount(loggedInUserAccountId, 1)
                 socialDatabase.relationshipsDao().updateFollowing(accountId, true)
             }
