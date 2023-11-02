@@ -14,6 +14,7 @@ import org.mozilla.social.common.Resource
 import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.core.data.repository.AccountRepository
 import org.mozilla.social.core.domain.AccountIdBlocking
+import org.mozilla.social.core.navigation.usecases.PopNavBackstack
 import org.mozilla.social.feature.account.R
 import timber.log.Timber
 import java.io.File
@@ -21,6 +22,7 @@ import java.io.File
 class EditAccountViewModel(
     private val accountRepository: AccountRepository,
     accountIdBlocking: AccountIdBlocking,
+    private val popNavBackstack: PopNavBackstack,
 ) : ViewModel(), EditAccountInteractions {
 
     private val accountId = accountIdBlocking()
@@ -42,6 +44,7 @@ class EditAccountViewModel(
     }
 
     private fun loadAccount() {
+        _editAccountUiState.update { Resource.Loading() }
         viewModelScope.launch {
             try {
                 val account = accountRepository.getAccountFromDatabase(accountId)!!
@@ -63,6 +66,7 @@ class EditAccountViewModel(
                 }
             } catch (e: Exception) {
                 Timber.e(e)
+                _editAccountUiState.update { Resource.Error(e) }
             }
         }
     }
@@ -106,7 +110,7 @@ class EditAccountViewModel(
                         locked = data.lockChecked,
                         bot = data.botChecked,
                     )
-                    //TODO navigate back
+                    popNavBackstack()
                 } catch (e: Exception) {
                     _errorToastMessage.emit(StringFactory.resource(R.string.edit_account_save_failed))
                     Timber.e(e)
@@ -164,6 +168,10 @@ class EditAccountViewModel(
                 )
             }
         }
+    }
+
+    override fun onRetryClicked() {
+        loadAccount()
     }
 
     companion object {

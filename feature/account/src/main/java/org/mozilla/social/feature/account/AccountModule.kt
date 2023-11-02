@@ -32,6 +32,7 @@ val accountModule = module {
         EditAccountViewModel(
             get(),
             get(),
+            get(),
         )
     }
 }
