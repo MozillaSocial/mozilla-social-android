@@ -18,8 +18,10 @@ dependencies {
     implementation(project(":core:navigation"))
 
     implementation(libs.androidx.navigation.compose)
-    implementation(libs.androidx.navigation.compose)
     implementation(libs.koin.core)
     implementation(libs.koin.androidx.compose)
     implementation(libs.coil)
+
+    // The version catalog doesn't like that this ends in a "class"
+    implementation("androidx.compose.material3:material3-window-size-class")
 }
