@@ -20,6 +20,8 @@ import org.mozilla.social.common.LoadState
 import org.mozilla.social.common.logging.Log
 import org.mozilla.social.common.utils.FileType
 import org.mozilla.social.common.utils.StringFactory
+import org.mozilla.social.core.analytics.Analytics
+import org.mozilla.social.core.analytics.AnalyticsIdentifiers
 import org.mozilla.social.core.data.repository.MediaRepository
 import org.mozilla.social.core.data.repository.SearchRepository
 import org.mozilla.social.core.data.repository.StatusRepository
@@ -43,6 +45,7 @@ import org.mozilla.social.post.status.StatusDelegate
 import org.mozilla.social.post.status.StatusInteractions
 
 class NewPostViewModel(
+    private val analytics: Analytics,
     private val replyStatusId: String?,
     accountFlow: AccountFlow,
     mediaRepository: MediaRepository,
@@ -52,7 +55,7 @@ class NewPostViewModel(
     private val timelineRepository: TimelineRepository,
     private val popNavBackstack: PopNavBackstack,
     private val showSnackbar: ShowSnackbar,
-) : ViewModel() {
+) : ViewModel(), NewPostInteractions {
 
     private val statusDelegate: StatusDelegate = StatusDelegate(
         viewModelScope,
@@ -168,6 +171,12 @@ class NewPostViewModel(
         showSnackbar(
             text = StringFactory.resource(R.string.your_post_was_published),
             isError = false
+        )
+    }
+
+    override fun onScreenViewed() {
+        analytics.uiImpression(
+            uiIdentifier = AnalyticsIdentifiers.NEW_POST_SCREEN_IMPRESSION,
         )
     }
 

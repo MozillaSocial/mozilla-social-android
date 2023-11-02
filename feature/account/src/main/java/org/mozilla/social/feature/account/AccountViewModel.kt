@@ -21,6 +21,7 @@ import org.mozilla.social.common.logging.Log
 import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.common.utils.edit
 import org.mozilla.social.core.analytics.Analytics
+import org.mozilla.social.core.analytics.AnalyticsIdentifiers
 import org.mozilla.social.core.data.repository.AccountRepository
 import org.mozilla.social.core.data.repository.StatusRepository
 import org.mozilla.social.core.data.repository.model.status.toExternalModel
@@ -130,10 +131,10 @@ class AccountViewModel(
         }
     }
 
-    fun onAccountScreenShown() {
+    override fun onScreenViewed() {
         analytics.uiImpression(
             mastodonAccountId = accountId,
-            uiIdentifier = "account.screen.impression",
+            uiIdentifier = AnalyticsIdentifiers.ACCOUNTS_SCREEN_IMPRESSION,
         )
     }
 

@@ -98,7 +98,7 @@ internal fun AccountScreen(
     )
 
     LaunchedEffect(Unit) {
-        viewModel.onAccountScreenShown()
+        viewModel.onScreenViewed()
     }
 
     MoSoToast(toastMessage = viewModel.errorToastMessage)

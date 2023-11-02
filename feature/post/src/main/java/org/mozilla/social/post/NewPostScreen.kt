@@ -125,6 +125,10 @@ internal fun NewPostScreen(
     )
 
     MoSoToast(toastMessage = viewModel.errorToastMessage)
+
+    LaunchedEffect(Unit) {
+        viewModel.onScreenViewed()
+    }
 }
 
 data class UserHeaderState(val avatarUrl: String, val displayName: String)
