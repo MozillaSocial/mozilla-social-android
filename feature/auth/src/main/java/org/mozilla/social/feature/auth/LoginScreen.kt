@@ -51,7 +51,7 @@ private fun LoginScreen(defaultUrl: String, onLoginClicked: (String) -> Unit) {
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Spacer(modifier = Modifier.padding(80.dp))
+        Spacer(modifier = Modifier.weight(2f))
         Text(
             text = stringResource(id = R.string.title_text),
             fontSize = 30.sp
@@ -63,8 +63,9 @@ private fun LoginScreen(defaultUrl: String, onLoginClicked: (String) -> Unit) {
                 .fillMaxWidth()
                 .wrapContentHeight(),
             value = text, singleLine = true, onValueChange = { text = it })
-        Spacer(modifier = Modifier.padding(80.dp))
+        Spacer(modifier = Modifier.weight(1f))
         LoginButton(onLoginClicked = { onLoginClicked(text) })
+        Spacer(modifier = Modifier.weight(2f))
     }
 }
 

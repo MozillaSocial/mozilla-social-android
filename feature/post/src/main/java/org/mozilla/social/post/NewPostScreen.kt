@@ -5,13 +5,13 @@
 
 package org.mozilla.social.post
 
+import android.app.Activity
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -34,6 +34,9 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
+import androidx.compose.material3.windowsizeclass.WindowHeightSizeClass
+import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
@@ -45,6 +48,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
@@ -125,6 +129,7 @@ internal fun NewPostScreen(
 
 data class UserHeaderState(val avatarUrl: String, val displayName: String)
 
+@OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 @Composable
 private fun NewPostScreen(
     bottomBarState: BottomBarState,
@@ -147,53 +152,60 @@ private fun NewPostScreen(
     userHeaderState: UserHeaderState?,
 ) {
 
+    // If the current height class is compact (prob in landscape mode)
+    val isCompactHeight = (LocalContext.current as? Activity)?.let {
+        calculateWindowSizeClass(it).heightSizeClass == WindowHeightSizeClass.Compact
+    } ?: true
+
     Box(
         modifier = Modifier
             .systemBarsPadding()
-            .imePadding()
             .background(MoSoTheme.colors.layer1)
     ) {
-        Column {
-            TopBar(
-                onPostClicked = onPostClicked,
-                sendButtonEnabled = sendButtonEnabled,
-            )
-            userHeaderState?.let { userHeaderState ->
-                UserHeader(
-                    userHeaderState = userHeaderState,
-                    visibility = visibility,
-                    onVisibilitySelected = onVisibilitySelected,
-                )
-            }
-            Box(
-                modifier = Modifier
-                    .weight(1f)
-            ) {
-                MainBox(
+        if (isCompactHeight) {
+            Row {
+                CompactNewPostScreenContent(
+                    bottomBarState = bottomBarState,
                     statusText = statusText,
                     statusInteractions = statusInteractions,
+                    onPostClicked = onPostClicked,
+                    sendButtonEnabled = sendButtonEnabled,
                     imageStates = imageStates,
                     mediaInteractions = mediaInteractions,
+                    visibility = visibility,
+                    onVisibilitySelected = onVisibilitySelected,
                     poll = poll,
                     pollInteractions = pollInteractions,
                     contentWarningText = contentWarningText,
                     contentWarningInteractions = contentWarningInteractions,
+                    accounts = accounts,
+                    hashTags = hashTags,
                     inReplyToAccountName = inReplyToAccountName,
+                    userHeaderState = userHeaderState
                 )
             }
-            accounts?.let {
-                AccountSearchBar(accounts = accounts, statusInteractions = statusInteractions)
-            }
-            hashTags?.let {
-                HashtagSearchBar(hashTags = hashTags, statusInteractions = statusInteractions)
-            }
-            BottomBar(
+        } else {
+            NewPostScreenContent(
                 bottomBarState = bottomBarState,
-                onMediaInserted = mediaInteractions::onMediaInserted,
+                statusText = statusText,
+                statusInteractions = statusInteractions,
+                onPostClicked = onPostClicked,
+                sendButtonEnabled = sendButtonEnabled,
+                imageStates = imageStates,
+                mediaInteractions = mediaInteractions,
+                visibility = visibility,
+                onVisibilitySelected = onVisibilitySelected,
+                poll = poll,
                 pollInteractions = pollInteractions,
+                contentWarningText = contentWarningText,
                 contentWarningInteractions = contentWarningInteractions,
+                accounts = accounts,
+                hashTags = hashTags,
+                inReplyToAccountName = inReplyToAccountName,
+                userHeaderState = userHeaderState
             )
         }
+
         if (isSendingPost) {
             TransparentNoTouchOverlay()
             CircularProgressIndicator(
@@ -201,6 +213,136 @@ private fun NewPostScreen(
             )
         }
     }
+}
+
+@Composable
+private fun CompactNewPostScreenContent(
+    bottomBarState: BottomBarState,
+    statusText: TextFieldValue,
+    statusInteractions: StatusInteractions,
+    onPostClicked: () -> Unit,
+    sendButtonEnabled: Boolean,
+    imageStates: List<ImageState>,
+    mediaInteractions: MediaInteractions,
+    visibility: StatusVisibility,
+    onVisibilitySelected: (StatusVisibility) -> Unit,
+    poll: Poll?,
+    pollInteractions: PollInteractions,
+    contentWarningText: String?,
+    contentWarningInteractions: ContentWarningInteractions,
+    accounts: List<Account>?,
+    hashTags: List<String>?,
+    inReplyToAccountName: String?,
+    userHeaderState: UserHeaderState?,
+) {
+    Row {
+        userHeaderState?.let { userHeaderState ->
+            UserHeader(
+                userHeaderState = userHeaderState,
+                visibility = visibility,
+                onVisibilitySelected = onVisibilitySelected,
+            )
+        }
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .imePadding()
+        ) {
+            MainBox(
+                statusText = statusText,
+                statusInteractions = statusInteractions,
+                imageStates = imageStates,
+                mediaInteractions = mediaInteractions,
+                poll = poll,
+                pollInteractions = pollInteractions,
+                contentWarningText = contentWarningText,
+                contentWarningInteractions = contentWarningInteractions,
+                inReplyToAccountName = inReplyToAccountName,
+            )
+            BottomBar(
+                bottomBarState = bottomBarState,
+                onMediaInserted = mediaInteractions::onMediaInserted,
+                pollInteractions = pollInteractions,
+                contentWarningInteractions = contentWarningInteractions,
+            )
+        }
+        accounts?.let {
+            AccountSearchBar(accounts = accounts, statusInteractions = statusInteractions)
+        }
+        hashTags?.let {
+            HashtagSearchBar(hashTags = hashTags, statusInteractions = statusInteractions)
+        }
+
+        PostButton(
+            onPostClicked = onPostClicked,
+            sendButtonEnabled = sendButtonEnabled,
+        )
+    }
+}
+
+@Composable
+private fun NewPostScreenContent(
+    bottomBarState: BottomBarState,
+    statusText: TextFieldValue,
+    statusInteractions: StatusInteractions,
+    onPostClicked: () -> Unit,
+    sendButtonEnabled: Boolean,
+    imageStates: List<ImageState>,
+    mediaInteractions: MediaInteractions,
+    visibility: StatusVisibility,
+    onVisibilitySelected: (StatusVisibility) -> Unit,
+    poll: Poll?,
+    pollInteractions: PollInteractions,
+    contentWarningText: String?,
+    contentWarningInteractions: ContentWarningInteractions,
+    accounts: List<Account>?,
+    hashTags: List<String>?,
+    inReplyToAccountName: String?,
+    userHeaderState: UserHeaderState?,
+) {
+    Column {
+        TopBar(
+            onPostClicked = onPostClicked,
+            sendButtonEnabled = sendButtonEnabled,
+        )
+        userHeaderState?.let { userHeaderState ->
+            UserHeader(
+                userHeaderState = userHeaderState,
+                visibility = visibility,
+                onVisibilitySelected = onVisibilitySelected,
+            )
+        }
+        Box(
+            modifier = Modifier
+                .weight(1f)
+        ) {
+            MainBox(
+                statusText = statusText,
+                statusInteractions = statusInteractions,
+                imageStates = imageStates,
+                mediaInteractions = mediaInteractions,
+                poll = poll,
+                pollInteractions = pollInteractions,
+                contentWarningText = contentWarningText,
+                contentWarningInteractions = contentWarningInteractions,
+                inReplyToAccountName = inReplyToAccountName,
+            )
+        }
+        accounts?.let {
+            AccountSearchBar(accounts = accounts, statusInteractions = statusInteractions)
+        }
+        hashTags?.let {
+            HashtagSearchBar(hashTags = hashTags, statusInteractions = statusInteractions)
+        }
+        BottomBar(
+            bottomBarState = bottomBarState,
+            onMediaInserted = mediaInteractions::onMediaInserted,
+            pollInteractions = pollInteractions,
+            contentWarningInteractions = contentWarningInteractions,
+        )
+    }
+
+
 }
 
 @Composable
@@ -243,13 +385,19 @@ private fun TopBar(
 ) {
     MoSoCloseableTopAppBar(
         actions = {
-            MoSoButton(onClick = onPostClicked, enabled = sendButtonEnabled) {
-                Text(
-                    text = stringResource(id = R.string.post),
-                    style = MoSoTheme.typography.labelSmall
-                )
-            }
-        })
+            PostButton(onPostClicked = onPostClicked, sendButtonEnabled = sendButtonEnabled)
+        }
+    )
+}
+
+@Composable
+private fun PostButton(onPostClicked: () -> Unit, sendButtonEnabled: Boolean) {
+    MoSoButton(onClick = onPostClicked, enabled = sendButtonEnabled) {
+        Text(
+            text = stringResource(id = R.string.post),
+            style = MoSoTheme.typography.labelSmall
+        )
+    }
 }
 
 
