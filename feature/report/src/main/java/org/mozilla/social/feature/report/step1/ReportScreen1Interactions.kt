@@ -10,4 +10,5 @@ interface ReportScreen1Interactions {
     fun onServerRuleClicked(rule: InstanceRule) = Unit
     fun onAdditionCommentTextChanged(text: String) = Unit
     fun onSendToExternalServerClicked() = Unit
+    fun onScreenViewed() = Unit
 }

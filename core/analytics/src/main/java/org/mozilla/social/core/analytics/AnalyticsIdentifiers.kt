@@ -12,4 +12,6 @@ object AnalyticsIdentifiers {
     const val NEW_POST_SCREEN_IMPRESSION = "new.post.screen.impression"
 
     const val FEED_SCREEN_IMPRESSION = "feed.screen.impression"
+
+    const val REPORT_SCREEN_IMPRESSION = "report.screen.impression"
 }
