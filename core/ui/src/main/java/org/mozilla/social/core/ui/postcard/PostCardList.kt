@@ -1,8 +1,5 @@
-@file:OptIn(ExperimentalFoundationApi::class)
-
 package org.mozilla.social.core.ui.postcard
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -214,7 +211,6 @@ private fun LazyListScope.listContent(
     ) { index ->
         lazyingPagingItems[index]?.let { item ->
             PostCard(
-                modifier = Modifier.animateItemPlacement(),
                 post = item,
                 postCardInteractions = postCardInteractions,
             )
@@ -248,7 +244,6 @@ fun PostCardList(
         ) { index ->
             val item = items[index]
             PostCard(
-                modifier = Modifier.animateItemPlacement(),
                 post = item,
                 postCardInteractions = postCardInteractions,
                 threadId = threadId
