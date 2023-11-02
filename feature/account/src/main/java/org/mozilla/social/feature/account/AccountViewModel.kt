@@ -203,7 +203,10 @@ class AccountViewModel(
     override fun onFollowClicked() {
         viewModelScope.launch {
             try {
-                accountRepository.followAccount(accountId)
+                accountRepository.followAccount(
+                    accountId = accountId,
+                    loggedInUserAccountId = usersAccountId
+                )
             } catch (e: Exception) {
                 Timber.e(e)
                 _errorToastMessage.emit(StringFactory.resource(R.string.error_following_account))
@@ -214,7 +217,10 @@ class AccountViewModel(
     override fun onUnfollowClicked() {
         viewModelScope.launch {
             try {
-                accountRepository.unfollowAccount(accountId)
+                accountRepository.unfollowAccount(
+                    accountId = accountId,
+                    loggedInUserAccountId = usersAccountId,
+                )
             } catch (e: Exception) {
                 Timber.e(e)
                 _errorToastMessage.emit(StringFactory.resource(R.string.error_unfollowing_account))

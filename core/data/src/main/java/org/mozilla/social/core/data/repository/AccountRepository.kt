@@ -1,8 +1,8 @@
 package org.mozilla.social.core.data.repository
 
+import androidx.room.withTransaction
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
@@ -105,23 +105,41 @@ class AccountRepository internal constructor(
     suspend fun getAccountFavourites(): List<Status> =
         accountApi.getAccountFavourites().map { it.toExternalModel() }
 
-    suspend fun followAccount(accountId: String) {
+    suspend fun followAccount(
+        accountId: String,
+        loggedInUserAccountId: String,
+    ) {
         try {
-            socialDatabase.relationshipsDao().updateFollowing(accountId, true)
+            socialDatabase.withTransaction {
+                socialDatabase.accountsDao().updateFollowingCount(loggedInUserAccountId, 1)
+                socialDatabase.relationshipsDao().updateFollowing(accountId, true)
+            }
             accountApi.followAccount(accountId)
         } catch (e: Exception) {
-            socialDatabase.relationshipsDao().updateFollowing(accountId, false)
+            socialDatabase.withTransaction {
+                socialDatabase.accountsDao().updateFollowingCount(loggedInUserAccountId, -1)
+                socialDatabase.relationshipsDao().updateFollowing(accountId, false)
+            }
             throw e
         }
     }
 
-    suspend fun unfollowAccount(accountId: String) {
+    suspend fun unfollowAccount(
+        accountId: String,
+        loggedInUserAccountId: String,
+    ) {
         try {
-            socialDatabase.homeTimelineDao().removePostsFromAccount(accountId)
-            socialDatabase.relationshipsDao().updateFollowing(accountId, false)
+            socialDatabase.withTransaction {
+                socialDatabase.accountsDao().updateFollowingCount(loggedInUserAccountId, -1)
+                socialDatabase.homeTimelineDao().removePostsFromAccount(accountId)
+                socialDatabase.relationshipsDao().updateFollowing(accountId, false)
+            }
             accountApi.unfollowAccount(accountId)
         } catch (e: Exception) {
-            socialDatabase.relationshipsDao().updateFollowing(accountId, true)
+            socialDatabase.withTransaction {
+                socialDatabase.accountsDao().updateFollowingCount(loggedInUserAccountId, 1)
+                socialDatabase.relationshipsDao().updateFollowing(accountId, true)
+            }
             throw e
         }
     }
