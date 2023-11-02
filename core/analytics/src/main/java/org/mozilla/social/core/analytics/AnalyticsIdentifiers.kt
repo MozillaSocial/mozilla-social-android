@@ -21,4 +21,6 @@ object AnalyticsIdentifiers {
     const val FOLLOWING_SCREEN_IMPRESSION = "following.screen.impression"
 
     const val HASHTAG_SCREEN_IMPRESSION = "hashtag.screen.impression"
+
+    const val AUTH_SCREEN_IMPRESSION = "auth.screen.impression"
 }
