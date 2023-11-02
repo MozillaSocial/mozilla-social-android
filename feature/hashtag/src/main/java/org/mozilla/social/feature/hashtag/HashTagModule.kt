@@ -14,6 +14,7 @@ val hashTagModule = module {
             accountIdFlow = get(),
             navigateTo = get(),
             openLink = get(),
+            analytics = get(),
         )
     }
 }
