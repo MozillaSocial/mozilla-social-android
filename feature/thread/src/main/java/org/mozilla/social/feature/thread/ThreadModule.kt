@@ -5,6 +5,7 @@ import org.koin.dsl.module
 
 val threadModule = module {
     viewModel { parametersHolder -> ThreadViewModel(
+        analytics = get(),
         statusRepository = get(),
         accountRepository = get(),
         log = get(),
