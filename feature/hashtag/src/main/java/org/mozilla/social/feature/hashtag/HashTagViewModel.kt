@@ -15,6 +15,8 @@ import kotlinx.coroutines.flow.stateIn
 import org.koin.core.parameter.parametersOf
 import org.koin.java.KoinJavaComponent.inject
 import org.mozilla.social.common.logging.Log
+import org.mozilla.social.core.analytics.Analytics
+import org.mozilla.social.core.analytics.AnalyticsIdentifiers
 import org.mozilla.social.core.data.repository.AccountRepository
 import org.mozilla.social.core.data.repository.StatusRepository
 import org.mozilla.social.core.data.repository.model.status.toExternalModel
@@ -36,7 +38,8 @@ class HashTagViewModel(
     accountIdFlow: AccountIdFlow,
     navigateTo: NavigateTo,
     openLink: OpenLink,
-) : ViewModel() {
+    private val analytics: Analytics,
+) : ViewModel(), HashTagInteractions {
 
     private val hashTagTimelineRemoteMediator: HashTagTimelineRemoteMediator by inject(
         HashTagTimelineRemoteMediator::class.java
@@ -73,4 +76,10 @@ class HashTagViewModel(
         navigateTo = navigateTo,
         openLink = openLink,
     )
+
+    override fun onScreenViewed() {
+        analytics.uiImpression(
+            uiIdentifier = AnalyticsIdentifiers.HASHTAG_SCREEN_IMPRESSION,
+        )
+    }
 }
