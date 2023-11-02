@@ -18,7 +18,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -42,6 +41,8 @@ import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.ui.TransparentNoTouchOverlay
 import org.mozilla.social.core.ui.appbar.MoSoCloseableTopAppBar
+import org.mozilla.social.core.ui.error.GenericError
+import org.mozilla.social.core.ui.loading.MaxSizeLoading
 import org.mozilla.social.feature.account.Header
 import org.mozilla.social.feature.account.R
 
@@ -51,7 +52,7 @@ internal fun EditAccountScreen(
 ) {
     EditAccountScreen(
         editAccountInteractions = viewModel,
-        editAccountUiState = viewModel.editAccountUiState.collectAsState().value,
+        uiState = viewModel.editAccountUiState.collectAsState().value,
         isUploading = viewModel.isUploading.collectAsState().value,
     )
 
@@ -61,38 +62,58 @@ internal fun EditAccountScreen(
 @Composable
 fun EditAccountScreen(
     editAccountInteractions: EditAccountInteractions,
-    editAccountUiState: Resource<EditAccountUiState>,
+    uiState: Resource<EditAccountUiState>,
     isUploading: Boolean,
 ) {
     MoSoSurface(
         modifier = Modifier
             .fillMaxSize(),
     ) {
-        Box(modifier = Modifier.fillMaxSize()) {
-            Box(
-                modifier = Modifier
-                    .systemBarsPadding()
-                    .imePadding(),
-            ) {
-                when (editAccountUiState) {
-                    is Resource.Loading -> {}
-                    is Resource.Loaded -> {
-                        LoadedState(
-                            editAccountInteractions = editAccountInteractions,
-                            uiState = editAccountUiState.data,
-                        )
+        Column(
+            modifier = Modifier
+                .systemBarsPadding()
+                .imePadding(),
+        ) {
+            MoSoCloseableTopAppBar(
+                title = (uiState as? Resource.Loaded)?.data?.topBarTitle ?: "",
+                actions = {
+                    if (uiState is Resource.Loaded) {
+                        MoSoButton(
+                            modifier = Modifier
+                                .padding(8.dp)
+                                .height(38.dp),
+                            onClick = { editAccountInteractions.onSaveClicked() }
+                        ) {
+                            Text(text = stringResource(id = R.string.edit_account_save_button))
+                        }
                     }
+                },
+                showDivider = false,
+            )
 
-                    is Resource.Error -> {}
+
+            when (uiState) {
+                is Resource.Loading -> {
+                    MaxSizeLoading()
+                }
+                is Resource.Loaded -> {
+                    LoadedState(
+                        editAccountInteractions = editAccountInteractions,
+                        uiState = uiState.data,
+                    )
+                }
+
+                is Resource.Error -> {
+                    GenericError(
+                        onRetryClicked = editAccountInteractions::onRetryClicked
+                    )
                 }
             }
+        }
 
-            if (isUploading) {
-                TransparentNoTouchOverlay()
-                CircularProgressIndicator(
-                    modifier = Modifier.align(Alignment.Center),
-                )
-            }
+        if (isUploading) {
+            TransparentNoTouchOverlay()
+            MaxSizeLoading()
         }
     }
 }
@@ -105,21 +126,6 @@ private fun LoadedState(
     val context = LocalContext.current
 
     Column {
-        MoSoCloseableTopAppBar(
-            title = uiState.topBarTitle,
-            actions = {
-                MoSoButton(
-                    modifier = Modifier
-                        .padding(8.dp)
-                        .height(38.dp),
-                    onClick = { editAccountInteractions.onSaveClicked() }
-                ) {
-                    Text(text = stringResource(id = R.string.edit_account_save_button))
-                }
-            },
-            showDivider = false,
-        )
-
         val avatarSelectionLauncher = rememberLauncherForActivityResult(
             ActivityResultContracts.PickVisualMedia()
         ) { uri ->
@@ -270,7 +276,7 @@ private fun BotAndLock(
 private fun PreviewEditAccountScreen() {
     MoSoTheme {
         EditAccountScreen(
-            editAccountUiState = Resource.Loaded(
+            uiState = Resource.Loaded(
                 data = EditAccountUiState(
                     topBarTitle = "John",
                     headerUrl = "",
