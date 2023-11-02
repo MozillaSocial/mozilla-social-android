@@ -16,6 +16,8 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import org.mozilla.social.common.logging.Log
+import org.mozilla.social.core.analytics.Analytics
+import org.mozilla.social.core.analytics.AnalyticsIdentifiers
 import org.mozilla.social.core.data.repository.AccountRepository
 import org.mozilla.social.core.data.repository.StatusRepository
 import org.mozilla.social.core.data.repository.model.status.toExternalModel
@@ -34,6 +36,7 @@ import org.mozilla.social.feed.remoteMediators.LocalTimelineRemoteMediator
  * Produces a flow of pages of statuses for a feed
  */
 class FeedViewModel(
+    private val analytics: Analytics,
     homeTimelineRemoteMediator: HomeTimelineRemoteMediator,
     localTimelineRemoteMediator: LocalTimelineRemoteMediator,
     federatedTimelineRemoteMediator: FederatedTimelineRemoteMediator,
@@ -113,5 +116,11 @@ class FeedViewModel(
 
     override fun onTabClicked(timelineType: TimelineType) {
         _timelineType.update { timelineType }
+    }
+
+    override fun onScreenViewed() {
+        analytics.uiImpression(
+            uiIdentifier = AnalyticsIdentifiers.FEED_SCREEN_IMPRESSION,
+        )
     }
 }
