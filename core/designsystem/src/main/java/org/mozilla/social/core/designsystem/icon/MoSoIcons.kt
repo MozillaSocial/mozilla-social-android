@@ -55,6 +55,9 @@ object MoSoIcons {
     fun compass() = painterResource(R.drawable.compass)
 
     @Composable
+    fun connect() = painterResource(id = R.drawable.connect)
+
+    @Composable
     fun heart() = painterResource(id = R.drawable.heart)
 
     @Composable

@@ -187,6 +187,12 @@ class AppState(
      */
     fun navigateToBottomBarDestination(destination: NavigationDestination) {
         Timber.d("NAVIGATION navigate to bottom bar destination: $destination")
+
+        if (destination == NavigationDestination.NewPost) {
+            mainNavController.navigateToNewPost()
+            return
+        }
+
         // If navigating to the feed, just pop up to the feed.  Don't start a new instance
         // of it.  If a new instance is started, we don't retain scroll position!
         if (destination == NavigationDestination.Feed) {

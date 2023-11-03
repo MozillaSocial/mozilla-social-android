@@ -107,7 +107,7 @@ fun NavGraphBuilder.bottomTabScreen(appState: AppState) {
             bottomBar = {
                 BottomBar(
                     currentDestination = currentDestination,
-                    navigateToTopLevelDestination = appState::navigateToBottomBarDestination
+                    navigateToTopLevelDestination = appState::navigateToBottomBarDestination,
                 )
             },
             content = {
@@ -138,7 +138,7 @@ private fun BottomBar(
         MoSoBottomNavigationBar(
             currentDestination = currentDestination,
             bottomBarTabs = BottomBarTabs.values().map { it.bottomBarTab },
-            navigateTo = navigateToTopLevelDestination
+            navigateTo = navigateToTopLevelDestination,
         )
     }
 }

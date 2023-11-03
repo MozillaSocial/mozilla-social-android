@@ -38,6 +38,17 @@ enum class BottomBarTabs(
             override val navigationDestination: NavigationDestination = NavigationDestination.Discover
         }
     ),
+    NEW_POST(
+        bottomBarTab = object : BottomBarTab {
+            @Composable
+            override fun selectedIcon(): Painter {
+                return MoSoIcons.connect()
+            }
+
+            override val tabText = StringFactory.resource(R.string.new_post_tab_text)
+            override val navigationDestination: NavigationDestination = NavigationDestination.NewPost
+        }
+    ),
     BOOKMARKS(
         bottomBarTab = object : BottomBarTab {
             @Composable
@@ -65,6 +76,4 @@ enum class BottomBarTabs(
 
 object Routes {
     const val SPLASH = "splash"
-    const val BOOKMARKS = "bookmarks"
-    const val MAIN = "main"
 }
