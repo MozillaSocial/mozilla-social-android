@@ -28,7 +28,7 @@ import org.mozilla.social.core.database.SocialDatabase
 import org.mozilla.social.core.database.model.statusCollections.toStatusWrapper
 import org.mozilla.social.core.domain.AccountIdBlocking
 import org.mozilla.social.core.domain.GetDetailedAccount
-import org.mozilla.social.core.navigation.NavDestination
+import org.mozilla.social.core.navigation.NavigationDestination
 import org.mozilla.social.core.navigation.usecases.NavigateTo
 import org.mozilla.social.core.navigation.usecases.OpenLink
 import org.mozilla.social.core.ui.R
@@ -184,7 +184,7 @@ class AccountViewModel(
     override fun onOverflowReportClicked() {
         (uiState.value as? Resource.Loaded)?.data?.webFinger?.let { webFinger ->
             navigateTo(
-                NavDestination.Report(
+                NavigationDestination.Report(
                     accountId,
                     webFinger,
                 )
@@ -193,11 +193,11 @@ class AccountViewModel(
     }
 
     override fun onFollowersClicked() {
-        navigateTo(NavDestination.Followers(accountId))
+        navigateTo(NavigationDestination.Followers(accountId))
     }
 
     override fun onFollowingClicked() {
-        navigateTo(NavDestination.Following(accountId))
+        navigateTo(NavigationDestination.Following(accountId))
     }
 
     override fun onFollowClicked() {
@@ -237,10 +237,10 @@ class AccountViewModel(
     }
 
     override fun onSettingsClicked() {
-        navigateTo(NavDestination.Settings)
+        navigateTo(NavigationDestination.Settings)
     }
 
     override fun onEditAccountClicked() {
-        navigateTo(NavDestination.EditAccount)
+        navigateTo(NavigationDestination.EditAccount)
     }
 }

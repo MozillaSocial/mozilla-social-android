@@ -5,7 +5,7 @@ import androidx.compose.ui.graphics.painter.Painter
 import org.mozilla.social.R
 import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
-import org.mozilla.social.core.navigation.NavigationDestination
+import org.mozilla.social.core.navigation.BottomBarNavigationDestination
 
 /**
  * An enum of all the bottom nav bar destinations
@@ -24,7 +24,8 @@ enum class BottomBarTabs(
             }
 
             override val tabText = StringFactory.resource(R.string.feed_tab_text)
-            override val navigationDestination: NavigationDestination = NavigationDestination.Feed
+            override val navigationDestination: BottomBarNavigationDestination =
+                BottomBarNavigationDestination.Feed
         }
     ),
     DISCOVER(
@@ -35,7 +36,8 @@ enum class BottomBarTabs(
             }
 
             override val tabText = StringFactory.resource(R.string.discover_tab_text)
-            override val navigationDestination: NavigationDestination = NavigationDestination.Discover
+            override val navigationDestination: BottomBarNavigationDestination =
+                BottomBarNavigationDestination.Discover
         }
     ),
     BOOKMARKS(
@@ -46,7 +48,8 @@ enum class BottomBarTabs(
             }
 
             override val tabText = StringFactory.resource(R.string.settings_tab_text)
-            override val navigationDestination: NavigationDestination = NavigationDestination.Bookmarks
+            override val navigationDestination: BottomBarNavigationDestination =
+                BottomBarNavigationDestination.Bookmarks
         }
     ),
     ACCOUNT(
@@ -57,7 +60,8 @@ enum class BottomBarTabs(
             }
 
             override val tabText = StringFactory.resource(R.string.account_tab_text)
-            override val navigationDestination: NavigationDestination = NavigationDestination.MyAccount
+            override val navigationDestination: BottomBarNavigationDestination =
+                BottomBarNavigationDestination.MyAccount
 
         }
     )
@@ -65,6 +69,4 @@ enum class BottomBarTabs(
 
 object Routes {
     const val SPLASH = "splash"
-    const val BOOKMARKS = "bookmarks"
-    const val MAIN = "main"
 }

@@ -26,21 +26,14 @@ import org.koin.compose.koinInject
 import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.core.designsystem.component.MoSoSnackbarHostState
 import org.mozilla.social.core.designsystem.component.SnackbarType
+import org.mozilla.social.core.navigation.BottomBarNavigationDestination
 import org.mozilla.social.core.navigation.Event
-import org.mozilla.social.core.navigation.NavDestination
 import org.mozilla.social.core.navigation.NavigationDestination
+import org.mozilla.social.core.navigation.NavigationDestination.EditAccount.navigateToEditAccount
+import org.mozilla.social.core.navigation.NavigationDestination.Login.navigateToLoginScreen
+import org.mozilla.social.core.navigation.NavigationDestination.Settings.navigateToSettings
+import org.mozilla.social.core.navigation.NavigationDestination.Tabs.navigateToTabs
 import org.mozilla.social.core.navigation.NavigationEventFlow
-import org.mozilla.social.feature.account.edit.navigateToEditAccount
-import org.mozilla.social.feature.account.navigateToAccount
-import org.mozilla.social.feature.auth.navigateToLoginScreen
-import org.mozilla.social.feature.followers.navigateToFollowers
-import org.mozilla.social.feature.followers.navigateToFollowing
-import org.mozilla.social.feature.hashtag.navigateToHashTag
-import org.mozilla.social.feature.report.navigateToReport
-import org.mozilla.social.feature.settings.navigateToSettings
-import org.mozilla.social.feature.thread.navigateToThread
-import org.mozilla.social.navigation.navigateToTabs
-import org.mozilla.social.post.navigateToNewPost
 import timber.log.Timber
 
 @Composable
@@ -67,7 +60,7 @@ fun rememberAppState(
  * Class to encapsulate high-level app state
  */
 class AppState(
-    initialTopLevelDestination: NavigationDestination = NavigationDestination.Feed,
+    initialTopLevelDestination: BottomBarNavigationDestination = BottomBarNavigationDestination.Feed,
     val mainNavController: NavHostController,
     val coroutineScope: CoroutineScope,
     val snackbarHostState: MoSoSnackbarHostState,
@@ -122,10 +115,10 @@ class AppState(
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    val currentNavigationDestination: StateFlow<NavigationDestination?> =
+    val currentNavigationDestination: StateFlow<BottomBarNavigationDestination?> =
         tabbedNavControllerFlow.flatMapLatest {
             it?.currentBackStackEntryFlow?.mapLatest { backStackEntry ->
-                NavigationDestination::class.sealedSubclasses.firstOrNull {
+                BottomBarNavigationDestination::class.sealedSubclasses.firstOrNull {
                     it.objectInstance?.route == backStackEntry.destination.route
                 }?.objectInstance
             } ?: error("no matching nav destination")
@@ -145,55 +138,80 @@ class AppState(
         if (!mainNavController.popBackStack()) tabbedNavController?.popBackStack()
     }
 
-    private fun navigate(navDestination: NavDestination) {
+    private fun navigate(navDestination: NavigationDestination) {
         Timber.d("NAVIGATION consuming $navDestination")
         with(navDestination) {
             when (this) {
-                NavDestination.Login -> {
+                is NavigationDestination.Account -> {
+                    mainNavController.navigateToAccount()
+                }
+
+                NavigationDestination.Login -> {
                     clearBackstack()
                     mainNavController.navigateToLoginScreen()
                 }
 
-                is NavDestination.NewPost -> {
-                    mainNavController.navigateToNewPost(replyStatusId = replyId)
+                NavigationDestination.EditAccount -> {
+                    mainNavController.navigateToEditAccount()
                 }
 
-                is NavDestination.Report -> {
-                    mainNavController.navigateToReport(
-                        reportAccountId = accountId,
-                        reportAccountHandle = accountHandle,
-                        reportStatusId = statusId,
-                    )
+                is NavigationDestination.Followers -> {
+                    mainNavController.navigateToFollowers()
                 }
 
-                is NavDestination.Thread -> mainNavController.navigateToThread(threadStatusId = statusId)
-                is NavDestination.Following -> mainNavController.navigateToFollowing(accountId)
-                is NavDestination.Account -> mainNavController.navigateToAccount(accountId = accountId)
-                is NavDestination.Followers -> mainNavController.navigateToFollowers(accountId)
-                NavDestination.Settings -> mainNavController.navigateToSettings()
-                NavDestination.Tabs -> {
+                is NavigationDestination.Following -> {
+                    mainNavController.navigateToFollowing()
+                }
+
+                is NavigationDestination.HashTag -> {
+                    mainNavController.navigateToHashTag()
+                }
+
+                is NavigationDestination.NewPost -> {
+                    mainNavController.navigateToNewPost()
+                }
+
+                is NavigationDestination.Report -> {
+                    mainNavController.navigateToReport()
+                }
+
+                NavigationDestination.Settings -> {
+                    mainNavController.navigateToSettings()
+                }
+
+                NavigationDestination.Tabs -> {
                     clearBackstack()
                     mainNavController.navigateToTabs()
                 }
 
-                is NavDestination.Hashtag -> mainNavController.navigateToHashTag(hashTagValue = hashtag)
-                NavDestination.EditAccount -> mainNavController.navigateToEditAccount()
+                is NavigationDestination.Thread -> {
+                    mainNavController.navigateToThread()
+                }
             }
+        }
+    }
+
+    fun navigateToNewPost() {
+        with(NavigationDestination.NewPost()) {
+            mainNavController.navigateToNewPost()
         }
     }
 
     /**
      * Used by bottom bar navigation
      */
-    fun navigateToBottomBarDestination(destination: NavigationDestination) {
+    fun navigateToBottomBarDestination(destination: BottomBarNavigationDestination) {
         Timber.d("NAVIGATION navigate to bottom bar destination: $destination")
         // If navigating to the feed, just pop up to the feed.  Don't start a new instance
         // of it.  If a new instance is started, we don't retain scroll position!
-        if (destination == NavigationDestination.Feed) {
-            tabbedNavController?.popBackStack(NavigationDestination.Feed.route, false)
+        if (destination == BottomBarNavigationDestination.Feed) {
+            tabbedNavController?.popBackStack(
+                BottomBarNavigationDestination.Feed.route,
+                false
+            )
         }
         val navOptions = navOptions {
-            popUpTo(NavigationDestination.Feed.route) {
+            popUpTo(BottomBarNavigationDestination.Feed.route) {
                 saveState = true
             }
             launchSingleTop = true

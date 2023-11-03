@@ -10,7 +10,7 @@ class EventRelay {
     val navigationEvents: SharedFlow<Event>
         get() = _navigationEvents
 
-    fun emitEvent(navDestination: NavDestination) {
+    fun emitEvent(navDestination: NavigationDestination) {
         emitEvent(Event.NavigateToDestination(navDestination))
     }
 
@@ -26,6 +26,6 @@ sealed class Event {
     data class OpenLink(val url: String) : Event()
     data class ShowSnackbar(val text: StringFactory, val isError: Boolean) : Event()
 
-    data class NavigateToDestination(val destination: NavDestination) :
+    data class NavigateToDestination(val destination: NavigationDestination) :
         Event()
 }

@@ -4,14 +4,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NavOptions
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -23,6 +20,7 @@ import org.mozilla.social.core.designsystem.component.MoSoFloatingActionButton
 import org.mozilla.social.core.designsystem.component.MoSoSnackbar
 import org.mozilla.social.core.designsystem.component.MoSoSnackbarHost
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
+import org.mozilla.social.core.navigation.BottomBarNavigationDestination
 import org.mozilla.social.core.navigation.NavigationDestination
 import org.mozilla.social.feature.account.accountScreen
 import org.mozilla.social.feature.account.edit.editAccountScreen
@@ -33,9 +31,7 @@ import org.mozilla.social.feature.hashtag.hashTagScreen
 import org.mozilla.social.feature.report.reportFlow
 import org.mozilla.social.feature.settings.settingsScreen
 import org.mozilla.social.feature.thread.threadScreen
-import org.mozilla.social.post.navigateToNewPost
 import org.mozilla.social.post.newPostScreen
-import org.mozilla.social.search.searchScreen
 import org.mozilla.social.ui.AppState
 
 @Composable
@@ -54,7 +50,6 @@ fun MainNavHost(
     ) {
         splashScreen()
         loginScreen()
-        searchScreen()
         settingsScreen()
         accountScreen()
         followersScreen()
@@ -90,9 +85,9 @@ fun NavGraphBuilder.bottomTabScreen(appState: AppState) {
             },
             floatingActionButton = {
                 when (currentDestination) {
-                    NavigationDestination.Feed -> {
+                    BottomBarNavigationDestination.Feed -> {
                         MoSoFloatingActionButton(onClick = {
-                            appState.mainNavController.navigateToNewPost()
+                            appState.navigateToNewPost()
                         }) {
                             Icon(
                                 MoSoIcons.plus(),
@@ -124,14 +119,10 @@ fun NavGraphBuilder.bottomTabScreen(appState: AppState) {
     }
 }
 
-fun NavController.navigateToTabs(navOptions: NavOptions? = null) {
-    this.navigate(NavigationDestination.Tabs.route, navOptions)
-}
-
 @Composable
 private fun BottomBar(
-    currentDestination: NavigationDestination,
-    navigateToTopLevelDestination: (route: NavigationDestination) -> Unit,
+    currentDestination: BottomBarNavigationDestination,
+    navigateToTopLevelDestination: (route: BottomBarNavigationDestination) -> Unit,
 ) {
     Column {
         MoSoDivider()

@@ -1,154 +1,208 @@
 package org.mozilla.social.core.navigation
 
+import androidx.navigation.NavController
+import androidx.navigation.NavOptions
+
+/**
+ * Represents a Navigation destination. Destinations with a static fullRoute value are used for
+ * setting up destinations in the graph.
+ *
+ * @property route
+ * @constructor Create empty Navigation destination
+ */
 sealed class NavigationDestination(
     val route: String,
 ) {
-    data object MyAccount: NavigationDestination(route = "myAccount")
+    data class Account(val accountId: String) : NavigationDestination(route = ROUTE) {
+        fun NavController.navigateToAccount(
+            navOptions: NavOptions? = null,
+        ) {
+            navigate(route(accountIdValue = accountId), navOptions)
+        }
 
-    data object Account: NavigationDestination(route = "account") {
-
-        const val NAV_PARAM_ACCOUNT_ID = "accountId"
-        val fullRoute = "$route?$NAV_PARAM_ACCOUNT_ID={$NAV_PARAM_ACCOUNT_ID}"
-
-        fun route(accountId: String): String = "$route?$NAV_PARAM_ACCOUNT_ID=$accountId"
+        companion object {
+            private const val ROUTE = "account"
+            const val NAV_PARAM_ACCOUNT_ID = "accountId"
+            val fullRoute: String = route("{$NAV_PARAM_ACCOUNT_ID}")
+            private fun route(accountIdValue: String) =
+                "${ROUTE}?$NAV_PARAM_ACCOUNT_ID=$accountIdValue"
+        }
     }
 
-    data object EditAccount: NavigationDestination(
+    data object EditAccount : NavigationDestination(
         route = "editAccount"
-    )
+    ) {
+        fun NavController.navigateToEditAccount(
+            navOptions: NavOptions? = null,
+        ) {
+            navigate(route, navOptions)
+        }
+    }
 
-    data object Auth: NavigationDestination(
+    data object Login : NavigationDestination(
         route = "auth"
-    )
+    ) {
+        fun NavController.navigateToLoginScreen(navOptions: NavOptions? = null) {
+            this.navigate(route, navOptions)
+        }
+    }
 
-    data object Bookmarks: NavigationDestination(
-        route = "bookmarks"
-    )
-
-    data object Discover: NavigationDestination(
-        route = "discover"
-    )
-
-    data object Tabs: NavigationDestination(
+    data object Tabs : NavigationDestination(
         route = "tabs"
-    )
-
-    data object Feed: NavigationDestination(
-        route = "feed"
-    )
-
-    data object Followers: NavigationDestination(
-        route = "followers"
     ) {
-        const val NAV_PARAM_ACCOUNT_ID = "accountId"
-        val fullRoute = "$route?$NAV_PARAM_ACCOUNT_ID={$NAV_PARAM_ACCOUNT_ID}"
-
-        fun route(accountId: String): String = "$route?${NAV_PARAM_ACCOUNT_ID}=$accountId"
+        fun NavController.navigateToTabs(navOptions: NavOptions? = null) {
+            this.navigate(route, navOptions)
+        }
     }
 
-    data object Following: NavigationDestination(
-        route = "following"
+    data class Followers(val accountId: String) : NavigationDestination(
+        route = ROUTE
     ) {
-        const val NAV_PARAM_ACCOUNT_ID = "accountId"
-        val fullRoute = "$route?$NAV_PARAM_ACCOUNT_ID={$NAV_PARAM_ACCOUNT_ID}"
+        fun NavController.navigateToFollowers(
+            navOptions: NavOptions? = null,
+        ) {
+            navigate(route(accountId), navOptions)
+        }
 
-        fun route(accountId: String): String = "$route?${NAV_PARAM_ACCOUNT_ID}=$accountId"
+        companion object {
+            private const val ROUTE = "followers"
+            const val NAV_PARAM_ACCOUNT_ID = "accountId"
+            val fullRoute = route("{$NAV_PARAM_ACCOUNT_ID}")
+            private fun route(paramValue: String) = "${ROUTE}?$NAV_PARAM_ACCOUNT_ID=$paramValue"
+        }
     }
 
-    data object HashTag: NavigationDestination(
-        route = "hashTag"
+    data class Following(val accountId: String) : NavigationDestination(
+        route = ROUTE
     ) {
-        const val NAV_PARAM_HASH_TAG = "hashTagValue"
-        val fullRoute = "$route?$NAV_PARAM_HASH_TAG={$NAV_PARAM_HASH_TAG}"
 
-        fun route(hashTagValue: String) = "$route?$NAV_PARAM_HASH_TAG=$hashTagValue"
+        fun NavController.navigateToFollowing(
+            navOptions: NavOptions? = null,
+        ) {
+            navigate(route(accountId), navOptions)
+        }
+
+        companion object {
+            private const val ROUTE = "following"
+            const val NAV_PARAM_ACCOUNT_ID = "accountId"
+            val fullRoute = route("{$NAV_PARAM_ACCOUNT_ID}")
+            fun route(accountId: String): String = "$ROUTE?${NAV_PARAM_ACCOUNT_ID}=$accountId"
+        }
     }
 
-    data object NewPost: NavigationDestination(
-        route = "newPost"
+    data class HashTag(val hashtag: String) : NavigationDestination(
+        route = ROUTE
     ) {
-        const val NAV_PARAM_REPLY_STATUS_ID = "replyStatusId"
-        val fullRoute = "$route?$NAV_PARAM_REPLY_STATUS_ID={$NAV_PARAM_REPLY_STATUS_ID}"
+        fun NavController.navigateToHashTag(
+            navOptions: NavOptions? = null,
+        ) {
+            navigate(route(hashtag), navOptions)
+        }
 
-        fun route(replyStatusId: String?): String =
-            when {
-                replyStatusId != null -> "$route?$NAV_PARAM_REPLY_STATUS_ID=$replyStatusId"
-                else -> route
-            }
+        companion object {
+            private const val ROUTE = "hashtag"
+            const val NAV_PARAM_HASH_TAG = "hashTagValue"
+            val fullRoute = route("{${NAV_PARAM_HASH_TAG}}")
+            private fun route(paramValue: String) =
+                "$ROUTE?$NAV_PARAM_HASH_TAG=$paramValue"
+        }
     }
 
-    data object Report: NavigationDestination(
-        route = "report"
+    data class NewPost(val replyStatusId: String? = null) : NavigationDestination(
+        route = ROUTE,
     ) {
-        const val NAV_PARAM_REPORT_STATUS_ID = "reportStatusId"
-        const val NAV_PARAM_REPORT_ACCOUNT_ID = "reportAccountId"
-        const val NAV_PARAM_REPORT_ACCOUNT_HANDLE = "reportAccountHandle"
-        val fullRoute = "$route?" +
-                "$NAV_PARAM_REPORT_STATUS_ID={$NAV_PARAM_REPORT_STATUS_ID}" +
-                "&$NAV_PARAM_REPORT_ACCOUNT_ID={$NAV_PARAM_REPORT_ACCOUNT_ID}" +
-                "&$NAV_PARAM_REPORT_ACCOUNT_HANDLE={$NAV_PARAM_REPORT_ACCOUNT_HANDLE}"
+        fun NavController.navigateToNewPost(
+            navOptions: NavOptions? = null,
+        ) {
+            navigate(route(replyStatusId), navOptions)
+        }
 
-        fun route(
-            reportAccountId: String,
-            reportAccountHandle: String,
-            reportStatusId: String? = null,
-        ): String = "$route?" +
-                "$NAV_PARAM_REPORT_ACCOUNT_ID=$reportAccountId" +
-                "&$NAV_PARAM_REPORT_ACCOUNT_HANDLE=$reportAccountHandle" +
-                if (reportStatusId != null) {
-                    "&$NAV_PARAM_REPORT_STATUS_ID=$reportStatusId"
-                } else {
-                    ""
+        companion object {
+            private const val ROUTE = "newPost"
+            const val NAV_PARAM_REPLY_STATUS_ID = "replyStatusId"
+            val fullRoute = route("{$NAV_PARAM_REPLY_STATUS_ID}")
+
+            fun route(replyStatusId: String?): String {
+                val a = when {
+                    replyStatusId != null -> "$ROUTE?$NAV_PARAM_REPLY_STATUS_ID=$replyStatusId"
+                    else -> ROUTE
                 }
+
+                println(a)
+                return a
+            }
+        }
     }
 
-    data object ReportScreen1: NavigationDestination(
-        route = "report1"
-    )
-
-    data object ReportScreen2: NavigationDestination(
-        route = "report2"
+    data class Report(
+        val reportAccountId: String,
+        val reportAccountHandle: String,
+        val reportStatusId: String? = null
+    ) : NavigationDestination(
+        route = ROUTE
     ) {
-        const val NAV_PARAM_BUNDLE = "reportDataBundle"
-        val fullRoute = "$route?" +
-                "$NAV_PARAM_BUNDLE={$NAV_PARAM_BUNDLE}"
+        fun NavController.navigateToReport(
+            navOptions: NavOptions? = null,
+        ) {
+            navigate(
+                route(
+                    reportAccountId = reportAccountId,
+                    reportAccountHandle = reportAccountHandle,
+                    reportStatusId = reportStatusId,
+                ),
+                navOptions
+            )
+        }
 
-        fun route(
-            bundle: String
-        ): String = "$route?" +
-                "$NAV_PARAM_BUNDLE=$bundle"
+        companion object {
+            private const val ROUTE = "report"
+            const val NAV_PARAM_REPORT_STATUS_ID = "reportStatusId"
+            const val NAV_PARAM_REPORT_ACCOUNT_ID = "reportAccountId"
+            const val NAV_PARAM_REPORT_ACCOUNT_HANDLE = "reportAccountHandle"
+            val fullRoute = "$ROUTE?" +
+                    "$NAV_PARAM_REPORT_STATUS_ID={$NAV_PARAM_REPORT_STATUS_ID}" +
+                    "&$NAV_PARAM_REPORT_ACCOUNT_ID={$NAV_PARAM_REPORT_ACCOUNT_ID}" +
+                    "&$NAV_PARAM_REPORT_ACCOUNT_HANDLE={$NAV_PARAM_REPORT_ACCOUNT_HANDLE}"
+
+            fun route(
+                reportAccountId: String,
+                reportAccountHandle: String,
+                reportStatusId: String? = null,
+            ): String = "$ROUTE?" +
+                    "$NAV_PARAM_REPORT_ACCOUNT_ID=$reportAccountId" +
+                    "&$NAV_PARAM_REPORT_ACCOUNT_HANDLE=$reportAccountHandle" +
+                    if (reportStatusId != null) {
+                        "&$NAV_PARAM_REPORT_STATUS_ID=$reportStatusId"
+                    } else {
+                        ""
+                    }
+        }
     }
 
-    data object ReportScreen3: NavigationDestination(
-        route = "report3"
-    ) {
-        const val NAV_PARAM_BUNDLE = "reportDataBundle"
-        val fullRoute = "$route?" +
-                "$NAV_PARAM_BUNDLE={$NAV_PARAM_BUNDLE}"
-
-        fun route(
-            bundle: String
-        ): String = "$route?" +
-                "$NAV_PARAM_BUNDLE=$bundle"
-    }
-
-    data object Search: NavigationDestination(
-        route = "search"
-    )
-
-    data object Settings: NavigationDestination(
+    data object Settings : NavigationDestination(
         route = "settings"
-    )
-
-    data object Thread: NavigationDestination(
-        route = "thread"
     ) {
-        const val NAV_PARAM_STATUS_ID = "statusId"
-        val fullRoute = "$route?$NAV_PARAM_STATUS_ID={$NAV_PARAM_STATUS_ID}"
+        fun NavController.navigateToSettings(navOptions: NavOptions? = null) {
+            navigate(route, navOptions)
+        }
+    }
 
-        fun route(statusId: String) = "$route?$NAV_PARAM_STATUS_ID=$statusId"
+    data class Thread(val threadStatusId: String) : NavigationDestination(
+        route = ROUTE
+    ) {
+
+        fun NavController.navigateToThread(
+            navOptions: NavOptions? = null,
+        ) {
+            navigate(route(threadStatusId), navOptions)
+        }
+
+        companion object {
+            private const val ROUTE = "thread"
+            const val NAV_PARAM_STATUS_ID = "statusId"
+            val fullRoute = route("{$NAV_PARAM_STATUS_ID}")
+
+            fun route(statusIdValue: String) = "$ROUTE?$NAV_PARAM_STATUS_ID=$statusIdValue"
+        }
     }
 }
-
-
-
