@@ -60,7 +60,7 @@ fun rememberAppState(
  * Class to encapsulate high-level app state
  */
 class AppState(
-    initialTopLevelDestination: BottomBarNavigationDestination = BottomBarNavigationDestination.Feed,
+    initialBottomBarDestination: BottomBarNavigationDestination = BottomBarNavigationDestination.Feed,
     val mainNavController: NavHostController,
     val coroutineScope: CoroutineScope,
     val snackbarHostState: MoSoSnackbarHostState,
@@ -125,7 +125,7 @@ class AppState(
         }.stateIn(
             coroutineScope,
             started = SharingStarted.WhileSubscribed(),
-            initialTopLevelDestination
+            initialBottomBarDestination
         )
 
     private fun clearBackstack() {
@@ -191,6 +191,10 @@ class AppState(
         }
     }
 
+    /**
+     * Navigate to new post from FAB- TODO remove when removing the FAB
+     *
+     */
     fun navigateToNewPost() {
         with(NavigationDestination.NewPost()) {
             mainNavController.navigateToNewPost()

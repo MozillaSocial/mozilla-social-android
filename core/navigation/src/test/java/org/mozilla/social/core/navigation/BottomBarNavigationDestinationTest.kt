@@ -2,7 +2,6 @@ package org.mozilla.social.core.navigation
 
 
 import androidx.navigation.NavController
-import io.mockk.impl.annotations.SpyK
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.Test
@@ -11,7 +10,6 @@ import org.mozilla.social.core.navigation.BottomBarNavigationDestination.Feed.na
 import org.mozilla.social.core.navigation.BottomBarNavigationDestination.MyAccount.navigateToMyAccount
 
 class BottomBarNavigationDestinationTest {
-    @SpyK
     private val navController = mockk<NavController>(relaxed = true)
 
     @Test

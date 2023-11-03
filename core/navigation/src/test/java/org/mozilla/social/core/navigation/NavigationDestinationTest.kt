@@ -12,9 +12,7 @@ import org.mozilla.social.core.navigation.NavigationDestination.EditAccount.navi
 import org.mozilla.social.core.navigation.NavigationDestination.Tabs.navigateToTabs
 
 class NavigationDestinationTest {
-    @SpyK
     private val navController = mockk<NavController>(relaxed = true)
-
     private val testUtils = TestUtils()
 
     @Test

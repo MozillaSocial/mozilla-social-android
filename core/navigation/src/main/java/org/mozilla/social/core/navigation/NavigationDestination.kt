@@ -4,11 +4,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavOptions
 
 /**
- * Represents a Navigation destination. Destinations with a static fullRoute value are used for
- * setting up destinations in the graph.
- *
- * @property route
- * @constructor Create empty Navigation destination
+ * Represents a top-level Navigation destination
  */
 sealed class NavigationDestination(
     val route: String,
