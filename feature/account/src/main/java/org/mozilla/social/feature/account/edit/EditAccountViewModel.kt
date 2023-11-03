@@ -1,7 +1,6 @@
 package org.mozilla.social.feature.account.edit
 
 import android.net.Uri
-import androidx.core.text.HtmlCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -11,6 +10,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.mozilla.social.common.Resource
+import org.mozilla.social.common.updateData
 import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.core.data.repository.AccountRepository
 import org.mozilla.social.core.domain.AccountIdBlocking
@@ -60,32 +60,6 @@ class EditAccountViewModel(
         }
     }
 
-    override fun onDisplayNameTextChanged(text: String) {
-        with(_editAccountUiState.value as? Resource.Loaded ?: return) {
-            _editAccountUiState.update {
-                Resource.Loaded(
-                    data = data.copy(
-                        displayName = text
-                    )
-                )
-            }
-        }
-    }
-
-    override fun onBioTextChanged(text: String) {
-        if (text.length > MAX_BIO_LENGTH) return
-        with(_editAccountUiState.value as? Resource.Loaded ?: return) {
-            _editAccountUiState.update {
-                Resource.Loaded(
-                    data = data.copy(
-                        bio = text,
-                        bioCharacterCount = text.length
-                    )
-                )
-            }
-        }
-    }
-
     override fun onSaveClicked() {
         _isUploading.update { true }
         with(_editAccountUiState.value as? Resource.Loaded ?: return) {
@@ -115,54 +89,44 @@ class EditAccountViewModel(
         }
     }
 
+    override fun onDisplayNameTextChanged(text: String) {
+        _editAccountUiState.updateData { copy(
+            displayName = text
+        ) }
+    }
+
+    override fun onBioTextChanged(text: String) {
+        if (text.length > MAX_BIO_LENGTH) return
+        _editAccountUiState.updateData { copy(
+            bio = text,
+            bioCharacterCount = text.length
+        ) }
+    }
+
     override fun onNewAvatarSelected(uri: Uri, file: File) {
-        with(_editAccountUiState.value as? Resource.Loaded ?: return) {
-            _editAccountUiState.update {
-                Resource.Loaded(
-                    data = data.copy(
-                        avatarUrl = uri.toString()
-                    )
-                )
-            }
-        }
+        _editAccountUiState.updateData { copy(
+            avatarUrl = uri.toString()
+        ) }
         newAvatar = file
     }
 
     override fun onNewHeaderSelected(uri: Uri, file: File) {
-        with(_editAccountUiState.value as? Resource.Loaded ?: return) {
-            _editAccountUiState.update {
-                Resource.Loaded(
-                    data = data.copy(
-                        headerUrl = uri.toString()
-                    )
-                )
-            }
-        }
+        _editAccountUiState.updateData { copy(
+            headerUrl = uri.toString()
+        ) }
         newHeader = file
     }
 
     override fun onLockClicked() {
-        with(_editAccountUiState.value as? Resource.Loaded ?: return) {
-            _editAccountUiState.update {
-                Resource.Loaded(
-                    data = data.copy(
-                        lockChecked = !data.lockChecked
-                    )
-                )
-            }
-        }
+        _editAccountUiState.updateData { copy(
+            lockChecked = !lockChecked
+        ) }
     }
 
     override fun onBotClicked() {
-        with(_editAccountUiState.value as? Resource.Loaded ?: return) {
-            _editAccountUiState.update {
-                Resource.Loaded(
-                    data = data.copy(
-                        botChecked = !data.botChecked
-                    )
-                )
-            }
-        }
+        _editAccountUiState.updateData { copy(
+            botChecked = !botChecked
+        ) }
     }
 
     override fun onRetryClicked() {
@@ -170,30 +134,66 @@ class EditAccountViewModel(
     }
 
     override fun onLabelTextChanged(index: Int, text: String) {
-        with(_editAccountUiState.value as? Resource.Loaded ?: return) {
-            _editAccountUiState.update {
-                Resource.Loaded(
-                    data = data.copy(
-                        fields = data.fields
+        if (text.length > MAX_FIELD_LENGTH) return
+        _editAccountUiState.updateData { copy(
+            fields = fields.toMutableList().apply {
+                val content = get(index).content
+                removeAt(index)
+                add(
+                    index,
+                    EditAccountUiStateField(
+                        label = text,
+                        content = content,
                     )
                 )
+                modifyFieldCount()
             }
-        }
+        ) }
     }
 
     override fun onContentTextChanged(index: Int, text: String) {
-        super.onContentTextChanged(index, text)
+        if (text.length > MAX_FIELD_LENGTH) return
+        _editAccountUiState.updateData { copy(
+            fields = fields.toMutableList().apply {
+                val label = get(index).label
+                removeAt(index)
+                add(
+                    index,
+                    EditAccountUiStateField(
+                        label = label,
+                        content = text,
+                    )
+                )
+                modifyFieldCount()
+            }
+        ) }
     }
 
     override fun onFieldDeleteClicked(index: Int) {
-        super.onFieldDeleteClicked(index)
+        _editAccountUiState.updateData { copy(
+            fields = fields.toMutableList().apply {
+                removeAt(index)
+            }
+        ) }
     }
 
     override fun onAddFieldClicked() {
-        super.onAddFieldClicked()
+        _editAccountUiState.updateData { copy(
+            fields = fields.toMutableList().apply {
+                add(EditAccountUiStateField("", ""))
+            }
+        ) }
+    }
+
+    private fun MutableList<EditAccountUiStateField>.modifyFieldCount() {
+        if (size < MAX_FIELDS && (last().label.isNotBlank() || last().content.isNotBlank())) {
+            add(EditAccountUiStateField("", ""))
+        }
     }
 
     companion object {
         const val MAX_BIO_LENGTH = 500
+        const val MAX_FIELDS = 4
+        const val MAX_FIELD_LENGTH = 255
     }
 }

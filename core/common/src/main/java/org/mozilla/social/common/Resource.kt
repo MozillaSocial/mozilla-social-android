@@ -1,5 +1,8 @@
 package org.mozilla.social.common
 
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.update
+
 /**
  * This class is used to represent the loading state of any resource while wrapping
  * the loaded data or exception.
@@ -22,4 +25,14 @@ sealed class Resource<T> {
     data class Error<T>(
         val exception: Exception,
     ) : Resource<T>()
+}
+
+fun <T> MutableStateFlow<Resource<T>>.updateData(block: T.() -> T) {
+    with(value as? Resource.Loaded ?: return) {
+        update {
+            Resource.Loaded(
+                data = data.block()
+            )
+        }
+    }
 }

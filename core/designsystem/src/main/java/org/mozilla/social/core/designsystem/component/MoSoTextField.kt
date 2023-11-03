@@ -53,7 +53,7 @@ fun MoSoTextField(
             .border(
                 width = 1.dp,
                 color = MoSoTheme.colors.borderInputEnabled,
-                shape = RoundedCornerShape(16.dp)
+                shape = RoundedCornerShape(8.dp)
             ),
         enabled = enabled,
         readOnly = readOnly,

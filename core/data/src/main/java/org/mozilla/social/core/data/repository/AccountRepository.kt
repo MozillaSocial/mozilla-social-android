@@ -208,12 +208,12 @@ class AccountRepository internal constructor(
             },
             fieldLabel0 = fields?.getOrNull(0)?.first?.toRequestBody(MultipartBody.FORM),
             fieldContent0 = fields?.getOrNull(0)?.second?.toRequestBody(MultipartBody.FORM),
-            fieldLabel1 = fields?.getOrNull(0)?.first?.toRequestBody(MultipartBody.FORM),
-            fieldContent1 = fields?.getOrNull(0)?.second?.toRequestBody(MultipartBody.FORM),
-            fieldLabel2 = fields?.getOrNull(0)?.first?.toRequestBody(MultipartBody.FORM),
-            fieldContent2 = fields?.getOrNull(0)?.second?.toRequestBody(MultipartBody.FORM),
-            fieldLabel3 = fields?.getOrNull(0)?.first?.toRequestBody(MultipartBody.FORM),
-            fieldContent3 = fields?.getOrNull(0)?.second?.toRequestBody(MultipartBody.FORM),
+            fieldLabel1 = fields?.getOrNull(1)?.first?.toRequestBody(MultipartBody.FORM),
+            fieldContent1 = fields?.getOrNull(1)?.second?.toRequestBody(MultipartBody.FORM),
+            fieldLabel2 = fields?.getOrNull(2)?.first?.toRequestBody(MultipartBody.FORM),
+            fieldContent2 = fields?.getOrNull(2)?.second?.toRequestBody(MultipartBody.FORM),
+            fieldLabel3 = fields?.getOrNull(3)?.first?.toRequestBody(MultipartBody.FORM),
+            fieldContent3 = fields?.getOrNull(3)?.second?.toRequestBody(MultipartBody.FORM),
         ).toExternalModel()
         socialDatabase.accountsDao().insert(updatedAccount.toDatabaseModel())
     }

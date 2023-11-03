@@ -38,6 +38,12 @@ fun Account.toUiState(): EditAccountUiState {
                 label = it.name,
                 content = it.value,
             )
-        } ?: emptyList()
+        }?.toMutableList()?.apply {
+            if (size < EditAccountViewModel.MAX_FIELDS) {
+                add(EditAccountUiStateField("", ""))
+            }
+        } ?: listOf(
+            EditAccountUiStateField("", "")
+        )
     )
 }
