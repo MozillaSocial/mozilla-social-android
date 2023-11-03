@@ -160,6 +160,7 @@ private fun NewPostScreen(
     Box(
         modifier = Modifier
             .systemBarsPadding()
+            .imePadding()
             .background(MoSoTheme.colors.layer1)
     ) {
         if (isCompactHeight) {
