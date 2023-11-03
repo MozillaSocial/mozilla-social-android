@@ -37,6 +37,9 @@ object MoSoIcons {
     fun bookmark() = painterResource(R.drawable.bookmark_simple)
 
     @Composable
+    fun bookmarkFill() = painterResource(R.drawable.bookmark_simple_fill)
+
+    @Composable
     fun robot() = painterResource(id = R.drawable.robot)
 
     @Composable
@@ -55,6 +58,9 @@ object MoSoIcons {
     fun compass() = painterResource(R.drawable.compass)
 
     @Composable
+    fun compassFill() = painterResource(R.drawable.compass_fill)
+
+    @Composable
     fun connect() = painterResource(id = R.drawable.connect)
 
     @Composable
@@ -65,6 +71,9 @@ object MoSoIcons {
 
     @Composable
     fun house() = painterResource(R.drawable.house)
+
+    @Composable
+    fun houseFill() = painterResource(R.drawable.house_fill)
 
     @Composable
     fun image() = painterResource(id = R.drawable.image)
@@ -93,6 +102,9 @@ object MoSoIcons {
 
     @Composable
     fun userCircle() = painterResource(id = R.drawable.user_circle)
+
+    @Composable
+    fun userCircleFill() = painterResource(id = R.drawable.user_circle_fill)
 
     @Composable
     fun userJoin() = painterResource(id = R.drawable.user_join)

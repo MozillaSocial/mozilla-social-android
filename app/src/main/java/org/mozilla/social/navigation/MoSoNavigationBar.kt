@@ -140,7 +140,7 @@ private fun BottomBarIcon(
         )
     } else {
         Icon(
-            painter = destination.selectedIcon(),
+            painter = destination.unselectedIcon(),
             modifier = Modifier.size(24.dp),
             contentDescription = null,
         )
@@ -153,6 +153,8 @@ private fun BottomBarIcon(
 interface BottomBarTab {
     @Composable
     fun selectedIcon(): Painter
+    @Composable
+    fun unselectedIcon(): Painter
     val tabText: StringFactory
     val navigationDestination: NavigationDestination
 }
