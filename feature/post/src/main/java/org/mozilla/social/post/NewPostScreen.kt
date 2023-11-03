@@ -160,28 +160,23 @@ private fun NewPostScreen(
     Box(
         modifier = Modifier
             .systemBarsPadding()
+            .imePadding()
             .background(MoSoTheme.colors.layer1)
     ) {
         if (isCompactHeight) {
             Row {
                 CompactNewPostScreenContent(
-                    bottomBarState = bottomBarState,
                     statusText = statusText,
                     statusInteractions = statusInteractions,
                     onPostClicked = onPostClicked,
                     sendButtonEnabled = sendButtonEnabled,
                     imageStates = imageStates,
                     mediaInteractions = mediaInteractions,
-                    visibility = visibility,
-                    onVisibilitySelected = onVisibilitySelected,
                     poll = poll,
                     pollInteractions = pollInteractions,
                     contentWarningText = contentWarningText,
                     contentWarningInteractions = contentWarningInteractions,
-                    accounts = accounts,
-                    hashTags = hashTags,
                     inReplyToAccountName = inReplyToAccountName,
-                    userHeaderState = userHeaderState
                 )
             }
         } else {
@@ -217,36 +212,22 @@ private fun NewPostScreen(
 
 @Composable
 private fun CompactNewPostScreenContent(
-    bottomBarState: BottomBarState,
     statusText: TextFieldValue,
     statusInteractions: StatusInteractions,
     onPostClicked: () -> Unit,
     sendButtonEnabled: Boolean,
     imageStates: List<ImageState>,
     mediaInteractions: MediaInteractions,
-    visibility: StatusVisibility,
-    onVisibilitySelected: (StatusVisibility) -> Unit,
     poll: Poll?,
     pollInteractions: PollInteractions,
     contentWarningText: String?,
     contentWarningInteractions: ContentWarningInteractions,
-    accounts: List<Account>?,
-    hashTags: List<String>?,
     inReplyToAccountName: String?,
-    userHeaderState: UserHeaderState?,
 ) {
     Row {
-        userHeaderState?.let { userHeaderState ->
-            UserHeader(
-                userHeaderState = userHeaderState,
-                visibility = visibility,
-                onVisibilitySelected = onVisibilitySelected,
-            )
-        }
-        Column(
+        Box(
             modifier = Modifier
                 .weight(1f)
-                .imePadding()
         ) {
             MainBox(
                 statusText = statusText,
@@ -259,24 +240,9 @@ private fun CompactNewPostScreenContent(
                 contentWarningInteractions = contentWarningInteractions,
                 inReplyToAccountName = inReplyToAccountName,
             )
-            BottomBar(
-                bottomBarState = bottomBarState,
-                onMediaInserted = mediaInteractions::onMediaInserted,
-                pollInteractions = pollInteractions,
-                contentWarningInteractions = contentWarningInteractions,
-            )
-        }
-        accounts?.let {
-            AccountSearchBar(accounts = accounts, statusInteractions = statusInteractions)
-        }
-        hashTags?.let {
-            HashtagSearchBar(hashTags = hashTags, statusInteractions = statusInteractions)
         }
 
-        PostButton(
-            onPostClicked = onPostClicked,
-            sendButtonEnabled = sendButtonEnabled,
-        )
+        PostButton(onPostClicked = onPostClicked, sendButtonEnabled = sendButtonEnabled)
     }
 }
 
