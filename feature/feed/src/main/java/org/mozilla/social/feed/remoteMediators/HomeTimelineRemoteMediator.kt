@@ -6,6 +6,7 @@ import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import androidx.room.withTransaction
 import kotlinx.coroutines.delay
+import org.mozilla.social.common.Rel
 import org.mozilla.social.core.data.repository.AccountRepository
 import org.mozilla.social.core.data.repository.StatusRepository
 import org.mozilla.social.core.data.repository.TimelineRepository
@@ -59,16 +60,18 @@ class HomeTimelineRemoteMediator(
                         loadSize = pageSize,
                     )
                 }
-            }.getInReplyToAccountNames(accountRepository)
+            }
+
+            val result = response.statuses.getInReplyToAccountNames(accountRepository)
 
             socialDatabase.withTransaction {
                 if (loadType == LoadType.REFRESH) {
                     socialDatabase.homeTimelineDao().deleteHomeTimeline()
                 }
 
-                statusRepository.saveStatusesToDatabase(response)
+                statusRepository.saveStatusesToDatabase(result)
 
-                socialDatabase.homeTimelineDao().insertAll(response.map {
+                socialDatabase.homeTimelineDao().insertAll(result.map {
                     HomeTimelineStatus(
                         statusId = it.statusId,
                         accountId = it.account.accountId,
@@ -92,7 +95,11 @@ class HomeTimelineRemoteMediator(
             }
 
             MediatorResult.Success(
-                endOfPaginationReached = response.size != pageSize
+                endOfPaginationReached = when (loadType) {
+                    LoadType.PREPEND -> response.pagingLinks?.find { it.rel == Rel.PREV } == null
+                    LoadType.REFRESH,
+                    LoadType.APPEND -> response.pagingLinks?.find { it.rel == Rel.NEXT } == null
+                }
             )
         } catch (e: Exception) {
             Timber.e(e)

@@ -49,6 +49,7 @@ class GetDetailedAccount(
                     socialDatabase.relationshipsDao().insert(relationship.first().toDatabaseModel())
                 }
             } catch (e: Exception) {
+                Timber.e(e)
                 exception = e
             } finally {
                 mutex.unlock()
