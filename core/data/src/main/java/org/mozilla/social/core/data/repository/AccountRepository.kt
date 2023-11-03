@@ -1,8 +1,8 @@
 package org.mozilla.social.core.data.repository
 
+import androidx.room.withTransaction
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
@@ -12,6 +12,7 @@ import org.mozilla.social.core.data.repository.model.followers.FollowersPagingWr
 import org.mozilla.social.core.data.repository.model.status.toDatabaseModel
 import org.mozilla.social.core.data.repository.model.status.toExternalModel
 import org.mozilla.social.core.database.SocialDatabase
+import org.mozilla.social.core.database.model.statusCollections.HomeTimelineStatus
 import org.mozilla.social.core.network.AccountApi
 import org.mozilla.social.model.Account
 import org.mozilla.social.model.Relationship
@@ -105,23 +106,44 @@ class AccountRepository internal constructor(
     suspend fun getAccountFavourites(): List<Status> =
         accountApi.getAccountFavourites().map { it.toExternalModel() }
 
-    suspend fun followAccount(accountId: String) {
+    suspend fun followAccount(
+        accountId: String,
+        loggedInUserAccountId: String,
+    ) {
         try {
-            socialDatabase.relationshipsDao().updateFollowing(accountId, true)
+            socialDatabase.withTransaction {
+                socialDatabase.accountsDao().updateFollowingCount(loggedInUserAccountId, 1)
+                socialDatabase.relationshipsDao().updateFollowing(accountId, true)
+            }
             accountApi.followAccount(accountId)
         } catch (e: Exception) {
-            socialDatabase.relationshipsDao().updateFollowing(accountId, false)
+            socialDatabase.withTransaction {
+                socialDatabase.accountsDao().updateFollowingCount(loggedInUserAccountId, -1)
+                socialDatabase.relationshipsDao().updateFollowing(accountId, false)
+            }
             throw e
         }
     }
 
-    suspend fun unfollowAccount(accountId: String) {
+    suspend fun unfollowAccount(
+        accountId: String,
+        loggedInUserAccountId: String,
+    ) {
+        var timelinePosts: List<HomeTimelineStatus>? = null
         try {
-            socialDatabase.homeTimelineDao().removePostsFromAccount(accountId)
-            socialDatabase.relationshipsDao().updateFollowing(accountId, false)
+            socialDatabase.withTransaction {
+                timelinePosts = socialDatabase.homeTimelineDao().getPostsFromAccount(accountId)
+                socialDatabase.homeTimelineDao().removePostsFromAccount(accountId)
+                socialDatabase.accountsDao().updateFollowingCount(loggedInUserAccountId, -1)
+                socialDatabase.relationshipsDao().updateFollowing(accountId, false)
+            }
             accountApi.unfollowAccount(accountId)
         } catch (e: Exception) {
-            socialDatabase.relationshipsDao().updateFollowing(accountId, true)
+            socialDatabase.withTransaction {
+                timelinePosts?.let { socialDatabase.homeTimelineDao().insertAll(it) }
+                socialDatabase.accountsDao().updateFollowingCount(loggedInUserAccountId, 1)
+                socialDatabase.relationshipsDao().updateFollowing(accountId, true)
+            }
             throw e
         }
     }

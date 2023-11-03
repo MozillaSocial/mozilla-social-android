@@ -10,15 +10,22 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.core.data.repository.AccountRepository
+import org.mozilla.social.core.domain.AccountIdBlocking
 import org.mozilla.social.feature.report.R
 import timber.log.Timber
 
 class ReportScreen3ViewModel(
     private val accountRepository: AccountRepository,
+    accountIdBlocking: AccountIdBlocking,
     private val doneClicked: () -> Unit,
     private val closeClicked: () -> Unit,
     private val reportAccountId: String,
 ) : ViewModel(), ReportScreen3Interactions {
+
+    /**
+     * The account ID of the logged in user
+     */
+    private val usersAccountId: String = accountIdBlocking()
 
     private val _errorToastMessage = MutableSharedFlow<StringFactory>(extraBufferCapacity = 1)
     val errorToastMessage = _errorToastMessage.asSharedFlow()
@@ -44,7 +51,10 @@ class ReportScreen3ViewModel(
         _unfollowVisible.update { false }
         viewModelScope.launch {
             try {
-                accountRepository.unfollowAccount(reportAccountId)
+                accountRepository.unfollowAccount(
+                    accountId = reportAccountId,
+                    loggedInUserAccountId = usersAccountId,
+                )
             } catch (e: Exception) {
                 Timber.e(e)
                 _errorToastMessage.emit(StringFactory.resource(R.string.error_unfollowing))
