@@ -18,6 +18,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import org.mozilla.social.core.designsystem.theme.MoSoRadius
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 
 @Composable
@@ -53,7 +54,7 @@ fun MoSoTextField(
             .border(
                 width = 1.dp,
                 color = MoSoTheme.colors.borderInputEnabled,
-                shape = RoundedCornerShape(8.dp)
+                shape = RoundedCornerShape(MoSoRadius.md)
             ),
         enabled = enabled,
         readOnly = readOnly,
