@@ -1,6 +1,5 @@
 package org.mozilla.social.core.database.dao
 
-import android.accounts.Account
 import androidx.room.Dao
 import androidx.room.Query
 import kotlinx.coroutines.flow.Flow
@@ -20,4 +19,11 @@ interface AccountsDao : BaseDao<DatabaseAccount> {
         "WHERE accountId = :accountId"
     )
     fun getAccountFlow(accountId: String): Flow<DatabaseAccount>
+
+    @Query(
+        "UPDATE accounts " +
+        "SET followingCount = followingCount + :valueChange " +
+        "WHERE accountId = :accountId"
+    )
+    suspend fun updateFollowingCount(accountId: String, valueChange: Long)
 }

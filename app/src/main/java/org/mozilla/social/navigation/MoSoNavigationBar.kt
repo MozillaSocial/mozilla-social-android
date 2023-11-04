@@ -26,6 +26,7 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import org.mozilla.social.common.utils.StringFactory
+import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.navigation.NavigationDestination
 
@@ -47,18 +48,37 @@ fun MoSoBottomNavigationBar(
         tonalElevation = tonalElevation,
         windowInsets = windowInsets
     ) {
-        bottomBarTabs.forEach { navBarDestination ->
-            MoSoNavigationBarItem(
-                destination = navBarDestination,
-                isSelected = currentDestination == navBarDestination.navigationDestination,
-                navigateTo = navigateTo,
-            )
+        bottomBarTabs.forEach {
+            if (it == BottomBarTabs.NEW_POST.bottomBarTab) {
+                NavigationBarItem(
+                    modifier = modifier.height(48.dp),
+                    selected = false,
+                    onClick = { navigateTo(NavigationDestination.NewPost) },
+                    colors = MoSoNavigationBarItemDefaults.colors(),
+                    icon = {
+                        Icon(
+                            painter = MoSoIcons.connect(),
+                            modifier = Modifier
+                                .size(40.dp),
+                            contentDescription = null,
+                            tint = MoSoTheme.colors.actionPrimary,
+                        )
+                    },
+                )
+            } else {
+                MoSoNavigationBarItem(
+                    destination = it,
+                    isSelected = currentDestination == it.navigationDestination,
+                    navigateTo = navigateTo,
+                )
+            }
+
         }
     }
 }
 
 @Composable
-fun MoSoNavigationBar(
+private fun MoSoNavigationBar(
     modifier: Modifier = Modifier,
     containerColor: Color = MoSoNavigationBarDefaults.containerColor,
     contentColor: Color = MoSoTheme.colors.iconPrimary,
@@ -86,7 +106,7 @@ fun MoSoNavigationBar(
 }
 
 @Composable
-fun RowScope.MoSoNavigationBarItem(
+private fun RowScope.MoSoNavigationBarItem(
     modifier: Modifier = Modifier,
     destination: BottomBarTab,
     isSelected: Boolean,
@@ -98,28 +118,20 @@ fun RowScope.MoSoNavigationBarItem(
         onClick = { navigateTo(destination.navigationDestination) },
         colors = MoSoNavigationBarItemDefaults.colors(),
         icon = {
-            MoSoIcon(
-                destination = destination, isSelected = isSelected
+            BottomBarIcon(
+                destination = destination,
+                isSelected = isSelected,
             )
         },
-//        label = {
-//            Text(
-//                text = destination.tabText.build(
-//                    LocalContext.current,
-//                ),
-//                style = Typography.bodyLarge,
-//            )
-//        }
     )
 }
 
 @Composable
-private fun MoSoIcon(
-    destination: BottomBarTab, isSelected: Boolean
+private fun BottomBarIcon(
+    destination: BottomBarTab,
+    isSelected: Boolean,
 ) {
     if (isSelected) {
-//        val a = destination.selectedIcon
-//        val b = a.build()
         Icon(
             painter = destination.selectedIcon(),
             modifier = Modifier
@@ -128,15 +140,10 @@ private fun MoSoIcon(
         )
     } else {
         Icon(
-            painter = destination.selectedIcon(),
+            painter = destination.unselectedIcon(),
             modifier = Modifier.size(24.dp),
             contentDescription = null,
         )
-
-//        Icon(
-//            imageVector = destination.unselectedIcon,
-//            contentDescription = null,
-//        )
     }
 }
 
@@ -146,6 +153,8 @@ private fun MoSoIcon(
 interface BottomBarTab {
     @Composable
     fun selectedIcon(): Painter
+    @Composable
+    fun unselectedIcon(): Painter
     val tabText: StringFactory
     val navigationDestination: NavigationDestination
 }
