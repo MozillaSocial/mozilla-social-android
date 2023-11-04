@@ -20,6 +20,11 @@ enum class BottomBarTabs(
         bottomBarTab = object : BottomBarTab {
             @Composable
             override fun selectedIcon(): Painter {
+                return MoSoIcons.houseFill()
+            }
+
+            @Composable
+            override fun unselectedIcon(): Painter {
                 return MoSoIcons.house()
             }
 
@@ -31,6 +36,11 @@ enum class BottomBarTabs(
         bottomBarTab = object : BottomBarTab {
             @Composable
             override fun selectedIcon(): Painter {
+                return MoSoIcons.compassFill()
+            }
+
+            @Composable
+            override fun unselectedIcon(): Painter {
                 return MoSoIcons.compass()
             }
 
@@ -38,10 +48,31 @@ enum class BottomBarTabs(
             override val navigationDestination: NavigationDestination = NavigationDestination.Discover
         }
     ),
+    NEW_POST(
+        bottomBarTab = object : BottomBarTab {
+            @Composable
+            override fun selectedIcon(): Painter {
+                return MoSoIcons.connect()
+            }
+
+            @Composable
+            override fun unselectedIcon(): Painter {
+                return MoSoIcons.connect()
+            }
+
+            override val tabText = StringFactory.resource(R.string.new_post_tab_text)
+            override val navigationDestination: NavigationDestination = NavigationDestination.NewPost
+        }
+    ),
     BOOKMARKS(
         bottomBarTab = object : BottomBarTab {
             @Composable
             override fun selectedIcon(): Painter {
+                return MoSoIcons.bookmarkFill()
+            }
+
+            @Composable
+            override fun unselectedIcon(): Painter {
                 return MoSoIcons.bookmark()
             }
 
@@ -53,6 +84,11 @@ enum class BottomBarTabs(
         bottomBarTab = object : BottomBarTab {
             @Composable
             override fun selectedIcon(): Painter {
+                return MoSoIcons.userCircleFill()
+            }
+
+            @Composable
+            override fun unselectedIcon(): Painter {
                 return MoSoIcons.userCircle()
             }
 
@@ -65,6 +101,4 @@ enum class BottomBarTabs(
 
 object Routes {
     const val SPLASH = "splash"
-    const val BOOKMARKS = "bookmarks"
-    const val MAIN = "main"
 }
