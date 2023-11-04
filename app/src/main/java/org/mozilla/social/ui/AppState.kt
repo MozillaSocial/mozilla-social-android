@@ -34,6 +34,10 @@ import org.mozilla.social.core.navigation.NavigationDestination.Login.navigateTo
 import org.mozilla.social.core.navigation.NavigationDestination.Settings.navigateToSettings
 import org.mozilla.social.core.navigation.NavigationDestination.Tabs.navigateToTabs
 import org.mozilla.social.core.navigation.NavigationEventFlow
+import org.mozilla.social.core.navigation.SettingsNavigationDestination
+import org.mozilla.social.core.navigation.SettingsNavigationDestination.AboutSettings.navigateToAboutSettings
+import org.mozilla.social.core.navigation.SettingsNavigationDestination.AccountSettings.navigateToAccountSettings
+import org.mozilla.social.core.navigation.SettingsNavigationDestination.PrivacySettings.navigateToPrivacySettings
 import timber.log.Timber
 
 @Composable
@@ -88,17 +92,25 @@ class AppState(
                     is Event.NavigateToDestination -> {
                         navigate(it.destination)
                     }
+
                     is Event.NavigateToBottomBarDestination -> {
                         navigateToBottomBarDestination(it.destination)
                     }
+
                     Event.PopBackStack -> {
                         popBackStack()
                     }
+
                     is Event.OpenLink -> {
                         openLink(it.url)
                     }
+
                     is Event.ShowSnackbar -> {
                         showSnackbar(it.text, it.isError)
+                    }
+
+                    is Event.NavigateToSettingsDestination -> {
+                        navigateToSettingsDestination(it.destination)
                     }
                 }
             }
@@ -200,13 +212,25 @@ class AppState(
         }
     }
 
+    private fun navigateToSettingsDestination(destination: SettingsNavigationDestination) {
+        when (destination) {
+            SettingsNavigationDestination.AboutSettings -> {
+                mainNavController.navigateToAboutSettings()
+            }
+
+            SettingsNavigationDestination.AccountSettings -> {
+                mainNavController.navigateToAccountSettings()
+            }
+
+            SettingsNavigationDestination.PrivacySettings -> {
+                mainNavController.navigateToPrivacySettings()
+            }
+        }
+
+    }
+
     private fun navigateToBottomBarDestination(destination: BottomBarNavigationDestination) {
         Timber.d("NAVIGATION navigate to bottom bar destination: $destination")
-
-//        if (destination == NavigationDestination.NewPost) {
-//            mainNavController.navigateToNewPost()
-//            return
-//        }
 
         // If navigating to the feed, just pop up to the feed.  Don't start a new instance
         // of it.  If a new instance is started, we don't retain scroll position!
