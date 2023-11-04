@@ -7,8 +7,10 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
+import org.mozilla.social.common.parseMastodonLinkHeader
 import org.mozilla.social.core.data.repository.model.account.toExternal
 import org.mozilla.social.core.data.repository.model.followers.FollowersPagingWrapper
+import org.mozilla.social.core.data.repository.model.status.StatusPagingWrapper
 import org.mozilla.social.core.data.repository.model.status.toDatabaseModel
 import org.mozilla.social.core.data.repository.model.status.toExternalModel
 import org.mozilla.social.core.database.SocialDatabase
@@ -89,8 +91,8 @@ class AccountRepository internal constructor(
         onlyMedia: Boolean = false,
         excludeReplies: Boolean = false,
         excludeBoosts: Boolean = false,
-    ): List<Status> =
-        accountApi.getAccountStatuses(
+    ): StatusPagingWrapper {
+        val response = accountApi.getAccountStatuses(
             accountId = accountId,
             olderThanId = olderThanId,
             immediatelyNewerThanId = immediatelyNewerThanId,
@@ -98,7 +100,17 @@ class AccountRepository internal constructor(
             onlyMedia = onlyMedia,
             excludeReplies = excludeReplies,
             excludeBoosts = excludeBoosts,
-        ).map { it.toExternalModel() }
+        )
+
+        if (!response.isSuccessful) {
+            throw HttpException(response)
+        }
+
+        return StatusPagingWrapper(
+            statuses = response.body()?.map { it.toExternalModel() } ?: emptyList(),
+            pagingLinks = response.headers().get("link")?.parseMastodonLinkHeader(),
+        )
+    }
 
     suspend fun getAccountBookmarks(): List<Status> =
         accountApi.getAccountBookmarks().map { it.toExternalModel() }

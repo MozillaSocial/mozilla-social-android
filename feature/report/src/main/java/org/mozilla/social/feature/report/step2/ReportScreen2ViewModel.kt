@@ -55,7 +55,7 @@ class ReportScreen2ViewModel(
                     accountId = reportAccountId,
                     loadSize = 40,
                     excludeBoosts = true,
-                ).map {
+                ).statuses.map {
                     it.toReportStatusUiState()
                 }.filterNot {
                     it.statusId == reportStatusId
