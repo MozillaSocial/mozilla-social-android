@@ -6,6 +6,7 @@ import org.mozilla.social.R
 import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.navigation.BottomBarNavigationDestination
+import org.mozilla.social.core.navigation.NavigationDestination
 
 /**
  * An enum of all the bottom nav bar destinations
@@ -20,48 +21,85 @@ enum class BottomBarTabs(
         bottomBarTab = object : BottomBarTab {
             @Composable
             override fun selectedIcon(): Painter {
+                return MoSoIcons.houseFill()
+            }
+
+            @Composable
+            override fun unselectedIcon(): Painter {
                 return MoSoIcons.house()
             }
 
             override val tabText = StringFactory.resource(R.string.feed_tab_text)
-            override val navigationDestination: BottomBarNavigationDestination =
-                BottomBarNavigationDestination.Feed
+            override val navigationDestination: Destination =
+                Destination.BottomBar(BottomBarNavigationDestination.Feed)
         }
     ),
     DISCOVER(
         bottomBarTab = object : BottomBarTab {
             @Composable
             override fun selectedIcon(): Painter {
+                return MoSoIcons.compassFill()
+            }
+
+            @Composable
+            override fun unselectedIcon(): Painter {
                 return MoSoIcons.compass()
             }
 
             override val tabText = StringFactory.resource(R.string.discover_tab_text)
-            override val navigationDestination: BottomBarNavigationDestination =
-                BottomBarNavigationDestination.Discover
+            override val navigationDestination: Destination =
+                Destination.BottomBar(BottomBarNavigationDestination.Discover)
+        }
+    ),
+    NEW_POST(
+        bottomBarTab = object : BottomBarTab {
+            @Composable
+            override fun selectedIcon(): Painter {
+                return MoSoIcons.connect()
+            }
+
+            @Composable
+            override fun unselectedIcon(): Painter {
+                return MoSoIcons.connect()
+            }
+
+            override val tabText = StringFactory.resource(R.string.new_post_tab_text)
+            override val navigationDestination: Destination =
+                Destination.Main(NavigationDestination.NewPost())
         }
     ),
     BOOKMARKS(
         bottomBarTab = object : BottomBarTab {
             @Composable
             override fun selectedIcon(): Painter {
+                return MoSoIcons.bookmarkFill()
+            }
+
+            @Composable
+            override fun unselectedIcon(): Painter {
                 return MoSoIcons.bookmark()
             }
 
             override val tabText = StringFactory.resource(R.string.settings_tab_text)
-            override val navigationDestination: BottomBarNavigationDestination =
-                BottomBarNavigationDestination.Bookmarks
+            override val navigationDestination: Destination =
+                Destination.BottomBar(BottomBarNavigationDestination.Bookmarks)
         }
     ),
     ACCOUNT(
         bottomBarTab = object : BottomBarTab {
             @Composable
             override fun selectedIcon(): Painter {
+                return MoSoIcons.userCircleFill()
+            }
+
+            @Composable
+            override fun unselectedIcon(): Painter {
                 return MoSoIcons.userCircle()
             }
 
             override val tabText = StringFactory.resource(R.string.account_tab_text)
-            override val navigationDestination: BottomBarNavigationDestination =
-                BottomBarNavigationDestination.MyAccount
+            override val navigationDestination: Destination =
+                Destination.BottomBar(BottomBarNavigationDestination.MyAccount)
 
         }
     )

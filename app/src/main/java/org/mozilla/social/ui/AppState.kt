@@ -85,9 +85,18 @@ class AppState(
             navigationEventFlow().collectLatest {
                 Timber.d("consuming event $it")
                 when (it) {
-                    is Event.NavigateToDestination -> navigate(it.destination)
-                    Event.PopBackStack -> popBackStack()
-                    is Event.OpenLink -> openLink(it.url)
+                    is Event.NavigateToDestination -> {
+                        navigate(it.destination)
+                    }
+                    is Event.NavigateToBottomBarDestination -> {
+                        navigateToBottomBarDestination(it.destination)
+                    }
+                    Event.PopBackStack -> {
+                        popBackStack()
+                    }
+                    is Event.OpenLink -> {
+                        openLink(it.url)
+                    }
                     is Event.ShowSnackbar -> {
                         showSnackbar(it.text, it.isError)
                     }
@@ -191,21 +200,14 @@ class AppState(
         }
     }
 
-    /**
-     * Navigate to new post from FAB- TODO remove when removing the FAB
-     *
-     */
-    fun navigateToNewPost() {
-        with(NavigationDestination.NewPost()) {
-            mainNavController.navigateToNewPost()
-        }
-    }
-
-    /**
-     * Used by bottom bar navigation
-     */
-    fun navigateToBottomBarDestination(destination: BottomBarNavigationDestination) {
+    private fun navigateToBottomBarDestination(destination: BottomBarNavigationDestination) {
         Timber.d("NAVIGATION navigate to bottom bar destination: $destination")
+
+//        if (destination == NavigationDestination.NewPost) {
+//            mainNavController.navigateToNewPost()
+//            return
+//        }
+
         // If navigating to the feed, just pop up to the feed.  Don't start a new instance
         // of it.  If a new instance is started, we don't retain scroll position!
         if (destination == BottomBarNavigationDestination.Feed) {

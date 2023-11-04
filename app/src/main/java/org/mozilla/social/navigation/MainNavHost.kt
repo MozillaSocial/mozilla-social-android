@@ -2,26 +2,23 @@ package org.mozilla.social.navigation
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import org.mozilla.social.R
+import org.koin.compose.koinInject
 import org.mozilla.social.common.utils.mosoFadeIn
 import org.mozilla.social.common.utils.mosoFadeOut
 import org.mozilla.social.core.designsystem.component.MoSoDivider
-import org.mozilla.social.core.designsystem.component.MoSoFloatingActionButton
 import org.mozilla.social.core.designsystem.component.MoSoSnackbar
 import org.mozilla.social.core.designsystem.component.MoSoSnackbarHost
-import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.navigation.BottomBarNavigationDestination
 import org.mozilla.social.core.navigation.NavigationDestination
+import org.mozilla.social.core.navigation.usecases.NavigateTo
 import org.mozilla.social.feature.account.accountScreen
 import org.mozilla.social.feature.account.edit.editAccountScreen
 import org.mozilla.social.feature.auth.loginScreen
@@ -83,26 +80,9 @@ fun NavGraphBuilder.bottomTabScreen(appState: AppState) {
                     MoSoSnackbar(snackbarData = snackbarData, snackbarType = snackbarType)
                 }
             },
-            floatingActionButton = {
-                when (currentDestination) {
-                    BottomBarNavigationDestination.Feed -> {
-                        MoSoFloatingActionButton(onClick = {
-                            appState.navigateToNewPost()
-                        }) {
-                            Icon(
-                                MoSoIcons.plus(),
-                                stringResource(id = R.string.feed_fab_content_description)
-                            )
-                        }
-                    }
-
-                    else -> {}
-                }
-            },
             bottomBar = {
                 BottomBar(
                     currentDestination = currentDestination,
-                    navigateToTopLevelDestination = appState::navigateToBottomBarDestination
                 )
             },
             content = {
@@ -122,14 +102,24 @@ fun NavGraphBuilder.bottomTabScreen(appState: AppState) {
 @Composable
 private fun BottomBar(
     currentDestination: BottomBarNavigationDestination,
-    navigateToTopLevelDestination: (route: BottomBarNavigationDestination) -> Unit,
+    navigateTo: NavigateTo = koinInject(),
 ) {
     Column {
         MoSoDivider()
         MoSoBottomNavigationBar(
             currentDestination = currentDestination,
             bottomBarTabs = BottomBarTabs.values().map { it.bottomBarTab },
-            navigateTo = navigateToTopLevelDestination
+            navigateTo = {
+                when (it) {
+                    is Destination.BottomBar -> {
+                        navigateTo(it.bottomBarNavigationDestination)
+                    }
+
+                    is Destination.Main -> {
+                        navigateTo(it.navigationDestination)
+                    }
+                }
+            },
         )
     }
 }

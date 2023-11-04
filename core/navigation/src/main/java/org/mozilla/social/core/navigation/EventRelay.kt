@@ -14,6 +14,10 @@ class EventRelay {
         emitEvent(Event.NavigateToDestination(navDestination))
     }
 
+    fun emitEvent(navDestination: BottomBarNavigationDestination) {
+        emitEvent(Event.NavigateToBottomBarDestination(navDestination))
+    }
+
     fun emitEvent(event: Event) {
         Timber.d("NAVIGATION trying to emit $event")
         _navigationEvents.tryEmit(event)
@@ -27,5 +31,8 @@ sealed class Event {
     data class ShowSnackbar(val text: StringFactory, val isError: Boolean) : Event()
 
     data class NavigateToDestination(val destination: NavigationDestination) :
+        Event()
+
+    data class NavigateToBottomBarDestination(val destination: BottomBarNavigationDestination) :
         Event()
 }
