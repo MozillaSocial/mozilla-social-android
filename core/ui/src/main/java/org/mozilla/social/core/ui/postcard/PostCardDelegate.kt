@@ -8,7 +8,7 @@ import org.mozilla.social.common.logging.Log
 import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.core.data.repository.AccountRepository
 import org.mozilla.social.core.data.repository.StatusRepository
-import org.mozilla.social.core.navigation.NavDestination
+import org.mozilla.social.core.navigation.NavigationDestination
 import org.mozilla.social.core.navigation.usecases.NavigateTo
 import org.mozilla.social.core.navigation.usecases.OpenLink
 import org.mozilla.social.core.ui.R
@@ -37,7 +37,7 @@ class PostCardDelegate(
     }
 
     override fun onReplyClicked(statusId: String) {
-        navigateTo(NavDestination.NewPost(replyId = statusId))
+        navigateTo(NavigationDestination.NewPost(replyStatusId = statusId))
     }
 
     override fun onBoostClicked(statusId: String, isBoosting: Boolean) {
@@ -81,7 +81,7 @@ class PostCardDelegate(
     }
 
     override fun onPostCardClicked(statusId: String) {
-        navigateTo(NavDestination.Thread(statusId = statusId))
+        navigateTo(NavigationDestination.Thread(threadStatusId = statusId))
     }
 
     override fun onOverflowMuteClicked(accountId: String) {
@@ -111,10 +111,10 @@ class PostCardDelegate(
         accountHandle: String,
         statusId: String,
     ) {
-        navigateTo(NavDestination.Report(
-            accountId = accountId,
-            accountHandle = accountHandle,
-            statusId = statusId,
+        navigateTo(NavigationDestination.Report(
+            reportAccountId = accountId,
+            reportAccountHandle = accountHandle,
+            reportStatusId = statusId,
         ))
     }
 
@@ -132,7 +132,7 @@ class PostCardDelegate(
     }
 
     override fun onAccountImageClicked(accountId: String) {
-        navigateTo(NavDestination.Account(accountId))
+        navigateTo(NavigationDestination.Account(accountId))
     }
 
     override fun onLinkClicked(url: String) {
@@ -140,11 +140,11 @@ class PostCardDelegate(
     }
 
     override fun onAccountClicked(accountId: String) {
-        navigateTo(NavDestination.Account(accountId))
+        navigateTo(NavigationDestination.Account(accountId))
 
     }
 
     override fun onHashTagClicked(hashTag: String) {
-        navigateTo(NavDestination.Hashtag(hashTag))
+        navigateTo(NavigationDestination.HashTag(hashTag))
     }
 }

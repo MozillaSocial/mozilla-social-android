@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.mozilla.social.core.domain.IsSignedInFlow
 import org.mozilla.social.core.domain.Login
-import org.mozilla.social.core.navigation.NavDestination
+import org.mozilla.social.core.navigation.NavigationDestination
 import org.mozilla.social.core.navigation.usecases.NavigateTo
 
 /**
@@ -24,9 +24,9 @@ class MainViewModel(
         viewModelScope.launch(Dispatchers.Main) {
             isSignedInFlow().collectLatest {
                 if (!it) {
-                    navigateTo(NavDestination.Login)
+                    navigateTo(NavigationDestination.Login)
                 } else {
-                    navigateTo(NavDestination.Tabs)
+                    navigateTo(NavigationDestination.Tabs)
                 }
             }
         }

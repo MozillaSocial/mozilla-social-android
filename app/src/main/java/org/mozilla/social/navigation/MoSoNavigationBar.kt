@@ -1,7 +1,5 @@
 package org.mozilla.social.navigation
 
-import org.mozilla.social.core.designsystem.component.MoSoSurface
-
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
@@ -26,16 +24,19 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import org.mozilla.social.common.utils.StringFactory
+import org.mozilla.social.core.designsystem.component.MoSoSurface
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
+import org.mozilla.social.core.navigation.BottomBarNavigationDestination
 import org.mozilla.social.core.navigation.NavigationDestination
+import org.mozilla.social.navigation.Destination.Main
 
 @Composable
 fun MoSoBottomNavigationBar(
     modifier: Modifier = Modifier,
-    currentDestination: NavigationDestination,
+    currentDestination: BottomBarNavigationDestination,
     bottomBarTabs: List<BottomBarTab>,
-    navigateTo: (route: NavigationDestination) -> Unit,
+    navigateTo: (route: Destination) -> Unit,
     containerColor: Color = MoSoNavigationBarDefaults.containerColor,
     contentColor: Color = MoSoTheme.colors.iconPrimary,
     tonalElevation: Dp = NavigationBarDefaults.Elevation,
@@ -49,30 +50,34 @@ fun MoSoBottomNavigationBar(
         windowInsets = windowInsets
     ) {
         bottomBarTabs.forEach {
-            if (it == BottomBarTabs.NEW_POST.bottomBarTab) {
-                NavigationBarItem(
-                    modifier = modifier.height(48.dp),
-                    selected = false,
-                    onClick = { navigateTo(NavigationDestination.NewPost) },
-                    colors = MoSoNavigationBarItemDefaults.colors(),
-                    icon = {
-                        Icon(
-                            painter = MoSoIcons.connect(),
-                            modifier = Modifier
-                                .size(40.dp),
-                            contentDescription = null,
-                            tint = MoSoTheme.colors.actionPrimary,
-                        )
-                    },
-                )
-            } else {
-                MoSoNavigationBarItem(
-                    destination = it,
-                    isSelected = currentDestination == it.navigationDestination,
-                    navigateTo = navigateTo,
-                )
-            }
+            when (it.navigationDestination) {
+                is Destination.BottomBar -> {
+                    MoSoNavigationBarItem(
+                        destination = it,
+                        isSelected = currentDestination ==
+                                (it.navigationDestination as? Destination.BottomBar)?.bottomBarNavigationDestination,
+                        navigateTo = navigateTo,
+                    )
+                }
 
+                is Destination.Main -> {
+                    NavigationBarItem(
+                        modifier = modifier.height(48.dp),
+                        selected = false,
+                        onClick = { navigateTo(it.navigationDestination) },
+                        colors = MoSoNavigationBarItemDefaults.colors(),
+                        icon = {
+                            Icon(
+                                painter = MoSoIcons.connect(),
+                                modifier = Modifier
+                                    .size(40.dp),
+                                contentDescription = null,
+                                tint = MoSoTheme.colors.actionPrimary,
+                            )
+                        },
+                    )
+                }
+            }
         }
     }
 }
@@ -110,7 +115,7 @@ private fun RowScope.MoSoNavigationBarItem(
     modifier: Modifier = Modifier,
     destination: BottomBarTab,
     isSelected: Boolean,
-    navigateTo: (route: NavigationDestination) -> Unit
+    navigateTo: (route: Destination) -> Unit
 ) {
     NavigationBarItem(
         modifier = modifier.height(48.dp),
@@ -153,10 +158,22 @@ private fun BottomBarIcon(
 interface BottomBarTab {
     @Composable
     fun selectedIcon(): Painter
+
     @Composable
     fun unselectedIcon(): Painter
     val tabText: StringFactory
-    val navigationDestination: NavigationDestination
+    val navigationDestination: Destination
+}
+
+/**
+ * The type of destination the bottom bar tab goes to. If it's [Main], it navigates to a
+ * non-bottom-tab destination
+ */
+sealed interface Destination {
+    data class BottomBar(val bottomBarNavigationDestination: BottomBarNavigationDestination) :
+        Destination
+
+    data class Main(val navigationDestination: NavigationDestination) : Destination
 }
 
 object MoSoNavigationDefaults {

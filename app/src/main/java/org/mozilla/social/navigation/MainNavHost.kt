@@ -6,18 +6,19 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NavOptions
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import org.koin.compose.koinInject
 import org.mozilla.social.common.utils.mosoFadeIn
 import org.mozilla.social.common.utils.mosoFadeOut
 import org.mozilla.social.core.designsystem.component.MoSoDivider
 import org.mozilla.social.core.designsystem.component.MoSoSnackbar
 import org.mozilla.social.core.designsystem.component.MoSoSnackbarHost
+import org.mozilla.social.core.navigation.BottomBarNavigationDestination
 import org.mozilla.social.core.navigation.NavigationDestination
+import org.mozilla.social.core.navigation.usecases.NavigateTo
 import org.mozilla.social.feature.account.accountScreen
 import org.mozilla.social.feature.account.edit.editAccountScreen
 import org.mozilla.social.feature.auth.loginScreen
@@ -28,7 +29,6 @@ import org.mozilla.social.feature.report.reportFlow
 import org.mozilla.social.feature.settings.settingsScreen
 import org.mozilla.social.feature.thread.threadScreen
 import org.mozilla.social.post.newPostScreen
-import org.mozilla.social.search.searchScreen
 import org.mozilla.social.ui.AppState
 
 @Composable
@@ -47,7 +47,6 @@ fun MainNavHost(
     ) {
         splashScreen()
         loginScreen()
-        searchScreen()
         settingsScreen()
         accountScreen()
         followersScreen()
@@ -84,7 +83,6 @@ fun NavGraphBuilder.bottomTabScreen(appState: AppState) {
             bottomBar = {
                 BottomBar(
                     currentDestination = currentDestination,
-                    navigateToTopLevelDestination = appState::navigateToBottomBarDestination,
                 )
             },
             content = {
@@ -101,21 +99,27 @@ fun NavGraphBuilder.bottomTabScreen(appState: AppState) {
     }
 }
 
-fun NavController.navigateToTabs(navOptions: NavOptions? = null) {
-    this.navigate(NavigationDestination.Tabs.route, navOptions)
-}
-
 @Composable
 private fun BottomBar(
-    currentDestination: NavigationDestination,
-    navigateToTopLevelDestination: (route: NavigationDestination) -> Unit,
+    currentDestination: BottomBarNavigationDestination,
+    navigateTo: NavigateTo = koinInject(),
 ) {
     Column {
         MoSoDivider()
         MoSoBottomNavigationBar(
             currentDestination = currentDestination,
             bottomBarTabs = BottomBarTabs.values().map { it.bottomBarTab },
-            navigateTo = navigateToTopLevelDestination,
+            navigateTo = {
+                when (it) {
+                    is Destination.BottomBar -> {
+                        navigateTo(it.bottomBarNavigationDestination)
+                    }
+
+                    is Destination.Main -> {
+                        navigateTo(it.navigationDestination)
+                    }
+                }
+            },
         )
     }
 }

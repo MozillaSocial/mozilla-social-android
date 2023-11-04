@@ -9,13 +9,6 @@ import org.mozilla.social.common.utils.mosoSlideIn
 import org.mozilla.social.common.utils.mosoSlideOut
 import org.mozilla.social.core.navigation.NavigationDestination
 
-fun NavController.navigateToNewPost(
-    navOptions: NavOptions? = null,
-    replyStatusId: String? = null,
-) {
-    navigate(NavigationDestination.NewPost.route(replyStatusId), navOptions)
-}
-
 fun NavGraphBuilder.newPostScreen() {
     composable(
         route = NavigationDestination.NewPost.fullRoute,

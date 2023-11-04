@@ -5,6 +5,7 @@ import androidx.compose.ui.graphics.painter.Painter
 import org.mozilla.social.R
 import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
+import org.mozilla.social.core.navigation.BottomBarNavigationDestination
 import org.mozilla.social.core.navigation.NavigationDestination
 
 /**
@@ -29,7 +30,8 @@ enum class BottomBarTabs(
             }
 
             override val tabText = StringFactory.resource(R.string.feed_tab_text)
-            override val navigationDestination: NavigationDestination = NavigationDestination.Feed
+            override val navigationDestination: Destination =
+                Destination.BottomBar(BottomBarNavigationDestination.Feed)
         }
     ),
     DISCOVER(
@@ -45,7 +47,8 @@ enum class BottomBarTabs(
             }
 
             override val tabText = StringFactory.resource(R.string.discover_tab_text)
-            override val navigationDestination: NavigationDestination = NavigationDestination.Discover
+            override val navigationDestination: Destination =
+                Destination.BottomBar(BottomBarNavigationDestination.Discover)
         }
     ),
     NEW_POST(
@@ -61,7 +64,8 @@ enum class BottomBarTabs(
             }
 
             override val tabText = StringFactory.resource(R.string.new_post_tab_text)
-            override val navigationDestination: NavigationDestination = NavigationDestination.NewPost
+            override val navigationDestination: Destination =
+                Destination.Main(NavigationDestination.NewPost())
         }
     ),
     BOOKMARKS(
@@ -77,7 +81,8 @@ enum class BottomBarTabs(
             }
 
             override val tabText = StringFactory.resource(R.string.settings_tab_text)
-            override val navigationDestination: NavigationDestination = NavigationDestination.Bookmarks
+            override val navigationDestination: Destination =
+                Destination.BottomBar(BottomBarNavigationDestination.Bookmarks)
         }
     ),
     ACCOUNT(
@@ -93,7 +98,8 @@ enum class BottomBarTabs(
             }
 
             override val tabText = StringFactory.resource(R.string.account_tab_text)
-            override val navigationDestination: NavigationDestination = NavigationDestination.MyAccount
+            override val navigationDestination: Destination =
+                Destination.BottomBar(BottomBarNavigationDestination.MyAccount)
 
         }
     )

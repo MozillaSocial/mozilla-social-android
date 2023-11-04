@@ -8,9 +8,8 @@ import androidx.paging.cachedIn
 import androidx.paging.map
 import kotlinx.coroutines.flow.map
 import org.mozilla.social.core.data.repository.AccountRepository
-import org.mozilla.social.core.navigation.NavDestination
+import org.mozilla.social.core.navigation.NavigationDestination
 import org.mozilla.social.core.navigation.usecases.NavigateTo
-import org.mozilla.social.core.navigation.usecases.PopNavBackstack
 import org.mozilla.social.core.ui.account.quickview.toQuickViewUiState
 
 class FollowersViewModel(
@@ -34,6 +33,6 @@ class FollowersViewModel(
     }.cachedIn(viewModelScope)
 
     override fun onAccountClicked(accountId: String) {
-        navigateTo(NavDestination.Account(accountId))
+        navigateTo(NavigationDestination.Account(accountId))
     }
 }
