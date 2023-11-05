@@ -2,6 +2,7 @@ package org.mozilla.social.core.data.repository
 
 import org.mozilla.social.core.data.repository.model.instance.toExternalModel
 import org.mozilla.social.core.network.InstanceApi
+import org.mozilla.social.model.Instance
 import org.mozilla.social.model.InstanceRule
 
 class InstanceRepository(
@@ -9,4 +10,7 @@ class InstanceRepository(
 ) {
     suspend fun getInstanceRules(): List<InstanceRule> =
         instanceApi.getRules().toExternalModel()
+
+    suspend fun getInstance(): Instance =
+        instanceApi.getInstance().toExternalModel()
 }

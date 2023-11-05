@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="profile_title">Profile</string>
     <string name="settings_title">Settings</string>
-    <string name="switch_text">switch test</string>
-    <string name="ic_switch_explanation">testing switches</string>
 
-    <string name="group_1">Group 1</string>
-    <string name="group_2">Group 2</string>
-    <string name="account_options">Account Options</string>
+    <string name="account_settings_title">Account</string>
+    <string name="privacy_settings_title">Privacy</string>
+    <string name="about_settings_title">About</string>
 
-    <string name="analytics_group">Data collection and use</string>
-    <string name="analytics_icon">Analytics Icon</string>
-    <string name="analytics_opt_in_name">Help improve Mozilla.social</string>
-    <string name="analytics_opt_in_subtitle">Allow technical, interaction, campaign and referral data to be sent to Mozilla. With this data you will have a personalized experience.</string>
+    <string name="profile_settings_title">Profile settings</string>
+    <string name="manage_your_account">Manage your account on %1$s</string>
 
-    <string name="logout">Logout</string>
+    <string name="data_collection_and_use">Data collection and use</string>
+    <string name="data_collection_title">Help improve Mozilla.social</string>
+    <string name="data_collection_description">Allow technical, interaction, campaign and referral data to be sent to Mozilla. With this data you will have a personalized experience.</string>
+
+    <string name="sign_out">Sign Out</string>
+    <string name="settings_section_content_description">%1$s settings. %2$s</string>
 </resources>

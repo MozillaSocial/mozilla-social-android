@@ -10,7 +10,6 @@ import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material.icons.rounded.ChevronRight
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.DeleteOutline
-import androidx.compose.material.icons.rounded.Info
 import androidx.compose.material.icons.rounded.KeyboardArrowUp
 import androidx.compose.material.icons.rounded.Lock
 import androidx.compose.material.icons.rounded.LockOpen
@@ -76,18 +75,29 @@ object MoSoIcons {
     fun houseFill() = painterResource(R.drawable.house_fill)
 
     @Composable
+    fun identificationCard() = painterResource(id = R.drawable.identification_card)
+
+    @Composable
     fun image() = painterResource(id = R.drawable.image)
 
     @Composable
     fun imagePlus() = painterResource(id = R.drawable.image_plus)
 
     @Composable
+    fun info() = painterResource(id = R.drawable.info)
+
+    @Composable
     fun list() = painterResource(id = R.drawable.list)
 
     @Composable
+    fun lockKey() = painterResource(id = R.drawable.lock_key)
+
+    @Composable
     fun monitorPlay() = painterResource(id = R.drawable.monitor_play)
+
     @Composable
     fun moreVertical() = painterResource(id = R.drawable.more_vertical)
+
     @Composable
     fun plus() = painterResource(id = R.drawable.plus)
 
@@ -124,9 +134,6 @@ object MoSoIcons {
 
     @Composable
     fun backArrow() = rememberVectorPainter(image = Icons.Rounded.ArrowBack)
-
-    @Composable
-    fun info() = rememberVectorPainter(image = Icons.Rounded.Info)
 
     @Composable
     fun chevronRight() = rememberVectorPainter(image = Icons.Rounded.ChevronRight)

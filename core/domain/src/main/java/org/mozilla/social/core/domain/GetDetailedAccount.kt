@@ -6,6 +6,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.emitAll
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.sync.Mutex
 import org.mozilla.social.common.Resource
@@ -63,8 +64,8 @@ class GetDetailedAccount(
             emit(Resource.Error(it))
         } ?: try { // TODO@John
             emitAll(
-                socialDatabase.accountsDao().getAccountFlow(accountId).combine(
-                    socialDatabase.relationshipsDao().getRelationshipFlow(accountId)
+                socialDatabase.accountsDao().getAccountFlow(accountId).filterNotNull().combine(
+                    socialDatabase.relationshipsDao().getRelationshipFlow(accountId).filterNotNull()
                 ) { databaseAccount, databaseRelationship ->
                     Resource.Loaded(
                         transform(
