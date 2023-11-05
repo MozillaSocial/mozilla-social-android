@@ -51,9 +51,9 @@ fun AccountSearchBar(
                                 color =  MoSoTheme.colors.borderPrimary,
                                 shape = RoundedCornerShape(4.dp)
                             )
-                            .padding(4.dp)
                             .align(Alignment.Center)
-                            .clickable { statusInteractions.onAccountClicked(account.accountId) },
+                            .clickable { statusInteractions.onAccountClicked(account.accountId) }
+                            .padding(4.dp),
                     ) {
                         AsyncImage(
                             modifier = Modifier
@@ -109,9 +109,9 @@ fun HashtagSearchBar(
                                 color =  MoSoTheme.colors.borderPrimary,
                                 shape = RoundedCornerShape(4.dp)
                             )
-                            .padding(4.dp)
                             .align(Alignment.Center)
-                            .clickable { statusInteractions.onHashtagClicked(hashTag) },
+                            .clickable { statusInteractions.onHashtagClicked(hashTag) }
+                            .padding(4.dp),
                     ) {
                         Text(
                             modifier = Modifier

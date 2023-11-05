@@ -26,6 +26,7 @@ import org.mozilla.social.feature.followers.followersScreen
 import org.mozilla.social.feature.followers.followingScreen
 import org.mozilla.social.feature.hashtag.hashTagScreen
 import org.mozilla.social.feature.report.reportFlow
+import org.mozilla.social.feature.settings.settingsFlow
 import org.mozilla.social.feature.settings.settingsScreen
 import org.mozilla.social.feature.thread.threadScreen
 import org.mozilla.social.post.newPostScreen
@@ -57,6 +58,7 @@ fun MainNavHost(
         hashTagScreen()
         bottomTabScreen(appState)
         editAccountScreen()
+        settingsFlow()
     }
 }
 
