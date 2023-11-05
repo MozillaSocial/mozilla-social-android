@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.map
 import org.mozilla.social.core.data.repository.AccountRepository
 import org.mozilla.social.core.navigation.NavigationDestination
 import org.mozilla.social.core.navigation.usecases.NavigateTo
-import org.mozilla.social.core.ui.account.quickview.toQuickViewUiState
+import org.mozilla.social.core.ui.common.account.quickview.toQuickViewUiState
 
 class FollowersViewModel(
     private val accountId: String,

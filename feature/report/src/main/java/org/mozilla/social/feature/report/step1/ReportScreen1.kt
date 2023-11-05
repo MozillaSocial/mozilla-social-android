@@ -34,11 +34,11 @@ import org.mozilla.social.core.designsystem.component.MoSoDivider
 import org.mozilla.social.core.designsystem.component.MoSoRadioButton
 import org.mozilla.social.core.designsystem.component.MoSoSurface
 import org.mozilla.social.core.designsystem.component.MoSoTextField
-import org.mozilla.social.core.ui.appbar.MoSoTopBar
+import org.mozilla.social.core.ui.common.appbar.MoSoTopBar
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.designsystem.utils.NoRipple
-import org.mozilla.social.core.ui.animation.ExpandingAnimation
-import org.mozilla.social.core.ui.appbar.MoSoCloseableTopAppBar
+import org.mozilla.social.core.ui.common.animation.ExpandingAnimation
+import org.mozilla.social.core.ui.common.appbar.MoSoCloseableTopAppBar
 import org.mozilla.social.feature.report.R
 import org.mozilla.social.feature.report.ReportDataBundle
 import org.mozilla.social.feature.report.ReportTarget
