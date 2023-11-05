@@ -411,7 +411,7 @@ private fun MainBox(
                     }
 
                     item {
-                        val highlightColor = FirefoxColor.Blue60
+                        val highlightColor = MoSoTheme.colors.textLink
                         MoSoTextField(
                             modifier = Modifier
                                 .fillMaxWidth()
