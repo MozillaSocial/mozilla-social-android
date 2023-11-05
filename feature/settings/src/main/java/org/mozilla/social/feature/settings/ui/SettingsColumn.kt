@@ -8,7 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import org.mozilla.social.core.designsystem.theme.MoSoSpacing
-import org.mozilla.social.core.ui.appbar.MoSoCloseableTopAppBar
+import org.mozilla.social.core.ui.common.appbar.MoSoCloseableTopAppBar
 
 @Composable
 internal fun SettingsColumn(
