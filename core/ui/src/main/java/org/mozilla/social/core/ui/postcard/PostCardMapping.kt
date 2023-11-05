@@ -36,7 +36,7 @@ private fun Status.toMainPostCardUiState(
         replyCount = repliesCount,
         boostCount = boostsCount,
         favoriteCount = favouritesCount,
-        username = account.username,
+        username = account.displayName,
         statusId = statusId,
         userBoosted = isBoosted ?: false,
         isFavorited = isFavourited ?: false,
