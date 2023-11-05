@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.sync.Mutex
 import org.mozilla.social.common.Resource
 import org.mozilla.social.common.utils.launchSupervisor
+import org.mozilla.social.common.utils.tryDbCall
 import org.mozilla.social.core.data.repository.AccountRepository
 import org.mozilla.social.core.data.repository.model.account.toDatabaseModel
 import org.mozilla.social.core.data.repository.model.account.toExternal
@@ -62,7 +63,7 @@ class GetDetailedAccount(
 
         exception?.let {
             emit(Resource.Error(it))
-        } ?: try { // TODO@John
+        } ?: tryDbCall { // TODO@John
             emitAll(
                 socialDatabase.accountsDao().getAccountFlow(accountId).filterNotNull().combine(
                     socialDatabase.relationshipsDao().getRelationshipFlow(accountId).filterNotNull()
@@ -73,12 +74,8 @@ class GetDetailedAccount(
                             databaseRelationship.toExternal()
                         )
                     )
-
                 }
-
             )
-        } catch (exception: Exception) {
-            Timber.e(exception)
         }
     }
 }
