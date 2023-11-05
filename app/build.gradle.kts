@@ -48,7 +48,7 @@ dependencies {
     implementation(project(":core:datastore"))
     implementation(project(":core:database"))
     implementation(project(":core:model"))
-    implementation(project(":core:ui"))
+    implementation(project(":core:ui:common"))
     implementation(project(":core:analytics"))
     implementation(project(":feature:auth"))
     implementation(project(":feature:feed"))

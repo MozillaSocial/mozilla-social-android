@@ -69,14 +69,14 @@ import org.mozilla.social.core.designsystem.component.MoSoToast
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.designsystem.utils.NoRipple
-import org.mozilla.social.core.ui.DropDownItem
-import org.mozilla.social.core.ui.appbar.MoSoCloseableTopAppBar
-import org.mozilla.social.core.ui.error.GenericError
-import org.mozilla.social.core.ui.htmlcontent.HtmlContent
-import org.mozilla.social.core.ui.htmlcontent.HtmlContentInteractions
-import org.mozilla.social.core.ui.postcard.PostCardInteractions
-import org.mozilla.social.core.ui.postcard.PostCardList
-import org.mozilla.social.core.ui.postcard.PostCardUiState
+import org.mozilla.social.core.ui.common.DropDownItem
+import org.mozilla.social.core.ui.common.appbar.MoSoCloseableTopAppBar
+import org.mozilla.social.core.ui.common.error.GenericError
+import org.mozilla.social.core.ui.common.htmlcontent.HtmlContent
+import org.mozilla.social.core.ui.common.htmlcontent.HtmlContentInteractions
+import org.mozilla.social.core.ui.common.postcard.PostCardInteractions
+import org.mozilla.social.core.ui.common.postcard.PostCardList
+import org.mozilla.social.core.ui.common.postcard.PostCardUiState
 
 @Composable
 internal fun AccountScreen(
@@ -327,7 +327,7 @@ private fun OverflowMenu(
                 if (account.isMuted) {
                     DropDownItem(
                         text = stringResource(
-                            id = org.mozilla.social.core.ui.R.string.unmute_user,
+                            id = org.mozilla.social.core.ui.common.R.string.unmute_user,
                             account.username
                         ),
                         expanded = overflowMenuExpanded,
@@ -336,7 +336,7 @@ private fun OverflowMenu(
                 } else {
                     DropDownItem(
                         text = stringResource(
-                            id = org.mozilla.social.core.ui.R.string.mute_user,
+                            id = org.mozilla.social.core.ui.common.R.string.mute_user,
                             account.username
                         ),
                         expanded = overflowMenuExpanded,
@@ -347,7 +347,7 @@ private fun OverflowMenu(
                 if (account.isBlocked) {
                     DropDownItem(
                         text = stringResource(
-                            id = org.mozilla.social.core.ui.R.string.unblock_user,
+                            id = org.mozilla.social.core.ui.common.R.string.unblock_user,
                             account.username
                         ),
                         expanded = overflowMenuExpanded,
@@ -356,7 +356,7 @@ private fun OverflowMenu(
                 } else {
                     DropDownItem(
                         text = stringResource(
-                            id = org.mozilla.social.core.ui.R.string.block_user,
+                            id = org.mozilla.social.core.ui.common.R.string.block_user,
                             account.username
                         ),
                         expanded = overflowMenuExpanded,
@@ -366,7 +366,7 @@ private fun OverflowMenu(
 
                 DropDownItem(
                     text = stringResource(
-                        id = org.mozilla.social.core.ui.R.string.report_user,
+                        id = org.mozilla.social.core.ui.common.R.string.report_user,
                         account.username
                     ),
                     expanded = overflowMenuExpanded,

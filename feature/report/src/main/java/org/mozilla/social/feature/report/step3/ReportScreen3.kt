@@ -25,8 +25,8 @@ import org.mozilla.social.core.designsystem.component.MoSoSurface
 import org.mozilla.social.core.designsystem.component.MoSoToast
 import org.mozilla.social.core.designsystem.theme.MoSoRadius
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
-import org.mozilla.social.core.ui.animation.ExpandingAnimation
-import org.mozilla.social.core.ui.appbar.MoSoCloseableTopAppBar
+import org.mozilla.social.core.ui.common.animation.ExpandingAnimation
+import org.mozilla.social.core.ui.common.appbar.MoSoCloseableTopAppBar
 import org.mozilla.social.feature.report.R
 
 @Composable

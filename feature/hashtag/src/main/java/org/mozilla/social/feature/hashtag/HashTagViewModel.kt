@@ -24,8 +24,8 @@ import org.mozilla.social.core.domain.AccountIdFlow
 import org.mozilla.social.core.domain.remotemediators.HashTagTimelineRemoteMediator
 import org.mozilla.social.core.navigation.usecases.NavigateTo
 import org.mozilla.social.core.navigation.usecases.OpenLink
-import org.mozilla.social.core.ui.postcard.PostCardDelegate
-import org.mozilla.social.core.ui.postcard.toPostCardUiState
+import org.mozilla.social.core.ui.common.postcard.PostCardDelegate
+import org.mozilla.social.core.ui.common.postcard.toPostCardUiState
 
 class HashTagViewModel(
     hashTag: String,
