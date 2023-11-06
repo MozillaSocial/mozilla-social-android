@@ -16,18 +16,9 @@ dependencies {
     implementation(project(":core:ui:common"))
 
     implementation(libs.androidx.paging.compose)
-
-    implementation(libs.androidx.navigation.compose)
     implementation(libs.koin.core)
     implementation(libs.koin.androidx.compose)
-
     implementation(libs.kotlinx.datetime)
-
     implementation(libs.coil)
-    implementation(libs.androidx.media3.exoplayer)
-    implementation(libs.androidx.media3.ui)
-
     implementation(libs.jakewharton.timber)
-
-    implementation(libs.androidx.browser)
 }
