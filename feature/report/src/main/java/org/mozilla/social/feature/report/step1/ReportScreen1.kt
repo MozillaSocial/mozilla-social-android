@@ -27,6 +27,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.KoinApplication
 import org.koin.core.parameter.parametersOf
 import org.mozilla.social.core.designsystem.component.MoSoButton
 import org.mozilla.social.core.designsystem.component.MoSoCheckBox
@@ -37,6 +38,7 @@ import org.mozilla.social.core.designsystem.component.MoSoTextField
 import org.mozilla.social.core.ui.common.appbar.MoSoTopBar
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.designsystem.utils.NoRipple
+import org.mozilla.social.core.navigation.navigationModule
 import org.mozilla.social.core.ui.common.animation.ExpandingAnimation
 import org.mozilla.social.core.ui.common.appbar.MoSoCloseableTopAppBar
 import org.mozilla.social.feature.report.R
@@ -457,23 +459,27 @@ private fun ReportScreenPreviewDarkMode() {
         2,
         "no dogs"
     )
-    MoSoTheme(
-        darkTheme = true
-    ) {
-        ReportScreen1(
-            reportTarget = ReportTarget.POST,
-            instanceRules = listOf(
-                noDummies,
-                noDogs
-            ),
-            selectedReportType = ReportType.VIOLATION,
-            checkedRules = listOf(
-                noDogs,
-            ),
-            additionalCommentText = "",
-            reportAccountHandle = "john@mozilla.com",
-            sendToExternalServer = false,
-            reportInteractions = object : ReportScreen1Interactions {},
-        )
+    KoinApplication(application = {
+        modules(navigationModule)
+    }) {
+        MoSoTheme(
+            darkTheme = true
+        ) {
+            ReportScreen1(
+                reportTarget = ReportTarget.POST,
+                instanceRules = listOf(
+                    noDummies,
+                    noDogs
+                ),
+                selectedReportType = ReportType.VIOLATION,
+                checkedRules = listOf(
+                    noDogs,
+                ),
+                additionalCommentText = "",
+                reportAccountHandle = "john@mozilla.com",
+                sendToExternalServer = false,
+                reportInteractions = object : ReportScreen1Interactions {},
+            )
+        }
     }
 }
