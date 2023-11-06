@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.KoinApplication
+import org.mozilla.social.common.Resource
 import org.mozilla.social.core.designsystem.component.MoSoButtonSecondary
 import org.mozilla.social.core.designsystem.component.MoSoSurface
 import org.mozilla.social.core.designsystem.theme.MoSoSpacing
@@ -28,7 +29,6 @@ import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.feature.settings.R
 import org.mozilla.social.feature.settings.previewModule
 import org.mozilla.social.feature.settings.ui.SettingsColumn
-import org.mozilla.social.feature.settings.ui.SettingsSection
 
 @Composable
 fun AccountSettingsScreen(
@@ -36,11 +36,16 @@ fun AccountSettingsScreen(
 ) {
     MoSoSurface {
         SettingsColumn(title = stringResource(id = R.string.account_settings_title)) {
-            val userHeader = viewModel.userHeader.collectAsState(initial = null).value
 
-            if (userHeader != null) {
-                UserHeader(userHeader = userHeader)
-                SignoutButton(onLogoutClicked = viewModel::onLogoutClicked)
+            when (val userHeader =
+                viewModel.userHeader.collectAsState(initial = Resource.Loading()).value) {
+                is Resource.Error -> {}
+                is Resource.Loading -> {}
+                is Resource.Loaded -> {
+                    UserHeader(userHeader = userHeader.data)
+
+                    SignoutButton(onLogoutClicked = viewModel::onLogoutClicked)
+                }
             }
         }
     }

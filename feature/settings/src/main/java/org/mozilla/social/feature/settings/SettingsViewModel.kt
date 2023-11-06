@@ -7,7 +7,6 @@ import org.mozilla.social.core.navigation.usecases.NavigateTo
 class SettingsViewModel(
     private val navigateTo: NavigateTo,
 ) : ViewModel() {
-
     fun onAboutClicked() {
         navigateTo(SettingsNavigationDestination.AboutSettings)
     }

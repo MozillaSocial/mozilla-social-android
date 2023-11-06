@@ -63,7 +63,7 @@ class GetDetailedAccount(
 
         exception?.let {
             emit(Resource.Error(it))
-        } ?: tryDbCall { // TODO@John
+        } ?: try {
             emitAll(
                 socialDatabase.accountsDao().getAccountFlow(accountId).filterNotNull().combine(
                     socialDatabase.relationshipsDao().getRelationshipFlow(accountId).filterNotNull()
@@ -76,6 +76,8 @@ class GetDetailedAccount(
                     )
                 }
             )
+        } catch (exception: Exception) {
+            Timber.e(exception)
         }
     }
 }

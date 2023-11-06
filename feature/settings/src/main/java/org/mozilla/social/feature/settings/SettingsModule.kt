@@ -7,6 +7,6 @@ import org.mozilla.social.feature.settings.privacy.PrivacySettingsViewModel
 
 val settingsModule = module {
     viewModel { SettingsViewModel(get()) }
-    viewModel { AccountSettingsViewModel(get(), get()) }
+    viewModel { AccountSettingsViewModel(get(), get(), get()) }
     viewModel { PrivacySettingsViewModel(get()) }
 }
