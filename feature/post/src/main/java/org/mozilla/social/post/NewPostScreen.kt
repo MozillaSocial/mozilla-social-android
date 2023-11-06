@@ -66,9 +66,8 @@ import org.mozilla.social.common.utils.buildAnnotatedStringForAccountsAndHashtag
 import org.mozilla.social.core.designsystem.component.MoSoButton
 import org.mozilla.social.core.designsystem.component.MoSoSurface
 import org.mozilla.social.core.designsystem.component.MoSoTextField
-import org.mozilla.social.core.designsystem.component.MoSoToast
+import org.mozilla.social.core.ui.common.MoSoErrorToast
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
-import org.mozilla.social.core.designsystem.theme.FirefoxColor
 import org.mozilla.social.core.designsystem.theme.MoSoSpacing
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.designsystem.utils.NoIndication
@@ -124,7 +123,7 @@ internal fun NewPostScreen(
         bottomBarState = viewModel.bottomBarState.collectAsState().value,
     )
 
-    MoSoToast(toastMessage = viewModel.errorToastMessage)
+    MoSoErrorToast(toastMessage = viewModel.errorToastMessage)
 }
 
 data class UserHeaderState(val avatarUrl: String, val displayName: String)

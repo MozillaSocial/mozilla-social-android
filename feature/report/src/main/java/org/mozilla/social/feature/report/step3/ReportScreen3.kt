@@ -22,7 +22,7 @@ import org.mozilla.social.core.designsystem.component.MoSoButton
 import org.mozilla.social.core.designsystem.component.MoSoButtonSecondary
 import org.mozilla.social.core.designsystem.component.MoSoDivider
 import org.mozilla.social.core.designsystem.component.MoSoSurface
-import org.mozilla.social.core.designsystem.component.MoSoToast
+import org.mozilla.social.core.ui.common.MoSoErrorToast
 import org.mozilla.social.core.designsystem.theme.MoSoRadius
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.ui.common.animation.ExpandingAnimation
@@ -53,7 +53,7 @@ internal fun ReportScreen3(
         reportInteractions = viewModel,
     )
 
-    MoSoToast(toastMessage = viewModel.errorToastMessage)
+    MoSoErrorToast(toastMessage = viewModel.errorToastMessage)
 }
 
 @Composable

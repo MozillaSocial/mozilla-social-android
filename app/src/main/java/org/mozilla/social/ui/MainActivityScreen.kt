@@ -35,6 +35,7 @@ fun MainActivityScreen(viewModel: MainViewModel) {
                 .align(Alignment.BottomStart)
                 .systemBarsPadding()
                 .padding(bottom = 16.dp)
+                .padding(horizontal = 16.dp)
                 .bottomBarPadding(currentDestination),
             hostState = appState.snackbarHostState,
         ) { snackbarData, snackbarType ->

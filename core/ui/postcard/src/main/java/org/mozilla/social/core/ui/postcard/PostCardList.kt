@@ -25,7 +25,7 @@ import kotlinx.coroutines.flow.SharedFlow
 import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.core.designsystem.component.MoSoCircularProgressIndicator
 import org.mozilla.social.core.designsystem.component.MoSoDivider
-import org.mozilla.social.core.designsystem.component.MoSoToast
+import org.mozilla.social.core.ui.common.MoSoErrorToast
 import org.mozilla.social.core.ui.common.error.GenericError
 import org.mozilla.social.core.ui.common.loading.MaxSizeLoading
 import org.mozilla.social.core.ui.common.pullrefresh.PullRefreshIndicator
@@ -107,7 +107,7 @@ fun PostCardList(
         }
     }
 
-    MoSoToast(toastMessage = errorToastMessage)
+    MoSoErrorToast(toastMessage = errorToastMessage)
 }
 
 @Composable
@@ -254,5 +254,5 @@ fun PostCardList(
         }
     }
 
-    MoSoToast(toastMessage = errorToastMessage)
+    MoSoErrorToast(toastMessage = errorToastMessage)
 }

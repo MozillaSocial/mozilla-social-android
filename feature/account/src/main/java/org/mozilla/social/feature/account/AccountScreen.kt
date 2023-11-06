@@ -65,7 +65,7 @@ import org.mozilla.social.core.designsystem.component.MoSoDropdownMenu
 import org.mozilla.social.core.designsystem.component.MoSoSurface
 import org.mozilla.social.core.designsystem.component.MoSoTab
 import org.mozilla.social.core.designsystem.component.MoSoTabRow
-import org.mozilla.social.core.designsystem.component.MoSoToast
+import org.mozilla.social.core.ui.common.MoSoErrorToast
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.designsystem.utils.NoRipple
@@ -101,7 +101,7 @@ internal fun AccountScreen(
         viewModel.onAccountScreenShown()
     }
 
-    MoSoToast(toastMessage = viewModel.errorToastMessage)
+    MoSoErrorToast(toastMessage = viewModel.errorToastMessage)
 }
 
 @Composable
