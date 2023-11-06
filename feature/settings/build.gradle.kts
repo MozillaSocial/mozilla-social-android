@@ -18,12 +18,12 @@ dependencies {
     implementation(project(":core:navigation"))
     implementation(project(":core:analytics"))
 
+    implementation(libs.androidx.datastore)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.coil)
+    implementation(libs.jakewharton.timber)
     implementation(libs.koin.core)
     implementation(libs.koin.androidx.compose)
-
-    implementation(libs.androidx.datastore)
     implementation(libs.protobuf.kotlin.lite)
     testImplementation("junit:junit:4.12")
     testImplementation("com.google.truth:truth:1.1.5")
