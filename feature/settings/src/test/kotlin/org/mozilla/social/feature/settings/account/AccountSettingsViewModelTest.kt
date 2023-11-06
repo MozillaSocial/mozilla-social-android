@@ -47,7 +47,7 @@ class AccountSettingsViewModelTest {
     fun userHeaderState() = runTest {
         val userHeader = objUnderTest.userHeader.first()
         verify { account.toUserHeader() }
-        assertThat(userHeader.accountName).isEqualTo(account.acct)
+        assertThat(userHeader?.accountName).isEqualTo(account.acct)
     }
 
 
