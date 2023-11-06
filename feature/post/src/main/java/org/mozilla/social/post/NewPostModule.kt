@@ -7,13 +7,14 @@ val newPostModule = module {
     viewModel { parametersHolder ->
         NewPostViewModel(
             replyStatusId = parametersHolder.getOrNull(),
-            accountFlow = get(),
             mediaRepository = get(),
             searchRepository = get(),
             statusRepository = get(),
             timelineRepository = get(),
             popNavBackstack = get(),
             showSnackbar = get(),
+            accountIdBlocking = get(),
+            accountRepository = get(),
         )
     }
 }

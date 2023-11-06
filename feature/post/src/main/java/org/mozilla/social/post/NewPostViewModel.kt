@@ -2,7 +2,6 @@ package org.mozilla.social.post
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -11,19 +10,21 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
+import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.mozilla.social.common.LoadState
+import org.mozilla.social.common.loadResource
 import org.mozilla.social.common.utils.FileType
 import org.mozilla.social.common.utils.StringFactory
+import org.mozilla.social.core.data.repository.AccountRepository
 import org.mozilla.social.core.data.repository.MediaRepository
 import org.mozilla.social.core.data.repository.SearchRepository
 import org.mozilla.social.core.data.repository.StatusRepository
 import org.mozilla.social.core.data.repository.TimelineRepository
-import org.mozilla.social.core.domain.AccountFlow
+import org.mozilla.social.core.domain.AccountIdBlocking
 import org.mozilla.social.core.navigation.usecases.PopNavBackstack
 import org.mozilla.social.core.navigation.usecases.ShowSnackbar
 import org.mozilla.social.feature.post.R
@@ -43,9 +44,10 @@ import timber.log.Timber
 
 class NewPostViewModel(
     private val replyStatusId: String?,
-    accountFlow: AccountFlow,
     mediaRepository: MediaRepository,
     searchRepository: SearchRepository,
+    accountIdBlocking: AccountIdBlocking,
+    accountRepository: AccountRepository,
     private val statusRepository: StatusRepository,
     private val timelineRepository: TimelineRepository,
     private val popNavBackstack: PopNavBackstack,
@@ -120,8 +122,12 @@ class NewPostViewModel(
     private val _visibility = MutableStateFlow(StatusVisibility.Public)
     val visibility = _visibility.asStateFlow()
 
-    val userHeaderState: Flow<UserHeaderState> = accountFlow().map { account ->
-        UserHeaderState(avatarUrl = account.avatarUrl, displayName = account.displayName)
+    val userHeaderState: Flow<UserHeaderState> = loadResource {
+        accountRepository.getAccount(accountIdBlocking())
+    }.mapNotNull { resource ->
+        resource.data?.let { account ->
+            UserHeaderState(avatarUrl = account.avatarUrl, displayName = account.displayName)
+        }
     }
 
     fun onVisibilitySelected(statusVisibility: StatusVisibility) {

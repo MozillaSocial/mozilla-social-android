@@ -1,7 +1,9 @@
 package org.mozilla.social.common
 
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import timber.log.Timber
 
@@ -17,11 +19,12 @@ import timber.log.Timber
  * on the [Resource] type.
  */
 sealed class Resource<T> {
+    open val data: T? = null
 
     class Loading<T> : Resource<T>()
 
     data class Loaded<T>(
-        val data: T,
+        override val data: T,
     ) : Resource<T>()
 
     data class Error<T>(
@@ -47,4 +50,16 @@ fun <T> loadResource(block: suspend () -> T) = flow {
         Timber.e(e)
         this.emit(Resource.Error(e))
     }
+}
+
+fun <I, O> Resource<I>.mapData(transform: (I) -> O): Resource<O> {
+    return when (this) {
+        is Resource.Error -> Resource.Error(exception)
+        is Resource.Loaded -> Resource.Loaded(transform(data))
+        is Resource.Loading -> Resource.Loading()
+    }
+}
+
+fun <I, O> Flow<Resource<I>>.mapData(transform: (I) -> O): Flow<Resource<O>> {
+    return this.map { it.mapData(transform = transform) }
 }

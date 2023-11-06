@@ -16,8 +16,7 @@ class AccountSettingsViewModel(
 ) : ViewModel() {
 
     val userHeader = loadResource {
-        val account = accountRepository.getAccount(accountIdBlocking())
-        UserHeader(avatarUrl = account.avatarUrl, accountName = account.acct, url = account.url)
+        accountRepository.getAccount(accountIdBlocking()).toUserHeader()
     }
 
     fun onLogoutClicked() {
