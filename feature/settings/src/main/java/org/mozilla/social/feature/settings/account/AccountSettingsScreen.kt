@@ -26,28 +26,21 @@ import org.mozilla.social.core.designsystem.component.MoSoSurface
 import org.mozilla.social.core.designsystem.theme.MoSoSpacing
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.feature.settings.R
-import org.mozilla.social.feature.settings.SettingsViewModel
-import org.mozilla.social.feature.settings.UserHeader
 import org.mozilla.social.feature.settings.previewModule
 import org.mozilla.social.feature.settings.ui.SettingsColumn
 import org.mozilla.social.feature.settings.ui.SettingsSection
 
 @Composable
 fun AccountSettingsScreen(
-    settingsViewModel: SettingsViewModel = koinViewModel()
+    viewModel: AccountSettingsViewModel = koinViewModel()
 ) {
     MoSoSurface {
         SettingsColumn(title = stringResource(id = R.string.account_settings_title)) {
-            val userHeader = settingsViewModel.userHeader.collectAsState(initial = null).value
+            val userHeader = viewModel.userHeader.collectAsState(initial = null).value
 
             if (userHeader != null) {
                 UserHeader(userHeader = userHeader)
-                SettingsSection(
-                    title = stringResource(id = R.string.profile_settings_title),
-                    subtitle = stringResource(id = R.string.manage_your_account, userHeader.url),
-                    onClick = settingsViewModel::onProfileSettingsClicked
-                )
-                SignoutButton(onLogoutClicked = settingsViewModel::onLogoutClicked)
+                SignoutButton(onLogoutClicked = viewModel::onLogoutClicked)
             }
         }
     }
@@ -78,7 +71,7 @@ private fun Avatar(avatarUrl: String) {
 }
 
 @Composable
-fun SignoutButton(onLogoutClicked: () -> Unit) {
+private fun SignoutButton(onLogoutClicked: () -> Unit) {
     MoSoButtonSecondary(
         modifier = Modifier
             .wrapContentHeight()

@@ -16,15 +16,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.isTraversalGroup
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.designsystem.theme.MoSoSpacing
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
-import org.mozilla.social.feature.settings.R
 
 @Composable
 internal fun SettingsSection(
@@ -33,21 +30,14 @@ internal fun SettingsSection(
     iconPainter: Painter? = null,
     onClick: () -> Unit,
 ) {
-    val context = LocalContext.current
-    // TODO@DA fix this
     Row(
         modifier = Modifier
             .padding(MoSoSpacing.md)
             .fillMaxWidth()
             .wrapContentHeight()
             .clickable { onClick() }
-            .semantics {
+            .semantics(mergeDescendants = true) {
                 isTraversalGroup = true
-                contentDescription = context.getString(
-                        /* resId = */ R.string.settings_section_content_description,
-                        /* ...formatArgs = */ title,
-                        subtitle
-                    )
             },
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -55,7 +45,7 @@ internal fun SettingsSection(
             Icon(
                 modifier = Modifier.size(MoSoIcons.Sizes.normal),
                 painter = iconPainter,
-                contentDescription = null
+                contentDescription = null,
             )
         }
         Column(

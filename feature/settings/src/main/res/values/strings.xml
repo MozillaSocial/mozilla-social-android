@@ -14,5 +14,4 @@
     <string name="data_collection_description">Allow technical, interaction, campaign and referral data to be sent to Mozilla. With this data you will have a personalized experience.</string>
 
     <string name="sign_out">Sign Out</string>
-    <string name="settings_section_content_description">%1$s settings. %2$s</string>
 </resources>
