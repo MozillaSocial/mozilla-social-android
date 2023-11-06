@@ -21,6 +21,7 @@ import org.mozilla.social.core.data.repositoryModule
 import org.mozilla.social.core.database.databaseModule
 import org.mozilla.social.core.datastore.dataStoreModule
 import org.mozilla.social.core.navigation.navigationModule
+import org.mozilla.social.core.ui.postcard.postCardModule
 import org.mozilla.social.feature.auth.authModule
 import org.mozilla.social.feature.settings.settingsModule
 import org.mozilla.social.feed.feedModule
@@ -88,6 +89,7 @@ val appModules = module {
         analyticsModule,
         followersModule,
         discoverModule,
-        navigationModule
+        navigationModule,
+        postCardModule,
     )
 }

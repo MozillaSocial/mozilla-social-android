@@ -8,27 +8,19 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
-import org.mozilla.social.common.logging.Log
-import org.mozilla.social.core.data.repository.AccountRepository
-import org.mozilla.social.core.data.repository.StatusRepository
+import org.koin.core.parameter.parametersOf
+import org.koin.java.KoinJavaComponent
 import org.mozilla.social.core.domain.AccountIdFlow
 import org.mozilla.social.core.domain.GetThreadUseCase
-import org.mozilla.social.core.navigation.usecases.NavigateTo
-import org.mozilla.social.core.navigation.usecases.OpenLink
 import org.mozilla.social.core.ui.postcard.PostCardDelegate
 import org.mozilla.social.core.ui.postcard.PostCardUiState
 import org.mozilla.social.core.ui.postcard.toPostCardUiState
 import timber.log.Timber
 
 class ThreadViewModel(
-    statusRepository: StatusRepository,
-    accountRepository: AccountRepository,
-    log: Log,
     accountIdFlow: AccountIdFlow,
     getThreadUseCase: GetThreadUseCase,
     mainStatusId: String,
-    openLink: OpenLink,
-    navigateTo: NavigateTo,
 ) : ViewModel() {
 
     private val currentUserAccountId: StateFlow<String> =
@@ -38,19 +30,14 @@ class ThreadViewModel(
             ""
         )
 
-    var statuses: Flow<List<org.mozilla.social.core.ui.postcard.PostCardUiState>> =
+    var statuses: Flow<List<PostCardUiState>> =
         getThreadUseCase.invoke(mainStatusId).map { statuses ->
             statuses.map { it.toPostCardUiState(currentUserAccountId.value) }
         }.catch {
             Timber.e(it)
         }
 
-    val postCardDelegate = org.mozilla.social.core.ui.postcard.PostCardDelegate(
-        coroutineScope = viewModelScope,
-        statusRepository = statusRepository,
-        accountRepository = accountRepository,
-        log = log,
-        navigateTo = navigateTo,
-        openLink = openLink,
-    )
+    val postCardDelegate: PostCardDelegate by KoinJavaComponent.inject(
+        PostCardDelegate::class.java
+    ) { parametersOf(viewModelScope) }
 }
