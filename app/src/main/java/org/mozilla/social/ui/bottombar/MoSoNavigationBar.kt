@@ -1,4 +1,4 @@
-package org.mozilla.social.navigation
+package org.mozilla.social.ui.bottombar
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -29,7 +29,7 @@ import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.navigation.BottomBarNavigationDestination
 import org.mozilla.social.core.navigation.NavigationDestination
-import org.mozilla.social.navigation.Destination.Main
+import org.mozilla.social.ui.bottombar.Destination.Main
 
 @Composable
 fun MoSoBottomNavigationBar(
@@ -60,7 +60,7 @@ fun MoSoBottomNavigationBar(
                     )
                 }
 
-                is Destination.Main -> {
+                is Main -> {
                     NavigationBarItem(
                         modifier = modifier.height(48.dp),
                         selected = false,
