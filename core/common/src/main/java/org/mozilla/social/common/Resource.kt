@@ -1,12 +1,14 @@
 package org.mozilla.social.common
 
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.update
+import timber.log.Timber
 
 /**
  * This class is used to represent the loading state of any resource while wrapping
  * the loaded data or exception.
- * 
+ *
  * Example use case:
  * You are loading a String from network.  Your view model has a Flow<Resource<String>> variable.
  * The flow emits a [Loading] while the string is load.  It emits a [Loaded] when the string is
@@ -34,5 +36,15 @@ fun <T> MutableStateFlow<Resource<T>>.updateData(block: T.() -> T) {
                 data = data.block()
             )
         }
+    }
+}
+
+fun <T> loadResource(block: suspend () -> T) = flow {
+    this.emit(Resource.Loading())
+    try {
+        this.emit(Resource.Loaded(block()))
+    } catch (e: Exception) {
+        Timber.e(e)
+        this.emit(Resource.Error(e))
     }
 }

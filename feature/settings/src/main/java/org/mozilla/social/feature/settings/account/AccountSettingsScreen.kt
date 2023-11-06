@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.KoinApplication
+import org.mozilla.social.common.Resource
 import org.mozilla.social.core.designsystem.component.MoSoButtonSecondary
 import org.mozilla.social.core.designsystem.component.MoSoSurface
 import org.mozilla.social.core.designsystem.theme.MoSoSpacing
@@ -38,16 +39,20 @@ fun AccountSettingsScreen(
 ) {
     MoSoSurface {
         SettingsColumn(title = stringResource(id = R.string.account_settings_title)) {
-            val userHeader = settingsViewModel.userHeader.collectAsState(initial = null).value
+            val userHeader = settingsViewModel.userHeader.collectAsState(initial = Resource.Loading()).value
 
-            if (userHeader != null) {
-                UserHeader(userHeader = userHeader)
-                SettingsSection(
-                    title = stringResource(id = R.string.profile_settings_title),
-                    subtitle = stringResource(id = R.string.manage_your_account, userHeader.url),
-                    onClick = settingsViewModel::onProfileSettingsClicked
-                )
-                SignoutButton(onLogoutClicked = settingsViewModel::onLogoutClicked)
+            when (userHeader) {
+                is Resource.Error -> {}
+                is Resource.Loading -> {}
+                is Resource.Loaded -> {
+                    UserHeader(userHeader = userHeader.data)
+                    SettingsSection(
+                        title = stringResource(id = R.string.profile_settings_title),
+                        subtitle = stringResource(id = R.string.manage_your_account, userHeader.data.url),
+                        onClick = settingsViewModel::onProfileSettingsClicked
+                    )
+                    SignoutButton(onLogoutClicked = settingsViewModel::onLogoutClicked)
+                }
             }
         }
     }

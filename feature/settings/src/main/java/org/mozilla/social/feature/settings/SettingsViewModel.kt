@@ -5,34 +5,29 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.launch
-import org.mozilla.social.core.data.repository.InstanceRepository
+import org.mozilla.social.common.loadResource
+import org.mozilla.social.core.data.repository.AccountRepository
 import org.mozilla.social.core.datastore.AppPreferencesDatastore
-import org.mozilla.social.core.datastore.MastodonInstance
-import org.mozilla.social.core.domain.AccountFlow
+import org.mozilla.social.core.domain.AccountIdBlocking
 import org.mozilla.social.core.domain.Logout
 import org.mozilla.social.core.navigation.SettingsNavigationDestination
 import org.mozilla.social.core.navigation.usecases.NavigateTo
-import org.mozilla.social.model.Instance
 
 class SettingsViewModel(
     private val appPreferencesDatastore: AppPreferencesDatastore,
     private val logout: Logout,
     private val navigateTo: NavigateTo,
-    getAccountFlow: AccountFlow,
+    accountIdBlocking: AccountIdBlocking,
+    accountRepository: AccountRepository,
 ) : ViewModel() {
 
     private val _isAnalyticsToggledOn: MutableStateFlow<Boolean> = MutableStateFlow(false)
     var isAnalyticsToggledOn = _isAnalyticsToggledOn.asStateFlow()
 
-    val userHeader = getAccountFlow().mapLatest {
-        UserHeader(
-            avatarUrl = it.avatarUrl,
-            accountName = it.acct,
-            url = it.url,
-        )
+    val userHeader = loadResource {
+        val account = accountRepository.getAccount(accountIdBlocking())
+        UserHeader(avatarUrl = account.avatarUrl, accountName = account.acct, url = account.url)
     }
 
     init {
