@@ -36,7 +36,7 @@ fun Account.toUiState(): EditAccountUiState {
         fields = fields?.map {
             EditAccountUiStateField(
                 label = it.name,
-                content = it.value,
+                content = HtmlCompat.fromHtml(it.value, 0).toString(),
             )
         }?.toMutableList()?.apply {
             if (size < EditAccountViewModel.MAX_FIELDS) {
