@@ -8,7 +8,6 @@ val postCardModule = module {
             coroutineScope = parametersHolder[0],
             statusRepository = get(),
             accountRepository = get(),
-            log = get(),
             navigateTo = get(),
             openLink = get(),
         )
