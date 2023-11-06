@@ -582,6 +582,7 @@ private fun UserLabel(
 
 private const val BIO_MAX_LINES_NOT_EXPANDED = 3
 
+@Suppress("MagicNumber")
 @Preview
 @Composable
 fun AccountScreenPreview() {
