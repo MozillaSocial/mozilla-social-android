@@ -31,7 +31,7 @@ class GleanAnalytics(
         )
 
         GlobalScope.launch {
-            appPreferencesDatastore.trackAnalytics.collectLatest {
+            appPreferencesDatastore.allowAnalytics.collectLatest {
                 Glean.setUploadEnabled(it)
             }
         }

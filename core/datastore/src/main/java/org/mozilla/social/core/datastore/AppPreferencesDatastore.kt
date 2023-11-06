@@ -7,14 +7,14 @@ import kotlinx.coroutines.flow.mapLatest
 class AppPreferencesDatastore(context: Context) {
     private val dataStore = context.appPreferencesDataStore
 
-    val trackAnalytics: Flow<Boolean> = dataStore.data.mapLatest {
+    val allowAnalytics: Flow<Boolean> = dataStore.data.mapLatest {
         it.trackAnalytics
     }
 
-    suspend fun toggleTrackAnalytics(trackAnalytics: Boolean) {
+    suspend fun allowAnalytics(allowAnalytics: Boolean) {
         dataStore.updateData {
             it.toBuilder()
-                .setTrackAnalytics(trackAnalytics)
+                .setTrackAnalytics(allowAnalytics)
                 .build()
         }
     }

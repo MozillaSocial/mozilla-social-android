@@ -9,20 +9,19 @@ import org.koin.androidx.compose.koinViewModel
 import org.mozilla.social.core.designsystem.component.MoSoSurface
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.feature.settings.R
-import org.mozilla.social.feature.settings.SettingsViewModel
 import org.mozilla.social.feature.settings.ui.SettingsColumn
 import org.mozilla.social.feature.settings.ui.SettingsGroup
 import org.mozilla.social.feature.settings.ui.SettingsSwitch
 
 @Composable
 fun PrivacySettingsScreen(
-    settingsViewModel: SettingsViewModel = koinViewModel()
+    viewModel: PrivacySettingsViewModel = koinViewModel()
 ) {
-    val isAnalyticsToggled = settingsViewModel.isAnalyticsToggledOn.collectAsState()
+    val isAnalyticsToggled = viewModel.allowAnalytics.collectAsState()
 
     PrivacySettingsScreen(
         isAnalyticsToggledOn = isAnalyticsToggled.value,
-        toggleAnalyticsSwitch = settingsViewModel::toggleAnalytics,
+        toggleAnalyticsSwitch = viewModel::toggleAllowAnalytics,
     )
 }
 
@@ -33,26 +32,26 @@ fun PrivacySettingsScreen(
 ) {
     MoSoSurface {
         SettingsColumn(title = stringResource(id = R.string.privacy_settings_title)) {
-            AllowDataCollectionSwitch(
-                isAnalyticsToggledOn = isAnalyticsToggledOn,
-                toggleAnalyticsSwitch = toggleAnalyticsSwitch
+            AllowAnalyticsSwitch(
+                initialAllowAnalytics = isAnalyticsToggledOn,
+                onAllowAnalyticsSwitchToggled = toggleAnalyticsSwitch
             )
         }
     }
 }
 
 @Composable
-private fun AllowDataCollectionSwitch(
-    isAnalyticsToggledOn: Boolean,
-    toggleAnalyticsSwitch: () -> Unit
+private fun AllowAnalyticsSwitch(
+    initialAllowAnalytics: Boolean,
+    onAllowAnalyticsSwitchToggled: () -> Unit
 ) {
     Column {
         SettingsGroup(name = R.string.data_collection_and_use) {
             SettingsSwitch(
                 title = R.string.data_collection_title,
                 description = R.string.data_collection_description,
-                checked = isAnalyticsToggledOn,
-                onCheckedChanged = toggleAnalyticsSwitch
+                checked = initialAllowAnalytics,
+                onCheckedChanged = onAllowAnalyticsSwitchToggled
             )
         }
     }
