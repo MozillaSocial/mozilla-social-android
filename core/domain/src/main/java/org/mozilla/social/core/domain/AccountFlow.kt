@@ -11,5 +11,9 @@ class AccountFlow(
     private val accountRepository: AccountRepository,
 ) {
     operator fun invoke(): Flow<Account> =
-        accountIdFlow().filterNotNull().transformLatest { emit(accountRepository.getAccount(it)) }
+        accountIdFlow().filterNotNull().transformLatest {
+            if (!it.isNullOrBlank()) {
+                emit(accountRepository.getAccount(it))
+            }
+        }
 }
