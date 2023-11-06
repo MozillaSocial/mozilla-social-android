@@ -1,9 +1,9 @@
-package org.mozilla.social.core.ui.common.postcard
+package org.mozilla.social.core.ui.postcard
 
 import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.common.utils.timeSinceNow
 import org.mozilla.social.core.ui.common.R
-import org.mozilla.social.core.ui.common.poll.toPollUiState
+import org.mozilla.social.core.ui.postcard.poll.toPollUiState
 import org.mozilla.social.model.Card
 import org.mozilla.social.model.Status
 

@@ -37,12 +37,7 @@ val feedModule = module {
         localTimelineRemoteMediator = get(),
         federatedTimelineRemoteMediator = get(),
         accountIdFlow = get(),
-        statusRepository = get(),
-        accountRepository = get(),
         socialDatabase = get(),
-        log = get(),
-        navigateTo = get(),
-        openLink = get(),
     ) }
     includes(domainModule)
     includes(domainModule)

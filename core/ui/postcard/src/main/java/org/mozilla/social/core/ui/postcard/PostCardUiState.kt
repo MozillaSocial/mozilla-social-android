@@ -1,7 +1,7 @@
-package org.mozilla.social.core.ui.common.postcard
+package org.mozilla.social.core.ui.postcard
 
 import org.mozilla.social.common.utils.StringFactory
-import org.mozilla.social.core.ui.common.poll.PollUiState
+import org.mozilla.social.core.ui.postcard.poll.PollUiState
 import org.mozilla.social.model.Attachment
 import org.mozilla.social.model.Mention
 

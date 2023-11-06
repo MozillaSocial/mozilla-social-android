@@ -12,9 +12,9 @@ import org.koin.core.parameter.parametersOf
 import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.core.designsystem.component.MoSoSurface
 import org.mozilla.social.core.ui.common.appbar.MoSoCloseableTopAppBar
-import org.mozilla.social.core.ui.common.postcard.PostCardInteractions
-import org.mozilla.social.core.ui.common.postcard.PostCardList
-import org.mozilla.social.core.ui.common.postcard.PostCardUiState
+import org.mozilla.social.core.ui.postcard.PostCardInteractions
+import org.mozilla.social.core.ui.postcard.PostCardList
+import org.mozilla.social.core.ui.postcard.PostCardUiState
 
 @Composable
 internal fun HashTagScreen(

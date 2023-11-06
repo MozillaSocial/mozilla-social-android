@@ -1,4 +1,4 @@
-package org.mozilla.social.core.ui.common.postcard
+package org.mozilla.social.core.ui.postcard
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
@@ -49,9 +49,9 @@ import org.mozilla.social.core.ui.common.R
 import org.mozilla.social.core.ui.common.TransparentNoTouchOverlay
 import org.mozilla.social.core.ui.common.getMaxWidth
 import org.mozilla.social.core.ui.common.media.MediaDisplay
-import org.mozilla.social.core.ui.common.poll.Poll
 import org.mozilla.social.core.ui.common.htmlcontent.HtmlContent
 import org.mozilla.social.core.ui.common.shareUrl
+import org.mozilla.social.core.ui.postcard.poll.Poll
 
 /**
  * @param threadId if viewing this post from a thread, pass the threadId in to prevent

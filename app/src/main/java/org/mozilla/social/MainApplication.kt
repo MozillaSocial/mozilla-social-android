@@ -13,7 +13,6 @@ import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
 import org.koin.dsl.module
-import org.mozilla.social.common.commonModule
 import org.mozilla.social.core.analytics.Analytics
 import org.mozilla.social.core.analytics.analyticsModule
 import org.mozilla.social.core.data.AuthCredentialObserver
@@ -21,6 +20,7 @@ import org.mozilla.social.core.data.repositoryModule
 import org.mozilla.social.core.database.databaseModule
 import org.mozilla.social.core.datastore.dataStoreModule
 import org.mozilla.social.core.navigation.navigationModule
+import org.mozilla.social.core.ui.postcard.postCardModule
 import org.mozilla.social.feature.auth.authModule
 import org.mozilla.social.feature.settings.settingsModule
 import org.mozilla.social.feed.feedModule
@@ -73,7 +73,6 @@ val appModules = module {
     includes(
         authModule,
         dataStoreModule,
-        commonModule(BuildConfig.DEBUG),
         mainModule,
         feedModule,
         searchModule,
@@ -88,6 +87,7 @@ val appModules = module {
         analyticsModule,
         followersModule,
         discoverModule,
-        navigationModule
+        navigationModule,
+        postCardModule,
     )
 }

@@ -1,4 +1,4 @@
-package org.mozilla.social.core.ui.common.poll
+package org.mozilla.social.core.ui.postcard.poll
 
 import org.mozilla.social.common.utils.StringFactory
 

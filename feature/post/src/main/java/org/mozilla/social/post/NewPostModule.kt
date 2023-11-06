@@ -10,7 +10,6 @@ val newPostModule = module {
             accountFlow = get(),
             mediaRepository = get(),
             searchRepository = get(),
-            log = get(),
             statusRepository = get(),
             timelineRepository = get(),
             popNavBackstack = get(),

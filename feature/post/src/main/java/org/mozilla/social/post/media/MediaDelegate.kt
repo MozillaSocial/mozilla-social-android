@@ -9,17 +9,16 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.mozilla.social.common.LoadState
-import org.mozilla.social.common.logging.Log
 import org.mozilla.social.common.utils.FileType
 import org.mozilla.social.core.data.repository.MediaRepository
 import org.mozilla.social.model.ImageState
 import org.mozilla.social.post.NewPostViewModel
+import timber.log.Timber
 import java.io.File
 
 class MediaDelegate(
     private val coroutineScope: CoroutineScope,
     private val mediaRepository: MediaRepository,
-    private val log: Log,
 ) : MediaInteractions {
 
     private val _imageStates = MutableStateFlow<List<ImageState>>(emptyList())
@@ -78,12 +77,12 @@ class MediaDelegate(
                     )
                 }
             } catch (e: Exception) {
-                log.e(e)
+                Timber.e(e)
                 updateImageState(uri) { copy(loadState = LoadState.ERROR) }
             }
         }
         uploadJobs[uri]?.invokeOnCompletion {
-            log.d("removed")
+            Timber.d("removed")
             uploadJobs.remove(uri)
         }
     }

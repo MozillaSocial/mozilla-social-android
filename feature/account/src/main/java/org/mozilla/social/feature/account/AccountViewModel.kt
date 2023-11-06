@@ -16,13 +16,12 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import org.koin.core.parameter.parametersOf
 import org.koin.java.KoinJavaComponent
+import org.koin.java.KoinJavaComponent.inject
 import org.mozilla.social.common.Resource
-import org.mozilla.social.common.logging.Log
 import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.common.utils.edit
 import org.mozilla.social.core.analytics.Analytics
 import org.mozilla.social.core.data.repository.AccountRepository
-import org.mozilla.social.core.data.repository.StatusRepository
 import org.mozilla.social.core.data.repository.model.status.toExternalModel
 import org.mozilla.social.core.database.SocialDatabase
 import org.mozilla.social.core.database.model.statusCollections.toStatusWrapper
@@ -30,9 +29,8 @@ import org.mozilla.social.core.domain.AccountIdBlocking
 import org.mozilla.social.core.domain.GetDetailedAccount
 import org.mozilla.social.core.navigation.NavigationDestination
 import org.mozilla.social.core.navigation.usecases.NavigateTo
-import org.mozilla.social.core.navigation.usecases.OpenLink
-import org.mozilla.social.core.ui.common.postcard.PostCardDelegate
-import org.mozilla.social.core.ui.common.postcard.toPostCardUiState
+import org.mozilla.social.core.ui.postcard.PostCardDelegate
+import org.mozilla.social.core.ui.postcard.toPostCardUiState
 import org.mozilla.social.core.ui.common.R
 import timber.log.Timber
 
@@ -40,26 +38,18 @@ class AccountViewModel(
     private val analytics: Analytics,
     private val accountRepository: AccountRepository,
     accountIdBlocking: AccountIdBlocking,
-    log: Log,
-    statusRepository: StatusRepository,
     private val socialDatabase: SocialDatabase,
     private val getDetailedAccount: GetDetailedAccount,
     private val navigateTo: NavigateTo,
-    openLink: OpenLink,
     initialAccountId: String?,
 ) : ViewModel(), AccountInteractions {
 
     private val _errorToastMessage = MutableSharedFlow<StringFactory>(extraBufferCapacity = 1)
     val errorToastMessage = _errorToastMessage.asSharedFlow()
 
-    val postCardDelegate = PostCardDelegate(
-        coroutineScope = viewModelScope,
-        statusRepository = statusRepository,
-        accountRepository = accountRepository,
-        log = log,
-        navigateTo = navigateTo,
-        openLink = openLink,
-    )
+    val postCardDelegate: PostCardDelegate by inject(
+        PostCardDelegate::class.java
+    ) { parametersOf(viewModelScope) }
 
     /**
      * The account ID of the logged in user

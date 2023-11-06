@@ -1,7 +1,7 @@
-package org.mozilla.social.core.ui.common.postcard
+package org.mozilla.social.core.ui.postcard
 
-import org.mozilla.social.core.ui.common.poll.PollInteractions
 import org.mozilla.social.core.ui.common.htmlcontent.HtmlContentInteractions
+import org.mozilla.social.core.ui.postcard.poll.PollInteractions
 
 interface PostCardInteractions : PollInteractions, HtmlContentInteractions {
     fun onReplyClicked(statusId: String) = Unit
