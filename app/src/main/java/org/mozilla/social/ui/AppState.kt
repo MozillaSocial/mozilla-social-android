@@ -136,9 +136,21 @@ class AppState(
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    val currentNavigationDestination: StateFlow<BottomBarNavigationDestination?> =
-        tabbedNavControllerFlow.flatMapLatest {
-            it?.currentBackStackEntryFlow?.mapLatest { backStackEntry ->
+    val currentNavigationDestination: StateFlow<NavigationDestination?> =
+        mainNavController.currentBackStackEntryFlow.mapLatest { backStackEntry ->
+            NavigationDestination::class.sealedSubclasses.firstOrNull {
+                it.objectInstance?.route == backStackEntry.destination.route
+            }?.objectInstance
+        }.stateIn(
+            coroutineScope,
+            started = SharingStarted.WhileSubscribed(),
+            initialValue = null,
+        )
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val currentBottomBarNavigationDestination: StateFlow<BottomBarNavigationDestination?> =
+        tabbedNavControllerFlow.flatMapLatest { navHostController ->
+            navHostController?.currentBackStackEntryFlow?.mapLatest { backStackEntry ->
                 BottomBarNavigationDestination::class.sealedSubclasses.firstOrNull {
                     it.objectInstance?.route == backStackEntry.destination.route
                 }?.objectInstance

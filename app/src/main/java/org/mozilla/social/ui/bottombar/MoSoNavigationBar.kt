@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.only
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsPadding
@@ -219,4 +220,12 @@ object MoSoNavigationBarDefaults {
 
     val height: Dp
         get() = 48.dp
+
+    fun Modifier.bottomBarPadding(
+        currentDestination: NavigationDestination?
+    ): Modifier = if (currentDestination == NavigationDestination.Tabs) {
+        padding(bottom = height)
+    } else {
+        this
+    }
 }

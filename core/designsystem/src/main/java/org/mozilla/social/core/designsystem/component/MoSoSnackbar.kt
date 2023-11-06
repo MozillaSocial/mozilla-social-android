@@ -35,6 +35,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.style.TextAlign
@@ -109,10 +110,12 @@ private fun MoSoSnackbar(
     contentColor: Color,
 ) {
     Snackbar(
-        modifier = Modifier.border(
-            border = BorderStroke(width = 2.dp, brush = SolidColor(borderColor)),
-            shape = RoundedCornerShape(MoSoRadius.md)
-        ),
+        modifier = Modifier
+            .border(
+                border = BorderStroke(width = 2.dp, brush = SolidColor(borderColor)),
+                shape = RoundedCornerShape(MoSoRadius.md)
+            )
+            .clip(RoundedCornerShape(MoSoRadius.md)),
         containerColor = backgroundColor,
     ) {
         Box(
