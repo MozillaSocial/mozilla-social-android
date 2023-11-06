@@ -10,7 +10,7 @@ import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 import org.mozilla.social.core.designsystem.component.MoSoSurface
 import org.mozilla.social.core.ui.common.appbar.MoSoCloseableTopAppBar
-import org.mozilla.social.core.ui.common.postcard.PostCardList
+import org.mozilla.social.core.ui.postcard.PostCardList
 
 
 @Composable

@@ -15,9 +15,9 @@ import org.mozilla.social.core.domain.AccountIdFlow
 import org.mozilla.social.core.domain.GetThreadUseCase
 import org.mozilla.social.core.navigation.usecases.NavigateTo
 import org.mozilla.social.core.navigation.usecases.OpenLink
-import org.mozilla.social.core.ui.common.postcard.PostCardDelegate
-import org.mozilla.social.core.ui.common.postcard.PostCardUiState
-import org.mozilla.social.core.ui.common.postcard.toPostCardUiState
+import org.mozilla.social.core.ui.postcard.PostCardDelegate
+import org.mozilla.social.core.ui.postcard.PostCardUiState
+import org.mozilla.social.core.ui.postcard.toPostCardUiState
 import timber.log.Timber
 
 class ThreadViewModel(
@@ -38,14 +38,14 @@ class ThreadViewModel(
             ""
         )
 
-    var statuses: Flow<List<PostCardUiState>> =
+    var statuses: Flow<List<org.mozilla.social.core.ui.postcard.PostCardUiState>> =
         getThreadUseCase.invoke(mainStatusId).map { statuses ->
             statuses.map { it.toPostCardUiState(currentUserAccountId.value) }
         }.catch {
             Timber.e(it)
         }
 
-    val postCardDelegate = PostCardDelegate(
+    val postCardDelegate = org.mozilla.social.core.ui.postcard.PostCardDelegate(
         coroutineScope = viewModelScope,
         statusRepository = statusRepository,
         accountRepository = accountRepository,

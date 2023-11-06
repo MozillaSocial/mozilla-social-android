@@ -1,4 +1,4 @@
-package org.mozilla.social.core.ui.common.poll
+package org.mozilla.social.core.ui.postcard.poll
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -33,7 +33,7 @@ import org.mozilla.social.core.designsystem.component.MoSoSurface
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.designsystem.utils.NoRipple
-import org.mozilla.social.core.ui.common.R
+import org.mozilla.social.core.ui.postcard.R
 
 @Composable
 fun Poll(

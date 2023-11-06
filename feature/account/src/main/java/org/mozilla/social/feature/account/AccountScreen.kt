@@ -74,9 +74,9 @@ import org.mozilla.social.core.ui.common.appbar.MoSoCloseableTopAppBar
 import org.mozilla.social.core.ui.common.error.GenericError
 import org.mozilla.social.core.ui.common.htmlcontent.HtmlContent
 import org.mozilla.social.core.ui.common.htmlcontent.HtmlContentInteractions
-import org.mozilla.social.core.ui.common.postcard.PostCardInteractions
-import org.mozilla.social.core.ui.common.postcard.PostCardList
-import org.mozilla.social.core.ui.common.postcard.PostCardUiState
+import org.mozilla.social.core.ui.postcard.PostCardInteractions
+import org.mozilla.social.core.ui.postcard.PostCardList
+import org.mozilla.social.core.ui.postcard.PostCardUiState
 
 @Composable
 internal fun AccountScreen(

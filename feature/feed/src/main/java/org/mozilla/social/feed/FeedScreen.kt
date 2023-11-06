@@ -34,10 +34,10 @@ import org.mozilla.social.core.designsystem.component.MoSoTab
 import org.mozilla.social.core.designsystem.component.MoSoTabRow
 import org.mozilla.social.core.designsystem.icon.mozillaLogo
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
-import org.mozilla.social.core.ui.common.postcard.PostCardInteractions
-import org.mozilla.social.core.ui.common.postcard.PostCardList
+import org.mozilla.social.core.ui.postcard.PostCardInteractions
+import org.mozilla.social.core.ui.postcard.PostCardList
 
-import org.mozilla.social.core.ui.common.postcard.PostCardUiState
+import org.mozilla.social.core.ui.postcard.PostCardUiState
 
 @Composable
 internal fun FeedScreen(

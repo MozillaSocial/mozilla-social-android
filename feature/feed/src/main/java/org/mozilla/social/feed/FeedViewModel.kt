@@ -24,8 +24,8 @@ import org.mozilla.social.core.database.model.statusCollections.toStatusWrapper
 import org.mozilla.social.core.domain.AccountIdFlow
 import org.mozilla.social.core.navigation.usecases.NavigateTo
 import org.mozilla.social.core.navigation.usecases.OpenLink
-import org.mozilla.social.core.ui.common.postcard.PostCardDelegate
-import org.mozilla.social.core.ui.common.postcard.toPostCardUiState
+import org.mozilla.social.core.ui.postcard.PostCardDelegate
+import org.mozilla.social.core.ui.postcard.toPostCardUiState
 import org.mozilla.social.feed.remoteMediators.FederatedTimelineRemoteMediator
 import org.mozilla.social.feed.remoteMediators.HomeTimelineRemoteMediator
 import org.mozilla.social.feed.remoteMediators.LocalTimelineRemoteMediator
@@ -102,7 +102,7 @@ class FeedViewModel(
         }
     }.cachedIn(viewModelScope)
 
-    val postCardDelegate = PostCardDelegate(
+    val postCardDelegate = org.mozilla.social.core.ui.postcard.PostCardDelegate(
         coroutineScope = viewModelScope,
         statusRepository = statusRepository,
         accountRepository = accountRepository,

@@ -31,8 +31,8 @@ import org.mozilla.social.core.domain.GetDetailedAccount
 import org.mozilla.social.core.navigation.NavigationDestination
 import org.mozilla.social.core.navigation.usecases.NavigateTo
 import org.mozilla.social.core.navigation.usecases.OpenLink
-import org.mozilla.social.core.ui.common.postcard.PostCardDelegate
-import org.mozilla.social.core.ui.common.postcard.toPostCardUiState
+import org.mozilla.social.core.ui.postcard.PostCardDelegate
+import org.mozilla.social.core.ui.postcard.toPostCardUiState
 import org.mozilla.social.core.ui.common.R
 import timber.log.Timber
 
@@ -52,7 +52,7 @@ class AccountViewModel(
     private val _errorToastMessage = MutableSharedFlow<StringFactory>(extraBufferCapacity = 1)
     val errorToastMessage = _errorToastMessage.asSharedFlow()
 
-    val postCardDelegate = PostCardDelegate(
+    val postCardDelegate = org.mozilla.social.core.ui.postcard.PostCardDelegate(
         coroutineScope = viewModelScope,
         statusRepository = statusRepository,
         accountRepository = accountRepository,

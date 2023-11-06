@@ -1,4 +1,4 @@
-package org.mozilla.social.core.ui.common.postcard
+package org.mozilla.social.core.ui.postcard
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableSharedFlow

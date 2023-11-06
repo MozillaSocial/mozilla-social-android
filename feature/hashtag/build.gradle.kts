@@ -15,6 +15,7 @@ dependencies {
     implementation(project(":core:datastore"))
     implementation(project(":core:designsystem"))
     implementation(project(":core:ui:common"))
+    implementation(project(":core:ui:postcard"))
     implementation(project(":core:common"))
     implementation(project(":core:database"))
     implementation(project(":core:navigation"))
