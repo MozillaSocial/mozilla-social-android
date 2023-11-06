@@ -2,6 +2,7 @@ package org.mozilla.social
 
 import android.content.Context
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.StateFlow
 import org.koin.core.annotation.KoinExperimentalAPI
 import org.koin.test.KoinTest
@@ -26,6 +27,7 @@ class CheckModulesTest : KoinTest {
                 List::class,
                 Boolean::class,
                 FollowerScreenType::class,
+                CoroutineScope::class,
             )
         )
     }
