@@ -60,6 +60,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.koinInject
 import org.koin.core.parameter.parametersOf
 import org.mozilla.social.common.LoadState
 import org.mozilla.social.common.utils.buildAnnotatedStringForAccountsAndHashtags
@@ -68,10 +69,10 @@ import org.mozilla.social.core.designsystem.component.MoSoSurface
 import org.mozilla.social.core.designsystem.component.MoSoTextField
 import org.mozilla.social.core.designsystem.component.MoSoToast
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
-import org.mozilla.social.core.designsystem.theme.FirefoxColor
 import org.mozilla.social.core.designsystem.theme.MoSoSpacing
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.designsystem.utils.NoIndication
+import org.mozilla.social.core.navigation.usecases.PopNavBackstack
 import org.mozilla.social.core.ui.common.TransparentNoTouchOverlay
 import org.mozilla.social.core.ui.common.VerticalDivider
 import org.mozilla.social.core.ui.common.VisibilityDropDownButton
@@ -101,6 +102,7 @@ import org.mozilla.social.post.status.StatusInteractions
 @Composable
 internal fun NewPostScreen(
     replyStatusId: String?,
+    popBackstack: PopNavBackstack = koinInject(),
     viewModel: NewPostViewModel = koinViewModel(parameters = { parametersOf(replyStatusId) })
 ) {
     NewPostScreen(
@@ -122,6 +124,7 @@ internal fun NewPostScreen(
         inReplyToAccountName = viewModel.inReplyToAccountName.collectAsState().value,
         userHeaderState = viewModel.userHeaderState.collectAsState(initial = null).value,
         bottomBarState = viewModel.bottomBarState.collectAsState().value,
+        onBackClicked = { popBackstack() },
     )
 
     MoSoToast(toastMessage = viewModel.errorToastMessage)
@@ -150,6 +153,7 @@ private fun NewPostScreen(
     hashTags: List<String>?,
     inReplyToAccountName: String?,
     userHeaderState: UserHeaderState?,
+    onBackClicked: () -> Unit,
 ) {
 
     // If the current height class is compact (prob in landscape mode)
@@ -197,7 +201,8 @@ private fun NewPostScreen(
                 accounts = accounts,
                 hashTags = hashTags,
                 inReplyToAccountName = inReplyToAccountName,
-                userHeaderState = userHeaderState
+                userHeaderState = userHeaderState,
+                onBackClicked = onBackClicked,
             )
         }
 
@@ -265,11 +270,13 @@ private fun NewPostScreenContent(
     hashTags: List<String>?,
     inReplyToAccountName: String?,
     userHeaderState: UserHeaderState?,
+    onBackClicked: () -> Unit,
 ) {
     Column {
         TopBar(
             onPostClicked = onPostClicked,
             sendButtonEnabled = sendButtonEnabled,
+            onBackClicked = onBackClicked,
         )
         userHeaderState?.let { userHeaderState ->
             UserHeader(
@@ -348,11 +355,13 @@ fun UserHeader(
 private fun TopBar(
     onPostClicked: () -> Unit,
     sendButtonEnabled: Boolean,
+    onBackClicked: () -> Unit,
 ) {
     MoSoCloseableTopAppBar(
         actions = {
             PostButton(onPostClicked = onPostClicked, sendButtonEnabled = sendButtonEnabled)
-        }
+        },
+        onIconClicked = onBackClicked,
     )
 }
 
@@ -700,7 +709,8 @@ private fun NewPostScreenPreview() {
             hashTags = null,
             inReplyToAccountName = null,
             userHeaderState = UserHeaderState("", "Barack Obama"),
-            bottomBarState = BottomBarState()
+            bottomBarState = BottomBarState(),
+            onBackClicked = {},
         )
     }
 }
@@ -735,6 +745,7 @@ private fun NewPostScreenWithPollPreview() {
             inReplyToAccountName = null,
             userHeaderState = UserHeaderState("", "Barack Obama"),
             bottomBarState = BottomBarState(),
+            onBackClicked = {},
         )
     }
 }
@@ -764,6 +775,7 @@ private fun NewPostScreenWithContentWarningPreview() {
             inReplyToAccountName = null,
             userHeaderState = UserHeaderState("", "Barack Obama"),
             bottomBarState = BottomBarState(),
+            onBackClicked = {},
         )
     }
 }

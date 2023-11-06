@@ -33,6 +33,7 @@ import androidx.compose.ui.text.font.FontWeight.Companion.W700
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.koinInject
 import org.mozilla.social.common.Resource
 import org.mozilla.social.common.utils.toFile
 import org.mozilla.social.core.designsystem.component.MoSoButton
@@ -43,6 +44,7 @@ import org.mozilla.social.core.designsystem.component.MoSoTextField
 import org.mozilla.social.core.designsystem.component.MoSoToast
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
+import org.mozilla.social.core.navigation.usecases.PopNavBackstack
 import org.mozilla.social.core.ui.common.TransparentNoTouchOverlay
 import org.mozilla.social.core.ui.common.appbar.MoSoCloseableTopAppBar
 import org.mozilla.social.core.ui.common.error.GenericError
@@ -52,12 +54,14 @@ import org.mozilla.social.feature.account.R
 
 @Composable
 internal fun EditAccountScreen(
+    popBackstack: PopNavBackstack = koinInject(),
     viewModel: EditAccountViewModel = koinViewModel(),
 ) {
     EditAccountScreen(
         editAccountInteractions = viewModel,
         uiState = viewModel.editAccountUiState.collectAsState().value,
         isUploading = viewModel.isUploading.collectAsState().value,
+        onBackClicked = { popBackstack() },
     )
 
     MoSoToast(toastMessage = viewModel.errorToastMessage)
@@ -68,6 +72,7 @@ fun EditAccountScreen(
     editAccountInteractions: EditAccountInteractions,
     uiState: Resource<EditAccountUiState>,
     isUploading: Boolean,
+    onBackClicked: () -> Unit,
 ) {
     MoSoSurface(
         modifier = Modifier
@@ -93,6 +98,7 @@ fun EditAccountScreen(
                     }
                 },
                 showDivider = false,
+                onIconClicked = onBackClicked,
             )
 
 
@@ -348,6 +354,7 @@ private fun PreviewEditAccountScreen() {
             ),
             editAccountInteractions = object : EditAccountInteractions {},
             isUploading = false,
+            onBackClicked = {},
         )
     }
 }

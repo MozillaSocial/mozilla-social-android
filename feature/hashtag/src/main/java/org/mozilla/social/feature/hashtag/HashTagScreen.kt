@@ -8,9 +8,11 @@ import androidx.paging.PagingData
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharedFlow
 import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.koinInject
 import org.koin.core.parameter.parametersOf
 import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.core.designsystem.component.MoSoSurface
+import org.mozilla.social.core.navigation.usecases.PopNavBackstack
 import org.mozilla.social.core.ui.common.appbar.MoSoCloseableTopAppBar
 import org.mozilla.social.core.ui.postcard.PostCardInteractions
 import org.mozilla.social.core.ui.postcard.PostCardList
@@ -19,6 +21,7 @@ import org.mozilla.social.core.ui.postcard.PostCardUiState
 @Composable
 internal fun HashTagScreen(
     hashTag: String,
+    popBackstack: PopNavBackstack = koinInject(),
     viewModel: HashTagViewModel = koinViewModel(parameters = { parametersOf(hashTag) })
 ) {
     HashTagScreen(
@@ -26,6 +29,7 @@ internal fun HashTagScreen(
         feed = viewModel.feed,
         errorToastMessage = viewModel.postCardDelegate.errorToastMessage,
         postCardInteractions = viewModel.postCardDelegate,
+        onBackClicked = { popBackstack() },
     )
 }
 
@@ -35,6 +39,7 @@ private fun HashTagScreen(
     feed: Flow<PagingData<PostCardUiState>>,
     errorToastMessage: SharedFlow<StringFactory>,
     postCardInteractions: PostCardInteractions,
+    onBackClicked: () -> Unit,
 ) {
     MoSoSurface {
         Column(
@@ -42,6 +47,7 @@ private fun HashTagScreen(
         ) {
             MoSoCloseableTopAppBar(
                 title = "#$hashTag",
+                onIconClicked = onBackClicked,
             )
 
             PostCardList(

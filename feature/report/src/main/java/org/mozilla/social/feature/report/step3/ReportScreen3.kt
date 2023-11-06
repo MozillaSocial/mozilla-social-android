@@ -17,6 +17,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight.Companion.W600
 import androidx.compose.ui.unit.dp
 import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.koinInject
 import org.koin.core.parameter.parametersOf
 import org.mozilla.social.core.designsystem.component.MoSoButton
 import org.mozilla.social.core.designsystem.component.MoSoButtonSecondary
@@ -25,6 +26,7 @@ import org.mozilla.social.core.designsystem.component.MoSoSurface
 import org.mozilla.social.core.designsystem.component.MoSoToast
 import org.mozilla.social.core.designsystem.theme.MoSoRadius
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
+import org.mozilla.social.core.navigation.usecases.PopNavBackstack
 import org.mozilla.social.core.ui.common.animation.ExpandingAnimation
 import org.mozilla.social.core.ui.common.appbar.MoSoCloseableTopAppBar
 import org.mozilla.social.feature.report.R
@@ -36,6 +38,7 @@ internal fun ReportScreen3(
     reportAccountId: String,
     reportAccountHandle: String,
     didUserReportAccount: Boolean,
+    popBackstack: PopNavBackstack = koinInject(),
     viewModel: ReportScreen3ViewModel = koinViewModel(parameters = {
         parametersOf(
             onDoneClicked,
@@ -51,6 +54,7 @@ internal fun ReportScreen3(
         muteVisible = viewModel.muteVisible.collectAsState().value,
         blockVisible = viewModel.blockVisible.collectAsState().value,
         reportInteractions = viewModel,
+        onBackClicked = { popBackstack() },
     )
 
     MoSoToast(toastMessage = viewModel.errorToastMessage)
@@ -64,6 +68,7 @@ private fun ReportScreen3(
     muteVisible: Boolean,
     blockVisible: Boolean,
     reportInteractions: ReportScreen3Interactions,
+    onBackClicked: () -> Unit,
 ) {
     MoSoSurface {
         Column(
@@ -71,7 +76,10 @@ private fun ReportScreen3(
                 .fillMaxHeight()
                 .systemBarsPadding()
         ) {
-            MoSoCloseableTopAppBar(title = stringResource(id = R.string.report_screen_title))
+            MoSoCloseableTopAppBar(
+                title = stringResource(id = R.string.report_screen_title),
+                onIconClicked = onBackClicked,
+            )
 
             TopContent(
                 reportAccountHandle = reportAccountHandle,

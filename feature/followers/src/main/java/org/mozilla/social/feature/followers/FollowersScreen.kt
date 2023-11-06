@@ -22,10 +22,12 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import kotlinx.coroutines.flow.Flow
 import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.koinInject
 import org.koin.core.parameter.parametersOf
 import org.mozilla.social.core.designsystem.component.MoSoDivider
 import org.mozilla.social.core.designsystem.component.MoSoSurface
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
+import org.mozilla.social.core.navigation.usecases.PopNavBackstack
 import org.mozilla.social.core.ui.common.account.quickview.AccountQuickView
 import org.mozilla.social.core.ui.common.account.quickview.AccountQuickViewUiState
 import org.mozilla.social.core.ui.common.appbar.MoSoCloseableTopAppBar
@@ -38,6 +40,7 @@ import org.mozilla.social.core.ui.common.pullrefresh.rememberPullRefreshState
 internal fun FollowersScreen(
     accountId: String,
     followersScreenType: FollowerScreenType,
+    popBackstack: PopNavBackstack = koinInject(),
     viewModel: FollowersViewModel = koinViewModel(
         parameters = {
             parametersOf(
@@ -51,6 +54,7 @@ internal fun FollowersScreen(
         followersScreenType = followersScreenType,
         followers = viewModel.followers,
         followersInteractions = viewModel,
+        onBackClicked = { popBackstack() }
     )
 }
 
@@ -59,6 +63,7 @@ private fun FollowersScreen(
     followersScreenType: FollowerScreenType,
     followers: Flow<PagingData<AccountQuickViewUiState>>,
     followersInteractions: FollowersInteractions,
+    onBackClicked: () -> Unit,
 ) {
     MoSoSurface {
         Column(
@@ -71,6 +76,7 @@ private fun FollowersScreen(
                     FollowerScreenType.FOLLOWERS -> stringResource(id = R.string.followers)
                     FollowerScreenType.FOLLOWING -> stringResource(id = R.string.following)
                 },
+                onIconClicked = onBackClicked,
             )
 
             val lazyPagingItems = followers.collectAsLazyPagingItems()

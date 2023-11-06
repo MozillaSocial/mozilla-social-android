@@ -16,10 +16,14 @@ internal fun SettingsColumn(
     modifier: Modifier = Modifier.padding(MoSoSpacing.sm),
     verticalArrangement: Arrangement.Vertical = Arrangement.Top,
     horizontalAlignment: Alignment.Horizontal = Alignment.Start,
-    content: @Composable ColumnScope.() -> Unit
+    onBackClicked: () -> Unit,
+    content: @Composable ColumnScope.() -> Unit,
 ) {
     Column {
-        MoSoCloseableTopAppBar(title = title)
+        MoSoCloseableTopAppBar(
+            title = title,
+            onIconClicked = onBackClicked,
+        )
         Column(
             modifier = modifier,
             verticalArrangement = verticalArrangement,

@@ -6,8 +6,10 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.koinInject
 import org.mozilla.social.core.designsystem.component.MoSoSurface
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
+import org.mozilla.social.core.navigation.usecases.PopNavBackstack
 import org.mozilla.social.feature.settings.R
 import org.mozilla.social.feature.settings.ui.SettingsColumn
 import org.mozilla.social.feature.settings.ui.SettingsGroup
@@ -15,13 +17,15 @@ import org.mozilla.social.feature.settings.ui.SettingsSwitch
 
 @Composable
 fun PrivacySettingsScreen(
-    viewModel: PrivacySettingsViewModel = koinViewModel()
+    popBackstack: PopNavBackstack = koinInject(),
+    viewModel: PrivacySettingsViewModel = koinViewModel(),
 ) {
     val isAnalyticsToggled = viewModel.allowAnalytics.collectAsState()
 
     PrivacySettingsScreen(
         isAnalyticsToggledOn = isAnalyticsToggled.value,
         toggleAnalyticsSwitch = viewModel::toggleAllowAnalytics,
+        onBackClicked = { popBackstack() },
     )
 }
 
@@ -29,9 +33,13 @@ fun PrivacySettingsScreen(
 fun PrivacySettingsScreen(
     isAnalyticsToggledOn: Boolean,
     toggleAnalyticsSwitch: () -> Unit,
+    onBackClicked: () -> Unit,
 ) {
     MoSoSurface {
-        SettingsColumn(title = stringResource(id = R.string.privacy_settings_title)) {
+        SettingsColumn(
+            title = stringResource(id = R.string.privacy_settings_title),
+            onBackClicked = onBackClicked,
+        ) {
             AllowAnalyticsSwitch(
                 initialAllowAnalytics = isAnalyticsToggledOn,
                 onAllowAnalyticsSwitchToggled = toggleAnalyticsSwitch
@@ -62,6 +70,10 @@ private fun AllowAnalyticsSwitch(
 @Composable
 private fun PrivacySettingsScreenPreview() {
     MoSoTheme {
-        PrivacySettingsScreen(isAnalyticsToggledOn = true, {})
+        PrivacySettingsScreen(
+            isAnalyticsToggledOn = true,
+            onBackClicked = {},
+            toggleAnalyticsSwitch = {},
+        )
     }
 }

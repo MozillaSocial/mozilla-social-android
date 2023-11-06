@@ -28,6 +28,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.koinInject
 import org.koin.core.parameter.parametersOf
 import org.mozilla.social.common.Resource
 import org.mozilla.social.core.designsystem.component.MoSoButton
@@ -38,6 +39,7 @@ import org.mozilla.social.core.designsystem.component.MoSoSurface
 import org.mozilla.social.core.designsystem.component.MoSoToast
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.designsystem.utils.NoRipple
+import org.mozilla.social.core.navigation.usecases.PopNavBackstack
 import org.mozilla.social.core.ui.common.appbar.MoSoCloseableTopAppBar
 import org.mozilla.social.core.ui.common.error.GenericError
 import org.mozilla.social.core.ui.common.htmlcontent.HtmlContent
@@ -59,6 +61,7 @@ internal fun ReportScreen2(
     checkedInstanceRules: List<InstanceRule>,
     additionalText: String,
     sendToExternalServer: Boolean,
+    popBackstack: PopNavBackstack = koinInject(),
     viewModel: ReportScreen2ViewModel = koinViewModel(parameters = {
         parametersOf(
             onCloseClicked,
@@ -79,7 +82,8 @@ internal fun ReportScreen2(
         uiState = viewModel.statuses.collectAsState().value,
         reportIsSending = viewModel.reportIsSending.collectAsState().value,
         hasPreAttachedStatus = reportStatusId != null,
-        reportInteractions = viewModel
+        reportInteractions = viewModel,
+        onBackClicked = { popBackstack() },
     )
 
     MoSoToast(toastMessage = viewModel.errorToastMessage)
@@ -92,6 +96,7 @@ private fun ReportScreen2(
     reportIsSending: Boolean,
     hasPreAttachedStatus: Boolean,
     reportInteractions: ReportScreen2Interactions,
+    onBackClicked: () -> Unit,
 ) {
     MoSoSurface {
         Column(
@@ -101,6 +106,7 @@ private fun ReportScreen2(
         ) {
             MoSoCloseableTopAppBar(
                 title = stringResource(id = R.string.report_screen_title),
+                onIconClicked = onBackClicked,
             )
 
             TopContent(

@@ -27,6 +27,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.koinInject
 import org.koin.core.parameter.parametersOf
 import org.mozilla.social.core.designsystem.component.MoSoButton
 import org.mozilla.social.core.designsystem.component.MoSoCheckBox
@@ -37,6 +38,7 @@ import org.mozilla.social.core.designsystem.component.MoSoTextField
 import org.mozilla.social.core.ui.common.appbar.MoSoTopBar
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.designsystem.utils.NoRipple
+import org.mozilla.social.core.navigation.usecases.PopNavBackstack
 import org.mozilla.social.core.ui.common.animation.ExpandingAnimation
 import org.mozilla.social.core.ui.common.appbar.MoSoCloseableTopAppBar
 import org.mozilla.social.feature.report.R
@@ -52,6 +54,7 @@ internal fun ReportScreen1(
     reportAccountId: String,
     reportAccountHandle: String,
     reportStatusId: String?,
+    popBackstack: PopNavBackstack = koinInject(),
     viewModel: ReportScreen1ViewModel = koinViewModel(parameters = {
         parametersOf(
             onNextClicked,
@@ -74,7 +77,8 @@ internal fun ReportScreen1(
         additionalCommentText = viewModel.additionalCommentText.collectAsState().value,
         reportAccountHandle = reportAccountHandle,
         sendToExternalServer = viewModel.sendToExternalServerChecked.collectAsState().value,
-        reportInteractions = viewModel
+        reportInteractions = viewModel,
+        onBackClicked = { popBackstack() },
     )
 }
 
@@ -88,6 +92,7 @@ private fun ReportScreen1(
     reportAccountHandle: String,
     sendToExternalServer: Boolean,
     reportInteractions: ReportScreen1Interactions,
+    onBackClicked: () -> Unit,
 ) {
     MoSoSurface {
         Column(
@@ -98,6 +103,7 @@ private fun ReportScreen1(
         ) {
             MoSoCloseableTopAppBar(
                 title = stringResource(id = R.string.report_screen_title),
+                onIconClicked = onBackClicked,
             )
             MoSoDivider()
             MainContent(
@@ -442,6 +448,7 @@ private fun ReportScreenPreview() {
             reportAccountHandle = "john@mozilla.com",
             sendToExternalServer = false,
             reportInteractions = object : ReportScreen1Interactions {},
+            onBackClicked = {},
         )
     }
 }
@@ -474,6 +481,7 @@ private fun ReportScreenPreviewDarkMode() {
             reportAccountHandle = "john@mozilla.com",
             sendToExternalServer = false,
             reportInteractions = object : ReportScreen1Interactions {},
+            onBackClicked = {},
         )
     }
 }

@@ -5,20 +5,24 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.KoinApplication
+import org.koin.compose.koinInject
 import org.mozilla.social.core.designsystem.component.MoSoSurface
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
+import org.mozilla.social.core.navigation.usecases.PopNavBackstack
 import org.mozilla.social.feature.settings.ui.SettingsColumn
 import org.mozilla.social.feature.settings.ui.SettingsSection
 
 @Composable
 fun SettingsScreen(
+    popBackstack: PopNavBackstack = koinInject(),
     viewModel: SettingsViewModel = koinViewModel(),
 ) {
     SettingsScreen(
         onAccountClicked = viewModel::onAccountClicked,
         onPrivacyClicked = viewModel::onPrivacyClicked,
         onAboutClicked = viewModel::onAboutClicked,
+        onBackClicked = { popBackstack() },
     )
 }
 
@@ -27,9 +31,13 @@ fun SettingsScreen(
     onAccountClicked: () -> Unit,
     onPrivacyClicked: () -> Unit,
     onAboutClicked: () -> Unit,
+    onBackClicked: () -> Unit,
 ) {
     MoSoSurface {
-        SettingsColumn(title = stringResource(id = R.string.settings_title)) {
+        SettingsColumn(
+            title = stringResource(id = R.string.settings_title),
+            onBackClicked = onBackClicked,
+        ) {
             SettingsSection(
                 title = stringResource(id = R.string.account_settings_title),
                 iconPainter = MoSoIcons.identificationCard(),

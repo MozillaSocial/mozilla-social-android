@@ -33,7 +33,6 @@ import org.mozilla.social.core.navigation.usecases.PopNavBackstack
  * @param title
  * @param showCloseButton
  * @param popBackstack
- * @param leftSideContent
  * @param actions
  * @param showDivider
  */
@@ -41,14 +40,14 @@ import org.mozilla.social.core.navigation.usecases.PopNavBackstack
 fun MoSoCloseableTopAppBar(
     title: String = "",
     showCloseButton: Boolean = true,
-    popBackstack: PopNavBackstack = koinInject(),
+    onIconClicked: () -> Unit,
     actions: @Composable () -> Unit = {},
     showDivider: Boolean = false,
 ) {
     MoSoTopBar(
         title = title,
         icon = if (showCloseButton) MoSoIcons.backArrow() else null,
-        onIconClicked = { popBackstack() },
+        onIconClicked = onIconClicked,
         actions = actions,
         showDivider = showDivider
     )
@@ -152,7 +151,8 @@ private fun MoSoTopBarPreview() {
             title = "test",
             actions = {
                 Text(text = "rightSide")
-            }
+            },
+            onIconClicked = {},
         )
     }
 }

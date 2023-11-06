@@ -21,10 +21,12 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.KoinApplication
+import org.koin.compose.koinInject
 import org.mozilla.social.core.designsystem.component.MoSoButtonSecondary
 import org.mozilla.social.core.designsystem.component.MoSoSurface
 import org.mozilla.social.core.designsystem.theme.MoSoSpacing
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
+import org.mozilla.social.core.navigation.usecases.PopNavBackstack
 import org.mozilla.social.feature.settings.R
 import org.mozilla.social.feature.settings.previewModule
 import org.mozilla.social.feature.settings.ui.SettingsColumn
@@ -32,10 +34,14 @@ import org.mozilla.social.feature.settings.ui.SettingsSection
 
 @Composable
 fun AccountSettingsScreen(
-    viewModel: AccountSettingsViewModel = koinViewModel()
+    popBackstack: PopNavBackstack = koinInject(),
+    viewModel: AccountSettingsViewModel = koinViewModel(),
 ) {
     MoSoSurface {
-        SettingsColumn(title = stringResource(id = R.string.account_settings_title)) {
+        SettingsColumn(
+            title = stringResource(id = R.string.account_settings_title),
+            onBackClicked = { popBackstack() },
+        ) {
             val userHeader = viewModel.userHeader.collectAsState(initial = null).value
 
             if (userHeader != null) {
