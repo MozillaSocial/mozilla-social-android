@@ -15,6 +15,7 @@ dependencies {
     implementation(project(":core:datastore"))
     implementation(project(":core:model"))
     implementation(project(":core:ui:common"))
+    implementation(project(":core:ui:htmlcontent"))
     implementation(project(":core:navigation"))
     implementation(project(":core:domain"))
 
