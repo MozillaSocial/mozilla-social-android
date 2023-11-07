@@ -13,6 +13,7 @@ val accountModule = module {
             socialDatabase = get(),
             getDetailedAccount = get(),
             navigateTo = get(),
+            showSnackbar = get(),
             initialAccountId = parametersHolder[0],
         )
     }
@@ -27,6 +28,7 @@ val accountModule = module {
     }
     viewModel {
         EditAccountViewModel(
+            get(),
             get(),
             get(),
             get(),

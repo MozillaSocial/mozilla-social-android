@@ -6,10 +6,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.paging.PagingData
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.SharedFlow
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
-import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.core.designsystem.component.MoSoSurface
 import org.mozilla.social.core.ui.common.appbar.MoSoCloseableTopAppBar
 import org.mozilla.social.core.ui.postcard.PostCardInteractions
@@ -24,7 +22,6 @@ internal fun HashTagScreen(
     HashTagScreen(
         hashTag = hashTag,
         feed = viewModel.feed,
-        errorToastMessage = viewModel.postCardDelegate.errorToastMessage,
         postCardInteractions = viewModel.postCardDelegate,
     )
 }
@@ -33,7 +30,6 @@ internal fun HashTagScreen(
 private fun HashTagScreen(
     hashTag: String,
     feed: Flow<PagingData<PostCardUiState>>,
-    errorToastMessage: SharedFlow<StringFactory>,
     postCardInteractions: PostCardInteractions,
 ) {
     MoSoSurface {
@@ -46,7 +42,6 @@ private fun HashTagScreen(
 
             PostCardList(
                 feed = feed,
-                errorToastMessage = errorToastMessage,
                 postCardInteractions = postCardInteractions,
                 pullToRefreshEnabled = true,
                 isFullScreenLoading = true,

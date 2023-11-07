@@ -1,4 +1,4 @@
-package org.mozilla.social.navigation
+package org.mozilla.social.ui
 
 import androidx.compose.runtime.Composable
 

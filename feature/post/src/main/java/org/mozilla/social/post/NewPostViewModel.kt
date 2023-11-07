@@ -3,11 +3,9 @@ package org.mozilla.social.post
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.mapLatest
@@ -113,9 +111,6 @@ class NewPostViewModel(
             initialValue = false,
         )
 
-    private val _errorToastMessage = MutableSharedFlow<StringFactory>(extraBufferCapacity = 1)
-    val errorToastMessage = _errorToastMessage.asSharedFlow()
-
     private val _isSendingPost = MutableStateFlow(false)
     val isSendingPost = _isSendingPost.asStateFlow()
 
@@ -159,7 +154,10 @@ class NewPostViewModel(
                 onStatusPosted()
             } catch (e: Exception) {
                 Timber.e(e)
-                _errorToastMessage.emit(StringFactory.resource(R.string.error_sending_post_toast))
+                showSnackbar(
+                    text = StringFactory.resource(R.string.error_sending_post_toast),
+                    isError = true,
+                )
                 _isSendingPost.update { false }
             }
         }

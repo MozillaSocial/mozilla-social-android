@@ -1,4 +1,4 @@
-package org.mozilla.social.navigation
+package org.mozilla.social.ui.bottombar
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.painter.Painter
@@ -7,6 +7,8 @@ import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.navigation.BottomBarNavigationDestination
 import org.mozilla.social.core.navigation.NavigationDestination
+import org.mozilla.social.ui.bottombar.BottomBarTab
+import org.mozilla.social.ui.bottombar.Destination
 
 /**
  * An enum of all the bottom nav bar destinations

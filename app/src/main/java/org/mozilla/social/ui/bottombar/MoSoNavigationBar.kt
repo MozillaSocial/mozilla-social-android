@@ -1,4 +1,4 @@
-package org.mozilla.social.navigation
+package org.mozilla.social.ui.bottombar
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.only
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsPadding
@@ -29,7 +30,7 @@ import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.navigation.BottomBarNavigationDestination
 import org.mozilla.social.core.navigation.NavigationDestination
-import org.mozilla.social.navigation.Destination.Main
+import org.mozilla.social.ui.bottombar.Destination.Main
 
 @Composable
 fun MoSoBottomNavigationBar(
@@ -60,7 +61,7 @@ fun MoSoBottomNavigationBar(
                     )
                 }
 
-                is Destination.Main -> {
+                is Main -> {
                     NavigationBarItem(
                         modifier = modifier.height(48.dp),
                         selected = false,
@@ -219,4 +220,12 @@ object MoSoNavigationBarDefaults {
 
     val height: Dp
         get() = 48.dp
+
+    fun Modifier.bottomBarPadding(
+        currentDestination: NavigationDestination?
+    ): Modifier = if (currentDestination == NavigationDestination.Tabs) {
+        padding(bottom = height)
+    } else {
+        this
+    }
 }

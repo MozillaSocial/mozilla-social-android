@@ -2,20 +2,20 @@ package org.mozilla.social.feature.report.step3
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.core.data.repository.AccountRepository
 import org.mozilla.social.core.domain.AccountIdBlocking
+import org.mozilla.social.core.navigation.usecases.ShowSnackbar
 import org.mozilla.social.feature.report.R
 import timber.log.Timber
 
 class ReportScreen3ViewModel(
     private val accountRepository: AccountRepository,
+    private val showSnackbar: ShowSnackbar,
     accountIdBlocking: AccountIdBlocking,
     private val doneClicked: () -> Unit,
     private val closeClicked: () -> Unit,
@@ -26,9 +26,6 @@ class ReportScreen3ViewModel(
      * The account ID of the logged in user
      */
     private val usersAccountId: String = accountIdBlocking()
-
-    private val _errorToastMessage = MutableSharedFlow<StringFactory>(extraBufferCapacity = 1)
-    val errorToastMessage = _errorToastMessage.asSharedFlow()
 
     private val _unfollowVisible = MutableStateFlow(true)
     val unfollowVisible = _unfollowVisible.asStateFlow()
@@ -57,7 +54,10 @@ class ReportScreen3ViewModel(
                 )
             } catch (e: Exception) {
                 Timber.e(e)
-                _errorToastMessage.emit(StringFactory.resource(R.string.error_unfollowing))
+                showSnackbar(
+                    text = StringFactory.resource(R.string.error_unfollowing),
+                    isError = true,
+                )
                 _unfollowVisible.update { true }
             }
         }
@@ -70,7 +70,10 @@ class ReportScreen3ViewModel(
                 accountRepository.muteAccount(reportAccountId)
             } catch (e: Exception) {
                 Timber.e(e)
-                _errorToastMessage.emit(StringFactory.resource(R.string.error_muting))
+                showSnackbar(
+                    text = StringFactory.resource(R.string.error_muting),
+                    isError = true,
+                )
                 _muteVisible.update { true }
             }
         }
@@ -83,7 +86,10 @@ class ReportScreen3ViewModel(
                 accountRepository.blockAccount(reportAccountId)
             } catch (e: Exception) {
                 Timber.e(e)
-                _errorToastMessage.emit(StringFactory.resource(R.string.error_blocking))
+                showSnackbar(
+                    text = StringFactory.resource(R.string.error_blocking),
+                    isError = true,
+                )
                 _blockVisible.update { true }
             }
         }
