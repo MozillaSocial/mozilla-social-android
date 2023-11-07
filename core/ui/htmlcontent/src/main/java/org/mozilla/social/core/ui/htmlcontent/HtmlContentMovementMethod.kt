@@ -1,4 +1,4 @@
-package org.mozilla.social.core.ui.common.htmlcontent
+package org.mozilla.social.core.ui.htmlcontent
 
 import android.text.Layout
 import android.text.Selection

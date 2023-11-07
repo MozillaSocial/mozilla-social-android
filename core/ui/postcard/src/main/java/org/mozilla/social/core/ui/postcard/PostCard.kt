@@ -49,9 +49,7 @@ import org.mozilla.social.core.ui.common.R
 import org.mozilla.social.core.ui.common.TransparentNoTouchOverlay
 import org.mozilla.social.core.ui.common.getMaxWidth
 import org.mozilla.social.core.ui.common.media.MediaDisplay
-import org.mozilla.social.core.ui.common.htmlcontent.HtmlContent
 import org.mozilla.social.core.ui.common.shareUrl
-import org.mozilla.social.core.ui.postcard.poll.Poll
 
 /**
  * @param threadId if viewing this post from a thread, pass the threadId in to prevent
@@ -139,7 +137,7 @@ private fun MainPost(
                 post = post,
                 postCardInteractions = postCardInteractions,
             )
-            HtmlContent(
+            org.mozilla.social.core.ui.htmlcontent.HtmlContent(
                 mentions = post.mentions,
                 htmlText = post.statusTextHtml,
                 htmlContentInteractions = postCardInteractions,
@@ -148,7 +146,7 @@ private fun MainPost(
 
             MediaDisplay(attachments = post.mediaAttachments)
 
-            post.pollUiState?.let { Poll(it, postCardInteractions) }
+            post.pollUiState?.let { org.mozilla.social.core.ui.poll.Poll(it, postCardInteractions) }
 
             // only display preview card if there are no other media attachments
             if (post.previewCard != null && post.mediaAttachments.isEmpty()) {

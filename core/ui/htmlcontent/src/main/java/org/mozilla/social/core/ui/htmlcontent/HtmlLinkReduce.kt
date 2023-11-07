@@ -1,4 +1,4 @@
-package org.mozilla.social.core.ui.common.htmlcontent
+package org.mozilla.social.core.ui.htmlcontent
 
 /**
  * Html content returned from mastodon has some html spans that can be removed to reduce the

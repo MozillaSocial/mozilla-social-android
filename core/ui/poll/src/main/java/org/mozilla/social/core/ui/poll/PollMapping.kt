@@ -1,8 +1,7 @@
-package org.mozilla.social.core.ui.postcard.poll
+package org.mozilla.social.core.ui.poll
 
 import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.common.utils.timeLeft
-import org.mozilla.social.core.ui.postcard.R
 import org.mozilla.social.model.Poll
 import org.mozilla.social.model.PollOption
 

@@ -1,4 +1,4 @@
-package org.mozilla.social.core.ui.common.htmlcontent
+package org.mozilla.social.core.ui.htmlcontent
 
 import android.graphics.Typeface
 import android.os.Build

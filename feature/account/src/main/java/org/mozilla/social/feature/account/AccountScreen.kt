@@ -50,7 +50,6 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.paging.PagingData
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flowOf
@@ -77,8 +76,8 @@ import org.mozilla.social.core.navigation.navigationModule
 import org.mozilla.social.core.ui.common.DropDownItem
 import org.mozilla.social.core.ui.common.appbar.MoSoCloseableTopAppBar
 import org.mozilla.social.core.ui.common.error.GenericError
-import org.mozilla.social.core.ui.common.htmlcontent.HtmlContent
-import org.mozilla.social.core.ui.common.htmlcontent.HtmlContentInteractions
+import org.mozilla.social.core.ui.htmlcontent.HtmlContent
+import org.mozilla.social.core.ui.htmlcontent.HtmlContentInteractions
 import org.mozilla.social.core.ui.postcard.PostCardInteractions
 import org.mozilla.social.core.ui.postcard.PostCardList
 import org.mozilla.social.core.ui.postcard.PostCardUiState
@@ -113,7 +112,7 @@ private fun AccountScreen(
     isUsersProfile: Boolean,
     feed: Flow<PagingData<PostCardUiState>>,
     timelineTypeFlow: StateFlow<TimelineType>,
-    htmlContentInteractions: HtmlContentInteractions,
+    htmlContentInteractions: org.mozilla.social.core.ui.htmlcontent.HtmlContentInteractions,
     postCardInteractions: PostCardInteractions,
     accountInteractions: AccountInteractions,
     windowInsets: WindowInsets,
@@ -190,7 +189,7 @@ private fun MainContent(
     isUsersProfile: Boolean,
     feed: Flow<PagingData<PostCardUiState>>,
     timelineTypeFlow: StateFlow<TimelineType>,
-    htmlContentInteractions: HtmlContentInteractions,
+    htmlContentInteractions: org.mozilla.social.core.ui.htmlcontent.HtmlContentInteractions,
     postCardInteractions: PostCardInteractions,
     accountInteractions: AccountInteractions,
 ) {
@@ -432,7 +431,7 @@ private fun Counter(
 private fun UserBio(
     modifier: Modifier = Modifier,
     account: AccountUiState,
-    htmlContentInteractions: HtmlContentInteractions,
+    htmlContentInteractions: org.mozilla.social.core.ui.htmlcontent.HtmlContentInteractions,
 ) {
     var expanded by remember { mutableStateOf(false) }
     NoRipple {
@@ -470,7 +469,7 @@ private fun UserBio(
                 }
             ) { targetState ->
                 Column {
-                    HtmlContent(
+                    org.mozilla.social.core.ui.htmlcontent.HtmlContent(
                         mentions = emptyList(),
                         htmlText = account.bio,
                         htmlContentInteractions = htmlContentInteractions,
@@ -521,7 +520,7 @@ private fun UserLabel(
     icon: Painter? = null,
     label: String? = null,
     text: String,
-    htmlContentInteractions: HtmlContentInteractions,
+    htmlContentInteractions: org.mozilla.social.core.ui.htmlcontent.HtmlContentInteractions,
 ) {
     Row {
         icon?.let {
@@ -546,7 +545,7 @@ private fun UserLabel(
             Spacer(modifier = Modifier.width(4.dp))
         }
 
-        HtmlContent(
+        org.mozilla.social.core.ui.htmlcontent.HtmlContent(
             modifier = Modifier
                 .weight(1f),
             mentions = emptyList(),
@@ -599,7 +598,8 @@ fun AccountScreenPreview() {
                 isUsersProfile = false,
                 feed = flowOf(),
                 timelineTypeFlow = MutableStateFlow(TimelineType.POSTS),
-                htmlContentInteractions = object : HtmlContentInteractions {},
+                htmlContentInteractions = object :
+                    org.mozilla.social.core.ui.htmlcontent.HtmlContentInteractions {},
                 postCardInteractions = object : PostCardInteractions {},
                 accountInteractions = object : AccountInteractions {},
                 windowInsets = WindowInsets.systemBars,
