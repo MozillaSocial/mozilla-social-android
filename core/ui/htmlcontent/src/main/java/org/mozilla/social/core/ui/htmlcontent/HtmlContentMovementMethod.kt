@@ -25,7 +25,9 @@ object HtmlContentMovementMethod : LinkMovementMethod() {
         event: MotionEvent
     ): Boolean {
         val action = event.action
-        if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_DOWN || action == MotionEvent.ACTION_CANCEL) {
+        if (action == MotionEvent.ACTION_UP
+            || action == MotionEvent.ACTION_DOWN
+            || action == MotionEvent.ACTION_CANCEL) {
             var x = event.x.toInt()
             var y = event.y.toInt()
             x -= widget.totalPaddingLeft
