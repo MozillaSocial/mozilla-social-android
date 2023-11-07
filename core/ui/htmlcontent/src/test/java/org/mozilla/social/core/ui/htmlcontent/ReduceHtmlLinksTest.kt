@@ -1,6 +1,5 @@
 package org.mozilla.social.core.ui.htmlcontent
 
-import org.mozilla.social.core.ui.htmlcontent.reduceHtmlLinks
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
