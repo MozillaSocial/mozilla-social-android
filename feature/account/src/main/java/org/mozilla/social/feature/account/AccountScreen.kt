@@ -50,9 +50,16 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.paging.PagingData
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.LocalTime
 import kotlinx.datetime.toJavaLocalDateTime
 import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.KoinApplication
 import org.koin.core.parameter.parametersOf
 import org.mozilla.social.common.Resource
 import org.mozilla.social.common.utils.DateTimeFormatters
@@ -66,6 +73,7 @@ import org.mozilla.social.core.designsystem.component.MoSoTabRow
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.designsystem.utils.NoRipple
+import org.mozilla.social.core.navigation.navigationModule
 import org.mozilla.social.core.ui.common.DropDownItem
 import org.mozilla.social.core.ui.common.appbar.MoSoCloseableTopAppBar
 import org.mozilla.social.core.ui.common.error.GenericError
@@ -554,10 +562,48 @@ private fun UserLabel(
 
 private const val BIO_MAX_LINES_NOT_EXPANDED = 3
 
+@Suppress("MagicNumber")
 @Preview
 @Composable
 fun AccountScreenPreview() {
-    MoSoTheme {
-//        AccountScreen("110810174933375392")
+    KoinApplication(application = {
+        modules(navigationModule)
+    }) {
+        MoSoTheme {
+            AccountScreen(
+                resource = Resource.Loaded(
+                    data = AccountUiState(
+                        accountId = "",
+                        username = "Coolguy",
+                        webFinger = "@coolguy",
+                        displayName = "Cool Guy",
+                        accountUrl = "",
+                        bio = "I'm pretty cool",
+                        avatarUrl = "",
+                        headerUrl = "",
+                        followersCount = 1,
+                        followingCount = 500,
+                        statusesCount = 4000,
+                        fields = listOf(),
+                        isBot = false,
+                        isFollowing = false,
+                        isMuted = false,
+                        isBlocked = false,
+                        joinDate = LocalDateTime(
+                            LocalDate(2023, 7, 3),
+                            LocalTime(0, 0, 0)
+                        ),
+                    )
+                ),
+                closeButtonVisible = true,
+                isUsersProfile = false,
+                feed = flowOf(),
+                timelineTypeFlow = MutableStateFlow(TimelineType.POSTS),
+                htmlContentInteractions = object : HtmlContentInteractions {},
+                postCardInteractions = object : PostCardInteractions {},
+                accountInteractions = object : AccountInteractions {},
+                windowInsets = WindowInsets.systemBars,
+            )
+        }
     }
 }
