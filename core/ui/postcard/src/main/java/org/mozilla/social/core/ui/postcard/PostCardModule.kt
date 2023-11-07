@@ -10,6 +10,7 @@ val postCardModule = module {
             accountRepository = get(),
             navigateTo = get(),
             openLink = get(),
+            showSnackbar = get(),
         )
     }
 }

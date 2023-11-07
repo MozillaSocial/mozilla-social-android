@@ -21,11 +21,8 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.SharedFlow
-import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.core.designsystem.component.MoSoCircularProgressIndicator
 import org.mozilla.social.core.designsystem.component.MoSoDivider
-import org.mozilla.social.core.ui.common.MoSoErrorToast
 import org.mozilla.social.core.ui.common.error.GenericError
 import org.mozilla.social.core.ui.common.loading.MaxSizeLoading
 import org.mozilla.social.core.ui.common.pullrefresh.PullRefreshIndicator
@@ -47,7 +44,6 @@ import org.mozilla.social.core.ui.common.pullrefresh.rememberPullRefreshState
 @Composable
 fun PostCardList(
     feed: Flow<PagingData<PostCardUiState>>,
-    errorToastMessage: SharedFlow<StringFactory>,
     refreshSignalFlow: Flow<Any>? = null,
     postCardInteractions: PostCardInteractions,
     pullToRefreshEnabled: Boolean = false,
@@ -106,8 +102,6 @@ fun PostCardList(
             )
         }
     }
-
-    MoSoErrorToast(toastMessage = errorToastMessage)
 }
 
 @Composable
@@ -228,7 +222,6 @@ private fun LazyListScope.listContent(
 @Composable
 fun PostCardList(
     items: List<PostCardUiState>,
-    errorToastMessage: SharedFlow<StringFactory>,
     postCardInteractions: PostCardInteractions,
     threadId: String? = null,
 ) {
@@ -253,6 +246,4 @@ fun PostCardList(
             }
         }
     }
-
-    MoSoErrorToast(toastMessage = errorToastMessage)
 }

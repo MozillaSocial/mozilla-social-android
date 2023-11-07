@@ -16,7 +16,7 @@ import org.mozilla.social.navigation.MainNavHost
 import org.mozilla.social.ui.bottombar.MoSoNavigationBarDefaults.bottomBarPadding
 
 /**
- * must pass in view model... why does app break without it?
+ * must pass in view model to ensure it gets instantiated
  */
 @Composable
 @Suppress("UnusedPrivateMember")

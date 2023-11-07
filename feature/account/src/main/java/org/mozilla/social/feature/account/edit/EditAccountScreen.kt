@@ -40,7 +40,6 @@ import org.mozilla.social.core.designsystem.component.MoSoCheckBox
 import org.mozilla.social.core.designsystem.component.MoSoDivider
 import org.mozilla.social.core.designsystem.component.MoSoSurface
 import org.mozilla.social.core.designsystem.component.MoSoTextField
-import org.mozilla.social.core.ui.common.MoSoErrorToast
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.ui.common.TransparentNoTouchOverlay
@@ -59,8 +58,6 @@ internal fun EditAccountScreen(
         uiState = viewModel.editAccountUiState.collectAsState().value,
         isUploading = viewModel.isUploading.collectAsState().value,
     )
-
-    MoSoErrorToast(toastMessage = viewModel.errorToastMessage)
 }
 
 @Composable

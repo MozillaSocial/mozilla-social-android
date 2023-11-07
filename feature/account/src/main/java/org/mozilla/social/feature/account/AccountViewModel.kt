@@ -8,9 +8,7 @@ import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
 import androidx.paging.map
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
@@ -29,6 +27,7 @@ import org.mozilla.social.core.domain.AccountIdBlocking
 import org.mozilla.social.core.domain.GetDetailedAccount
 import org.mozilla.social.core.navigation.NavigationDestination
 import org.mozilla.social.core.navigation.usecases.NavigateTo
+import org.mozilla.social.core.navigation.usecases.ShowSnackbar
 import org.mozilla.social.core.ui.postcard.PostCardDelegate
 import org.mozilla.social.core.ui.postcard.toPostCardUiState
 import org.mozilla.social.core.ui.common.R
@@ -41,11 +40,9 @@ class AccountViewModel(
     private val socialDatabase: SocialDatabase,
     private val getDetailedAccount: GetDetailedAccount,
     private val navigateTo: NavigateTo,
+    private val showSnackbar: ShowSnackbar,
     initialAccountId: String?,
 ) : ViewModel(), AccountInteractions {
-
-    private val _errorToastMessage = MutableSharedFlow<StringFactory>(extraBufferCapacity = 1)
-    val errorToastMessage = _errorToastMessage.asSharedFlow()
 
     val postCardDelegate: PostCardDelegate by inject(
         PostCardDelegate::class.java
@@ -133,7 +130,10 @@ class AccountViewModel(
                 accountRepository.muteAccount(accountId)
             } catch (e: Exception) {
                 Timber.e(e)
-                _errorToastMessage.emit(StringFactory.resource(R.string.error_muting_account))
+                showSnackbar(
+                    text = StringFactory.resource(R.string.error_muting_account),
+                    isError = true,
+                )
             }
         }
     }
@@ -144,7 +144,10 @@ class AccountViewModel(
                 accountRepository.unmuteAccount(accountId)
             } catch (e: Exception) {
                 Timber.e(e)
-                _errorToastMessage.emit(StringFactory.resource(R.string.error_unmuting_account))
+                showSnackbar(
+                    text = StringFactory.resource(R.string.error_unmuting_account),
+                    isError = true,
+                )
             }
         }
     }
@@ -155,7 +158,10 @@ class AccountViewModel(
                 accountRepository.blockAccount(accountId)
             } catch (e: Exception) {
                 Timber.e(e)
-                _errorToastMessage.emit(StringFactory.resource(R.string.error_blocking_account))
+                showSnackbar(
+                    text = StringFactory.resource(R.string.error_blocking_account),
+                    isError = true,
+                )
             }
         }
     }
@@ -166,7 +172,10 @@ class AccountViewModel(
                 accountRepository.unblockAccount(accountId)
             } catch (e: Exception) {
                 Timber.e(e)
-                _errorToastMessage.emit(StringFactory.resource(R.string.error_unblocking_account))
+                showSnackbar(
+                    text = StringFactory.resource(R.string.error_unblocking_account),
+                    isError = true,
+                )
             }
         }
     }
@@ -199,7 +208,10 @@ class AccountViewModel(
                 )
             } catch (e: Exception) {
                 Timber.e(e)
-                _errorToastMessage.emit(StringFactory.resource(R.string.error_following_account))
+                showSnackbar(
+                    text = StringFactory.resource(R.string.error_following_account),
+                    isError = true,
+                )
             }
         }
     }
@@ -213,7 +225,10 @@ class AccountViewModel(
                 )
             } catch (e: Exception) {
                 Timber.e(e)
-                _errorToastMessage.emit(StringFactory.resource(R.string.error_unfollowing_account))
+                showSnackbar(
+                    text = StringFactory.resource(R.string.error_unfollowing_account),
+                    isError = true,
+                )
             }
         }
     }

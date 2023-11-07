@@ -14,6 +14,7 @@ import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.common.utils.edit
 import org.mozilla.social.core.data.repository.AccountRepository
 import org.mozilla.social.core.data.repository.ReportRepository
+import org.mozilla.social.core.navigation.usecases.ShowSnackbar
 import org.mozilla.social.feature.report.R
 import org.mozilla.social.feature.report.ReportDataBundle
 import org.mozilla.social.feature.report.ReportType
@@ -23,6 +24,7 @@ import timber.log.Timber
 class ReportScreen2ViewModel(
     private val accountRepository: AccountRepository,
     private val reportRepository: ReportRepository,
+    private val showSnackbar: ShowSnackbar,
     private val onClose: () -> Unit,
     private val onReportSubmitted: (bundle: ReportDataBundle.ReportDataBundleForScreen3) -> Unit,
     private val reportAccountId: String,
@@ -33,9 +35,6 @@ class ReportScreen2ViewModel(
     private val additionalText: String,
     private val sendToExternalServer: Boolean,
 ) : ViewModel(), ReportScreen2Interactions {
-
-    private val _errorToastMessage = MutableSharedFlow<StringFactory>(extraBufferCapacity = 1)
-    val errorToastMessage = _errorToastMessage.asSharedFlow()
 
     private val _statuses = MutableStateFlow<Resource<List<ReportStatusUiState>>>(Resource.Loading())
     val statuses = _statuses.asStateFlow()
@@ -96,7 +95,10 @@ class ReportScreen2ViewModel(
                 )
             } catch (e: Exception) {
                 Timber.e(e)
-                _errorToastMessage.emit(StringFactory.resource(R.string.error_sending_report_toast))
+                showSnackbar(
+                    text = StringFactory.resource(R.string.error_sending_report_toast),
+                    isError = true,
+                )
                 _reportIsSending.update { false }
             }
         }

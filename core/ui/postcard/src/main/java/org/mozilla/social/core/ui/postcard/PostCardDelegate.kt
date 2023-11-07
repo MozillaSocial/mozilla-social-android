@@ -10,6 +10,7 @@ import org.mozilla.social.core.data.repository.StatusRepository
 import org.mozilla.social.core.navigation.NavigationDestination
 import org.mozilla.social.core.navigation.usecases.NavigateTo
 import org.mozilla.social.core.navigation.usecases.OpenLink
+import org.mozilla.social.core.navigation.usecases.ShowSnackbar
 import org.mozilla.social.core.ui.common.R
 import timber.log.Timber
 
@@ -19,10 +20,8 @@ class PostCardDelegate(
     private val accountRepository: AccountRepository,
     private val navigateTo: NavigateTo,
     private val openLink: OpenLink,
+    private val showSnackbar: ShowSnackbar,
 ) : PostCardInteractions {
-
-    private val _errorToastMessage = MutableSharedFlow<StringFactory>(extraBufferCapacity = 1)
-    val errorToastMessage = _errorToastMessage.asSharedFlow()
 
     override fun onVoteClicked(pollId: String, choices: List<Int>) {
         coroutineScope.launch {
@@ -30,7 +29,10 @@ class PostCardDelegate(
                 statusRepository.voteOnPoll(pollId, choices)
             } catch (e: Exception) {
                 Timber.e(e)
-                _errorToastMessage.emit(StringFactory.resource(R.string.error_voting))
+                showSnackbar(
+                    text = StringFactory.resource(R.string.error_voting),
+                    isError = true,
+                )
             }
         }
     }
@@ -46,14 +48,20 @@ class PostCardDelegate(
                     statusRepository.boostStatus(statusId)
                 } catch (e: Exception) {
                     Timber.e(e)
-                    _errorToastMessage.emit(StringFactory.resource(R.string.error_boosting))
+                    showSnackbar(
+                        text = StringFactory.resource(R.string.error_boosting),
+                        isError = true,
+                    )
                 }
             } else {
                 try {
                     statusRepository.undoStatusBoost(statusId)
                 } catch (e: Exception) {
                     Timber.e(e)
-                    _errorToastMessage.emit(StringFactory.resource(R.string.error_undoing_boost))
+                    showSnackbar(
+                        text = StringFactory.resource(R.string.error_undoing_boost),
+                        isError = true,
+                    )
                 }
             }
         }
@@ -66,14 +74,20 @@ class PostCardDelegate(
                     statusRepository.favoriteStatus(statusId)
                 } catch (e: Exception) {
                     Timber.e(e)
-                    _errorToastMessage.emit(StringFactory.resource(R.string.error_adding_favorite))
+                    showSnackbar(
+                        text = StringFactory.resource(R.string.error_adding_favorite),
+                        isError = true,
+                    )
                 }
             } else {
                 try {
                     statusRepository.undoFavoriteStatus(statusId)
                 } catch (e: Exception) {
                     Timber.e(e)
-                    _errorToastMessage.emit(StringFactory.resource(R.string.error_removing_favorite))
+                    showSnackbar(
+                        text = StringFactory.resource(R.string.error_removing_favorite),
+                        isError = true,
+                    )
                 }
             }
         }
@@ -89,7 +103,10 @@ class PostCardDelegate(
                 accountRepository.muteAccount(accountId)
             } catch (e: Exception) {
                 Timber.e(e)
-                _errorToastMessage.emit(StringFactory.resource(R.string.error_muting_account))
+                showSnackbar(
+                    text = StringFactory.resource(R.string.error_muting_account),
+                    isError = true,
+                )
             }
         }
     }
@@ -100,7 +117,10 @@ class PostCardDelegate(
                 accountRepository.blockAccount(accountId)
             } catch (e: Exception) {
                 Timber.e(e)
-                _errorToastMessage.emit(StringFactory.resource(R.string.error_blocking_account))
+                showSnackbar(
+                    text = StringFactory.resource(R.string.error_blocking_account),
+                    isError = true,
+                )
             }
         }
     }
@@ -125,7 +145,10 @@ class PostCardDelegate(
                 statusRepository.deleteStatus(statusId)
             } catch (e: Exception) {
                 Timber.e(e)
-                _errorToastMessage.emit(StringFactory.resource(R.string.error_deleting_post))
+                showSnackbar(
+                    text = StringFactory.resource(R.string.error_deleting_post),
+                    isError = true,
+                )
             }
         }
     }

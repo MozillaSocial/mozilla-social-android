@@ -3,9 +3,7 @@ package org.mozilla.social.feature.account.edit
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -15,6 +13,7 @@ import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.core.data.repository.AccountRepository
 import org.mozilla.social.core.domain.AccountIdBlocking
 import org.mozilla.social.core.navigation.usecases.PopNavBackstack
+import org.mozilla.social.core.navigation.usecases.ShowSnackbar
 import org.mozilla.social.feature.account.R
 import timber.log.Timber
 import java.io.File
@@ -23,6 +22,7 @@ class EditAccountViewModel(
     private val accountRepository: AccountRepository,
     accountIdBlocking: AccountIdBlocking,
     private val popNavBackstack: PopNavBackstack,
+    private val showSnackbar: ShowSnackbar,
 ) : ViewModel(), EditAccountInteractions {
 
     private val accountId = accountIdBlocking()
@@ -32,9 +32,6 @@ class EditAccountViewModel(
 
     private val _isUploading = MutableStateFlow(false)
     val isUploading = _isUploading.asStateFlow()
-
-    private val _errorToastMessage = MutableSharedFlow<StringFactory>(extraBufferCapacity = 1)
-    val errorToastMessage = _errorToastMessage.asSharedFlow()
 
     private var newAvatar: File? = null
     private var newHeader: File? = null
@@ -81,7 +78,10 @@ class EditAccountViewModel(
                     )
                     popNavBackstack()
                 } catch (e: Exception) {
-                    _errorToastMessage.emit(StringFactory.resource(R.string.edit_account_save_failed))
+                    showSnackbar(
+                        text = StringFactory.resource(R.string.edit_account_save_failed),
+                        isError = true,
+                    )
                     Timber.e(e)
                     _isUploading.update { false }
                 }

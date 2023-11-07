@@ -50,14 +50,12 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.paging.PagingData
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.datetime.toJavaLocalDateTime
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 import org.mozilla.social.common.Resource
 import org.mozilla.social.common.utils.DateTimeFormatters
-import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.core.designsystem.component.MoSoButton
 import org.mozilla.social.core.designsystem.component.MoSoButtonSecondary
 import org.mozilla.social.core.designsystem.component.MoSoCircularProgressIndicator
@@ -65,7 +63,6 @@ import org.mozilla.social.core.designsystem.component.MoSoDropdownMenu
 import org.mozilla.social.core.designsystem.component.MoSoSurface
 import org.mozilla.social.core.designsystem.component.MoSoTab
 import org.mozilla.social.core.designsystem.component.MoSoTabRow
-import org.mozilla.social.core.ui.common.MoSoErrorToast
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.designsystem.utils.NoRipple
@@ -89,7 +86,6 @@ internal fun AccountScreen(
         closeButtonVisible = viewModel.shouldShowCloseButton,
         isUsersProfile = viewModel.isOwnProfile,
         feed = viewModel.feed,
-        errorToastMessage = viewModel.postCardDelegate.errorToastMessage,
         timelineTypeFlow = viewModel.timelineType,
         htmlContentInteractions = viewModel.postCardDelegate,
         postCardInteractions = viewModel.postCardDelegate,
@@ -100,8 +96,6 @@ internal fun AccountScreen(
     LaunchedEffect(Unit) {
         viewModel.onAccountScreenShown()
     }
-
-    MoSoErrorToast(toastMessage = viewModel.errorToastMessage)
 }
 
 @Composable
@@ -110,7 +104,6 @@ private fun AccountScreen(
     closeButtonVisible: Boolean,
     isUsersProfile: Boolean,
     feed: Flow<PagingData<PostCardUiState>>,
-    errorToastMessage: SharedFlow<StringFactory>,
     timelineTypeFlow: StateFlow<TimelineType>,
     htmlContentInteractions: HtmlContentInteractions,
     postCardInteractions: PostCardInteractions,
@@ -155,7 +148,6 @@ private fun AccountScreen(
                         account = resource.data,
                         isUsersProfile = isUsersProfile,
                         feed = feed,
-                        errorToastMessage = errorToastMessage,
                         htmlContentInteractions = htmlContentInteractions,
                         postCardInteractions = postCardInteractions,
                         accountInteractions = accountInteractions,
@@ -189,7 +181,6 @@ private fun MainContent(
     account: AccountUiState,
     isUsersProfile: Boolean,
     feed: Flow<PagingData<PostCardUiState>>,
-    errorToastMessage: SharedFlow<StringFactory>,
     timelineTypeFlow: StateFlow<TimelineType>,
     htmlContentInteractions: HtmlContentInteractions,
     postCardInteractions: PostCardInteractions,
@@ -205,7 +196,6 @@ private fun MainContent(
 
         PostCardList(
             feed = feed,
-            errorToastMessage = errorToastMessage,
             refreshSignalFlow = timelineTypeFlow,
             postCardInteractions = postCardInteractions
         ) {
