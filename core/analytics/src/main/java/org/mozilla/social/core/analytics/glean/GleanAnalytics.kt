@@ -98,7 +98,7 @@ class GleanAnalytics(
     }
 
     override fun clearLoggedInIdentifiers() {
-        Identifiers.mastodonAccountHandle.destroy()
-        Identifiers.mastodonAccountId.destroy()
+        Identifiers.mastodonAccountHandle.set("")
+        Identifiers.mastodonAccountId.set("")
     }
 }
