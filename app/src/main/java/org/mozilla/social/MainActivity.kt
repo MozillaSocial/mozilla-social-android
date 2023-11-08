@@ -7,6 +7,8 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.ui.Modifier
 import androidx.core.view.WindowCompat
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
 import org.koin.androidx.compose.KoinAndroidContext
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.mozilla.social.core.designsystem.component.MoSoSurface
@@ -20,13 +22,16 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        lifecycleScope.launch {
+            viewModel.preloadData()
+        }
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
         setContent {
             MoSoTheme {
                 MoSoSurface(modifier = Modifier.fillMaxSize()) {
                     KoinAndroidContext {
-                        MainActivityScreen(viewModel)
+                        MainActivityScreen()
                     }
                 }
             }

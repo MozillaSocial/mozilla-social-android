@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import org.mozilla.social.core.datastore.UserPreferencesDatastore
 import org.mozilla.social.core.domain.IsSignedInFlow
 import org.mozilla.social.core.domain.Login
 import org.mozilla.social.core.navigation.NavigationDestination
@@ -18,6 +19,7 @@ class MainViewModel(
     private val login: Login,
     private val navigateTo: NavigateTo,
     private val isSignedInFlow: IsSignedInFlow,
+    private val userPreferencesDatastore: UserPreferencesDatastore,
 ) : ViewModel() {
 
     init {
@@ -35,5 +37,9 @@ class MainViewModel(
     fun onNewIntentReceived(intent: Intent) {
         // Attempt to resolve the intent as a login event
         viewModelScope.launch { login.onNewIntentReceived(intent) }
+    }
+
+    suspend fun preloadData() {
+        userPreferencesDatastore.preloadData()
     }
 }
