@@ -4,9 +4,9 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
-import org.junit.Test
 import org.mozilla.social.core.domain.BaseDomainTest
 import kotlin.test.BeforeTest
+import kotlin.test.Test
 import kotlin.test.assertNotNull
 
 class FollowAccountTest : BaseDomainTest() {
@@ -66,5 +66,22 @@ class FollowAccountTest : BaseDomainTest() {
             accountsDao.updateFollowingCount(loggedInId, -1)
             relationshipsDao.updateFollowing(accountId, false)
         }
+    }
+
+    @Test
+    fun outerScopeCancelledTest() {
+        val accountId = "id1"
+        val loggedInId = "id2"
+
+        testOuterScopeCancelled(
+            delayedCallBlock =  { accountApi.followAccount(any()) },
+            subjectCallBlock = { subject(
+                accountId = accountId,
+                loggedInUserAccountId = loggedInId
+            ) },
+            verifyBlock = {
+                accountApi.followAccount(accountId)
+            },
+        )
     }
 }

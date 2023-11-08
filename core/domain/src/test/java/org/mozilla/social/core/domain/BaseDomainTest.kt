@@ -1,9 +1,19 @@
 package org.mozilla.social.core.domain
 
+import io.mockk.MockKMatcherScope
+import io.mockk.MockKVerificationScope
+import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.runTest
 import org.mozilla.social.core.data.utils.TransactionUtils
 import org.mozilla.social.core.database.SocialDatabase
 import org.mozilla.social.core.database.dao.AccountTimelineStatusDao
@@ -74,5 +84,37 @@ open class BaseDomainTest {
         every { socialDatabase.statusDao() } returns statusDao
 
         TransactionUtils.setupTransactionMock(socialDatabase)
+    }
+
+    /**
+     * Used for use cases that should continue running even if their outer scope gets cancelled
+     * @param delayedCallBlock a block of a call that should be slightly delayed.  For example,
+     * if your use case uses [AccountApi.followAccount], then this parameter should look like
+     * { accountApi.followAccount(any()) }
+     * @param subjectCallBlock a block that is calling you use case
+     * @param verifyBlock a block that we should verify gets called once.  Typically good to use
+     * the same call that you used in the @param delayedCallBlock.
+     */
+    protected fun testOuterScopeCancelled(
+        delayedCallBlock: suspend MockKMatcherScope.() -> Unit,
+        subjectCallBlock: suspend () -> Unit,
+        verifyBlock: suspend MockKVerificationScope.() -> Unit,
+    ) = runTest {
+        val mutex = Mutex(locked = true)
+
+        coEvery(delayedCallBlock).coAnswers {
+            mutex.unlock()
+            delay(100)
+        }
+
+        val job = CoroutineScope(Dispatchers.Default).launch {
+            subjectCallBlock()
+        }
+
+        mutex.lock()
+
+        job.cancel()
+
+        coVerify(exactly = 1, verifyBlock = verifyBlock)
     }
 }
