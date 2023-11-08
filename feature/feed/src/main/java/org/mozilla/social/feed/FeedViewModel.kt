@@ -16,7 +16,7 @@ import org.koin.java.KoinJavaComponent
 import org.mozilla.social.core.data.repository.model.status.toExternalModel
 import org.mozilla.social.core.database.SocialDatabase
 import org.mozilla.social.core.database.model.statusCollections.toStatusWrapper
-import org.mozilla.social.core.domain.LoggedInUserAccountId
+import org.mozilla.social.core.domain.GetLoggedInUserAccountId
 import org.mozilla.social.core.ui.postcard.PostCardDelegate
 import org.mozilla.social.core.ui.postcard.toPostCardUiState
 import org.mozilla.social.feed.remoteMediators.FederatedTimelineRemoteMediator
@@ -31,10 +31,10 @@ class FeedViewModel(
     localTimelineRemoteMediator: LocalTimelineRemoteMediator,
     federatedTimelineRemoteMediator: FederatedTimelineRemoteMediator,
     private val socialDatabase: SocialDatabase,
-    loggedInUserAccountId: LoggedInUserAccountId,
+    getLoggedInUserAccountId: GetLoggedInUserAccountId,
 ) : ViewModel(), FeedInteractions {
 
-    private val userAccountId: String = loggedInUserAccountId()
+    private val userAccountId: String = getLoggedInUserAccountId()
 
     private val _timelineType = MutableStateFlow(TimelineType.FOR_YOU)
     val timelineType = _timelineType.asStateFlow()

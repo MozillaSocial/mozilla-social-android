@@ -12,7 +12,7 @@ import timber.log.Timber
  *
  * Uses a mutex so we can cancel the flow collection after we get the value.
  */
-class LoggedInUserAccountId(
+class GetLoggedInUserAccountId(
     private val userPreferencesDatastore: UserPreferencesDatastore,
 ) {
 

@@ -13,7 +13,7 @@ import org.koin.java.KoinJavaComponent.inject
 import org.mozilla.social.core.data.repository.model.status.toExternalModel
 import org.mozilla.social.core.database.SocialDatabase
 import org.mozilla.social.core.database.model.statusCollections.toStatusWrapper
-import org.mozilla.social.core.domain.LoggedInUserAccountId
+import org.mozilla.social.core.domain.GetLoggedInUserAccountId
 import org.mozilla.social.core.domain.remotemediators.HashTagTimelineRemoteMediator
 import org.mozilla.social.core.ui.postcard.PostCardDelegate
 import org.mozilla.social.core.ui.postcard.toPostCardUiState
@@ -21,7 +21,7 @@ import org.mozilla.social.core.ui.postcard.toPostCardUiState
 class HashTagViewModel(
     hashTag: String,
     socialDatabase: SocialDatabase,
-    userAccountId: LoggedInUserAccountId,
+    userAccountId: GetLoggedInUserAccountId,
 ) : ViewModel() {
 
     private val hashTagTimelineRemoteMediator: HashTagTimelineRemoteMediator by inject(
