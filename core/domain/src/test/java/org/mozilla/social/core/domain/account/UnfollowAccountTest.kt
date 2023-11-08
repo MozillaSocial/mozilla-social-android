@@ -1,83 +1,36 @@
-package org.mozilla.social.core.data.repository
+package org.mozilla.social.core.domain.account
 
 import io.mockk.coEvery
 import io.mockk.coVerify
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestScope
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
+import org.junit.Test
 import org.mozilla.social.core.database.model.statusCollections.HomeTimelineStatus
+import org.mozilla.social.core.domain.BaseDomainTest
 import kotlin.test.BeforeTest
-import kotlin.test.Test
 import kotlin.test.assertNotNull
 
-@OptIn(ExperimentalCoroutinesApi::class)
-class AccountRepositoryTest : BaseRepositoryTest() {
+class UnfollowAccountTest : BaseDomainTest() {
 
-    private lateinit var subject: AccountRepository
-
-    private val dispatcher = UnconfinedTestDispatcher()
+    private lateinit var subject: UnfollowAccount
 
     @BeforeTest
     fun setup() {
-        subject = AccountRepository(
+        subject = UnfollowAccount(
+            externalScope = TestScope(testDispatcher),
+            showSnackbar = showSnackbar,
             accountApi = accountApi,
             socialDatabase = socialDatabase,
-            externalScope = TestScope(dispatcher),
-            dispatcherIo = dispatcher
+            dispatcherIo = testDispatcher,
         )
     }
 
     @Test
-    fun followAccountTest() = runTest {
-        val accountId = "id1"
-        val loggedInId = "id2"
-        subject.followAccount(
-            accountId = accountId,
-            loggedInUserAccountId = loggedInId
-        )
-
-        coVerify(exactly = 1) {
-            accountsDao.updateFollowingCount(loggedInId, 1)
-            relationshipsDao.updateFollowing(accountId, true)
-            accountApi.followAccount(accountId)
-        }
-    }
-
-    @Test
-    fun followAccountNetworkFailureTest() = runTest {
+    fun successTest() = runTest {
         val accountId = "id1"
         val loggedInId = "id2"
 
-        coEvery { accountApi.followAccount(accountId) } throws Exception()
-
-        var exception: Exception? = null
-
-        try {
-            subject.followAccount(
-                accountId = accountId,
-                loggedInUserAccountId = loggedInId
-            )
-        } catch (e: Exception) {
-            exception = e
-        }
-
-        assertNotNull(exception)
-
-        coVerify(exactly = 1) {
-            accountsDao.updateFollowingCount(loggedInId, 1)
-            relationshipsDao.updateFollowing(accountId, true)
-            accountsDao.updateFollowingCount(loggedInId, -1)
-            relationshipsDao.updateFollowing(accountId, false)
-        }
-    }
-
-    @Test
-    fun unfollowAccountTest() = runTest {
-        val accountId = "id1"
-        val loggedInId = "id2"
-
-        subject.unfollowAccount(
+        subject(
             accountId = accountId,
             loggedInUserAccountId = loggedInId
         )
@@ -92,7 +45,7 @@ class AccountRepositoryTest : BaseRepositoryTest() {
     }
 
     @Test
-    fun unfollowAccountNetworkFailureTest() = runTest {
+    fun networkFailureTest() = runTest {
         val accountId = "id1"
         val loggedInId = "id2"
 
@@ -114,7 +67,7 @@ class AccountRepositoryTest : BaseRepositoryTest() {
         var exception: Exception? = null
 
         try {
-            subject.unfollowAccount(
+            subject(
                 accountId = accountId,
                 loggedInUserAccountId = loggedInId
             )
