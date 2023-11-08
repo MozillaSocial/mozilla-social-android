@@ -5,14 +5,12 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
-import org.mozilla.social.common.FailedUpdateException
-import org.mozilla.social.common.appscope.AppScope
+import org.mozilla.social.core.data.FailedUpdateException
 import org.mozilla.social.common.parseMastodonLinkHeader
 import org.mozilla.social.core.data.repository.model.account.toExternal
 import org.mozilla.social.core.data.repository.model.followers.FollowersPagingWrapper

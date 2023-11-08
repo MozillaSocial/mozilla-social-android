@@ -7,7 +7,6 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
 import androidx.paging.map
-import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -16,7 +15,7 @@ import kotlinx.coroutines.launch
 import org.koin.core.parameter.parametersOf
 import org.koin.java.KoinJavaComponent
 import org.koin.java.KoinJavaComponent.inject
-import org.mozilla.social.common.FailedUpdateException
+import org.mozilla.social.core.data.FailedUpdateException
 import org.mozilla.social.common.Resource
 import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.common.utils.edit
