@@ -63,7 +63,7 @@ class PollMappingTest {
     }
 
     @Test
-    fun `Results are shown when user has not vote but poll is expired`() {
+    fun `Results are shown when user has not voted but poll is expired`() {
         val poll = basePoll.copy(
             hasVoted = false,
             isExpired = true,
@@ -73,7 +73,7 @@ class PollMappingTest {
     }
 
     @Test
-    fun `Results are hidden when user has not vote but poll is expired but options are null for some reason`() {
+    fun `Results are hidden when user has not voted but poll is expired but options are null for some reason`() {
         val poll = basePoll.copy(
             hasVoted = false,
             isExpired = true,
