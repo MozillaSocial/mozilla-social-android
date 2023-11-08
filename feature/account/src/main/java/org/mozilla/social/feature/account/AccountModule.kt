@@ -8,7 +8,7 @@ val accountModule = module {
     viewModel { parametersHolder ->
         AccountViewModel(
             analytics = get(),
-            accountIdBlocking = get(),
+            getLoggedInUserAccountId = get(),
             socialDatabase = get(),
             getDetailedAccount = get(),
             navigateTo = get(),

@@ -16,16 +16,14 @@ import org.koin.core.parameter.parametersOf
 import org.koin.java.KoinJavaComponent
 import org.koin.java.KoinJavaComponent.inject
 import org.mozilla.social.common.Resource
-import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.common.utils.edit
 import org.mozilla.social.core.analytics.Analytics
-import org.mozilla.social.core.data.repository.AccountRepository
 import org.mozilla.social.core.data.repository.model.status.toExternalModel
 import org.mozilla.social.core.database.SocialDatabase
 import org.mozilla.social.core.database.model.statusCollections.toStatusWrapper
-import org.mozilla.social.core.domain.AccountIdBlocking
 import org.mozilla.social.core.domain.account.FollowAccount
 import org.mozilla.social.core.domain.GetDetailedAccount
+import org.mozilla.social.core.domain.GetLoggedInUserAccountId
 import org.mozilla.social.core.domain.account.BlockAccount
 import org.mozilla.social.core.domain.account.MuteAccount
 import org.mozilla.social.core.domain.account.UnblockAccount
@@ -33,15 +31,13 @@ import org.mozilla.social.core.domain.account.UnfollowAccount
 import org.mozilla.social.core.domain.account.UnmuteAccount
 import org.mozilla.social.core.navigation.NavigationDestination
 import org.mozilla.social.core.navigation.usecases.NavigateTo
-import org.mozilla.social.core.navigation.usecases.ShowSnackbar
 import org.mozilla.social.core.ui.postcard.PostCardDelegate
 import org.mozilla.social.core.ui.postcard.toPostCardUiState
-import org.mozilla.social.core.ui.common.R
 import timber.log.Timber
 
 class AccountViewModel(
     private val analytics: Analytics,
-    accountIdBlocking: AccountIdBlocking,
+    private val getLoggedInUserAccountId: GetLoggedInUserAccountId,
     private val socialDatabase: SocialDatabase,
     private val getDetailedAccount: GetDetailedAccount,
     private val navigateTo: NavigateTo,
@@ -61,7 +57,7 @@ class AccountViewModel(
     /**
      * The account ID of the logged in user
      */
-    private val usersAccountId: String = accountIdBlocking()
+    private val usersAccountId: String = getLoggedInUserAccountId()
 
     /**
      * if an account Id was passed in the constructor, the use that,

@@ -9,24 +9,21 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.mozilla.social.common.Resource
 import org.mozilla.social.common.updateData
-import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.core.data.repository.AccountRepository
-import org.mozilla.social.core.domain.AccountIdBlocking
 import org.mozilla.social.core.domain.account.UpdateMyAccount
+import org.mozilla.social.core.domain.GetLoggedInUserAccountId
 import org.mozilla.social.core.navigation.usecases.PopNavBackstack
-import org.mozilla.social.core.navigation.usecases.ShowSnackbar
-import org.mozilla.social.feature.account.R
 import timber.log.Timber
 import java.io.File
 
 class EditAccountViewModel(
     private val accountRepository: AccountRepository,
-    accountIdBlocking: AccountIdBlocking,
+    getLoggedInUserAccountId: GetLoggedInUserAccountId,
     private val popNavBackstack: PopNavBackstack,
     private val updateMyAccount: UpdateMyAccount,
 ) : ViewModel(), EditAccountInteractions {
 
-    private val accountId = accountIdBlocking()
+    private val accountId = getLoggedInUserAccountId()
 
     private val _editAccountUiState = MutableStateFlow<Resource<EditAccountUiState>>(Resource.Loading())
     val editAccountUiState = _editAccountUiState.asStateFlow()

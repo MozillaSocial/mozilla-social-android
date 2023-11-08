@@ -35,10 +35,10 @@ val reportModule = module {
     }
     viewModel { parametersHolder ->
         ReportScreen3ViewModel(
-            accountIdBlocking = get(),
             unfollowAccount = get(),
             blockAccount = get(),
             muteAccount = get(),
+            getLoggedInUserAccountId = get(),
             doneClicked = parametersHolder[0],
             closeClicked = parametersHolder[1],
             reportAccountId = parametersHolder[2],

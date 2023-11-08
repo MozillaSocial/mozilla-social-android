@@ -8,19 +8,15 @@ import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
 import androidx.paging.map
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import org.koin.core.parameter.parametersOf
 import org.koin.java.KoinJavaComponent
 import org.mozilla.social.core.data.repository.model.status.toExternalModel
 import org.mozilla.social.core.database.SocialDatabase
 import org.mozilla.social.core.database.model.statusCollections.toStatusWrapper
-import org.mozilla.social.core.domain.AccountIdFlow
+import org.mozilla.social.core.domain.GetLoggedInUserAccountId
 import org.mozilla.social.core.ui.postcard.PostCardDelegate
 import org.mozilla.social.core.ui.postcard.toPostCardUiState
 import org.mozilla.social.feed.remoteMediators.FederatedTimelineRemoteMediator
@@ -34,20 +30,14 @@ class FeedViewModel(
     homeTimelineRemoteMediator: HomeTimelineRemoteMediator,
     localTimelineRemoteMediator: LocalTimelineRemoteMediator,
     federatedTimelineRemoteMediator: FederatedTimelineRemoteMediator,
-    accountIdFlow: AccountIdFlow,
     private val socialDatabase: SocialDatabase,
+    getLoggedInUserAccountId: GetLoggedInUserAccountId,
 ) : ViewModel(), FeedInteractions {
+
+    private val userAccountId: String = getLoggedInUserAccountId()
 
     private val _timelineType = MutableStateFlow(TimelineType.FOR_YOU)
     val timelineType = _timelineType.asStateFlow()
-
-    private val currentUserAccountId: StateFlow<String> =
-        accountIdFlow().filterNotNull()
-            .stateIn(
-                viewModelScope,
-                SharingStarted.Eagerly,
-                ""
-            )
 
     @OptIn(ExperimentalPagingApi::class)
     val homeFeed = Pager(
@@ -60,7 +50,7 @@ class FeedViewModel(
         socialDatabase.homeTimelineDao().homeTimelinePagingSource()
     }.flow.map { pagingData ->
         pagingData.map {
-            it.toStatusWrapper().toExternalModel().toPostCardUiState(currentUserAccountId.value)
+            it.toStatusWrapper().toExternalModel().toPostCardUiState(userAccountId)
         }
     }.cachedIn(viewModelScope)
 
@@ -75,7 +65,7 @@ class FeedViewModel(
         socialDatabase.localTimelineDao().localTimelinePagingSource()
     }.flow.map { pagingData ->
         pagingData.map {
-            it.toStatusWrapper().toExternalModel().toPostCardUiState(currentUserAccountId.value)
+            it.toStatusWrapper().toExternalModel().toPostCardUiState(userAccountId)
         }
     }.cachedIn(viewModelScope)
 
@@ -90,7 +80,7 @@ class FeedViewModel(
         socialDatabase.federatedTimelineDao().federatedTimelinePagingSource()
     }.flow.map { pagingData ->
         pagingData.map {
-            it.toStatusWrapper().toExternalModel().toPostCardUiState(currentUserAccountId.value)
+            it.toStatusWrapper().toExternalModel().toPostCardUiState(userAccountId)
         }
     }.cachedIn(viewModelScope)
 

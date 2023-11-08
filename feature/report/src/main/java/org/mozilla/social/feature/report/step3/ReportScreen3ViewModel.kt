@@ -6,17 +6,17 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import org.mozilla.social.core.domain.AccountIdBlocking
+import org.mozilla.social.core.domain.GetLoggedInUserAccountId
 import org.mozilla.social.core.domain.account.BlockAccount
 import org.mozilla.social.core.domain.account.MuteAccount
 import org.mozilla.social.core.domain.account.UnfollowAccount
 import timber.log.Timber
 
 class ReportScreen3ViewModel(
-    accountIdBlocking: AccountIdBlocking,
     private val unfollowAccount: UnfollowAccount,
     private val blockAccount: BlockAccount,
     private val muteAccount: MuteAccount,
+    getLoggedInUserAccountId: GetLoggedInUserAccountId,
     private val doneClicked: () -> Unit,
     private val closeClicked: () -> Unit,
     private val reportAccountId: String,
@@ -25,7 +25,7 @@ class ReportScreen3ViewModel(
     /**
      * The account ID of the logged in user
      */
-    private val usersAccountId: String = accountIdBlocking()
+    private val usersAccountId: String = getLoggedInUserAccountId()
 
     private val _unfollowVisible = MutableStateFlow(true)
     val unfollowVisible = _unfollowVisible.asStateFlow()

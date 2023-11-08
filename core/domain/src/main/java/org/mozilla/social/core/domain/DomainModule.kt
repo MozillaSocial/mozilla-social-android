@@ -32,9 +32,8 @@ val domainModule = module {
         )
     }
     single { IsSignedInFlow(get()) }
-    single { AccountIdFlow(get()) }
     single { GetDetailedAccount(get(), get()) }
-    single { AccountIdBlocking(get()) }
+    single { GetLoggedInUserAccountId(get()) }
 
     single { BlockAccount(
         externalScope = get<AppScope>(),
