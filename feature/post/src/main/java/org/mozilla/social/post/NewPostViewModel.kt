@@ -22,7 +22,7 @@ import org.mozilla.social.core.data.repository.MediaRepository
 import org.mozilla.social.core.data.repository.SearchRepository
 import org.mozilla.social.core.data.repository.StatusRepository
 import org.mozilla.social.core.data.repository.TimelineRepository
-import org.mozilla.social.core.domain.AccountIdBlocking
+import org.mozilla.social.core.domain.GetLoggedInUserAccountId
 import org.mozilla.social.core.navigation.usecases.PopNavBackstack
 import org.mozilla.social.core.navigation.usecases.ShowSnackbar
 import org.mozilla.social.feature.post.R
@@ -44,7 +44,7 @@ class NewPostViewModel(
     private val replyStatusId: String?,
     mediaRepository: MediaRepository,
     searchRepository: SearchRepository,
-    accountIdBlocking: AccountIdBlocking,
+    getLoggedInUserAccountId: GetLoggedInUserAccountId,
     accountRepository: AccountRepository,
     private val statusRepository: StatusRepository,
     private val timelineRepository: TimelineRepository,
@@ -118,7 +118,7 @@ class NewPostViewModel(
     val visibility = _visibility.asStateFlow()
 
     val userHeaderState: Flow<UserHeaderState> = loadResource {
-        accountRepository.getAccount(accountIdBlocking())
+        accountRepository.getAccount(getLoggedInUserAccountId())
     }.mapNotNull { resource ->
         resource.data?.let { account ->
             UserHeaderState(avatarUrl = account.avatarUrl, displayName = account.displayName)
