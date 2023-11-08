@@ -11,18 +11,20 @@ import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertNotNull
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class AccountRepositoryTest : BaseRepositoryTest() {
 
     private lateinit var subject: AccountRepository
 
-    @OptIn(ExperimentalCoroutinesApi::class)
+    private val dispatcher = UnconfinedTestDispatcher()
+
     @BeforeTest
     fun setup() {
         subject = AccountRepository(
             accountApi = accountApi,
             socialDatabase = socialDatabase,
-            externalScope = TestScope(UnconfinedTestDispatcher()),
-            dispatcherIo = UnconfinedTestDispatcher()
+            externalScope = TestScope(dispatcher),
+            dispatcherIo = dispatcher
         )
     }
 

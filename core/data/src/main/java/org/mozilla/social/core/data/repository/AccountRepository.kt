@@ -1,37 +1,20 @@
 package org.mozilla.social.core.data.repository
 
-import androidx.room.withTransaction
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.withContext
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.MultipartBody
-import okhttp3.RequestBody.Companion.asRequestBody
-import okhttp3.RequestBody.Companion.toRequestBody
-import org.mozilla.social.core.data.FailedUpdateException
 import org.mozilla.social.common.parseMastodonLinkHeader
 import org.mozilla.social.core.data.repository.model.account.toExternal
 import org.mozilla.social.core.data.repository.model.followers.FollowersPagingWrapper
 import org.mozilla.social.core.data.repository.model.status.StatusPagingWrapper
-import org.mozilla.social.core.data.repository.model.status.toDatabaseModel
 import org.mozilla.social.core.data.repository.model.status.toExternalModel
 import org.mozilla.social.core.database.SocialDatabase
-import org.mozilla.social.core.database.model.statusCollections.HomeTimelineStatus
 import org.mozilla.social.core.network.AccountApi
 import org.mozilla.social.model.Account
 import org.mozilla.social.model.Relationship
 import org.mozilla.social.model.Status
 import retrofit2.HttpException
-import java.io.File
 
 class AccountRepository internal constructor(
     private val accountApi: AccountApi,
     private val socialDatabase: SocialDatabase,
-    private val externalScope: CoroutineScope,
-    private val dispatcherIo: CoroutineDispatcher = Dispatchers.IO
 ) {
 
     suspend fun verifyUserCredentials(): Account {
@@ -124,142 +107,4 @@ class AccountRepository internal constructor(
 
     suspend fun getAccountFavourites(): List<Status> =
         accountApi.getAccountFavourites().map { it.toExternalModel() }
-
-    suspend fun followAccount(
-        accountId: String,
-        loggedInUserAccountId: String,
-    ) = externalScope.async(dispatcherIo) {
-        try {
-            socialDatabase.withTransaction {
-                socialDatabase.accountsDao().updateFollowingCount(loggedInUserAccountId, 1)
-                socialDatabase.relationshipsDao().updateFollowing(accountId, true)
-            }
-            accountApi.followAccount(accountId)
-        } catch (e: Exception) {
-            socialDatabase.withTransaction {
-                socialDatabase.accountsDao().updateFollowingCount(loggedInUserAccountId, -1)
-                socialDatabase.relationshipsDao().updateFollowing(accountId, false)
-            }
-            throw FailedUpdateException(e)
-        }
-    }.await()
-
-    suspend fun unfollowAccount(
-        accountId: String,
-        loggedInUserAccountId: String,
-    ) = externalScope.async(dispatcherIo) {
-        var timelinePosts: List<HomeTimelineStatus>? = null
-        try {
-            socialDatabase.withTransaction {
-                timelinePosts = socialDatabase.homeTimelineDao().getPostsFromAccount(accountId)
-                socialDatabase.homeTimelineDao().removePostsFromAccount(accountId)
-                socialDatabase.accountsDao().updateFollowingCount(loggedInUserAccountId, -1)
-                socialDatabase.relationshipsDao().updateFollowing(accountId, false)
-            }
-            accountApi.unfollowAccount(accountId)
-        } catch (e: Exception) {
-            socialDatabase.withTransaction {
-                timelinePosts?.let { socialDatabase.homeTimelineDao().insertAll(it) }
-                socialDatabase.accountsDao().updateFollowingCount(loggedInUserAccountId, 1)
-                socialDatabase.relationshipsDao().updateFollowing(accountId, true)
-            }
-            throw FailedUpdateException(e)
-        }
-    }.await()
-
-    /**
-     * remove posts from any timelines before blocking
-     */
-    suspend fun blockAccount(accountId: String) = externalScope.async(dispatcherIo) {
-        try {
-            socialDatabase.homeTimelineDao().removePostsFromAccount(accountId)
-            socialDatabase.localTimelineDao().removePostsFromAccount(accountId)
-            socialDatabase.federatedTimelineDao().removePostsFromAccount(accountId)
-            socialDatabase.relationshipsDao().updateBlocked(accountId, true)
-            accountApi.blockAccount(accountId)
-        } catch (e: Exception) {
-            socialDatabase.relationshipsDao().updateBlocked(accountId, false)
-            throw FailedUpdateException(e)
-        }
-    }.await()
-
-    suspend fun unblockAccount(accountId: String) = externalScope.async(dispatcherIo) {
-        try {
-            socialDatabase.relationshipsDao().updateBlocked(accountId, false)
-            accountApi.unblockAccount(accountId)
-        } catch (e: Exception) {
-            socialDatabase.relationshipsDao().updateBlocked(accountId, true)
-            throw FailedUpdateException(e)
-        }
-    }.await()
-
-    /**
-     * remove posts from any timelines before muting
-     */
-    suspend fun muteAccount(accountId: String) = externalScope.async(dispatcherIo) {
-        try {
-            socialDatabase.homeTimelineDao().removePostsFromAccount(accountId)
-            socialDatabase.localTimelineDao().removePostsFromAccount(accountId)
-            socialDatabase.federatedTimelineDao().removePostsFromAccount(accountId)
-            socialDatabase.relationshipsDao().updateMuted(accountId, true)
-            accountApi.muteAccount(accountId)
-        } catch (e: Exception) {
-            socialDatabase.relationshipsDao().updateMuted(accountId, false)
-            throw FailedUpdateException(e)
-        }
-    }.await()
-
-    suspend fun unmuteAccount(accountId: String) = externalScope.async(dispatcherIo) {
-        try {
-            socialDatabase.relationshipsDao().updateMuted(accountId, false)
-            accountApi.unmuteAccount(accountId)
-        } catch (e: Exception) {
-            socialDatabase.relationshipsDao().updateMuted(accountId, true)
-            throw FailedUpdateException(e)
-        }
-    }.await()
-
-    suspend fun updateMyAccount(
-        displayName: String? = null,
-        bio: String? = null,
-        locked: Boolean? = null,
-        bot: Boolean? = null,
-        avatar: File? = null,
-        header: File? = null,
-        fields: List<Pair<String, String>>? = null
-    ) = externalScope.async(dispatcherIo) {
-        try {
-            val updatedAccount = accountApi.updateAccount(
-                displayName = displayName?.toRequestBody(MultipartBody.FORM),
-                bio = bio?.toRequestBody(MultipartBody.FORM),
-                locked = locked?.toString()?.toRequestBody(MultipartBody.FORM),
-                bot = bot?.toString()?.toRequestBody(MultipartBody.FORM),
-                avatar = avatar?.let {
-                    MultipartBody.Part.createFormData(
-                        "avatar",
-                        avatar.name,
-                        avatar.asRequestBody("image/*".toMediaTypeOrNull()),
-                    )
-                },
-                header = header?.let {
-                    MultipartBody.Part.createFormData(
-                        "header",
-                        header.name,
-                        header.asRequestBody("image/*".toMediaTypeOrNull()),
-                    )
-                },
-                fieldLabel0 = fields?.getOrNull(0)?.first?.toRequestBody(MultipartBody.FORM),
-                fieldContent0 = fields?.getOrNull(0)?.second?.toRequestBody(MultipartBody.FORM),
-                fieldLabel1 = fields?.getOrNull(1)?.first?.toRequestBody(MultipartBody.FORM),
-                fieldContent1 = fields?.getOrNull(1)?.second?.toRequestBody(MultipartBody.FORM),
-                fieldLabel2 = fields?.getOrNull(2)?.first?.toRequestBody(MultipartBody.FORM),
-                fieldContent2 = fields?.getOrNull(2)?.second?.toRequestBody(MultipartBody.FORM),
-                fieldLabel3 = fields?.getOrNull(3)?.first?.toRequestBody(MultipartBody.FORM),
-                fieldContent3 = fields?.getOrNull(3)?.second?.toRequestBody(MultipartBody.FORM),
-            ).toExternalModel()
-            socialDatabase.accountsDao().insert(updatedAccount.toDatabaseModel())
-        } catch (e: Exception) {
-            throw FailedUpdateException(e)
-        }
-    }.await()
 }

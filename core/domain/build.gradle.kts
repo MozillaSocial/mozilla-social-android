@@ -15,6 +15,7 @@ dependencies {
     implementation(project(":core:network"))
     implementation(project(":core:model"))
     implementation(project(":core:analytics"))
+    implementation(project(":core:navigation"))
 
     implementation(libs.jakewharton.timber)
     implementation(libs.androidx.navigation.compose)

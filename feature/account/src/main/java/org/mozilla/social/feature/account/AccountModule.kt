@@ -8,13 +8,17 @@ val accountModule = module {
     viewModel { parametersHolder ->
         AccountViewModel(
             analytics = get(),
-            accountRepository = get(),
             accountIdBlocking = get(),
             socialDatabase = get(),
             getDetailedAccount = get(),
             navigateTo = get(),
-            showSnackbar = get(),
             initialAccountId = parametersHolder[0],
+            followAccount = get(),
+            unfollowAccount = get(),
+            blockAccount = get(),
+            unblockAccount = get(),
+            muteAccount = get(),
+            unmuteAccount = get(),
         )
     }
     factory { parametersHolder ->

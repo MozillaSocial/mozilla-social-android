@@ -7,10 +7,11 @@ val postCardModule = module {
         PostCardDelegate(
             coroutineScope = parametersHolder[0],
             statusRepository = get(),
-            accountRepository = get(),
             navigateTo = get(),
             openLink = get(),
             showSnackbar = get(),
+            blockAccount = get(),
+            muteAccount = get(),
         )
     }
 }

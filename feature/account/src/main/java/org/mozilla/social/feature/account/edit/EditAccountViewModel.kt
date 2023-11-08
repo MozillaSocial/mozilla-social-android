@@ -12,6 +12,7 @@ import org.mozilla.social.common.updateData
 import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.core.data.repository.AccountRepository
 import org.mozilla.social.core.domain.AccountIdBlocking
+import org.mozilla.social.core.domain.account.UpdateMyAccount
 import org.mozilla.social.core.navigation.usecases.PopNavBackstack
 import org.mozilla.social.core.navigation.usecases.ShowSnackbar
 import org.mozilla.social.feature.account.R
@@ -22,7 +23,7 @@ class EditAccountViewModel(
     private val accountRepository: AccountRepository,
     accountIdBlocking: AccountIdBlocking,
     private val popNavBackstack: PopNavBackstack,
-    private val showSnackbar: ShowSnackbar,
+    private val updateMyAccount: UpdateMyAccount,
 ) : ViewModel(), EditAccountInteractions {
 
     private val accountId = accountIdBlocking()
@@ -62,7 +63,7 @@ class EditAccountViewModel(
         with(_editAccountUiState.value as? Resource.Loaded ?: return) {
             viewModelScope.launch {
                 try {
-                    accountRepository.updateMyAccount(
+                    updateMyAccount(
                         displayName = data.displayName.trim(),
                         bio = data.bio.trim(),
                         avatar = newAvatar,
@@ -78,10 +79,6 @@ class EditAccountViewModel(
                     )
                     popNavBackstack()
                 } catch (e: Exception) {
-                    showSnackbar(
-                        text = StringFactory.resource(R.string.edit_account_save_failed),
-                        isError = true,
-                    )
                     Timber.e(e)
                     _isUploading.update { false }
                 }
