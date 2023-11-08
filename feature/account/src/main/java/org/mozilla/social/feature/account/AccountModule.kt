@@ -9,7 +9,7 @@ val accountModule = module {
         AccountViewModel(
             analytics = get(),
             accountRepository = get(),
-            accountIdBlocking = get(),
+            loggedInUserAccountId = get(),
             socialDatabase = get(),
             getDetailedAccount = get(),
             navigateTo = get(),

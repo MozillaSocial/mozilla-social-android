@@ -17,7 +17,7 @@ import org.junit.Before
 import org.junit.Test
 import org.mozilla.social.common.Resource
 import org.mozilla.social.core.data.repository.AccountRepository
-import org.mozilla.social.core.domain.AccountIdBlocking
+import org.mozilla.social.core.domain.LoggedInUserAccountId
 import org.mozilla.social.core.domain.Logout
 import org.mozilla.social.model.Account
 
@@ -27,7 +27,7 @@ class AccountSettingsViewModelTest {
     private val accountId = "123"
     private val logout: Logout = mockk(relaxed = true)
 
-    private val accountIdBlocking: AccountIdBlocking = mockk(relaxed = true)
+    private val loggedInUserAccountId: LoggedInUserAccountId = mockk(relaxed = true)
     private val accountRepository: AccountRepository = mockk(relaxed = true)
 
     private val account = mockk<Account>()
@@ -40,11 +40,11 @@ class AccountSettingsViewModelTest {
         every { account.acct } returns "acct"
         every { account.avatarUrl } returns "avatarurl"
         every { account.url } returns "url"
-        every { accountIdBlocking() } returns accountId
+        every { loggedInUserAccountId() } returns accountId
         coEvery { accountRepository.getAccount(accountId) } returns account
         objUnderTest = AccountSettingsViewModel(
             logout = logout,
-            accountIdBlocking = accountIdBlocking,
+            loggedInUserAccountId = loggedInUserAccountId,
             accountRepository = accountRepository
         )
     }

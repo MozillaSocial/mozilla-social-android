@@ -5,18 +5,18 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import org.mozilla.social.common.loadResource
 import org.mozilla.social.core.data.repository.AccountRepository
-import org.mozilla.social.core.domain.AccountIdBlocking
+import org.mozilla.social.core.domain.LoggedInUserAccountId
 import org.mozilla.social.core.domain.Logout
 import org.mozilla.social.model.Account
 
 class AccountSettingsViewModel(
     private val logout: Logout,
-    accountIdBlocking: AccountIdBlocking,
+    loggedInUserAccountId: LoggedInUserAccountId,
     accountRepository: AccountRepository,
 ) : ViewModel() {
 
     val userHeader = loadResource {
-        accountRepository.getAccount(accountIdBlocking()).toUserHeader()
+        accountRepository.getAccount(loggedInUserAccountId()).toUserHeader()
     }
 
     fun onLogoutClicked() {

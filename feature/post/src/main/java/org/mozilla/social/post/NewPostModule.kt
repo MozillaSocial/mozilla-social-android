@@ -13,7 +13,7 @@ val newPostModule = module {
             timelineRepository = get(),
             popNavBackstack = get(),
             showSnackbar = get(),
-            accountIdBlocking = get(),
+            loggedInUserAccountId = get(),
             accountRepository = get(),
         )
     }

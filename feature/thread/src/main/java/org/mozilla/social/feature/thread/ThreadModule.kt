@@ -5,7 +5,7 @@ import org.koin.dsl.module
 
 val threadModule = module {
     viewModel { parametersHolder -> ThreadViewModel(
-        accountIdFlow = get(),
+        loggedInUserAccountId = get(),
         getThreadUseCase = get(),
         mainStatusId = parametersHolder[0],
     ) }
