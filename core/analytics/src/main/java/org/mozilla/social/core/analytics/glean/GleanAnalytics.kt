@@ -1,7 +1,9 @@
 package org.mozilla.social.core.analytics.glean
 
 import android.content.Context
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -24,11 +26,15 @@ class GleanAnalytics(
         Glean.setLogPings(true)
         Glean.setDebugViewTag("moso-android-debug")
 
-        Glean.initialize(
-            applicationContext = context,
-            uploadEnabled = false,
-            buildInfo = buildInfo
-        )
+        CoroutineScope(Main).launch {
+            appPreferencesDatastore.allowAnalytics.collectLatest {
+                Glean.initialize(
+                    applicationContext = context,
+                    uploadEnabled = it,
+                    buildInfo = buildInfo
+                )
+            }
+        }
 
         GlobalScope.launch {
             appPreferencesDatastore.allowAnalytics.collectLatest {
