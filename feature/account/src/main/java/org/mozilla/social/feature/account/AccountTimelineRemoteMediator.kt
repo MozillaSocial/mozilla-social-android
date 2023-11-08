@@ -7,12 +7,14 @@ import androidx.paging.RemoteMediator
 import androidx.room.withTransaction
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.StateFlow
+import org.mozilla.social.common.Rel
 import org.mozilla.social.core.data.repository.AccountRepository
 import org.mozilla.social.core.data.repository.StatusRepository
 import org.mozilla.social.core.database.SocialDatabase
 import org.mozilla.social.core.database.model.statusCollections.AccountTimelineStatus
 import org.mozilla.social.core.database.model.statusCollections.AccountTimelineStatusWrapper
 import org.mozilla.social.core.domain.remotemediators.getInReplyToAccountNames
+import timber.log.Timber
 
 @OptIn(ExperimentalPagingApi::class)
 class AccountTimelineRemoteMediator(
@@ -67,16 +69,18 @@ class AccountTimelineRemoteMediator(
                         excludeReplies = timelineType.value == TimelineType.POSTS,
                     )
                 }
-            }.getInReplyToAccountNames(accountRepository)
+            }
+
+            val result = response.statuses.getInReplyToAccountNames(accountRepository)
 
             socialDatabase.withTransaction {
                 if (loadType == LoadType.REFRESH) {
                     socialDatabase.accountTimelineDao().deleteAccountTimeline(accountId)
                 }
 
-                statusRepository.saveStatusesToDatabase(response)
+                statusRepository.saveStatusesToDatabase(result)
 
-                socialDatabase.accountTimelineDao().insertAll(response.map {
+                socialDatabase.accountTimelineDao().insertAll(result.map {
                     AccountTimelineStatus(
                         statusId = it.statusId,
                         accountId = it.account.accountId,
@@ -100,9 +104,14 @@ class AccountTimelineRemoteMediator(
             }
 
             MediatorResult.Success(
-                endOfPaginationReached = response.size != pageSize
+                endOfPaginationReached = when (loadType) {
+                    LoadType.PREPEND -> response.pagingLinks?.find { it.rel == Rel.PREV } == null
+                    LoadType.REFRESH,
+                    LoadType.APPEND -> response.pagingLinks?.find { it.rel == Rel.NEXT } == null
+                }
             )
         } catch (e: Exception) {
+            Timber.e(e)
             MediatorResult.Error(e)
         }
     }

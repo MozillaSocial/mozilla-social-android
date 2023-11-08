@@ -20,5 +20,4 @@ val domainModule = module {
     single { AccountIdFlow(get()) }
     single { GetDetailedAccount(get(), get()) }
     single { AccountIdBlocking(get()) }
-    single { AccountFlow(get(), get()) }
 }

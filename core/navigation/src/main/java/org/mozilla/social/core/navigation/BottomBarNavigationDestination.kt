@@ -1,0 +1,39 @@
+package org.mozilla.social.core.navigation
+
+import androidx.navigation.NavController
+import androidx.navigation.NavOptions
+
+sealed class BottomBarNavigationDestination(val route: String) {
+    data object Feed : BottomBarNavigationDestination(
+        route = "feed"
+    ) {
+        fun NavController.navigateToFeed(navOptions: NavOptions? = null) {
+            this.navigate(route, navOptions)
+        }
+    }
+
+    data object Discover : BottomBarNavigationDestination(
+        route = "discover"
+    ) {
+        fun NavController.navigateToDiscover(
+            navOptions: NavOptions? = null,
+        ) {
+            navigate(route, navOptions)
+        }
+    }
+    data object Bookmarks : BottomBarNavigationDestination(
+        route = "bookmarks"
+    ) {
+        fun NavController.navigateToBookmarksScreen(navOptions: NavOptions? = null) {
+            navigate(route, navOptions)
+        }
+    }
+
+    data object MyAccount : BottomBarNavigationDestination(route = "myAccount") {
+        fun NavController.navigateToMyAccount(
+            navOptions: NavOptions? = null,
+        ) {
+            navigate(route, navOptions)
+        }
+    }
+}

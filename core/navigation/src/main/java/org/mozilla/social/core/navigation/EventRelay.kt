@@ -6,12 +6,20 @@ import org.mozilla.social.common.utils.StringFactory
 import timber.log.Timber
 
 class EventRelay {
-    private val _navigationEvents = MutableSharedFlow<Event>(extraBufferCapacity = 1)
+    private val _navigationEvents = MutableSharedFlow<Event>(extraBufferCapacity = 10)
     val navigationEvents: SharedFlow<Event>
         get() = _navigationEvents
 
-    fun emitEvent(navDestination: NavDestination) {
+    fun emitEvent(navDestination: NavigationDestination) {
         emitEvent(Event.NavigateToDestination(navDestination))
+    }
+
+    fun emitEvent(navDestination: BottomBarNavigationDestination) {
+        emitEvent(Event.NavigateToBottomBarDestination(navDestination))
+    }
+
+    fun emitEvent(navDestination: SettingsNavigationDestination) {
+        emitEvent(Event.NavigateToSettingsDestination(navDestination))
     }
 
     fun emitEvent(event: Event) {
@@ -26,6 +34,12 @@ sealed class Event {
     data class OpenLink(val url: String) : Event()
     data class ShowSnackbar(val text: StringFactory, val isError: Boolean) : Event()
 
-    data class NavigateToDestination(val destination: NavDestination) :
+    data class NavigateToDestination(val destination: NavigationDestination) :
+        Event()
+
+    data class NavigateToBottomBarDestination(val destination: BottomBarNavigationDestination) :
+        Event()
+
+    data class NavigateToSettingsDestination(val destination: SettingsNavigationDestination) :
         Event()
 }

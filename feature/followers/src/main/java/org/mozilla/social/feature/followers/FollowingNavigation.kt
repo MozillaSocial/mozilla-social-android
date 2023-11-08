@@ -7,13 +7,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import org.mozilla.social.core.navigation.NavigationDestination
 
-fun NavController.navigateToFollowing(
-    accountId: String,
-    navOptions: NavOptions? = null,
-) {
-    navigate(NavigationDestination.Following.route(accountId), navOptions)
-}
-
 fun NavGraphBuilder.followingScreen() {
     composable(
         route = NavigationDestination.Following.fullRoute,

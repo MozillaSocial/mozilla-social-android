@@ -1,5 +1,7 @@
 package org.mozilla.social.core.network.model
 
+import kotlinx.serialization.SerialName
+
 /**
  * Information about the software instance of Mastodon running on this domain.
  */
@@ -8,31 +10,37 @@ data class NetworkInstance(
     /**
      * The domain name of the instance.
      */
+    @SerialName("uri")
     val uri: String,
 
     /**
      * The title of the instance.
      */
+    @SerialName("title")
     val title: String,
 
     /**
      * An admin-defined description of the instance.
      */
+    @SerialName("description")
     val description: String,
 
     /**
      * A shorter description of the instance defined by the admin.
      */
+    @SerialName("shortDescription")
     val shortDescription: String,
 
     /**
      * An email that may be contacted for any inquiries.
      */
+    @SerialName("email")
     val email: String,
 
     /**
      * The version of Mastodon installed on the instance.
      */
+    @SerialName("version")
     val version: String,
 
     /**
@@ -40,11 +48,13 @@ data class NetworkInstance(
      *
      * ISO 639-1 language two-letter code.
      */
+    @SerialName("languages")
     val languages: List<String>,
 
     /**
      * Whether registrations are enabled.
      */
+    @SerialName("areRegistrationsEnabled")
     val areRegistrationsEnabled: Boolean,
 
     /**

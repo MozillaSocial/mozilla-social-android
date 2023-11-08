@@ -1,17 +1,20 @@
 package org.mozilla.social.core.data.repository
 
+import androidx.room.withTransaction
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
+import org.mozilla.social.common.parseMastodonLinkHeader
 import org.mozilla.social.core.data.repository.model.account.toExternal
 import org.mozilla.social.core.data.repository.model.followers.FollowersPagingWrapper
+import org.mozilla.social.core.data.repository.model.status.StatusPagingWrapper
 import org.mozilla.social.core.data.repository.model.status.toDatabaseModel
 import org.mozilla.social.core.data.repository.model.status.toExternalModel
 import org.mozilla.social.core.database.SocialDatabase
+import org.mozilla.social.core.database.model.statusCollections.HomeTimelineStatus
 import org.mozilla.social.core.network.AccountApi
 import org.mozilla.social.model.Account
 import org.mozilla.social.model.Relationship
@@ -88,8 +91,8 @@ class AccountRepository internal constructor(
         onlyMedia: Boolean = false,
         excludeReplies: Boolean = false,
         excludeBoosts: Boolean = false,
-    ): List<Status> =
-        accountApi.getAccountStatuses(
+    ): StatusPagingWrapper {
+        val response = accountApi.getAccountStatuses(
             accountId = accountId,
             olderThanId = olderThanId,
             immediatelyNewerThanId = immediatelyNewerThanId,
@@ -97,7 +100,17 @@ class AccountRepository internal constructor(
             onlyMedia = onlyMedia,
             excludeReplies = excludeReplies,
             excludeBoosts = excludeBoosts,
-        ).map { it.toExternalModel() }
+        )
+
+        if (!response.isSuccessful) {
+            throw HttpException(response)
+        }
+
+        return StatusPagingWrapper(
+            statuses = response.body()?.map { it.toExternalModel() } ?: emptyList(),
+            pagingLinks = response.headers().get("link")?.parseMastodonLinkHeader(),
+        )
+    }
 
     suspend fun getAccountBookmarks(): List<Status> =
         accountApi.getAccountBookmarks().map { it.toExternalModel() }
@@ -105,23 +118,44 @@ class AccountRepository internal constructor(
     suspend fun getAccountFavourites(): List<Status> =
         accountApi.getAccountFavourites().map { it.toExternalModel() }
 
-    suspend fun followAccount(accountId: String) {
+    suspend fun followAccount(
+        accountId: String,
+        loggedInUserAccountId: String,
+    ) {
         try {
-            socialDatabase.relationshipsDao().updateFollowing(accountId, true)
+            socialDatabase.withTransaction {
+                socialDatabase.accountsDao().updateFollowingCount(loggedInUserAccountId, 1)
+                socialDatabase.relationshipsDao().updateFollowing(accountId, true)
+            }
             accountApi.followAccount(accountId)
         } catch (e: Exception) {
-            socialDatabase.relationshipsDao().updateFollowing(accountId, false)
+            socialDatabase.withTransaction {
+                socialDatabase.accountsDao().updateFollowingCount(loggedInUserAccountId, -1)
+                socialDatabase.relationshipsDao().updateFollowing(accountId, false)
+            }
             throw e
         }
     }
 
-    suspend fun unfollowAccount(accountId: String) {
+    suspend fun unfollowAccount(
+        accountId: String,
+        loggedInUserAccountId: String,
+    ) {
+        var timelinePosts: List<HomeTimelineStatus>? = null
         try {
-            socialDatabase.homeTimelineDao().removePostsFromAccount(accountId)
-            socialDatabase.relationshipsDao().updateFollowing(accountId, false)
+            socialDatabase.withTransaction {
+                timelinePosts = socialDatabase.homeTimelineDao().getPostsFromAccount(accountId)
+                socialDatabase.homeTimelineDao().removePostsFromAccount(accountId)
+                socialDatabase.accountsDao().updateFollowingCount(loggedInUserAccountId, -1)
+                socialDatabase.relationshipsDao().updateFollowing(accountId, false)
+            }
             accountApi.unfollowAccount(accountId)
         } catch (e: Exception) {
-            socialDatabase.relationshipsDao().updateFollowing(accountId, true)
+            socialDatabase.withTransaction {
+                timelinePosts?.let { socialDatabase.homeTimelineDao().insertAll(it) }
+                socialDatabase.accountsDao().updateFollowingCount(loggedInUserAccountId, 1)
+                socialDatabase.relationshipsDao().updateFollowing(accountId, true)
+            }
             throw e
         }
     }
@@ -185,6 +219,7 @@ class AccountRepository internal constructor(
         bot: Boolean? = null,
         avatar: File? = null,
         header: File? = null,
+        fields: List<Pair<String, String>>? = null
     ) = withContext(Dispatchers.IO) {
         val updatedAccount = accountApi.updateAccount(
             displayName = displayName?.toRequestBody(MultipartBody.FORM),
@@ -205,6 +240,14 @@ class AccountRepository internal constructor(
                     header.asRequestBody("image/*".toMediaTypeOrNull()),
                 )
             },
+            fieldLabel0 = fields?.getOrNull(0)?.first?.toRequestBody(MultipartBody.FORM),
+            fieldContent0 = fields?.getOrNull(0)?.second?.toRequestBody(MultipartBody.FORM),
+            fieldLabel1 = fields?.getOrNull(1)?.first?.toRequestBody(MultipartBody.FORM),
+            fieldContent1 = fields?.getOrNull(1)?.second?.toRequestBody(MultipartBody.FORM),
+            fieldLabel2 = fields?.getOrNull(2)?.first?.toRequestBody(MultipartBody.FORM),
+            fieldContent2 = fields?.getOrNull(2)?.second?.toRequestBody(MultipartBody.FORM),
+            fieldLabel3 = fields?.getOrNull(3)?.first?.toRequestBody(MultipartBody.FORM),
+            fieldContent3 = fields?.getOrNull(3)?.second?.toRequestBody(MultipartBody.FORM),
         ).toExternalModel()
         socialDatabase.accountsDao().insert(updatedAccount.toDatabaseModel())
     }

@@ -66,18 +66,16 @@ import org.mozilla.social.common.utils.buildAnnotatedStringForAccountsAndHashtag
 import org.mozilla.social.core.designsystem.component.MoSoButton
 import org.mozilla.social.core.designsystem.component.MoSoSurface
 import org.mozilla.social.core.designsystem.component.MoSoTextField
-import org.mozilla.social.core.designsystem.component.MoSoToast
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
-import org.mozilla.social.core.designsystem.theme.FirefoxColor
 import org.mozilla.social.core.designsystem.theme.MoSoSpacing
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.designsystem.utils.NoIndication
-import org.mozilla.social.core.ui.TransparentNoTouchOverlay
-import org.mozilla.social.core.ui.VerticalDivider
-import org.mozilla.social.core.ui.VisibilityDropDownButton
-import org.mozilla.social.core.ui.appbar.MoSoCloseableTopAppBar
-import org.mozilla.social.core.ui.media.MediaUpload
-import org.mozilla.social.core.ui.transparentTextFieldColors
+import org.mozilla.social.core.ui.common.TransparentNoTouchOverlay
+import org.mozilla.social.core.ui.common.VerticalDivider
+import org.mozilla.social.core.ui.common.VisibilityDropDownButton
+import org.mozilla.social.core.ui.common.appbar.MoSoCloseableTopAppBar
+import org.mozilla.social.core.ui.common.media.MediaUpload
+import org.mozilla.social.core.ui.common.transparentTextFieldColors
 import org.mozilla.social.feature.post.R
 import org.mozilla.social.model.ImageState
 import org.mozilla.social.model.StatusVisibility
@@ -124,8 +122,6 @@ internal fun NewPostScreen(
         bottomBarState = viewModel.bottomBarState.collectAsState().value,
     )
 
-    MoSoToast(toastMessage = viewModel.errorToastMessage)
-
     LaunchedEffect(Unit) {
         viewModel.onScreenViewed()
     }
@@ -164,28 +160,23 @@ private fun NewPostScreen(
     Box(
         modifier = Modifier
             .systemBarsPadding()
+            .imePadding()
             .background(MoSoTheme.colors.layer1)
     ) {
         if (isCompactHeight) {
             Row {
                 CompactNewPostScreenContent(
-                    bottomBarState = bottomBarState,
                     statusText = statusText,
                     statusInteractions = statusInteractions,
                     onPostClicked = onPostClicked,
                     sendButtonEnabled = sendButtonEnabled,
                     imageStates = imageStates,
                     mediaInteractions = mediaInteractions,
-                    visibility = visibility,
-                    onVisibilitySelected = onVisibilitySelected,
                     poll = poll,
                     pollInteractions = pollInteractions,
                     contentWarningText = contentWarningText,
                     contentWarningInteractions = contentWarningInteractions,
-                    accounts = accounts,
-                    hashTags = hashTags,
                     inReplyToAccountName = inReplyToAccountName,
-                    userHeaderState = userHeaderState
                 )
             }
         } else {
@@ -221,36 +212,22 @@ private fun NewPostScreen(
 
 @Composable
 private fun CompactNewPostScreenContent(
-    bottomBarState: BottomBarState,
     statusText: TextFieldValue,
     statusInteractions: StatusInteractions,
     onPostClicked: () -> Unit,
     sendButtonEnabled: Boolean,
     imageStates: List<ImageState>,
     mediaInteractions: MediaInteractions,
-    visibility: StatusVisibility,
-    onVisibilitySelected: (StatusVisibility) -> Unit,
     poll: Poll?,
     pollInteractions: PollInteractions,
     contentWarningText: String?,
     contentWarningInteractions: ContentWarningInteractions,
-    accounts: List<Account>?,
-    hashTags: List<String>?,
     inReplyToAccountName: String?,
-    userHeaderState: UserHeaderState?,
 ) {
     Row {
-        userHeaderState?.let { userHeaderState ->
-            UserHeader(
-                userHeaderState = userHeaderState,
-                visibility = visibility,
-                onVisibilitySelected = onVisibilitySelected,
-            )
-        }
-        Column(
+        Box(
             modifier = Modifier
                 .weight(1f)
-                .imePadding()
         ) {
             MainBox(
                 statusText = statusText,
@@ -263,24 +240,9 @@ private fun CompactNewPostScreenContent(
                 contentWarningInteractions = contentWarningInteractions,
                 inReplyToAccountName = inReplyToAccountName,
             )
-            BottomBar(
-                bottomBarState = bottomBarState,
-                onMediaInserted = mediaInteractions::onMediaInserted,
-                pollInteractions = pollInteractions,
-                contentWarningInteractions = contentWarningInteractions,
-            )
-        }
-        accounts?.let {
-            AccountSearchBar(accounts = accounts, statusInteractions = statusInteractions)
-        }
-        hashTags?.let {
-            HashtagSearchBar(hashTags = hashTags, statusInteractions = statusInteractions)
         }
 
-        PostButton(
-            onPostClicked = onPostClicked,
-            sendButtonEnabled = sendButtonEnabled,
-        )
+        PostButton(onPostClicked = onPostClicked, sendButtonEnabled = sendButtonEnabled)
     }
 }
 
@@ -449,7 +411,7 @@ private fun MainBox(
                     }
 
                     item {
-                        val highlightColor = FirefoxColor.Blue60
+                        val highlightColor = MoSoTheme.colors.textLink
                         MoSoTextField(
                             modifier = Modifier
                                 .fillMaxWidth()

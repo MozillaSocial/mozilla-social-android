@@ -10,7 +10,6 @@ import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material.icons.rounded.ChevronRight
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.DeleteOutline
-import androidx.compose.material.icons.rounded.Info
 import androidx.compose.material.icons.rounded.KeyboardArrowUp
 import androidx.compose.material.icons.rounded.Lock
 import androidx.compose.material.icons.rounded.LockOpen
@@ -37,6 +36,9 @@ object MoSoIcons {
     fun bookmark() = painterResource(R.drawable.bookmark_simple)
 
     @Composable
+    fun bookmarkFill() = painterResource(R.drawable.bookmark_simple_fill)
+
+    @Composable
     fun robot() = painterResource(id = R.drawable.robot)
 
     @Composable
@@ -55,6 +57,12 @@ object MoSoIcons {
     fun compass() = painterResource(R.drawable.compass)
 
     @Composable
+    fun compassFill() = painterResource(R.drawable.compass_fill)
+
+    @Composable
+    fun connect() = painterResource(id = R.drawable.connect)
+
+    @Composable
     fun heart() = painterResource(id = R.drawable.heart)
 
     @Composable
@@ -64,18 +72,32 @@ object MoSoIcons {
     fun house() = painterResource(R.drawable.house)
 
     @Composable
+    fun houseFill() = painterResource(R.drawable.house_fill)
+
+    @Composable
+    fun identificationCard() = painterResource(id = R.drawable.identification_card)
+
+    @Composable
     fun image() = painterResource(id = R.drawable.image)
 
     @Composable
     fun imagePlus() = painterResource(id = R.drawable.image_plus)
 
     @Composable
+    fun info() = painterResource(id = R.drawable.info)
+
+    @Composable
     fun list() = painterResource(id = R.drawable.list)
 
     @Composable
+    fun lockKey() = painterResource(id = R.drawable.lock_key)
+
+    @Composable
     fun monitorPlay() = painterResource(id = R.drawable.monitor_play)
+
     @Composable
     fun moreVertical() = painterResource(id = R.drawable.more_vertical)
+
     @Composable
     fun plus() = painterResource(id = R.drawable.plus)
 
@@ -90,6 +112,9 @@ object MoSoIcons {
 
     @Composable
     fun userCircle() = painterResource(id = R.drawable.user_circle)
+
+    @Composable
+    fun userCircleFill() = painterResource(id = R.drawable.user_circle_fill)
 
     @Composable
     fun userJoin() = painterResource(id = R.drawable.user_join)
@@ -109,9 +134,6 @@ object MoSoIcons {
 
     @Composable
     fun backArrow() = rememberVectorPainter(image = Icons.Rounded.ArrowBack)
-
-    @Composable
-    fun info() = rememberVectorPainter(image = Icons.Rounded.Info)
 
     @Composable
     fun chevronRight() = rememberVectorPainter(image = Icons.Rounded.ChevronRight)

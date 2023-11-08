@@ -29,4 +29,9 @@
     <string name="edit_account_save_failed">Failed to save changes</string>
     <string name="edit_account_lock">Lock</string>
     <string name="edit_account_bot">Bot</string>
+
+    <string name="edit_account_metadata_title">Profile metadata</string>
+    <string name="edit_account_metadata_description">You can have up to 4 items displayed as a table on your profile</string>
+    <string name="edit_account_label_hint">Label</string>
+    <string name="edit_account_content_hint">Content</string>
 </resources>

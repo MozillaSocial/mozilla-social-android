@@ -50,14 +50,18 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.paging.PagingData
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.LocalTime
 import kotlinx.datetime.toJavaLocalDateTime
 import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.KoinApplication
 import org.koin.core.parameter.parametersOf
 import org.mozilla.social.common.Resource
 import org.mozilla.social.common.utils.DateTimeFormatters
-import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.core.designsystem.component.MoSoButton
 import org.mozilla.social.core.designsystem.component.MoSoButtonSecondary
 import org.mozilla.social.core.designsystem.component.MoSoCircularProgressIndicator
@@ -65,13 +69,13 @@ import org.mozilla.social.core.designsystem.component.MoSoDropdownMenu
 import org.mozilla.social.core.designsystem.component.MoSoSurface
 import org.mozilla.social.core.designsystem.component.MoSoTab
 import org.mozilla.social.core.designsystem.component.MoSoTabRow
-import org.mozilla.social.core.designsystem.component.MoSoToast
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.designsystem.utils.NoRipple
-import org.mozilla.social.core.ui.DropDownItem
-import org.mozilla.social.core.ui.appbar.MoSoCloseableTopAppBar
-import org.mozilla.social.core.ui.error.GenericError
+import org.mozilla.social.core.navigation.navigationModule
+import org.mozilla.social.core.ui.common.DropDownItem
+import org.mozilla.social.core.ui.common.appbar.MoSoCloseableTopAppBar
+import org.mozilla.social.core.ui.common.error.GenericError
 import org.mozilla.social.core.ui.htmlcontent.HtmlContent
 import org.mozilla.social.core.ui.htmlcontent.HtmlContentInteractions
 import org.mozilla.social.core.ui.postcard.PostCardInteractions
@@ -89,7 +93,6 @@ internal fun AccountScreen(
         closeButtonVisible = viewModel.shouldShowCloseButton,
         isUsersProfile = viewModel.isOwnProfile,
         feed = viewModel.feed,
-        errorToastMessage = viewModel.postCardDelegate.errorToastMessage,
         timelineTypeFlow = viewModel.timelineType,
         htmlContentInteractions = viewModel.postCardDelegate,
         postCardInteractions = viewModel.postCardDelegate,
@@ -100,8 +103,6 @@ internal fun AccountScreen(
     LaunchedEffect(Unit) {
         viewModel.onScreenViewed()
     }
-
-    MoSoToast(toastMessage = viewModel.errorToastMessage)
 }
 
 @Composable
@@ -110,9 +111,8 @@ private fun AccountScreen(
     closeButtonVisible: Boolean,
     isUsersProfile: Boolean,
     feed: Flow<PagingData<PostCardUiState>>,
-    errorToastMessage: SharedFlow<StringFactory>,
     timelineTypeFlow: StateFlow<TimelineType>,
-    htmlContentInteractions: HtmlContentInteractions,
+    htmlContentInteractions: org.mozilla.social.core.ui.htmlcontent.HtmlContentInteractions,
     postCardInteractions: PostCardInteractions,
     accountInteractions: AccountInteractions,
     windowInsets: WindowInsets,
@@ -155,7 +155,6 @@ private fun AccountScreen(
                         account = resource.data,
                         isUsersProfile = isUsersProfile,
                         feed = feed,
-                        errorToastMessage = errorToastMessage,
                         htmlContentInteractions = htmlContentInteractions,
                         postCardInteractions = postCardInteractions,
                         accountInteractions = accountInteractions,
@@ -189,9 +188,8 @@ private fun MainContent(
     account: AccountUiState,
     isUsersProfile: Boolean,
     feed: Flow<PagingData<PostCardUiState>>,
-    errorToastMessage: SharedFlow<StringFactory>,
     timelineTypeFlow: StateFlow<TimelineType>,
-    htmlContentInteractions: HtmlContentInteractions,
+    htmlContentInteractions: org.mozilla.social.core.ui.htmlcontent.HtmlContentInteractions,
     postCardInteractions: PostCardInteractions,
     accountInteractions: AccountInteractions,
 ) {
@@ -205,7 +203,6 @@ private fun MainContent(
 
         PostCardList(
             feed = feed,
-            errorToastMessage = errorToastMessage,
             refreshSignalFlow = timelineTypeFlow,
             postCardInteractions = postCardInteractions
         ) {
@@ -327,7 +324,7 @@ private fun OverflowMenu(
                 if (account.isMuted) {
                     DropDownItem(
                         text = stringResource(
-                            id = org.mozilla.social.core.ui.R.string.unmute_user,
+                            id = org.mozilla.social.core.ui.common.R.string.unmute_user,
                             account.username
                         ),
                         expanded = overflowMenuExpanded,
@@ -336,7 +333,7 @@ private fun OverflowMenu(
                 } else {
                     DropDownItem(
                         text = stringResource(
-                            id = org.mozilla.social.core.ui.R.string.mute_user,
+                            id = org.mozilla.social.core.ui.common.R.string.mute_user,
                             account.username
                         ),
                         expanded = overflowMenuExpanded,
@@ -347,7 +344,7 @@ private fun OverflowMenu(
                 if (account.isBlocked) {
                     DropDownItem(
                         text = stringResource(
-                            id = org.mozilla.social.core.ui.R.string.unblock_user,
+                            id = org.mozilla.social.core.ui.common.R.string.unblock_user,
                             account.username
                         ),
                         expanded = overflowMenuExpanded,
@@ -356,7 +353,7 @@ private fun OverflowMenu(
                 } else {
                     DropDownItem(
                         text = stringResource(
-                            id = org.mozilla.social.core.ui.R.string.block_user,
+                            id = org.mozilla.social.core.ui.common.R.string.block_user,
                             account.username
                         ),
                         expanded = overflowMenuExpanded,
@@ -366,7 +363,7 @@ private fun OverflowMenu(
 
                 DropDownItem(
                     text = stringResource(
-                        id = org.mozilla.social.core.ui.R.string.report_user,
+                        id = org.mozilla.social.core.ui.common.R.string.report_user,
                         account.username
                     ),
                     expanded = overflowMenuExpanded,
@@ -434,7 +431,7 @@ private fun Counter(
 private fun UserBio(
     modifier: Modifier = Modifier,
     account: AccountUiState,
-    htmlContentInteractions: HtmlContentInteractions,
+    htmlContentInteractions: org.mozilla.social.core.ui.htmlcontent.HtmlContentInteractions,
 ) {
     var expanded by remember { mutableStateOf(false) }
     NoRipple {
@@ -472,7 +469,7 @@ private fun UserBio(
                 }
             ) { targetState ->
                 Column {
-                    HtmlContent(
+                    org.mozilla.social.core.ui.htmlcontent.HtmlContent(
                         mentions = emptyList(),
                         htmlText = account.bio,
                         htmlContentInteractions = htmlContentInteractions,
@@ -523,7 +520,7 @@ private fun UserLabel(
     icon: Painter? = null,
     label: String? = null,
     text: String,
-    htmlContentInteractions: HtmlContentInteractions,
+    htmlContentInteractions: org.mozilla.social.core.ui.htmlcontent.HtmlContentInteractions,
 ) {
     Row {
         icon?.let {
@@ -548,7 +545,7 @@ private fun UserLabel(
             Spacer(modifier = Modifier.width(4.dp))
         }
 
-        HtmlContent(
+        org.mozilla.social.core.ui.htmlcontent.HtmlContent(
             modifier = Modifier
                 .weight(1f),
             mentions = emptyList(),
@@ -564,10 +561,49 @@ private fun UserLabel(
 
 private const val BIO_MAX_LINES_NOT_EXPANDED = 3
 
+@Suppress("MagicNumber")
 @Preview
 @Composable
 fun AccountScreenPreview() {
-    MoSoTheme {
-//        AccountScreen("110810174933375392")
+    KoinApplication(application = {
+        modules(navigationModule)
+    }) {
+        MoSoTheme {
+            AccountScreen(
+                resource = Resource.Loaded(
+                    data = AccountUiState(
+                        accountId = "",
+                        username = "Coolguy",
+                        webFinger = "@coolguy",
+                        displayName = "Cool Guy",
+                        accountUrl = "",
+                        bio = "I'm pretty cool",
+                        avatarUrl = "",
+                        headerUrl = "",
+                        followersCount = 1,
+                        followingCount = 500,
+                        statusesCount = 4000,
+                        fields = listOf(),
+                        isBot = false,
+                        isFollowing = false,
+                        isMuted = false,
+                        isBlocked = false,
+                        joinDate = LocalDateTime(
+                            LocalDate(2023, 7, 3),
+                            LocalTime(0, 0, 0)
+                        ),
+                    )
+                ),
+                closeButtonVisible = true,
+                isUsersProfile = false,
+                feed = flowOf(),
+                timelineTypeFlow = MutableStateFlow(TimelineType.POSTS),
+                htmlContentInteractions = object :
+                    org.mozilla.social.core.ui.htmlcontent.HtmlContentInteractions {},
+                postCardInteractions = object : PostCardInteractions {},
+                accountInteractions = object : AccountInteractions {},
+                windowInsets = WindowInsets.systemBars,
+            )
+        }
     }
 }

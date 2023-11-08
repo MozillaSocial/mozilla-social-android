@@ -1,19 +1,19 @@
 package org.mozilla.social.feature.account.edit
 
 import android.net.Uri
-import androidx.core.text.HtmlCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.mozilla.social.common.Resource
+import org.mozilla.social.common.updateData
 import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.core.data.repository.AccountRepository
 import org.mozilla.social.core.domain.AccountIdBlocking
+import org.mozilla.social.core.navigation.usecases.PopNavBackstack
+import org.mozilla.social.core.navigation.usecases.ShowSnackbar
 import org.mozilla.social.feature.account.R
 import timber.log.Timber
 import java.io.File
@@ -21,6 +21,8 @@ import java.io.File
 class EditAccountViewModel(
     private val accountRepository: AccountRepository,
     accountIdBlocking: AccountIdBlocking,
+    private val popNavBackstack: PopNavBackstack,
+    private val showSnackbar: ShowSnackbar,
 ) : ViewModel(), EditAccountInteractions {
 
     private val accountId = accountIdBlocking()
@@ -31,9 +33,6 @@ class EditAccountViewModel(
     private val _isUploading = MutableStateFlow(false)
     val isUploading = _isUploading.asStateFlow()
 
-    private val _errorToastMessage = MutableSharedFlow<StringFactory>(extraBufferCapacity = 1)
-    val errorToastMessage = _errorToastMessage.asSharedFlow()
-
     private var newAvatar: File? = null
     private var newHeader: File? = null
 
@@ -42,53 +41,18 @@ class EditAccountViewModel(
     }
 
     private fun loadAccount() {
+        _editAccountUiState.update { Resource.Loading() }
         viewModelScope.launch {
             try {
                 val account = accountRepository.getAccountFromDatabase(accountId)!!
-                val bio = HtmlCompat.fromHtml(account.bio, 0).toString()
                 _editAccountUiState.update {
                     Resource.Loaded(
-                        data = EditAccountUiState(
-                            topBarTitle = account.displayName,
-                            headerUrl = account.headerUrl,
-                            avatarUrl = account.avatarUrl,
-                            handle = "@${account.acct}",
-                            displayName = account.displayName,
-                            bio = bio,
-                            bioCharacterCount = bio.length,
-                            lockChecked = account.isLocked,
-                            botChecked = account.isBot ?: false,
-                        )
+                        data = account.toUiState()
                     )
                 }
             } catch (e: Exception) {
                 Timber.e(e)
-            }
-        }
-    }
-
-    override fun onDisplayNameTextChanged(text: String) {
-        with(_editAccountUiState.value as? Resource.Loaded ?: return) {
-            _editAccountUiState.update {
-                Resource.Loaded(
-                    data = data.copy(
-                        displayName = text
-                    )
-                )
-            }
-        }
-    }
-
-    override fun onBioTextChanged(text: String) {
-        if (text.length > MAX_BIO_LENGTH) return
-        with(_editAccountUiState.value as? Resource.Loaded ?: return) {
-            _editAccountUiState.update {
-                Resource.Loaded(
-                    data = data.copy(
-                        bio = text,
-                        bioCharacterCount = text.length
-                    )
-                )
+                _editAccountUiState.update { Resource.Error(e) }
             }
         }
     }
@@ -105,10 +69,19 @@ class EditAccountViewModel(
                         header = newHeader,
                         locked = data.lockChecked,
                         bot = data.botChecked,
+                        fields = data.fields.map {
+                            Pair(
+                                first = it.label,
+                                second = it.content,
+                            )
+                        }
                     )
-                    //TODO navigate back
+                    popNavBackstack()
                 } catch (e: Exception) {
-                    _errorToastMessage.emit(StringFactory.resource(R.string.edit_account_save_failed))
+                    showSnackbar(
+                        text = StringFactory.resource(R.string.edit_account_save_failed),
+                        isError = true,
+                    )
                     Timber.e(e)
                     _isUploading.update { false }
                 }
@@ -116,57 +89,111 @@ class EditAccountViewModel(
         }
     }
 
+    override fun onDisplayNameTextChanged(text: String) {
+        _editAccountUiState.updateData { copy(
+            displayName = text
+        ) }
+    }
+
+    override fun onBioTextChanged(text: String) {
+        if (text.length > MAX_BIO_LENGTH) return
+        _editAccountUiState.updateData { copy(
+            bio = text,
+            bioCharacterCount = text.length
+        ) }
+    }
+
     override fun onNewAvatarSelected(uri: Uri, file: File) {
-        with(_editAccountUiState.value as? Resource.Loaded ?: return) {
-            _editAccountUiState.update {
-                Resource.Loaded(
-                    data = data.copy(
-                        avatarUrl = uri.toString()
-                    )
-                )
-            }
-        }
+        _editAccountUiState.updateData { copy(
+            avatarUrl = uri.toString()
+        ) }
         newAvatar = file
     }
 
     override fun onNewHeaderSelected(uri: Uri, file: File) {
-        with(_editAccountUiState.value as? Resource.Loaded ?: return) {
-            _editAccountUiState.update {
-                Resource.Loaded(
-                    data = data.copy(
-                        headerUrl = uri.toString()
-                    )
-                )
-            }
-        }
+        _editAccountUiState.updateData { copy(
+            headerUrl = uri.toString()
+        ) }
         newHeader = file
     }
 
     override fun onLockClicked() {
-        with(_editAccountUiState.value as? Resource.Loaded ?: return) {
-            _editAccountUiState.update {
-                Resource.Loaded(
-                    data = data.copy(
-                        lockChecked = !data.lockChecked
-                    )
-                )
-            }
-        }
+        _editAccountUiState.updateData { copy(
+            lockChecked = !lockChecked
+        ) }
     }
 
     override fun onBotClicked() {
-        with(_editAccountUiState.value as? Resource.Loaded ?: return) {
-            _editAccountUiState.update {
-                Resource.Loaded(
-                    data = data.copy(
-                        botChecked = !data.botChecked
+        _editAccountUiState.updateData { copy(
+            botChecked = !botChecked
+        ) }
+    }
+
+    override fun onRetryClicked() {
+        loadAccount()
+    }
+
+    override fun onLabelTextChanged(index: Int, text: String) {
+        if (text.length > MAX_FIELD_LENGTH) return
+        _editAccountUiState.updateData { copy(
+            fields = fields.toMutableList().apply {
+                val content = get(index).content
+                removeAt(index)
+                add(
+                    index,
+                    EditAccountUiStateField(
+                        label = text,
+                        content = content,
                     )
                 )
+                modifyFieldCount()
             }
+        ) }
+    }
+
+    override fun onContentTextChanged(index: Int, text: String) {
+        if (text.length > MAX_FIELD_LENGTH) return
+        _editAccountUiState.updateData { copy(
+            fields = fields.toMutableList().apply {
+                val label = get(index).label
+                removeAt(index)
+                add(
+                    index,
+                    EditAccountUiStateField(
+                        label = label,
+                        content = text,
+                    )
+                )
+                modifyFieldCount()
+            }
+        ) }
+    }
+
+    override fun onFieldDeleteClicked(index: Int) {
+        _editAccountUiState.updateData { copy(
+            fields = fields.toMutableList().apply {
+                removeAt(index)
+            }
+        ) }
+    }
+
+    override fun onAddFieldClicked() {
+        _editAccountUiState.updateData { copy(
+            fields = fields.toMutableList().apply {
+                add(EditAccountUiStateField("", ""))
+            }
+        ) }
+    }
+
+    private fun MutableList<EditAccountUiStateField>.modifyFieldCount() {
+        if (size < MAX_FIELDS && (last().label.isNotBlank() || last().content.isNotBlank())) {
+            add(EditAccountUiStateField("", ""))
         }
     }
 
     companion object {
         const val MAX_BIO_LENGTH = 500
+        const val MAX_FIELDS = 4
+        const val MAX_FIELD_LENGTH = 255
     }
 }

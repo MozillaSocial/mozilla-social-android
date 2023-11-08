@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
-import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -41,10 +40,10 @@ import org.mozilla.social.core.designsystem.component.MoSoSurface
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.designsystem.utils.NoRipple
-import org.mozilla.social.core.ui.Radius
-import org.mozilla.social.core.ui.error.GenericError
-import org.mozilla.social.core.ui.loading.MaxSizeLoading
-import org.mozilla.social.core.ui.shareUrl
+import org.mozilla.social.core.ui.common.Radius
+import org.mozilla.social.core.ui.common.error.GenericError
+import org.mozilla.social.core.ui.common.loading.MaxSizeLoading
+import org.mozilla.social.core.ui.common.shareUrl
 import org.mozilla.social.model.Recommendation
 
 @Composable

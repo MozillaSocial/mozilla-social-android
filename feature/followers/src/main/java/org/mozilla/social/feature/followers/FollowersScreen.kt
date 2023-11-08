@@ -27,13 +27,13 @@ import org.koin.core.parameter.parametersOf
 import org.mozilla.social.core.designsystem.component.MoSoDivider
 import org.mozilla.social.core.designsystem.component.MoSoSurface
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
-import org.mozilla.social.core.ui.account.quickview.AccountQuickView
-import org.mozilla.social.core.ui.account.quickview.AccountQuickViewUiState
-import org.mozilla.social.core.ui.appbar.MoSoCloseableTopAppBar
-import org.mozilla.social.core.ui.error.GenericError
-import org.mozilla.social.core.ui.pullrefresh.PullRefreshIndicator
-import org.mozilla.social.core.ui.pullrefresh.pullRefresh
-import org.mozilla.social.core.ui.pullrefresh.rememberPullRefreshState
+import org.mozilla.social.core.ui.common.account.quickview.AccountQuickView
+import org.mozilla.social.core.ui.common.account.quickview.AccountQuickViewUiState
+import org.mozilla.social.core.ui.common.appbar.MoSoCloseableTopAppBar
+import org.mozilla.social.core.ui.common.error.GenericError
+import org.mozilla.social.core.ui.common.pullrefresh.PullRefreshIndicator
+import org.mozilla.social.core.ui.common.pullrefresh.pullRefresh
+import org.mozilla.social.core.ui.common.pullrefresh.rememberPullRefreshState
 
 @Composable
 internal fun FollowersScreen(

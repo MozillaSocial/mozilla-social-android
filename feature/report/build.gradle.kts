@@ -14,9 +14,11 @@ dependencies {
     implementation(project(":core:common"))
     implementation(project(":core:datastore"))
     implementation(project(":core:model"))
-    implementation(project(":core:ui"))
+    implementation(project(":core:ui:common"))
+    implementation(project(":core:ui:htmlcontent"))
     implementation(project(":core:navigation"))
     implementation(project(":core:analytics"))
+    implementation(project(":core:domain"))
 
     implementation(libs.androidx.navigation.compose)
     implementation(libs.koin.core)

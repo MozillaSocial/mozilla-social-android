@@ -14,30 +14,20 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import org.koin.core.parameter.parametersOf
 import org.koin.java.KoinJavaComponent.inject
-import org.mozilla.social.common.logging.Log
 import org.mozilla.social.core.analytics.Analytics
 import org.mozilla.social.core.analytics.AnalyticsIdentifiers
-import org.mozilla.social.core.data.repository.AccountRepository
-import org.mozilla.social.core.data.repository.StatusRepository
 import org.mozilla.social.core.data.repository.model.status.toExternalModel
 import org.mozilla.social.core.database.SocialDatabase
 import org.mozilla.social.core.database.model.statusCollections.toStatusWrapper
 import org.mozilla.social.core.domain.AccountIdFlow
 import org.mozilla.social.core.domain.remotemediators.HashTagTimelineRemoteMediator
-import org.mozilla.social.core.navigation.usecases.NavigateTo
-import org.mozilla.social.core.navigation.usecases.OpenLink
 import org.mozilla.social.core.ui.postcard.PostCardDelegate
 import org.mozilla.social.core.ui.postcard.toPostCardUiState
 
 class HashTagViewModel(
     hashTag: String,
-    statusRepository: StatusRepository,
-    accountRepository: AccountRepository,
-    log: Log,
     socialDatabase: SocialDatabase,
     accountIdFlow: AccountIdFlow,
-    navigateTo: NavigateTo,
-    openLink: OpenLink,
     private val analytics: Analytics,
 ) : ViewModel(), HashTagInteractions {
 
@@ -68,18 +58,13 @@ class HashTagViewModel(
         }
     }.cachedIn(viewModelScope)
 
-    val postCardDelegate = PostCardDelegate(
-        coroutineScope = viewModelScope,
-        statusRepository = statusRepository,
-        accountRepository = accountRepository,
-        log = log,
-        navigateTo = navigateTo,
-        openLink = openLink,
-    )
-
     override fun onScreenViewed() {
         analytics.uiImpression(
             uiIdentifier = AnalyticsIdentifiers.HASHTAG_SCREEN_IMPRESSION,
         )
     }
+
+    val postCardDelegate: PostCardDelegate by inject(
+        PostCardDelegate::class.java
+    ) { parametersOf(viewModelScope) }
 }

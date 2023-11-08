@@ -11,4 +11,9 @@ interface EditAccountInteractions {
     fun onNewHeaderSelected(uri: Uri, file: File) = Unit
     fun onLockClicked() = Unit
     fun onBotClicked() = Unit
+    fun onRetryClicked() = Unit
+    fun onLabelTextChanged(index: Int, text: String) = Unit
+    fun onContentTextChanged(index: Int, text: String) = Unit
+    fun onFieldDeleteClicked(index: Int) = Unit
+    fun onAddFieldClicked() = Unit
 }

@@ -9,7 +9,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import org.mozilla.social.common.logging.Log
 import org.mozilla.social.common.utils.accountText
 import org.mozilla.social.common.utils.edit
 import org.mozilla.social.common.utils.hashtagText
@@ -18,13 +17,12 @@ import org.mozilla.social.common.utils.replaceHashtag
 import org.mozilla.social.core.data.repository.SearchRepository
 import org.mozilla.social.core.data.repository.StatusRepository
 import org.mozilla.social.post.NewPostViewModel
-import org.mozilla.social.post.bottombar.BottomBarState
+import timber.log.Timber
 
 class StatusDelegate(
     private val coroutineScope: CoroutineScope,
     private val searchRepository: SearchRepository,
     private val statusRepository: StatusRepository,
-    private val log: Log,
     private val inReplyToId: String?,
 ) : StatusInteractions, ContentWarningInteractions {
 
@@ -66,7 +64,7 @@ class StatusDelegate(
     override fun onStatusTextUpdated(textFieldValue: TextFieldValue) {
         if (textFieldValue.text.length + (contentWarningText.value?.length ?: 0) > NewPostViewModel.MAX_POST_LENGTH) return
         _statusText.update {
-            log.d("updating onStatusTextUpdated")
+            Timber.d("updating onStatusTextUpdated")
             textFieldValue
         }
 
@@ -101,7 +99,7 @@ class StatusDelegate(
                         }
                     }
                 } catch (e: Exception) {
-                    log.e(e)
+                    Timber.e(e)
                 }
             }
 
@@ -111,7 +109,7 @@ class StatusDelegate(
                         searchRepository.searchForHashtags(hashtagText).map { it.name }
                     }
                 } catch (e: Exception) {
-                    log.e(e)
+                    Timber.e(e)
                 }
             }
         }

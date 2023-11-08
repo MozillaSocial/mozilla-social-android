@@ -8,14 +8,14 @@ val newPostModule = module {
         NewPostViewModel(
             analytics = get(),
             replyStatusId = parametersHolder.getOrNull(),
-            accountFlow = get(),
             mediaRepository = get(),
             searchRepository = get(),
-            log = get(),
             statusRepository = get(),
             timelineRepository = get(),
             popNavBackstack = get(),
             showSnackbar = get(),
+            accountIdBlocking = get(),
+            accountRepository = get(),
         )
     }
 }

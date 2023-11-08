@@ -10,12 +10,10 @@ val accountModule = module {
             analytics = get(),
             accountRepository = get(),
             accountIdBlocking = get(),
-            log = get(),
-            statusRepository = get(),
             socialDatabase = get(),
             getDetailedAccount = get(),
             navigateTo = get(),
-            openLink = get(),
+            showSnackbar = get(),
             initialAccountId = parametersHolder[0],
         )
     }
@@ -30,6 +28,8 @@ val accountModule = module {
     }
     viewModel {
         EditAccountViewModel(
+            get(),
+            get(),
             get(),
             get(),
         )

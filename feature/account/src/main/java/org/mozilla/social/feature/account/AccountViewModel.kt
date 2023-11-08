@@ -8,59 +8,46 @@ import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
 import androidx.paging.map
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import org.koin.core.parameter.parametersOf
 import org.koin.java.KoinJavaComponent
+import org.koin.java.KoinJavaComponent.inject
 import org.mozilla.social.common.Resource
-import org.mozilla.social.common.logging.Log
 import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.common.utils.edit
 import org.mozilla.social.core.analytics.Analytics
 import org.mozilla.social.core.analytics.AnalyticsIdentifiers
 import org.mozilla.social.core.data.repository.AccountRepository
-import org.mozilla.social.core.data.repository.StatusRepository
 import org.mozilla.social.core.data.repository.model.status.toExternalModel
 import org.mozilla.social.core.database.SocialDatabase
 import org.mozilla.social.core.database.model.statusCollections.toStatusWrapper
 import org.mozilla.social.core.domain.AccountIdBlocking
 import org.mozilla.social.core.domain.GetDetailedAccount
-import org.mozilla.social.core.navigation.NavDestination
+import org.mozilla.social.core.navigation.NavigationDestination
 import org.mozilla.social.core.navigation.usecases.NavigateTo
-import org.mozilla.social.core.navigation.usecases.OpenLink
-import org.mozilla.social.core.ui.R
+import org.mozilla.social.core.navigation.usecases.ShowSnackbar
 import org.mozilla.social.core.ui.postcard.PostCardDelegate
 import org.mozilla.social.core.ui.postcard.toPostCardUiState
+import org.mozilla.social.core.ui.common.R
 import timber.log.Timber
 
 class AccountViewModel(
     private val analytics: Analytics,
     private val accountRepository: AccountRepository,
     accountIdBlocking: AccountIdBlocking,
-    log: Log,
-    statusRepository: StatusRepository,
     private val socialDatabase: SocialDatabase,
     private val getDetailedAccount: GetDetailedAccount,
     private val navigateTo: NavigateTo,
-    openLink: OpenLink,
+    private val showSnackbar: ShowSnackbar,
     initialAccountId: String?,
 ) : ViewModel(), AccountInteractions {
 
-    private val _errorToastMessage = MutableSharedFlow<StringFactory>(extraBufferCapacity = 1)
-    val errorToastMessage = _errorToastMessage.asSharedFlow()
-
-    val postCardDelegate = PostCardDelegate(
-        coroutineScope = viewModelScope,
-        statusRepository = statusRepository,
-        accountRepository = accountRepository,
-        log = log,
-        navigateTo = navigateTo,
-        openLink = openLink,
-    )
+    val postCardDelegate: PostCardDelegate by inject(
+        PostCardDelegate::class.java
+    ) { parametersOf(viewModelScope) }
 
     /**
      * The account ID of the logged in user
@@ -144,7 +131,10 @@ class AccountViewModel(
                 accountRepository.muteAccount(accountId)
             } catch (e: Exception) {
                 Timber.e(e)
-                _errorToastMessage.emit(StringFactory.resource(R.string.error_muting_account))
+                showSnackbar(
+                    text = StringFactory.resource(R.string.error_muting_account),
+                    isError = true,
+                )
             }
         }
     }
@@ -155,7 +145,10 @@ class AccountViewModel(
                 accountRepository.unmuteAccount(accountId)
             } catch (e: Exception) {
                 Timber.e(e)
-                _errorToastMessage.emit(StringFactory.resource(R.string.error_unmuting_account))
+                showSnackbar(
+                    text = StringFactory.resource(R.string.error_unmuting_account),
+                    isError = true,
+                )
             }
         }
     }
@@ -166,7 +159,10 @@ class AccountViewModel(
                 accountRepository.blockAccount(accountId)
             } catch (e: Exception) {
                 Timber.e(e)
-                _errorToastMessage.emit(StringFactory.resource(R.string.error_blocking_account))
+                showSnackbar(
+                    text = StringFactory.resource(R.string.error_blocking_account),
+                    isError = true,
+                )
             }
         }
     }
@@ -177,7 +173,10 @@ class AccountViewModel(
                 accountRepository.unblockAccount(accountId)
             } catch (e: Exception) {
                 Timber.e(e)
-                _errorToastMessage.emit(StringFactory.resource(R.string.error_unblocking_account))
+                showSnackbar(
+                    text = StringFactory.resource(R.string.error_unblocking_account),
+                    isError = true,
+                )
             }
         }
     }
@@ -185,7 +184,7 @@ class AccountViewModel(
     override fun onOverflowReportClicked() {
         (uiState.value as? Resource.Loaded)?.data?.webFinger?.let { webFinger ->
             navigateTo(
-                NavDestination.Report(
+                NavigationDestination.Report(
                     accountId,
                     webFinger,
                 )
@@ -194,20 +193,26 @@ class AccountViewModel(
     }
 
     override fun onFollowersClicked() {
-        navigateTo(NavDestination.Followers(accountId))
+        navigateTo(NavigationDestination.Followers(accountId))
     }
 
     override fun onFollowingClicked() {
-        navigateTo(NavDestination.Following(accountId))
+        navigateTo(NavigationDestination.Following(accountId))
     }
 
     override fun onFollowClicked() {
         viewModelScope.launch {
             try {
-                accountRepository.followAccount(accountId)
+                accountRepository.followAccount(
+                    accountId = accountId,
+                    loggedInUserAccountId = usersAccountId
+                )
             } catch (e: Exception) {
                 Timber.e(e)
-                _errorToastMessage.emit(StringFactory.resource(R.string.error_following_account))
+                showSnackbar(
+                    text = StringFactory.resource(R.string.error_following_account),
+                    isError = true,
+                )
             }
         }
     }
@@ -215,10 +220,16 @@ class AccountViewModel(
     override fun onUnfollowClicked() {
         viewModelScope.launch {
             try {
-                accountRepository.unfollowAccount(accountId)
+                accountRepository.unfollowAccount(
+                    accountId = accountId,
+                    loggedInUserAccountId = usersAccountId,
+                )
             } catch (e: Exception) {
                 Timber.e(e)
-                _errorToastMessage.emit(StringFactory.resource(R.string.error_unfollowing_account))
+                showSnackbar(
+                    text = StringFactory.resource(R.string.error_unfollowing_account),
+                    isError = true,
+                )
             }
         }
     }
@@ -232,10 +243,10 @@ class AccountViewModel(
     }
 
     override fun onSettingsClicked() {
-        navigateTo(NavDestination.Settings)
+        navigateTo(NavigationDestination.Settings)
     }
 
     override fun onEditAccountClicked() {
-        navigateTo(NavDestination.EditAccount)
+        navigateTo(NavigationDestination.EditAccount)
     }
 }

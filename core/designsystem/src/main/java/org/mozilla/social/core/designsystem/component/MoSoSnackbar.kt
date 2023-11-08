@@ -17,12 +17,16 @@
 package org.mozilla.social.core.designsystem.component
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -35,6 +39,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.style.TextAlign
@@ -108,17 +113,17 @@ private fun MoSoSnackbar(
     borderColor: Color,
     contentColor: Color,
 ) {
-    Snackbar(
-        modifier = Modifier.border(
-            border = BorderStroke(width = 2.dp, brush = SolidColor(borderColor)),
-            shape = RoundedCornerShape(MoSoRadius.md)
-        ),
-        containerColor = backgroundColor,
+    Surface(
+        modifier = Modifier
+            .defaultMinSize(minHeight = 32.dp),
+        color = backgroundColor,
+        border = BorderStroke(width = 1.dp, brush = SolidColor(borderColor)),
+        shape = RoundedCornerShape(MoSoRadius.md)
     ) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .wrapContentHeight(),
+                .padding(MoSoSpacing.sm),
             contentAlignment = Alignment.Center,
         ) {
             Text(
@@ -184,6 +189,20 @@ private fun SnackbarPreview() {
                     }
                 }) {
                     Text(text = "show error snackbar")
+                }
+
+                MoSoButton(onClick = {
+                    scope.launch {
+                        snackbarHostState.showSnackbar(
+                            snackbarType = SnackbarType.ERROR,
+                            message = "Here's an error snackbar with a really long message that " +
+                                    "will show on multiple lines because it's so long",
+                            duration = SnackbarDuration.Short,
+                        )
+
+                    }
+                }) {
+                    Text(text = "show snackbar with long text")
                 }
             }
         }

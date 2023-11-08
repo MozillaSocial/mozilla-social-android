@@ -17,8 +17,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -28,20 +29,25 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight.Companion.W700
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.KoinApplication
 import org.mozilla.social.common.Resource
 import org.mozilla.social.common.utils.toFile
 import org.mozilla.social.core.designsystem.component.MoSoButton
 import org.mozilla.social.core.designsystem.component.MoSoCheckBox
+import org.mozilla.social.core.designsystem.component.MoSoDivider
 import org.mozilla.social.core.designsystem.component.MoSoSurface
 import org.mozilla.social.core.designsystem.component.MoSoTextField
-import org.mozilla.social.core.designsystem.component.MoSoToast
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
-import org.mozilla.social.core.ui.TransparentNoTouchOverlay
-import org.mozilla.social.core.ui.appbar.MoSoCloseableTopAppBar
+import org.mozilla.social.core.navigation.navigationModule
+import org.mozilla.social.core.ui.common.TransparentNoTouchOverlay
+import org.mozilla.social.core.ui.common.appbar.MoSoCloseableTopAppBar
+import org.mozilla.social.core.ui.common.error.GenericError
+import org.mozilla.social.core.ui.common.loading.MaxSizeLoading
 import org.mozilla.social.feature.account.Header
 import org.mozilla.social.feature.account.R
 
@@ -51,48 +57,66 @@ internal fun EditAccountScreen(
 ) {
     EditAccountScreen(
         editAccountInteractions = viewModel,
-        editAccountUiState = viewModel.editAccountUiState.collectAsState().value,
+        uiState = viewModel.editAccountUiState.collectAsState().value,
         isUploading = viewModel.isUploading.collectAsState().value,
     )
-
-    MoSoToast(toastMessage = viewModel.errorToastMessage)
 }
 
 @Composable
 fun EditAccountScreen(
     editAccountInteractions: EditAccountInteractions,
-    editAccountUiState: Resource<EditAccountUiState>,
+    uiState: Resource<EditAccountUiState>,
     isUploading: Boolean,
 ) {
     MoSoSurface(
         modifier = Modifier
             .fillMaxSize(),
     ) {
-        Box(modifier = Modifier.fillMaxSize()) {
-            Box(
-                modifier = Modifier
-                    .systemBarsPadding()
-                    .imePadding(),
-            ) {
-                when (editAccountUiState) {
-                    is Resource.Loading -> {}
-                    is Resource.Loaded -> {
-                        LoadedState(
-                            editAccountInteractions = editAccountInteractions,
-                            uiState = editAccountUiState.data,
-                        )
+        Column(
+            modifier = Modifier
+                .systemBarsPadding()
+                .imePadding(),
+        ) {
+            MoSoCloseableTopAppBar(
+                title = (uiState as? Resource.Loaded)?.data?.topBarTitle ?: "",
+                actions = {
+                    if (uiState is Resource.Loaded) {
+                        MoSoButton(
+                            modifier = Modifier
+                                .padding(8.dp)
+                                .height(38.dp),
+                            onClick = { editAccountInteractions.onSaveClicked() }
+                        ) {
+                            Text(text = stringResource(id = R.string.edit_account_save_button))
+                        }
                     }
+                },
+                showDivider = false,
+            )
 
-                    is Resource.Error -> {}
+
+            when (uiState) {
+                is Resource.Loading -> {
+                    MaxSizeLoading()
+                }
+                is Resource.Loaded -> {
+                    LoadedState(
+                        editAccountInteractions = editAccountInteractions,
+                        uiState = uiState.data,
+                    )
+                }
+
+                is Resource.Error -> {
+                    GenericError(
+                        onRetryClicked = editAccountInteractions::onRetryClicked
+                    )
                 }
             }
+        }
 
-            if (isUploading) {
-                TransparentNoTouchOverlay()
-                CircularProgressIndicator(
-                    modifier = Modifier.align(Alignment.Center),
-                )
-            }
+        if (isUploading) {
+            TransparentNoTouchOverlay()
+            MaxSizeLoading()
         }
     }
 }
@@ -104,22 +128,10 @@ private fun LoadedState(
 ) {
     val context = LocalContext.current
 
-    Column {
-        MoSoCloseableTopAppBar(
-            title = uiState.topBarTitle,
-            actions = {
-                MoSoButton(
-                    modifier = Modifier
-                        .padding(8.dp)
-                        .height(38.dp),
-                    onClick = { editAccountInteractions.onSaveClicked() }
-                ) {
-                    Text(text = stringResource(id = R.string.edit_account_save_button))
-                }
-            },
-            showDivider = false,
-        )
-
+    Column(
+        modifier = Modifier
+            .verticalScroll(rememberScrollState())
+    ) {
         val avatarSelectionLauncher = rememberLauncherForActivityResult(
             ActivityResultContracts.PickVisualMedia()
         ) { uri ->
@@ -198,6 +210,11 @@ private fun LoadedState(
                 style = MoSoTheme.typography.labelSmall,
                 color = MoSoTheme.colors.textSecondary,
             )
+
+            Metadata(
+                editAccountInteractions = editAccountInteractions,
+                fields = uiState.fields
+            )
         }
     }
 }
@@ -265,26 +282,75 @@ private fun BotAndLock(
     }
 }
 
+@Composable
+private fun Metadata(
+    editAccountInteractions: EditAccountInteractions,
+    fields: List<EditAccountUiStateField>,
+) {
+    Column {
+        Text(
+            text = stringResource(id = R.string.edit_account_metadata_title),
+            style = MoSoTheme.typography.bodyMedium,
+            fontWeight = W700
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(
+            text = stringResource(id = R.string.edit_account_metadata_description),
+            style = MoSoTheme.typography.bodyMedium,
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        fields.forEachIndexed { index, field ->
+            MoSoTextField(
+                modifier = Modifier.fillMaxWidth(),
+                value = field.label,
+                onValueChange = { editAccountInteractions.onLabelTextChanged(index, it) },
+                label = {
+                    Text(text = stringResource(id = R.string.edit_account_label_hint))
+                },
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            MoSoTextField(
+                modifier = Modifier.fillMaxWidth(),
+                value = field.content,
+                onValueChange = { editAccountInteractions.onContentTextChanged(index, it) },
+                label = {
+                    Text(text = stringResource(id = R.string.edit_account_content_hint))
+                },
+            )
+            if (index < fields.size - 1) {
+                Spacer(modifier = Modifier.height(16.dp))
+                MoSoDivider()
+            }
+            Spacer(modifier = Modifier.height(16.dp))
+        }
+    }
+}
+
 @Preview
 @Composable
 private fun PreviewEditAccountScreen() {
-    MoSoTheme {
-        EditAccountScreen(
-            editAccountUiState = Resource.Loaded(
-                data = EditAccountUiState(
-                    topBarTitle = "John",
-                    headerUrl = "",
-                    avatarUrl = "",
-                    handle = "@john",
-                    displayName = "John New",
-                    bio = "I'm super cool",
-                    bioCharacterCount = 20,
-                    lockChecked = false,
-                    botChecked = false,
-                )
-            ),
-            editAccountInteractions = object : EditAccountInteractions {},
-            isUploading = false,
-        )
+    KoinApplication(application = {
+        modules(navigationModule)
+    }) {
+        MoSoTheme {
+            EditAccountScreen(
+                uiState = Resource.Loaded(
+                    data = EditAccountUiState(
+                        topBarTitle = "John",
+                        headerUrl = "",
+                        avatarUrl = "",
+                        handle = "@john",
+                        displayName = "John New",
+                        bio = "I'm super cool",
+                        bioCharacterCount = 20,
+                        lockChecked = false,
+                        botChecked = false,
+                        fields = listOf(),
+                    )
+                ),
+                editAccountInteractions = object : EditAccountInteractions {},
+                isUploading = false,
+            )
+        }
     }
 }

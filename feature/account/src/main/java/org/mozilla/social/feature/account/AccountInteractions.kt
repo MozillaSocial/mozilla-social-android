@@ -7,7 +7,7 @@ interface AccountInteractions : OverflowInteractions {
     fun onUnfollowClicked() = Unit
     fun onRetryClicked() = Unit
     fun onTabClicked(timelineType: TimelineType) = Unit
-    fun onSettingsClicked()
+    fun onSettingsClicked() = Unit
     fun onScreenViewed() = Unit
     fun onEditAccountClicked() = Unit
 }

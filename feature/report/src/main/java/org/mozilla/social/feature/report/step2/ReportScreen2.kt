@@ -35,15 +35,13 @@ import org.mozilla.social.core.designsystem.component.MoSoCheckBox
 import org.mozilla.social.core.designsystem.component.MoSoCircularProgressIndicator
 import org.mozilla.social.core.designsystem.component.MoSoDivider
 import org.mozilla.social.core.designsystem.component.MoSoSurface
-import org.mozilla.social.core.designsystem.component.MoSoToast
-import org.mozilla.social.core.ui.appbar.MoSoTopBar
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.designsystem.utils.NoRipple
-import org.mozilla.social.core.ui.appbar.MoSoCloseableTopAppBar
-import org.mozilla.social.core.ui.error.GenericError
+import org.mozilla.social.core.ui.common.appbar.MoSoCloseableTopAppBar
+import org.mozilla.social.core.ui.common.error.GenericError
 import org.mozilla.social.core.ui.htmlcontent.HtmlContent
 import org.mozilla.social.core.ui.htmlcontent.HtmlContentInteractions
-import org.mozilla.social.core.ui.loading.MaxSizeLoading
+import org.mozilla.social.core.ui.common.loading.MaxSizeLoading
 import org.mozilla.social.feature.report.R
 import org.mozilla.social.feature.report.ReportDataBundle
 import org.mozilla.social.feature.report.ReportType
@@ -82,8 +80,6 @@ internal fun ReportScreen2(
         hasPreAttachedStatus = reportStatusId != null,
         reportInteractions = viewModel
     )
-
-    MoSoToast(toastMessage = viewModel.errorToastMessage)
 }
 
 @Composable
@@ -280,10 +276,11 @@ private fun SelectableStatusCard(
                     )
                 }
 
-                HtmlContent(
+                org.mozilla.social.core.ui.htmlcontent.HtmlContent(
                     mentions = emptyList(),
                     htmlText = uiState.htmlStatusText,
-                    htmlContentInteractions = object : HtmlContentInteractions {},
+                    htmlContentInteractions = object :
+                        org.mozilla.social.core.ui.htmlcontent.HtmlContentInteractions {},
                     maximumLineCount = 2,
                     clickableLinks = false
                 )

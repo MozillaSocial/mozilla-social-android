@@ -31,7 +31,7 @@ class GleanAnalytics(
         )
 
         GlobalScope.launch {
-            appPreferencesDatastore.trackAnalytics.collectLatest {
+            appPreferencesDatastore.allowAnalytics.collectLatest {
                 Glean.setUploadEnabled(it)
             }
         }
@@ -98,7 +98,7 @@ class GleanAnalytics(
     }
 
     override fun clearLoggedInIdentifiers() {
-        Identifiers.mastodonAccountHandle.destroy()
-        Identifiers.mastodonAccountId.destroy()
+        Identifiers.mastodonAccountHandle.set("")
+        Identifiers.mastodonAccountId.set("")
     }
 }

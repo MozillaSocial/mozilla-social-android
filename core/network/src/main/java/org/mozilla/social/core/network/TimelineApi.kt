@@ -1,6 +1,7 @@
 package org.mozilla.social.core.network
 
 import org.mozilla.social.core.network.model.NetworkStatus
+import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -16,7 +17,7 @@ interface TimelineApi {
         @Query("min_id") immediatelyNewerThanId: String? = null,
         // Maximum number of results to return. Defaults to 20 statuses. Max 40 statuses.
         @Query("limit") limit: Int? = null,
-    ): List<NetworkStatus>
+    ): Response<List<NetworkStatus>>
 
     @GET("/api/v1/timelines/public")
     suspend fun getPublicTimeline(
@@ -31,7 +32,7 @@ interface TimelineApi {
         @Query("min_id") immediatelyNewerThanId: String? = null,
         // Maximum number of results to return. Defaults to 20 statuses. Max 40 statuses.
         @Query("limit") limit: Int? = null,
-    ): List<NetworkStatus>
+    ): Response<List<NetworkStatus>>
 
     @GET("/api/v1/timelines/tag/{hashtag}")
     suspend fun getHashTagTimeline(
@@ -44,5 +45,5 @@ interface TimelineApi {
         @Query("min_id") immediatelyNewerThanId: String? = null,
         // Maximum number of results to return. Defaults to 20 statuses. Max 40 statuses.
         @Query("limit") limit: Int? = null,
-    ): List<NetworkStatus>
+    ): Response<List<NetworkStatus>>
 }

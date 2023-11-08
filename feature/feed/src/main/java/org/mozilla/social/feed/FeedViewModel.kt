@@ -15,17 +15,14 @@ import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
-import org.mozilla.social.common.logging.Log
+import org.koin.core.parameter.parametersOf
+import org.koin.java.KoinJavaComponent
 import org.mozilla.social.core.analytics.Analytics
 import org.mozilla.social.core.analytics.AnalyticsIdentifiers
-import org.mozilla.social.core.data.repository.AccountRepository
-import org.mozilla.social.core.data.repository.StatusRepository
 import org.mozilla.social.core.data.repository.model.status.toExternalModel
 import org.mozilla.social.core.database.SocialDatabase
 import org.mozilla.social.core.database.model.statusCollections.toStatusWrapper
 import org.mozilla.social.core.domain.AccountIdFlow
-import org.mozilla.social.core.navigation.usecases.NavigateTo
-import org.mozilla.social.core.navigation.usecases.OpenLink
 import org.mozilla.social.core.ui.postcard.PostCardDelegate
 import org.mozilla.social.core.ui.postcard.toPostCardUiState
 import org.mozilla.social.feed.remoteMediators.FederatedTimelineRemoteMediator
@@ -41,12 +38,7 @@ class FeedViewModel(
     localTimelineRemoteMediator: LocalTimelineRemoteMediator,
     federatedTimelineRemoteMediator: FederatedTimelineRemoteMediator,
     accountIdFlow: AccountIdFlow,
-    statusRepository: StatusRepository,
-    accountRepository: AccountRepository,
     private val socialDatabase: SocialDatabase,
-    log: Log,
-    openLink: OpenLink,
-    navigateTo: NavigateTo,
 ) : ViewModel(), FeedInteractions {
 
     private val _timelineType = MutableStateFlow(TimelineType.FOR_YOU)
@@ -105,14 +97,9 @@ class FeedViewModel(
         }
     }.cachedIn(viewModelScope)
 
-    val postCardDelegate = PostCardDelegate(
-        coroutineScope = viewModelScope,
-        statusRepository = statusRepository,
-        accountRepository = accountRepository,
-        log = log,
-        navigateTo = navigateTo,
-        openLink = openLink,
-    )
+    val postCardDelegate: PostCardDelegate by KoinJavaComponent.inject(
+        PostCardDelegate::class.java
+    ) { parametersOf(viewModelScope) }
 
     override fun onTabClicked(timelineType: TimelineType) {
         _timelineType.update { timelineType }
