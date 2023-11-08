@@ -75,7 +75,7 @@ class EditAccountViewModel(
                         }
                     )
                     popNavBackstack()
-                } catch (e: Exception) {
+                } catch (e: UpdateMyAccount.UpdateAccountFailedException) {
                     Timber.e(e)
                     _isUploading.update { false }
                 }

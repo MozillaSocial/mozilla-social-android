@@ -37,7 +37,7 @@ import timber.log.Timber
 
 class AccountViewModel(
     private val analytics: Analytics,
-    private val getLoggedInUserAccountId: GetLoggedInUserAccountId,
+    getLoggedInUserAccountId: GetLoggedInUserAccountId,
     private val socialDatabase: SocialDatabase,
     private val getDetailedAccount: GetDetailedAccount,
     private val navigateTo: NavigateTo,
@@ -144,7 +144,7 @@ class AccountViewModel(
         viewModelScope.launch {
             try {
                 unmuteAccount(accountId)
-            } catch (e: Exception) {
+            } catch (e: UnmuteAccount.UnmuteFailedException) {
                 Timber.e(e)
             }
         }
@@ -204,10 +204,14 @@ class AccountViewModel(
 
     override fun onUnfollowClicked() {
         viewModelScope.launch {
-            unfollowAccount(
-                accountId = accountId,
-                loggedInUserAccountId = usersAccountId,
-            )
+            try {
+                unfollowAccount(
+                    accountId = accountId,
+                    loggedInUserAccountId = usersAccountId,
+                )
+            } catch (e: UnfollowAccount.UnfollowFailedException) {
+                Timber.e(e)
+            }
         }
     }
 
