@@ -1,12 +1,13 @@
 package org.mozilla.social.core.data.repository
 
 import androidx.room.withTransaction
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
+import org.mozilla.social.common.appscope.AppScope
 import org.mozilla.social.common.parseMastodonLinkHeader
 import org.mozilla.social.core.data.repository.model.account.toExternal
 import org.mozilla.social.core.data.repository.model.followers.FollowersPagingWrapper
@@ -25,6 +26,7 @@ import java.io.File
 class AccountRepository internal constructor(
     private val accountApi: AccountApi,
     private val socialDatabase: SocialDatabase,
+    private val externalScope: CoroutineScope,
 ) {
 
     suspend fun verifyUserCredentials(): Account {
@@ -121,7 +123,7 @@ class AccountRepository internal constructor(
     suspend fun followAccount(
         accountId: String,
         loggedInUserAccountId: String,
-    ) {
+    ) = withContext(externalScope.coroutineContext) {
         try {
             socialDatabase.withTransaction {
                 socialDatabase.accountsDao().updateFollowingCount(loggedInUserAccountId, 1)
@@ -140,7 +142,7 @@ class AccountRepository internal constructor(
     suspend fun unfollowAccount(
         accountId: String,
         loggedInUserAccountId: String,
-    ) {
+    ) = withContext(externalScope.coroutineContext) {
         var timelinePosts: List<HomeTimelineStatus>? = null
         try {
             socialDatabase.withTransaction {
@@ -163,7 +165,7 @@ class AccountRepository internal constructor(
     /**
      * remove posts from any timelines before blocking
      */
-    suspend fun blockAccount(accountId: String) {
+    suspend fun blockAccount(accountId: String) = withContext(externalScope.coroutineContext) {
         try {
             socialDatabase.homeTimelineDao().removePostsFromAccount(accountId)
             socialDatabase.localTimelineDao().removePostsFromAccount(accountId)
@@ -176,7 +178,7 @@ class AccountRepository internal constructor(
         }
     }
 
-    suspend fun unblockAccount(accountId: String) {
+    suspend fun unblockAccount(accountId: String) = withContext(externalScope.coroutineContext) {
         try {
             socialDatabase.relationshipsDao().updateBlocked(accountId, false)
             accountApi.unblockAccount(accountId)
@@ -189,7 +191,7 @@ class AccountRepository internal constructor(
     /**
      * remove posts from any timelines before muting
      */
-    suspend fun muteAccount(accountId: String) {
+    suspend fun muteAccount(accountId: String) = withContext(externalScope.coroutineContext) {
         try {
             socialDatabase.homeTimelineDao().removePostsFromAccount(accountId)
             socialDatabase.localTimelineDao().removePostsFromAccount(accountId)
@@ -202,7 +204,7 @@ class AccountRepository internal constructor(
         }
     }
 
-    suspend fun unmuteAccount(accountId: String) {
+    suspend fun unmuteAccount(accountId: String) = withContext(externalScope.coroutineContext) {
         try {
             socialDatabase.relationshipsDao().updateMuted(accountId, false)
             accountApi.unmuteAccount(accountId)
@@ -220,7 +222,7 @@ class AccountRepository internal constructor(
         avatar: File? = null,
         header: File? = null,
         fields: List<Pair<String, String>>? = null
-    ) = withContext(Dispatchers.IO) {
+    ) = withContext(externalScope.coroutineContext) {
         val updatedAccount = accountApi.updateAccount(
             displayName = displayName?.toRequestBody(MultipartBody.FORM),
             bio = bio?.toRequestBody(MultipartBody.FORM),

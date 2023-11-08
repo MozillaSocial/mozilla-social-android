@@ -1,6 +1,7 @@
 package org.mozilla.social.core.data
 
 import org.koin.dsl.module
+import org.mozilla.social.common.appscope.AppScope
 import org.mozilla.social.core.data.repository.AccountRepository
 import org.mozilla.social.core.data.repository.AppRepository
 import org.mozilla.social.core.data.repository.InstanceRepository
@@ -16,7 +17,7 @@ import org.mozilla.social.core.network.networkModule
 fun repositoryModule(isDebug: Boolean) = module {
     single { AuthCredentialObserver(get(), get()) }
     single { StatusRepository(get(), get(), get()) }
-    single { AccountRepository(get(), get()) }
+    single { AccountRepository(get(), get(), get<AppScope>()) }
     single { TimelineRepository(get(), get()) }
     single { StatusRepository(get(), get(), get()) }
     single { OauthRepository(get()) }

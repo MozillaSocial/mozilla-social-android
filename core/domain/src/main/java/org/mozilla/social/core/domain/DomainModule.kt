@@ -15,7 +15,14 @@ val domainModule = module {
     }
     single { GetThreadUseCase(get()) }
     single { Login(get(), get(), get(), get(), get()) }
-    single { Logout(get(), get(), get()) }
+    single {
+        Logout(
+            userPreferencesDatastore = get(),
+            socialDatabase = get(),
+            analytics = get(),
+            appScope = get(),
+        )
+    }
     single { IsSignedInFlow(get()) }
     single { AccountIdFlow(get()) }
     single { GetDetailedAccount(get(), get()) }

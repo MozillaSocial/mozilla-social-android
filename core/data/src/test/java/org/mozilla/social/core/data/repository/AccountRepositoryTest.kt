@@ -2,6 +2,9 @@ package org.mozilla.social.core.data.repository
 
 import io.mockk.coEvery
 import io.mockk.coVerify
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.mozilla.social.core.database.model.statusCollections.HomeTimelineStatus
 import kotlin.test.BeforeTest
@@ -12,11 +15,13 @@ class AccountRepositoryTest : BaseRepositoryTest() {
 
     private lateinit var subject: AccountRepository
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     @BeforeTest
     fun setup() {
         subject = AccountRepository(
             accountApi = accountApi,
             socialDatabase = socialDatabase,
+            externalScope = TestScope(UnconfinedTestDispatcher())
         )
     }
 
