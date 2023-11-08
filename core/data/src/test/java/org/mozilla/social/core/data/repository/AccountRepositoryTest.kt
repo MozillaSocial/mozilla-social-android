@@ -21,7 +21,8 @@ class AccountRepositoryTest : BaseRepositoryTest() {
         subject = AccountRepository(
             accountApi = accountApi,
             socialDatabase = socialDatabase,
-            externalScope = TestScope(UnconfinedTestDispatcher())
+            externalScope = TestScope(UnconfinedTestDispatcher()),
+            dispatcherIo = UnconfinedTestDispatcher()
         )
     }
 
