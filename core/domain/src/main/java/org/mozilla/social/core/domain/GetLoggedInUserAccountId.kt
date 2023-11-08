@@ -6,11 +6,7 @@ import org.mozilla.social.core.datastore.UserPreferencesDatastore
 import timber.log.Timber
 
 /**
- * The account ID of the logged in user
- *
- * So much depends on this value, trying out a blocking call to simplify the rest of the code.
- *
- * Uses a mutex so we can cancel the flow collection after we get the value.
+ * Synchronously gets the account ID of the current logged in user
  */
 class GetLoggedInUserAccountId(
     private val userPreferencesDatastore: UserPreferencesDatastore,
