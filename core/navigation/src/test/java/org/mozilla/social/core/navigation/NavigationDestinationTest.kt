@@ -3,13 +3,13 @@ package org.mozilla.social.core.navigation
 
 import androidx.navigation.NavController
 import com.google.common.truth.Truth.assertThat
-import io.mockk.impl.annotations.SpyK
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.Test
 import org.mozilla.social.core.navigation.NavigationDestination.Login.navigateToLoginScreen
 import org.mozilla.social.core.navigation.NavigationDestination.EditAccount.navigateToEditAccount
 import org.mozilla.social.core.navigation.NavigationDestination.Tabs.navigateToTabs
+import org.mozilla.social.core.test.TestUtils
 
 class NavigationDestinationTest {
     private val navController = mockk<NavController>(relaxed = true)

@@ -14,6 +14,7 @@ internal fun Project.configureUnitTests(
             add("testImplementation", libs.findLibrary("kotlin-test-junit").get())
             add("testImplementation", libs.findLibrary("kotlinx-coroutines-test").get())
             add("testImplementation", libs.findLibrary("google-truth").get())
+            add("testImplementation", project(":core:test"))
         }
     }
 }
