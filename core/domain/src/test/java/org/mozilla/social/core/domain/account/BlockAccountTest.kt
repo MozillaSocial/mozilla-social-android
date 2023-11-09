@@ -35,4 +35,16 @@ class BlockAccountTest : BaseDomainTest() {
             }
         )
     }
+
+    @Test
+    fun testCancelledScopeWithError() {
+        testOuterScopeCancelledAndInnerException(
+            delayedCallBlock = {
+                relationshipsDao.updateBlocked(any(), true)
+            },
+            subjectCallBlock = {
+                subject("id")
+            },
+        )
+    }
 }

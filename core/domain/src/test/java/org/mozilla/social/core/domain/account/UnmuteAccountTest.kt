@@ -25,7 +25,7 @@ class UnmuteAccountTest : BaseDomainTest() {
         val accountId = "id1"
         testOuterScopeCancelled(
             delayedCallBlock = {
-                relationshipsDao.updateMuted(any(), any())
+                relationshipsDao.updateMuted(any(), false)
             },
             subjectCallBlock = {
                 subject(accountId)
@@ -33,6 +33,18 @@ class UnmuteAccountTest : BaseDomainTest() {
             verifyBlock = {
                 accountApi.unmuteAccount(accountId)
             }
+        )
+    }
+
+    @Test
+    fun testCancelledScopeWithError() {
+        testOuterScopeCancelledAndInnerException(
+            delayedCallBlock = {
+                relationshipsDao.updateMuted(any(), false)
+            },
+            subjectCallBlock = {
+                subject("id")
+            },
         )
     }
 }

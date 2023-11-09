@@ -25,7 +25,7 @@ class UnblockAccountTest: BaseDomainTest() {
         val accountId = "id1"
         testOuterScopeCancelled(
             delayedCallBlock = {
-                relationshipsDao.updateBlocked(any(), any())
+                relationshipsDao.updateBlocked(any(), false)
             },
             subjectCallBlock = {
                 subject(accountId)
@@ -33,6 +33,18 @@ class UnblockAccountTest: BaseDomainTest() {
             verifyBlock = {
                 accountApi.unblockAccount(accountId)
             }
+        )
+    }
+
+    @Test
+    fun testCancelledScopeWithError() {
+        testOuterScopeCancelledAndInnerException(
+            delayedCallBlock = {
+                relationshipsDao.updateBlocked(any(), false)
+            },
+            subjectCallBlock = {
+                subject("id1")
+            },
         )
     }
 }

@@ -11,7 +11,7 @@ class UpdateMyAccountTest : BaseDomainTest() {
 
     private lateinit var subject: UpdateMyAccount
 
-    val networkAccountMock = NetworkAccount(
+    private val networkAccountMock = NetworkAccount(
         accountId = "mediocritatem",
         username = "Rosie Small",
         acct = "eripuit",
@@ -78,6 +78,33 @@ class UpdateMyAccountTest : BaseDomainTest() {
             verifyBlock = {
                 accountsDao.insert(any())
             }
+        )
+    }
+
+    @Test
+    fun testCancelledScopeWithError() {
+        testOuterScopeCancelledAndInnerException(
+            delayedCallBlock = {
+                accountApi.updateAccount(
+                    any(),
+                    any(),
+                    any(),
+                    any(),
+                    any(),
+                    any(),
+                    any(),
+                    any(),
+                    any(),
+                    any(),
+                    any(),
+                    any(),
+                    any(),
+                    any(),
+                )
+            },
+            subjectCallBlock = {
+                subject()
+            },
         )
     }
 }

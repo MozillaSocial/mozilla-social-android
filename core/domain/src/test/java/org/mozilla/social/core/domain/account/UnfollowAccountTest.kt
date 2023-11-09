@@ -96,7 +96,7 @@ class UnfollowAccountTest : BaseDomainTest() {
 
         testOuterScopeCancelled(
             delayedCallBlock = {
-                relationshipsDao.updateFollowing(any(), any())
+                relationshipsDao.updateFollowing(any(), false)
             },
             subjectCallBlock = {
                 subject(
@@ -106,6 +106,21 @@ class UnfollowAccountTest : BaseDomainTest() {
             },
             verifyBlock = {
                 accountApi.unfollowAccount(accountId)
+            },
+        )
+    }
+
+    @Test
+    fun testCancelledScopeWithError() {
+        testOuterScopeCancelledAndInnerException(
+            delayedCallBlock = {
+                relationshipsDao.updateFollowing(any(), false)
+            },
+            subjectCallBlock = {
+                subject(
+                    accountId = "id1",
+                    loggedInUserAccountId = "id2",
+                )
             },
         )
     }

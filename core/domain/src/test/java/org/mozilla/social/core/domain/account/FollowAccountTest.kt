@@ -75,7 +75,7 @@ class FollowAccountTest : BaseDomainTest() {
 
         testOuterScopeCancelled(
             delayedCallBlock =  {
-                relationshipsDao.updateFollowing(any(), any())
+                relationshipsDao.updateFollowing(any(), true)
             },
             subjectCallBlock = {
                 subject(
@@ -85,6 +85,21 @@ class FollowAccountTest : BaseDomainTest() {
             },
             verifyBlock = {
                 accountApi.followAccount(accountId)
+            },
+        )
+    }
+
+    @Test
+    fun testCancelledScopeWithError() {
+        testOuterScopeCancelledAndInnerException(
+            delayedCallBlock =  {
+                relationshipsDao.updateFollowing(any(), true)
+            },
+            subjectCallBlock = {
+                subject(
+                    accountId = "id1",
+                    loggedInUserAccountId = "id2"
+                )
             },
         )
     }
