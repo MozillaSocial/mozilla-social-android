@@ -18,6 +18,9 @@ class MuteAccount(
     private val dispatcherIo: CoroutineDispatcher = Dispatchers.IO,
 ) {
 
+    /**
+     * @throws MuteFailedException if any error occurred
+     */
     suspend operator fun invoke(
         accountId: String
     ) = externalScope.async(dispatcherIo) {

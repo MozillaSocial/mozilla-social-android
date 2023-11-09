@@ -18,6 +18,9 @@ class BlockAccount(
     private val dispatcherIo: CoroutineDispatcher = Dispatchers.IO,
 ) {
 
+    /**
+     * @throws BlockFailedException if any error occurred
+     */
     suspend operator fun invoke(
         accountId: String
     ) = externalScope.async(dispatcherIo) {

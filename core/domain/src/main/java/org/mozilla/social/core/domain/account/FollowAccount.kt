@@ -19,6 +19,9 @@ class FollowAccount(
     private val dispatcherIo: CoroutineDispatcher = Dispatchers.IO,
 ) {
 
+    /**
+     * @throws FollowFailedException if any error occurred
+     */
     suspend operator fun invoke(
         accountId: String,
         loggedInUserAccountId: String,

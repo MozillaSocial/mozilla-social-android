@@ -18,6 +18,9 @@ class UnmuteAccount(
     private val dispatcherIo: CoroutineDispatcher = Dispatchers.IO,
 ) {
 
+    /**
+     * @throws UnmuteFailedException if any error occurred
+     */
     suspend operator fun invoke(
         accountId: String
     ) = externalScope.async(dispatcherIo) {

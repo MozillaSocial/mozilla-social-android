@@ -25,6 +25,9 @@ class UpdateMyAccount(
     private val dispatcherIo: CoroutineDispatcher = Dispatchers.IO,
 ) {
 
+    /**
+     * @throws UpdateAccountFailedException if any error occurred
+     */
     suspend operator fun invoke(
         displayName: String? = null,
         bio: String? = null,

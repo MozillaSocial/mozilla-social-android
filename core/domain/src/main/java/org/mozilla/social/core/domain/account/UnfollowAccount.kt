@@ -20,6 +20,9 @@ class UnfollowAccount(
     private val dispatcherIo: CoroutineDispatcher = Dispatchers.IO,
 ) {
 
+    /**
+     * @throws UnfollowFailedException if any error occurred
+     */
     suspend operator fun invoke(
         accountId: String,
         loggedInUserAccountId: String,

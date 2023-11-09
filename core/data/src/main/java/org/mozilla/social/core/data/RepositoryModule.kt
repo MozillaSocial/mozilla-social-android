@@ -1,7 +1,6 @@
 package org.mozilla.social.core.data
 
 import org.koin.dsl.module
-import org.mozilla.social.common.appscope.AppScope
 import org.mozilla.social.core.data.repository.AccountRepository
 import org.mozilla.social.core.data.repository.AppRepository
 import org.mozilla.social.core.data.repository.InstanceRepository
