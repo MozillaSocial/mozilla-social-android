@@ -1,4 +1,4 @@
-package org.mozilla.social.core.data.utils
+package org.mozilla.social.core.domain.utils
 
 import androidx.room.RoomDatabase
 import androidx.room.withTransaction

@@ -25,7 +25,7 @@ class BlockAccountTest : BaseDomainTest() {
         val accountId = "id1"
         testOuterScopeCancelled(
             delayedCallBlock = {
-                accountApi.blockAccount(accountId)
+                relationshipsDao.updateBlocked(any(), any())
             },
             subjectCallBlock = {
                 subject(accountId)

@@ -25,7 +25,7 @@ class UnblockAccountTest: BaseDomainTest() {
         val accountId = "id1"
         testOuterScopeCancelled(
             delayedCallBlock = {
-                accountApi.unblockAccount(accountId)
+                relationshipsDao.updateBlocked(any(), any())
             },
             subjectCallBlock = {
                 subject(accountId)

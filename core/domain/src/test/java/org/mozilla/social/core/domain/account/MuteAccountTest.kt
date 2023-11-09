@@ -25,7 +25,7 @@ class MuteAccountTest : BaseDomainTest() {
         val accountId = "id1"
         testOuterScopeCancelled(
             delayedCallBlock = {
-                accountApi.muteAccount(accountId)
+                relationshipsDao.updateMuted(any(), any())
             },
             subjectCallBlock = {
                 subject(accountId)

@@ -74,11 +74,15 @@ class FollowAccountTest : BaseDomainTest() {
         val loggedInId = "id2"
 
         testOuterScopeCancelled(
-            delayedCallBlock =  { accountApi.followAccount(accountId) },
-            subjectCallBlock = { subject(
-                accountId = accountId,
-                loggedInUserAccountId = loggedInId
-            ) },
+            delayedCallBlock =  {
+                relationshipsDao.updateFollowing(any(), any())
+            },
+            subjectCallBlock = {
+                subject(
+                    accountId = accountId,
+                    loggedInUserAccountId = loggedInId
+                )
+            },
             verifyBlock = {
                 accountApi.followAccount(accountId)
             },

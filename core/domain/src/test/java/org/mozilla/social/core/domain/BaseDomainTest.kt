@@ -9,12 +9,12 @@ import io.mockk.mockk
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
-import org.mozilla.social.core.data.utils.TransactionUtils
 import org.mozilla.social.core.database.SocialDatabase
 import org.mozilla.social.core.database.dao.AccountTimelineStatusDao
 import org.mozilla.social.core.database.dao.AccountsDao
@@ -26,6 +26,7 @@ import org.mozilla.social.core.database.dao.LocalTimelineStatusDao
 import org.mozilla.social.core.database.dao.PollsDao
 import org.mozilla.social.core.database.dao.RelationshipsDao
 import org.mozilla.social.core.database.dao.StatusDao
+import org.mozilla.social.core.domain.utils.TransactionUtils
 import org.mozilla.social.core.navigation.usecases.ShowSnackbar
 import org.mozilla.social.core.network.AccountApi
 import org.mozilla.social.core.network.AppApi
@@ -96,24 +97,43 @@ open class BaseDomainTest {
      * the same call that you used in the @param delayedCallBlock.
      */
     protected fun testOuterScopeCancelled(
-        delayedCallBlock: suspend MockKMatcherScope.() -> Unit,
+        delayedCallBlock: suspend MockKMatcherScope.() -> Any,
+        delayedCallBlockReturnValue: Any = Unit,
         subjectCallBlock: suspend () -> Unit,
         verifyBlock: suspend MockKVerificationScope.() -> Unit,
     ) = runTest {
-        val mutex = Mutex(locked = true)
+        val mutex1 = Mutex(locked = true)
+        val mutex2 = Mutex(locked = true)
 
         coEvery(delayedCallBlock).coAnswers {
-            mutex.unlock()
-            delay(100)
+            CoroutineScope(Dispatchers.Default).launch {
+                // we know we've started the subject block, so we can unlock the first mutex
+                mutex1.unlock()
+                println("lock 1 unlocked")
+                delay(100)
+                // unlock to allow the verify block to run
+                mutex2.unlock()
+                println("lock 2 unlocked")
+            }.join()
+            delayedCallBlockReturnValue
         }
 
         val job = CoroutineScope(Dispatchers.Default).launch {
             subjectCallBlock()
         }
 
-        mutex.lock()
+        // lock to make sure we give the subject callback time to start
+        println("lock 1 locking")
+        mutex1.lock()
 
         job.cancel()
+
+        // lock again to make sure our delayed callback has run before we verify
+        println("lock 2 locking")
+        mutex2.lock()
+
+        // delay to make sure the rest of the subject block has had time to run
+        delay(50)
 
         coVerify(exactly = 1, verifyBlock = verifyBlock)
     }

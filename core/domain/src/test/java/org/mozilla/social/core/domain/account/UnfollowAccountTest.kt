@@ -95,11 +95,15 @@ class UnfollowAccountTest : BaseDomainTest() {
         val loggedInId = "id2"
 
         testOuterScopeCancelled(
-            delayedCallBlock = { accountApi.unfollowAccount(accountId) },
-            subjectCallBlock = { subject(
-                accountId = accountId,
-                loggedInUserAccountId = loggedInId,
-            ) },
+            delayedCallBlock = {
+                relationshipsDao.updateFollowing(any(), any())
+            },
+            subjectCallBlock = {
+                subject(
+                    accountId = accountId,
+                    loggedInUserAccountId = loggedInId,
+                )
+            },
             verifyBlock = {
                 accountApi.unfollowAccount(accountId)
             },
