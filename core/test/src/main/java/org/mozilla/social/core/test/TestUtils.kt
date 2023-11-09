@@ -1,11 +1,11 @@
-package org.mozilla.social.core.navigation
+package org.mozilla.social.core.test
 
 import kotlin.math.absoluteValue
 import kotlin.random.Random
 
 class TestUtils(
-    val seed: Long = System.currentTimeMillis(),
-    val random: Random = Random(seed),
+    private val seed: Long = System.currentTimeMillis(),
+    private val random: Random = Random(seed),
 ) {
     init {
         println("random seed: $seed")
