@@ -6,6 +6,7 @@ import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.core.data.repository.StatusRepository
 import org.mozilla.social.core.domain.account.BlockAccount
 import org.mozilla.social.core.domain.account.MuteAccount
+import org.mozilla.social.core.domain.status.VoteOnPoll
 import org.mozilla.social.core.navigation.NavigationDestination
 import org.mozilla.social.core.navigation.usecases.NavigateTo
 import org.mozilla.social.core.navigation.usecases.OpenLink
@@ -21,18 +22,15 @@ class PostCardDelegate(
     private val showSnackbar: ShowSnackbar,
     private val blockAccount: BlockAccount,
     private val muteAccount: MuteAccount,
+    private val voteOnPoll: VoteOnPoll,
 ) : PostCardInteractions {
 
     override fun onVoteClicked(pollId: String, choices: List<Int>) {
         coroutineScope.launch {
             try {
-                statusRepository.voteOnPoll(pollId, choices)
-            } catch (e: Exception) {
+                voteOnPoll(pollId, choices)
+            } catch (e: VoteOnPoll.VoteOnPollFailedException) {
                 Timber.e(e)
-                showSnackbar(
-                    text = StringFactory.resource(R.string.error_voting),
-                    isError = true,
-                )
             }
         }
     }
