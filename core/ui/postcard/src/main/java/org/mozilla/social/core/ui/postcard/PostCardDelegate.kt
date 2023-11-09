@@ -6,6 +6,7 @@ import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.core.data.repository.StatusRepository
 import org.mozilla.social.core.domain.account.BlockAccount
 import org.mozilla.social.core.domain.account.MuteAccount
+import org.mozilla.social.core.domain.status.BoostStatus
 import org.mozilla.social.core.domain.status.VoteOnPoll
 import org.mozilla.social.core.navigation.NavigationDestination
 import org.mozilla.social.core.navigation.usecases.NavigateTo
@@ -23,6 +24,7 @@ class PostCardDelegate(
     private val blockAccount: BlockAccount,
     private val muteAccount: MuteAccount,
     private val voteOnPoll: VoteOnPoll,
+    private val boostStatus: BoostStatus,
 ) : PostCardInteractions {
 
     override fun onVoteClicked(pollId: String, choices: List<Int>) {
@@ -43,13 +45,9 @@ class PostCardDelegate(
         coroutineScope.launch {
             if (isBoosting) {
                 try {
-                    statusRepository.boostStatus(statusId)
-                } catch (e: Exception) {
+                    boostStatus(statusId)
+                } catch (e: BoostStatus.BoostStatusFailedException) {
                     Timber.e(e)
-                    showSnackbar(
-                        text = StringFactory.resource(R.string.error_boosting),
-                        isError = true,
-                    )
                 }
             } else {
                 try {
