@@ -17,6 +17,7 @@ dependencies {
     implementation(project(":core:ui:common"))
     implementation(project(":core:ui:htmlcontent"))
     implementation(project(":core:navigation"))
+    implementation(project(":core:analytics"))
     implementation(project(":core:domain"))
 
     implementation(libs.androidx.navigation.compose)

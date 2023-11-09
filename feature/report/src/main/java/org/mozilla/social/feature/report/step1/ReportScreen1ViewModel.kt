@@ -7,6 +7,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.mozilla.social.common.utils.edit
+import org.mozilla.social.core.analytics.Analytics
+import org.mozilla.social.core.analytics.AnalyticsIdentifiers
 import org.mozilla.social.core.data.repository.InstanceRepository
 import org.mozilla.social.feature.report.ReportDataBundle
 import org.mozilla.social.feature.report.ReportType
@@ -14,6 +16,7 @@ import org.mozilla.social.model.InstanceRule
 import timber.log.Timber
 
 class ReportScreen1ViewModel(
+    private val analytics: Analytics,
     private val instanceRepository: InstanceRepository,
     private val onNextClicked: (bundle: ReportDataBundle) -> Unit,
     private val onClose: () -> Unit,
@@ -102,5 +105,11 @@ class ReportScreen1ViewModel(
             )
         }
         onNextClicked(bundle)
+    }
+
+    override fun onScreenViewed() {
+        analytics.uiImpression(
+            uiIdentifier = AnalyticsIdentifiers.REPORT_SCREEN_IMPRESSION,
+        )
     }
 }

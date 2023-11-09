@@ -33,6 +33,7 @@ val feedModule = module {
         )
     }
     viewModel { _ -> FeedViewModel(
+        analytics = get(),
         homeTimelineRemoteMediator = get(),
         localTimelineRemoteMediator = get(),
         federatedTimelineRemoteMediator = get(),

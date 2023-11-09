@@ -8,6 +8,7 @@ val hashTagModule = module {
         HashTagViewModel(
             hashTag = parametersHolder[0],
             socialDatabase = get(),
+            analytics = get(),
             userAccountId = get(),
         )
     }

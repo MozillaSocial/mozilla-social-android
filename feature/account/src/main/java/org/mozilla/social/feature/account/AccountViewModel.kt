@@ -18,6 +18,7 @@ import org.koin.java.KoinJavaComponent.inject
 import org.mozilla.social.common.Resource
 import org.mozilla.social.common.utils.edit
 import org.mozilla.social.core.analytics.Analytics
+import org.mozilla.social.core.analytics.AnalyticsIdentifiers
 import org.mozilla.social.core.data.repository.model.status.toExternalModel
 import org.mozilla.social.core.database.SocialDatabase
 import org.mozilla.social.core.database.model.statusCollections.toStatusWrapper
@@ -123,10 +124,10 @@ class AccountViewModel(
         }
     }
 
-    fun onAccountScreenShown() {
+    override fun onScreenViewed() {
         analytics.uiImpression(
             mastodonAccountId = accountId,
-            uiIdentifier = "account.screen.impression",
+            uiIdentifier = AnalyticsIdentifiers.ACCOUNTS_SCREEN_IMPRESSION,
         )
     }
 
