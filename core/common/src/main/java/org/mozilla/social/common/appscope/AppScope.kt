@@ -1,10 +1,14 @@
 package org.mozilla.social.common.appscope
 
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlin.coroutines.CoroutineContext
 
+/**
+ * A coroutine scope that uses a supervisor job as it's context.
+ *
+ * In MoSo, we are only canceling the supervisor job on logout.
+ */
 class AppScope : CoroutineScope {
 
     private var supervisorJob = SupervisorJob()
@@ -12,8 +16,12 @@ class AppScope : CoroutineScope {
     override val coroutineContext: CoroutineContext
         get() = supervisorJob
 
+    /**
+     * Create a new supervisor and cancel the old one
+     */
     fun reset() {
-        supervisorJob.cancel()
+        val oldSupervisor = supervisorJob
         supervisorJob = SupervisorJob()
+        oldSupervisor.cancel()
     }
 }
