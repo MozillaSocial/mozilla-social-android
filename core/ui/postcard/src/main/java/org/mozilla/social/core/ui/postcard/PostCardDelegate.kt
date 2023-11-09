@@ -1,12 +1,11 @@
 package org.mozilla.social.core.ui.postcard
 
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import org.mozilla.social.common.utils.StringFactory
-import org.mozilla.social.core.data.repository.AccountRepository
 import org.mozilla.social.core.data.repository.StatusRepository
+import org.mozilla.social.core.domain.account.BlockAccount
+import org.mozilla.social.core.domain.account.MuteAccount
 import org.mozilla.social.core.navigation.NavigationDestination
 import org.mozilla.social.core.navigation.usecases.NavigateTo
 import org.mozilla.social.core.navigation.usecases.OpenLink
@@ -17,10 +16,11 @@ import timber.log.Timber
 class PostCardDelegate(
     private val coroutineScope: CoroutineScope,
     private val statusRepository: StatusRepository,
-    private val accountRepository: AccountRepository,
     private val navigateTo: NavigateTo,
     private val openLink: OpenLink,
     private val showSnackbar: ShowSnackbar,
+    private val blockAccount: BlockAccount,
+    private val muteAccount: MuteAccount,
 ) : PostCardInteractions {
 
     override fun onVoteClicked(pollId: String, choices: List<Int>) {
@@ -100,13 +100,9 @@ class PostCardDelegate(
     override fun onOverflowMuteClicked(accountId: String) {
         coroutineScope.launch {
             try {
-                accountRepository.muteAccount(accountId)
-            } catch (e: Exception) {
+                muteAccount(accountId)
+            } catch (e: MuteAccount.MuteFailedException) {
                 Timber.e(e)
-                showSnackbar(
-                    text = StringFactory.resource(R.string.error_muting_account),
-                    isError = true,
-                )
             }
         }
     }
@@ -114,13 +110,9 @@ class PostCardDelegate(
     override fun onOverflowBlockClicked(accountId: String) {
         coroutineScope.launch {
             try {
-                accountRepository.blockAccount(accountId)
-            } catch (e: Exception) {
+                blockAccount(accountId)
+            } catch (e: BlockAccount.BlockFailedException) {
                 Timber.e(e)
-                showSnackbar(
-                    text = StringFactory.resource(R.string.error_blocking_account),
-                    isError = true,
-                )
             }
         }
     }

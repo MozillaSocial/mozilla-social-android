@@ -36,12 +36,13 @@ val reportModule = module {
     }
     viewModel { parametersHolder ->
         ReportScreen3ViewModel(
-            get(),
-            get(),
-            get(),
-            parametersHolder[0],
-            parametersHolder[1],
-            parametersHolder[2],
+            unfollowAccount = get(),
+            blockAccount = get(),
+            muteAccount = get(),
+            getLoggedInUserAccountId = get(),
+            doneClicked = parametersHolder[0],
+            closeClicked = parametersHolder[1],
+            reportAccountId = parametersHolder[2],
         )
     }
 }

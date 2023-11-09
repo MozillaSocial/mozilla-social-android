@@ -4,6 +4,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import org.mozilla.social.common.appscope.AppScope
 import org.mozilla.social.core.analytics.Analytics
 import org.mozilla.social.core.database.SocialDatabase
 import org.mozilla.social.core.datastore.UserPreferencesDatastore
@@ -16,8 +17,10 @@ class Logout(
     private val socialDatabase: SocialDatabase,
     private val analytics: Analytics,
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
+    private val appScope: AppScope,
 ) {
     operator fun invoke() = GlobalScope.launch(ioDispatcher) {
+        appScope.reset()
         userPreferencesDatastore.clearData()
         socialDatabase.clearAllTables()
 

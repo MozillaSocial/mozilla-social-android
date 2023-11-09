@@ -13,6 +13,7 @@ dependencies {
     implementation(project(":core:common"))
     implementation(project(":core:data"))
     implementation(project(":core:navigation"))
+    implementation(project(":core:domain"))
     implementation(project(":core:ui:common"))
     api(project(":core:ui:htmlcontent"))
     api(project(":core:ui:poll"))

@@ -13,6 +13,7 @@ import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
 import org.koin.dsl.module
+import org.mozilla.social.common.appscope.appScopeModule
 import org.mozilla.social.core.analytics.Analytics
 import org.mozilla.social.core.analytics.analyticsModule
 import org.mozilla.social.core.data.AuthCredentialObserver
@@ -89,5 +90,6 @@ val appModules = module {
         discoverModule,
         navigationModule,
         postCardModule,
+        appScopeModule,
     )
 }

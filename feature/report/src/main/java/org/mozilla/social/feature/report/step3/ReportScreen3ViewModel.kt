@@ -6,16 +6,16 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import org.mozilla.social.common.utils.StringFactory
-import org.mozilla.social.core.data.repository.AccountRepository
 import org.mozilla.social.core.domain.GetLoggedInUserAccountId
-import org.mozilla.social.core.navigation.usecases.ShowSnackbar
-import org.mozilla.social.feature.report.R
+import org.mozilla.social.core.domain.account.BlockAccount
+import org.mozilla.social.core.domain.account.MuteAccount
+import org.mozilla.social.core.domain.account.UnfollowAccount
 import timber.log.Timber
 
 class ReportScreen3ViewModel(
-    private val accountRepository: AccountRepository,
-    private val showSnackbar: ShowSnackbar,
+    private val unfollowAccount: UnfollowAccount,
+    private val blockAccount: BlockAccount,
+    private val muteAccount: MuteAccount,
     getLoggedInUserAccountId: GetLoggedInUserAccountId,
     private val doneClicked: () -> Unit,
     private val closeClicked: () -> Unit,
@@ -48,16 +48,12 @@ class ReportScreen3ViewModel(
         _unfollowVisible.update { false }
         viewModelScope.launch {
             try {
-                accountRepository.unfollowAccount(
+                unfollowAccount(
                     accountId = reportAccountId,
                     loggedInUserAccountId = usersAccountId,
                 )
-            } catch (e: Exception) {
+            } catch (e: UnfollowAccount.UnfollowFailedException) {
                 Timber.e(e)
-                showSnackbar(
-                    text = StringFactory.resource(R.string.error_unfollowing),
-                    isError = true,
-                )
                 _unfollowVisible.update { true }
             }
         }
@@ -67,13 +63,9 @@ class ReportScreen3ViewModel(
         _muteVisible.update { false }
         viewModelScope.launch {
             try {
-                accountRepository.muteAccount(reportAccountId)
-            } catch (e: Exception) {
+                muteAccount(reportAccountId)
+            } catch (e: MuteAccount.MuteFailedException) {
                 Timber.e(e)
-                showSnackbar(
-                    text = StringFactory.resource(R.string.error_muting),
-                    isError = true,
-                )
                 _muteVisible.update { true }
             }
         }
@@ -83,13 +75,9 @@ class ReportScreen3ViewModel(
         _blockVisible.update { false }
         viewModelScope.launch {
             try {
-                accountRepository.blockAccount(reportAccountId)
-            } catch (e: Exception) {
+                blockAccount(reportAccountId)
+            } catch (e: BlockAccount.BlockFailedException) {
                 Timber.e(e)
-                showSnackbar(
-                    text = StringFactory.resource(R.string.error_blocking),
-                    isError = true,
-                )
                 _blockVisible.update { true }
             }
         }
