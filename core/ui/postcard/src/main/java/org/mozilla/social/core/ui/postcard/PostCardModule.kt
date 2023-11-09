@@ -9,7 +9,6 @@ val postCardModule = module {
             statusRepository = get(),
             navigateTo = get(),
             openLink = get(),
-            showSnackbar = get(),
             blockAccount = get(),
             muteAccount = get(),
             voteOnPoll = get(),
@@ -17,6 +16,7 @@ val postCardModule = module {
             undoBoostStatus = get(),
             favoriteStatus = get(),
             undoFavoriteStatus = get(),
+            deleteStatus = get(),
         )
     }
 }
