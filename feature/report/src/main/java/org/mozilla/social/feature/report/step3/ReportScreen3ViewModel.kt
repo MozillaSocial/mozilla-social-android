@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.core.data.repository.AccountRepository
-import org.mozilla.social.core.domain.AccountIdBlocking
+import org.mozilla.social.core.domain.GetLoggedInUserAccountId
 import org.mozilla.social.core.navigation.usecases.ShowSnackbar
 import org.mozilla.social.feature.report.R
 import timber.log.Timber
@@ -16,7 +16,7 @@ import timber.log.Timber
 class ReportScreen3ViewModel(
     private val accountRepository: AccountRepository,
     private val showSnackbar: ShowSnackbar,
-    accountIdBlocking: AccountIdBlocking,
+    getLoggedInUserAccountId: GetLoggedInUserAccountId,
     private val doneClicked: () -> Unit,
     private val closeClicked: () -> Unit,
     private val reportAccountId: String,
@@ -25,7 +25,7 @@ class ReportScreen3ViewModel(
     /**
      * The account ID of the logged in user
      */
-    private val usersAccountId: String = accountIdBlocking()
+    private val usersAccountId: String = getLoggedInUserAccountId()
 
     private val _unfollowVisible = MutableStateFlow(true)
     val unfollowVisible = _unfollowVisible.asStateFlow()

@@ -24,7 +24,7 @@ import org.mozilla.social.core.data.repository.AccountRepository
 import org.mozilla.social.core.data.repository.model.status.toExternalModel
 import org.mozilla.social.core.database.SocialDatabase
 import org.mozilla.social.core.database.model.statusCollections.toStatusWrapper
-import org.mozilla.social.core.domain.AccountIdBlocking
+import org.mozilla.social.core.domain.GetLoggedInUserAccountId
 import org.mozilla.social.core.domain.GetDetailedAccount
 import org.mozilla.social.core.navigation.NavigationDestination
 import org.mozilla.social.core.navigation.usecases.NavigateTo
@@ -37,7 +37,7 @@ import timber.log.Timber
 class AccountViewModel(
     private val analytics: Analytics,
     private val accountRepository: AccountRepository,
-    accountIdBlocking: AccountIdBlocking,
+    getLoggedInUserAccountId: GetLoggedInUserAccountId,
     private val socialDatabase: SocialDatabase,
     private val getDetailedAccount: GetDetailedAccount,
     private val navigateTo: NavigateTo,
@@ -52,7 +52,7 @@ class AccountViewModel(
     /**
      * The account ID of the logged in user
      */
-    private val usersAccountId: String = accountIdBlocking()
+    private val usersAccountId: String = getLoggedInUserAccountId()
 
     /**
      * if an account Id was passed in the constructor, the use that,

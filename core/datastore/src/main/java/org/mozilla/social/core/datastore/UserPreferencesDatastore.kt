@@ -3,7 +3,10 @@ package org.mozilla.social.core.datastore
 import android.content.Context
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.mapLatest
+import timber.log.Timber
+import java.io.IOException
 
 class UserPreferencesDatastore(context: Context) {
     private val dataStore = context.userPreferencesDataStore
@@ -31,6 +34,17 @@ class UserPreferencesDatastore(context: Context) {
     val isSignedIn: Flow<Boolean> = accessToken.mapLatest {
         !it.isNullOrBlank()
     }.distinctUntilChanged()
+
+    /**
+     * Preload the data so that it's available in the cache
+     */
+    suspend fun preloadData() {
+        try {
+            dataStore.data.first()
+        } catch (ioException: IOException) {
+            Timber.e(t = ioException, message = "Problem preloading data")
+        }
+    }
 
     suspend fun saveAccessToken(accessToken: String) {
         dataStore.updateData {

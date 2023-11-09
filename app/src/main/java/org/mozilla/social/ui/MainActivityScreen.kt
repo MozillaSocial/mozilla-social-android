@@ -20,7 +20,7 @@ import org.mozilla.social.ui.bottombar.MoSoNavigationBarDefaults.bottomBarPaddin
  */
 @Composable
 @Suppress("UnusedPrivateMember")
-fun MainActivityScreen(viewModel: MainViewModel) {
+fun MainActivityScreen() {
     val appState = rememberAppState()
 
     Box {

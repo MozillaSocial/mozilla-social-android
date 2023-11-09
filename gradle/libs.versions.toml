@@ -10,6 +10,7 @@ coil = "2.4.0"
 detekt = "1.23.1"
 espresso-intents = "3.5.1"
 glean = "54.0.0"
+google-truth = "1.1.5"
 koin = "3.5.0"
 koin-compose = "1.1.0"
 kotlin = "1.9.10"
@@ -59,6 +60,7 @@ coil-gif = { module = "io.coil-kt:coil-gif", version.ref = "coil" }
 coil-video = { module = "io.coil-kt:coil-video", version.ref = "coil" }
 glean = { module = "org.mozilla.telemetry:glean", version.ref = "glean" }
 glean-forUnitTests = { module = "org.mozilla.telemetry:glean-native-forUnitTests", version.ref = "glean" }
+google-truth = { module = "com.google.truth:truth", version.ref = "google-truth" }
 google-material = { module = "com.google.android.material:material", version = "1.9.0" }
 jakewharton-timber = { module = "com.jakewharton.timber:timber", version = "5.0.1" }
 koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
