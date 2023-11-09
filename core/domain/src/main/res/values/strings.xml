@@ -13,6 +13,7 @@
     <string name="error_unfollowing_account">Error unfollowing account</string>
     <string name="error_deleting_post">Error deleting post</string>
     <string name="error_sending_report_toast">Error sending report</string>
+    <string name="error_sending_post_toast">Error sending post</string>
 
     <string name="edit_account_save_failed">Failed to save changes</string>
 </resources>

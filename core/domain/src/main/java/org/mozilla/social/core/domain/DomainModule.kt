@@ -11,6 +11,7 @@ import org.mozilla.social.core.domain.account.UnmuteAccount
 import org.mozilla.social.core.domain.account.UpdateMyAccount
 import org.mozilla.social.core.domain.remotemediators.HashTagTimelineRemoteMediator
 import org.mozilla.social.core.domain.report.Report
+import org.mozilla.social.core.domain.status.PostStatus
 
 val domainModule = module {
     factory { parametersHolder ->
@@ -82,5 +83,13 @@ val domainModule = module {
         externalScope = get<AppScope>(),
         showSnackbar = get(),
         reportApi = get(),
+    ) }
+    single { PostStatus(
+        externalScope = get<AppScope>(),
+        statusApi = get(),
+        mediaApi = get(),
+        statusRepository = get(),
+        timelineRepository = get(),
+        showSnackbar = get(),
     ) }
 }
