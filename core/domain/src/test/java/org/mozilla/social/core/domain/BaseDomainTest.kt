@@ -6,6 +6,7 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -104,39 +105,31 @@ open class BaseDomainTest {
         subjectCallBlock: suspend () -> Unit,
         verifyBlock: suspend MockKVerificationScope.() -> Unit,
     ) = runTest {
-        val mutex1 = Mutex(locked = true)
-        val mutex2 = Mutex(locked = true)
+        val waitToCancel = CompletableDeferred<Unit>()
+        val waitToFinish = CompletableDeferred<Unit>()
 
         coEvery(delayedCallBlock).coAnswers {
-            CoroutineScope(Dispatchers.Default).launch {
-                // we know we've started the subject block, so we can unlock the first mutex
-                mutex1.unlock()
-                println("lock 1 unlocked")
-                delay(100)
-                // unlock to allow the verify block to run
-                mutex2.unlock()
-                println("lock 2 unlocked")
-            }.join()
+            println("allow cancel")
+            waitToCancel.complete(Unit)
+            println("wait to finish")
+            waitToFinish.await()
+            println("finishing subject block")
             delayedCallBlockReturnValue
         }
 
-        val outerJob = CoroutineScope(Dispatchers.Default).launch {
+        val outerJob = launch {
             subjectCallBlock()
         }
 
-        // lock to make sure we give the subject callback time to start
-        println("lock 1 locking")
-        mutex1.lock()
+        println("wait to cancel")
+        waitToCancel.await()
 
+        println("canceling outer job")
         outerJob.cancel()
+        println("allow finish")
+        waitToFinish.complete(Unit)
 
-        // lock again to make sure our delayed callback has run before we verify
-        println("lock 2 locking")
-        mutex2.lock()
-
-        // delay to make sure the rest of the subject block has had time to run
-        delay(50)
-
+        println("verify")
         coVerify(exactly = 1, verifyBlock = verifyBlock)
     }
 
@@ -149,23 +142,19 @@ open class BaseDomainTest {
         delayedCallBlock: suspend MockKMatcherScope.() -> Any,
         subjectCallBlock: suspend () -> Unit,
     ) = runTest {
-        val mutex1 = Mutex(locked = true)
-        val mutex2 = Mutex(locked = true)
+        val waitToCancel = CompletableDeferred<Unit>()
+        val waitToFinish = CompletableDeferred<Unit>()
 
         coEvery(delayedCallBlock).coAnswers {
-            CoroutineScope(Dispatchers.Default).async {
-                // we know we've started the subject block, so we can unlock the first mutex
-                mutex1.unlock()
-                println("lock 1 unlocked")
-                delay(100)
-                // unlock to allow the verify block to run
-                mutex2.unlock()
-                println("lock 2 unlocked")
-                throw TestException()
-            }.await()
+            println("allow cancel")
+            waitToCancel.complete(Unit)
+            println("wait to finish")
+            waitToFinish.await()
+            println("finishing subject block")
+            throw TestException()
         }
 
-        val outerJob = CoroutineScope(Dispatchers.Default).launch {
+        val outerJob = launch {
             try {
                 subjectCallBlock()
             } catch (e: TestException) {
@@ -175,19 +164,12 @@ open class BaseDomainTest {
             }
         }
 
-        // lock to make sure we give the subject callback time to start
-        println("lock 1 locking")
-        mutex1.lock()
-
+        println("wait to cancel")
+        waitToCancel.await()
+        println("canceling outer job")
         outerJob.cancel()
-
-        // lock again to make sure our delayed callback has run before we verify
-        println("lock 2 locking")
-        mutex2.lock()
-
-        // delay to make sure the rest of the subject block has had time to run
-        delay(50)
-        println("test ending")
+        println("allow finish")
+        waitToFinish.complete(Unit)
     }
 }
 
