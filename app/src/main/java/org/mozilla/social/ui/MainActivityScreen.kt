@@ -1,6 +1,7 @@
 package org.mozilla.social.ui
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.runtime.Composable
@@ -23,11 +24,11 @@ import org.mozilla.social.ui.bottombar.MoSoNavigationBarDefaults.bottomBarPaddin
 fun MainActivityScreen() {
     val appState = rememberAppState()
 
-    Box {
-        MainNavHost(
-            appState = appState,
-        )
+    MainNavHost(
+        appState = appState,
+    )
 
+    Box(modifier = Modifier.fillMaxSize()) {
         val currentDestination by appState.currentNavigationDestination.collectAsStateWithLifecycle()
 
         MoSoSnackbarHost(
