@@ -7,6 +7,7 @@ import org.mozilla.social.core.data.repository.StatusRepository
 import org.mozilla.social.core.domain.account.BlockAccount
 import org.mozilla.social.core.domain.account.MuteAccount
 import org.mozilla.social.core.domain.status.BoostStatus
+import org.mozilla.social.core.domain.status.FavoriteStatus
 import org.mozilla.social.core.domain.status.UndoBoostStatus
 import org.mozilla.social.core.domain.status.VoteOnPoll
 import org.mozilla.social.core.navigation.NavigationDestination
@@ -27,6 +28,7 @@ class PostCardDelegate(
     private val voteOnPoll: VoteOnPoll,
     private val boostStatus: BoostStatus,
     private val undoBoostStatus: UndoBoostStatus,
+    private val favoriteStatus: FavoriteStatus,
 ) : PostCardInteractions {
 
     override fun onVoteClicked(pollId: String, choices: List<Int>) {
@@ -65,13 +67,9 @@ class PostCardDelegate(
         coroutineScope.launch {
             if (isFavoriting) {
                 try {
-                    statusRepository.favoriteStatus(statusId)
-                } catch (e: Exception) {
+                    favoriteStatus(statusId)
+                } catch (e: FavoriteStatus.FavoriteStatusFailedException) {
                     Timber.e(e)
-                    showSnackbar(
-                        text = StringFactory.resource(R.string.error_adding_favorite),
-                        isError = true,
-                    )
                 }
             } else {
                 try {

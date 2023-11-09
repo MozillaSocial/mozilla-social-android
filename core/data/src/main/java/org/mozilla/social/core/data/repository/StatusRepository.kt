@@ -62,44 +62,6 @@ class StatusRepository(
         }
     }
 
-    suspend fun undoStatusBoost(
-        boostedStatusId: String,
-    ) {
-        socialDatabase.withTransaction {
-            socialDatabase.statusDao().updateBoostCount(boostedStatusId, -1)
-            socialDatabase.statusDao().updateBoosted(boostedStatusId, false)
-        }
-        try {
-            val status = statusApi.unBoostStatus(boostedStatusId).toExternalModel()
-            saveStatusToDatabase(status)
-        } catch (e: Exception) {
-            socialDatabase.withTransaction {
-                socialDatabase.statusDao().updateBoostCount(boostedStatusId, 1)
-                socialDatabase.statusDao().updateBoosted(boostedStatusId, true)
-            }
-            throw e
-        }
-    }
-
-    suspend fun favoriteStatus(
-        statusId: String,
-    ) {
-        socialDatabase.withTransaction {
-            socialDatabase.statusDao().updateFavoriteCount(statusId, 1)
-            socialDatabase.statusDao().updateFavorited(statusId, true)
-        }
-        try {
-            val status = statusApi.favoriteStatus(statusId).toExternalModel()
-            saveStatusToDatabase(status)
-        } catch (e: Exception) {
-            socialDatabase.withTransaction {
-                socialDatabase.statusDao().updateFavoriteCount(statusId, -1)
-                socialDatabase.statusDao().updateFavorited(statusId, false)
-            }
-            throw e
-        }
-    }
-
     suspend fun undoFavoriteStatus(
         statusId: String,
     ) {
