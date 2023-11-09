@@ -6,7 +6,6 @@ val postCardModule = module {
     factory { parametersHolder ->
         PostCardDelegate(
             coroutineScope = parametersHolder[0],
-            statusRepository = get(),
             navigateTo = get(),
             openLink = get(),
             blockAccount = get(),

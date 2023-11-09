@@ -2,8 +2,6 @@ package org.mozilla.social.core.ui.postcard
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import org.mozilla.social.common.utils.StringFactory
-import org.mozilla.social.core.data.repository.StatusRepository
 import org.mozilla.social.core.domain.account.BlockAccount
 import org.mozilla.social.core.domain.account.MuteAccount
 import org.mozilla.social.core.domain.status.BoostStatus
@@ -15,13 +13,10 @@ import org.mozilla.social.core.domain.status.VoteOnPoll
 import org.mozilla.social.core.navigation.NavigationDestination
 import org.mozilla.social.core.navigation.usecases.NavigateTo
 import org.mozilla.social.core.navigation.usecases.OpenLink
-import org.mozilla.social.core.navigation.usecases.ShowSnackbar
-import org.mozilla.social.core.ui.common.R
 import timber.log.Timber
 
 class PostCardDelegate(
     private val coroutineScope: CoroutineScope,
-    private val statusRepository: StatusRepository,
     private val navigateTo: NavigateTo,
     private val openLink: OpenLink,
     private val blockAccount: BlockAccount,
