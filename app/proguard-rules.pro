@@ -57,3 +57,7 @@
 #-renamesourcefileattribute SourceFile
 
 -keep class org.mozilla.social.core.navigation.** { *; }
+
+-keepclassmembers class * extends com.google.protobuf.GeneratedMessageLite* {
+   <fields>;
+}
