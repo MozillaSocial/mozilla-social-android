@@ -129,5 +129,4 @@ class TimelineRepository internal constructor(
             )
         }
     }
-
 }
