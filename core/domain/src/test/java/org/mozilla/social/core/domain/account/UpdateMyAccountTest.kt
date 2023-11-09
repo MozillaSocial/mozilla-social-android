@@ -105,6 +105,9 @@ class UpdateMyAccountTest : BaseDomainTest() {
             subjectCallBlock = {
                 subject()
             },
+            verifyBlock = {
+                showSnackbar(any(), any())
+            },
         )
     }
 }

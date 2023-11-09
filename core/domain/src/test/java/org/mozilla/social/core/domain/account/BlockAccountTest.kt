@@ -45,6 +45,9 @@ class BlockAccountTest : BaseDomainTest() {
             subjectCallBlock = {
                 subject("id")
             },
+            verifyBlock = {
+                showSnackbar(any(), any())
+            },
         )
     }
 }

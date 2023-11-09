@@ -45,6 +45,9 @@ class MuteAccountTest : BaseDomainTest() {
             subjectCallBlock = {
                 subject("id1")
             },
+            verifyBlock = {
+                showSnackbar(any(), any())
+            },
         )
     }
 }
