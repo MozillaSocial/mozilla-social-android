@@ -10,6 +10,7 @@ import org.mozilla.social.core.domain.account.UnfollowAccount
 import org.mozilla.social.core.domain.account.UnmuteAccount
 import org.mozilla.social.core.domain.account.UpdateMyAccount
 import org.mozilla.social.core.domain.remotemediators.HashTagTimelineRemoteMediator
+import org.mozilla.social.core.domain.report.Report
 
 val domainModule = module {
     factory { parametersHolder ->
@@ -76,5 +77,10 @@ val domainModule = module {
         showSnackbar = get(),
         accountApi = get(),
         socialDatabase = get(),
+    ) }
+    single { Report(
+        externalScope = get<AppScope>(),
+        showSnackbar = get(),
+        reportApi = get(),
     ) }
 }

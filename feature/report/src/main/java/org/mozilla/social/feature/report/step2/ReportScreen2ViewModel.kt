@@ -2,29 +2,21 @@ package org.mozilla.social.feature.report.step2
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.mozilla.social.common.Resource
-import org.mozilla.social.common.utils.StringFactory
-import org.mozilla.social.common.utils.edit
 import org.mozilla.social.core.data.repository.AccountRepository
-import org.mozilla.social.core.data.repository.ReportRepository
-import org.mozilla.social.core.navigation.usecases.ShowSnackbar
-import org.mozilla.social.feature.report.R
+import org.mozilla.social.core.domain.report.Report
 import org.mozilla.social.feature.report.ReportDataBundle
 import org.mozilla.social.feature.report.ReportType
 import org.mozilla.social.model.InstanceRule
 import timber.log.Timber
 
 class ReportScreen2ViewModel(
+    private val report: Report,
     private val accountRepository: AccountRepository,
-    private val reportRepository: ReportRepository,
-    private val showSnackbar: ShowSnackbar,
     private val onClose: () -> Unit,
     private val onReportSubmitted: (bundle: ReportDataBundle.ReportDataBundleForScreen3) -> Unit,
     private val reportAccountId: String,
@@ -73,7 +65,7 @@ class ReportScreen2ViewModel(
         _reportIsSending.update { true }
         viewModelScope.launch {
             try {
-                reportRepository.report(
+                report(
                     accountId = reportAccountId,
                     statusIds = buildList {
                         reportStatusId?.let { add(it) }
@@ -93,12 +85,8 @@ class ReportScreen2ViewModel(
                         didUserReportAccount = true,
                     )
                 )
-            } catch (e: Exception) {
+            } catch (e: Report.ReportFailedException) {
                 Timber.e(e)
-                showSnackbar(
-                    text = StringFactory.resource(R.string.error_sending_report_toast),
-                    isError = true,
-                )
                 _reportIsSending.update { false }
             }
         }

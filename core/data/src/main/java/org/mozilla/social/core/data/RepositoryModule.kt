@@ -7,7 +7,6 @@ import org.mozilla.social.core.data.repository.InstanceRepository
 import org.mozilla.social.core.data.repository.MediaRepository
 import org.mozilla.social.core.data.repository.OauthRepository
 import org.mozilla.social.core.data.repository.RecommendationRepository
-import org.mozilla.social.core.data.repository.ReportRepository
 import org.mozilla.social.core.data.repository.SearchRepository
 import org.mozilla.social.core.data.repository.StatusRepository
 import org.mozilla.social.core.data.repository.TimelineRepository
@@ -25,6 +24,5 @@ fun repositoryModule(isDebug: Boolean) = module {
     single { RecommendationRepository(get()) }
     single { AppRepository(get()) }
     single { InstanceRepository(get()) }
-    single { ReportRepository(get()) }
     includes(networkModule(isDebug))
 }
