@@ -37,6 +37,7 @@ import org.mozilla.social.core.navigation.NavigationEventFlow
 import org.mozilla.social.core.navigation.SettingsNavigationDestination
 import org.mozilla.social.core.navigation.SettingsNavigationDestination.AboutSettings.navigateToAboutSettings
 import org.mozilla.social.core.navigation.SettingsNavigationDestination.AccountSettings.navigateToAccountSettings
+import org.mozilla.social.core.navigation.SettingsNavigationDestination.MainSettings.navigateToMainSettings
 import org.mozilla.social.core.navigation.SettingsNavigationDestination.PrivacySettings.navigateToPrivacySettings
 import timber.log.Timber
 
@@ -236,6 +237,10 @@ class AppState(
 
             SettingsNavigationDestination.PrivacySettings -> {
                 mainNavController.navigateToPrivacySettings()
+            }
+
+            SettingsNavigationDestination.MainSettings -> {
+                mainNavController.navigateToMainSettings()
             }
         }
 

@@ -15,13 +15,12 @@ import org.mozilla.social.feature.followers.followingScreen
 import org.mozilla.social.feature.hashtag.hashTagScreen
 import org.mozilla.social.feature.report.reportFlow
 import org.mozilla.social.feature.settings.settingsFlow
-import org.mozilla.social.feature.settings.settingsScreen
 import org.mozilla.social.feature.thread.threadScreen
 import org.mozilla.social.post.newPostScreen
 import org.mozilla.social.ui.AppState
 import org.mozilla.social.ui.SplashScreen
-import org.mozilla.social.ui.bottombar.bottomTabScreen
 import org.mozilla.social.ui.bottombar.Routes
+import org.mozilla.social.ui.bottombar.bottomTabScreen
 
 @Composable
 fun MainNavHost(
@@ -39,7 +38,6 @@ fun MainNavHost(
     ) {
         splashScreen()
         loginScreen()
-        settingsScreen()
         accountScreen()
         followersScreen()
         followingScreen()

@@ -11,18 +11,18 @@ import org.mozilla.social.feature.settings.privacy.PrivacySettingsScreen
 
 fun NavGraphBuilder.settingsFlow() {
     navigation(
-        startDestination = NavigationDestination.Settings.route,
-        route = NavigationDestination.Report.fullRoute,
+        startDestination = SettingsNavigationDestination.MainSettings.route,
+        route = NavigationDestination.Settings.route,
     ) {
-        settingsScreen()
+        mainSettingsScreen()
         accountSettingsScreen()
         privacySettingsScreen()
         aboutSettingsScreen()
     }
 }
 
-fun NavGraphBuilder.settingsScreen() {
-    composable(route = NavigationDestination.Settings.route) {
+fun NavGraphBuilder.mainSettingsScreen() {
+    composable(route = SettingsNavigationDestination.MainSettings.route) {
         SettingsScreen()
     }
 }

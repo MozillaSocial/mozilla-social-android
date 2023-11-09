@@ -3,6 +3,14 @@ package org.mozilla.social.core.navigation
 import androidx.navigation.NavController
 
 sealed class SettingsNavigationDestination(val route: String) {
+
+    data object MainSettings : SettingsNavigationDestination(
+        route = "mainSettings"
+    ) {
+        fun NavController.navigateToMainSettings() {
+            navigate(route = route)
+        }
+    }
     data object AccountSettings : SettingsNavigationDestination(
         route = "accountSettings"
     ) {

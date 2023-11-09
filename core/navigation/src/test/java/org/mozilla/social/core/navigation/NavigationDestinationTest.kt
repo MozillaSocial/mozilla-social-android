@@ -10,6 +10,7 @@ import org.junit.Test
 import org.mozilla.social.core.navigation.NavigationDestination.Login.navigateToLoginScreen
 import org.mozilla.social.core.navigation.NavigationDestination.EditAccount.navigateToEditAccount
 import org.mozilla.social.core.navigation.NavigationDestination.Tabs.navigateToTabs
+import org.mozilla.social.core.navigation.SettingsNavigationDestination.MainSettings.navigateToMainSettings
 
 class NavigationDestinationTest {
     private val navController = mockk<NavController>(relaxed = true)
@@ -134,6 +135,17 @@ class NavigationDestinationTest {
 
         verify {
             navController.navigate("newPost?replyStatusId=$replyId")
+        }
+    }
+
+    @Test
+    fun navigateToSettings() {
+        with(NavigationDestination.Settings) {
+            navController.navigateToSettings()
+        }
+
+        verify {
+            navController.navigate("settings")
         }
     }
 }
