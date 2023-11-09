@@ -7,6 +7,7 @@ import org.mozilla.social.core.data.repository.StatusRepository
 import org.mozilla.social.core.domain.account.BlockAccount
 import org.mozilla.social.core.domain.account.MuteAccount
 import org.mozilla.social.core.domain.status.BoostStatus
+import org.mozilla.social.core.domain.status.DeleteStatus
 import org.mozilla.social.core.domain.status.FavoriteStatus
 import org.mozilla.social.core.domain.status.UndoBoostStatus
 import org.mozilla.social.core.domain.status.UndoFavoriteStatus
@@ -23,7 +24,6 @@ class PostCardDelegate(
     private val statusRepository: StatusRepository,
     private val navigateTo: NavigateTo,
     private val openLink: OpenLink,
-    private val showSnackbar: ShowSnackbar,
     private val blockAccount: BlockAccount,
     private val muteAccount: MuteAccount,
     private val voteOnPoll: VoteOnPoll,
@@ -31,6 +31,7 @@ class PostCardDelegate(
     private val undoBoostStatus: UndoBoostStatus,
     private val favoriteStatus: FavoriteStatus,
     private val undoFavoriteStatus: UndoFavoriteStatus,
+    private val deleteStatus: DeleteStatus,
 ) : PostCardInteractions {
 
     override fun onVoteClicked(pollId: String, choices: List<Int>) {
@@ -124,13 +125,9 @@ class PostCardDelegate(
     ) {
         coroutineScope.launch {
             try {
-                statusRepository.deleteStatus(statusId)
-            } catch (e: Exception) {
+                deleteStatus(statusId)
+            } catch (e: DeleteStatus.DeleteStatusFailedException) {
                 Timber.e(e)
-                showSnackbar(
-                    text = StringFactory.resource(R.string.error_deleting_post),
-                    isError = true,
-                )
             }
         }
     }

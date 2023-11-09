@@ -1,10 +1,8 @@
 package org.mozilla.social.core.data.repository
 
 import androidx.room.withTransaction
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.withContext
 import org.mozilla.social.core.data.repository.model.context.toExternalModel
 import org.mozilla.social.core.data.repository.model.status.toDatabaseModel
 import org.mozilla.social.core.data.repository.model.status.toExternalModel
@@ -64,24 +62,4 @@ class StatusRepository(
 
     suspend fun getStatusContext(statusId: String): Context =
         statusApi.getStatusContext(statusId).toExternalModel()
-
-    suspend fun deleteStatus(
-        statusId: String,
-    ) = withContext(Dispatchers.IO) {
-        try {
-            socialDatabase.statusDao().updateIsBeingDeleted(statusId, true)
-            statusApi.deleteStatus(statusId)
-            socialDatabase.withTransaction {
-                socialDatabase.homeTimelineDao().deletePost(statusId)
-                socialDatabase.localTimelineDao().deletePost(statusId)
-                socialDatabase.federatedTimelineDao().deletePost(statusId)
-                socialDatabase.hashTagTimelineDao().deletePost(statusId)
-                socialDatabase.accountTimelineDao().deletePost(statusId)
-                socialDatabase.statusDao().deleteStatus(statusId)
-            }
-        } catch (e: Exception) {
-            socialDatabase.statusDao().updateIsBeingDeleted(statusId, false)
-            throw e
-        }
-    }
 }
