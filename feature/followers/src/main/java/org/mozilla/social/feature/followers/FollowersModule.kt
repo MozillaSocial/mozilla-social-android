@@ -10,6 +10,7 @@ val followersModule = module {
             followerScreenType = parameters[1],
             accountRepository = get(),
             navigateTo = get(),
+            analytics = get(),
         )
     }
 }

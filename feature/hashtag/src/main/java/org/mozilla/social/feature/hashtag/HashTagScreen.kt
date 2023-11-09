@@ -3,6 +3,7 @@ package org.mozilla.social.feature.hashtag
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.paging.PagingData
 import kotlinx.coroutines.flow.Flow
@@ -24,6 +25,10 @@ internal fun HashTagScreen(
         feed = viewModel.feed,
         postCardInteractions = viewModel.postCardDelegate,
     )
+
+    LaunchedEffect(Unit) {
+        viewModel.onScreenViewed()
+    }
 }
 
 @Composable

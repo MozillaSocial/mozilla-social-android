@@ -10,6 +10,8 @@ import androidx.paging.map
 import kotlinx.coroutines.flow.map
 import org.koin.core.parameter.parametersOf
 import org.koin.java.KoinJavaComponent.inject
+import org.mozilla.social.core.analytics.Analytics
+import org.mozilla.social.core.analytics.AnalyticsIdentifiers
 import org.mozilla.social.core.data.repository.model.status.toExternalModel
 import org.mozilla.social.core.database.SocialDatabase
 import org.mozilla.social.core.database.model.statusCollections.toStatusWrapper
@@ -19,10 +21,11 @@ import org.mozilla.social.core.ui.postcard.PostCardDelegate
 import org.mozilla.social.core.ui.postcard.toPostCardUiState
 
 class HashTagViewModel(
+    private val analytics: Analytics,
     hashTag: String,
     socialDatabase: SocialDatabase,
     userAccountId: GetLoggedInUserAccountId,
-) : ViewModel() {
+) : ViewModel(), HashTagInteractions {
 
     private val hashTagTimelineRemoteMediator: HashTagTimelineRemoteMediator by inject(
         HashTagTimelineRemoteMediator::class.java
@@ -42,6 +45,12 @@ class HashTagViewModel(
             it.toStatusWrapper().toExternalModel().toPostCardUiState(userAccountId())
         }
     }.cachedIn(viewModelScope)
+
+    override fun onScreenViewed() {
+        analytics.uiImpression(
+            uiIdentifier = AnalyticsIdentifiers.HASHTAG_SCREEN_IMPRESSION,
+        )
+    }
 
     val postCardDelegate: PostCardDelegate by inject(
         PostCardDelegate::class.java

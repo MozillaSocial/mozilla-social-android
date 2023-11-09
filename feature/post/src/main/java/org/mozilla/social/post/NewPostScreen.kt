@@ -121,6 +121,10 @@ internal fun NewPostScreen(
         userHeaderState = viewModel.userHeaderState.collectAsState(initial = null).value,
         bottomBarState = viewModel.bottomBarState.collectAsState().value,
     )
+
+    LaunchedEffect(Unit) {
+        viewModel.onScreenViewed()
+    }
 }
 
 data class UserHeaderState(val avatarUrl: String, val displayName: String)

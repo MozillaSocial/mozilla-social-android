@@ -7,6 +7,8 @@ import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
 import androidx.paging.map
 import kotlinx.coroutines.flow.map
+import org.mozilla.social.core.analytics.Analytics
+import org.mozilla.social.core.analytics.AnalyticsIdentifiers
 import org.mozilla.social.core.data.repository.AccountRepository
 import org.mozilla.social.core.navigation.NavigationDestination
 import org.mozilla.social.core.navigation.usecases.NavigateTo
@@ -17,6 +19,7 @@ class FollowersViewModel(
     private val followerScreenType: FollowerScreenType,
     private val accountRepository: AccountRepository,
     private val navigateTo: NavigateTo,
+    private val analytics: Analytics,
 ) : ViewModel(), FollowersInteractions {
 
     val followers = Pager(
@@ -34,5 +37,20 @@ class FollowersViewModel(
 
     override fun onAccountClicked(accountId: String) {
         navigateTo(NavigationDestination.Account(accountId))
+    }
+
+    override fun onScreenViewed() {
+        when (followerScreenType) {
+            FollowerScreenType.FOLLOWERS -> {
+                analytics.uiImpression(
+                    uiIdentifier = AnalyticsIdentifiers.FOLLOWERS_SCREEN_IMPRESSION,
+                )
+            }
+            FollowerScreenType.FOLLOWING -> {
+                analytics.uiImpression(
+                    uiIdentifier = AnalyticsIdentifiers.FOLLOWING_SCREEN_IMPRESSION,
+                )
+            }
+        }
     }
 }

@@ -17,6 +17,8 @@ import org.mozilla.social.common.LoadState
 import org.mozilla.social.common.loadResource
 import org.mozilla.social.common.utils.FileType
 import org.mozilla.social.common.utils.StringFactory
+import org.mozilla.social.core.analytics.Analytics
+import org.mozilla.social.core.analytics.AnalyticsIdentifiers
 import org.mozilla.social.core.data.repository.AccountRepository
 import org.mozilla.social.core.data.repository.MediaRepository
 import org.mozilla.social.core.data.repository.SearchRepository
@@ -41,6 +43,7 @@ import org.mozilla.social.post.status.StatusInteractions
 import timber.log.Timber
 
 class NewPostViewModel(
+    private val analytics: Analytics,
     private val replyStatusId: String?,
     mediaRepository: MediaRepository,
     searchRepository: SearchRepository,
@@ -50,7 +53,7 @@ class NewPostViewModel(
     private val timelineRepository: TimelineRepository,
     private val popNavBackstack: PopNavBackstack,
     private val showSnackbar: ShowSnackbar,
-) : ViewModel() {
+) : ViewModel(), NewPostInteractions {
 
     private val statusDelegate: StatusDelegate = StatusDelegate(
         viewModelScope,
@@ -168,6 +171,12 @@ class NewPostViewModel(
         showSnackbar(
             text = StringFactory.resource(R.string.your_post_was_published),
             isError = false
+        )
+    }
+
+    override fun onScreenViewed() {
+        analytics.uiImpression(
+            uiIdentifier = AnalyticsIdentifiers.NEW_POST_SCREEN_IMPRESSION,
         )
     }
 

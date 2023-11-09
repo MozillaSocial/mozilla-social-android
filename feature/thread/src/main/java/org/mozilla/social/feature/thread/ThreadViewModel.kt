@@ -7,6 +7,8 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import org.koin.core.parameter.parametersOf
 import org.koin.java.KoinJavaComponent
+import org.mozilla.social.core.analytics.Analytics
+import org.mozilla.social.core.analytics.AnalyticsIdentifiers
 import org.mozilla.social.core.domain.GetThreadUseCase
 import org.mozilla.social.core.domain.GetLoggedInUserAccountId
 import org.mozilla.social.core.ui.postcard.PostCardDelegate
@@ -15,10 +17,11 @@ import org.mozilla.social.core.ui.postcard.toPostCardUiState
 import timber.log.Timber
 
 class ThreadViewModel(
+    private val analytics: Analytics,
     getThreadUseCase: GetThreadUseCase,
     mainStatusId: String,
     getLoggedInUserAccountId: GetLoggedInUserAccountId,
-) : ViewModel() {
+) : ViewModel(), ThreadInteractions {
 
     var statuses: Flow<List<PostCardUiState>> =
         getThreadUseCase.invoke(mainStatusId).map { statuses ->
@@ -26,6 +29,12 @@ class ThreadViewModel(
         }.catch {
             Timber.e(it)
         }
+
+    override fun onsScreenViewed() {
+        analytics.uiImpression(
+            uiIdentifier = AnalyticsIdentifiers.THREAD_SCREEN_IMPRESSION,
+        )
+    }
 
     val postCardDelegate: PostCardDelegate by KoinJavaComponent.inject(
         PostCardDelegate::class.java

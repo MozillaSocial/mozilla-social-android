@@ -3,6 +3,7 @@ package org.mozilla.social.feature.thread
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -28,5 +29,9 @@ internal fun ThreadScreen(
                 threadId = threadStatusId,
             )
         }
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.onsScreenViewed()
     }
 }
