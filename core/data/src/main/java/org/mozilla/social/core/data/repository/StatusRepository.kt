@@ -62,25 +62,6 @@ class StatusRepository(
         }
     }
 
-    suspend fun undoFavoriteStatus(
-        statusId: String,
-    ) {
-        socialDatabase.withTransaction {
-            socialDatabase.statusDao().updateFavoriteCount(statusId, -1)
-            socialDatabase.statusDao().updateFavorited(statusId, false)
-        }
-        try {
-            val status = statusApi.unFavoriteStatus(statusId).toExternalModel()
-            saveStatusToDatabase(status)
-        } catch (e: Exception) {
-            socialDatabase.withTransaction {
-                socialDatabase.statusDao().updateFavoriteCount(statusId, 1)
-                socialDatabase.statusDao().updateFavorited(statusId, true)
-            }
-            throw e
-        }
-    }
-
     suspend fun getStatusContext(statusId: String): Context =
         statusApi.getStatusContext(statusId).toExternalModel()
 

@@ -11,7 +11,12 @@ import org.mozilla.social.core.domain.account.UnmuteAccount
 import org.mozilla.social.core.domain.account.UpdateMyAccount
 import org.mozilla.social.core.domain.remotemediators.HashTagTimelineRemoteMediator
 import org.mozilla.social.core.domain.report.Report
+import org.mozilla.social.core.domain.status.BoostStatus
+import org.mozilla.social.core.domain.status.FavoriteStatus
 import org.mozilla.social.core.domain.status.PostStatus
+import org.mozilla.social.core.domain.status.UndoBoostStatus
+import org.mozilla.social.core.domain.status.UndoFavoriteStatus
+import org.mozilla.social.core.domain.status.VoteOnPoll
 
 val domainModule = module {
     factory { parametersHolder ->
@@ -91,5 +96,39 @@ val domainModule = module {
         statusRepository = get(),
         timelineRepository = get(),
         showSnackbar = get(),
+    ) }
+    single { BoostStatus(
+        externalScope = get<AppScope>(),
+        statusApi = get(),
+        statusRepository = get(),
+        showSnackbar = get(),
+        socialDatabase = get(),
+    ) }
+    single { FavoriteStatus(
+        externalScope = get<AppScope>(),
+        statusApi = get(),
+        statusRepository = get(),
+        showSnackbar = get(),
+        socialDatabase = get(),
+    ) }
+    single { UndoBoostStatus(
+        externalScope = get<AppScope>(),
+        statusApi = get(),
+        statusRepository = get(),
+        showSnackbar = get(),
+        socialDatabase = get(),
+    ) }
+    single { UndoFavoriteStatus(
+        externalScope = get<AppScope>(),
+        statusApi = get(),
+        statusRepository = get(),
+        showSnackbar = get(),
+        socialDatabase = get(),
+    ) }
+    single { VoteOnPoll(
+        externalScope = get<AppScope>(),
+        statusApi = get(),
+        showSnackbar = get(),
+        socialDatabase = get(),
     ) }
 }

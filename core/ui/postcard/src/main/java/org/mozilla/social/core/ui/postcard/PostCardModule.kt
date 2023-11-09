@@ -14,6 +14,9 @@ val postCardModule = module {
             muteAccount = get(),
             voteOnPoll = get(),
             boostStatus = get(),
+            undoBoostStatus = get(),
+            favoriteStatus = get(),
+            undoFavoriteStatus = get(),
         )
     }
 }
