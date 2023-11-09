@@ -1,6 +1,7 @@
 package org.mozilla.social.core.datastore
 
 import android.content.Context
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
@@ -8,16 +9,9 @@ import kotlinx.coroutines.flow.mapLatest
 import timber.log.Timber
 import java.io.IOException
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class UserPreferencesDatastore(context: Context) {
     private val dataStore = context.userPreferencesDataStore
-
-    val clientId: Flow<String?> = dataStore.data.mapLatest {
-        it.clientId
-    }
-
-    val clientSecret: Flow<String?> = dataStore.data.mapLatest {
-        it.clientSecret
-    }
 
     val accessToken: Flow<String?> = dataStore.data.mapLatest {
         it.accessToken
@@ -31,8 +25,8 @@ class UserPreferencesDatastore(context: Context) {
         it.accountId
     }
 
-    val isSignedIn: Flow<Boolean> = accessToken.mapLatest {
-        !it.isNullOrBlank()
+    val isSignedIn: Flow<Boolean> = dataStore.data.mapLatest {
+        !it.accountId.isNullOrBlank() && !it.accessToken.isNullOrBlank()
     }.distinctUntilChanged()
 
     /**
@@ -62,15 +56,6 @@ class UserPreferencesDatastore(context: Context) {
         }
     }
 
-    suspend fun saveClientCredentials(clientId: String, clientSecret: String) {
-        dataStore.updateData {
-            it.toBuilder()
-                .setClientId(clientId)
-                .setClientSecret(clientSecret)
-                .build()
-        }
-    }
-
     suspend fun saveDomain(domain: String) {
         dataStore.updateData {
             it.toBuilder().setDomain(domain).build()
@@ -83,19 +68,7 @@ class UserPreferencesDatastore(context: Context) {
                 .clearAccessToken()
                 .clearDomain()
                 .clearAccountId()
-                .clearClientId()
-                .clearClientSecret()
                 .build()
         }
     }
 }
-
-data class MastodonInstance(
-    val clientId: String,
-    val clientSecret: String,
-)
-
-private val UserPreferences.mastodonInstance: MastodonInstance?
-    get() = if (clientId != null && clientSecret != null) {
-        MastodonInstance(clientId = clientId, clientSecret = clientSecret)
-    } else null

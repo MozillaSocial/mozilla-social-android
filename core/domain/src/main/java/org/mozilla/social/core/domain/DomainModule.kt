@@ -23,7 +23,8 @@ val domainModule = module {
         )
     }
     single { GetThreadUseCase(get()) }
-    single { Login(get(), get(), get(), get(), get()) }
+    single { Login(get(), get(), get(), get(), get(), get(), get()) }
+    single { OpenLoginCustomTab() }
     single {
         Logout(
             userPreferencesDatastore = get(),
