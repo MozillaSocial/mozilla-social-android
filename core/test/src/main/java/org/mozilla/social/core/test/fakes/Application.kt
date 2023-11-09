@@ -6,12 +6,12 @@ fun fakeApplication(
     name: String = "Louella Perry",
     website: String? = null,
     vapidKey: String? = null,
-    clientID: String? = null,
+    clientId: String? = null,
     clientSecret: String? = null
 ) = Application(
     name = name,
     website = website,
     vapidKey = vapidKey,
-    clientId = clientID,
+    clientId = clientId,
     clientSecret = clientSecret,
 )
