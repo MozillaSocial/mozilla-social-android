@@ -62,25 +62,6 @@ class StatusRepository(
         }
     }
 
-    suspend fun boostStatus(
-        statusId: String,
-    ) {
-        socialDatabase.withTransaction {
-            socialDatabase.statusDao().updateBoostCount(statusId, 1)
-            socialDatabase.statusDao().updateBoosted(statusId, true)
-        }
-        try {
-            val status = statusApi.boostStatus(statusId).toExternalModel()
-            saveStatusToDatabase(status)
-        } catch (e: Exception) {
-            socialDatabase.withTransaction {
-                socialDatabase.statusDao().updateBoostCount(statusId, -1)
-                socialDatabase.statusDao().updateBoosted(statusId, false)
-            }
-            throw e
-        }
-    }
-
     suspend fun undoStatusBoost(
         boostedStatusId: String,
     ) {

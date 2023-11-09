@@ -12,6 +12,8 @@ val postCardModule = module {
             showSnackbar = get(),
             blockAccount = get(),
             muteAccount = get(),
+            voteOnPoll = get(),
+            boostStatus = get(),
         )
     }
 }
