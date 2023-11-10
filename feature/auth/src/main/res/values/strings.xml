@@ -2,4 +2,10 @@
 <resources>
     <string name="login_button">Login</string>
     <string name="title_text">Mozilla Social</string>
+
+    <string name="beta_badge">Beta</string>
+    <string name="intro_title">Get started</string>
+    <string name="intro_message">Like, share, and follow interesting profiles and hashtags.</string>
+    <string name="sign_in_button">Sign in or sign up</string>
+    <string name="choose_server_option">Choose a server</string>
 </resources>
