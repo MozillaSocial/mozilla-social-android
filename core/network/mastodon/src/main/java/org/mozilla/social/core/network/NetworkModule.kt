@@ -9,7 +9,6 @@ import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import org.mozilla.social.core.network.interceptors.AuthCredentialInterceptor
 import retrofit2.Retrofit
-import retrofit2.create
 import java.util.concurrent.TimeUnit
 
 fun networkModule(isDebug: Boolean) = module {

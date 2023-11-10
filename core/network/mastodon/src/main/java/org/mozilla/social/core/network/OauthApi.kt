@@ -3,7 +3,6 @@ package org.mozilla.social.core.network
 import org.mozilla.social.core.network.model.NetworkAccessToken
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
-import retrofit2.http.Header
 import retrofit2.http.POST
 
 interface OauthApi {
