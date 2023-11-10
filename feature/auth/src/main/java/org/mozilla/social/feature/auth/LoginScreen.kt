@@ -1,11 +1,14 @@
 package org.mozilla.social.feature.auth
 
+import android.content.res.Configuration
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -16,10 +19,10 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -40,12 +43,51 @@ import org.mozilla.social.core.designsystem.theme.MoSoTheme
 internal fun LoginScreen(
     viewModel: AuthViewModel = koinViewModel(),
 ) {
-    VerticalLoginScreen(
-        authInteractions = viewModel,
-    )
+    val configuration = LocalConfiguration.current
+    if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+        HorizontalLoginScreen(
+            authInteractions = viewModel,
+        )
+    } else {
+        VerticalLoginScreen(
+            authInteractions = viewModel,
+        )
+    }
 
     LaunchedEffect(Unit) {
         viewModel.onScreenViewed()
+    }
+}
+
+@Composable
+private fun HorizontalLoginScreen(
+    authInteractions: AuthInteractions,
+) {
+    MoSoSurface(
+        color = MoSoTheme.colors.layer2
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxSize(),
+        ) {
+            ImageBox(
+                modifier = Modifier
+                    .weight(1f)
+                    .systemBarsPadding(),
+            )
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .align(Alignment.CenterVertically)
+                    .fillMaxHeight()
+                    .background(MoSoTheme.colors.layer1),
+            ) {
+                LoginBox(
+                    modifier = Modifier.align(Alignment.Center),
+                    authInteractions = authInteractions,
+                )
+            }
+        }
     }
 }
 
@@ -81,8 +123,12 @@ private fun VerticalLoginScreen(
 }
 
 @Composable
-private fun ImageBox() {
-    Box {
+private fun ImageBox(
+    modifier: Modifier = Modifier,
+) {
+    Box(
+        modifier = modifier,
+    ) {
         Text(
             modifier = Modifier
                 .align(Alignment.TopCenter)
@@ -93,10 +139,12 @@ private fun ImageBox() {
             fontFamily = MoSoFonts.zillaSlab,
         )
         Image(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth(),
             painter = painterResource(id = R.drawable.login_art),
             contentDescription = "",
-            contentScale = ContentScale.FillWidth
+            contentScale = ContentScale.FillWidth,
+            alignment = Alignment.TopCenter
         )
     }
 }
@@ -153,9 +201,19 @@ private fun LoginBox(
 
 @Preview
 @Composable
-internal fun AuthScreenPreview() {
+internal fun AuthVerticalScreenPreview() {
     MoSoTheme {
         VerticalLoginScreen(
+            authInteractions = object : AuthInteractions {},
+        )
+    }
+}
+
+@Preview(heightDp = 400, widthDp = 800)
+@Composable
+internal fun AuthHorizontalScreenPreview() {
+    MoSoTheme {
+        HorizontalLoginScreen(
             authInteractions = object : AuthInteractions {},
         )
     }
