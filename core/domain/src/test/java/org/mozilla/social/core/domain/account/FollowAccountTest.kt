@@ -101,6 +101,9 @@ class FollowAccountTest : BaseDomainTest() {
                     loggedInUserAccountId = "id2"
                 )
             },
+            verifyBlock = {
+                showSnackbar(any(), any())
+            },
         )
     }
 }

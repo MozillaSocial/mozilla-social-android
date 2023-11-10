@@ -2,37 +2,39 @@ package org.mozilla.social.core.ui.postcard
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import org.mozilla.social.common.utils.StringFactory
-import org.mozilla.social.core.data.repository.StatusRepository
 import org.mozilla.social.core.domain.account.BlockAccount
 import org.mozilla.social.core.domain.account.MuteAccount
+import org.mozilla.social.core.domain.status.BoostStatus
+import org.mozilla.social.core.domain.status.DeleteStatus
+import org.mozilla.social.core.domain.status.FavoriteStatus
+import org.mozilla.social.core.domain.status.UndoBoostStatus
+import org.mozilla.social.core.domain.status.UndoFavoriteStatus
+import org.mozilla.social.core.domain.status.VoteOnPoll
 import org.mozilla.social.core.navigation.NavigationDestination
 import org.mozilla.social.core.navigation.usecases.NavigateTo
 import org.mozilla.social.core.navigation.usecases.OpenLink
-import org.mozilla.social.core.navigation.usecases.ShowSnackbar
-import org.mozilla.social.core.ui.common.R
 import timber.log.Timber
 
 class PostCardDelegate(
     private val coroutineScope: CoroutineScope,
-    private val statusRepository: StatusRepository,
     private val navigateTo: NavigateTo,
     private val openLink: OpenLink,
-    private val showSnackbar: ShowSnackbar,
     private val blockAccount: BlockAccount,
     private val muteAccount: MuteAccount,
+    private val voteOnPoll: VoteOnPoll,
+    private val boostStatus: BoostStatus,
+    private val undoBoostStatus: UndoBoostStatus,
+    private val favoriteStatus: FavoriteStatus,
+    private val undoFavoriteStatus: UndoFavoriteStatus,
+    private val deleteStatus: DeleteStatus,
 ) : PostCardInteractions {
 
     override fun onVoteClicked(pollId: String, choices: List<Int>) {
         coroutineScope.launch {
             try {
-                statusRepository.voteOnPoll(pollId, choices)
-            } catch (e: Exception) {
+                voteOnPoll(pollId, choices)
+            } catch (e: VoteOnPoll.VoteOnPollFailedException) {
                 Timber.e(e)
-                showSnackbar(
-                    text = StringFactory.resource(R.string.error_voting),
-                    isError = true,
-                )
             }
         }
     }
@@ -45,23 +47,15 @@ class PostCardDelegate(
         coroutineScope.launch {
             if (isBoosting) {
                 try {
-                    statusRepository.boostStatus(statusId)
-                } catch (e: Exception) {
+                    boostStatus(statusId)
+                } catch (e: BoostStatus.BoostStatusFailedException) {
                     Timber.e(e)
-                    showSnackbar(
-                        text = StringFactory.resource(R.string.error_boosting),
-                        isError = true,
-                    )
                 }
             } else {
                 try {
-                    statusRepository.undoStatusBoost(statusId)
-                } catch (e: Exception) {
+                    undoBoostStatus(statusId)
+                } catch (e: UndoBoostStatus.UndoBoostStatusFailedException) {
                     Timber.e(e)
-                    showSnackbar(
-                        text = StringFactory.resource(R.string.error_undoing_boost),
-                        isError = true,
-                    )
                 }
             }
         }
@@ -71,23 +65,15 @@ class PostCardDelegate(
         coroutineScope.launch {
             if (isFavoriting) {
                 try {
-                    statusRepository.favoriteStatus(statusId)
-                } catch (e: Exception) {
+                    favoriteStatus(statusId)
+                } catch (e: FavoriteStatus.FavoriteStatusFailedException) {
                     Timber.e(e)
-                    showSnackbar(
-                        text = StringFactory.resource(R.string.error_adding_favorite),
-                        isError = true,
-                    )
                 }
             } else {
                 try {
-                    statusRepository.undoFavoriteStatus(statusId)
-                } catch (e: Exception) {
+                    undoFavoriteStatus(statusId)
+                } catch (e: UndoFavoriteStatus.UndoFavoriteStatusFailedException) {
                     Timber.e(e)
-                    showSnackbar(
-                        text = StringFactory.resource(R.string.error_removing_favorite),
-                        isError = true,
-                    )
                 }
             }
         }
@@ -134,13 +120,9 @@ class PostCardDelegate(
     ) {
         coroutineScope.launch {
             try {
-                statusRepository.deleteStatus(statusId)
-            } catch (e: Exception) {
+                deleteStatus(statusId)
+            } catch (e: DeleteStatus.DeleteStatusFailedException) {
                 Timber.e(e)
-                showSnackbar(
-                    text = StringFactory.resource(R.string.error_deleting_post),
-                    isError = true,
-                )
             }
         }
     }

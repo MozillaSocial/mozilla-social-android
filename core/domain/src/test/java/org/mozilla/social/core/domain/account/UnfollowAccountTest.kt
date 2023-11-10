@@ -122,6 +122,9 @@ class UnfollowAccountTest : BaseDomainTest() {
                     loggedInUserAccountId = "id2",
                 )
             },
+            verifyBlock = {
+                showSnackbar(any(), any())
+            },
         )
     }
 }

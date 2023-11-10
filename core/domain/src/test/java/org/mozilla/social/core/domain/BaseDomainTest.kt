@@ -6,11 +6,13 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
+import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
@@ -135,12 +137,13 @@ open class BaseDomainTest {
 
     /**
      * When the outer job is canceled, but an exception is thrown inside, it should not be
-     * caught in the outer job's catch
+     * caught in the outer job's catch.
      */
     @Suppress("TooGenericExceptionThrown", "SwallowedException")
     protected fun testOuterScopeCancelledAndInnerException(
         delayedCallBlock: suspend MockKMatcherScope.() -> Any,
         subjectCallBlock: suspend () -> Unit,
+        verifyBlock: suspend MockKVerificationScope.() -> Unit,
     ) = runTest {
         val waitToCancel = CompletableDeferred<Unit>()
         val waitToFinish = CompletableDeferred<Unit>()
@@ -157,9 +160,12 @@ open class BaseDomainTest {
         val outerJob = launch {
             try {
                 subjectCallBlock()
-            } catch (e: TestException) {
+            } catch (e: CancellationException) {
+                println("canceled")
+            } catch (e: Exception) {
                 // fail the test if the exception gets caught here
                 // the outer job should have already been canceled
+                println("failing $e")
                 fail("The exception should have been caught outside this scope")
             }
         }
@@ -170,6 +176,9 @@ open class BaseDomainTest {
         outerJob.cancel()
         println("allow finish")
         waitToFinish.complete(Unit)
+
+        println("verify")
+        coVerify(exactly = 1, verifyBlock = verifyBlock)
     }
 }
 

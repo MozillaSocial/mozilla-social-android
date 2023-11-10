@@ -25,6 +25,7 @@ import org.mozilla.social.core.data.repository.SearchRepository
 import org.mozilla.social.core.data.repository.StatusRepository
 import org.mozilla.social.core.data.repository.TimelineRepository
 import org.mozilla.social.core.domain.GetLoggedInUserAccountId
+import org.mozilla.social.core.domain.status.PostStatus
 import org.mozilla.social.core.navigation.usecases.PopNavBackstack
 import org.mozilla.social.core.navigation.usecases.ShowSnackbar
 import org.mozilla.social.feature.post.R
@@ -50,7 +51,7 @@ class NewPostViewModel(
     getLoggedInUserAccountId: GetLoggedInUserAccountId,
     accountRepository: AccountRepository,
     private val statusRepository: StatusRepository,
-    private val timelineRepository: TimelineRepository,
+    private val postStatus: PostStatus,
     private val popNavBackstack: PopNavBackstack,
     private val showSnackbar: ShowSnackbar,
 ) : ViewModel(), NewPostInteractions {
@@ -136,7 +137,7 @@ class NewPostViewModel(
         viewModelScope.launch {
             _isSendingPost.update { true }
             try {
-                val status = statusRepository.sendPost(
+                postStatus(
                     statusText = statusText.value.text,
                     imageStates = mediaStates.value.toList(),
                     visibility = visibility.value,
@@ -151,27 +152,21 @@ class NewPostViewModel(
                     contentWarningText = contentWarningText.value,
                     inReplyToId = replyStatusId,
                 )
-                statusRepository.saveStatusToDatabase(status)
-                timelineRepository.insertStatusIntoTimelines(status)
 
                 onStatusPosted()
             } catch (e: Exception) {
                 Timber.e(e)
-                showSnackbar(
-                    text = StringFactory.resource(R.string.error_sending_post_toast),
-                    isError = true,
-                )
                 _isSendingPost.update { false }
             }
         }
     }
 
     private fun onStatusPosted() {
-        popNavBackstack()
         showSnackbar(
             text = StringFactory.resource(R.string.your_post_was_published),
             isError = false
         )
+        popNavBackstack()
     }
 
     override fun onScreenViewed() {

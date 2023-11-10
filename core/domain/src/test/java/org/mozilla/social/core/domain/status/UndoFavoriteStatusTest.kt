@@ -1,20 +1,28 @@
-package org.mozilla.social.core.domain.account
+package org.mozilla.social.core.domain.status
 
+import io.mockk.mockk
 import kotlinx.coroutines.test.TestScope
+import org.mozilla.social.core.data.repository.StatusRepository
 import org.mozilla.social.core.domain.BaseDomainTest
+import org.mozilla.social.core.test.fakes.NetworkModels
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 
-class BlockAccountTest : BaseDomainTest() {
+class UndoFavoriteStatusTest : BaseDomainTest() {
 
-    private lateinit var subject: BlockAccount
+    private val statusRepository = mockk<StatusRepository>(relaxed = true)
+
+    private lateinit var subject: UndoFavoriteStatus
+
+    private val networkStatus = NetworkModels.networkStatus
 
     @BeforeTest
     fun setup() {
-        subject = BlockAccount(
+        subject = UndoFavoriteStatus(
             externalScope = TestScope(testDispatcher),
             showSnackbar = showSnackbar,
-            accountApi = accountApi,
+            statusApi = statusApi,
+            statusRepository = statusRepository,
             socialDatabase = socialDatabase,
             dispatcherIo = testDispatcher,
         )
@@ -22,16 +30,16 @@ class BlockAccountTest : BaseDomainTest() {
 
     @Test
     fun testCancelledScope() {
-        val accountId = "id1"
         testOuterScopeCancelled(
             delayedCallBlock = {
-                relationshipsDao.updateBlocked(any(), any())
+                statusApi.unFavoriteStatus(any())
             },
+            delayedCallBlockReturnValue = networkStatus,
             subjectCallBlock = {
-                subject(accountId)
+                subject("id")
             },
             verifyBlock = {
-                accountApi.blockAccount(accountId)
+                statusRepository.saveStatusToDatabase(any())
             }
         )
     }
@@ -40,14 +48,14 @@ class BlockAccountTest : BaseDomainTest() {
     fun testCancelledScopeWithError() {
         testOuterScopeCancelledAndInnerException(
             delayedCallBlock = {
-                relationshipsDao.updateBlocked(any(), true)
+                statusApi.unFavoriteStatus(any())
             },
             subjectCallBlock = {
                 subject("id")
             },
             verifyBlock = {
                 showSnackbar(any(), any())
-            },
+            }
         )
     }
 }
