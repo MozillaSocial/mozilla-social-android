@@ -1,11 +1,11 @@
-package org.mozilla.social.core.domain.utils
+package org.mozilla.social.core.test.fakes
 
 import kotlinx.datetime.Instant
 import org.mozilla.social.core.network.model.NetworkAccount
 import org.mozilla.social.core.network.model.NetworkStatus
 import org.mozilla.social.core.network.model.NetworkStatusVisibility
 
-object TestModels {
+object NetworkModels {
     val networkStatus = NetworkStatus(
         statusId = "vivendo",
         uri = "est",

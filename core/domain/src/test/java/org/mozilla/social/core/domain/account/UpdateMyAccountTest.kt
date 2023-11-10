@@ -2,7 +2,7 @@ package org.mozilla.social.core.domain.account
 
 import kotlinx.coroutines.test.TestScope
 import org.mozilla.social.core.domain.BaseDomainTest
-import org.mozilla.social.core.domain.utils.TestModels
+import org.mozilla.social.core.test.fakes.NetworkModels
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 
@@ -10,7 +10,7 @@ class UpdateMyAccountTest : BaseDomainTest() {
 
     private lateinit var subject: UpdateMyAccount
 
-    private val networkAccountMock = TestModels.networkAccount
+    private val networkAccountMock = NetworkModels.networkAccount
 
     @BeforeTest
     fun setup() {

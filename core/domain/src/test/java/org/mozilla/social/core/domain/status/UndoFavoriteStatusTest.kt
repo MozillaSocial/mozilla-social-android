@@ -4,7 +4,7 @@ import io.mockk.mockk
 import kotlinx.coroutines.test.TestScope
 import org.mozilla.social.core.data.repository.StatusRepository
 import org.mozilla.social.core.domain.BaseDomainTest
-import org.mozilla.social.core.domain.utils.TestModels
+import org.mozilla.social.core.test.fakes.NetworkModels
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 
@@ -14,7 +14,7 @@ class UndoFavoriteStatusTest : BaseDomainTest() {
 
     private lateinit var subject: UndoFavoriteStatus
 
-    private val networkStatus = TestModels.networkStatus
+    private val networkStatus = NetworkModels.networkStatus
 
     @BeforeTest
     fun setup() {

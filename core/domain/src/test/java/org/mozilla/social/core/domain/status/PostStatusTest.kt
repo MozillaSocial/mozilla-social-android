@@ -2,14 +2,10 @@ package org.mozilla.social.core.domain.status
 
 import io.mockk.mockk
 import kotlinx.coroutines.test.TestScope
-import kotlinx.datetime.Instant
 import org.mozilla.social.core.data.repository.StatusRepository
 import org.mozilla.social.core.data.repository.TimelineRepository
 import org.mozilla.social.core.domain.BaseDomainTest
-import org.mozilla.social.core.domain.utils.TestModels
-import org.mozilla.social.core.network.model.NetworkAccount
-import org.mozilla.social.core.network.model.NetworkStatus
-import org.mozilla.social.core.network.model.NetworkStatusVisibility
+import org.mozilla.social.core.test.fakes.NetworkModels
 import org.mozilla.social.model.StatusVisibility
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -21,7 +17,7 @@ class PostStatusTest : BaseDomainTest() {
 
     private lateinit var subject: PostStatus
 
-    private val networkStatus = TestModels.networkStatus
+    private val networkStatus = NetworkModels.networkStatus
 
     @BeforeTest
     fun setup() {

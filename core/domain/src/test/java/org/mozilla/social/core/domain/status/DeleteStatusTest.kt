@@ -5,7 +5,7 @@ import io.mockk.coVerify
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
 import org.mozilla.social.core.domain.BaseDomainTest
-import org.mozilla.social.core.domain.utils.TestModels
+import org.mozilla.social.core.test.fakes.NetworkModels
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertNotNull
@@ -14,7 +14,7 @@ class DeleteStatusTest : BaseDomainTest() {
 
     private lateinit var subject: DeleteStatus
 
-    private val networkStatus = TestModels.networkStatus
+    private val networkStatus = NetworkModels.networkStatus
 
     @BeforeTest
     fun setup() {
