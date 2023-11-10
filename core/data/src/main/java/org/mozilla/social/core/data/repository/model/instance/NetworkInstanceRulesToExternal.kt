@@ -1,10 +1,10 @@
 package org.mozilla.social.core.data.repository.model.instance
 
 import org.mozilla.social.core.data.repository.model.status.toExternalModel
-import org.mozilla.social.core.network.model.NetworkInstance
-import org.mozilla.social.core.network.model.NetworkInstanceRule
-import org.mozilla.social.core.network.model.NetworkInstanceStats
-import org.mozilla.social.core.network.model.NetworkInstanceUrls
+import org.mozilla.social.core.network.mastodon.model.NetworkInstance
+import org.mozilla.social.core.network.mastodon.model.NetworkInstanceRule
+import org.mozilla.social.core.network.mastodon.model.NetworkInstanceStats
+import org.mozilla.social.core.network.mastodon.model.NetworkInstanceUrls
 import org.mozilla.social.model.Instance
 import org.mozilla.social.model.InstanceRule
 import org.mozilla.social.model.InstanceStats

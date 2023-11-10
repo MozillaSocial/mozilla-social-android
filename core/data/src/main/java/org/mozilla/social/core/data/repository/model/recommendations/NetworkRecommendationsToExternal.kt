@@ -1,8 +1,8 @@
 package org.mozilla.social.core.data.repository.model.recommendations
 
-import org.mozilla.social.core.network.model.NetworkRecommendation
-import org.mozilla.social.core.network.model.NetworkRecommendationAuthor
-import org.mozilla.social.core.network.model.NetworkRecommendationImage
+import org.mozilla.social.core.network.mastodon.model.NetworkRecommendation
+import org.mozilla.social.core.network.mastodon.model.NetworkRecommendationAuthor
+import org.mozilla.social.core.network.mastodon.model.NetworkRecommendationImage
 import org.mozilla.social.model.Recommendation
 import org.mozilla.social.model.RecommendationAuthor
 import org.mozilla.social.model.RecommendationImage

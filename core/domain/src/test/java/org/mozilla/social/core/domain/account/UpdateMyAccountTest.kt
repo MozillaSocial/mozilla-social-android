@@ -3,7 +3,7 @@ package org.mozilla.social.core.domain.account
 import kotlinx.coroutines.test.TestScope
 import kotlinx.datetime.Instant
 import org.mozilla.social.core.domain.BaseDomainTest
-import org.mozilla.social.core.network.model.NetworkAccount
+import org.mozilla.social.core.network.mastodon.model.NetworkAccount
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 

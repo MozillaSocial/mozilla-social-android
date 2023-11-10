@@ -30,16 +30,16 @@ import org.mozilla.social.core.database.dao.RelationshipsDao
 import org.mozilla.social.core.database.dao.StatusDao
 import org.mozilla.social.core.domain.utils.TransactionUtils
 import org.mozilla.social.core.navigation.usecases.ShowSnackbar
-import org.mozilla.social.core.network.AccountApi
-import org.mozilla.social.core.network.AppApi
-import org.mozilla.social.core.network.InstanceApi
-import org.mozilla.social.core.network.MediaApi
-import org.mozilla.social.core.network.OauthApi
-import org.mozilla.social.core.network.RecommendationApi
-import org.mozilla.social.core.network.ReportApi
-import org.mozilla.social.core.network.SearchApi
-import org.mozilla.social.core.network.StatusApi
-import org.mozilla.social.core.network.TimelineApi
+import org.mozilla.social.core.network.mastodon.AccountApi
+import org.mozilla.social.core.network.mastodon.AppApi
+import org.mozilla.social.core.network.mastodon.InstanceApi
+import org.mozilla.social.core.network.mastodon.MediaApi
+import org.mozilla.social.core.network.mastodon.OauthApi
+import org.mozilla.social.core.network.mastodon.RecommendationApi
+import org.mozilla.social.core.network.mastodon.ReportApi
+import org.mozilla.social.core.network.mastodon.SearchApi
+import org.mozilla.social.core.network.mastodon.StatusApi
+import org.mozilla.social.core.network.mastodon.TimelineApi
 import kotlin.test.BeforeTest
 import kotlin.test.fail
 

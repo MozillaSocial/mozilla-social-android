@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "org.mozilla.social.core.network"
+    namespace = "org.mozilla.social.core.network.mastodon"
 }
 
 dependencies {

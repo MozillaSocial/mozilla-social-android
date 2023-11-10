@@ -1,7 +1,7 @@
 package org.mozilla.social.core.data.repository.model.status
 
-import org.mozilla.social.core.network.model.NetworkStatusVisibility
-import org.mozilla.social.core.network.model.request.NetworkPollCreate
+import org.mozilla.social.core.network.mastodon.model.NetworkStatusVisibility
+import org.mozilla.social.core.network.mastodon.model.request.NetworkPollCreate
 import org.mozilla.social.model.StatusVisibility
 import org.mozilla.social.model.request.PollCreate
 

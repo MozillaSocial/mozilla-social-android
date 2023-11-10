@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "org.mozilla.social.core.network.mozilla"
+    namespace = "org.mozilla.social.core.network.mastodon.mozilla"
     compileSdk = 33
 
     defaultConfig {

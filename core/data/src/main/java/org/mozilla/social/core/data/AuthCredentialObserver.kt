@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
 import org.mozilla.social.core.datastore.UserPreferencesDatastore
-import org.mozilla.social.core.network.interceptors.AuthCredentialInterceptor
+import org.mozilla.social.core.network.mastodon.interceptors.AuthCredentialInterceptor
 
 /**
  * Keeps the domain and access token in [AuthCredentialInterceptor] up to date
