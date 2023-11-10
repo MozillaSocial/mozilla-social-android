@@ -8,7 +8,7 @@ android {
 }
 
 dependencies {
-    implementation(project(":core:network"))
+    implementation(project(":core:network:mozilla"))
     implementation(project(":core:model"))
     implementation(project(":core:designsystem"))
     implementation(project(":core:ui:common"))

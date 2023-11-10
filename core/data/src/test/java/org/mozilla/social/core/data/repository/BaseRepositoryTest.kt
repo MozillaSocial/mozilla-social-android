@@ -1,7 +1,6 @@
 package org.mozilla.social.core.data.repository
 
 import io.mockk.every
-import io.mockk.impl.annotations.SpyK
 import io.mockk.mockk
 import org.mozilla.social.core.data.utils.TransactionUtils
 import org.mozilla.social.core.database.SocialDatabase
@@ -15,16 +14,16 @@ import org.mozilla.social.core.database.dao.LocalTimelineStatusDao
 import org.mozilla.social.core.database.dao.PollsDao
 import org.mozilla.social.core.database.dao.RelationshipsDao
 import org.mozilla.social.core.database.dao.StatusDao
-import org.mozilla.social.core.network.AccountApi
-import org.mozilla.social.core.network.AppApi
-import org.mozilla.social.core.network.InstanceApi
-import org.mozilla.social.core.network.MediaApi
-import org.mozilla.social.core.network.OauthApi
-import org.mozilla.social.core.network.RecommendationApi
-import org.mozilla.social.core.network.ReportApi
-import org.mozilla.social.core.network.SearchApi
-import org.mozilla.social.core.network.StatusApi
-import org.mozilla.social.core.network.TimelineApi
+import org.mozilla.social.core.network.mastodon.AccountApi
+import org.mozilla.social.core.network.mastodon.AppApi
+import org.mozilla.social.core.network.mastodon.InstanceApi
+import org.mozilla.social.core.network.mastodon.MediaApi
+import org.mozilla.social.core.network.mastodon.OauthApi
+import org.mozilla.social.core.network.mozilla.RecommendationApi
+import org.mozilla.social.core.network.mastodon.ReportApi
+import org.mozilla.social.core.network.mastodon.SearchApi
+import org.mozilla.social.core.network.mastodon.StatusApi
+import org.mozilla.social.core.network.mastodon.TimelineApi
 import kotlin.test.BeforeTest
 
 open class BaseRepositoryTest {
@@ -34,7 +33,7 @@ open class BaseRepositoryTest {
     protected val instanceApi = mockk<InstanceApi>(relaxed = true)
     protected val mediaApi = mockk<MediaApi>(relaxed = true)
     protected val oauthApi = mockk<OauthApi>(relaxed = true)
-    protected val recommendationApi = mockk<RecommendationApi>(relaxed = true)
+    protected val recommendationApi = mockk<org.mozilla.social.core.network.mozilla.RecommendationApi>(relaxed = true)
     protected val reportApi = mockk<ReportApi>(relaxed = true)
     protected val searchApi = mockk<SearchApi>(relaxed = true)
     protected val statusApi = mockk<StatusApi>(relaxed = true)

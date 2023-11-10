@@ -3,7 +3,7 @@ package org.mozilla.social.core.data.repository
 import org.mozilla.social.core.data.repository.model.status.toExternalModel
 import org.mozilla.social.model.Account
 import org.mozilla.social.model.HashTag
-import org.mozilla.social.core.network.SearchApi
+import org.mozilla.social.core.network.mastodon.SearchApi
 
 class SearchRepository internal constructor(
     private val searchApi: SearchApi,

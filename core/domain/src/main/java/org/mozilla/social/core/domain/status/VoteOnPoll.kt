@@ -10,12 +10,12 @@ import org.mozilla.social.core.data.repository.model.status.toExternalModel
 import org.mozilla.social.core.database.SocialDatabase
 import org.mozilla.social.core.domain.R
 import org.mozilla.social.core.navigation.usecases.ShowSnackbar
-import org.mozilla.social.core.network.StatusApi
-import org.mozilla.social.core.network.model.request.NetworkPollVote
+import org.mozilla.social.core.network.mastodon.StatusApi
+import org.mozilla.social.core.network.mastodon.model.request.NetworkPollVote
 
 class VoteOnPoll(
     private val externalScope: CoroutineScope,
-    private val statusApi: StatusApi,
+    private val statusApi: org.mozilla.social.core.network.mastodon.StatusApi,
     private val socialDatabase: SocialDatabase,
     private val showSnackbar: ShowSnackbar,
     private val dispatcherIo: CoroutineDispatcher = Dispatchers.IO,
@@ -29,7 +29,7 @@ class VoteOnPoll(
             socialDatabase.pollDao().updateOwnVotes(pollId, pollChoices)
             val poll = statusApi.voteOnPoll(
                 pollId,
-                NetworkPollVote(pollChoices),
+                org.mozilla.social.core.network.mastodon.model.request.NetworkPollVote(pollChoices),
             ).toExternalModel()
             socialDatabase.pollDao().update(poll.toDatabaseModel())
         } catch (e: Exception) {

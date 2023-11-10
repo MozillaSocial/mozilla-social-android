@@ -10,7 +10,7 @@ import org.mozilla.social.core.data.repository.RecommendationRepository
 import org.mozilla.social.core.data.repository.SearchRepository
 import org.mozilla.social.core.data.repository.StatusRepository
 import org.mozilla.social.core.data.repository.TimelineRepository
-import org.mozilla.social.core.network.networkModule
+import org.mozilla.social.core.network.mastodon.mastodonNetworkModule
 
 fun repositoryModule(isDebug: Boolean) = module {
     single { AuthCredentialObserver(get(), get()) }
@@ -23,5 +23,6 @@ fun repositoryModule(isDebug: Boolean) = module {
     single { RecommendationRepository(get()) }
     single { AppRepository(get()) }
     single { InstanceRepository(get()) }
-    includes(networkModule(isDebug))
+    includes(org.mozilla.social.core.network.mozilla.mozillaNetworkModule(isDebug))
+    includes(mastodonNetworkModule(isDebug))
 }

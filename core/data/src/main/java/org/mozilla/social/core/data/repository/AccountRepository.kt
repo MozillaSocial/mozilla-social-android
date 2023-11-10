@@ -6,7 +6,7 @@ import org.mozilla.social.core.data.repository.model.followers.FollowersPagingWr
 import org.mozilla.social.core.data.repository.model.status.StatusPagingWrapper
 import org.mozilla.social.core.data.repository.model.status.toExternalModel
 import org.mozilla.social.core.database.SocialDatabase
-import org.mozilla.social.core.network.AccountApi
+import org.mozilla.social.core.network.mastodon.AccountApi
 import org.mozilla.social.model.Account
 import org.mozilla.social.model.Relationship
 import org.mozilla.social.model.Status

@@ -2,7 +2,7 @@ package org.mozilla.social.core.domain.status
 
 import kotlinx.coroutines.test.TestScope
 import org.mozilla.social.core.domain.BaseDomainTest
-import org.mozilla.social.core.network.model.NetworkPoll
+import org.mozilla.social.core.network.mastodon.model.NetworkPoll
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 

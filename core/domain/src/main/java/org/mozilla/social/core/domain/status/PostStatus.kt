@@ -11,18 +11,18 @@ import org.mozilla.social.core.data.repository.model.status.toExternalModel
 import org.mozilla.social.core.data.repository.model.status.toNetworkModel
 import org.mozilla.social.core.domain.R
 import org.mozilla.social.core.navigation.usecases.ShowSnackbar
-import org.mozilla.social.core.network.MediaApi
-import org.mozilla.social.core.network.StatusApi
-import org.mozilla.social.core.network.model.request.NetworkMediaUpdate
-import org.mozilla.social.core.network.model.request.NetworkStatusCreate
+import org.mozilla.social.core.network.mastodon.MediaApi
+import org.mozilla.social.core.network.mastodon.StatusApi
+import org.mozilla.social.core.network.mastodon.model.request.NetworkMediaUpdate
+import org.mozilla.social.core.network.mastodon.model.request.NetworkStatusCreate
 import org.mozilla.social.model.ImageState
 import org.mozilla.social.model.StatusVisibility
 import org.mozilla.social.model.request.PollCreate
 
 class PostStatus(
     private val externalScope: CoroutineScope,
-    private val statusApi: StatusApi,
-    private val mediaApi: MediaApi,
+    private val statusApi: org.mozilla.social.core.network.mastodon.StatusApi,
+    private val mediaApi: org.mozilla.social.core.network.mastodon.MediaApi,
     private val statusRepository: StatusRepository,
     private val timelineRepository: TimelineRepository,
     private val showSnackbar: ShowSnackbar,
@@ -44,7 +44,9 @@ class PostStatus(
                     async {
                         mediaApi.updateMedia(
                             imageState.attachmentId!!,
-                            NetworkMediaUpdate(imageState.description)
+                            org.mozilla.social.core.network.mastodon.model.request.NetworkMediaUpdate(
+                                imageState.description
+                            )
                         )
                     }
                 } else {
@@ -55,7 +57,7 @@ class PostStatus(
             }
 
             val status = statusApi.postStatus(
-                NetworkStatusCreate(
+                org.mozilla.social.core.network.mastodon.model.request.NetworkStatusCreate(
                     status = statusText,
                     mediaIds = if (imageStates.isEmpty()) {
                         null

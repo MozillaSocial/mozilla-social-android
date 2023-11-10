@@ -9,7 +9,7 @@ android {
 
 dependencies {
     implementation(project(":core:datastore"))
-    implementation(project(":core:network"))
+    implementation(project(":core:network:mozilla"))
     implementation(project(":core:model"))
     implementation(project(":core:data"))
     implementation(project(":core:designsystem"))

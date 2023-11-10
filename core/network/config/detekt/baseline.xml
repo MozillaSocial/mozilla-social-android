@@ -1,8 +1,0 @@
-<?xml version="1.0" ?>
-<SmellBaseline>
-  <ManuallySuppressedIssues></ManuallySuppressedIssues>
-  <CurrentIssues>
-    <ID>MagicNumber:NetworkModule.kt$30</ID>
-    <ID>MaxLineLength:NetworkHistory.kt$NetworkHistory$val</ID>
-  </CurrentIssues>
-</SmellBaseline>

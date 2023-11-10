@@ -1,12 +1,12 @@
 package org.mozilla.social.core.data.repository
 
 import org.mozilla.social.core.data.repository.model.recommendations.toExternalModel
-import org.mozilla.social.core.network.RecommendationApi
+import org.mozilla.social.core.network.mozilla.RecommendationApi
 import org.mozilla.social.model.Recommendation
 import java.util.Locale
 
 class RecommendationRepository(
-    private val recommendationApi: RecommendationApi
+    private val recommendationApi: org.mozilla.social.core.network.mozilla.RecommendationApi
 ) {
 
     suspend fun getRecommendations(): List<Recommendation> =

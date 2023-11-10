@@ -1,6 +1,6 @@
 package org.mozilla.social.core.data.repository
 
-import org.mozilla.social.core.network.OauthApi
+import org.mozilla.social.core.network.mastodon.OauthApi
 
 class OauthRepository(private val oauthApi: OauthApi) {
 
