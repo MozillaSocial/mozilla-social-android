@@ -4,9 +4,9 @@ option java_package = "org.mozilla.social.core.datastore";
 option java_multiple_files = true;
 
 message UserPreferences {
+  reserved 4, 5;
+  reserved "client_id", "client_secret";
   string access_token = 1;
   string account_id = 2;
   string domain = 3;
-  string client_id = 4;
-  string client_secret = 5;
 }

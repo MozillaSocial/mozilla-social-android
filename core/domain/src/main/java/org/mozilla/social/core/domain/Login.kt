@@ -4,13 +4,13 @@ import android.content.Context
 import android.content.Intent
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.net.toUri
-import kotlinx.coroutines.flow.first
 import okhttp3.HttpUrl
 import org.mozilla.social.core.analytics.Analytics
 import org.mozilla.social.core.data.repository.AccountRepository
 import org.mozilla.social.core.data.repository.AppRepository
 import org.mozilla.social.core.data.repository.OauthRepository
 import org.mozilla.social.core.datastore.UserPreferencesDatastore
+import org.mozilla.social.core.domain.Login.Companion.AUTH_SCHEME
 import org.mozilla.social.model.Account
 import timber.log.Timber
 
@@ -22,48 +22,34 @@ class Login(
     private val accountRepository: AccountRepository,
     private val userPreferencesDatastore: UserPreferencesDatastore,
     private val appRepository: AppRepository,
-    private val analytics: Analytics
+    private val analytics: Analytics,
+    private val openLoginCustomTab: OpenLoginCustomTab,
+    private val logout: Logout,
 ) {
+
+    private var clientId: String? = null
+    private var clientSecret: String? = null
 
     /**
      * When a  logging in by registering this client with the given domain
      */
     suspend operator fun invoke(context: Context, domain: String) {
-        userPreferencesDatastore.saveDomain(domain)
-
-        val application = appRepository.createApplication(
-            clientName = CLIENT_NAME,
-            redirectUris = REDIRECT_URI,
-            scopes = SCOPES,
-        )
-
-        userPreferencesDatastore.saveClientCredentials(
-            clientId = application.clientId!!,
-            clientSecret = application.clientSecret!!
-        )
-
-        openLoginCustomTab(
-            context = context, clientId = application.clientId!!, host = domain
-        )
-    }
-
-    private fun openLoginCustomTab(context: Context, clientId: String, host: String) {
-        CustomTabsIntent.Builder()
-            .build()
-            .launchUrl(
-                context,
-                HttpUrl.Builder()
-                    .scheme(HTTPS)
-                    .host(host)
-                    .addPathSegments(OAUTH_AUTHORIZE)
-                    .addQueryParameter(RESPONSE_TYPE_QUERY_PARAM, CODE)
-                    .addQueryParameter(REDIRECT_URI_QUERY_PARAM, AUTH_SCHEME)
-                    .addQueryParameter(SCOPE_QUERY_PARAM, READ_WRITE_PUSH)
-                    .addQueryParameter(CLIENT_ID_QUERY_PARAM, clientId)
-                    .build()
-                    .toString()
-                    .toUri()
+        try {
+            userPreferencesDatastore.saveDomain(domain)
+            val application = appRepository.createApplication(
+                clientName = CLIENT_NAME,
+                redirectUris = REDIRECT_URI,
+                scopes = SCOPES,
             )
+            clientId = application.clientId!!
+            clientSecret = application.clientSecret!!
+            openLoginCustomTab(
+                context = context, clientId = application.clientId!!, host = domain
+            )
+        } catch (exception: Exception) {
+            logout()
+            Timber.e(exception)
+        }
     }
 
     /**
@@ -80,25 +66,31 @@ class Login(
     }
 
     private suspend fun onUserCodeReceived(code: String) {
-        Timber.tag(TAG).d("user code received")
-        val token = oauthRepository.fetchOAuthToken(
-            clientId = userPreferencesDatastore.clientId.first()!!,
-            clientSecret = userPreferencesDatastore.clientSecret.first()!!,
-            redirectUri = REDIRECT_URI,
-            code = code,
-            grantType = AUTHORIZATION_CODE,
-        )
-
-        onOAuthTokenReceived(token)
+        try {
+            Timber.tag(TAG).d("user code received")
+            val token = oauthRepository.fetchOAuthToken(
+                clientId = clientId!!,
+                clientSecret = clientSecret!!,
+                redirectUri = REDIRECT_URI,
+                code = code,
+                grantType = AUTHORIZATION_CODE,
+            )
+            onOAuthTokenReceived(token)
+        } catch (exception: Exception) {
+            logout()
+            Timber.e(exception)
+        }
     }
 
     private suspend fun onOAuthTokenReceived(accessToken: String) {
         Timber.tag(TAG).d("access token received")
         userPreferencesDatastore.saveAccessToken(accessToken)
         val account: Account = accountRepository.verifyUserCredentials()
+        userPreferencesDatastore.saveAccountId(accountId = account.accountId)
         analytics.setMastodonAccountId(account.accountId)
         analytics.setMastodonAccountHandle(account.username)
-        userPreferencesDatastore.saveAccountId(accountId = account.accountId)
+        clientId = null
+        clientSecret = null
     }
 
     companion object {
@@ -116,5 +108,26 @@ class Login(
         const val SCOPE_QUERY_PARAM = "scope"
         const val READ_WRITE_PUSH = "read write push"
         const val TAG = "Login"
+    }
+}
+
+class OpenLoginCustomTab {
+    operator fun invoke(context: Context, clientId: String, host: String) {
+        CustomTabsIntent.Builder()
+            .build()
+            .launchUrl(
+                context,
+                HttpUrl.Builder()
+                    .scheme(Login.HTTPS)
+                    .host(host)
+                    .addPathSegments(Login.OAUTH_AUTHORIZE)
+                    .addQueryParameter(Login.RESPONSE_TYPE_QUERY_PARAM, Login.CODE)
+                    .addQueryParameter(Login.REDIRECT_URI_QUERY_PARAM, Login.AUTH_SCHEME)
+                    .addQueryParameter(Login.SCOPE_QUERY_PARAM, Login.READ_WRITE_PUSH)
+                    .addQueryParameter(Login.CLIENT_ID_QUERY_PARAM, clientId)
+                    .build()
+                    .toString()
+                    .toUri()
+            )
     }
 }
