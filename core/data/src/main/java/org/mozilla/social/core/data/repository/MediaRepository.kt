@@ -4,7 +4,7 @@ import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import org.mozilla.social.core.data.repository.model.status.toExternalModel
-import org.mozilla.social.core.network.MediaApi
+import org.mozilla.social.core.network.mastodon.MediaApi
 import org.mozilla.social.model.Attachment
 import java.io.File
 

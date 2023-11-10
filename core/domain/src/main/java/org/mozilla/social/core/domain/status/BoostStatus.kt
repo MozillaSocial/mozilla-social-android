@@ -11,11 +11,11 @@ import org.mozilla.social.core.data.repository.model.status.toExternalModel
 import org.mozilla.social.core.database.SocialDatabase
 import org.mozilla.social.core.domain.R
 import org.mozilla.social.core.navigation.usecases.ShowSnackbar
-import org.mozilla.social.core.network.StatusApi
+import org.mozilla.social.core.network.mastodon.StatusApi
 
 class BoostStatus(
     private val externalScope: CoroutineScope,
-    private val statusApi: StatusApi,
+    private val statusApi: org.mozilla.social.core.network.mastodon.StatusApi,
     private val socialDatabase: SocialDatabase,
     private val statusRepository: StatusRepository,
     private val showSnackbar: ShowSnackbar,

@@ -7,8 +7,8 @@ import kotlinx.coroutines.async
 import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.core.domain.R
 import org.mozilla.social.core.navigation.usecases.ShowSnackbar
-import org.mozilla.social.core.network.ReportApi
-import org.mozilla.social.core.network.model.request.NetworkReportCreate
+import org.mozilla.social.core.network.mastodon.ReportApi
+import org.mozilla.social.core.network.mastodon.model.request.NetworkReportCreate
 
 class Report(
     private val externalScope: CoroutineScope,

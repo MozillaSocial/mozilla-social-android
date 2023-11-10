@@ -8,7 +8,7 @@ import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.core.database.SocialDatabase
 import org.mozilla.social.core.domain.R
 import org.mozilla.social.core.navigation.usecases.ShowSnackbar
-import org.mozilla.social.core.network.AccountApi
+import org.mozilla.social.core.network.mastodon.AccountApi
 
 class BlockAccount(
     private val externalScope: CoroutineScope,

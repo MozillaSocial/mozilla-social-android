@@ -13,6 +13,7 @@ dependencies {
     implementation(project(":core:designsystem"))
     implementation(project(":core:common"))
     implementation(project(":core:network"))
+    implementation(project(":core:network:mastodon"))
     implementation(project(":core:model"))
     implementation(project(":core:analytics"))
     implementation(project(":core:navigation"))

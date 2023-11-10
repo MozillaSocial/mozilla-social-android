@@ -7,7 +7,7 @@ import org.mozilla.social.core.data.repository.model.context.toExternalModel
 import org.mozilla.social.core.data.repository.model.status.toDatabaseModel
 import org.mozilla.social.core.data.repository.model.status.toExternalModel
 import org.mozilla.social.core.database.SocialDatabase
-import org.mozilla.social.core.network.StatusApi
+import org.mozilla.social.core.network.mastodon.StatusApi
 import org.mozilla.social.model.Context
 import org.mozilla.social.model.Status
 
