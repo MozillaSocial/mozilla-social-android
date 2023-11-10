@@ -26,11 +26,14 @@ import org.koin.compose.koinInject
 import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.core.designsystem.component.MoSoSnackbarHostState
 import org.mozilla.social.core.designsystem.component.SnackbarType
+import org.mozilla.social.core.navigation.AuthNavigationDestination
+import org.mozilla.social.core.navigation.AuthNavigationDestination.ChooseServer.navigateToChooseServerScreen
+import org.mozilla.social.core.navigation.AuthNavigationDestination.Login.navigateToLoginScreen
 import org.mozilla.social.core.navigation.BottomBarNavigationDestination
 import org.mozilla.social.core.navigation.Event
 import org.mozilla.social.core.navigation.NavigationDestination
 import org.mozilla.social.core.navigation.NavigationDestination.EditAccount.navigateToEditAccount
-import org.mozilla.social.core.navigation.NavigationDestination.Login.navigateToLoginScreen
+import org.mozilla.social.core.navigation.NavigationDestination.Auth.navigateToAuthFlow
 import org.mozilla.social.core.navigation.NavigationDestination.Settings.navigateToSettings
 import org.mozilla.social.core.navigation.NavigationDestination.Tabs.navigateToTabs
 import org.mozilla.social.core.navigation.NavigationEventFlow
@@ -113,6 +116,10 @@ class AppState(
                     is Event.NavigateToSettingsDestination -> {
                         navigateToSettingsDestination(it.destination)
                     }
+
+                    is Event.NavigateToLoginDestination -> {
+                        navigateToAuthDestination(it.destination)
+                    }
                 }
             }
         }
@@ -180,9 +187,9 @@ class AppState(
                     mainNavController.navigateToAccount()
                 }
 
-                NavigationDestination.Login -> {
+                NavigationDestination.Auth -> {
                     clearBackstack()
-                    mainNavController.navigateToLoginScreen()
+                    mainNavController.navigateToAuthFlow()
                 }
 
                 NavigationDestination.EditAccount -> {
@@ -243,7 +250,18 @@ class AppState(
                 mainNavController.navigateToMainSettings()
             }
         }
+    }
 
+    private fun navigateToAuthDestination(destination: AuthNavigationDestination) {
+        when (destination) {
+            AuthNavigationDestination.Login -> {
+                mainNavController.navigateToLoginScreen()
+            }
+
+            AuthNavigationDestination.ChooseServer -> {
+                mainNavController.navigateToChooseServerScreen()
+            }
+        }
     }
 
     private fun navigateToBottomBarDestination(destination: BottomBarNavigationDestination) {

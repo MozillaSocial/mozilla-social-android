@@ -7,7 +7,7 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.junit.Test
 import org.mozilla.social.core.navigation.NavigationDestination.EditAccount.navigateToEditAccount
-import org.mozilla.social.core.navigation.NavigationDestination.Login.navigateToLoginScreen
+import org.mozilla.social.core.navigation.NavigationDestination.Auth.navigateToAuthFlow
 import org.mozilla.social.core.navigation.NavigationDestination.Tabs.navigateToTabs
 import org.mozilla.social.core.test.TestUtils
 
@@ -42,7 +42,7 @@ class NavigationDestinationTest {
 
     @Test
     fun navigateToAuth() {
-        navController.navigateToLoginScreen()
+        navController.navigateToAuthFlow()
 
         verify { navController.navigate("auth") }
     }

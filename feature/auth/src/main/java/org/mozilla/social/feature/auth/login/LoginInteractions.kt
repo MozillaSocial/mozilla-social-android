@@ -1,8 +1,8 @@
-package org.mozilla.social.feature.auth
+package org.mozilla.social.feature.auth.login
 
 import android.content.Context
 
-interface AuthInteractions {
+interface LoginInteractions {
     fun onScreenViewed() = Unit
     fun onSignInClicked(context: Context) = Unit
     fun onChooseServerClicked() = Unit

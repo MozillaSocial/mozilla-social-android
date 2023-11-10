@@ -1,8 +1,9 @@
-package org.mozilla.social.feature.auth
+package org.mozilla.social.feature.auth.login
 
 import android.content.res.Configuration
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -38,19 +39,20 @@ import org.mozilla.social.core.designsystem.component.MoSoSurface
 import org.mozilla.social.core.designsystem.font.MoSoFonts
 import org.mozilla.social.core.designsystem.theme.MoSoSpacing
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
+import org.mozilla.social.feature.auth.R
 
 @Composable
 internal fun LoginScreen(
-    viewModel: AuthViewModel = koinViewModel(),
+    viewModel: LoginViewModel = koinViewModel(),
 ) {
     val configuration = LocalConfiguration.current
     if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
         HorizontalLoginScreen(
-            authInteractions = viewModel,
+            loginInteractions = viewModel,
         )
     } else {
         VerticalLoginScreen(
-            authInteractions = viewModel,
+            loginInteractions = viewModel,
         )
     }
 
@@ -61,7 +63,7 @@ internal fun LoginScreen(
 
 @Composable
 private fun HorizontalLoginScreen(
-    authInteractions: AuthInteractions,
+    loginInteractions: LoginInteractions,
 ) {
     MoSoSurface(
         color = MoSoTheme.colors.layer2
@@ -84,7 +86,7 @@ private fun HorizontalLoginScreen(
             ) {
                 LoginBox(
                     modifier = Modifier.align(Alignment.Center),
-                    authInteractions = authInteractions,
+                    loginInteractions = loginInteractions,
                 )
             }
         }
@@ -93,7 +95,7 @@ private fun HorizontalLoginScreen(
 
 @Composable
 private fun VerticalLoginScreen(
-    authInteractions: AuthInteractions,
+    loginInteractions: LoginInteractions,
 ) {
     MoSoSurface(
         color = MoSoTheme.colors.layer2
@@ -116,7 +118,7 @@ private fun VerticalLoginScreen(
             Spacer(modifier = Modifier.weight(1f))
             LoginBox(
                 modifier = Modifier.weight(1f),
-                authInteractions = authInteractions,
+                loginInteractions = loginInteractions,
             )
         }
     }
@@ -152,7 +154,7 @@ private fun ImageBox(
 @Composable
 private fun LoginBox(
     modifier: Modifier = Modifier,
-    authInteractions: AuthInteractions,
+    loginInteractions: LoginInteractions,
 ) {
     val context = LocalContext.current
     Column(
@@ -182,7 +184,7 @@ private fun LoginBox(
         Spacer(modifier = Modifier.height(24.dp))
         MoSoButton(
             modifier = Modifier.fillMaxWidth(),
-            onClick = { authInteractions.onSignInClicked(context) }
+            onClick = { loginInteractions.onSignInClicked(context) }
         ) {
             Text(
                 text = stringResource(id = R.string.sign_in_button),
@@ -190,7 +192,9 @@ private fun LoginBox(
         }
         Spacer(modifier = Modifier.height(24.dp))
         Text(
-            modifier = Modifier.align(Alignment.CenterHorizontally),
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                .clickable { loginInteractions.onChooseServerClicked() },
             text = stringResource(id = R.string.choose_server_option),
             style = MoSoTheme.typography.labelSmallLink,
             textDecoration = TextDecoration.Underline,
@@ -204,7 +208,7 @@ private fun LoginBox(
 internal fun AuthVerticalScreenPreview() {
     MoSoTheme {
         VerticalLoginScreen(
-            authInteractions = object : AuthInteractions {},
+            loginInteractions = object : LoginInteractions {},
         )
     }
 }
@@ -214,7 +218,7 @@ internal fun AuthVerticalScreenPreview() {
 internal fun AuthHorizontalScreenPreview() {
     MoSoTheme {
         HorizontalLoginScreen(
-            authInteractions = object : AuthInteractions {},
+            loginInteractions = object : LoginInteractions {},
         )
     }
 }
