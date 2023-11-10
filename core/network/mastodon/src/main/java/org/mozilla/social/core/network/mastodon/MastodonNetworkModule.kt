@@ -17,8 +17,8 @@ fun mastodonNetworkModule(isDebug: Boolean) = module {
         named(AUTHORIZED_CLIENT)
     ) {
         OkHttpClient.Builder()
-            .readTimeout(30, TimeUnit.SECONDS)
-            .connectTimeout(30, TimeUnit.SECONDS)
+            .readTimeout(OKHTTP_TIMEOUT, TimeUnit.SECONDS)
+            .connectTimeout(OKHTTP_TIMEOUT, TimeUnit.SECONDS)
             .addNetworkInterceptor(HttpLoggingInterceptor().apply {
                 level = if (isDebug) {
                     HttpLoggingInterceptor.Level.BASIC
@@ -32,8 +32,8 @@ fun mastodonNetworkModule(isDebug: Boolean) = module {
 
     single(named(RECCS_CLIENT)) {
         OkHttpClient.Builder()
-            .readTimeout(30, TimeUnit.SECONDS)
-            .connectTimeout(30, TimeUnit.SECONDS)
+            .readTimeout(OKHTTP_TIMEOUT, TimeUnit.SECONDS)
+            .connectTimeout(OKHTTP_TIMEOUT, TimeUnit.SECONDS)
             .addNetworkInterceptor(HttpLoggingInterceptor().apply {
                 level = if (isDebug) {
                     HttpLoggingInterceptor.Level.BASIC
@@ -75,3 +75,4 @@ private var json: Json = Json { ignoreUnknownKeys = true }
 private const val AUTHORIZED_CLIENT = "authorizedClient"
 private const val RECCS_CLIENT = "reccsClient"
 private const val RECCS_SERVICE = "reccsService"
+private const val OKHTTP_TIMEOUT = 30L

@@ -7,7 +7,7 @@ class AuthCredentialInterceptor : Interceptor {
 
     var accessToken: String? = null
     var domain: String =
-        org.mozilla.social.core.network.mastodon.interceptors.AuthCredentialInterceptor.Companion.DEFAULT_HOST // only non-null if different domain
+        DEFAULT_HOST // only non-null if different domain
 
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()
