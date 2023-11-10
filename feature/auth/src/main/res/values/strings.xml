@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="login_button">Login</string>
-    <string name="title_text">Mozilla Social</string>
+    <string name="title_text">mozilla.social</string>
 
     <string name="beta_badge">Beta</string>
     <string name="intro_title">Get started</string>
