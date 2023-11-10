@@ -1,7 +1,6 @@
-package org.mozilla.social.core.network.model
+package org.mozilla.social.core.network.mozilla.model
 
 import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
 
 @Serializable
 data class NetworkRecommendations(

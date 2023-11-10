@@ -1,6 +1,6 @@
-package org.mozilla.social.core.network
+package org.mozilla.social.core.network.mozilla
 
-import org.mozilla.social.core.network.model.NetworkRecommendations
+import org.mozilla.social.core.network.mozilla.model.NetworkRecommendations
 import retrofit2.http.GET
 import retrofit2.http.Query
 

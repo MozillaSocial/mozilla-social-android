@@ -1,4 +1,4 @@
-package org.mozilla.social.core.network
+package org.mozilla.social.core.network.mozilla
 
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import kotlinx.serialization.json.Json

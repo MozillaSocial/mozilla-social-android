@@ -31,7 +31,7 @@ import org.mozilla.social.core.network.mastodon.AppApi
 import org.mozilla.social.core.network.mastodon.InstanceApi
 import org.mozilla.social.core.network.mastodon.MediaApi
 import org.mozilla.social.core.network.mastodon.OauthApi
-import org.mozilla.social.core.network.RecommendationApi
+import org.mozilla.social.core.network.mozilla.RecommendationApi
 import org.mozilla.social.core.network.mastodon.ReportApi
 import org.mozilla.social.core.network.mastodon.SearchApi
 import org.mozilla.social.core.network.mastodon.StatusApi
@@ -46,7 +46,7 @@ open class BaseDomainTest {
     protected val instanceApi = mockk<InstanceApi>(relaxed = true)
     protected val mediaApi = mockk<MediaApi>(relaxed = true)
     protected val oauthApi = mockk<OauthApi>(relaxed = true)
-    protected val recommendationApi = mockk<RecommendationApi>(relaxed = true)
+    protected val recommendationApi = mockk<org.mozilla.social.core.network.mozilla.RecommendationApi>(relaxed = true)
     protected val reportApi = mockk<ReportApi>(relaxed = true)
     protected val searchApi = mockk<SearchApi>(relaxed = true)
     protected val statusApi = mockk<StatusApi>(relaxed = true)
