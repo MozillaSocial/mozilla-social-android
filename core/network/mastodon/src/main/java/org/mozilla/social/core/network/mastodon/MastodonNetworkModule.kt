@@ -29,29 +29,6 @@ fun mastodonNetworkModule(isDebug: Boolean) = module {
             .addInterceptor(get<AuthCredentialInterceptor>())
             .build()
     }
-
-    single(named(RECCS_CLIENT)) {
-        OkHttpClient.Builder()
-            .readTimeout(OKHTTP_TIMEOUT, TimeUnit.SECONDS)
-            .connectTimeout(OKHTTP_TIMEOUT, TimeUnit.SECONDS)
-            .addNetworkInterceptor(HttpLoggingInterceptor().apply {
-                level = if (isDebug) {
-                    HttpLoggingInterceptor.Level.BASIC
-                } else {
-                    HttpLoggingInterceptor.Level.NONE
-                }
-            })
-            .build()
-    }
-    single(
-        named(RECCS_SERVICE)
-    ) {
-        Retrofit.Builder()
-            .baseUrl("https://mozilla.social/")
-            .client(get(qualifier = named(RECCS_CLIENT)))
-            .addConverterFactory(json.asConverterFactory(contentType = "application/json".toMediaType()))
-            .build()
-    }
     single {
         Retrofit.Builder()
             .baseUrl("https://mozilla.social/")
@@ -73,6 +50,4 @@ fun mastodonNetworkModule(isDebug: Boolean) = module {
 
 private var json: Json = Json { ignoreUnknownKeys = true }
 private const val AUTHORIZED_CLIENT = "authorizedClient"
-private const val RECCS_CLIENT = "reccsClient"
-private const val RECCS_SERVICE = "reccsService"
 private const val OKHTTP_TIMEOUT = 30L
