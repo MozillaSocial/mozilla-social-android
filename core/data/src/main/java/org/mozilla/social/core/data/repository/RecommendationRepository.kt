@@ -1,7 +1,7 @@
 package org.mozilla.social.core.data.repository
 
 import org.mozilla.social.core.data.repository.model.recommendations.toExternalModel
-import org.mozilla.social.core.network.mastodon.RecommendationApi
+import org.mozilla.social.core.network.mozilla.RecommendationApi
 import org.mozilla.social.model.Recommendation
 import java.util.Locale
 

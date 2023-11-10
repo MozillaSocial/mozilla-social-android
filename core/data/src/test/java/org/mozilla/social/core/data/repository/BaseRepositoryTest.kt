@@ -1,7 +1,6 @@
 package org.mozilla.social.core.data.repository
 
 import io.mockk.every
-import io.mockk.impl.annotations.SpyK
 import io.mockk.mockk
 import org.mozilla.social.core.data.utils.TransactionUtils
 import org.mozilla.social.core.database.SocialDatabase
@@ -20,7 +19,7 @@ import org.mozilla.social.core.network.mastodon.AppApi
 import org.mozilla.social.core.network.mastodon.InstanceApi
 import org.mozilla.social.core.network.mastodon.MediaApi
 import org.mozilla.social.core.network.mastodon.OauthApi
-import org.mozilla.social.core.network.mastodon.RecommendationApi
+import org.mozilla.social.core.network.mozilla.model.RecommendationApi
 import org.mozilla.social.core.network.mastodon.ReportApi
 import org.mozilla.social.core.network.mastodon.SearchApi
 import org.mozilla.social.core.network.mastodon.StatusApi
@@ -34,7 +33,7 @@ open class BaseRepositoryTest {
     protected val instanceApi = mockk<InstanceApi>(relaxed = true)
     protected val mediaApi = mockk<MediaApi>(relaxed = true)
     protected val oauthApi = mockk<OauthApi>(relaxed = true)
-    protected val recommendationApi = mockk<RecommendationApi>(relaxed = true)
+    protected val recommendationApi = mockk<org.mozilla.social.core.network.mozilla.model.RecommendationApi>(relaxed = true)
     protected val reportApi = mockk<ReportApi>(relaxed = true)
     protected val searchApi = mockk<SearchApi>(relaxed = true)
     protected val statusApi = mockk<StatusApi>(relaxed = true)

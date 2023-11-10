@@ -11,7 +11,7 @@ import org.mozilla.social.core.network.mastodon.interceptors.AuthCredentialInter
 import retrofit2.Retrofit
 import java.util.concurrent.TimeUnit
 
-fun networkModule(isDebug: Boolean) = module {
+fun mastodonNetworkModule(isDebug: Boolean) = module {
     single { AuthCredentialInterceptor() }
     single(
         named(AUTHORIZED_CLIENT)
@@ -68,7 +68,6 @@ fun networkModule(isDebug: Boolean) = module {
     single { get<Retrofit>().create(TimelineApi::class.java) }
     single { get<Retrofit>().create(InstanceApi::class.java) }
     single { get<Retrofit>().create(ReportApi::class.java) }
-    single { get<Retrofit>(named(RECCS_SERVICE)).create(RecommendationApi::class.java) }
     single { get<Retrofit>().create(AppApi::class.java) }
 }
 
