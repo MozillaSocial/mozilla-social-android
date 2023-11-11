@@ -10,10 +10,9 @@ android {
 
 dependencies {
     implementation(project(":core:datastore"))
-    implementation(project(":core:network:mozilla"))
     implementation(project(":core:model"))
     implementation(project(":core:domain"))
-    implementation(project(":core:data"))
+    implementation(project(":core:repository:mastodon"))
     implementation(project(":core:designsystem"))
     implementation(project(":core:ui:postcard"))
     implementation(project(":core:common"))

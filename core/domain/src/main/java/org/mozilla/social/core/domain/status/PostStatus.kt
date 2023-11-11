@@ -5,10 +5,10 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import org.mozilla.social.common.utils.StringFactory
-import org.mozilla.social.core.data.repository.StatusRepository
-import org.mozilla.social.core.data.repository.TimelineRepository
-import org.mozilla.social.core.data.repository.model.status.toExternalModel
-import org.mozilla.social.core.data.repository.model.status.toNetworkModel
+import org.mozilla.social.core.repository.mastodon.StatusRepository
+import org.mozilla.social.core.repository.mastodon.TimelineRepository
+import org.mozilla.social.core.repository.mastodon.model.status.toExternalModel
+import org.mozilla.social.core.repository.mastodon.model.status.toNetworkModel
 import org.mozilla.social.core.domain.R
 import org.mozilla.social.core.navigation.usecases.ShowSnackbar
 import org.mozilla.social.core.network.mastodon.MediaApi

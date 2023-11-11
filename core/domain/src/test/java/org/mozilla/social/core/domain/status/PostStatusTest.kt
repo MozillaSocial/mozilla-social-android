@@ -2,8 +2,8 @@ package org.mozilla.social.core.domain.status
 
 import io.mockk.mockk
 import kotlinx.coroutines.test.TestScope
-import org.mozilla.social.core.data.repository.StatusRepository
-import org.mozilla.social.core.data.repository.TimelineRepository
+import org.mozilla.social.core.repository.mastodon.StatusRepository
+import org.mozilla.social.core.repository.mastodon.TimelineRepository
 import org.mozilla.social.core.domain.BaseDomainTest
 import org.mozilla.social.core.test.fakes.NetworkModels
 import org.mozilla.social.model.StatusVisibility

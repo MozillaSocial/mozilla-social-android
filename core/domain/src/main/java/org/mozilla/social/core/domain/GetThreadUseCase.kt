@@ -3,7 +3,7 @@ package org.mozilla.social.core.domain
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
-import org.mozilla.social.core.data.repository.StatusRepository
+import org.mozilla.social.core.repository.mastodon.StatusRepository
 import org.mozilla.social.model.Status
 
 class GetThreadUseCase(

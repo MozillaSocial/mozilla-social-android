@@ -19,11 +19,11 @@ import org.mozilla.social.common.utils.FileType
 import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.core.analytics.Analytics
 import org.mozilla.social.core.analytics.AnalyticsIdentifiers
-import org.mozilla.social.core.data.repository.AccountRepository
-import org.mozilla.social.core.data.repository.MediaRepository
-import org.mozilla.social.core.data.repository.SearchRepository
-import org.mozilla.social.core.data.repository.StatusRepository
-import org.mozilla.social.core.data.repository.TimelineRepository
+import org.mozilla.social.core.repository.mastodon.AccountRepository
+import org.mozilla.social.core.repository.mastodon.MediaRepository
+import org.mozilla.social.core.repository.mastodon.SearchRepository
+import org.mozilla.social.core.repository.mastodon.StatusRepository
+import org.mozilla.social.core.repository.mastodon.TimelineRepository
 import org.mozilla.social.core.domain.GetLoggedInUserAccountId
 import org.mozilla.social.core.domain.status.PostStatus
 import org.mozilla.social.core.navigation.usecases.PopNavBackstack

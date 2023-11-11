@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import org.mozilla.social.common.loadResource
-import org.mozilla.social.core.data.repository.AccountRepository
+import org.mozilla.social.core.repository.mastodon.AccountRepository
 import org.mozilla.social.core.domain.GetLoggedInUserAccountId
 import org.mozilla.social.core.domain.Logout
 import org.mozilla.social.model.Account
