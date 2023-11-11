@@ -1,15 +1,35 @@
-package org.mozilla.social.core.repository.mastodon.mappers
+package org.mozilla.social.core.repository.mastodon.model.status
+
+import org.mozilla.social.core.network.mastodon.model.NetworkStatusVisibility
+import org.mozilla.social.core.network.mastodon.model.request.NetworkPollCreate
+import org.mozilla.social.model.StatusVisibility
+import org.mozilla.social.model.request.PollCreate
+
 
 import org.mozilla.social.core.network.mastodon.model.request.NetworkMediaUpdate
 import org.mozilla.social.core.network.mastodon.model.request.NetworkPollVote
 import org.mozilla.social.core.network.mastodon.model.request.NetworkReportCreate
 import org.mozilla.social.core.network.mastodon.model.request.NetworkStatusCreate
-import org.mozilla.social.core.repository.mastodon.model.MediaUpdate
-import org.mozilla.social.core.repository.mastodon.model.PollVote
-import org.mozilla.social.core.repository.mastodon.model.status.toNetworkModel
+import org.mozilla.social.model.MediaUpdate
+import org.mozilla.social.model.PollVote
 import org.mozilla.social.model.request.ReportCreate
 import org.mozilla.social.model.request.StatusCreate
 
+internal fun StatusVisibility.toNetworkModel(): NetworkStatusVisibility =
+    when(this) {
+        StatusVisibility.Direct -> NetworkStatusVisibility.Direct
+        StatusVisibility.Private -> NetworkStatusVisibility.Private
+        StatusVisibility.Public -> NetworkStatusVisibility.Public
+        StatusVisibility.Unlisted -> NetworkStatusVisibility.Unlisted
+    }
+
+internal fun PollCreate.toNetworkModel(): NetworkPollCreate =
+    NetworkPollCreate(
+        options = options,
+        expiresInSec = expiresInSec,
+        allowMultipleChoices = allowMultipleChoices,
+        hideTotals = hideTotals
+    )
 internal fun PollVote.toNetworkModel(): NetworkPollVote = NetworkPollVote(choices = choices)
 
 internal fun StatusCreate.toNetworkModel(): NetworkStatusCreate = NetworkStatusCreate(

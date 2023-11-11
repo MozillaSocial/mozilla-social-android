@@ -7,11 +7,9 @@ import kotlinx.coroutines.async
 import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.core.repository.mastodon.StatusRepository
 import org.mozilla.social.core.repository.mastodon.TimelineRepository
-import org.mozilla.social.core.repository.mastodon.model.status.toExternalModel
-import org.mozilla.social.core.repository.mastodon.model.status.toNetworkModel
 import org.mozilla.social.core.navigation.usecases.ShowSnackbar
 import org.mozilla.social.core.repository.mastodon.MediaRepository
-import org.mozilla.social.core.repository.mastodon.model.MediaUpdate
+import org.mozilla.social.model.MediaUpdate
 import org.mozilla.social.core.usecase.mastodon.R
 import org.mozilla.social.model.ImageState
 import org.mozilla.social.model.StatusVisibility

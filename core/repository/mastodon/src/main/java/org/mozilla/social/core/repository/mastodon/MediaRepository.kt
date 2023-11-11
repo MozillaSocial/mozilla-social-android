@@ -5,8 +5,8 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import org.mozilla.social.core.repository.mastodon.model.status.toExternalModel
 import org.mozilla.social.core.network.mastodon.MediaApi
-import org.mozilla.social.core.repository.mastodon.mappers.toNetworkModel
-import org.mozilla.social.core.repository.mastodon.model.MediaUpdate
+import org.mozilla.social.core.repository.mastodon.model.status.toNetworkModel
+import org.mozilla.social.model.MediaUpdate
 import org.mozilla.social.model.Attachment
 import java.io.File
 

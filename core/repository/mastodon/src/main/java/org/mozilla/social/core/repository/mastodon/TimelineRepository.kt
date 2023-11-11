@@ -10,7 +10,7 @@ import org.mozilla.social.core.database.model.statusCollections.FederatedTimelin
 import org.mozilla.social.core.database.model.statusCollections.HomeTimelineStatus
 import org.mozilla.social.core.database.model.statusCollections.LocalTimelineStatus
 import org.mozilla.social.core.network.mastodon.TimelineApi
-import org.mozilla.social.core.repository.mastodon.model.status.StatusPagingWrapper
+import org.mozilla.social.model.paging.StatusPagingWrapper
 import org.mozilla.social.model.Status
 import org.mozilla.social.model.StatusVisibility
 import retrofit2.HttpException
