@@ -8,7 +8,8 @@ android {
 }
 
 dependencies {
-    implementation(project(":core:data"))
+    implementation(project(":core:repository:mastodon"))
+    implementation(project(":core:repository:mozilla"))
     implementation(project(":core:designsystem"))
     implementation(project(":core:ui:common"))
     implementation(project(":core:common"))

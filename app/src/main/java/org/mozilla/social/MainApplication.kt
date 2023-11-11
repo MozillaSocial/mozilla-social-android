@@ -16,11 +16,12 @@ import org.koin.dsl.module
 import org.mozilla.social.common.appscope.appScopeModule
 import org.mozilla.social.core.analytics.Analytics
 import org.mozilla.social.core.analytics.analyticsModule
-import org.mozilla.social.core.data.AuthCredentialObserver
-import org.mozilla.social.core.data.repositoryModule
 import org.mozilla.social.core.database.databaseModule
 import org.mozilla.social.core.datastore.dataStoreModule
 import org.mozilla.social.core.navigation.navigationModule
+import org.mozilla.social.core.repository.mastodon.AuthCredentialObserver
+import org.mozilla.social.core.repository.mastodon.mastodonRepositoryModule
+import org.mozilla.social.core.repository.mozilla.mozillaRepositoryModule
 import org.mozilla.social.core.ui.postcard.postCardModule
 import org.mozilla.social.feature.auth.authModule
 import org.mozilla.social.feature.settings.settingsModule
@@ -77,7 +78,8 @@ val appModules = module {
         mainModule,
         feedModule,
         searchModule,
-        repositoryModule(BuildConfig.DEBUG),
+        mastodonRepositoryModule(BuildConfig.DEBUG),
+        mozillaRepositoryModule(BuildConfig.DEBUG),
         newPostModule,
         settingsModule,
         accountModule,

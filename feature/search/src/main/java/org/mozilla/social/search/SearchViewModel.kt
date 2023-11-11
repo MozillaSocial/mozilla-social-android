@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-import org.mozilla.social.core.data.repository.TimelineRepository
+import org.mozilla.social.core.repository.mastodon.TimelineRepository
 import org.mozilla.social.model.Status
 
 class SearchViewModel(

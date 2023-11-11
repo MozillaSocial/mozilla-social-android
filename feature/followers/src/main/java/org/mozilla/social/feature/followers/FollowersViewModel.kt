@@ -9,7 +9,7 @@ import androidx.paging.map
 import kotlinx.coroutines.flow.map
 import org.mozilla.social.core.analytics.Analytics
 import org.mozilla.social.core.analytics.AnalyticsIdentifiers
-import org.mozilla.social.core.data.repository.AccountRepository
+import org.mozilla.social.core.repository.mastodon.AccountRepository
 import org.mozilla.social.core.navigation.NavigationDestination
 import org.mozilla.social.core.navigation.usecases.NavigateTo
 import org.mozilla.social.core.ui.common.account.quickview.toQuickViewUiState
