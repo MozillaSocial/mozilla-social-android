@@ -7,7 +7,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import okhttp3.HttpUrl.Companion.toHttpUrl
 import org.mozilla.social.core.domain.Login
 
 class ChooseServerViewModel(
