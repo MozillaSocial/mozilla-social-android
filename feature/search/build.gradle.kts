@@ -11,7 +11,6 @@ dependencies {
     implementation(project(":core:datastore"))
     implementation(project(":core:model"))
     implementation(project(":core:repository:mastodon"))
-    implementation(project(":core:repository:mozilla"))
     implementation(project(":core:designsystem"))
     implementation(project(":core:ui:common"))
     implementation(project(":core:navigation"))

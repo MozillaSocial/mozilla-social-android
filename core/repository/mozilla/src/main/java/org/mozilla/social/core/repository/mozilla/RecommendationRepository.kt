@@ -6,7 +6,7 @@ import org.mozilla.social.model.Recommendation
 import java.util.Locale
 
 class RecommendationRepository(
-    private val recommendationApi: org.mozilla.social.core.network.mozilla.RecommendationApi
+    private val recommendationApi: RecommendationApi
 ) {
 
     suspend fun getRecommendations(): List<Recommendation> =

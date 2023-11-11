@@ -14,7 +14,6 @@ dependencies {
     implementation(project(":core:domain"))
     implementation(project(":core:model"))
     implementation(project(":core:repository:mastodon"))
-    implementation(project(":core:repository:mozilla"))
     implementation(project(":core:ui:common"))
     implementation(project(":core:navigation"))
     implementation(project(":core:analytics"))
