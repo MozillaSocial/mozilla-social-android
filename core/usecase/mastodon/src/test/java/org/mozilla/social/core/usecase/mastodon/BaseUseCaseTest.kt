@@ -34,7 +34,6 @@ import org.mozilla.social.core.repository.mastodon.ReportRepository
 import org.mozilla.social.core.repository.mastodon.SearchRepository
 import org.mozilla.social.core.repository.mastodon.StatusRepository
 import org.mozilla.social.core.repository.mastodon.TimelineRepository
-import org.mozilla.social.core.repository.mozilla.RecommendationRepository
 import org.mozilla.social.core.usecase.mastodon.utils.TransactionUtils
 import kotlin.test.BeforeTest
 import kotlin.test.fail
@@ -46,7 +45,6 @@ open class BaseUseCaseTest {
     protected val instanceRepository = mockk<InstanceRepository>(relaxed = true)
     protected val mediaRepository = mockk<MediaRepository>(relaxed = true)
     protected val oauthRepository = mockk<OauthRepository>(relaxed = true)
-    protected val recommendationRepository = mockk<RecommendationRepository>(relaxed = true)
     protected val reportRepository = mockk<ReportRepository>(relaxed = true)
     protected val searchRepository = mockk<SearchRepository>(relaxed = true)
     protected val statusRepository = mockk<StatusRepository>(relaxed = true)
