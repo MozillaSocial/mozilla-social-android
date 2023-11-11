@@ -13,7 +13,7 @@ import org.mozilla.social.core.repository.mastodon.StatusRepository
 import org.mozilla.social.core.database.SocialDatabase
 import org.mozilla.social.core.database.model.statusCollections.AccountTimelineStatus
 import org.mozilla.social.core.database.model.statusCollections.AccountTimelineStatusWrapper
-import org.mozilla.social.core.domain.remotemediators.getInReplyToAccountNames
+import org.mozilla.social.core.usecase.mastodon.remotemediators.getInReplyToAccountNames
 import timber.log.Timber
 
 @OptIn(ExperimentalPagingApi::class)

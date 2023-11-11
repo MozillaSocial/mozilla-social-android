@@ -9,10 +9,10 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.mozilla.social.common.Resource
 import org.mozilla.social.common.updateData
-import org.mozilla.social.core.repository.mastodon.AccountRepository
-import org.mozilla.social.core.domain.account.UpdateMyAccount
-import org.mozilla.social.core.domain.GetLoggedInUserAccountId
 import org.mozilla.social.core.navigation.usecases.PopNavBackstack
+import org.mozilla.social.core.repository.mastodon.AccountRepository
+import org.mozilla.social.core.usecase.mastodon.account.GetLoggedInUserAccountId
+import org.mozilla.social.core.usecase.mastodon.account.UpdateMyAccount
 import timber.log.Timber
 import java.io.File
 

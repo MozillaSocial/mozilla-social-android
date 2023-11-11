@@ -23,11 +23,10 @@ import org.mozilla.social.core.repository.mastodon.AccountRepository
 import org.mozilla.social.core.repository.mastodon.MediaRepository
 import org.mozilla.social.core.repository.mastodon.SearchRepository
 import org.mozilla.social.core.repository.mastodon.StatusRepository
-import org.mozilla.social.core.repository.mastodon.TimelineRepository
-import org.mozilla.social.core.domain.GetLoggedInUserAccountId
-import org.mozilla.social.core.domain.status.PostStatus
+import org.mozilla.social.core.usecase.mastodon.account.GetLoggedInUserAccountId
 import org.mozilla.social.core.navigation.usecases.PopNavBackstack
 import org.mozilla.social.core.navigation.usecases.ShowSnackbar
+import org.mozilla.social.core.usecase.mastodon.status.PostStatus
 import org.mozilla.social.feature.post.R
 import org.mozilla.social.model.ImageState
 import org.mozilla.social.model.StatusVisibility

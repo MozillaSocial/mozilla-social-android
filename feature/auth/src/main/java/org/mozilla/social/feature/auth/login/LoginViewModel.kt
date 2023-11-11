@@ -6,9 +6,9 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import org.mozilla.social.core.analytics.Analytics
 import org.mozilla.social.core.analytics.AnalyticsIdentifiers
-import org.mozilla.social.core.domain.Login
 import org.mozilla.social.core.navigation.AuthNavigationDestination
 import org.mozilla.social.core.navigation.usecases.NavigateTo
+import org.mozilla.social.core.usecase.mastodon.auth.Login
 import org.mozilla.social.feature.auth.BuildConfig
 
 class LoginViewModel(

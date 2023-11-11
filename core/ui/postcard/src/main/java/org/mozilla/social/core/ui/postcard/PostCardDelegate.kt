@@ -2,17 +2,17 @@ package org.mozilla.social.core.ui.postcard
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import org.mozilla.social.core.domain.account.BlockAccount
-import org.mozilla.social.core.domain.account.MuteAccount
-import org.mozilla.social.core.domain.status.BoostStatus
-import org.mozilla.social.core.domain.status.DeleteStatus
-import org.mozilla.social.core.domain.status.FavoriteStatus
-import org.mozilla.social.core.domain.status.UndoBoostStatus
-import org.mozilla.social.core.domain.status.UndoFavoriteStatus
-import org.mozilla.social.core.domain.status.VoteOnPoll
+import org.mozilla.social.core.usecase.mastodon.status.BoostStatus
 import org.mozilla.social.core.navigation.NavigationDestination
 import org.mozilla.social.core.navigation.usecases.NavigateTo
 import org.mozilla.social.core.navigation.usecases.OpenLink
+import org.mozilla.social.core.usecase.mastodon.account.BlockAccount
+import org.mozilla.social.core.usecase.mastodon.account.MuteAccount
+import org.mozilla.social.core.usecase.mastodon.status.DeleteStatus
+import org.mozilla.social.core.usecase.mastodon.status.FavoriteStatus
+import org.mozilla.social.core.usecase.mastodon.status.UndoBoostStatus
+import org.mozilla.social.core.usecase.mastodon.status.UndoFavoriteStatus
+import org.mozilla.social.core.usecase.mastodon.status.VoteOnPoll
 import timber.log.Timber
 
 class PostCardDelegate(

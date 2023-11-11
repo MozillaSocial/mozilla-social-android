@@ -13,7 +13,7 @@ dependencies {
     implementation(project(":core:ui:common"))
     implementation(project(":core:repository:mastodon"))
     implementation(project(":core:common"))
-    implementation(project(":core:domain"))
+    implementation(project(":core:usecase:mastodon"))
     implementation(project(":core:navigation"))
     implementation(project(":core:analytics"))
 
