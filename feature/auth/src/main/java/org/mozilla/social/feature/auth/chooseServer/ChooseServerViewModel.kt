@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import org.mozilla.social.core.domain.Login
+import org.mozilla.social.core.usecase.mastodon.auth.Login
 
 class ChooseServerViewModel(
     private val login: Login,
