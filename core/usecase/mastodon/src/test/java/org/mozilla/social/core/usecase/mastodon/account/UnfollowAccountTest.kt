@@ -5,12 +5,12 @@ import io.mockk.coVerify
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
 import org.mozilla.social.core.database.model.statusCollections.HomeTimelineStatus
-import org.mozilla.social.core.usecase.mastodon.BaseDomainTest
+import org.mozilla.social.core.usecase.mastodon.BaseUseCaseTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertNotNull
 
-class UnfollowAccountTest : BaseDomainTest() {
+class UnfollowAccountTest : BaseUseCaseTest() {
 
     private lateinit var subject: UnfollowAccount
 
@@ -19,7 +19,7 @@ class UnfollowAccountTest : BaseDomainTest() {
         subject = UnfollowAccount(
             externalScope = TestScope(testDispatcher),
             showSnackbar = showSnackbar,
-            accountApi = accountApi,
+            accountRepository = accountRepository,
             socialDatabase = socialDatabase,
             dispatcherIo = testDispatcher,
         )
@@ -40,7 +40,7 @@ class UnfollowAccountTest : BaseDomainTest() {
             homeTimelineDao.removePostsFromAccount(accountId)
             accountsDao.updateFollowingCount(loggedInId, -1)
             relationshipsDao.updateFollowing(accountId, false)
-            accountApi.unfollowAccount(accountId)
+            accountRepository.unfollowAccount(accountId)
         }
     }
 
@@ -62,7 +62,7 @@ class UnfollowAccountTest : BaseDomainTest() {
 
         coEvery { homeTimelineDao.getPostsFromAccount(accountId) } returns homeTimelinePosts
 
-        coEvery { accountApi.unfollowAccount(accountId) } throws Exception()
+        coEvery { accountRepository.unfollowAccount(accountId) } throws Exception()
 
         var exception: Exception? = null
 
@@ -105,7 +105,7 @@ class UnfollowAccountTest : BaseDomainTest() {
                 )
             },
             verifyBlock = {
-                accountApi.unfollowAccount(accountId)
+                accountRepository.unfollowAccount(accountId)
             },
         )
     }

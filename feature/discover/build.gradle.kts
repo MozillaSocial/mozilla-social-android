@@ -8,8 +8,7 @@ android {
 }
 
 dependencies {
-    implementation(project(":core:repository:mastodon"))
-    implementation(project(":core:repository:mozilla"))
+    implementation(project(":core:usecase:mozilla"))
     implementation(project(":core:designsystem"))
     implementation(project(":core:ui:common"))
     implementation(project(":core:common"))
@@ -17,11 +16,10 @@ dependencies {
     implementation(project(":core:model"))
     implementation(project(":core:analytics"))
 
-    implementation(libs.androidx.navigation.compose)
-    implementation(libs.koin.core)
-    implementation(libs.koin.androidx.compose)
-    implementation(libs.jakewharton.timber)
-
-    implementation(libs.coil)
     implementation(libs.androidx.browser)
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.coil)
+    implementation(libs.jakewharton.timber)
+    implementation(libs.koin.androidx.compose)
+    implementation(libs.koin.core)
 }

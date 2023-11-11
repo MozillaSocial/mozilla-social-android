@@ -1,31 +1,25 @@
 package org.mozilla.social.core.usecase.mastodon.status
 
-import io.mockk.mockk
 import kotlinx.coroutines.test.TestScope
-import org.mozilla.social.core.repository.mastodon.StatusRepository
-import org.mozilla.social.core.repository.mastodon.TimelineRepository
-import org.mozilla.social.core.usecase.mastodon.BaseDomainTest
-import org.mozilla.social.core.test.fakes.NetworkModels
+import org.mozilla.social.core.usecase.mastodon.BaseUseCaseTest
+import org.mozilla.social.core.test.fakes.Models
 import org.mozilla.social.model.StatusVisibility
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 
-class PostStatusTest : BaseDomainTest() {
+class PostStatusTest : BaseUseCaseTest() {
 
-    private val statusRepository = mockk<StatusRepository>(relaxed = true)
-    private val timelineRepository = mockk<TimelineRepository>(relaxed = true)
 
     private lateinit var subject: PostStatus
 
-    private val networkStatus = NetworkModels.networkStatus
+    private val networkStatus = Models.status
 
     @BeforeTest
     fun setup() {
         subject = PostStatus(
             externalScope = TestScope(testDispatcher),
             showSnackbar = showSnackbar,
-            statusApi = statusApi,
-            mediaApi = mediaApi,
+            mediaApi = mediaRepository,
             statusRepository = statusRepository,
             timelineRepository = timelineRepository,
             dispatcherIo = testDispatcher,
@@ -36,7 +30,7 @@ class PostStatusTest : BaseDomainTest() {
     fun testCancelledScope() {
         testOuterScopeCancelled(
             delayedCallBlock = {
-                statusApi.postStatus(any())
+                statusRepository.postStatus(any())
             },
             delayedCallBlockReturnValue = networkStatus,
             subjectCallBlock = {
@@ -59,7 +53,7 @@ class PostStatusTest : BaseDomainTest() {
     fun testCancelledScopeWithError() {
         testOuterScopeCancelledAndInnerException(
             delayedCallBlock = {
-                statusApi.postStatus(any())
+                statusRepository.postStatus(any())
             },
             subjectCallBlock = {
                 subject(

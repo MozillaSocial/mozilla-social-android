@@ -7,13 +7,13 @@ import kotlinx.coroutines.async
 import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.core.database.SocialDatabase
 import org.mozilla.social.core.navigation.usecases.ShowSnackbar
-import org.mozilla.social.core.network.mastodon.AccountApi
+import org.mozilla.social.core.repository.mastodon.AccountRepository
 import org.mozilla.social.core.usecase.mastodon.R
 
 class UnblockAccount(
     private val externalScope: CoroutineScope,
     private val showSnackbar: ShowSnackbar,
-    private val accountApi: AccountApi,
+    private val accountRepository: AccountRepository,
     private val socialDatabase: SocialDatabase,
     private val dispatcherIo: CoroutineDispatcher = Dispatchers.IO,
 ) {
@@ -26,7 +26,7 @@ class UnblockAccount(
     ) = externalScope.async(dispatcherIo) {
         try {
             socialDatabase.relationshipsDao().updateBlocked(accountId, false)
-            accountApi.unblockAccount(accountId)
+            accountRepository.unblockAccount(accountId)
         } catch (e: Exception) {
             socialDatabase.relationshipsDao().updateBlocked(accountId, true)
             showSnackbar(

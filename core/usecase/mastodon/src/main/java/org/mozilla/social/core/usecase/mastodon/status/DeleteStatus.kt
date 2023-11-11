@@ -8,11 +8,12 @@ import kotlinx.coroutines.async
 import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.core.database.SocialDatabase
 import org.mozilla.social.core.navigation.usecases.ShowSnackbar
+import org.mozilla.social.core.repository.mastodon.StatusRepository
 import org.mozilla.social.core.usecase.mastodon.R
 
 class DeleteStatus(
     private val externalScope: CoroutineScope,
-    private val statusApi: org.mozilla.social.core.network.mastodon.StatusApi,
+    private val statusRepository: StatusRepository,
     private val socialDatabase: SocialDatabase,
     private val showSnackbar: ShowSnackbar,
     private val dispatcherIo: CoroutineDispatcher = Dispatchers.IO,
@@ -23,7 +24,7 @@ class DeleteStatus(
     ) = externalScope.async(dispatcherIo) {
         try {
             socialDatabase.statusDao().updateIsBeingDeleted(statusId, true)
-            statusApi.deleteStatus(statusId)
+            statusRepository.deleteStatus(statusId)
             socialDatabase.withTransaction {
                 socialDatabase.homeTimelineDao().deletePost(statusId)
                 socialDatabase.localTimelineDao().deletePost(statusId)

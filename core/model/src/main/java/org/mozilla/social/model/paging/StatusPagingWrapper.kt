@@ -1,4 +1,4 @@
-package org.mozilla.social.core.repository.mastodon.model.status
+package org.mozilla.social.model.paging
 
 import org.mozilla.social.common.MastodonPagingLink
 import org.mozilla.social.model.Status

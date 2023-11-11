@@ -14,7 +14,6 @@ import org.mozilla.social.core.usecase.mastodon.R
 
 class FavoriteStatus(
     private val externalScope: CoroutineScope,
-    private val statusApi: org.mozilla.social.core.network.mastodon.StatusApi,
     private val socialDatabase: SocialDatabase,
     private val statusRepository: StatusRepository,
     private val showSnackbar: ShowSnackbar,
@@ -29,7 +28,7 @@ class FavoriteStatus(
                 socialDatabase.statusDao().updateFavoriteCount(statusId, 1)
                 socialDatabase.statusDao().updateFavorited(statusId, true)
             }
-            val status = statusApi.favoriteStatus(statusId).toExternalModel()
+            val status = statusRepository.favoriteStatus(statusId)
             statusRepository.saveStatusToDatabase(status)
         } catch (e: Exception) {
             socialDatabase.withTransaction {

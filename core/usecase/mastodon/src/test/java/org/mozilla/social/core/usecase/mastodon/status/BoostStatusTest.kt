@@ -1,27 +1,22 @@
 package org.mozilla.social.core.usecase.mastodon.status
 
-import io.mockk.mockk
 import kotlinx.coroutines.test.TestScope
-import org.mozilla.social.core.repository.mastodon.StatusRepository
-import org.mozilla.social.core.usecase.mastodon.BaseDomainTest
-import org.mozilla.social.core.test.fakes.NetworkModels
+import org.mozilla.social.core.usecase.mastodon.BaseUseCaseTest
+import org.mozilla.social.core.test.fakes.Models
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 
-class BoostStatusTest : BaseDomainTest() {
-
-    private val statusRepository = mockk<StatusRepository>(relaxed = true)
+class BoostStatusTest : BaseUseCaseTest() {
 
     private lateinit var subject: BoostStatus
 
-    private val networkStatus = NetworkModels.networkStatus
+    private val networkStatus = Models.status
 
     @BeforeTest
     fun setup() {
         subject = BoostStatus(
             externalScope = TestScope(testDispatcher),
             showSnackbar = showSnackbar,
-            statusApi = statusApi,
             statusRepository = statusRepository,
             socialDatabase = socialDatabase,
             dispatcherIo = testDispatcher,
@@ -32,7 +27,7 @@ class BoostStatusTest : BaseDomainTest() {
     fun testCancelledScope() {
         testOuterScopeCancelled(
             delayedCallBlock = {
-                statusApi.boostStatus(any())
+                statusRepository.boostStatus(any())
             },
             delayedCallBlockReturnValue = networkStatus,
             subjectCallBlock = {
@@ -48,7 +43,7 @@ class BoostStatusTest : BaseDomainTest() {
     fun testCancelledScopeWithError() {
         testOuterScopeCancelledAndInnerException(
             delayedCallBlock = {
-                statusApi.boostStatus(any())
+                statusRepository.boostStatus(any())
             },
             subjectCallBlock = {
                 subject("id")
