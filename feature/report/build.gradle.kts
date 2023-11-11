@@ -18,7 +18,7 @@ dependencies {
     implementation(project(":core:ui:htmlcontent"))
     implementation(project(":core:navigation"))
     implementation(project(":core:analytics"))
-    implementation(project(":core:domain"))
+    implementation(project(":core:usecase:mastodon"))
 
     implementation(libs.androidx.navigation.compose)
     implementation(libs.koin.core)

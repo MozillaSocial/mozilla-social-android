@@ -22,18 +22,18 @@ import org.mozilla.social.core.analytics.AnalyticsIdentifiers
 import org.mozilla.social.core.repository.mastodon.model.status.toExternalModel
 import org.mozilla.social.core.database.SocialDatabase
 import org.mozilla.social.core.database.model.statusCollections.toStatusWrapper
-import org.mozilla.social.core.domain.account.FollowAccount
-import org.mozilla.social.core.domain.GetDetailedAccount
-import org.mozilla.social.core.domain.GetLoggedInUserAccountId
-import org.mozilla.social.core.domain.account.BlockAccount
-import org.mozilla.social.core.domain.account.MuteAccount
-import org.mozilla.social.core.domain.account.UnblockAccount
-import org.mozilla.social.core.domain.account.UnfollowAccount
-import org.mozilla.social.core.domain.account.UnmuteAccount
+import org.mozilla.social.core.usecase.mastodon.account.GetDetailedAccount
+import org.mozilla.social.core.usecase.mastodon.account.GetLoggedInUserAccountId
 import org.mozilla.social.core.navigation.NavigationDestination
 import org.mozilla.social.core.navigation.usecases.NavigateTo
 import org.mozilla.social.core.ui.postcard.PostCardDelegate
 import org.mozilla.social.core.ui.postcard.toPostCardUiState
+import org.mozilla.social.core.usecase.mastodon.account.BlockAccount
+import org.mozilla.social.core.usecase.mastodon.account.FollowAccount
+import org.mozilla.social.core.usecase.mastodon.account.MuteAccount
+import org.mozilla.social.core.usecase.mastodon.account.UnblockAccount
+import org.mozilla.social.core.usecase.mastodon.account.UnfollowAccount
+import org.mozilla.social.core.usecase.mastodon.account.UnmuteAccount
 import timber.log.Timber
 
 class AccountViewModel(
@@ -81,7 +81,7 @@ class AccountViewModel(
     private val _timelineType = MutableStateFlow(TimelineType.POSTS)
     val timelineType = _timelineType.asStateFlow()
 
-    private val accountTimelineRemoteMediator: AccountTimelineRemoteMediator by KoinJavaComponent.inject(
+    private val accountTimelineRemoteMediator: AccountTimelineRemoteMediator by inject(
         AccountTimelineRemoteMediator::class.java
     ) {
         parametersOf(

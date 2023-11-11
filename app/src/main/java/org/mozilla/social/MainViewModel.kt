@@ -7,10 +7,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.mozilla.social.core.datastore.UserPreferencesDatastore
-import org.mozilla.social.core.domain.IsSignedInFlow
-import org.mozilla.social.core.domain.Login
+import org.mozilla.social.core.usecase.mastodon.auth.Login
 import org.mozilla.social.core.navigation.NavigationDestination
 import org.mozilla.social.core.navigation.usecases.NavigateTo
+import org.mozilla.social.core.usecase.mastodon.auth.IsSignedInFlow
 
 /**
  * Main view model- handles login logic and logout navigation

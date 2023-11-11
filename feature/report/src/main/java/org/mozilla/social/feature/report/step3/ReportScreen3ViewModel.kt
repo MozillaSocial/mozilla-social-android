@@ -6,10 +6,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import org.mozilla.social.core.domain.GetLoggedInUserAccountId
-import org.mozilla.social.core.domain.account.BlockAccount
-import org.mozilla.social.core.domain.account.MuteAccount
-import org.mozilla.social.core.domain.account.UnfollowAccount
+import org.mozilla.social.core.usecase.mastodon.account.BlockAccount
+import org.mozilla.social.core.usecase.mastodon.account.GetLoggedInUserAccountId
+import org.mozilla.social.core.usecase.mastodon.account.MuteAccount
+import org.mozilla.social.core.usecase.mastodon.account.UnfollowAccount
 import timber.log.Timber
 
 class ReportScreen3ViewModel(
