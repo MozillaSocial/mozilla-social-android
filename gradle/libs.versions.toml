@@ -32,6 +32,7 @@ androidx-compose-bom = { module = "androidx.compose:compose-bom", version = "202
 androidx-compose-compiler = { module = "androidx.compose.compiler:compiler", version = "1.5.3" }
 androidx-compose-material-iconsExtended = { module = "androidx.compose.material:material-icons-extended" }
 androidx-compose-material3 = { module = "androidx.compose.material3:material3" }
+androidx-compose-material3-windowClass = { module = "androidx.compose.material3:material3-window-size-class" }
 androidx-compose-ui-graphics = { module = "androidx.compose.ui:ui-graphics" }
 androidx-compose-ui-test-manifest = { module = "androidx.compose.ui:ui-test-manifest" }
 androidx-compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }

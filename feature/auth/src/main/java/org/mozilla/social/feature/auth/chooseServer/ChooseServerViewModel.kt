@@ -16,7 +16,6 @@ class ChooseServerViewModel(
     private val _uiState = MutableStateFlow(ChooseServerUiState())
     val uiState = _uiState.asStateFlow()
 
-    @Suppress("SwallowedException")
     override fun onServerTextChanged(text: String) {
         val isUrl = URL_REGEX.toRegex().matches(text)
         _uiState.update {

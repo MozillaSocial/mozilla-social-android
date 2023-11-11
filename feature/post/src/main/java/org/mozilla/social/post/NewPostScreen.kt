@@ -5,7 +5,6 @@
 
 package org.mozilla.social.post
 
-import android.app.Activity
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -34,9 +33,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
-import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.WindowHeightSizeClass
-import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
@@ -48,7 +45,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
@@ -76,6 +72,7 @@ import org.mozilla.social.core.ui.common.VisibilityDropDownButton
 import org.mozilla.social.core.ui.common.appbar.MoSoCloseableTopAppBar
 import org.mozilla.social.core.ui.common.media.MediaUpload
 import org.mozilla.social.core.ui.common.transparentTextFieldColors
+import org.mozilla.social.core.ui.common.utils.getWindowHeightClass
 import org.mozilla.social.feature.post.R
 import org.mozilla.social.model.ImageState
 import org.mozilla.social.model.StatusVisibility
@@ -129,7 +126,6 @@ internal fun NewPostScreen(
 
 data class UserHeaderState(val avatarUrl: String, val displayName: String)
 
-@OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 @Composable
 private fun NewPostScreen(
     bottomBarState: BottomBarState,
@@ -151,19 +147,13 @@ private fun NewPostScreen(
     inReplyToAccountName: String?,
     userHeaderState: UserHeaderState?,
 ) {
-
-    // If the current height class is compact (prob in landscape mode)
-    val isCompactHeight = (LocalContext.current as? Activity)?.let {
-        calculateWindowSizeClass(it).heightSizeClass == WindowHeightSizeClass.Compact
-    } ?: true
-
     Box(
         modifier = Modifier
             .systemBarsPadding()
             .imePadding()
             .background(MoSoTheme.colors.layer1)
     ) {
-        if (isCompactHeight) {
+        if (getWindowHeightClass() == WindowHeightSizeClass.Compact) {
             Row {
                 CompactNewPostScreenContent(
                     statusText = statusText,
