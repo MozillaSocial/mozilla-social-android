@@ -35,10 +35,10 @@ sealed class NavigationDestination(
         }
     }
 
-    data object Login : NavigationDestination(
+    data object Auth : NavigationDestination(
         route = "auth"
     ) {
-        fun NavController.navigateToLoginScreen(navOptions: NavOptions? = null) {
+        fun NavController.navigateToAuthFlow(navOptions: NavOptions? = null) {
             this.navigate(route, navOptions)
         }
     }

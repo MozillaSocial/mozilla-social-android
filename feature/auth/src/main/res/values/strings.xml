@@ -1,5 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="login_button">Login</string>
-    <string name="title_text">Mozilla Social</string>
+    <string name="title_text">mozilla.social</string>
+
+    <string name="beta_badge">Beta</string>
+    <string name="intro_title">Get started</string>
+    <string name="intro_message">Like, share, and follow interesting profiles and hashtags.</string>
+    <string name="sign_in_button">Sign in or sign up</string>
+    <string name="choose_server_option">Choose a server</string>
+
+    <string name="choose_a_server_screen_title">Choose a server</string>
+    <string name="choose_a_server_message">Type in the address of the server you want to sign in to.</string>
+    <string name="server_text_box_hint">Enter server address</string>
+    <string name="choose_server_next_button">Next</string>
 </resources>

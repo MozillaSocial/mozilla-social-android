@@ -16,6 +16,8 @@ dependencies {
 
     implementation(libs.androidx.paging.compose)
 
+    api(libs.androidx.compose.material3.windowClass)
+
     implementation(libs.androidx.navigation.compose)
     implementation(libs.koin.core)
     implementation(libs.koin.androidx.compose)

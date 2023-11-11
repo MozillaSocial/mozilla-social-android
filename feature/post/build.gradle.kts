@@ -23,7 +23,4 @@ dependencies {
     implementation(libs.koin.androidx.compose)
     implementation(libs.coil)
     implementation(libs.jakewharton.timber)
-
-    // The version catalog doesn't like that this ends in a "class"
-    implementation("androidx.compose.material3:material3-window-size-class")
 }

@@ -9,6 +9,7 @@ import org.mozilla.social.common.utils.mosoFadeIn
 import org.mozilla.social.common.utils.mosoFadeOut
 import org.mozilla.social.feature.account.accountScreen
 import org.mozilla.social.feature.account.edit.editAccountScreen
+import org.mozilla.social.feature.auth.authFlow
 import org.mozilla.social.feature.auth.loginScreen
 import org.mozilla.social.feature.followers.followersScreen
 import org.mozilla.social.feature.followers.followingScreen
@@ -37,7 +38,7 @@ fun MainNavHost(
         popExitTransition = { mosoFadeOut() },
     ) {
         splashScreen()
-        loginScreen()
+        authFlow()
         accountScreen()
         followersScreen()
         followingScreen()
