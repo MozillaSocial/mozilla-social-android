@@ -3,9 +3,9 @@ package org.mozilla.social.core.repository.mozilla.model
 import org.mozilla.social.core.network.mozilla.model.NetworkRecommendation
 import org.mozilla.social.core.network.mozilla.model.NetworkRecommendationAuthor
 import org.mozilla.social.core.network.mozilla.model.NetworkRecommendationImage
-import org.mozilla.social.model.Recommendation
-import org.mozilla.social.model.RecommendationAuthor
-import org.mozilla.social.model.RecommendationImage
+import org.mozilla.social.core.model.Recommendation
+import org.mozilla.social.core.model.RecommendationAuthor
+import org.mozilla.social.core.model.RecommendationImage
 
 fun NetworkRecommendation.toExternalModel() = Recommendation(
     id = id,

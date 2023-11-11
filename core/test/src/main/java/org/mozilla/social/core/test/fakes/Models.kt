@@ -1,9 +1,9 @@
 package org.mozilla.social.core.test.fakes
 
 import kotlinx.datetime.Instant
-import org.mozilla.social.model.Account
-import org.mozilla.social.model.Status
-import org.mozilla.social.model.StatusVisibility
+import org.mozilla.social.core.model.Account
+import org.mozilla.social.core.model.Status
+import org.mozilla.social.core.model.StatusVisibility
 
 object Models {
     val status = Status(

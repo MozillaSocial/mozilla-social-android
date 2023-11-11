@@ -8,7 +8,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.core.text.HtmlCompat
 import androidx.core.text.toSpannable
-import org.mozilla.social.model.Mention
+import org.mozilla.social.core.model.Mention
 
 fun String.htmlToSpannable(
     mentions: List<Mention>,

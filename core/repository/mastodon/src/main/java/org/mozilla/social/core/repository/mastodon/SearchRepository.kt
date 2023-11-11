@@ -1,8 +1,8 @@
 package org.mozilla.social.core.repository.mastodon
 
 import org.mozilla.social.core.repository.mastodon.model.status.toExternalModel
-import org.mozilla.social.model.Account
-import org.mozilla.social.model.HashTag
+import org.mozilla.social.core.model.Account
+import org.mozilla.social.core.model.HashTag
 import org.mozilla.social.core.network.mastodon.SearchApi
 
 class SearchRepository internal constructor(

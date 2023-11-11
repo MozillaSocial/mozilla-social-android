@@ -74,8 +74,8 @@ import org.mozilla.social.core.ui.common.media.MediaUpload
 import org.mozilla.social.core.ui.common.transparentTextFieldColors
 import org.mozilla.social.core.ui.common.utils.getWindowHeightClass
 import org.mozilla.social.feature.post.R
-import org.mozilla.social.model.ImageState
-import org.mozilla.social.model.StatusVisibility
+import org.mozilla.social.core.model.ImageState
+import org.mozilla.social.core.model.StatusVisibility
 import org.mozilla.social.post.NewPostViewModel.Companion.MAX_POLL_COUNT
 import org.mozilla.social.post.NewPostViewModel.Companion.MIN_POLL_COUNT
 import org.mozilla.social.post.bottombar.BottomBar

@@ -8,7 +8,7 @@ import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.core.navigation.usecases.ShowSnackbar
 import org.mozilla.social.core.repository.mastodon.ReportRepository
 import org.mozilla.social.core.usecase.mastodon.R
-import org.mozilla.social.model.request.ReportCreate
+import org.mozilla.social.core.model.request.ReportCreate
 
 class Report(
     private val externalScope: CoroutineScope,

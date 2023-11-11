@@ -1,8 +1,8 @@
 package org.mozilla.social.core.ui.poll
 
 import kotlin.test.Test
-import org.mozilla.social.model.Poll
-import org.mozilla.social.model.PollOption
+import org.mozilla.social.core.model.Poll
+import org.mozilla.social.core.model.PollOption
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 

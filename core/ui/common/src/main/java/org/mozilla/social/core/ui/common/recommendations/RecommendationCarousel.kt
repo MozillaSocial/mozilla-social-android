@@ -26,7 +26,7 @@ import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.designsystem.theme.Typography
 import org.mozilla.social.core.ui.common.R
-import org.mozilla.social.model.Recommendation
+import org.mozilla.social.core.model.Recommendation
 
 @Composable
 fun RecommendationCarousel(reccs: List<Recommendation>, onMoreInfoClicked: () -> Unit) {

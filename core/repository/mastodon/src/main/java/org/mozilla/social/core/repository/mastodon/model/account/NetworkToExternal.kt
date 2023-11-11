@@ -1,7 +1,7 @@
 package org.mozilla.social.core.repository.mastodon.model.account
 
 import org.mozilla.social.core.network.mastodon.model.NetworkRelationship
-import org.mozilla.social.model.Relationship
+import org.mozilla.social.core.model.Relationship
 
 fun NetworkRelationship.toExternal(): Relationship = Relationship(
     accountId = accountId,

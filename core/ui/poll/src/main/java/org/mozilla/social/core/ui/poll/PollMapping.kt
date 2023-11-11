@@ -2,8 +2,8 @@ package org.mozilla.social.core.ui.poll
 
 import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.common.utils.timeLeft
-import org.mozilla.social.model.Poll
-import org.mozilla.social.model.PollOption
+import org.mozilla.social.core.model.Poll
+import org.mozilla.social.core.model.PollOption
 
 /**
  * @param isUserCreatedPoll refers to if the current user is the creator of the poll

@@ -1,7 +1,7 @@
 package org.mozilla.social.feature.account.edit
 
 import androidx.core.text.HtmlCompat
-import org.mozilla.social.model.Account
+import org.mozilla.social.core.model.Account
 
 data class EditAccountUiState(
     val topBarTitle: String,

@@ -2,7 +2,7 @@ package org.mozilla.social.core.repository.mastodon
 
 import org.mozilla.social.core.repository.mastodon.model.status.toExternalModel
 import org.mozilla.social.core.network.mastodon.AppApi
-import org.mozilla.social.model.Application
+import org.mozilla.social.core.model.Application
 
 class AppRepository(private val appApi: AppApi) {
     suspend fun createApplication(

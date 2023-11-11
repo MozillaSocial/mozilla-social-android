@@ -7,7 +7,7 @@ import org.mozilla.social.common.loadResource
 import org.mozilla.social.core.repository.mastodon.AccountRepository
 import org.mozilla.social.core.usecase.mastodon.account.GetLoggedInUserAccountId
 import org.mozilla.social.core.usecase.mastodon.auth.Logout
-import org.mozilla.social.model.Account
+import org.mozilla.social.core.model.Account
 
 class AccountSettingsViewModel(
     private val logout: Logout,

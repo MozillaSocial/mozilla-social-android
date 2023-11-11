@@ -1,6 +1,6 @@
 package org.mozilla.social.core.test.fakes
 
-import org.mozilla.social.model.Application
+import org.mozilla.social.core.model.Application
 
 fun fakeApplication(
     name: String = "Louella Perry",

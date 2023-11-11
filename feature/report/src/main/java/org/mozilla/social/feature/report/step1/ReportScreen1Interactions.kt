@@ -1,7 +1,7 @@
 package org.mozilla.social.feature.report.step1
 
 import org.mozilla.social.feature.report.ReportType
-import org.mozilla.social.model.InstanceRule
+import org.mozilla.social.core.model.InstanceRule
 
 interface ReportScreen1Interactions {
     fun onCloseClicked() = Unit

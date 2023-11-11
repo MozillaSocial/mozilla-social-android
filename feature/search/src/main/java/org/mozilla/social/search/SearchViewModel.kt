@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
 import org.mozilla.social.core.repository.mastodon.TimelineRepository
-import org.mozilla.social.model.Status
+import org.mozilla.social.core.model.Status
 
 class SearchViewModel(
     private val timelineRepository: TimelineRepository

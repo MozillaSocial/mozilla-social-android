@@ -3,7 +3,7 @@ package org.mozilla.social.core.usecase.mastodon.status
 import kotlinx.coroutines.test.TestScope
 import org.mozilla.social.core.usecase.mastodon.BaseUseCaseTest
 import org.mozilla.social.core.test.fakes.Models
-import org.mozilla.social.model.StatusVisibility
+import org.mozilla.social.core.model.StatusVisibility
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 

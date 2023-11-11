@@ -43,7 +43,7 @@ import org.mozilla.social.core.ui.common.loading.MaxSizeLoading
 import org.mozilla.social.feature.report.R
 import org.mozilla.social.feature.report.ReportDataBundle
 import org.mozilla.social.feature.report.ReportType
-import org.mozilla.social.model.InstanceRule
+import org.mozilla.social.core.model.InstanceRule
 
 @Composable
 internal fun ReportScreen2(

@@ -2,7 +2,7 @@ package org.mozilla.social.core.repository.mozilla
 
 import org.mozilla.social.core.repository.mozilla.model.toExternalModel
 import org.mozilla.social.core.network.mozilla.RecommendationApi
-import org.mozilla.social.model.Recommendation
+import org.mozilla.social.core.model.Recommendation
 import java.util.Locale
 
 class RecommendationRepository(

@@ -1,7 +1,7 @@
 package org.mozilla.social.core.repository.mastodon.model.account
 
 import org.mozilla.social.core.database.model.DatabaseRelationship
-import org.mozilla.social.model.Relationship
+import org.mozilla.social.core.model.Relationship
 
 fun DatabaseRelationship.toExternal(): Relationship = Relationship(
     accountId = accountId,

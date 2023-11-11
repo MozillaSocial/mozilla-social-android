@@ -4,8 +4,8 @@ import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.common.utils.timeSinceNow
 import org.mozilla.social.core.ui.common.R
 import org.mozilla.social.core.ui.poll.toPollUiState
-import org.mozilla.social.model.Card
-import org.mozilla.social.model.Status
+import org.mozilla.social.core.model.Card
+import org.mozilla.social.core.model.Status
 
 /**
  * @param currentUserAccountId refers to the current user, not necessarily the creator of the Status.

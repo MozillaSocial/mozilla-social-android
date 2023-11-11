@@ -12,7 +12,7 @@ import org.mozilla.social.core.analytics.AnalyticsIdentifiers
 import org.mozilla.social.core.analytics.EngagementType
 import org.mozilla.social.core.analytics.utils.ImpressionTracker
 import org.mozilla.social.core.usecase.mozilla.GetRecommendations
-import org.mozilla.social.model.Recommendation
+import org.mozilla.social.core.model.Recommendation
 import timber.log.Timber
 
 class DiscoverViewModel(

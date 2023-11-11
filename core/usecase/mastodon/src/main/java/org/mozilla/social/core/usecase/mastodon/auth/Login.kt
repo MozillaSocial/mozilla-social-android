@@ -11,7 +11,7 @@ import org.mozilla.social.core.repository.mastodon.AccountRepository
 import org.mozilla.social.core.repository.mastodon.AppRepository
 import org.mozilla.social.core.repository.mastodon.OauthRepository
 import org.mozilla.social.core.usecase.mastodon.auth.Login.Companion.AUTH_SCHEME
-import org.mozilla.social.model.Account
+import org.mozilla.social.core.model.Account
 import timber.log.Timber
 
 /**

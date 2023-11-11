@@ -2,7 +2,7 @@ package org.mozilla.social.feature.report.step2
 
 import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.common.utils.timeSinceNow
-import org.mozilla.social.model.Status
+import org.mozilla.social.core.model.Status
 
 data class ReportStatusUiState(
     val statusId: String,

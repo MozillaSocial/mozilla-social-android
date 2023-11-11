@@ -44,7 +44,7 @@ import org.mozilla.social.core.ui.common.Radius
 import org.mozilla.social.core.ui.common.error.GenericError
 import org.mozilla.social.core.ui.common.loading.MaxSizeLoading
 import org.mozilla.social.core.ui.common.shareUrl
-import org.mozilla.social.model.Recommendation
+import org.mozilla.social.core.model.Recommendation
 
 @Composable
 internal fun DiscoverScreen(
