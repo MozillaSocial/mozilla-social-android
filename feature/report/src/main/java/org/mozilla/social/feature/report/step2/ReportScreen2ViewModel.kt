@@ -8,14 +8,14 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.mozilla.social.common.Resource
 import org.mozilla.social.core.repository.mastodon.AccountRepository
-import org.mozilla.social.core.domain.report.Report
+import org.mozilla.social.core.usecase.mastodon.report.Report
 import org.mozilla.social.feature.report.ReportDataBundle
 import org.mozilla.social.feature.report.ReportType
 import org.mozilla.social.model.InstanceRule
 import timber.log.Timber
 
 class ReportScreen2ViewModel(
-    private val report: Report,
+    private val report: org.mozilla.social.core.usecase.mastodon.report.Report,
     private val accountRepository: AccountRepository,
     private val onClose: () -> Unit,
     private val onReportSubmitted: (bundle: ReportDataBundle.ReportDataBundleForScreen3) -> Unit,
@@ -85,7 +85,7 @@ class ReportScreen2ViewModel(
                         didUserReportAccount = true,
                     )
                 )
-            } catch (e: Report.ReportFailedException) {
+            } catch (e: org.mozilla.social.core.usecase.mastodon.report.Report.ReportFailedException) {
                 Timber.e(e)
                 _reportIsSending.update { false }
             }

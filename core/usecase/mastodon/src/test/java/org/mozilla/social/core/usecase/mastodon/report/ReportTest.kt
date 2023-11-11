@@ -1,0 +1,52 @@
+package org.mozilla.social.core.usecase.mastodon.report
+
+import kotlinx.coroutines.test.TestScope
+import org.mozilla.social.core.usecase.mastodon.BaseDomainTest
+import kotlin.test.BeforeTest
+import kotlin.test.Test
+
+class ReportTest : BaseDomainTest() {
+
+    private lateinit var subject: org.mozilla.social.core.usecase.mastodon.report.Report
+
+    @BeforeTest
+    fun setup() {
+        subject = org.mozilla.social.core.usecase.mastodon.report.Report(
+            externalScope = TestScope(testDispatcher),
+            showSnackbar = showSnackbar,
+            reportApi = reportApi,
+            dispatcherIo = testDispatcher,
+        )
+    }
+
+    @Test
+    fun testCancelledScope() {
+        val accountId = "id1"
+        testOuterScopeCancelled(
+            delayedCallBlock = {
+                reportApi.report(any())
+            },
+            subjectCallBlock = {
+                subject(accountId)
+            },
+            verifyBlock = {
+                reportApi.report(any())
+            }
+        )
+    }
+
+    @Test
+    fun testCancelledScopeWithError() {
+        testOuterScopeCancelledAndInnerException(
+            delayedCallBlock = {
+                reportApi.report(any())
+            },
+            subjectCallBlock = {
+                subject("id")
+            },
+            verifyBlock = {
+                showSnackbar(any(), any())
+            }
+        )
+    }
+}

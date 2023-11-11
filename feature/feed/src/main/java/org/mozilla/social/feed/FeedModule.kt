@@ -2,7 +2,7 @@ package org.mozilla.social.feed
 
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
-import org.mozilla.social.core.domain.domainModule
+import org.mozilla.social.core.usecase.mastodon.domainModule
 import org.mozilla.social.feed.remoteMediators.FederatedTimelineRemoteMediator
 import org.mozilla.social.feed.remoteMediators.HomeTimelineRemoteMediator
 import org.mozilla.social.feed.remoteMediators.LocalTimelineRemoteMediator
@@ -40,6 +40,6 @@ val feedModule = module {
         getLoggedInUserAccountId = get(),
         socialDatabase = get(),
     ) }
-    includes(domainModule)
-    includes(domainModule)
+    includes(org.mozilla.social.core.usecase.mastodon.domainModule)
+    includes(org.mozilla.social.core.usecase.mastodon.domainModule)
 }

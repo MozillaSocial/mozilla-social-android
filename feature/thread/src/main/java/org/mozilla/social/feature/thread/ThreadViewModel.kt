@@ -9,11 +9,11 @@ import org.koin.core.parameter.parametersOf
 import org.koin.java.KoinJavaComponent
 import org.mozilla.social.core.analytics.Analytics
 import org.mozilla.social.core.analytics.AnalyticsIdentifiers
-import org.mozilla.social.core.domain.GetThreadUseCase
-import org.mozilla.social.core.domain.GetLoggedInUserAccountId
+import org.mozilla.social.core.usecase.mastodon.account.GetLoggedInUserAccountId
 import org.mozilla.social.core.ui.postcard.PostCardDelegate
 import org.mozilla.social.core.ui.postcard.PostCardUiState
 import org.mozilla.social.core.ui.postcard.toPostCardUiState
+import org.mozilla.social.core.usecase.mastodon.thread.GetThreadUseCase
 import timber.log.Timber
 
 class ThreadViewModel(

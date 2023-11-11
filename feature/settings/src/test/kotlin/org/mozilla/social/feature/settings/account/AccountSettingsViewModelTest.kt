@@ -16,8 +16,8 @@ import kotlinx.coroutines.test.setMain
 import org.junit.Test
 import org.mozilla.social.common.Resource
 import org.mozilla.social.core.repository.mastodon.AccountRepository
-import org.mozilla.social.core.domain.GetLoggedInUserAccountId
-import org.mozilla.social.core.domain.Logout
+import org.mozilla.social.core.usecase.mastodon.account.GetLoggedInUserAccountId
+import org.mozilla.social.core.usecase.mastodon.auth.Logout
 import org.mozilla.social.model.Account
 import kotlin.test.BeforeTest
 

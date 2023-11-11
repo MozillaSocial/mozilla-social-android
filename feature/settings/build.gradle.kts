@@ -11,7 +11,7 @@ dependencies {
     implementation(project(":core:designsystem"))
     implementation(project(":core:common"))
     implementation(project(":core:datastore"))
-    implementation(project(":core:domain"))
+    implementation(project(":core:usecase:mastodon"))
     implementation(project(":core:model"))
     implementation(project(":core:repository:mastodon"))
     implementation(project(":core:ui:common"))

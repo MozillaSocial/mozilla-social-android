@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import org.mozilla.social.core.analytics.Analytics
 import org.mozilla.social.core.analytics.AnalyticsIdentifiers
-import org.mozilla.social.core.domain.Login
+import org.mozilla.social.core.usecase.mastodon.auth.Login
 
 class AuthViewModel(
     private val analytics: Analytics,

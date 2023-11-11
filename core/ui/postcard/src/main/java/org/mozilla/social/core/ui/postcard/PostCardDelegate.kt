@@ -2,25 +2,23 @@ package org.mozilla.social.core.ui.postcard
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import org.mozilla.social.core.domain.account.BlockAccount
-import org.mozilla.social.core.domain.account.MuteAccount
-import org.mozilla.social.core.domain.status.BoostStatus
-import org.mozilla.social.core.domain.status.DeleteStatus
-import org.mozilla.social.core.domain.status.FavoriteStatus
-import org.mozilla.social.core.domain.status.UndoBoostStatus
-import org.mozilla.social.core.domain.status.UndoFavoriteStatus
-import org.mozilla.social.core.domain.status.VoteOnPoll
+import org.mozilla.social.core.usecase.mastodon.status.BoostStatus
 import org.mozilla.social.core.navigation.NavigationDestination
 import org.mozilla.social.core.navigation.usecases.NavigateTo
 import org.mozilla.social.core.navigation.usecases.OpenLink
+import org.mozilla.social.core.usecase.mastodon.status.DeleteStatus
+import org.mozilla.social.core.usecase.mastodon.status.FavoriteStatus
+import org.mozilla.social.core.usecase.mastodon.status.UndoBoostStatus
+import org.mozilla.social.core.usecase.mastodon.status.UndoFavoriteStatus
+import org.mozilla.social.core.usecase.mastodon.status.VoteOnPoll
 import timber.log.Timber
 
 class PostCardDelegate(
     private val coroutineScope: CoroutineScope,
     private val navigateTo: NavigateTo,
     private val openLink: OpenLink,
-    private val blockAccount: BlockAccount,
-    private val muteAccount: MuteAccount,
+    private val blockAccount: org.mozilla.social.core.usecase.mastodon.account.BlockAccount,
+    private val muteAccount: org.mozilla.social.core.usecase.mastodon.account.MuteAccount,
     private val voteOnPoll: VoteOnPoll,
     private val boostStatus: BoostStatus,
     private val undoBoostStatus: UndoBoostStatus,
@@ -87,7 +85,7 @@ class PostCardDelegate(
         coroutineScope.launch {
             try {
                 muteAccount(accountId)
-            } catch (e: MuteAccount.MuteFailedException) {
+            } catch (e: org.mozilla.social.core.usecase.mastodon.account.MuteAccount.MuteFailedException) {
                 Timber.e(e)
             }
         }
@@ -97,7 +95,7 @@ class PostCardDelegate(
         coroutineScope.launch {
             try {
                 blockAccount(accountId)
-            } catch (e: BlockAccount.BlockFailedException) {
+            } catch (e: org.mozilla.social.core.usecase.mastodon.account.BlockAccount.BlockFailedException) {
                 Timber.e(e)
             }
         }
