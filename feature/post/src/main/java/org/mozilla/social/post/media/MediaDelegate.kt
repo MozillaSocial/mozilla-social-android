@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.mozilla.social.common.LoadState
 import org.mozilla.social.common.utils.FileType
-import org.mozilla.social.core.data.repository.MediaRepository
+import org.mozilla.social.core.repository.mastodon.MediaRepository
 import org.mozilla.social.model.ImageState
 import org.mozilla.social.post.NewPostViewModel
 import timber.log.Timber

@@ -12,7 +12,7 @@ import org.koin.core.parameter.parametersOf
 import org.koin.java.KoinJavaComponent.inject
 import org.mozilla.social.core.analytics.Analytics
 import org.mozilla.social.core.analytics.AnalyticsIdentifiers
-import org.mozilla.social.core.data.repository.model.status.toExternalModel
+import org.mozilla.social.core.repository.mastodon.model.status.toExternalModel
 import org.mozilla.social.core.database.SocialDatabase
 import org.mozilla.social.core.database.model.statusCollections.toStatusWrapper
 import org.mozilla.social.core.domain.GetLoggedInUserAccountId

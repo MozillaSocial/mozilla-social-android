@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.mozilla.social.common.Resource
-import org.mozilla.social.core.data.repository.AccountRepository
+import org.mozilla.social.core.repository.mastodon.AccountRepository
 import org.mozilla.social.core.domain.report.Report
 import org.mozilla.social.feature.report.ReportDataBundle
 import org.mozilla.social.feature.report.ReportType

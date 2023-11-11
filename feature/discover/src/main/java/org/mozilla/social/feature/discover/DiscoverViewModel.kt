@@ -11,7 +11,7 @@ import org.mozilla.social.core.analytics.Analytics
 import org.mozilla.social.core.analytics.AnalyticsIdentifiers
 import org.mozilla.social.core.analytics.EngagementType
 import org.mozilla.social.core.analytics.utils.ImpressionTracker
-import org.mozilla.social.core.data.repository.RecommendationRepository
+import org.mozilla.social.core.repository.mozilla.RecommendationRepository
 import org.mozilla.social.model.Recommendation
 import timber.log.Timber
 

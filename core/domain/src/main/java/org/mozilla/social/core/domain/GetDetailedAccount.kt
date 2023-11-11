@@ -11,11 +11,11 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.sync.Mutex
 import org.mozilla.social.common.Resource
 import org.mozilla.social.common.utils.launchSupervisor
-import org.mozilla.social.core.data.repository.AccountRepository
-import org.mozilla.social.core.data.repository.model.account.toDatabaseModel
-import org.mozilla.social.core.data.repository.model.account.toExternal
-import org.mozilla.social.core.data.repository.model.status.toDatabaseModel
-import org.mozilla.social.core.data.repository.model.status.toExternalModel
+import org.mozilla.social.core.repository.mastodon.AccountRepository
+import org.mozilla.social.core.repository.mastodon.model.account.toDatabaseModel
+import org.mozilla.social.core.repository.mastodon.model.account.toExternal
+import org.mozilla.social.core.repository.mastodon.model.status.toDatabaseModel
+import org.mozilla.social.core.repository.mastodon.model.status.toExternalModel
 import org.mozilla.social.core.database.SocialDatabase
 import org.mozilla.social.model.Account
 import org.mozilla.social.model.Relationship

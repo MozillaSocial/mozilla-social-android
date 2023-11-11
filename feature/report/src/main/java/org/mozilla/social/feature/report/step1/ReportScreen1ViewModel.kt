@@ -9,7 +9,7 @@ import kotlinx.coroutines.launch
 import org.mozilla.social.common.utils.edit
 import org.mozilla.social.core.analytics.Analytics
 import org.mozilla.social.core.analytics.AnalyticsIdentifiers
-import org.mozilla.social.core.data.repository.InstanceRepository
+import org.mozilla.social.core.repository.mastodon.InstanceRepository
 import org.mozilla.social.feature.report.ReportDataBundle
 import org.mozilla.social.feature.report.ReportType
 import org.mozilla.social.model.InstanceRule

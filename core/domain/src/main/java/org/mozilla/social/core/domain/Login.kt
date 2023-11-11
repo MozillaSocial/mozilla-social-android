@@ -6,9 +6,9 @@ import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.net.toUri
 import okhttp3.HttpUrl
 import org.mozilla.social.core.analytics.Analytics
-import org.mozilla.social.core.data.repository.AccountRepository
-import org.mozilla.social.core.data.repository.AppRepository
-import org.mozilla.social.core.data.repository.OauthRepository
+import org.mozilla.social.core.repository.mastodon.AccountRepository
+import org.mozilla.social.core.repository.mastodon.AppRepository
+import org.mozilla.social.core.repository.mastodon.OauthRepository
 import org.mozilla.social.core.datastore.UserPreferencesDatastore
 import org.mozilla.social.core.domain.Login.Companion.AUTH_SCHEME
 import org.mozilla.social.model.Account

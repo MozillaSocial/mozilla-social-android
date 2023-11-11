@@ -43,7 +43,8 @@ android {
 dependencies {
     implementation(project(":core:designsystem"))
     implementation(project(":core:common"))
-    implementation(project(":core:data"))
+    implementation(project(":core:repository:mastodon"))
+    implementation(project(":core:repository:mozilla"))
     implementation(project(":core:domain"))
     implementation(project(":core:datastore"))
     implementation(project(":core:database"))

@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.mozilla.social.common.Resource
 import org.mozilla.social.common.updateData
-import org.mozilla.social.core.data.repository.AccountRepository
+import org.mozilla.social.core.repository.mastodon.AccountRepository
 import org.mozilla.social.core.domain.account.UpdateMyAccount
 import org.mozilla.social.core.domain.GetLoggedInUserAccountId
 import org.mozilla.social.core.navigation.usecases.PopNavBackstack
