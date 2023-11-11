@@ -9,9 +9,10 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.mozilla.social.common.Resource
 import org.mozilla.social.common.updateData
+import org.mozilla.social.core.navigation.usecases.PopNavBackstack
 import org.mozilla.social.core.repository.mastodon.AccountRepository
 import org.mozilla.social.core.usecase.mastodon.account.GetLoggedInUserAccountId
-import org.mozilla.social.core.navigation.usecases.PopNavBackstack
+import org.mozilla.social.core.usecase.mastodon.account.UpdateMyAccount
 import timber.log.Timber
 import java.io.File
 
@@ -19,7 +20,7 @@ class EditAccountViewModel(
     private val accountRepository: AccountRepository,
     getLoggedInUserAccountId: GetLoggedInUserAccountId,
     private val popNavBackstack: PopNavBackstack,
-    private val updateMyAccount: org.mozilla.social.core.usecase.mastodon.account.UpdateMyAccount,
+    private val updateMyAccount: UpdateMyAccount,
 ) : ViewModel(), EditAccountInteractions {
 
     private val accountId = getLoggedInUserAccountId()
@@ -74,7 +75,7 @@ class EditAccountViewModel(
                         }
                     )
                     popNavBackstack()
-                } catch (e: org.mozilla.social.core.usecase.mastodon.account.UpdateMyAccount.UpdateAccountFailedException) {
+                } catch (e: UpdateMyAccount.UpdateAccountFailedException) {
                     Timber.e(e)
                     _isUploading.update { false }
                 }

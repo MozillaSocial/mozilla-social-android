@@ -23,6 +23,7 @@ class HashTagTimelineRemoteMediator(
     private val hashTag: String,
 ) : RemoteMediator<Int, HashTagTimelineStatusWrapper>() {
 
+    @Suppress("ReturnCount")
     override suspend fun load(
         loadType: LoadType,
         state: PagingState<Int, HashTagTimelineStatusWrapper>
@@ -93,7 +94,7 @@ class HashTagTimelineRemoteMediator(
             // it's assumed we've reached the end of pagination, and nothing gets loaded
             // ever again.
             if (loadType == LoadType.REFRESH) {
-                delay(200)
+                delay(REFRESH_DELAY)
             }
 
             MediatorResult.Success(
@@ -108,3 +109,5 @@ class HashTagTimelineRemoteMediator(
         }
     }
 }
+
+private const val REFRESH_DELAY = 200L

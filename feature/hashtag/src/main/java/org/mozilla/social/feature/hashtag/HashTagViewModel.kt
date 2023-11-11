@@ -18,6 +18,7 @@ import org.mozilla.social.core.database.model.statusCollections.toStatusWrapper
 import org.mozilla.social.core.usecase.mastodon.account.GetLoggedInUserAccountId
 import org.mozilla.social.core.ui.postcard.PostCardDelegate
 import org.mozilla.social.core.ui.postcard.toPostCardUiState
+import org.mozilla.social.core.usecase.mastodon.remotemediators.HashTagTimelineRemoteMediator
 
 class HashTagViewModel(
     private val analytics: Analytics,
@@ -26,8 +27,8 @@ class HashTagViewModel(
     userAccountId: GetLoggedInUserAccountId,
 ) : ViewModel(), HashTagInteractions {
 
-    private val hashTagTimelineRemoteMediator: org.mozilla.social.core.usecase.mastodon.remotemediators.HashTagTimelineRemoteMediator by inject(
-        org.mozilla.social.core.usecase.mastodon.remotemediators.HashTagTimelineRemoteMediator::class.java
+    private val hashTagTimelineRemoteMediator: HashTagTimelineRemoteMediator by inject(
+        HashTagTimelineRemoteMediator::class.java
     ) { parametersOf(hashTag) }
 
     @OptIn(ExperimentalPagingApi::class)
