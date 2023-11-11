@@ -1,16 +1,16 @@
 package org.mozilla.social.core.usecase.mastodon.status
 
 import kotlinx.coroutines.test.TestScope
-import org.mozilla.social.core.usecase.mastodon.BaseDomainTest
-import org.mozilla.social.core.network.mastodon.model.NetworkPoll
+import org.mozilla.social.core.usecase.mastodon.BaseUseCaseTest
+import org.mozilla.social.model.Poll
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 
-class VoteOnPollTest : BaseDomainTest() {
+class VoteOnPollTest : BaseUseCaseTest() {
 
     private lateinit var subject: VoteOnPoll
 
-    private val networkPoll = NetworkPoll(
+    private val networkPoll = Poll(
         pollId = "nostrum",
         isExpired = false,
         allowsMultipleChoices = false,
@@ -28,7 +28,7 @@ class VoteOnPollTest : BaseDomainTest() {
         subject = VoteOnPoll(
             externalScope = TestScope(testDispatcher),
             showSnackbar = showSnackbar,
-            statusApi = statusApi,
+            statusRepository = statusRepository,
             socialDatabase = socialDatabase,
             dispatcherIo = testDispatcher,
         )
@@ -38,7 +38,7 @@ class VoteOnPollTest : BaseDomainTest() {
     fun testCancelledScope() {
         testOuterScopeCancelled(
             delayedCallBlock = {
-                statusApi.voteOnPoll(any(), any())
+                statusRepository.voteOnPoll(any(), any())
             },
             delayedCallBlockReturnValue = networkPoll,
             subjectCallBlock = {
@@ -57,7 +57,7 @@ class VoteOnPollTest : BaseDomainTest() {
     fun testCancelledScopeWithError() {
         testOuterScopeCancelledAndInnerException(
             delayedCallBlock = {
-                statusApi.voteOnPoll(any(), any())
+                statusRepository.voteOnPoll(any(), any())
             },
             subjectCallBlock = {
                 subject(

@@ -24,32 +24,34 @@ import org.mozilla.social.core.database.dao.LocalTimelineStatusDao
 import org.mozilla.social.core.database.dao.PollsDao
 import org.mozilla.social.core.database.dao.RelationshipsDao
 import org.mozilla.social.core.database.dao.StatusDao
-import org.mozilla.social.core.usecase.mastodon.utils.TransactionUtils
 import org.mozilla.social.core.navigation.usecases.ShowSnackbar
-import org.mozilla.social.core.network.mastodon.AccountApi
-import org.mozilla.social.core.network.mastodon.AppApi
-import org.mozilla.social.core.network.mastodon.InstanceApi
-import org.mozilla.social.core.network.mastodon.MediaApi
-import org.mozilla.social.core.network.mastodon.OauthApi
-import org.mozilla.social.core.network.mastodon.ReportApi
-import org.mozilla.social.core.network.mastodon.SearchApi
-import org.mozilla.social.core.network.mastodon.StatusApi
-import org.mozilla.social.core.network.mastodon.TimelineApi
+import org.mozilla.social.core.repository.mastodon.AccountRepository
+import org.mozilla.social.core.repository.mastodon.AppRepository
+import org.mozilla.social.core.repository.mastodon.InstanceRepository
+import org.mozilla.social.core.repository.mastodon.MediaRepository
+import org.mozilla.social.core.repository.mastodon.OauthRepository
+import org.mozilla.social.core.repository.mastodon.ReportRepository
+import org.mozilla.social.core.repository.mastodon.SearchRepository
+import org.mozilla.social.core.repository.mastodon.StatusRepository
+import org.mozilla.social.core.repository.mastodon.TimelineRepository
+import org.mozilla.social.core.repository.mozilla.RecommendationRepository
+import org.mozilla.social.core.usecase.mastodon.utils.TransactionUtils
 import kotlin.test.BeforeTest
 import kotlin.test.fail
 
-open class BaseDomainTest {
+open class BaseUseCaseTest {
 
-    protected val accountApi = mockk<AccountApi>(relaxed = true)
-    protected val appApi = mockk<AppApi>(relaxed = true)
-    protected val instanceApi = mockk<InstanceApi>(relaxed = true)
-    protected val mediaApi = mockk<MediaApi>(relaxed = true)
-    protected val oauthApi = mockk<OauthApi>(relaxed = true)
-    protected val recommendationApi = mockk<org.mozilla.social.core.network.mozilla.RecommendationApi>(relaxed = true)
-    protected val reportApi = mockk<ReportApi>(relaxed = true)
-    protected val searchApi = mockk<SearchApi>(relaxed = true)
-    protected val statusApi = mockk<StatusApi>(relaxed = true)
-    protected val timelineApi = mockk<TimelineApi>(relaxed = true)
+    protected val accountRepository = mockk<AccountRepository>(relaxed = true)
+    protected val appRepository = mockk<AppRepository>(relaxed = true)
+    protected val instanceRepository = mockk<InstanceRepository>(relaxed = true)
+    protected val mediaRepository = mockk<MediaRepository>(relaxed = true)
+    protected val oauthRepository = mockk<OauthRepository>(relaxed = true)
+    protected val recommendationRepository = mockk<RecommendationRepository>(relaxed = true)
+    protected val reportRepository = mockk<ReportRepository>(relaxed = true)
+    protected val searchRepository = mockk<SearchRepository>(relaxed = true)
+    protected val statusRepository = mockk<StatusRepository>(relaxed = true)
+    protected val timelineRepository = mockk<TimelineRepository>(relaxed = true)
+
 
     protected val socialDatabase = mockk<SocialDatabase>(relaxed = true)
 

@@ -1,23 +1,23 @@
 package org.mozilla.social.core.usecase.mastodon.account
 
 import kotlinx.coroutines.test.TestScope
-import org.mozilla.social.core.usecase.mastodon.BaseDomainTest
-import org.mozilla.social.core.test.fakes.NetworkModels
+import org.mozilla.social.core.usecase.mastodon.BaseUseCaseTest
+import org.mozilla.social.core.test.fakes.Models
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 
-class UpdateMyAccountTest : BaseDomainTest() {
+class UpdateMyAccountTest : BaseUseCaseTest() {
 
     private lateinit var subject: UpdateMyAccount
 
-    private val networkAccountMock = NetworkModels.networkAccount
+    private val networkAccountMock = Models.networkAccount
 
     @BeforeTest
     fun setup() {
         subject = UpdateMyAccount(
             externalScope = TestScope(testDispatcher),
             showSnackbar = showSnackbar,
-            accountApi = accountApi,
+            accountRepository = accountRepository,
             socialDatabase = socialDatabase,
             dispatcherIo = testDispatcher,
         )
@@ -27,14 +27,7 @@ class UpdateMyAccountTest : BaseDomainTest() {
     fun testCancelledScope() {
         testOuterScopeCancelled(
             delayedCallBlock = {
-                accountApi.updateAccount(
-                    any(),
-                    any(),
-                    any(),
-                    any(),
-                    any(),
-                    any(),
-                    any(),
+                accountRepository.updateAccount(
                     any(),
                     any(),
                     any(),
@@ -58,14 +51,7 @@ class UpdateMyAccountTest : BaseDomainTest() {
     fun testCancelledScopeWithError() {
         testOuterScopeCancelledAndInnerException(
             delayedCallBlock = {
-                accountApi.updateAccount(
-                    any(),
-                    any(),
-                    any(),
-                    any(),
-                    any(),
-                    any(),
-                    any(),
+                accountRepository.updateAccount(
                     any(),
                     any(),
                     any(),

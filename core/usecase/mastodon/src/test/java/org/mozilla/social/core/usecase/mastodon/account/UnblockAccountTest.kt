@@ -1,11 +1,11 @@
 package org.mozilla.social.core.usecase.mastodon.account
 
 import kotlinx.coroutines.test.TestScope
-import org.mozilla.social.core.usecase.mastodon.BaseDomainTest
+import org.mozilla.social.core.usecase.mastodon.BaseUseCaseTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 
-class UnblockAccountTest: BaseDomainTest() {
+class UnblockAccountTest: BaseUseCaseTest() {
 
     private lateinit var subject: UnblockAccount
 
@@ -14,7 +14,7 @@ class UnblockAccountTest: BaseDomainTest() {
         subject = UnblockAccount(
             externalScope = TestScope(testDispatcher),
             showSnackbar = showSnackbar,
-            accountApi = accountApi,
+            accountRepository = accountRepository,
             socialDatabase = socialDatabase,
             dispatcherIo = testDispatcher,
         )
@@ -31,7 +31,7 @@ class UnblockAccountTest: BaseDomainTest() {
                 subject(accountId)
             },
             verifyBlock = {
-                accountApi.unblockAccount(accountId)
+                accountRepository.unblockAccount(accountId)
             }
         )
     }

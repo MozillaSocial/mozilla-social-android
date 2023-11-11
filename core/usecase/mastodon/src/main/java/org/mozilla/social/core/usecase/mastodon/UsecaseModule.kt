@@ -71,7 +71,7 @@ val usecaseModule = module {
         MuteAccount(
             externalScope = get<AppScope>(),
             showSnackbar = get(),
-            accountApi = get(),
+            accountRepository = get(),
             socialDatabase = get(),
         )
     }
@@ -79,7 +79,7 @@ val usecaseModule = module {
         UnblockAccount(
             externalScope = get<AppScope>(),
             showSnackbar = get(),
-            accountApi = get(),
+            accountRepository = get(),
             socialDatabase = get(),
         )
     }
@@ -87,7 +87,7 @@ val usecaseModule = module {
         UnfollowAccount(
             externalScope = get<AppScope>(),
             showSnackbar = get(),
-            accountApi = get(),
+            accountRepository = get(),
             socialDatabase = get(),
         )
     }
@@ -95,7 +95,7 @@ val usecaseModule = module {
         UnmuteAccount(
             externalScope = get<AppScope>(),
             showSnackbar = get(),
-            accountApi = get(),
+            accountRepository = get(),
             socialDatabase = get(),
         )
     }
@@ -103,7 +103,7 @@ val usecaseModule = module {
         UpdateMyAccount(
             externalScope = get<AppScope>(),
             showSnackbar = get(),
-            accountApi = get(),
+            accountRepository = get(),
             socialDatabase = get(),
         )
     }
@@ -111,13 +111,12 @@ val usecaseModule = module {
         Report(
             externalScope = get<AppScope>(),
             showSnackbar = get(),
-            reportApi = get(),
+            reportRepository = get(),
         )
     }
     single {
         PostStatus(
             externalScope = get<AppScope>(),
-            statusApi = get(),
             mediaApi = get(),
             statusRepository = get(),
             timelineRepository = get(),
@@ -127,7 +126,6 @@ val usecaseModule = module {
     single {
         BoostStatus(
             externalScope = get<AppScope>(),
-            statusApi = get(),
             statusRepository = get(),
             showSnackbar = get(),
             socialDatabase = get(),
@@ -136,7 +134,6 @@ val usecaseModule = module {
     single {
         FavoriteStatus(
             externalScope = get<AppScope>(),
-            statusApi = get(),
             statusRepository = get(),
             showSnackbar = get(),
             socialDatabase = get(),
@@ -145,7 +142,6 @@ val usecaseModule = module {
     single {
         UndoBoostStatus(
             externalScope = get<AppScope>(),
-            statusApi = get(),
             statusRepository = get(),
             showSnackbar = get(),
             socialDatabase = get(),
@@ -154,7 +150,6 @@ val usecaseModule = module {
     single {
         UndoFavoriteStatus(
             externalScope = get<AppScope>(),
-            statusApi = get(),
             statusRepository = get(),
             showSnackbar = get(),
             socialDatabase = get(),
@@ -163,7 +158,7 @@ val usecaseModule = module {
     single {
         VoteOnPoll(
             externalScope = get<AppScope>(),
-            statusApi = get(),
+            statusRepository = get(),
             showSnackbar = get(),
             socialDatabase = get(),
         )
@@ -171,7 +166,7 @@ val usecaseModule = module {
     single {
         DeleteStatus(
             externalScope = get<AppScope>(),
-            statusApi = get(),
+            statusRepository = get(),
             showSnackbar = get(),
             socialDatabase = get(),
         )

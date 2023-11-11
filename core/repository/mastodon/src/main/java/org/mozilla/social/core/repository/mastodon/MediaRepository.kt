@@ -5,14 +5,15 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import org.mozilla.social.core.repository.mastodon.model.status.toExternalModel
 import org.mozilla.social.core.network.mastodon.MediaApi
+import org.mozilla.social.core.repository.mastodon.mappers.toNetworkModel
+import org.mozilla.social.core.repository.mastodon.model.MediaUpdate
 import org.mozilla.social.model.Attachment
 import java.io.File
 
 class MediaRepository internal constructor(
     private val mediaApi: MediaApi,
 ) {
-
-    suspend fun uploadImage(
+    suspend fun uploadMedia(
         file: File,
         description: String?,
     ): Attachment = mediaApi.uploadMedia(
@@ -23,4 +24,7 @@ class MediaRepository internal constructor(
         ),
         description,
     ).toExternalModel()
+
+    suspend fun updateMedia(mediaId: String, mediaUpdate: MediaUpdate) =
+        mediaApi.updateMedia(mediaId, mediaUpdate.toNetworkModel())
 }

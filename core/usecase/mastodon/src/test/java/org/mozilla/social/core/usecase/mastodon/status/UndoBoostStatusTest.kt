@@ -1,27 +1,22 @@
 package org.mozilla.social.core.usecase.mastodon.status
 
-import io.mockk.mockk
 import kotlinx.coroutines.test.TestScope
-import org.mozilla.social.core.repository.mastodon.StatusRepository
-import org.mozilla.social.core.usecase.mastodon.BaseDomainTest
-import org.mozilla.social.core.test.fakes.NetworkModels
+import org.mozilla.social.core.usecase.mastodon.BaseUseCaseTest
+import org.mozilla.social.core.test.fakes.Models
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 
-class UndoBoostStatusTest : BaseDomainTest() {
-
-    private val statusRepository = mockk<StatusRepository>(relaxed = true)
+class UndoBoostStatusTest : BaseUseCaseTest() {
 
     private lateinit var subject: UndoBoostStatus
 
-    private val networkStatus = NetworkModels.networkStatus
+    private val networkStatus = Models.status
 
     @BeforeTest
     fun setup() {
         subject = UndoBoostStatus(
             externalScope = TestScope(testDispatcher),
             showSnackbar = showSnackbar,
-            statusApi = statusApi,
             statusRepository = statusRepository,
             socialDatabase = socialDatabase,
             dispatcherIo = testDispatcher,
@@ -32,7 +27,7 @@ class UndoBoostStatusTest : BaseDomainTest() {
     fun testCancelledScope() {
         testOuterScopeCancelled(
             delayedCallBlock = {
-                statusApi.unBoostStatus(any())
+                statusRepository.unBoostStatus(any())
             },
             delayedCallBlockReturnValue = networkStatus,
             subjectCallBlock = {
@@ -48,7 +43,7 @@ class UndoBoostStatusTest : BaseDomainTest() {
     fun testCancelledScopeWithError() {
         testOuterScopeCancelledAndInnerException(
             delayedCallBlock = {
-                statusApi.unBoostStatus(any())
+                statusRepository.unBoostStatus(any())
             },
             subjectCallBlock = {
                 subject("id")

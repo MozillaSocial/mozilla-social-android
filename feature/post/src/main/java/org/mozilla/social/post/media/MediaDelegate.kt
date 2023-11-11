@@ -65,7 +65,7 @@ class MediaDelegate(
         updateImageState(uri) { copy(loadState = LoadState.LOADING) }
         uploadJobs[uri] = coroutineScope.launch {
             try {
-                val imageId = mediaRepository.uploadImage(
+                val imageId = mediaRepository.uploadMedia(
                     file = file,
                     description = imageStates.value.firstOrNull { it.uri == uri }
                         ?.description?.ifBlank { null }

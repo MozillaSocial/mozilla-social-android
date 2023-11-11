@@ -25,5 +25,9 @@ data class ReportCreate(
     /**
      * If the account is remote, should the report be forwarded to the remote admin?
      */
-    val forwardToRemoteAdmin: Boolean?
+    val forward: Boolean?,
+
+    val category: String?,
+
+    val ruleViolations: List<Int>?,
 )

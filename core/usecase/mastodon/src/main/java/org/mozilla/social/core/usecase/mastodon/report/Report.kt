@@ -6,14 +6,14 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.core.navigation.usecases.ShowSnackbar
-import org.mozilla.social.core.network.mastodon.ReportApi
-import org.mozilla.social.core.network.mastodon.model.request.NetworkReportCreate
+import org.mozilla.social.core.repository.mastodon.ReportRepository
 import org.mozilla.social.core.usecase.mastodon.R
+import org.mozilla.social.model.request.ReportCreate
 
 class Report(
     private val externalScope: CoroutineScope,
     private val showSnackbar: ShowSnackbar,
-    private val reportApi: ReportApi,
+    private val reportRepository: ReportRepository,
     private val dispatcherIo: CoroutineDispatcher = Dispatchers.IO,
 ) {
 
@@ -29,8 +29,8 @@ class Report(
         ruleViolations: List<Int>? = null,
     ) = externalScope.async(dispatcherIo) {
         try {
-            reportApi.report(
-                body = NetworkReportCreate(
+            reportRepository.report(
+                body = ReportCreate(
                     accountId = accountId,
                     statusIds = statusIds,
                     comment = comment,
