@@ -26,7 +26,7 @@ import org.mozilla.social.core.usecase.mastodon.status.UndoFavoriteStatus
 import org.mozilla.social.core.usecase.mastodon.status.VoteOnPoll
 import org.mozilla.social.core.usecase.mastodon.thread.GetThreadUseCase
 
-val usecaseModule = module {
+val mastodonUsecaseModule = module {
     factory { parametersHolder ->
         HashTagTimelineRemoteMediator(
             get(),
