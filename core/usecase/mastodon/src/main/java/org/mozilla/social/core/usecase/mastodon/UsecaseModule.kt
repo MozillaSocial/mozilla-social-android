@@ -55,7 +55,7 @@ val usecaseModule = module {
         BlockAccount(
             externalScope = get<AppScope>(),
             showSnackbar = get(),
-            accountApi = get(),
+            accountRepository = get(),
             socialDatabase = get(),
         )
     }

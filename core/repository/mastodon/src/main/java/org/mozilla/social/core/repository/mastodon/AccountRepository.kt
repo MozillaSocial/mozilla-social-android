@@ -20,6 +20,8 @@ class AccountRepository internal constructor(
         return accountApi.verifyCredentials().toExternalModel()
     }
 
+    suspend fun blockAccount(accountId: String) = accountApi.blockAccount(accountId = accountId)
+
     suspend fun getAccount(accountId: String): Account =
         accountApi.getAccount(accountId).toExternalModel()
 

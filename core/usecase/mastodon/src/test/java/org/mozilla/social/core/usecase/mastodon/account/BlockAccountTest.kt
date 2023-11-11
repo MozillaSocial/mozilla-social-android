@@ -14,7 +14,7 @@ class BlockAccountTest : BaseDomainTest() {
         subject = BlockAccount(
             externalScope = TestScope(testDispatcher),
             showSnackbar = showSnackbar,
-            accountApi = accountApi,
+            accountRepository = accountApi,
             socialDatabase = socialDatabase,
             dispatcherIo = testDispatcher,
         )
