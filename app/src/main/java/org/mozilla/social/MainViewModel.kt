@@ -27,7 +27,7 @@ class MainViewModel(
         viewModelScope.launch(Dispatchers.Main) {
             isSignedInFlow().collectLatest {
                 if (!it) {
-                    navigateTo(AuthNavigationDestination.Login)
+                    navigateTo(NavigationDestination.Auth)
                 } else {
                     navigateTo(NavigationDestination.Tabs)
                 }
