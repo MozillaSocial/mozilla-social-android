@@ -16,6 +16,10 @@ class StatusRepository(
     private val socialDatabase: SocialDatabase,
 ) {
 
+    suspend fun voteOnPoll(pollId: String, pollVote: PollVote) {
+        statusApi.voteOnPoll(pollId = pollId, body = )
+    }
+
     suspend fun getStatusLocal(
         statusId: String
     ): Status? {

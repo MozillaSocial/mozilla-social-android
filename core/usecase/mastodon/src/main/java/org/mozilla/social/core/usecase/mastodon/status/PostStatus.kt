@@ -10,6 +10,7 @@ import org.mozilla.social.core.repository.mastodon.TimelineRepository
 import org.mozilla.social.core.repository.mastodon.model.status.toExternalModel
 import org.mozilla.social.core.repository.mastodon.model.status.toNetworkModel
 import org.mozilla.social.core.navigation.usecases.ShowSnackbar
+import org.mozilla.social.core.repository.mastodon.MediaRepository
 import org.mozilla.social.core.usecase.mastodon.R
 import org.mozilla.social.model.ImageState
 import org.mozilla.social.model.StatusVisibility
@@ -17,8 +18,8 @@ import org.mozilla.social.model.request.PollCreate
 
 class PostStatus(
     private val externalScope: CoroutineScope,
-    private val statusApi: org.mozilla.social.core.network.mastodon.StatusApi,
-    private val mediaApi: org.mozilla.social.core.network.mastodon.MediaApi,
+    private val statusApi: StatusRepository,
+    private val mediaApi: MediaRepository,
     private val statusRepository: StatusRepository,
     private val timelineRepository: TimelineRepository,
     private val showSnackbar: ShowSnackbar,

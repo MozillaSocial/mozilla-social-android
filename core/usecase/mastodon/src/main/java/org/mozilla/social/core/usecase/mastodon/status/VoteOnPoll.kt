@@ -9,11 +9,12 @@ import org.mozilla.social.core.repository.mastodon.model.status.toDatabaseModel
 import org.mozilla.social.core.repository.mastodon.model.status.toExternalModel
 import org.mozilla.social.core.database.SocialDatabase
 import org.mozilla.social.core.navigation.usecases.ShowSnackbar
+import org.mozilla.social.core.repository.mastodon.StatusRepository
 import org.mozilla.social.core.usecase.mastodon.R
 
 class VoteOnPoll(
     private val externalScope: CoroutineScope,
-    private val statusApi: org.mozilla.social.core.network.mastodon.StatusApi,
+    private val statusApi: StatusRepository,
     private val socialDatabase: SocialDatabase,
     private val showSnackbar: ShowSnackbar,
     private val dispatcherIo: CoroutineDispatcher = Dispatchers.IO,

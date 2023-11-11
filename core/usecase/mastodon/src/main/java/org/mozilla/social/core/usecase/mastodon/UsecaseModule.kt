@@ -63,7 +63,7 @@ val usecaseModule = module {
         FollowAccount(
             externalScope = get<AppScope>(),
             showSnackbar = get(),
-            accountApi = get(),
+            accountRepository = get(),
             socialDatabase = get(),
         )
     }
