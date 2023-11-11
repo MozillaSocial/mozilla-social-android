@@ -7,5 +7,5 @@ import org.mozilla.social.feature.auth.login.LoginViewModel
 
 val authModule = module {
     viewModel { LoginViewModel(get(), get(), get()) }
-    viewModel { ChooseServerViewModel() }
+    viewModel { ChooseServerViewModel(get()) }
 }

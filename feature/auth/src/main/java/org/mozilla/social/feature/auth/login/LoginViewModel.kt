@@ -18,6 +18,7 @@ class LoginViewModel(
 ) : ViewModel(), LoginInteractions {
 
     //TODO remove context
+    //TODO make login rethrow
     override fun onSignInClicked(context: Context) {
         viewModelScope.launch {
             login(
