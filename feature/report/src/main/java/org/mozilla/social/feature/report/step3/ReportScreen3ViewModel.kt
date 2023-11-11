@@ -6,13 +6,16 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.mozilla.social.core.usecase.mastodon.account.BlockAccount
 import org.mozilla.social.core.usecase.mastodon.account.GetLoggedInUserAccountId
+import org.mozilla.social.core.usecase.mastodon.account.MuteAccount
+import org.mozilla.social.core.usecase.mastodon.account.UnfollowAccount
 import timber.log.Timber
 
 class ReportScreen3ViewModel(
-    private val unfollowAccount: org.mozilla.social.core.usecase.mastodon.account.UnfollowAccount,
-    private val blockAccount: org.mozilla.social.core.usecase.mastodon.account.BlockAccount,
-    private val muteAccount: org.mozilla.social.core.usecase.mastodon.account.MuteAccount,
+    private val unfollowAccount: UnfollowAccount,
+    private val blockAccount: BlockAccount,
+    private val muteAccount: MuteAccount,
     getLoggedInUserAccountId: GetLoggedInUserAccountId,
     private val doneClicked: () -> Unit,
     private val closeClicked: () -> Unit,
@@ -49,7 +52,7 @@ class ReportScreen3ViewModel(
                     accountId = reportAccountId,
                     loggedInUserAccountId = usersAccountId,
                 )
-            } catch (e: org.mozilla.social.core.usecase.mastodon.account.UnfollowAccount.UnfollowFailedException) {
+            } catch (e: UnfollowAccount.UnfollowFailedException) {
                 Timber.e(e)
                 _unfollowVisible.update { true }
             }
@@ -61,7 +64,7 @@ class ReportScreen3ViewModel(
         viewModelScope.launch {
             try {
                 muteAccount(reportAccountId)
-            } catch (e: org.mozilla.social.core.usecase.mastodon.account.MuteAccount.MuteFailedException) {
+            } catch (e: MuteAccount.MuteFailedException) {
                 Timber.e(e)
                 _muteVisible.update { true }
             }
@@ -73,7 +76,7 @@ class ReportScreen3ViewModel(
         viewModelScope.launch {
             try {
                 blockAccount(reportAccountId)
-            } catch (e: org.mozilla.social.core.usecase.mastodon.account.BlockAccount.BlockFailedException) {
+            } catch (e: BlockAccount.BlockFailedException) {
                 Timber.e(e)
                 _blockVisible.update { true }
             }

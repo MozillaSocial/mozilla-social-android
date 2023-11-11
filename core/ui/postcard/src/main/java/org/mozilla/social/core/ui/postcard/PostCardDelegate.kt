@@ -6,6 +6,8 @@ import org.mozilla.social.core.usecase.mastodon.status.BoostStatus
 import org.mozilla.social.core.navigation.NavigationDestination
 import org.mozilla.social.core.navigation.usecases.NavigateTo
 import org.mozilla.social.core.navigation.usecases.OpenLink
+import org.mozilla.social.core.usecase.mastodon.account.BlockAccount
+import org.mozilla.social.core.usecase.mastodon.account.MuteAccount
 import org.mozilla.social.core.usecase.mastodon.status.DeleteStatus
 import org.mozilla.social.core.usecase.mastodon.status.FavoriteStatus
 import org.mozilla.social.core.usecase.mastodon.status.UndoBoostStatus
@@ -17,8 +19,8 @@ class PostCardDelegate(
     private val coroutineScope: CoroutineScope,
     private val navigateTo: NavigateTo,
     private val openLink: OpenLink,
-    private val blockAccount: org.mozilla.social.core.usecase.mastodon.account.BlockAccount,
-    private val muteAccount: org.mozilla.social.core.usecase.mastodon.account.MuteAccount,
+    private val blockAccount: BlockAccount,
+    private val muteAccount: MuteAccount,
     private val voteOnPoll: VoteOnPoll,
     private val boostStatus: BoostStatus,
     private val undoBoostStatus: UndoBoostStatus,
@@ -85,7 +87,7 @@ class PostCardDelegate(
         coroutineScope.launch {
             try {
                 muteAccount(accountId)
-            } catch (e: org.mozilla.social.core.usecase.mastodon.account.MuteAccount.MuteFailedException) {
+            } catch (e: MuteAccount.MuteFailedException) {
                 Timber.e(e)
             }
         }
@@ -95,7 +97,7 @@ class PostCardDelegate(
         coroutineScope.launch {
             try {
                 blockAccount(accountId)
-            } catch (e: org.mozilla.social.core.usecase.mastodon.account.BlockAccount.BlockFailedException) {
+            } catch (e: BlockAccount.BlockFailedException) {
                 Timber.e(e)
             }
         }

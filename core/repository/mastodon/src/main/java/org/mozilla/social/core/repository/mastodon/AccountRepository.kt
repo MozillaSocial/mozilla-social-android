@@ -5,6 +5,7 @@ import org.mozilla.social.core.repository.mastodon.model.account.toExternal
 import org.mozilla.social.core.repository.mastodon.model.status.toExternalModel
 import org.mozilla.social.core.database.SocialDatabase
 import org.mozilla.social.core.network.mastodon.AccountApi
+import org.mozilla.social.core.repository.mastodon.model.followers.FollowersPagingWrapper
 import org.mozilla.social.model.Account
 import org.mozilla.social.model.Relationship
 import org.mozilla.social.model.Status
@@ -34,7 +35,7 @@ class AccountRepository internal constructor(
         olderThanId: String? = null,
         newerThanId: String? = null,
         loadSize: Int? = null,
-    ): org.mozilla.social.core.repository.mastodon.model.followers.FollowersPagingWrapper {
+    ): FollowersPagingWrapper {
         val response = accountApi.getAccountFollowers(
             accountId = accountId,
             olderThanId = olderThanId,
@@ -44,7 +45,7 @@ class AccountRepository internal constructor(
         if (!response.isSuccessful) {
             throw HttpException(response)
         }
-        return org.mozilla.social.core.repository.mastodon.model.followers.FollowersPagingWrapper(
+        return FollowersPagingWrapper(
             accounts = response.body()?.map { it.toExternalModel() } ?: emptyList(),
             link = response.headers().get("link"),
         )
@@ -55,7 +56,7 @@ class AccountRepository internal constructor(
         olderThanId: String? = null,
         newerThanId: String? = null,
         loadSize: Int? = null,
-    ): org.mozilla.social.core.repository.mastodon.model.followers.FollowersPagingWrapper {
+    ): FollowersPagingWrapper {
         val response = accountApi.getAccountFollowing(
             accountId = accountId,
             olderThanId = olderThanId,
@@ -65,7 +66,7 @@ class AccountRepository internal constructor(
         if (!response.isSuccessful) {
             throw HttpException(response)
         }
-        return org.mozilla.social.core.repository.mastodon.model.followers.FollowersPagingWrapper(
+        return FollowersPagingWrapper(
             accounts = response.body()?.map { it.toExternalModel() } ?: emptyList(),
             link = response.headers().get("link"),
         )

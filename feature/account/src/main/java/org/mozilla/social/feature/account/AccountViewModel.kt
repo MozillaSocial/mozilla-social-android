@@ -28,6 +28,12 @@ import org.mozilla.social.core.navigation.NavigationDestination
 import org.mozilla.social.core.navigation.usecases.NavigateTo
 import org.mozilla.social.core.ui.postcard.PostCardDelegate
 import org.mozilla.social.core.ui.postcard.toPostCardUiState
+import org.mozilla.social.core.usecase.mastodon.account.BlockAccount
+import org.mozilla.social.core.usecase.mastodon.account.FollowAccount
+import org.mozilla.social.core.usecase.mastodon.account.MuteAccount
+import org.mozilla.social.core.usecase.mastodon.account.UnblockAccount
+import org.mozilla.social.core.usecase.mastodon.account.UnfollowAccount
+import org.mozilla.social.core.usecase.mastodon.account.UnmuteAccount
 import timber.log.Timber
 
 class AccountViewModel(
@@ -36,12 +42,12 @@ class AccountViewModel(
     private val socialDatabase: SocialDatabase,
     private val getDetailedAccount: GetDetailedAccount,
     private val navigateTo: NavigateTo,
-    private val followAccount: org.mozilla.social.core.usecase.mastodon.account.FollowAccount,
-    private val unfollowAccount: org.mozilla.social.core.usecase.mastodon.account.UnfollowAccount,
-    private val blockAccount: org.mozilla.social.core.usecase.mastodon.account.BlockAccount,
-    private val unblockAccount: org.mozilla.social.core.usecase.mastodon.account.UnblockAccount,
-    private val muteAccount: org.mozilla.social.core.usecase.mastodon.account.MuteAccount,
-    private val unmuteAccount: org.mozilla.social.core.usecase.mastodon.account.UnmuteAccount,
+    private val followAccount: FollowAccount,
+    private val unfollowAccount: UnfollowAccount,
+    private val blockAccount: BlockAccount,
+    private val unblockAccount: UnblockAccount,
+    private val muteAccount: MuteAccount,
+    private val unmuteAccount: UnmuteAccount,
     initialAccountId: String?,
 ) : ViewModel(), AccountInteractions {
 
@@ -75,7 +81,7 @@ class AccountViewModel(
     private val _timelineType = MutableStateFlow(TimelineType.POSTS)
     val timelineType = _timelineType.asStateFlow()
 
-    private val accountTimelineRemoteMediator: AccountTimelineRemoteMediator by KoinJavaComponent.inject(
+    private val accountTimelineRemoteMediator: AccountTimelineRemoteMediator by inject(
         AccountTimelineRemoteMediator::class.java
     ) {
         parametersOf(
@@ -129,7 +135,7 @@ class AccountViewModel(
         viewModelScope.launch {
             try {
                 muteAccount(accountId)
-            } catch (e: org.mozilla.social.core.usecase.mastodon.account.MuteAccount.MuteFailedException) {
+            } catch (e: MuteAccount.MuteFailedException) {
                 Timber.e(e)
             }
         }
@@ -139,7 +145,7 @@ class AccountViewModel(
         viewModelScope.launch {
             try {
                 unmuteAccount(accountId)
-            } catch (e: org.mozilla.social.core.usecase.mastodon.account.UnmuteAccount.UnmuteFailedException) {
+            } catch (e: UnmuteAccount.UnmuteFailedException) {
                 Timber.e(e)
             }
         }
@@ -149,7 +155,7 @@ class AccountViewModel(
         viewModelScope.launch {
             try {
                 blockAccount(accountId)
-            } catch (e: org.mozilla.social.core.usecase.mastodon.account.BlockAccount.BlockFailedException) {
+            } catch (e: BlockAccount.BlockFailedException) {
                 Timber.e(e)
             }
         }
@@ -159,7 +165,7 @@ class AccountViewModel(
         viewModelScope.launch {
             try {
                 unblockAccount(accountId)
-            } catch (e: org.mozilla.social.core.usecase.mastodon.account.UnblockAccount.UnblockFailedException) {
+            } catch (e: UnblockAccount.UnblockFailedException) {
                 Timber.e(e)
             }
         }
@@ -191,7 +197,7 @@ class AccountViewModel(
                     accountId = accountId,
                     loggedInUserAccountId = usersAccountId
                 )
-            } catch (e: org.mozilla.social.core.usecase.mastodon.account.FollowAccount.FollowFailedException) {
+            } catch (e: FollowAccount.FollowFailedException) {
                 Timber.e(e)
             }
         }
@@ -204,7 +210,7 @@ class AccountViewModel(
                     accountId = accountId,
                     loggedInUserAccountId = usersAccountId,
                 )
-            } catch (e: org.mozilla.social.core.usecase.mastodon.account.UnfollowAccount.UnfollowFailedException) {
+            } catch (e: UnfollowAccount.UnfollowFailedException) {
                 Timber.e(e)
             }
         }

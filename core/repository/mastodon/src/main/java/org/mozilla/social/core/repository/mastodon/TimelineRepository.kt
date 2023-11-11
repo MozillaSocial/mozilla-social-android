@@ -10,6 +10,7 @@ import org.mozilla.social.core.database.model.statusCollections.FederatedTimelin
 import org.mozilla.social.core.database.model.statusCollections.HomeTimelineStatus
 import org.mozilla.social.core.database.model.statusCollections.LocalTimelineStatus
 import org.mozilla.social.core.network.mastodon.TimelineApi
+import org.mozilla.social.core.repository.mastodon.model.status.StatusPagingWrapper
 import org.mozilla.social.model.Status
 import org.mozilla.social.model.StatusVisibility
 import retrofit2.HttpException
@@ -24,7 +25,7 @@ class TimelineRepository internal constructor(
         olderThanId: String? = null,
         immediatelyNewerThanId: String? = null,
         loadSize: Int? = null,
-    ): org.mozilla.social.core.repository.mastodon.model.status.StatusPagingWrapper {
+    ): StatusPagingWrapper {
         val response = timelineApi.getHomeTimeline(
             olderThanId = olderThanId,
             immediatelyNewerThanId = immediatelyNewerThanId,
@@ -35,7 +36,7 @@ class TimelineRepository internal constructor(
             throw HttpException(response)
         }
 
-        return org.mozilla.social.core.repository.mastodon.model.status.StatusPagingWrapper(
+        return StatusPagingWrapper(
             statuses = response.body()?.map { it.toExternalModel() } ?: emptyList(),
             pagingLinks = response.headers().get("link")?.parseMastodonLinkHeader(),
         )
@@ -48,7 +49,7 @@ class TimelineRepository internal constructor(
         olderThanId: String? = null,
         immediatelyNewerThanId: String? = null,
         loadSize: Int? = null,
-    ): org.mozilla.social.core.repository.mastodon.model.status.StatusPagingWrapper {
+    ): StatusPagingWrapper {
         val response = timelineApi.getPublicTimeline(
             localOnly = localOnly,
             federatedOnly = federatedOnly,
@@ -62,7 +63,7 @@ class TimelineRepository internal constructor(
             throw HttpException(response)
         }
 
-        return org.mozilla.social.core.repository.mastodon.model.status.StatusPagingWrapper(
+        return StatusPagingWrapper(
             statuses = response.body()?.map { it.toExternalModel() } ?: emptyList(),
             pagingLinks = response.headers().get("link")?.parseMastodonLinkHeader(),
         )
@@ -74,7 +75,7 @@ class TimelineRepository internal constructor(
         olderThanId: String? = null,
         immediatelyNewerThanId: String? = null,
         loadSize: Int? = null,
-    ): org.mozilla.social.core.repository.mastodon.model.status.StatusPagingWrapper {
+    ): StatusPagingWrapper {
         val response = timelineApi.getHashTagTimeline(
             hashTag = hashTag,
             olderThanId = olderThanId,
@@ -86,7 +87,7 @@ class TimelineRepository internal constructor(
             throw HttpException(response)
         }
 
-        return org.mozilla.social.core.repository.mastodon.model.status.StatusPagingWrapper(
+        return StatusPagingWrapper(
             statuses = response.body()?.map { it.toExternalModel() } ?: emptyList(),
             pagingLinks = response.headers().get("link")?.parseMastodonLinkHeader(),
         )

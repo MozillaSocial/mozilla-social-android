@@ -15,7 +15,7 @@ import org.mozilla.social.model.InstanceRule
 import timber.log.Timber
 
 class ReportScreen2ViewModel(
-    private val report: org.mozilla.social.core.usecase.mastodon.report.Report,
+    private val report: Report,
     private val accountRepository: AccountRepository,
     private val onClose: () -> Unit,
     private val onReportSubmitted: (bundle: ReportDataBundle.ReportDataBundleForScreen3) -> Unit,
@@ -85,7 +85,7 @@ class ReportScreen2ViewModel(
                         didUserReportAccount = true,
                     )
                 )
-            } catch (e: org.mozilla.social.core.usecase.mastodon.report.Report.ReportFailedException) {
+            } catch (e: Report.ReportFailedException) {
                 Timber.e(e)
                 _reportIsSending.update { false }
             }

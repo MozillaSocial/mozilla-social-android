@@ -7,11 +7,11 @@ import kotlin.test.Test
 
 class ReportTest : BaseDomainTest() {
 
-    private lateinit var subject: org.mozilla.social.core.usecase.mastodon.report.Report
+    private lateinit var subject: Report
 
     @BeforeTest
     fun setup() {
-        subject = org.mozilla.social.core.usecase.mastodon.report.Report(
+        subject = Report(
             externalScope = TestScope(testDispatcher),
             showSnackbar = showSnackbar,
             reportApi = reportApi,
