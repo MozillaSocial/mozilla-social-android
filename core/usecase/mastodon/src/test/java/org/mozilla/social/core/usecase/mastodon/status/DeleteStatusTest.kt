@@ -4,24 +4,24 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
-import org.mozilla.social.core.usecase.mastodon.BaseDomainTest
-import org.mozilla.social.core.test.fakes.NetworkModels
+import org.mozilla.social.core.test.fakes.Models
+import org.mozilla.social.core.usecase.mastodon.BaseUseCaseTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertNotNull
 
-class DeleteStatusTest : BaseDomainTest() {
+class DeleteStatusTest : BaseUseCaseTest() {
 
     private lateinit var subject: DeleteStatus
 
-    private val networkStatus = NetworkModels.networkStatus
+    private val networkStatus = Models.status
 
     @BeforeTest
     fun setup() {
         subject = DeleteStatus(
             externalScope = TestScope(testDispatcher),
             showSnackbar = showSnackbar,
-            statusApi = statusApi,
+            statusRepository = statusRepository,
             socialDatabase = socialDatabase,
             dispatcherIo = testDispatcher,
         )
@@ -33,7 +33,7 @@ class DeleteStatusTest : BaseDomainTest() {
 
         coVerify(exactly = 1) {
             statusDao.updateIsBeingDeleted("id", true)
-            statusApi.deleteStatus("id")
+            statusRepository.deleteStatus("id")
             homeTimelineDao.deletePost("id")
             localTimelineDao.deletePost("id")
             federatedTimelineDao.deletePost("id")
@@ -45,7 +45,7 @@ class DeleteStatusTest : BaseDomainTest() {
 
     @Test
     fun networkFailureTest() = runTest {
-        coEvery { statusApi.deleteStatus("id") } throws Exception()
+        coEvery { statusRepository.deleteStatus("id") } throws Exception()
         var exception: Exception? = null
         try {
             subject("id")
@@ -57,7 +57,7 @@ class DeleteStatusTest : BaseDomainTest() {
 
         coVerify(exactly = 1) {
             statusDao.updateIsBeingDeleted("id", true)
-            statusApi.deleteStatus("id")
+            statusRepository.deleteStatus("id")
             statusDao.updateIsBeingDeleted("id", false)
         }
 
@@ -75,7 +75,7 @@ class DeleteStatusTest : BaseDomainTest() {
     fun testCancelledScope() {
         testOuterScopeCancelled(
             delayedCallBlock = {
-                statusApi.deleteStatus(any())
+                statusRepository.deleteStatus(any())
             },
             delayedCallBlockReturnValue = networkStatus,
             subjectCallBlock = {
@@ -91,7 +91,7 @@ class DeleteStatusTest : BaseDomainTest() {
     fun testCancelledScopeWithError() {
         testOuterScopeCancelledAndInnerException(
             delayedCallBlock = {
-                statusApi.deleteStatus(any())
+                statusRepository.deleteStatus(any())
             },
             subjectCallBlock = {
                 subject("id")

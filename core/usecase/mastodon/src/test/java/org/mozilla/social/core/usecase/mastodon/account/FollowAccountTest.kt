@@ -4,12 +4,12 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
-import org.mozilla.social.core.usecase.mastodon.BaseDomainTest
+import org.mozilla.social.core.usecase.mastodon.BaseUseCaseTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertNotNull
 
-class FollowAccountTest : BaseDomainTest() {
+class FollowAccountTest : BaseUseCaseTest() {
 
     private lateinit var subject: FollowAccount
 
@@ -18,7 +18,7 @@ class FollowAccountTest : BaseDomainTest() {
         subject = FollowAccount(
             externalScope = TestScope(testDispatcher),
             showSnackbar = showSnackbar,
-            accountApi = accountApi,
+            accountRepository = accountRepository,
             socialDatabase = socialDatabase,
             dispatcherIo = testDispatcher,
         )
@@ -36,7 +36,7 @@ class FollowAccountTest : BaseDomainTest() {
         coVerify(exactly = 1) {
             accountsDao.updateFollowingCount(loggedInId, 1)
             relationshipsDao.updateFollowing(accountId, true)
-            accountApi.followAccount(accountId)
+            accountRepository.followAccount(accountId)
         }
     }
 
@@ -45,7 +45,7 @@ class FollowAccountTest : BaseDomainTest() {
         val accountId = "id1"
         val loggedInId = "id2"
 
-        coEvery { accountApi.followAccount(accountId) } throws Exception()
+        coEvery { accountRepository.followAccount(accountId) } throws Exception()
 
         var exception: Exception? = null
 
@@ -84,7 +84,7 @@ class FollowAccountTest : BaseDomainTest() {
                 )
             },
             verifyBlock = {
-                accountApi.followAccount(accountId)
+                accountRepository.followAccount(accountId)
             },
         )
     }

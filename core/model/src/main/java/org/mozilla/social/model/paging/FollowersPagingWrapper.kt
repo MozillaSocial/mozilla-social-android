@@ -1,4 +1,4 @@
-package org.mozilla.social.core.repository.mastodon.model.followers
+package org.mozilla.social.model.paging
 
 import org.mozilla.social.model.Account
 

@@ -14,7 +14,6 @@ import org.mozilla.social.core.usecase.mastodon.R
 
 class UndoBoostStatus(
     private val externalScope: CoroutineScope,
-    private val statusApi: org.mozilla.social.core.network.mastodon.StatusApi,
     private val socialDatabase: SocialDatabase,
     private val statusRepository: StatusRepository,
     private val showSnackbar: ShowSnackbar,
@@ -29,7 +28,7 @@ class UndoBoostStatus(
                 socialDatabase.statusDao().updateBoostCount(boostedStatusId, -1)
                 socialDatabase.statusDao().updateBoosted(boostedStatusId, false)
             }
-            val status = statusApi.unBoostStatus(boostedStatusId).toExternalModel()
+            val status = statusRepository.unBoostStatus(boostedStatusId)
             statusRepository.saveStatusToDatabase(status)
         } catch (e: Exception) {
             socialDatabase.withTransaction {

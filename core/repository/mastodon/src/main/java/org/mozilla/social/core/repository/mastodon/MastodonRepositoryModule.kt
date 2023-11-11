@@ -13,5 +13,6 @@ fun mastodonRepositoryModule(isDebug: Boolean) = module {
     single { SearchRepository(get()) }
     single { AppRepository(get()) }
     single { InstanceRepository(get()) }
+    single { ReportRepository(get()) }
     includes(mastodonNetworkModule(isDebug))
 }
