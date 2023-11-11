@@ -39,8 +39,6 @@ import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.designsystem.utils.NoRipple
 import org.mozilla.social.core.ui.common.appbar.MoSoCloseableTopAppBar
 import org.mozilla.social.core.ui.common.error.GenericError
-import org.mozilla.social.core.ui.htmlcontent.HtmlContent
-import org.mozilla.social.core.ui.htmlcontent.HtmlContentInteractions
 import org.mozilla.social.core.ui.common.loading.MaxSizeLoading
 import org.mozilla.social.feature.report.R
 import org.mozilla.social.feature.report.ReportDataBundle
