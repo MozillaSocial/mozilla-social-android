@@ -16,7 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import coil.compose.AsyncImage
 import org.mozilla.social.core.ui.common.Radius
-import org.mozilla.social.model.Attachment
+import org.mozilla.social.core.model.Attachment
 
 @Suppress("MagicNumber")
 @Composable

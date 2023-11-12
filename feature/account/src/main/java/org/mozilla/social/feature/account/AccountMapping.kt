@@ -2,9 +2,9 @@ package org.mozilla.social.feature.account
 
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
-import org.mozilla.social.model.Account
-import org.mozilla.social.model.Field
-import org.mozilla.social.model.Relationship
+import org.mozilla.social.core.model.Account
+import org.mozilla.social.core.model.Field
+import org.mozilla.social.core.model.Relationship
 
 fun Account.toUiState(
     relationship: Relationship,

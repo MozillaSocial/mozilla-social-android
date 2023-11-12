@@ -1,9 +1,8 @@
 package org.mozilla.social.core.ui.postcard
 
 import org.mozilla.social.common.utils.StringFactory
-import org.mozilla.social.core.ui.poll.PollUiState
-import org.mozilla.social.model.Attachment
-import org.mozilla.social.model.Mention
+import org.mozilla.social.core.model.Attachment
+import org.mozilla.social.core.model.Mention
 
 data class PostCardUiState(
     val statusId: String,

@@ -15,7 +15,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.view.doOnNextLayout
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
-import org.mozilla.social.model.Mention
+import org.mozilla.social.core.model.Mention
 import kotlin.math.min
 
 /**

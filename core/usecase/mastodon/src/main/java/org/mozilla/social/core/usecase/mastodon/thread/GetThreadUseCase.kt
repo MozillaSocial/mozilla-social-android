@@ -4,7 +4,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
 import org.mozilla.social.core.repository.mastodon.StatusRepository
-import org.mozilla.social.model.Status
+import org.mozilla.social.core.model.Status
 
 class GetThreadUseCase(
     private val statusRepository: StatusRepository,

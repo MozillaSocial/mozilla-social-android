@@ -17,8 +17,8 @@ import org.mozilla.social.core.repository.mastodon.model.account.toExternal
 import org.mozilla.social.core.repository.mastodon.model.status.toDatabaseModel
 import org.mozilla.social.core.repository.mastodon.model.status.toExternalModel
 import org.mozilla.social.core.database.SocialDatabase
-import org.mozilla.social.model.Account
-import org.mozilla.social.model.Relationship
+import org.mozilla.social.core.model.Account
+import org.mozilla.social.core.model.Relationship
 import timber.log.Timber
 
 class GetDetailedAccount(

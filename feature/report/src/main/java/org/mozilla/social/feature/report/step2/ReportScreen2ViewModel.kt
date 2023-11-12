@@ -11,7 +11,7 @@ import org.mozilla.social.core.repository.mastodon.AccountRepository
 import org.mozilla.social.core.usecase.mastodon.report.Report
 import org.mozilla.social.feature.report.ReportDataBundle
 import org.mozilla.social.feature.report.ReportType
-import org.mozilla.social.model.InstanceRule
+import org.mozilla.social.core.model.InstanceRule
 import timber.log.Timber
 
 class ReportScreen2ViewModel(

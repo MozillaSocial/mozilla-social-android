@@ -9,12 +9,12 @@ import org.mozilla.social.core.repository.mastodon.StatusRepository
 import org.mozilla.social.core.repository.mastodon.TimelineRepository
 import org.mozilla.social.core.navigation.usecases.ShowSnackbar
 import org.mozilla.social.core.repository.mastodon.MediaRepository
-import org.mozilla.social.model.MediaUpdate
+import org.mozilla.social.core.model.MediaUpdate
 import org.mozilla.social.core.usecase.mastodon.R
-import org.mozilla.social.model.ImageState
-import org.mozilla.social.model.StatusVisibility
-import org.mozilla.social.model.request.PollCreate
-import org.mozilla.social.model.request.StatusCreate
+import org.mozilla.social.core.model.ImageState
+import org.mozilla.social.core.model.StatusVisibility
+import org.mozilla.social.core.model.request.PollCreate
+import org.mozilla.social.core.model.request.StatusCreate
 
 class PostStatus(
     private val externalScope: CoroutineScope,

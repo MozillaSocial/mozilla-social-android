@@ -35,7 +35,6 @@ import org.mozilla.social.core.designsystem.component.MoSoDivider
 import org.mozilla.social.core.designsystem.component.MoSoRadioButton
 import org.mozilla.social.core.designsystem.component.MoSoSurface
 import org.mozilla.social.core.designsystem.component.MoSoTextField
-import org.mozilla.social.core.ui.common.appbar.MoSoTopBar
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.designsystem.utils.NoRipple
 import org.mozilla.social.core.navigation.navigationModule
@@ -45,7 +44,7 @@ import org.mozilla.social.feature.report.R
 import org.mozilla.social.feature.report.ReportDataBundle
 import org.mozilla.social.feature.report.ReportTarget
 import org.mozilla.social.feature.report.ReportType
-import org.mozilla.social.model.InstanceRule
+import org.mozilla.social.core.model.InstanceRule
 
 @Composable
 internal fun ReportScreen1(

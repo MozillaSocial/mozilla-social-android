@@ -5,10 +5,10 @@ import org.mozilla.social.core.network.mastodon.model.NetworkInstance
 import org.mozilla.social.core.network.mastodon.model.NetworkInstanceRule
 import org.mozilla.social.core.network.mastodon.model.NetworkInstanceStats
 import org.mozilla.social.core.network.mastodon.model.NetworkInstanceUrls
-import org.mozilla.social.model.Instance
-import org.mozilla.social.model.InstanceRule
-import org.mozilla.social.model.InstanceStats
-import org.mozilla.social.model.InstanceUrls
+import org.mozilla.social.core.model.Instance
+import org.mozilla.social.core.model.InstanceRule
+import org.mozilla.social.core.model.InstanceStats
+import org.mozilla.social.core.model.InstanceUrls
 
 fun NetworkInstanceRule.toExternalModel(): InstanceRule =
     InstanceRule(

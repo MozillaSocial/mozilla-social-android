@@ -10,9 +10,9 @@ import org.mozilla.social.core.database.model.statusCollections.FederatedTimelin
 import org.mozilla.social.core.database.model.statusCollections.HomeTimelineStatus
 import org.mozilla.social.core.database.model.statusCollections.LocalTimelineStatus
 import org.mozilla.social.core.network.mastodon.TimelineApi
-import org.mozilla.social.model.paging.StatusPagingWrapper
-import org.mozilla.social.model.Status
-import org.mozilla.social.model.StatusVisibility
+import org.mozilla.social.core.model.paging.StatusPagingWrapper
+import org.mozilla.social.core.model.Status
+import org.mozilla.social.core.model.StatusVisibility
 import retrofit2.HttpException
 
 class TimelineRepository internal constructor(

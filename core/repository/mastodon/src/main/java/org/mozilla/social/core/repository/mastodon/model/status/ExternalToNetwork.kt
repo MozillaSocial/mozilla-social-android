@@ -2,18 +2,18 @@ package org.mozilla.social.core.repository.mastodon.model.status
 
 import org.mozilla.social.core.network.mastodon.model.NetworkStatusVisibility
 import org.mozilla.social.core.network.mastodon.model.request.NetworkPollCreate
-import org.mozilla.social.model.StatusVisibility
-import org.mozilla.social.model.request.PollCreate
+import org.mozilla.social.core.model.StatusVisibility
+import org.mozilla.social.core.model.request.PollCreate
 
 
 import org.mozilla.social.core.network.mastodon.model.request.NetworkMediaUpdate
 import org.mozilla.social.core.network.mastodon.model.request.NetworkPollVote
 import org.mozilla.social.core.network.mastodon.model.request.NetworkReportCreate
 import org.mozilla.social.core.network.mastodon.model.request.NetworkStatusCreate
-import org.mozilla.social.model.MediaUpdate
-import org.mozilla.social.model.PollVote
-import org.mozilla.social.model.request.ReportCreate
-import org.mozilla.social.model.request.StatusCreate
+import org.mozilla.social.core.model.MediaUpdate
+import org.mozilla.social.core.model.PollVote
+import org.mozilla.social.core.model.request.ReportCreate
+import org.mozilla.social.core.model.request.StatusCreate
 
 internal fun StatusVisibility.toNetworkModel(): NetworkStatusVisibility =
     when(this) {

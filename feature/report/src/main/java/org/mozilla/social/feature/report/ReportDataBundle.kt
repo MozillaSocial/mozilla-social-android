@@ -1,7 +1,7 @@
 package org.mozilla.social.feature.report
 
 import kotlinx.serialization.Serializable
-import org.mozilla.social.model.InstanceRule
+import org.mozilla.social.core.model.InstanceRule
 
 sealed class ReportDataBundle {
     @Serializable

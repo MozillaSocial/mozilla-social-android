@@ -12,7 +12,7 @@ import org.mozilla.social.core.analytics.AnalyticsIdentifiers
 import org.mozilla.social.core.repository.mastodon.InstanceRepository
 import org.mozilla.social.feature.report.ReportDataBundle
 import org.mozilla.social.feature.report.ReportType
-import org.mozilla.social.model.InstanceRule
+import org.mozilla.social.core.model.InstanceRule
 import timber.log.Timber
 
 class ReportScreen1ViewModel(

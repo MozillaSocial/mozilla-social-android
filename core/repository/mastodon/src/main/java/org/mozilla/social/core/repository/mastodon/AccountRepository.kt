@@ -8,12 +8,12 @@ import org.mozilla.social.common.parseMastodonLinkHeader
 import org.mozilla.social.core.database.SocialDatabase
 import org.mozilla.social.core.network.mastodon.AccountApi
 import org.mozilla.social.core.repository.mastodon.model.account.toExternal
-import org.mozilla.social.model.paging.FollowersPagingWrapper
-import org.mozilla.social.model.paging.StatusPagingWrapper
+import org.mozilla.social.core.model.paging.FollowersPagingWrapper
+import org.mozilla.social.core.model.paging.StatusPagingWrapper
 import org.mozilla.social.core.repository.mastodon.model.status.toExternalModel
-import org.mozilla.social.model.Account
-import org.mozilla.social.model.Relationship
-import org.mozilla.social.model.Status
+import org.mozilla.social.core.model.Account
+import org.mozilla.social.core.model.Relationship
+import org.mozilla.social.core.model.Status
 import retrofit2.HttpException
 import java.io.File
 

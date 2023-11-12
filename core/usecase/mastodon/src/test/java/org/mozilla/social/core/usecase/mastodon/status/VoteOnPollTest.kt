@@ -2,7 +2,7 @@ package org.mozilla.social.core.usecase.mastodon.status
 
 import kotlinx.coroutines.test.TestScope
 import org.mozilla.social.core.usecase.mastodon.BaseUseCaseTest
-import org.mozilla.social.model.Poll
+import org.mozilla.social.core.model.Poll
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 

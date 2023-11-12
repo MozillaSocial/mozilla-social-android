@@ -28,9 +28,9 @@ import org.mozilla.social.core.navigation.usecases.PopNavBackstack
 import org.mozilla.social.core.navigation.usecases.ShowSnackbar
 import org.mozilla.social.core.usecase.mastodon.status.PostStatus
 import org.mozilla.social.feature.post.R
-import org.mozilla.social.model.ImageState
-import org.mozilla.social.model.StatusVisibility
-import org.mozilla.social.model.request.PollCreate
+import org.mozilla.social.core.model.ImageState
+import org.mozilla.social.core.model.StatusVisibility
+import org.mozilla.social.core.model.request.PollCreate
 import org.mozilla.social.post.bottombar.BottomBarState
 import org.mozilla.social.post.media.MediaDelegate
 import org.mozilla.social.post.media.MediaInteractions

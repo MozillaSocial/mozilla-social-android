@@ -5,7 +5,7 @@ import androidx.paging.PagingState
 import org.mozilla.social.common.Rel
 import org.mozilla.social.common.parseMastodonLinkHeader
 import org.mozilla.social.core.repository.mastodon.AccountRepository
-import org.mozilla.social.model.Account
+import org.mozilla.social.core.model.Account
 import timber.log.Timber
 
 class FollowersPagingSource(

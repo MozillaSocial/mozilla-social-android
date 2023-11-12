@@ -31,7 +31,7 @@ import coil.compose.AsyncImage
 import org.mozilla.social.core.designsystem.component.MoSoCard
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.designsystem.theme.Typography
-import org.mozilla.social.model.Recommendation
+import org.mozilla.social.core.model.Recommendation
 
 @Composable
 fun RecommendationCarouselCard(modifier: Modifier, recommendation: Recommendation) {

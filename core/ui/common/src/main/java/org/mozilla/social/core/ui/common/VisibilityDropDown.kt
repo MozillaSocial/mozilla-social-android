@@ -22,7 +22,7 @@ import org.mozilla.social.core.designsystem.component.MoSoDropdownMenu
 import org.mozilla.social.core.designsystem.component.MoSoDropdownMenuItem
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
-import org.mozilla.social.model.StatusVisibility
+import org.mozilla.social.core.model.StatusVisibility
 
 @Composable
 fun VisibilityDropDownButton(

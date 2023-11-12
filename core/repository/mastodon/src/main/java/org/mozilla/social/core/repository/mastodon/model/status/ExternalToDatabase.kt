@@ -15,21 +15,21 @@ import org.mozilla.social.core.database.model.DatabasePollOption
 import org.mozilla.social.core.database.model.DatabaseSource
 import org.mozilla.social.core.database.model.DatabaseStatus
 import org.mozilla.social.core.database.model.DatabaseStatusVisibility
-import org.mozilla.social.model.Account
-import org.mozilla.social.model.Application
-import org.mozilla.social.model.Attachment
-import org.mozilla.social.model.Card
-import org.mozilla.social.model.Emoji
-import org.mozilla.social.model.Field
-import org.mozilla.social.model.FocalPoint
-import org.mozilla.social.model.HashTag
-import org.mozilla.social.model.History
-import org.mozilla.social.model.Mention
-import org.mozilla.social.model.Poll
-import org.mozilla.social.model.PollOption
-import org.mozilla.social.model.Source
-import org.mozilla.social.model.Status
-import org.mozilla.social.model.StatusVisibility
+import org.mozilla.social.core.model.Account
+import org.mozilla.social.core.model.Application
+import org.mozilla.social.core.model.Attachment
+import org.mozilla.social.core.model.Card
+import org.mozilla.social.core.model.Emoji
+import org.mozilla.social.core.model.Field
+import org.mozilla.social.core.model.FocalPoint
+import org.mozilla.social.core.model.HashTag
+import org.mozilla.social.core.model.History
+import org.mozilla.social.core.model.Mention
+import org.mozilla.social.core.model.Poll
+import org.mozilla.social.core.model.PollOption
+import org.mozilla.social.core.model.Source
+import org.mozilla.social.core.model.Status
+import org.mozilla.social.core.model.StatusVisibility
 
 fun Status.toDatabaseModel(): DatabaseStatus =
     DatabaseStatus(
