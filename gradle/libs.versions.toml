@@ -1,11 +1,11 @@
 [versions]
-android-gradle-plugin = "8.1.2"
+android-gradle-plugin = "8.1.3"
 android-secrets-plugin = "2.0.1"
 androidx-lifecycle = "2.6.2"
-androidx-media3 = "1.1.0"
-androidx-navigation-compose = "2.7.4"
+androidx-media3 = "1.1.1"
+androidx-navigation = "2.7.5"
 androidx-paging = "3.2.1"
-androidx-room = "2.5.2"
+androidx-room = "2.6.0"
 coil = "2.4.0"
 detekt = "1.23.1"
 espresso-intents = "3.5.1"
@@ -13,11 +13,10 @@ glean = "54.0.0"
 google-truth = "1.1.5"
 koin = "3.5.0"
 koin-compose = "1.1.0"
-kotlin = "1.9.10"
-kotlin-ksp = "1.9.10-1.0.13" # Used only once, but keeping this definition makes the KSP version check at ci/verify-ksp-version.sh simpler.
+kotlin = "1.9.20"
+kotlin-ksp = "1.9.20-1.0.14" # Used only once, but keeping this definition makes the KSP version check at ci/verify-ksp-version.sh simpler.
 kotlinx-coroutines = "1.7.3"
-navigation-testing = "2.7.4"
-okhttp = "4.10.0"
+okhttp = "4.11.0"
 protobuf = "3.23.0"
 junit = "4.13.2"
 androidx-test-ext-junit = "1.1.5"
@@ -25,15 +24,16 @@ espresso-core = "3.5.1"
 
 
 [libraries]
-androidx-activity-compose = { module = "androidx.activity:activity-compose", version = "1.7.2" }
+androidx-activity-compose = { module = "androidx.activity:activity-compose", version = "1.8.0" }
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version = "1.6.1" }
-androidx-browser = { module = "androidx.browser:browser", version = "1.5.0" }
+androidx-browser = { module = "androidx.browser:browser", version = "1.6.0" }
 androidx-compose-bom = { module = "androidx.compose:compose-bom", version = "2023.10.01" }
-androidx-compose-compiler = { module = "androidx.compose.compiler:compiler", version = "1.5.3" }
+androidx-compose-compiler = { module = "androidx.compose.compiler:compiler", version = "1.5.4" }
 androidx-compose-material-iconsExtended = { module = "androidx.compose.material:material-icons-extended" }
 androidx-compose-material3 = { module = "androidx.compose.material3:material3" }
 androidx-compose-material3-windowClass = { module = "androidx.compose.material3:material3-window-size-class" }
 androidx-compose-ui-graphics = { module = "androidx.compose.ui:ui-graphics" }
+androidx-compose-ui-test-junit = { module = "androidx.compose.ui:ui-test-junit4" }
 androidx-compose-ui-test-manifest = { module = "androidx.compose.ui:ui-test-manifest" }
 androidx-compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
 androidx-compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
@@ -48,8 +48,8 @@ androidx-lifecycle-viewmodel = { module = "androidx.lifecycle:lifecycle-viewmode
 androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "androidx-lifecycle" }
 androidx-media3-exoplayer = { module = "androidx.media3:media3-exoplayer", version.ref = "androidx-media3" }
 androidx-media3-ui = { module = "androidx.media3:media3-ui", version.ref = "androidx-media3" }
-androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "androidx-navigation-compose"}
-androidx-navigation-testing = { module = "androidx.navigation:navigation-testing", version.ref = "navigation-testing" }
+androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "androidx-navigation"}
+androidx-navigation-testing = { module = "androidx.navigation:navigation-testing", version.ref = "androidx-navigation" }
 androidx-paging-compose = { module = "androidx.paging:paging-compose", version.ref = "androidx-paging" }
 androidx-paging-runtime = { module = "androidx.paging:paging-runtime", version.ref = "androidx-paging" }
 androidx-room = { module = "androidx.room:room-ktx", version.ref = "androidx-room" }
@@ -62,7 +62,7 @@ coil-video = { module = "io.coil-kt:coil-video", version.ref = "coil" }
 glean = { module = "org.mozilla.telemetry:glean", version.ref = "glean" }
 glean-forUnitTests = { module = "org.mozilla.telemetry:glean-native-forUnitTests", version.ref = "glean" }
 google-truth = { module = "com.google.truth:truth", version.ref = "google-truth" }
-google-material = { module = "com.google.android.material:material", version = "1.9.0" }
+google-material = { module = "com.google.android.material:material", version = "1.10.0" }
 jakewharton-timber = { module = "com.jakewharton.timber:timber", version = "5.0.1" }
 koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
 koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koin" }

@@ -13,5 +13,4 @@ dependencies {
     implementation(libs.jakewharton.timber)
     implementation(libs.koin.core)
     implementation(libs.koin.androidx.compose)
-    testImplementation("com.google.truth:truth:1.1.5")
 }
