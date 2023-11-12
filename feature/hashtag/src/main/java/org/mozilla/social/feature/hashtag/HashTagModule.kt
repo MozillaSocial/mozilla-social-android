@@ -7,7 +7,7 @@ val hashTagModule = module {
     viewModel { parametersHolder ->
         HashTagViewModel(
             hashTag = parametersHolder[0],
-            socialDatabase = get(),
+            localTimelineRepository = get(),
             analytics = get(),
             userAccountId = get(),
         )

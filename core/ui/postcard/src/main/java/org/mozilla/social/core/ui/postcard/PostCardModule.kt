@@ -15,7 +15,7 @@ val postCardModule = module {
             undoBoostStatus = get(),
             favoriteStatus = get(),
             undoFavoriteStatus = get(),
-            deleteStatus = get(),
+            deleteStatusFromTimelines = get(),
         )
     }
 }

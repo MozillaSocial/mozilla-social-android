@@ -16,13 +16,14 @@ import org.mozilla.social.common.utils.replaceAccount
 import org.mozilla.social.common.utils.replaceHashtag
 import org.mozilla.social.core.repository.mastodon.SearchRepository
 import org.mozilla.social.core.repository.mastodon.StatusRepository
+import org.mozilla.social.core.storage.mastodon.LocalStatusRepository
 import org.mozilla.social.post.NewPostViewModel
 import timber.log.Timber
 
 class StatusDelegate(
     private val coroutineScope: CoroutineScope,
     private val searchRepository: SearchRepository,
-    private val statusRepository: StatusRepository,
+    private val localStatusRepository: LocalStatusRepository,
     private val inReplyToId: String?,
 ) : StatusInteractions, ContentWarningInteractions {
 
@@ -48,7 +49,7 @@ class StatusDelegate(
     init {
         coroutineScope.launch {
             inReplyToId?.let {
-                statusRepository.getStatusLocal(inReplyToId)?.account?.let { account ->
+                localStatusRepository.getStatus(inReplyToId)?.account?.let { account ->
                     _statusText.update {
                         TextFieldValue(
                             text = "@${account.acct} ",

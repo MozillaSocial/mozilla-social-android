@@ -13,13 +13,14 @@ import org.mozilla.social.core.repository.mastodon.TimelineRepository
 import org.mozilla.social.core.database.SocialDatabase
 import org.mozilla.social.core.database.model.statusCollections.HashTagTimelineStatus
 import org.mozilla.social.core.database.model.statusCollections.HashTagTimelineStatusWrapper
+import org.mozilla.social.core.usecase.mastodon.status.SaveStatusesToDatabase
 
 @OptIn(ExperimentalPagingApi::class)
 class HashTagTimelineRemoteMediator(
     private val timelineRepository: TimelineRepository,
     private val accountRepository: AccountRepository,
-    private val statusRepository: StatusRepository,
     private val socialDatabase: SocialDatabase,
+    private val saveStatusesToDatabase: SaveStatusesToDatabase,
     private val hashTag: String,
 ) : RemoteMediator<Int, HashTagTimelineStatusWrapper>() {
 
@@ -71,7 +72,7 @@ class HashTagTimelineRemoteMediator(
                     socialDatabase.hashTagTimelineDao().deleteHashTagTimeline(hashTag)
                 }
 
-                statusRepository.saveStatusesToDatabase(result)
+                saveStatusesToDatabase(result)
 
                 socialDatabase.hashTagTimelineDao().insertAll(result.map {
                     HashTagTimelineStatus(

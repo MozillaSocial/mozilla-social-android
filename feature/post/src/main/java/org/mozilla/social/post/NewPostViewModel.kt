@@ -31,6 +31,7 @@ import org.mozilla.social.feature.post.R
 import org.mozilla.social.core.model.ImageState
 import org.mozilla.social.core.model.StatusVisibility
 import org.mozilla.social.core.model.request.PollCreate
+import org.mozilla.social.core.storage.mastodon.LocalStatusRepository
 import org.mozilla.social.post.bottombar.BottomBarState
 import org.mozilla.social.post.media.MediaDelegate
 import org.mozilla.social.post.media.MediaInteractions
@@ -49,17 +50,17 @@ class NewPostViewModel(
     searchRepository: SearchRepository,
     getLoggedInUserAccountId: GetLoggedInUserAccountId,
     accountRepository: AccountRepository,
-    private val statusRepository: StatusRepository,
+    localStatusRepository: LocalStatusRepository,
     private val postStatus: PostStatus,
     private val popNavBackstack: PopNavBackstack,
     private val showSnackbar: ShowSnackbar,
 ) : ViewModel(), NewPostInteractions {
 
     private val statusDelegate: StatusDelegate = StatusDelegate(
-        viewModelScope,
-        searchRepository,
-        statusRepository,
-        replyStatusId,
+        coroutineScope = viewModelScope,
+        searchRepository = searchRepository,
+        localStatusRepository = localStatusRepository,
+        inReplyToId = replyStatusId,
     )
     val statusInteractions: StatusInteractions = statusDelegate
     val contentWarningInteractions: ContentWarningInteractions = statusDelegate

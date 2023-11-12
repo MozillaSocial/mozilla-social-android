@@ -12,18 +12,18 @@ import org.koin.core.parameter.parametersOf
 import org.koin.java.KoinJavaComponent.inject
 import org.mozilla.social.core.analytics.Analytics
 import org.mozilla.social.core.analytics.AnalyticsIdentifiers
-import org.mozilla.social.core.repository.mastodon.model.status.toExternalModel
-import org.mozilla.social.core.database.SocialDatabase
 import org.mozilla.social.core.database.model.statusCollections.toStatusWrapper
-import org.mozilla.social.core.usecase.mastodon.account.GetLoggedInUserAccountId
+import org.mozilla.social.core.storage.mastodon.status.toExternalModel
+import org.mozilla.social.core.storage.mastodon.timeline.LocalHashtagTimelineRepository
 import org.mozilla.social.core.ui.postcard.PostCardDelegate
 import org.mozilla.social.core.ui.postcard.toPostCardUiState
+import org.mozilla.social.core.usecase.mastodon.account.GetLoggedInUserAccountId
 import org.mozilla.social.core.usecase.mastodon.remotemediators.HashTagTimelineRemoteMediator
 
 class HashTagViewModel(
     private val analytics: Analytics,
     hashTag: String,
-    socialDatabase: SocialDatabase,
+    localTimelineRepository: LocalHashtagTimelineRepository,
     userAccountId: GetLoggedInUserAccountId,
 ) : ViewModel(), HashTagInteractions {
 
@@ -39,7 +39,7 @@ class HashTagViewModel(
         ),
         remoteMediator = hashTagTimelineRemoteMediator
     ) {
-        socialDatabase.hashTagTimelineDao().hashTagTimelinePagingSource(hashTag)
+        localTimelineRepository.hashTagTimelinePagingSource(hashTag)
     }.flow.map { pagingData ->
         pagingData.map {
             it.toStatusWrapper().toExternalModel().toPostCardUiState(userAccountId())

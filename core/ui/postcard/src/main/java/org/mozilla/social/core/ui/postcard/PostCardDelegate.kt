@@ -6,9 +6,10 @@ import org.mozilla.social.core.usecase.mastodon.status.BoostStatus
 import org.mozilla.social.core.navigation.NavigationDestination
 import org.mozilla.social.core.navigation.usecases.NavigateTo
 import org.mozilla.social.core.navigation.usecases.OpenLink
+import org.mozilla.social.core.storage.mastodon.timeline.DeleteStatusFailedException
 import org.mozilla.social.core.usecase.mastodon.account.BlockAccount
 import org.mozilla.social.core.usecase.mastodon.account.MuteAccount
-import org.mozilla.social.core.usecase.mastodon.status.DeleteStatus
+import org.mozilla.social.core.usecase.mastodon.status.DeleteStatusFromTimelines
 import org.mozilla.social.core.usecase.mastodon.status.FavoriteStatus
 import org.mozilla.social.core.usecase.mastodon.status.UndoBoostStatus
 import org.mozilla.social.core.usecase.mastodon.status.UndoFavoriteStatus
@@ -26,7 +27,7 @@ class PostCardDelegate(
     private val undoBoostStatus: UndoBoostStatus,
     private val favoriteStatus: FavoriteStatus,
     private val undoFavoriteStatus: UndoFavoriteStatus,
-    private val deleteStatus: DeleteStatus,
+    private val deleteStatusFromTimelines: DeleteStatusFromTimelines,
 ) : PostCardInteractions {
 
     override fun onVoteClicked(pollId: String, choices: List<Int>) {
@@ -120,8 +121,8 @@ class PostCardDelegate(
     ) {
         coroutineScope.launch {
             try {
-                deleteStatus(statusId)
-            } catch (e: DeleteStatus.DeleteStatusFailedException) {
+                deleteStatusFromTimelines(statusId)
+            } catch (e: DeleteStatusFailedException) {
                 Timber.e(e)
             }
         }

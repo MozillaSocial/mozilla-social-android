@@ -4,23 +4,23 @@ import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
-import androidx.room.withTransaction
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.StateFlow
 import org.mozilla.social.common.Rel
-import org.mozilla.social.core.repository.mastodon.AccountRepository
-import org.mozilla.social.core.repository.mastodon.StatusRepository
-import org.mozilla.social.core.database.SocialDatabase
-import org.mozilla.social.core.database.model.statusCollections.AccountTimelineStatus
 import org.mozilla.social.core.database.model.statusCollections.AccountTimelineStatusWrapper
+import org.mozilla.social.core.repository.mastodon.AccountRepository
+import org.mozilla.social.core.storage.mastodon.DatabaseDelegate
+import org.mozilla.social.core.storage.mastodon.timeline.LocalAccountTimelineRepository
 import org.mozilla.social.core.usecase.mastodon.remotemediators.getInReplyToAccountNames
+import org.mozilla.social.core.usecase.mastodon.status.SaveStatusesToDatabase
 import timber.log.Timber
 
 @OptIn(ExperimentalPagingApi::class)
 class AccountTimelineRemoteMediator(
     private val accountRepository: AccountRepository,
-    private val statusRepository: StatusRepository,
-    private val socialDatabase: SocialDatabase,
+    private val saveStatusesToDatabase: SaveStatusesToDatabase,
+    private val localAccountTimelineRepository: LocalAccountTimelineRepository,
+    private val databaseDelegate: DatabaseDelegate,
     private val accountId: String,
     private val timelineType: StateFlow<TimelineType>,
 ) : RemoteMediator<Int, AccountTimelineStatusWrapper>() {
@@ -73,23 +73,14 @@ class AccountTimelineRemoteMediator(
 
             val result = response.statuses.getInReplyToAccountNames(accountRepository)
 
-            socialDatabase.withTransaction {
+            databaseDelegate.withTransaction {
                 if (loadType == LoadType.REFRESH) {
-                    socialDatabase.accountTimelineDao().deleteAccountTimeline(accountId)
+                    localAccountTimelineRepository.deleteAccountTimeline(accountId)
                 }
 
-                statusRepository.saveStatusesToDatabase(result)
+                saveStatusesToDatabase(result)
 
-                socialDatabase.accountTimelineDao().insertAll(result.map {
-                    AccountTimelineStatus(
-                        statusId = it.statusId,
-                        accountId = it.account.accountId,
-                        pollId = it.poll?.pollId,
-                        boostedStatusId = it.boostedStatus?.statusId,
-                        boostedStatusAccountId = it.boostedStatus?.account?.accountId,
-                        boostedPollId = it.boostedStatus?.poll?.pollId,
-                    )
-                })
+                localAccountTimelineRepository.insertAll(result)
             }
 
             // There seems to be some race condition for refreshes.  Subsequent pages do

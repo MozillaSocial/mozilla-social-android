@@ -12,13 +12,13 @@ import kotlin.test.assertNotNull
 
 class DeleteStatusTest : BaseUseCaseTest() {
 
-    private lateinit var subject: DeleteStatus
+    private lateinit var subject: DeleteStatusFromTimelines
 
     private val networkStatus = Models.status
 
     @BeforeTest
     fun setup() {
-        subject = DeleteStatus(
+        subject = DeleteStatusFromTimelines(
             externalScope = TestScope(testDispatcher),
             showSnackbar = showSnackbar,
             statusRepository = statusRepository,

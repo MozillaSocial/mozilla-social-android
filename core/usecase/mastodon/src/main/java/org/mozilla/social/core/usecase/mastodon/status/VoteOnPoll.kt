@@ -9,7 +9,7 @@ import org.mozilla.social.core.database.SocialDatabase
 import org.mozilla.social.core.navigation.usecases.ShowSnackbar
 import org.mozilla.social.core.repository.mastodon.StatusRepository
 import org.mozilla.social.core.model.PollVote
-import org.mozilla.social.core.repository.mastodon.model.status.toDatabaseModel
+import org.mozilla.social.core.storage.mastodon.status.toDatabaseModel
 import org.mozilla.social.core.usecase.mastodon.R
 
 class VoteOnPoll(

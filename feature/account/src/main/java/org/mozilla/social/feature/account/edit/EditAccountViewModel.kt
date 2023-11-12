@@ -10,15 +10,15 @@ import kotlinx.coroutines.launch
 import org.mozilla.social.common.Resource
 import org.mozilla.social.common.updateData
 import org.mozilla.social.core.navigation.usecases.PopNavBackstack
-import org.mozilla.social.core.repository.mastodon.AccountRepository
+import org.mozilla.social.core.storage.mastodon.LocalAccountRepository
 import org.mozilla.social.core.usecase.mastodon.account.GetLoggedInUserAccountId
 import org.mozilla.social.core.usecase.mastodon.account.UpdateMyAccount
 import timber.log.Timber
 import java.io.File
 
 class EditAccountViewModel(
-    private val accountRepository: AccountRepository,
     getLoggedInUserAccountId: GetLoggedInUserAccountId,
+    private val localAccountRepository: LocalAccountRepository,
     private val popNavBackstack: PopNavBackstack,
     private val updateMyAccount: UpdateMyAccount,
 ) : ViewModel(), EditAccountInteractions {
@@ -42,7 +42,7 @@ class EditAccountViewModel(
         _editAccountUiState.update { Resource.Loading() }
         viewModelScope.launch {
             try {
-                val account = accountRepository.getAccountFromDatabase(accountId)!!
+                val account = localAccountRepository.getAccount(accountId)!!
                 _editAccountUiState.update {
                     Resource.Loaded(
                         data = account.toUiState()

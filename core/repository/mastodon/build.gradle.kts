@@ -11,9 +11,9 @@ android {
 dependencies {
     implementation(project(":core:common"))
     implementation(project(":core:network:mastodon"))
-    implementation(project(":core:datastore"))
+//    implementation(project(":core:datastore"))
     implementation(project(":core:model"))
-    implementation(project(":core:database"))
+//    implementation(project(":core:database"))
 
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.kotlinx.datetime)
@@ -29,4 +29,5 @@ dependencies {
 
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room)
+    implementation(project(mapOf("path" to ":core:datastore")))
 }

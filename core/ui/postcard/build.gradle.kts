@@ -8,15 +8,16 @@ android {
 }
 
 dependencies {
-    implementation(project(":core:model"))
-    implementation(project(":core:designsystem"))
     implementation(project(":core:common"))
-    implementation(project(":core:repository:mastodon"))
+    implementation(project(":core:designsystem"))
+    implementation(project(":core:model"))
     implementation(project(":core:navigation"))
-    implementation(project(":core:usecase:mastodon"))
+    implementation(project(":core:repository:mastodon"))
     implementation(project(":core:ui:common"))
     api(project(":core:ui:htmlcontent"))
     api(project(":core:ui:poll"))
+    implementation(project(":core:usecase:mastodon"))
+    implementation(project(":core:storage:mastodon"))
 
     implementation(libs.androidx.paging.compose)
     implementation(libs.koin.core)

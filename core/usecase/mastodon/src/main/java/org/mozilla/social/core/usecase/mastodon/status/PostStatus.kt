@@ -15,12 +15,15 @@ import org.mozilla.social.core.model.ImageState
 import org.mozilla.social.core.model.StatusVisibility
 import org.mozilla.social.core.model.request.PollCreate
 import org.mozilla.social.core.model.request.StatusCreate
+import org.mozilla.social.core.storage.mastodon.timeline.LocalTimelineRepository
 
 class PostStatus(
     private val externalScope: CoroutineScope,
     private val mediaApi: MediaRepository,
     private val statusRepository: StatusRepository,
     private val timelineRepository: TimelineRepository,
+    private val saveStatusesToDatabase: SaveStatusesToDatabase,
+    private val localTimelineRepository: LocalTimelineRepository,
     private val showSnackbar: ShowSnackbar,
     private val dispatcherIo: CoroutineDispatcher = Dispatchers.IO,
 ) {
@@ -71,8 +74,8 @@ class PostStatus(
                 )
             )
 
-            statusRepository.saveStatusToDatabase(status)
-            timelineRepository.insertStatusIntoTimelines(status)
+            saveStatusesToDatabase(status)
+            localTimelineRepository.insertStatusIntoTimelines(status)
         } catch (e: Exception) {
             showSnackbar(
                 text = StringFactory.resource(R.string.error_sending_post_toast),

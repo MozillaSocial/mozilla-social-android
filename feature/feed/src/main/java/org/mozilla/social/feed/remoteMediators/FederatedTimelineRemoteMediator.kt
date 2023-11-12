@@ -13,16 +13,20 @@ import org.mozilla.social.core.repository.mastodon.TimelineRepository
 import org.mozilla.social.core.database.SocialDatabase
 import org.mozilla.social.core.database.model.statusCollections.FederatedTimelineStatus
 import org.mozilla.social.core.database.model.statusCollections.FederatedTimelineStatusWrapper
+import org.mozilla.social.core.storage.mastodon.DatabaseDelegate
+import org.mozilla.social.core.storage.mastodon.timeline.LocalFederatedTimelineRepository
 import org.mozilla.social.core.usecase.mastodon.remotemediators.getInReplyToAccountNames
+import org.mozilla.social.core.usecase.mastodon.status.SaveStatusesToDatabase
 import timber.log.Timber
 
 @OptIn(ExperimentalPagingApi::class)
 class FederatedTimelineRemoteMediator(
     private val timelineRepository: TimelineRepository,
     private val accountRepository: AccountRepository,
-    private val statusRepository: StatusRepository,
-    private val socialDatabase: SocialDatabase,
-) : RemoteMediator<Int, FederatedTimelineStatusWrapper>() {
+    private val localFederatedTimelineRepository: LocalFederatedTimelineRepository,
+    private val saveStatusesToDatabase: SaveStatusesToDatabase,
+    private val databaseDelegate: DatabaseDelegate,
+    ) : RemoteMediator<Int, FederatedTimelineStatusWrapper>() {
 
     @Suppress("ReturnCount", "MagicNumber")
     override suspend fun load(
@@ -67,23 +71,14 @@ class FederatedTimelineRemoteMediator(
 
             val result = response.statuses.getInReplyToAccountNames(accountRepository)
 
-            socialDatabase.withTransaction {
+            databaseDelegate.withTransaction {
                 if (loadType == LoadType.REFRESH) {
-                    socialDatabase.federatedTimelineDao().deleteFederatedTimeline()
+                    localFederatedTimelineRepository.deleteFederatedTimeline()
                 }
 
-                statusRepository.saveStatusesToDatabase(result)
+                saveStatusesToDatabase(result)
 
-                socialDatabase.federatedTimelineDao().insertAll(result.map {
-                    FederatedTimelineStatus(
-                        statusId = it.statusId,
-                        accountId = it.account.accountId,
-                        pollId = it.poll?.pollId,
-                        boostedStatusId = it.boostedStatus?.statusId,
-                        boostedStatusAccountId = it.boostedStatus?.account?.accountId,
-                        boostedPollId = it.boostedStatus?.poll?.pollId,
-                    )
-                })
+                localFederatedTimelineRepository.insertAll(result)
             }
 
             // There seems to be some race condition for refreshes.  Subsequent pages do

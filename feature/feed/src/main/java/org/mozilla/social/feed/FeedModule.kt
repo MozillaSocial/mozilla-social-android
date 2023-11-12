@@ -14,6 +14,7 @@ val feedModule = module {
             get(),
             get(),
             get(),
+            get(),
         )
     }
     single {
@@ -22,10 +23,12 @@ val feedModule = module {
             get(),
             get(),
             get(),
+            get(),
         )
     }
     single {
         FederatedTimelineRemoteMediator(
+            get(),
             get(),
             get(),
             get(),

@@ -13,23 +13,22 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import org.koin.core.parameter.parametersOf
-import org.koin.java.KoinJavaComponent
 import org.koin.java.KoinJavaComponent.inject
 import org.mozilla.social.common.Resource
 import org.mozilla.social.common.utils.edit
 import org.mozilla.social.core.analytics.Analytics
 import org.mozilla.social.core.analytics.AnalyticsIdentifiers
-import org.mozilla.social.core.repository.mastodon.model.status.toExternalModel
-import org.mozilla.social.core.database.SocialDatabase
 import org.mozilla.social.core.database.model.statusCollections.toStatusWrapper
-import org.mozilla.social.core.usecase.mastodon.account.GetDetailedAccount
-import org.mozilla.social.core.usecase.mastodon.account.GetLoggedInUserAccountId
 import org.mozilla.social.core.navigation.NavigationDestination
 import org.mozilla.social.core.navigation.usecases.NavigateTo
+import org.mozilla.social.core.storage.mastodon.status.toExternalModel
+import org.mozilla.social.core.storage.mastodon.timeline.LocalAccountTimelineRepository
 import org.mozilla.social.core.ui.postcard.PostCardDelegate
 import org.mozilla.social.core.ui.postcard.toPostCardUiState
 import org.mozilla.social.core.usecase.mastodon.account.BlockAccount
 import org.mozilla.social.core.usecase.mastodon.account.FollowAccount
+import org.mozilla.social.core.usecase.mastodon.account.GetDetailedAccount
+import org.mozilla.social.core.usecase.mastodon.account.GetLoggedInUserAccountId
 import org.mozilla.social.core.usecase.mastodon.account.MuteAccount
 import org.mozilla.social.core.usecase.mastodon.account.UnblockAccount
 import org.mozilla.social.core.usecase.mastodon.account.UnfollowAccount
@@ -39,7 +38,7 @@ import timber.log.Timber
 class AccountViewModel(
     private val analytics: Analytics,
     getLoggedInUserAccountId: GetLoggedInUserAccountId,
-    private val socialDatabase: SocialDatabase,
+    private val localAccountTimelineRepository: LocalAccountTimelineRepository,
     private val getDetailedAccount: GetDetailedAccount,
     private val navigateTo: NavigateTo,
     private val followAccount: FollowAccount,
@@ -98,7 +97,7 @@ class AccountViewModel(
         ),
         remoteMediator = accountTimelineRemoteMediator
     ) {
-        socialDatabase.accountTimelineDao().accountTimelinePagingSource(accountId)
+        localAccountTimelineRepository.accountTimelinePagingSource(accountId)
     }.flow.map { pagingData ->
         pagingData.map {
             it.toStatusWrapper().toExternalModel().toPostCardUiState(usersAccountId)

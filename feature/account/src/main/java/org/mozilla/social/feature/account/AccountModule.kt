@@ -9,7 +9,7 @@ val accountModule = module {
         AccountViewModel(
             analytics = get(),
             getLoggedInUserAccountId = get(),
-            socialDatabase = get(),
+            localAccountTimelineRepository = get(),
             getDetailedAccount = get(),
             navigateTo = get(),
             initialAccountId = parametersHolder[0],
@@ -24,10 +24,11 @@ val accountModule = module {
     factory { parametersHolder ->
         AccountTimelineRemoteMediator(
             accountRepository = get(),
-            statusRepository = get(),
-            socialDatabase = get(),
-            accountId = parametersHolder[0],
+            saveStatusesToDatabase = get(),
+            localAccountTimelineRepository = get(),
+            databaseDelegate = get(),
             timelineType = parametersHolder[1],
+            accountId = parametersHolder[0],
         )
     }
     viewModel {

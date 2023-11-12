@@ -8,17 +8,18 @@ android {
 }
 
 dependencies {
-    implementation(project(":core:datastore"))
-    implementation(project(":core:usecase:mastodon"))
-    implementation(project(":core:model"))
-    implementation(project(":core:repository:mastodon"))
-    implementation(project(":core:designsystem"))
-    implementation(project(":core:ui:common"))
-    implementation(project(":core:ui:postcard"))
+    implementation(project(":core:analytics"))
     implementation(project(":core:common"))
     implementation(project(":core:database"))
+    implementation(project(":core:datastore"))
+    implementation(project(":core:designsystem"))
+    implementation(project(":core:model"))
     implementation(project(":core:navigation"))
-    implementation(project(":core:analytics"))
+    implementation(project(":core:repository:mastodon"))
+    implementation(project(":core:storage:mastodon"))
+    implementation(project(":core:ui:common"))
+    implementation(project(":core:ui:postcard"))
+    implementation(project(":core:usecase:mastodon"))
 
     implementation(libs.coil)
     implementation(libs.androidx.media3.exoplayer)

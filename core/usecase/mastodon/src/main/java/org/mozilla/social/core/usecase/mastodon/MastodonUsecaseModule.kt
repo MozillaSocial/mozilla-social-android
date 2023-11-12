@@ -1,7 +1,9 @@
 package org.mozilla.social.core.usecase.mastodon
 
+import kotlinx.coroutines.Dispatchers
 import org.koin.dsl.module
 import org.mozilla.social.common.appscope.AppScope
+import org.mozilla.social.core.storage.mastodon.mastodonStorageModule
 import org.mozilla.social.core.usecase.mastodon.account.BlockAccount
 import org.mozilla.social.core.usecase.mastodon.account.FollowAccount
 import org.mozilla.social.core.usecase.mastodon.account.GetDetailedAccount
@@ -18,9 +20,10 @@ import org.mozilla.social.core.usecase.mastodon.auth.OpenLoginCustomTab
 import org.mozilla.social.core.usecase.mastodon.remotemediators.HashTagTimelineRemoteMediator
 import org.mozilla.social.core.usecase.mastodon.report.Report
 import org.mozilla.social.core.usecase.mastodon.status.BoostStatus
-import org.mozilla.social.core.usecase.mastodon.status.DeleteStatus
+import org.mozilla.social.core.usecase.mastodon.status.DeleteStatusFromTimelines
 import org.mozilla.social.core.usecase.mastodon.status.FavoriteStatus
 import org.mozilla.social.core.usecase.mastodon.status.PostStatus
+import org.mozilla.social.core.usecase.mastodon.status.SaveStatusesToDatabase
 import org.mozilla.social.core.usecase.mastodon.status.UndoBoostStatus
 import org.mozilla.social.core.usecase.mastodon.status.UndoFavoriteStatus
 import org.mozilla.social.core.usecase.mastodon.status.VoteOnPoll
@@ -36,7 +39,13 @@ val mastodonUsecaseModule = module {
             parametersHolder[0]
         )
     }
-    single { GetThreadUseCase(get()) }
+    single {
+        GetThreadUseCase(
+            statusRepository = get(),
+            localStatusRepository = get(),
+            saveStatusesToDatabase = get()
+        )
+    }
     single { Login(get(), get(), get(), get(), get(), get(), get()) }
     single { OpenLoginCustomTab() }
     single {
@@ -48,7 +57,14 @@ val mastodonUsecaseModule = module {
         )
     }
     single { IsSignedInFlow(get()) }
-    single { GetDetailedAccount(get(), get()) }
+    single {
+        GetDetailedAccount(
+            accountRepository = get(),
+            localAccountRepository = get(),
+            localRelationshipRepository = get(),
+            databaseDelegate = get()
+        )
+    }
     single { GetLoggedInUserAccountId(get()) }
 
     single {
@@ -104,7 +120,7 @@ val mastodonUsecaseModule = module {
             externalScope = get<AppScope>(),
             showSnackbar = get(),
             accountRepository = get(),
-            socialDatabase = get(),
+            localAccountRepository = get(),
         )
     }
     single {
@@ -121,6 +137,8 @@ val mastodonUsecaseModule = module {
             statusRepository = get(),
             timelineRepository = get(),
             showSnackbar = get(),
+            saveStatusesToDatabase = get(),
+            localTimelineRepository = get(),
         )
     }
     single {
@@ -128,7 +146,9 @@ val mastodonUsecaseModule = module {
             externalScope = get<AppScope>(),
             statusRepository = get(),
             showSnackbar = get(),
-            socialDatabase = get(),
+            saveStatusesToDatabase = get(),
+            databaseDelegate = get(),
+            localStatusRepository = get(),
         )
     }
     single {
@@ -137,6 +157,7 @@ val mastodonUsecaseModule = module {
             statusRepository = get(),
             showSnackbar = get(),
             socialDatabase = get(),
+            saveStatusesToDatabase = get(),
         )
     }
     single {
@@ -144,7 +165,10 @@ val mastodonUsecaseModule = module {
             externalScope = get<AppScope>(),
             statusRepository = get(),
             showSnackbar = get(),
-            socialDatabase = get(),
+            localStatusRepository = get(),
+            databaseDelegate = get(),
+            saveStatusesToDatabase = get(),
+            dispatcherIo = get(),
         )
     }
     single {
@@ -152,7 +176,10 @@ val mastodonUsecaseModule = module {
             externalScope = get<AppScope>(),
             statusRepository = get(),
             showSnackbar = get(),
-            socialDatabase = get(),
+            localStatusRepository = get(),
+            saveStatusesToDatabase = get(),
+            databaseDelegate = get(),
+            dispatcherIo = get(),
         )
     }
     single {
@@ -164,11 +191,14 @@ val mastodonUsecaseModule = module {
         )
     }
     single {
-        DeleteStatus(
-            externalScope = get<AppScope>(),
-            statusRepository = get(),
+        DeleteStatusFromTimelines(
+            localTimelineRepository = get(),
             showSnackbar = get(),
-            socialDatabase = get(),
         )
     }
+    single {
+        SaveStatusesToDatabase(get(), get(), get(), get())
+    }
+    single { Dispatchers.IO }
+    includes(mastodonStorageModule)
 }

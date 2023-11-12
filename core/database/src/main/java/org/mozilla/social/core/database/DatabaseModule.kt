@@ -11,4 +11,14 @@ val databaseModule = module {
             SocialDatabase::class.java, "database-social"
         ).build()
     }
+    single { get<SocialDatabase>().accountsDao() }
+    single { get<SocialDatabase>().statusDao() }
+    single { get<SocialDatabase>().hashtagDao() }
+    single { get<SocialDatabase>().homeTimelineDao() }
+    single { get<SocialDatabase>().pollDao() }
+    single { get<SocialDatabase>().hashTagTimelineDao() }
+    single { get<SocialDatabase>().accountTimelineDao() }
+    single { get<SocialDatabase>().relationshipsDao() }
+    single { get<SocialDatabase>().localTimelineDao() }
+    single { get<SocialDatabase>().federatedTimelineDao() }
 }

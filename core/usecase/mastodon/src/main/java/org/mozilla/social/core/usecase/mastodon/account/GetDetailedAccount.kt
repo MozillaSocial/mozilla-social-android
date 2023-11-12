@@ -12,18 +12,20 @@ import kotlinx.coroutines.sync.Mutex
 import org.mozilla.social.common.Resource
 import org.mozilla.social.common.utils.launchSupervisor
 import org.mozilla.social.core.repository.mastodon.AccountRepository
-import org.mozilla.social.core.repository.mastodon.model.account.toDatabaseModel
 import org.mozilla.social.core.repository.mastodon.model.account.toExternal
-import org.mozilla.social.core.repository.mastodon.model.status.toDatabaseModel
 import org.mozilla.social.core.repository.mastodon.model.status.toExternalModel
-import org.mozilla.social.core.database.SocialDatabase
 import org.mozilla.social.core.model.Account
 import org.mozilla.social.core.model.Relationship
+import org.mozilla.social.core.storage.mastodon.DatabaseDelegate
+import org.mozilla.social.core.storage.mastodon.LocalAccountRepository
+import org.mozilla.social.core.storage.mastodon.LocalRelationshipRepository
 import timber.log.Timber
 
 class GetDetailedAccount(
     private val accountRepository: AccountRepository,
-    private val socialDatabase: SocialDatabase,
+    private val localAccountRepository: LocalAccountRepository,
+    private val localRelationshipRepository: LocalRelationshipRepository,
+    private val databaseDelegate: DatabaseDelegate,
 ) {
 
     /**
@@ -44,10 +46,10 @@ class GetDetailedAccount(
                 val relationshipJob =
                     async { accountRepository.getAccountRelationships(listOf(accountId)) }
                 val account = accountJob.await()
-                val relationship = relationshipJob.await()
-                socialDatabase.withTransaction {
-                    socialDatabase.accountsDao().insert(account.toDatabaseModel())
-                    socialDatabase.relationshipsDao().insert(relationship.first().toDatabaseModel())
+                val relationship: List<Relationship> = relationshipJob.await()
+                databaseDelegate.withTransaction {
+                    localAccountRepository.insertAccount(account)
+                    localRelationshipRepository.insertRelationship(relationship.first())
                 }
             } catch (e: Exception) {
                 Timber.e(e)
@@ -64,13 +66,13 @@ class GetDetailedAccount(
             emit(Resource.Error(it))
         } ?: try {
             emitAll(
-                socialDatabase.accountsDao().getAccountFlow(accountId).filterNotNull().combine(
-                    socialDatabase.relationshipsDao().getRelationshipFlow(accountId).filterNotNull()
+                localAccountRepository.getAccountFlow(accountId).filterNotNull().combine(
+                    localRelationshipRepository.getRelationshipFlow(accountId).filterNotNull()
                 ) { databaseAccount, databaseRelationship ->
                     Resource.Loaded(
                         transform(
-                            databaseAccount.toExternalModel(),
-                            databaseRelationship.toExternal()
+                            databaseAccount,
+                            databaseRelationship,
                         )
                     )
                 }

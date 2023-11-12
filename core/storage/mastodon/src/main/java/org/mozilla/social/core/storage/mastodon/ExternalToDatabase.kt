@@ -1,9 +1,9 @@
-package org.mozilla.social.core.repository.mastodon.model.account
+package org.mozilla.social.core.storage.mastodon
 
 import org.mozilla.social.core.database.model.DatabaseRelationship
 import org.mozilla.social.core.model.Relationship
 
-fun DatabaseRelationship.toExternal(): Relationship = Relationship(
+fun Relationship.toDatabaseModel(): DatabaseRelationship = DatabaseRelationship(
     accountId = accountId,
     isFollowing = isFollowing,
     hasPendingFollowRequest = hasPendingFollowRequest,

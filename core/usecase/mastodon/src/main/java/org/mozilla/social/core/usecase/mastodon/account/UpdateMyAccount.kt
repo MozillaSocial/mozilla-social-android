@@ -5,10 +5,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import org.mozilla.social.common.utils.StringFactory
-import org.mozilla.social.core.database.SocialDatabase
 import org.mozilla.social.core.navigation.usecases.ShowSnackbar
 import org.mozilla.social.core.repository.mastodon.AccountRepository
-import org.mozilla.social.core.repository.mastodon.model.status.toDatabaseModel
+import org.mozilla.social.core.storage.mastodon.LocalAccountRepository
 import org.mozilla.social.core.usecase.mastodon.R
 import java.io.File
 
@@ -16,7 +15,7 @@ class UpdateMyAccount(
     private val externalScope: CoroutineScope,
     private val showSnackbar: ShowSnackbar,
     private val accountRepository: AccountRepository,
-    private val socialDatabase: SocialDatabase,
+    private val localAccountRepository: LocalAccountRepository,
     private val dispatcherIo: CoroutineDispatcher = Dispatchers.IO,
 ) {
 
@@ -44,7 +43,7 @@ class UpdateMyAccount(
                 fields = fields
             )
             println("johnny 2")
-            socialDatabase.accountsDao().insert(updatedAccount.toDatabaseModel())
+            localAccountRepository.insertAccount(updatedAccount)
         } catch (e: Exception) {
             println("johnny 3 $e")
             showSnackbar(

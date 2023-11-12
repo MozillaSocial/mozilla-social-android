@@ -2,23 +2,14 @@ package org.mozilla.social.core.repository.mastodon
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import org.mozilla.social.common.parseMastodonLinkHeader
-import org.mozilla.social.core.repository.mastodon.model.status.toExternalModel
-import org.mozilla.social.core.database.SocialDatabase
-import org.mozilla.social.core.database.model.statusCollections.FederatedTimelineStatus
-import org.mozilla.social.core.database.model.statusCollections.HomeTimelineStatus
-import org.mozilla.social.core.database.model.statusCollections.LocalTimelineStatus
-import org.mozilla.social.core.network.mastodon.TimelineApi
 import org.mozilla.social.core.model.paging.StatusPagingWrapper
-import org.mozilla.social.core.model.Status
-import org.mozilla.social.core.model.StatusVisibility
+import org.mozilla.social.core.network.mastodon.TimelineApi
+import org.mozilla.social.core.repository.mastodon.model.status.toExternalModel
 import retrofit2.HttpException
 
 class TimelineRepository internal constructor(
     private val timelineApi: TimelineApi,
-    private val socialDatabase: SocialDatabase,
-    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) {
 
     suspend fun getHomeTimeline(
@@ -91,42 +82,5 @@ class TimelineRepository internal constructor(
             statuses = response.body()?.map { it.toExternalModel() } ?: emptyList(),
             pagingLinks = response.headers().get("link")?.parseMastodonLinkHeader(),
         )
-    }
-
-
-    suspend fun insertStatusIntoTimelines(status: Status) = withContext(ioDispatcher) {
-        socialDatabase.homeTimelineDao().insert(
-            HomeTimelineStatus(
-                statusId = status.statusId,
-                accountId = status.account.accountId,
-                pollId = status.poll?.pollId,
-                boostedStatusId = status.boostedStatus?.statusId,
-                boostedPollId = status.boostedStatus?.poll?.pollId,
-                boostedStatusAccountId = status.boostedStatus?.account?.accountId,
-            )
-        )
-
-        if (status.visibility == StatusVisibility.Public) {
-            socialDatabase.localTimelineDao().insert(
-                LocalTimelineStatus(
-                    statusId = status.statusId,
-                    accountId = status.account.accountId,
-                    pollId = status.poll?.pollId,
-                    boostedStatusId = status.boostedStatus?.statusId,
-                    boostedPollId = status.boostedStatus?.poll?.pollId,
-                    boostedStatusAccountId = status.boostedStatus?.account?.accountId,
-                )
-            )
-            socialDatabase.federatedTimelineDao().insert(
-                FederatedTimelineStatus(
-                    statusId = status.statusId,
-                    accountId = status.account.accountId,
-                    pollId = status.poll?.pollId,
-                    boostedStatusId = status.boostedStatus?.statusId,
-                    boostedPollId = status.boostedStatus?.poll?.pollId,
-                    boostedStatusAccountId = status.boostedStatus?.account?.accountId,
-                )
-            )
-        }
     }
 }

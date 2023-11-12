@@ -1,4 +1,4 @@
-package org.mozilla.social.core.repository.mastodon.model.status
+package org.mozilla.social.core.storage.mastodon.status
 
 import org.mozilla.social.core.database.model.DatabaseAccount
 import org.mozilla.social.core.database.model.DatabaseApplication
@@ -15,7 +15,6 @@ import org.mozilla.social.core.database.model.DatabasePollOption
 import org.mozilla.social.core.database.model.DatabaseSource
 import org.mozilla.social.core.database.model.DatabaseStatus
 import org.mozilla.social.core.database.model.DatabaseStatusVisibility
-import org.mozilla.social.core.database.model.wrappers.StatusWrapper
 import org.mozilla.social.core.model.Account
 import org.mozilla.social.core.model.Application
 import org.mozilla.social.core.model.Attachment
@@ -32,78 +31,43 @@ import org.mozilla.social.core.model.Source
 import org.mozilla.social.core.model.Status
 import org.mozilla.social.core.model.StatusVisibility
 
-fun StatusWrapper.toExternalModel(): Status =
-    Status(
-        statusId = status.statusId,
-        uri = status.uri,
-        createdAt = status.createdAt,
-        account = account.toExternalModel(),
-        content = status.content,
-        visibility = status.visibility.toExternalModel(),
-        isSensitive = status.isSensitive,
-        contentWarningText = status.contentWarningText,
-        mediaAttachments = status.mediaAttachments.map { it.toExternalModel() },
-        mentions = status.mentions.map { it.toExternalModel() },
-        hashTags = status.hashTags.map { it.toExternalModel() },
-        emojis = status.emojis.map { it.toExternalModel() },
-        boostsCount = status.boostsCount,
-        favouritesCount = status.favouritesCount,
-        repliesCount = status.repliesCount,
-        application = status.application?.toExternalModel(),
-        url = status.url,
-        inReplyToId = status.inReplyToId,
-        inReplyToAccountId = status.inReplyToAccountId,
-        inReplyToAccountName = status.inReplyToAccountName,
-        boostedStatus = boostedAccount?.let { boostedStatus?.toExternalModel(it, boostedPoll) },
-        poll = poll?.toExternalModel(),
-        card = status.card?.toExternalModel(),
-        language = status.language,
-        plainText = status.plainText,
-        isFavourited = status.isFavorited,
-        isBoosted = status.isBoosted,
-        isMuted = status.isMuted,
-        isBookmarked = status.isBookmarked,
-        isPinned = status.isPinned,
-        isBeingDeleted = status.isBeingDeleted,
-    )
-
-fun DatabaseStatus.toExternalModel(
-    account: DatabaseAccount,
-    poll: DatabasePoll?,
-): Status =
-    Status(
+fun Status.toDatabaseModel(): DatabaseStatus =
+    DatabaseStatus(
         statusId = statusId,
         uri = uri,
         createdAt = createdAt,
-        account = account.toExternalModel(),
+        accountId = account.accountId,
         content = content,
-        visibility = visibility.toExternalModel(),
+        visibility = visibility.toDatabaseModel(),
         isSensitive = isSensitive,
         contentWarningText = contentWarningText,
-        mediaAttachments = mediaAttachments.map { it.toExternalModel() },
-        mentions = mentions.map { it.toExternalModel() },
-        hashTags = hashTags.map { it.toExternalModel() },
-        emojis = emojis.map { it.toExternalModel() },
+        mediaAttachments = mediaAttachments.map { it.toDatabaseModel() },
+        mentions = mentions.map { it.toDatabaseModel() },
+        hashTags = hashTags.map { it.toDatabaseModel() },
+        emojis = emojis.map { it.toDatabaseModel() },
         boostsCount = boostsCount,
         favouritesCount = favouritesCount,
         repliesCount = repliesCount,
-        application = application?.toExternalModel(),
+        application = application?.toDatabaseModel(),
         url = url,
         inReplyToId = inReplyToId,
         inReplyToAccountId = inReplyToAccountId,
         inReplyToAccountName = inReplyToAccountName,
-        poll = poll?.toExternalModel(),
-        card = card?.toExternalModel(),
+        boostedStatusId = boostedStatus?.statusId,
+        boostedStatusAccountId = boostedStatus?.account?.accountId,
+        pollId = poll?.pollId,
+        card = card?.toDatabaseModel(),
         language = language,
         plainText = plainText,
-        isFavourited = isFavorited,
+        isFavorited = isFavourited,
         isBoosted = isBoosted,
         isMuted = isMuted,
         isBookmarked = isBookmarked,
         isPinned = isPinned,
+        isBeingDeleted = isBeingDeleted,
     )
 
-fun DatabaseAccount.toExternalModel(): Account = Account(
+fun Account.toDatabaseModel(): DatabaseAccount = DatabaseAccount(
     accountId = accountId,
     username = username,
     acct = acct,
@@ -115,34 +79,34 @@ fun DatabaseAccount.toExternalModel(): Account = Account(
     headerUrl = headerUrl,
     headerStaticUrl = headerStaticUrl,
     isLocked = isLocked,
-    emojis = emojis.map { it.toExternalModel() },
+    emojis = emojis.map { it.toDatabaseModel() },
     createdAt = createdAt,
     lastStatusAt = lastStatusAt,
     statusesCount = statusesCount,
     followersCount = followersCount,
     followingCount = followingCount,
     isDiscoverable = isDiscoverable,
-    //TODO fix
-//    movedTo = movedTo?.toExternalModel(),
+    //TODO do we need this?  would require some work with the database wrappers
+//    movedTo = movedTo?.toDatabaseModel(),
     isGroup = isGroup,
-    fields = fields?.map { it.toExternalModel() },
+    fields = fields?.map { it.toDatabaseModel() },
     isBot = isBot,
-    source = source?.toExternalModel(),
+    source = source?.toDatabaseModel(),
     isSuspended = isSuspended,
     muteExpiresAt = muteExpiresAt,
 )
 
-fun DatabaseStatusVisibility.toExternalModel(): StatusVisibility =
+fun StatusVisibility.toDatabaseModel(): DatabaseStatusVisibility =
     when(this) {
-        DatabaseStatusVisibility.Direct -> StatusVisibility.Direct
-        DatabaseStatusVisibility.Private -> StatusVisibility.Private
-        DatabaseStatusVisibility.Public -> StatusVisibility.Public
-        DatabaseStatusVisibility.Unlisted -> StatusVisibility.Unlisted
+        StatusVisibility.Direct -> DatabaseStatusVisibility.Direct
+        StatusVisibility.Private -> DatabaseStatusVisibility.Private
+        StatusVisibility.Public -> DatabaseStatusVisibility.Public
+        StatusVisibility.Unlisted -> DatabaseStatusVisibility.Unlisted
     }
 
-fun DatabaseAttachment.toExternalModel(): Attachment =
+fun Attachment.toDatabaseModel(): DatabaseAttachment =
     when (this) {
-        is DatabaseAttachment.Image -> Attachment.Image(
+        is Attachment.Image -> DatabaseAttachment.Image(
             attachmentId = attachmentId,
             url = url,
             previewUrl = previewUrl,
@@ -151,9 +115,9 @@ fun DatabaseAttachment.toExternalModel(): Attachment =
             textUrl = textUrl,
             description = description,
             blurHash = blurHash,
-            meta = meta.toExternalModel(),
+            meta = meta.toDatabaseModel(),
         )
-        is DatabaseAttachment.Gifv -> Attachment.Gifv(
+        is Attachment.Gifv -> DatabaseAttachment.Gifv(
             attachmentId = attachmentId,
             url = url,
             previewUrl = previewUrl,
@@ -161,20 +125,9 @@ fun DatabaseAttachment.toExternalModel(): Attachment =
             previewRemoteUrl = previewRemoteUrl,
             textUrl = textUrl,
             description = description,
-            meta = meta.toExternalModel(),
+            meta = meta.toDatabaseModel(),
         )
-        is DatabaseAttachment.Video -> Attachment.Video(
-            attachmentId = attachmentId,
-            url = url,
-            previewUrl = previewUrl,
-            remoteUrl = remoteUrl,
-            previewRemoteUrl = previewRemoteUrl,
-            textUrl = textUrl,
-            description = description,
-            blurHash = blurHash,
-            meta = meta.toExternalModel(),
-        )
-        is DatabaseAttachment.Audio -> Attachment.Audio(
+        is Attachment.Video -> DatabaseAttachment.Video(
             attachmentId = attachmentId,
             url = url,
             previewUrl = previewUrl,
@@ -183,9 +136,9 @@ fun DatabaseAttachment.toExternalModel(): Attachment =
             textUrl = textUrl,
             description = description,
             blurHash = blurHash,
-            meta = meta.toExternalModel(),
+            meta = meta.toDatabaseModel(),
         )
-        is DatabaseAttachment.Unknown -> Attachment.Unknown(
+        is Attachment.Audio -> DatabaseAttachment.Audio(
             attachmentId = attachmentId,
             url = url,
             previewUrl = previewUrl,
@@ -194,104 +147,115 @@ fun DatabaseAttachment.toExternalModel(): Attachment =
             textUrl = textUrl,
             description = description,
             blurHash = blurHash,
+            meta = meta.toDatabaseModel(),
+        )
+        is Attachment.Unknown -> DatabaseAttachment.Unknown(
+            attachmentId = attachmentId,
+            url = url,
+            previewUrl = previewUrl,
+            remoteUrl = remoteUrl,
+            previewRemoteUrl = previewRemoteUrl,
+            textUrl = textUrl,
+            description = description,
+            blurHash = blurHash
         )
     }
 
-fun DatabaseAttachment.Audio.Meta.toExternalModel(): Attachment.Audio.Meta =
-    Attachment.Audio.Meta(
+fun Attachment.Audio.Meta.toDatabaseModel(): DatabaseAttachment.Audio.Meta =
+    DatabaseAttachment.Audio.Meta(
         durationSeconds = durationSeconds,
         audioCodec = audioCodec,
         audioBitrate = audioBitrate,
         audioChannels = audioChannels,
-        original = original?.toExternalModel()
+        original = original?.toDatabaseModel()
     )
 
-fun DatabaseAttachment.Audio.Meta.AudioInfo.toExternalModel(): Attachment.Audio.Meta.AudioInfo =
-    Attachment.Audio.Meta.AudioInfo(
+fun Attachment.Audio.Meta.AudioInfo.toDatabaseModel(): DatabaseAttachment.Audio.Meta.AudioInfo =
+    DatabaseAttachment.Audio.Meta.AudioInfo(
         bitrate = bitrate,
     )
 
-fun DatabaseAttachment.Video.Meta.toExternalModel(): Attachment.Video.Meta =
-    Attachment.Video.Meta(
+fun Attachment.Video.Meta.toDatabaseModel(): DatabaseAttachment.Video.Meta =
+    DatabaseAttachment.Video.Meta(
         aspectRatio = aspectRatio,
         durationSeconds = durationSeconds,
         fps = fps,
         audioCodec = audioCodec,
         audioBitrate = audioBitrate,
         audioChannels = audioChannels,
-        original = original?.toExternalModel(),
-        small = small?.toExternalModel(),
+        original = original?.toDatabaseModel(),
+        small = small?.toDatabaseModel(),
     )
 
-fun DatabaseAttachment.Video.Meta.VideoInfo.toExternalModel(): Attachment.Video.Meta.VideoInfo =
-    Attachment.Video.Meta.VideoInfo(
+fun Attachment.Video.Meta.VideoInfo.toDatabaseModel(): DatabaseAttachment.Video.Meta.VideoInfo =
+    DatabaseAttachment.Video.Meta.VideoInfo(
         width = width,
         height = height,
         bitrate = bitrate,
     )
 
-fun DatabaseAttachment.Image.Meta.toExternalModel(): Attachment.Image.Meta =
-    Attachment.Image.Meta(
-        focalPoint = focalPoint?.toExternalModel(),
-        original = original?.toExternalModel(),
-        small = small?.toExternalModel(),
+fun Attachment.Image.Meta.toDatabaseModel(): DatabaseAttachment.Image.Meta =
+    DatabaseAttachment.Image.Meta(
+        focalPoint = focalPoint?.toDatabaseModel(),
+        original = original?.toDatabaseModel(),
+        small = small?.toDatabaseModel(),
     )
 
-fun DatabaseAttachment.Image.Meta.ImageInfo.toExternalModel(): Attachment.Image.Meta.ImageInfo =
-    Attachment.Image.Meta.ImageInfo(
+fun Attachment.Image.Meta.ImageInfo.toDatabaseModel(): DatabaseAttachment.Image.Meta.ImageInfo =
+    DatabaseAttachment.Image.Meta.ImageInfo(
         width = width,
         height = height,
         size = size,
         aspectRatio = aspectRatio,
     )
 
-fun DatabaseAttachment.Gifv.Meta.toExternalModel(): Attachment.Gifv.Meta =
-    Attachment.Gifv.Meta(
+fun Attachment.Gifv.Meta.toDatabaseModel(): DatabaseAttachment.Gifv.Meta =
+    DatabaseAttachment.Gifv.Meta(
         aspectRatio = aspectRatio,
         durationSeconds = durationSeconds,
         fps = fps,
         bitrate = bitrate,
-        original = original?.toExternalModel(),
-        small = small?.toExternalModel(),
+        original = original?.toDatabaseModel(),
+        small = small?.toDatabaseModel(),
     )
 
-fun DatabaseAttachment.Gifv.Meta.GifvInfo.toExternalModel(): Attachment.Gifv.Meta.GifvInfo =
-    Attachment.Gifv.Meta.GifvInfo(
+fun Attachment.Gifv.Meta.GifvInfo.toDatabaseModel(): DatabaseAttachment.Gifv.Meta.GifvInfo =
+    DatabaseAttachment.Gifv.Meta.GifvInfo(
         width = width,
         height = height,
         bitrate = bitrate,
     )
 
-fun DatabaseFocalPoint.toExternalModel(): FocalPoint =
-    FocalPoint(
+fun FocalPoint.toDatabaseModel(): DatabaseFocalPoint =
+    DatabaseFocalPoint(
         x = x,
         y = y,
     )
 
-fun DatabaseMention.toExternalModel(): Mention =
-    Mention(
+fun Mention.toDatabaseModel(): DatabaseMention =
+    DatabaseMention(
         accountId = accountId,
         username = username,
         acct = acct,
         url = url
     )
 
-fun DatabaseHashTag.toExternalModel(): HashTag =
-    HashTag(
+fun HashTag.toDatabaseModel(): DatabaseHashTag =
+    DatabaseHashTag(
         name = name,
         url = url,
-        history = history?.map { it.toExternalModel() }
+        history = history?.map { it.toDatabaseModel() }
     )
 
-fun DatabaseHistory.toExternalModel(): History =
-    History(
+fun History.toDatabaseModel(): DatabaseHistory =
+    DatabaseHistory(
         day = day,
         usageCount = usageCount,
         accountCount = accountCount
     )
 
-fun DatabaseEmoji.toExternalModel(): Emoji =
-    Emoji(
+fun Emoji.toDatabaseModel(): DatabaseEmoji =
+    DatabaseEmoji(
         shortCode = shortCode,
         url = url,
         staticUrl = staticUrl,
@@ -299,8 +263,8 @@ fun DatabaseEmoji.toExternalModel(): Emoji =
         category = category
     )
 
-fun DatabaseApplication.toExternalModel(): Application =
-    Application(
+fun Application.toDatabaseModel(): DatabaseApplication =
+    DatabaseApplication(
         name = name,
         website = website,
         vapidKey = vapidKey,
@@ -308,46 +272,46 @@ fun DatabaseApplication.toExternalModel(): Application =
         clientSecret = clientSecret
     )
 
-fun DatabasePoll.toExternalModel(): Poll =
-    Poll(
+fun Poll.toDatabaseModel(): DatabasePoll =
+    DatabasePoll(
         pollId = pollId,
         isExpired = isExpired,
         allowsMultipleChoices = allowsMultipleChoices,
         votesCount = votesCount,
-        options = options.map { it.toExternalModel() },
-        emojis = emojis.map { it.toExternalModel() },
+        options = options.map { it.toDatabaseModel() },
+        emojis = emojis.map { it.toDatabaseModel() },
         expiresAt = expiresAt,
         votersCount = votersCount,
         hasVoted = hasVoted,
         ownVotes = ownVotes
     )
 
-fun DatabasePollOption.toExternalModel(): PollOption =
-    PollOption(
+fun PollOption.toDatabaseModel(): DatabasePollOption =
+    DatabasePollOption(
         title = title,
         votesCount = votesCount
     )
 
-fun DatabaseField.toExternalModel(): Field =
-    Field(
+fun Field.toDatabaseModel(): DatabaseField =
+    DatabaseField(
         name = name,
         value = value,
         verifiedAt = verifiedAt
     )
 
-fun DatabaseSource.toExternalModel(): Source =
-    Source(
+fun Source.toDatabaseModel(): DatabaseSource =
+    DatabaseSource(
         bio = bio,
-        fields = fields.map { it.toExternalModel() },
-        defaultPrivacy = defaultPrivacy?.toExternalModel(),
+        fields = fields.map { it.toDatabaseModel() },
+        defaultPrivacy = defaultPrivacy?.toDatabaseModel(),
         defaultSensitivity = defaultSensitivity,
         defaultLanguage = defaultLanguage,
         followRequestsCount = followRequestsCount
     )
 
-fun DatabaseCard.toExternalModel(): Card =
+fun Card.toDatabaseModel(): DatabaseCard =
     when (this) {
-        is DatabaseCard.Video -> Card.Video(
+        is Card.Video -> DatabaseCard.Video(
             url = url,
             title = title,
             description = description,
@@ -362,7 +326,7 @@ fun DatabaseCard.toExternalModel(): Card =
             embedUrl = embedUrl,
             blurHash = blurHash
         )
-        is DatabaseCard.Link -> Card.Link(
+        is Card.Link -> DatabaseCard.Link(
             url = url,
             title = title,
             description = description,
@@ -377,7 +341,7 @@ fun DatabaseCard.toExternalModel(): Card =
             embedUrl = embedUrl,
             blurHash = blurHash
         )
-        is DatabaseCard.Photo -> Card.Photo(
+        is Card.Photo -> DatabaseCard.Photo(
             url = url,
             title = title,
             description = description,
@@ -392,7 +356,7 @@ fun DatabaseCard.toExternalModel(): Card =
             embedUrl = embedUrl,
             blurHash = blurHash
         )
-        is DatabaseCard.Rich -> Card.Rich(
+        is Card.Rich -> DatabaseCard.Rich(
             url = url,
             title = title,
             description = description,

@@ -1,6 +1,8 @@
 package org.mozilla.social.core.usecase.mastodon.status
 
+import io.mockk.mockk
 import kotlinx.coroutines.test.TestScope
+import org.mozilla.social.core.model.Status
 import org.mozilla.social.core.usecase.mastodon.BaseUseCaseTest
 import org.mozilla.social.core.test.fakes.Models
 import kotlin.test.BeforeTest
@@ -11,6 +13,7 @@ class UndoFavoriteStatusTest : BaseUseCaseTest() {
     private lateinit var subject: UndoFavoriteStatus
 
     private val networkStatus = Models.status
+    private val saveStatusesToDatabase = mockk<SaveStatusesToDatabase>()
 
     @BeforeTest
     fun setup() {
@@ -34,7 +37,7 @@ class UndoFavoriteStatusTest : BaseUseCaseTest() {
                 subject("id")
             },
             verifyBlock = {
-                statusRepository.saveStatusToDatabase(any())
+                saveStatusesToDatabase(any<List<Status>>())
             }
         )
     }
