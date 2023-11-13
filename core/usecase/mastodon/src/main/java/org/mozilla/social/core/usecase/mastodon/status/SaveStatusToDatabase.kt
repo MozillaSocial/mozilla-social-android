@@ -7,7 +7,7 @@ import org.mozilla.social.core.model.Status
 import org.mozilla.social.core.repository.mastodon.PollRepository
 import org.mozilla.social.core.repository.mastodon.model.status.toDatabaseModel
 
-class SaveStatusToDatabase internal constructor(
+internal class SaveStatusToDatabase internal constructor(
     private val socialDatabase: SocialDatabase,
     private val pollRepository: PollRepository,
 ) {

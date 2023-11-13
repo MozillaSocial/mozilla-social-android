@@ -1,6 +1,7 @@
 package org.mozilla.social.core.usecase.mastodon.status
 
 import kotlinx.coroutines.test.TestScope
+import org.mozilla.social.core.model.Status
 import org.mozilla.social.core.usecase.mastodon.BaseUseCaseTest
 import org.mozilla.social.core.test.fakes.Models
 import kotlin.test.BeforeTest
@@ -16,10 +17,11 @@ class UndoBoostStatusTest : BaseUseCaseTest() {
     fun setup() {
         subject = UndoBoostStatus(
             externalScope = TestScope(testDispatcher),
-            showSnackbar = showSnackbar,
-            statusRepository = statusRepository,
             socialDatabase = socialDatabase,
+            statusRepository = statusRepository,
+            showSnackbar = showSnackbar,
             dispatcherIo = testDispatcher,
+            saveStatusToDatabase = saveStatusToDatabase,
         )
     }
 
@@ -34,7 +36,7 @@ class UndoBoostStatusTest : BaseUseCaseTest() {
                 subject("id")
             },
             verifyBlock = {
-                statusRepository.saveStatusToDatabase(any())
+                saveStatusToDatabase(any<List<Status>>())
             }
         )
     }

@@ -18,7 +18,6 @@ import org.mozilla.social.core.model.request.StatusCreate
 
 class StatusRepository(
     private val statusApi: StatusApi,
-    private val pollLocalDataSource: PollLocalDataSource,
     private val socialDatabase: SocialDatabase,
 ) {
     suspend fun postStatus(statusCreate: StatusCreate): Status =
@@ -63,30 +62,4 @@ class StatusRepository(
             statusWrapper.toExternalModel()
         }
     }
-
-    suspend fun saveStatusesToDatabase(statuses: List<Status>) {
-        saveStatusToDatabase(*statuses.toTypedArray())
-    }
-
-    suspend fun saveStatusToDatabase(vararg statuses: Status) {
-        socialDatabase.withTransaction {
-            val boostedStatuses = statuses.mapNotNull { it.boostedStatus }
-            pollLocalDataSource.insertAll(boostedStatuses.mapNotNull { it.poll })
-            socialDatabase.accountsDao().insertAll(boostedStatuses.map {
-                it.account.toDatabaseModel()
-            })
-            socialDatabase.statusDao().insertAll(boostedStatuses.map {
-                it.toDatabaseModel()
-            })
-
-            pollLocalDataSource.insertAll(statuses.mapNotNull { it.poll })
-            socialDatabase.accountsDao().insertAll(statuses.map {
-                it.account.toDatabaseModel()
-            })
-            socialDatabase.statusDao().insertAll(statuses.map {
-                it.toDatabaseModel()
-            })
-        }
-    }
 }
-

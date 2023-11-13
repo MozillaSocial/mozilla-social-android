@@ -1,4 +1,4 @@
-package org.mozilla.social.core.usecase.mastodon.remotemediators
+package org.mozilla.social.core.usecase.mastodon.timeline
 
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
@@ -8,33 +8,34 @@ import androidx.room.withTransaction
 import kotlinx.coroutines.delay
 import org.mozilla.social.common.Rel
 import org.mozilla.social.core.database.SocialDatabase
-import org.mozilla.social.core.database.model.statusCollections.HashTagTimelineStatus
-import org.mozilla.social.core.database.model.statusCollections.HashTagTimelineStatusWrapper
+import org.mozilla.social.core.database.model.statusCollections.LocalTimelineStatus
+import org.mozilla.social.core.database.model.statusCollections.LocalTimelineStatusWrapper
 import org.mozilla.social.core.repository.mastodon.AccountRepository
 import org.mozilla.social.core.repository.mastodon.TimelineRepository
+import org.mozilla.social.core.usecase.mastodon.remotemediators.getInReplyToAccountNames
 import org.mozilla.social.core.usecase.mastodon.status.SaveStatusToDatabase
+import timber.log.Timber
 
-@OptIn(ExperimentalPagingApi::class)
-class HashTagTimelineRemoteMediator internal constructor(
+class RefreshLocalTimeline internal constructor(
     private val timelineRepository: TimelineRepository,
     private val accountRepository: AccountRepository,
     private val saveStatusToDatabase: SaveStatusToDatabase,
     private val socialDatabase: SocialDatabase,
-    private val hashTag: String,
-) : RemoteMediator<Int, HashTagTimelineStatusWrapper>() {
+) {
 
-    @Suppress("ReturnCount")
-    override suspend fun load(
+    @OptIn(ExperimentalPagingApi::class)
+    @Suppress("ReturnCount", "MagicNumber")
+    suspend operator fun invoke(
         loadType: LoadType,
-        state: PagingState<Int, HashTagTimelineStatusWrapper>
-    ): MediatorResult {
+        state: PagingState<Int, LocalTimelineStatusWrapper>
+    ): RemoteMediator.MediatorResult {
         return try {
             var pageSize: Int = state.config.pageSize
             val response = when (loadType) {
                 LoadType.REFRESH -> {
                     pageSize = state.config.initialLoadSize
-                    timelineRepository.getHashtagTimeline(
-                        hashTag = hashTag,
+                    timelineRepository.getPublicTimeline(
+                        localOnly = true,
                         olderThanId = null,
                         immediatelyNewerThanId = null,
                         loadSize = pageSize,
@@ -43,9 +44,9 @@ class HashTagTimelineRemoteMediator internal constructor(
 
                 LoadType.PREPEND -> {
                     val firstItem = state.firstItemOrNull()
-                        ?: return MediatorResult.Success(endOfPaginationReached = true)
-                    timelineRepository.getHashtagTimeline(
-                        hashTag = hashTag,
+                        ?: return RemoteMediator.MediatorResult.Success(endOfPaginationReached = true)
+                    timelineRepository.getPublicTimeline(
+                        localOnly = true,
                         olderThanId = null,
                         immediatelyNewerThanId = firstItem.status.statusId,
                         loadSize = pageSize,
@@ -54,9 +55,9 @@ class HashTagTimelineRemoteMediator internal constructor(
 
                 LoadType.APPEND -> {
                     val lastItem = state.lastItemOrNull()
-                        ?: return MediatorResult.Success(endOfPaginationReached = true)
-                    timelineRepository.getHashtagTimeline(
-                        hashTag = hashTag,
+                        ?: return RemoteMediator.MediatorResult.Success(endOfPaginationReached = true)
+                    timelineRepository.getPublicTimeline(
+                        localOnly = true,
                         olderThanId = lastItem.status.statusId,
                         immediatelyNewerThanId = null,
                         loadSize = pageSize,
@@ -68,15 +69,14 @@ class HashTagTimelineRemoteMediator internal constructor(
 
             socialDatabase.withTransaction {
                 if (loadType == LoadType.REFRESH) {
-                    socialDatabase.hashTagTimelineDao().deleteHashTagTimeline(hashTag)
+                    socialDatabase.localTimelineDao().deleteLocalTimeline()
                 }
 
                 saveStatusToDatabase(result)
 
-                socialDatabase.hashTagTimelineDao().insertAll(result.map {
-                    HashTagTimelineStatus(
+                socialDatabase.localTimelineDao().insertAll(result.map {
+                    LocalTimelineStatus(
                         statusId = it.statusId,
-                        hashTag = hashTag,
                         accountId = it.account.accountId,
                         pollId = it.poll?.pollId,
                         boostedStatusId = it.boostedStatus?.statusId,
@@ -94,10 +94,10 @@ class HashTagTimelineRemoteMediator internal constructor(
             // it's assumed we've reached the end of pagination, and nothing gets loaded
             // ever again.
             if (loadType == LoadType.REFRESH) {
-                delay(REFRESH_DELAY)
+                delay(200)
             }
 
-            MediatorResult.Success(
+            RemoteMediator.MediatorResult.Success(
                 endOfPaginationReached = when (loadType) {
                     LoadType.PREPEND -> response.pagingLinks?.find { it.rel == Rel.PREV } == null
                     LoadType.REFRESH,
@@ -105,9 +105,9 @@ class HashTagTimelineRemoteMediator internal constructor(
                 }
             )
         } catch (e: Exception) {
-            MediatorResult.Error(e)
+            Timber.e(e)
+            RemoteMediator.MediatorResult.Error(e)
         }
     }
-}
 
-private const val REFRESH_DELAY = 200L
+}

@@ -23,9 +23,6 @@ val accountModule = module {
     }
     factory { parametersHolder ->
         AccountTimelineRemoteMediator(
-            accountRepository = get(),
-            statusRepository = get(),
-            socialDatabase = get(),
             accountId = parametersHolder[0],
             timelineType = parametersHolder[1],
         )

@@ -11,14 +11,14 @@ import org.mozilla.social.core.navigation.usecases.ShowSnackbar
 import org.mozilla.social.core.repository.mastodon.StatusRepository
 import org.mozilla.social.core.usecase.mastodon.R
 
-class UndoFavoriteStatus(
+class UndoFavoriteStatus internal constructor(
     private val externalScope: CoroutineScope,
     private val socialDatabase: SocialDatabase,
     private val statusRepository: StatusRepository,
+    private val saveStatusToDatabase: SaveStatusToDatabase,
     private val showSnackbar: ShowSnackbar,
     private val dispatcherIo: CoroutineDispatcher = Dispatchers.IO,
 ) {
-
     suspend operator fun invoke(
         statusId: String,
     ) = externalScope.async(dispatcherIo) {
@@ -28,7 +28,7 @@ class UndoFavoriteStatus(
                 socialDatabase.statusDao().updateFavorited(statusId, false)
             }
             val status = statusRepository.unFavoriteStatus(statusId)
-            statusRepository.saveStatusToDatabase(status)
+            saveStatusToDatabase(status)
         } catch (e: Exception) {
             socialDatabase.withTransaction {
                 socialDatabase.statusDao().updateFavoriteCount(statusId, 1)

@@ -35,6 +35,7 @@ import org.mozilla.social.core.repository.mastodon.ReportRepository
 import org.mozilla.social.core.repository.mastodon.SearchRepository
 import org.mozilla.social.core.repository.mastodon.StatusRepository
 import org.mozilla.social.core.repository.mastodon.TimelineRepository
+import org.mozilla.social.core.usecase.mastodon.status.SaveStatusToDatabase
 import org.mozilla.social.core.usecase.mastodon.utils.TransactionUtils
 import kotlin.test.BeforeTest
 import kotlin.test.fail
@@ -68,6 +69,7 @@ open class BaseUseCaseTest {
     @OptIn(ExperimentalCoroutinesApi::class)
     protected val testDispatcher: TestDispatcher = UnconfinedTestDispatcher()
     protected val databaseDelegate = mockk<DatabaseDelegate>(relaxed = true)
+    internal val saveStatusToDatabase = mockk<SaveStatusToDatabase>(relaxed = true)
 
     protected val showSnackbar = mockk<ShowSnackbar>(relaxed = true)
 

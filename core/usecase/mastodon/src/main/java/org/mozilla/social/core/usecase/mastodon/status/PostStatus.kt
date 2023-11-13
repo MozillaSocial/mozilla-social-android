@@ -16,10 +16,11 @@ import org.mozilla.social.core.model.StatusVisibility
 import org.mozilla.social.core.model.request.PollCreate
 import org.mozilla.social.core.model.request.StatusCreate
 
-class PostStatus(
+class PostStatus internal constructor(
     private val externalScope: CoroutineScope,
     private val mediaApi: MediaRepository,
     private val statusRepository: StatusRepository,
+    private val saveStatusToDatabase: SaveStatusToDatabase,
     private val timelineRepository: TimelineRepository,
     private val showSnackbar: ShowSnackbar,
     private val dispatcherIo: CoroutineDispatcher = Dispatchers.IO,
@@ -70,8 +71,7 @@ class PostStatus(
                     inReplyToId = inReplyToId,
                 )
             )
-
-            statusRepository.saveStatusToDatabase(status)
+            saveStatusToDatabase(status)
             timelineRepository.insertStatusIntoTimelines(status)
         } catch (e: Exception) {
             showSnackbar(
