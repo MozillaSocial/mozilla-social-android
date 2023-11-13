@@ -26,7 +26,6 @@ class ChooseServerViewModel(
     }
 
     //TODO remove context
-    //TODO make login rethrow
     override fun onNextClicked(context: Context) {
         _uiState.edit { copy(
             isLoading = true,
@@ -41,9 +40,12 @@ class ChooseServerViewModel(
             } catch (e: Login.LoginFailedException) {
                 _uiState.edit { copy(
                     loginFailed = true,
-                    isLoading = false,
                 ) }
                 Timber.e(e)
+            } finally {
+                _uiState.edit { copy(
+                    isLoading = false,
+                ) }
             }
         }
     }

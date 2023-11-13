@@ -50,7 +50,6 @@ class Login(
             )
         } catch (exception: Exception) {
             logout()
-            Timber.e(exception)
             throw LoginFailedException(exception)
         }
     }
