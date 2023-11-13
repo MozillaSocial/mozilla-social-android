@@ -76,12 +76,13 @@ import org.mozilla.social.core.database.model.statusCollections.LocalTimelineSta
     IntListConverter::class,
     CardConverter::class,
 )
+// TODO@DA eventually make internal
 abstract class SocialDatabase : RoomDatabase() {
     abstract fun statusDao(): StatusDao
     abstract fun accountsDao(): AccountsDao
     abstract fun hashtagDao(): HashtagDao
     abstract fun homeTimelineDao(): HomeTimelineStatusDao
-    abstract fun pollDao(): PollsDao
+    internal abstract fun pollDao(): PollsDao
     abstract fun hashTagTimelineDao(): HashTagTimelineStatusDao
     abstract fun accountTimelineDao(): AccountTimelineStatusDao
     abstract fun relationshipsDao(): RelationshipsDao

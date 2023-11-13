@@ -11,6 +11,7 @@ class StatusRepositoryTest : BaseRepositoryTest() {
         subject = StatusRepository(
             statusApi = statusApi,
             socialDatabase = socialDatabase,
+            pollLocalDataSource = pollLocalDataSource,
         )
     }
 }
