@@ -5,17 +5,16 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import org.mozilla.social.common.utils.StringFactory
-import org.mozilla.social.core.database.SocialDatabase
-import org.mozilla.social.core.navigation.usecases.ShowSnackbar
-import org.mozilla.social.core.repository.mastodon.StatusRepository
 import org.mozilla.social.core.model.PollVote
-import org.mozilla.social.core.repository.mastodon.model.status.toDatabaseModel
+import org.mozilla.social.core.navigation.usecases.ShowSnackbar
+import org.mozilla.social.core.repository.mastodon.PollRepository
+import org.mozilla.social.core.repository.mastodon.StatusRepository
 import org.mozilla.social.core.usecase.mastodon.R
 
 class VoteOnPoll(
     private val externalScope: CoroutineScope,
     private val statusRepository: StatusRepository,
-    private val socialDatabase: SocialDatabase,
+    private val pollRepository: PollRepository,
     private val showSnackbar: ShowSnackbar,
     private val dispatcherIo: CoroutineDispatcher = Dispatchers.IO,
 ) {
@@ -25,14 +24,14 @@ class VoteOnPoll(
         pollChoices: List<Int>,
     ) = externalScope.async(dispatcherIo) {
         try {
-            socialDatabase.pollDao().updateOwnVotes(pollId, pollChoices)
+            pollRepository.updateOwnVotes(pollId, pollChoices)
             val poll = statusRepository.voteOnPoll(
                 pollId,
                 PollVote(pollChoices),
             )
-            socialDatabase.pollDao().update(poll.toDatabaseModel())
+            pollRepository.update(poll)
         } catch (e: Exception) {
-            socialDatabase.pollDao().updateOwnVotes(pollId, null)
+            pollRepository.updateOwnVotes(pollId, null)
             showSnackbar(
                 text = StringFactory.resource(R.string.error_voting),
                 isError = true,

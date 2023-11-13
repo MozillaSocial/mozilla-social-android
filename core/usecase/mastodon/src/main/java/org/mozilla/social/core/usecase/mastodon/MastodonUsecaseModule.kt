@@ -21,6 +21,7 @@ import org.mozilla.social.core.usecase.mastodon.status.BoostStatus
 import org.mozilla.social.core.usecase.mastodon.status.DeleteStatus
 import org.mozilla.social.core.usecase.mastodon.status.FavoriteStatus
 import org.mozilla.social.core.usecase.mastodon.status.PostStatus
+import org.mozilla.social.core.usecase.mastodon.status.SaveStatusToDatabase
 import org.mozilla.social.core.usecase.mastodon.status.UndoBoostStatus
 import org.mozilla.social.core.usecase.mastodon.status.UndoFavoriteStatus
 import org.mozilla.social.core.usecase.mastodon.status.VoteOnPoll
@@ -125,10 +126,11 @@ val mastodonUsecaseModule = module {
     }
     single {
         BoostStatus(
-            externalScope = get<AppScope>(),
-            statusRepository = get(),
-            showSnackbar = get(),
+            externalScope = get(),
             socialDatabase = get(),
+            statusRepository = get(),
+            databaseDelegate = get(),
+            showSnackbar = get(),
         )
     }
     single {
@@ -157,10 +159,10 @@ val mastodonUsecaseModule = module {
     }
     single {
         VoteOnPoll(
-            externalScope = get<AppScope>(),
+            externalScope = get(),
             statusRepository = get(),
+            pollRepository = get(),
             showSnackbar = get(),
-            socialDatabase = get(),
         )
     }
     single {
@@ -171,4 +173,6 @@ val mastodonUsecaseModule = module {
             socialDatabase = get(),
         )
     }
+
+    single { SaveStatusToDatabase(socialDatabase = get(), pollRepository = get()) }
 }

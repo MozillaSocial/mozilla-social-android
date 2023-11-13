@@ -29,7 +29,7 @@ class VoteOnPollTest : BaseUseCaseTest() {
             externalScope = TestScope(testDispatcher),
             showSnackbar = showSnackbar,
             statusRepository = statusRepository,
-            socialDatabase = socialDatabase,
+            pollRepository = pollRepository,
             dispatcherIo = testDispatcher,
         )
     }
@@ -48,7 +48,7 @@ class VoteOnPollTest : BaseUseCaseTest() {
                 )
             },
             verifyBlock = {
-                pollsDao.update(any())
+                pollRepository.update(any())
             },
         )
     }
