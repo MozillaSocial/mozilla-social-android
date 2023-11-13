@@ -36,7 +36,7 @@ class UndoBoostStatusTest : BaseUseCaseTest() {
                 subject("id")
             },
             verifyBlock = {
-                saveStatusToDatabase(any<List<Status>>())
+                saveStatusToDatabase(any<Status>())
             }
         )
     }

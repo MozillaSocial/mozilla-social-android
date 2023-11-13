@@ -20,7 +20,6 @@ import timber.log.Timber
 class RefreshHomeTimeline internal constructor(
     private val timelineRepository: TimelineRepository,
     private val accountRepository: AccountRepository,
-    private val statusRepository: StatusRepository,
     private val saveStatusToDatabase: SaveStatusToDatabase,
     private val socialDatabase: SocialDatabase,
 ) {

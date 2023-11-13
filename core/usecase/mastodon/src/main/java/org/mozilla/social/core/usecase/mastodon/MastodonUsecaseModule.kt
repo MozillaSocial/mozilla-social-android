@@ -1,5 +1,6 @@
 package org.mozilla.social.core.usecase.mastodon
 
+import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 import org.mozilla.social.common.appscope.AppScope
 import org.mozilla.social.core.usecase.mastodon.account.BlockAccount
@@ -188,7 +189,7 @@ val mastodonUsecaseModule = module {
 
     single { RefreshLocalTimeline(get(), get(), get(), get()) }
     single { RefreshFederatedTimeline(get(), get(), get(), get()) }
-    single { RefreshHomeTimeline(get(), get(), get(), get(), get()) }
+    singleOf(::RefreshHomeTimeline)
     single {
         RefreshAccountTimeline(
             accountRepository = get(),

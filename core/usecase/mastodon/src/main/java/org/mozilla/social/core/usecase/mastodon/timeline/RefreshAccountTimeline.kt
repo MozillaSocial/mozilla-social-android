@@ -101,7 +101,7 @@ class RefreshAccountTimeline internal constructor(
             // it's assumed we've reached the end of pagination, and nothing gets loaded
             // ever again.
             if (loadType == LoadType.REFRESH) {
-                delay(200)
+                delay(REFRESH_DELAY)
             }
 
             RemoteMediator.MediatorResult.Success(
@@ -115,6 +115,10 @@ class RefreshAccountTimeline internal constructor(
             Timber.e(e)
             RemoteMediator.MediatorResult.Error(e)
         }
+    }
+
+    companion object {
+        private const val REFRESH_DELAY = 200L
     }
 }
 enum class TimelineType {

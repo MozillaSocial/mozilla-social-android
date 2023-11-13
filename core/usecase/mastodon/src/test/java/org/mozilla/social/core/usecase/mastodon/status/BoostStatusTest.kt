@@ -37,7 +37,7 @@ class BoostStatusTest : BaseUseCaseTest() {
                 subject("id")
             },
             verifyBlock = {
-                saveStatusToDatabase(anyVararg())
+                saveStatusToDatabase(any<Status>())
             }
         )
     }

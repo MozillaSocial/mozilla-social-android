@@ -44,7 +44,7 @@ class PostStatusTest : BaseUseCaseTest() {
                 )
             },
             verifyBlock = {
-                saveStatusToDatabase(any<List<Status>>())
+                saveStatusToDatabase(any<Status>())
             }
         )
     }
