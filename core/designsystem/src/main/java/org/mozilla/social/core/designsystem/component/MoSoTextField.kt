@@ -2,10 +2,13 @@ package org.mozilla.social.core.designsystem.component
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.LocalTextStyle
+import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldColors
 import androidx.compose.material3.TextFieldDefaults
@@ -17,6 +20,7 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.mozilla.social.core.designsystem.theme.MoSoRadius
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
@@ -53,7 +57,11 @@ fun MoSoTextField(
         modifier = modifier
             .border(
                 width = 1.dp,
-                color = MoSoTheme.colors.borderInputEnabled,
+                color = if (isError) {
+                    MoSoTheme.colors.borderWarning
+                } else {
+                    MoSoTheme.colors.borderInputEnabled
+                },
                 shape = RoundedCornerShape(MoSoRadius.md)
             ),
         enabled = enabled,
@@ -136,16 +144,55 @@ object MoSoTextFieldDefaults {
     @Composable
     fun colors(): TextFieldColors = TextFieldDefaults.colors(
         cursorColor = MoSoTheme.colors.textPrimary,
+        errorCursorColor = MoSoTheme.colors.textPrimary,
         unfocusedLabelColor = MoSoTheme.colors.textSecondary,
         focusedLabelColor = MoSoTheme.colors.textSecondary,
         disabledLabelColor = MoSoTheme.colors.textSecondary,
         errorLabelColor = MoSoTheme.colors.textWarning,
-        focusedContainerColor = Color.Transparent,
         focusedIndicatorColor = Color.Transparent,
         unfocusedIndicatorColor = Color.Transparent,
         disabledIndicatorColor = Color.Transparent,
+        errorIndicatorColor = Color.Transparent,
         disabledContainerColor = Color.Transparent,
         errorContainerColor = Color.Transparent,
         unfocusedContainerColor = Color.Transparent,
+        focusedContainerColor = Color.Transparent,
     )
+}
+
+@Preview
+@Composable
+private fun MoSoTextFieldPreview() {
+    MoSoTheme {
+        MoSoSurface {
+            Box(
+                modifier = Modifier.padding(8.dp)
+            ) {
+                MoSoTextField(
+                    value = "test",
+                    onValueChange = {},
+                    label = { Text(text = "label") },
+                )
+            }
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun MoSoTextFieldErrorPreview() {
+    MoSoTheme {
+        MoSoSurface {
+            Box(
+                modifier = Modifier.padding(8.dp)
+            ) {
+                MoSoTextField(
+                    value = "test",
+                    onValueChange = {},
+                    label = { Text(text = "label") },
+                    isError = true,
+                )
+            }
+        }
+    }
 }

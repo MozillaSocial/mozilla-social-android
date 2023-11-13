@@ -44,11 +44,14 @@ class Login(
             clientId = application.clientId!!
             clientSecret = application.clientSecret!!
             openLoginCustomTab(
-                context = context, clientId = application.clientId!!, host = domain
+                context = context,
+                clientId = application.clientId!!,
+                host = domain,
             )
         } catch (exception: Exception) {
             logout()
             Timber.e(exception)
+            throw LoginFailedException(exception)
         }
     }
 
@@ -109,6 +112,8 @@ class Login(
         const val READ_WRITE_PUSH = "read write push"
         const val TAG = "Login"
     }
+
+    class LoginFailedException(e: Exception) : Exception(e)
 }
 
 class OpenLoginCustomTab {
