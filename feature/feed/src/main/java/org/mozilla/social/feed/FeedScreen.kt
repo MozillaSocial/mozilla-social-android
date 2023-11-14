@@ -93,7 +93,7 @@ private fun FeedScreen(
                 selectedTabIndex = selectedTimelineType.ordinal,
                 divider = {},
             ) {
-                TimelineType.values().forEach { timelineType ->
+                TimelineType.entries.forEach { timelineType ->
                     MoSoTab(
                         modifier = Modifier
                             .height(40.dp),
