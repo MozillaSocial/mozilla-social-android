@@ -32,14 +32,14 @@ class DeleteStatusTest : BaseUseCaseTest() {
         subject("id")
 
         coVerify(exactly = 1) {
-            statusDao.updateIsBeingDeleted("id", true)
+            statusRepository.updateIsBeingDeleted("id", true)
             statusRepository.deleteStatus("id")
             homeTimelineDao.deletePost("id")
             localTimelineDao.deletePost("id")
             federatedTimelineDao.deletePost("id")
             hashTagTimelineDao.deletePost("id")
             accountTimelineDao.deletePost("id")
-            statusDao.deleteStatus("id")
+            statusRepository.deleteStatusLocal("id")
         }
     }
 
@@ -56,9 +56,9 @@ class DeleteStatusTest : BaseUseCaseTest() {
         assertNotNull(exception)
 
         coVerify(exactly = 1) {
-            statusDao.updateIsBeingDeleted("id", true)
+            statusRepository.updateIsBeingDeleted("id", true)
             statusRepository.deleteStatus("id")
-            statusDao.updateIsBeingDeleted("id", false)
+            statusRepository.updateIsBeingDeleted("id", false)
         }
 
         coVerify(exactly = 0) {
@@ -67,7 +67,7 @@ class DeleteStatusTest : BaseUseCaseTest() {
             federatedTimelineDao.deletePost("id")
             hashTagTimelineDao.deletePost("id")
             accountTimelineDao.deletePost("id")
-            statusDao.deleteStatus("id")
+            statusRepository.deleteStatusLocal("id")
         }
     }
 
@@ -82,7 +82,7 @@ class DeleteStatusTest : BaseUseCaseTest() {
                 subject("id")
             },
             verifyBlock = {
-                statusDao.deleteStatus(any())
+                statusRepository.deleteStatusLocal(any())
             }
         )
     }

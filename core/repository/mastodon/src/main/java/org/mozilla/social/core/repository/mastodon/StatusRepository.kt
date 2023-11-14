@@ -70,7 +70,7 @@ class StatusRepository(
         }
     }
 
-    suspend fun updateLocalIsBeingDeleted(statusId: String, isBeingDeleted: Boolean) {
+    suspend fun updateIsBeingDeleted(statusId: String, isBeingDeleted: Boolean) {
         dao.updateIsBeingDeleted(statusId = statusId, isBeingDeleted = isBeingDeleted)
     }
 

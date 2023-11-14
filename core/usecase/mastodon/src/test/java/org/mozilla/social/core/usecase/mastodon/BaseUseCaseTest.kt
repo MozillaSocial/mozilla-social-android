@@ -64,7 +64,6 @@ open class BaseUseCaseTest {
     protected val homeTimelineDao = mockk<HomeTimelineStatusDao>(relaxed = true)
     protected val localTimelineDao = mockk<LocalTimelineStatusDao>(relaxed = true)
     protected val relationshipsDao = mockk<RelationshipsDao>(relaxed = true)
-    protected val statusDao = mockk<StatusDao>(relaxed = true)
 
     @OptIn(ExperimentalCoroutinesApi::class)
     protected val testDispatcher: TestDispatcher = UnconfinedTestDispatcher()
@@ -83,7 +82,6 @@ open class BaseUseCaseTest {
         every { socialDatabase.homeTimelineDao() } returns homeTimelineDao
         every { socialDatabase.localTimelineDao() } returns localTimelineDao
         every { socialDatabase.relationshipsDao() } returns relationshipsDao
-        every { socialDatabase.statusDao() } returns statusDao
 
         TransactionUtils.setupTransactionMock(socialDatabase)
     }
