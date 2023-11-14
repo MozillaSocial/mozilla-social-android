@@ -3,6 +3,7 @@ package org.mozilla.social.core.repository.mastodon
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import org.mozilla.social.core.database.SocialDatabase
+import org.mozilla.social.core.database.dao.StatusDao
 import org.mozilla.social.core.model.Context
 import org.mozilla.social.core.model.Poll
 import org.mozilla.social.core.model.PollVote
@@ -15,7 +16,7 @@ import org.mozilla.social.core.repository.mastodon.model.status.toNetworkModel
 
 class StatusRepository(
     private val statusApi: StatusApi,
-    private val socialDatabase: SocialDatabase,
+    private val statusDao: StatusDao,
 ) {
     suspend fun postStatus(statusCreate: StatusCreate): Status =
         statusApi.postStatus(statusCreate.toNetworkModel()).toExternalModel()
@@ -48,13 +49,13 @@ class StatusRepository(
     suspend fun getStatusLocal(
         statusId: String
     ): Status? {
-        val status = socialDatabase.statusDao().getStatus(statusId)
+        val status = statusDao.getStatus(statusId)
         return status?.toExternalModel()
     }
 
     fun getStatusesFlow(
         statusIds: List<String>,
-    ): Flow<List<Status>> = socialDatabase.statusDao().getStatuses(statusIds).map {
+    ): Flow<List<Status>> = statusDao.getStatuses(statusIds).map {
         it.map { statusWrapper ->
             statusWrapper.toExternalModel()
         }

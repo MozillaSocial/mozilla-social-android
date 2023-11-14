@@ -10,7 +10,7 @@ class StatusRepositoryTest : BaseRepositoryTest() {
     fun setup() {
         subject = StatusRepository(
             statusApi = statusApi,
-            socialDatabase = socialDatabase,
+            statusDao = statusDao,
         )
     }
 }

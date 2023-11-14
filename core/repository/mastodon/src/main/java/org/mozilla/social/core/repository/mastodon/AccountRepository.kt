@@ -6,6 +6,7 @@ import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import org.mozilla.social.common.parseMastodonLinkHeader
 import org.mozilla.social.core.database.SocialDatabase
+import org.mozilla.social.core.database.dao.AccountsDao
 import org.mozilla.social.core.network.mastodon.AccountApi
 import org.mozilla.social.core.repository.mastodon.model.account.toExternal
 import org.mozilla.social.core.model.paging.FollowersPagingWrapper
@@ -19,7 +20,7 @@ import java.io.File
 
 class AccountRepository internal constructor(
     private val accountApi: AccountApi,
-    private val socialDatabase: SocialDatabase,
+    private val accountsDao: AccountsDao,
 ) {
     suspend fun getAccount(accountId: String): Account {
         return accountApi.getAccount(accountId).toExternalModel()
@@ -125,7 +126,7 @@ class AccountRepository internal constructor(
 
     // TODO@DA move to use case
     suspend fun getAccountFromDatabase(accountId: String): Account? =
-        socialDatabase.accountsDao().getAccount(accountId)?.toExternalModel()
+        accountsDao.getAccount(accountId)?.toExternalModel()
 
     @Suppress("MagicNumber")
     suspend fun updateAccount(
