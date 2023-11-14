@@ -10,8 +10,6 @@ import org.mozilla.social.core.database.model.DatabaseFocalPoint
 import org.mozilla.social.core.database.model.DatabaseHashTag
 import org.mozilla.social.core.database.model.DatabaseHistory
 import org.mozilla.social.core.database.model.DatabaseMention
-import org.mozilla.social.core.database.model.DatabasePoll
-import org.mozilla.social.core.database.model.DatabasePollOption
 import org.mozilla.social.core.database.model.DatabaseSource
 import org.mozilla.social.core.database.model.DatabaseStatus
 import org.mozilla.social.core.database.model.DatabaseStatusVisibility
@@ -25,13 +23,11 @@ import org.mozilla.social.core.model.FocalPoint
 import org.mozilla.social.core.model.HashTag
 import org.mozilla.social.core.model.History
 import org.mozilla.social.core.model.Mention
-import org.mozilla.social.core.model.Poll
-import org.mozilla.social.core.model.PollOption
 import org.mozilla.social.core.model.Source
 import org.mozilla.social.core.model.Status
 import org.mozilla.social.core.model.StatusVisibility
 
-fun Status.toDatabaseModel(): DatabaseStatus =
+internal fun Status.toDatabaseModel(): DatabaseStatus =
     DatabaseStatus(
         statusId = statusId,
         uri = uri,
@@ -97,7 +93,7 @@ fun Account.toDatabaseModel(): DatabaseAccount = DatabaseAccount(
 )
 
 fun StatusVisibility.toDatabaseModel(): DatabaseStatusVisibility =
-    when(this) {
+    when (this) {
         StatusVisibility.Direct -> DatabaseStatusVisibility.Direct
         StatusVisibility.Private -> DatabaseStatusVisibility.Private
         StatusVisibility.Public -> DatabaseStatusVisibility.Public
@@ -117,6 +113,7 @@ fun Attachment.toDatabaseModel(): DatabaseAttachment =
             blurHash = blurHash,
             meta = meta.toDatabaseModel(),
         )
+
         is Attachment.Gifv -> DatabaseAttachment.Gifv(
             attachmentId = attachmentId,
             url = url,
@@ -127,6 +124,7 @@ fun Attachment.toDatabaseModel(): DatabaseAttachment =
             description = description,
             meta = meta.toDatabaseModel(),
         )
+
         is Attachment.Video -> DatabaseAttachment.Video(
             attachmentId = attachmentId,
             url = url,
@@ -138,6 +136,7 @@ fun Attachment.toDatabaseModel(): DatabaseAttachment =
             blurHash = blurHash,
             meta = meta.toDatabaseModel(),
         )
+
         is Attachment.Audio -> DatabaseAttachment.Audio(
             attachmentId = attachmentId,
             url = url,
@@ -149,6 +148,7 @@ fun Attachment.toDatabaseModel(): DatabaseAttachment =
             blurHash = blurHash,
             meta = meta.toDatabaseModel(),
         )
+
         is Attachment.Unknown -> DatabaseAttachment.Unknown(
             attachmentId = attachmentId,
             url = url,
@@ -254,14 +254,6 @@ fun History.toDatabaseModel(): DatabaseHistory =
         accountCount = accountCount
     )
 
-fun Emoji.toDatabaseModel(): DatabaseEmoji =
-    DatabaseEmoji(
-        shortCode = shortCode,
-        url = url,
-        staticUrl = staticUrl,
-        isVisibleInPicker = isVisibleInPicker,
-        category = category
-    )
 
 fun Application.toDatabaseModel(): DatabaseApplication =
     DatabaseApplication(
@@ -272,25 +264,16 @@ fun Application.toDatabaseModel(): DatabaseApplication =
         clientSecret = clientSecret
     )
 
-fun Poll.toDatabaseModel(): DatabasePoll =
-    DatabasePoll(
-        pollId = pollId,
-        isExpired = isExpired,
-        allowsMultipleChoices = allowsMultipleChoices,
-        votesCount = votesCount,
-        options = options.map { it.toDatabaseModel() },
-        emojis = emojis.map { it.toDatabaseModel() },
-        expiresAt = expiresAt,
-        votersCount = votersCount,
-        hasVoted = hasVoted,
-        ownVotes = ownVotes
+
+fun Emoji.toDatabaseModel(): DatabaseEmoji =
+    DatabaseEmoji(
+        shortCode = shortCode,
+        url = url,
+        staticUrl = staticUrl,
+        isVisibleInPicker = isVisibleInPicker,
+        category = category
     )
 
-fun PollOption.toDatabaseModel(): DatabasePollOption =
-    DatabasePollOption(
-        title = title,
-        votesCount = votesCount
-    )
 
 fun Field.toDatabaseModel(): DatabaseField =
     DatabaseField(
@@ -326,6 +309,7 @@ fun Card.toDatabaseModel(): DatabaseCard =
             embedUrl = embedUrl,
             blurHash = blurHash
         )
+
         is Card.Link -> DatabaseCard.Link(
             url = url,
             title = title,
@@ -341,6 +325,7 @@ fun Card.toDatabaseModel(): DatabaseCard =
             embedUrl = embedUrl,
             blurHash = blurHash
         )
+
         is Card.Photo -> DatabaseCard.Photo(
             url = url,
             title = title,
@@ -356,6 +341,7 @@ fun Card.toDatabaseModel(): DatabaseCard =
             embedUrl = embedUrl,
             blurHash = blurHash
         )
+
         is Card.Rich -> DatabaseCard.Rich(
             url = url,
             title = title,

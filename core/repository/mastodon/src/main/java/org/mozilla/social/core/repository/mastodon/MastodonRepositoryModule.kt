@@ -5,7 +5,7 @@ import org.mozilla.social.core.network.mastodon.mastodonNetworkModule
 
 fun mastodonRepositoryModule(isDebug: Boolean) = module {
     single { AuthCredentialObserver(get(), get()) }
-    single { StatusRepository(get(), get()) }
+    single { StatusRepository(get(), get(), get()) }
     single { AccountRepository(get(), get()) }
     single { TimelineRepository(get(), get()) }
     single { OauthRepository(get()) }
@@ -14,5 +14,7 @@ fun mastodonRepositoryModule(isDebug: Boolean) = module {
     single { AppRepository(get()) }
     single { InstanceRepository(get()) }
     single { ReportRepository(get()) }
+    single { DatabaseDelegate(get()) }
+    single { PollRepository(get()) }
     includes(mastodonNetworkModule(isDebug))
 }

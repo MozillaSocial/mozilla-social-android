@@ -20,6 +20,7 @@ class BoostStatusTest : BaseUseCaseTest() {
             statusRepository = statusRepository,
             socialDatabase = socialDatabase,
             dispatcherIo = testDispatcher,
+            databaseDelegate = databaseDelegate,
         )
     }
 

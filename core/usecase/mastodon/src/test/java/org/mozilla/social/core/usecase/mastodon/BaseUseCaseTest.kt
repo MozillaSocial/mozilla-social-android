@@ -21,15 +21,16 @@ import org.mozilla.social.core.database.dao.HashTagTimelineStatusDao
 import org.mozilla.social.core.database.dao.HashtagDao
 import org.mozilla.social.core.database.dao.HomeTimelineStatusDao
 import org.mozilla.social.core.database.dao.LocalTimelineStatusDao
-import org.mozilla.social.core.database.dao.PollsDao
 import org.mozilla.social.core.database.dao.RelationshipsDao
 import org.mozilla.social.core.database.dao.StatusDao
 import org.mozilla.social.core.navigation.usecases.ShowSnackbar
 import org.mozilla.social.core.repository.mastodon.AccountRepository
 import org.mozilla.social.core.repository.mastodon.AppRepository
+import org.mozilla.social.core.repository.mastodon.DatabaseDelegate
 import org.mozilla.social.core.repository.mastodon.InstanceRepository
 import org.mozilla.social.core.repository.mastodon.MediaRepository
 import org.mozilla.social.core.repository.mastodon.OauthRepository
+import org.mozilla.social.core.repository.mastodon.PollRepository
 import org.mozilla.social.core.repository.mastodon.ReportRepository
 import org.mozilla.social.core.repository.mastodon.SearchRepository
 import org.mozilla.social.core.repository.mastodon.StatusRepository
@@ -48,6 +49,7 @@ open class BaseUseCaseTest {
     protected val reportRepository = mockk<ReportRepository>(relaxed = true)
     protected val searchRepository = mockk<SearchRepository>(relaxed = true)
     protected val statusRepository = mockk<StatusRepository>(relaxed = true)
+    protected val pollRepository = mockk<PollRepository>(relaxed = true)
     protected val timelineRepository = mockk<TimelineRepository>(relaxed = true)
 
 
@@ -60,12 +62,12 @@ open class BaseUseCaseTest {
     protected val hashTagTimelineDao = mockk<HashTagTimelineStatusDao>(relaxed = true)
     protected val homeTimelineDao = mockk<HomeTimelineStatusDao>(relaxed = true)
     protected val localTimelineDao = mockk<LocalTimelineStatusDao>(relaxed = true)
-    protected val pollsDao = mockk<PollsDao>(relaxed = true)
     protected val relationshipsDao = mockk<RelationshipsDao>(relaxed = true)
     protected val statusDao = mockk<StatusDao>(relaxed = true)
 
     @OptIn(ExperimentalCoroutinesApi::class)
     protected val testDispatcher: TestDispatcher = UnconfinedTestDispatcher()
+    protected val databaseDelegate = mockk<DatabaseDelegate>(relaxed = true)
 
     protected val showSnackbar = mockk<ShowSnackbar>(relaxed = true)
 
@@ -78,7 +80,6 @@ open class BaseUseCaseTest {
         every { socialDatabase.hashTagTimelineDao() } returns hashTagTimelineDao
         every { socialDatabase.homeTimelineDao() } returns homeTimelineDao
         every { socialDatabase.localTimelineDao() } returns localTimelineDao
-        every { socialDatabase.pollDao() } returns pollsDao
         every { socialDatabase.relationshipsDao() } returns relationshipsDao
         every { socialDatabase.statusDao() } returns statusDao
 
