@@ -29,7 +29,6 @@ class CheckModulesTest : KoinTest {
                 Boolean::class,
                 FollowerScreenType::class,
                 CoroutineScope::class,
-                TimelineType::class,
             )
         )
     }
