@@ -30,7 +30,7 @@ class FollowersViewModel(
         FollowersPagingSource(accountRepository, accountId, FollowType.FOLLOWERS)
     }.flow.map { pagingData ->
         pagingData.map {
-            it.toQuickViewUiState()
+            it.toQuickViewUiState(false)
         }
     }.cachedIn(viewModelScope)
 
@@ -43,7 +43,7 @@ class FollowersViewModel(
         FollowersPagingSource(accountRepository, accountId, FollowType.FOLLOWING)
     }.flow.map { pagingData ->
         pagingData.map {
-            it.toQuickViewUiState()
+            it.toQuickViewUiState(false)
         }
     }.cachedIn(viewModelScope)
 

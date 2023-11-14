@@ -18,6 +18,8 @@ import org.mozilla.social.core.database.converters.PollOptionConverter
 import org.mozilla.social.core.database.dao.AccountTimelineStatusDao
 import org.mozilla.social.core.database.dao.AccountsDao
 import org.mozilla.social.core.database.dao.FederatedTimelineStatusDao
+import org.mozilla.social.core.database.dao.FollowersDao
+import org.mozilla.social.core.database.dao.FollowingsDao
 import org.mozilla.social.core.database.dao.HashTagTimelineStatusDao
 import org.mozilla.social.core.database.dao.HashtagDao
 import org.mozilla.social.core.database.dao.HomeTimelineStatusDao
@@ -30,6 +32,8 @@ import org.mozilla.social.core.database.model.DatabaseHashTag
 import org.mozilla.social.core.database.model.DatabasePoll
 import org.mozilla.social.core.database.model.DatabaseRelationship
 import org.mozilla.social.core.database.model.DatabaseStatus
+import org.mozilla.social.core.database.model.accountCollections.Followers
+import org.mozilla.social.core.database.model.accountCollections.Followings
 import org.mozilla.social.core.database.model.statusCollections.AccountTimelineStatus
 import org.mozilla.social.core.database.model.statusCollections.FederatedTimelineStatus
 import org.mozilla.social.core.database.model.statusCollections.HashTagTimelineStatus
@@ -49,8 +53,10 @@ import org.mozilla.social.core.database.model.statusCollections.LocalTimelineSta
         DatabaseRelationship::class,
         LocalTimelineStatus::class,
         FederatedTimelineStatus::class,
+        Followers::class,
+        Followings::class,
     ],
-    version = 9,
+    version = 10,
     autoMigrations = [
         AutoMigration(1, 2, DatabaseMigrations.Schema1to2::class),
         AutoMigration(2, 3),
@@ -60,6 +66,7 @@ import org.mozilla.social.core.database.model.statusCollections.LocalTimelineSta
         AutoMigration(6, 7),
         AutoMigration(7, 8, DatabaseMigrations.Schema7to8::class),
         AutoMigration(8, 9),
+        AutoMigration(9, 10),
     ],
     exportSchema = true
 )
@@ -76,16 +83,18 @@ import org.mozilla.social.core.database.model.statusCollections.LocalTimelineSta
     IntListConverter::class,
     CardConverter::class,
 )
-// TODO@DA eventually make internal
+
 abstract class SocialDatabase : RoomDatabase() {
     abstract fun statusDao(): StatusDao
     abstract fun accountsDao(): AccountsDao
     abstract fun hashtagDao(): HashtagDao
     abstract fun homeTimelineDao(): HomeTimelineStatusDao
-    internal abstract fun pollDao(): PollsDao
+    abstract fun pollDao(): PollsDao
     abstract fun hashTagTimelineDao(): HashTagTimelineStatusDao
     abstract fun accountTimelineDao(): AccountTimelineStatusDao
     abstract fun relationshipsDao(): RelationshipsDao
     abstract fun localTimelineDao(): LocalTimelineStatusDao
     abstract fun federatedTimelineDao(): FederatedTimelineStatusDao
+    abstract fun followersDao(): FollowersDao
+    abstract fun followingsDao(): FollowingsDao
 }

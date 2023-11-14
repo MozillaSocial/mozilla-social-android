@@ -76,7 +76,8 @@ private fun AccountQuickViewPreview() {
                 accountId = "",
                 displayName = "name",
                 webFinger = "webfinger",
-                avatarUrl = "url"
+                avatarUrl = "url",
+                isFollowing = false,
             ),
             onClick = {}
         )

@@ -225,7 +225,8 @@ private fun FollowersScreenPreview() {
                             accountId = "",
                             displayName = "Person",
                             webFinger = "person",
-                            avatarUrl = ""
+                            avatarUrl = "",
+                            isFollowing = false,
                         )
                     )
                 )
