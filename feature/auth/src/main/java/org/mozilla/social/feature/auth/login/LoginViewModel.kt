@@ -28,7 +28,6 @@ class LoginViewModel(
     private val _uiState = MutableStateFlow(LoginUiState())
     val uiState = _uiState.asStateFlow()
 
-    //TODO remove context
     override fun onSignInClicked(context: Context) {
         _uiState.edit { copy(
             isLoading = true,

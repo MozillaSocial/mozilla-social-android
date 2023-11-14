@@ -22,10 +22,8 @@ import org.mozilla.social.core.usecase.mastodon.auth.Login.Companion.REDIRECT_UR
 import org.mozilla.social.core.usecase.mastodon.auth.Login.Companion.SCOPES
 import org.mozilla.social.core.test.TestUtils
 import org.mozilla.social.core.test.fakes.fakeApplication
-import org.mozilla.social.core.usecase.mastodon.auth.Login
-import org.mozilla.social.core.usecase.mastodon.auth.Logout
-import org.mozilla.social.core.usecase.mastodon.auth.OpenLoginCustomTab
 import kotlin.test.BeforeTest
+import kotlin.test.assertNotNull
 
 class LoginTest {
 
@@ -132,7 +130,15 @@ class LoginTest {
     @Test
     fun saveDomainThrowsError_userIsLoggedOut() = runTest {
         coEvery { userPreferencesDatastore.saveDomain(any()) } throws Exception()
-        objUnderTest.invoke(context, domain)
+        var exception: Login.LoginFailedException? = null
+
+        try {
+            objUnderTest.invoke(context, domain)
+        } catch (e: Login.LoginFailedException) {
+            exception = e
+        }
+
+        assertNotNull(exception)
 
         coVerify {
             logout()
@@ -142,7 +148,15 @@ class LoginTest {
     @Test
     fun createApplicationThrowsError_userIsLoggedOut() = runTest {
         coEvery { appRepository.createApplication(any(), any(), any()) } throws Exception()
-        objUnderTest.invoke(context, domain)
+        var exception: Login.LoginFailedException? = null
+
+        try {
+            objUnderTest.invoke(context, domain)
+        } catch (e: Login.LoginFailedException) {
+            exception = e
+        }
+
+        assertNotNull(exception)
 
         coVerify {
             logout()
@@ -152,7 +166,15 @@ class LoginTest {
     @Test
     fun openCustomTabThrowsError_userIsLoggedOut() = runTest {
         coEvery { openLoginCustomTab(any(), any(), any()) } throws Exception()
-        objUnderTest.invoke(context, domain)
+        var exception: Login.LoginFailedException? = null
+
+        try {
+            objUnderTest.invoke(context, domain)
+        } catch (e: Login.LoginFailedException) {
+            exception = e
+        }
+
+        assertNotNull(exception)
 
         coVerify {
             logout()

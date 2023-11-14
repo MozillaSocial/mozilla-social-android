@@ -25,7 +25,6 @@ class ChooseServerViewModel(
         ) }
     }
 
-    //TODO remove context
     override fun onNextClicked(context: Context) {
         _uiState.edit { copy(
             isLoading = true,
