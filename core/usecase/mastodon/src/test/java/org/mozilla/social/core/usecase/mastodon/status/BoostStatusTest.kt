@@ -19,7 +19,6 @@ class BoostStatusTest : BaseUseCaseTest() {
             externalScope = TestScope(testDispatcher),
             showSnackbar = showSnackbar,
             statusRepository = statusRepository,
-            socialDatabase = socialDatabase,
             dispatcherIo = testDispatcher,
             databaseDelegate = databaseDelegate,
             saveStatusToDatabase = saveStatusToDatabase,

@@ -24,15 +24,15 @@ class UndoBoostStatus internal constructor(
     ) = externalScope.async(dispatcherIo) {
         try {
             socialDatabase.withTransaction {
-                socialDatabase.statusDao().updateBoostCount(boostedStatusId, -1)
-                socialDatabase.statusDao().updateBoosted(boostedStatusId, false)
+                statusRepository.updateBoostCount(boostedStatusId, -1)
+                statusRepository.updateBoosted(boostedStatusId, false)
             }
             val status = statusRepository.unBoostStatus(boostedStatusId)
             saveStatusToDatabase(status)
         } catch (e: Exception) {
             socialDatabase.withTransaction {
-                socialDatabase.statusDao().updateBoostCount(boostedStatusId, 1)
-                socialDatabase.statusDao().updateBoosted(boostedStatusId, true)
+                statusRepository.updateBoostCount(boostedStatusId, 1)
+                statusRepository.updateBoosted(boostedStatusId, true)
             }
             showSnackbar(
                 text = StringFactory.resource(R.string.error_undoing_boost),

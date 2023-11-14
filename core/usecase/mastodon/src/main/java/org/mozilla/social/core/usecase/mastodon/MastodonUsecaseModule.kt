@@ -134,7 +134,6 @@ val mastodonUsecaseModule = module {
     single {
         BoostStatus(
             externalScope = get(),
-            socialDatabase = get(),
             statusRepository = get(),
             saveStatusToDatabase = get(),
             databaseDelegate = get(),
@@ -185,7 +184,7 @@ val mastodonUsecaseModule = module {
         )
     }
 
-    single { SaveStatusToDatabase(socialDatabase = get(), pollRepository = get()) }
+    singleOf(::SaveStatusToDatabase)
 
     single { RefreshLocalTimeline(get(), get(), get(), get()) }
     single { RefreshFederatedTimeline(get(), get(), get(), get()) }

@@ -5,7 +5,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import org.mozilla.social.common.utils.StringFactory
-import org.mozilla.social.core.database.SocialDatabase
 import org.mozilla.social.core.navigation.usecases.ShowSnackbar
 import org.mozilla.social.core.repository.mastodon.DatabaseDelegate
 import org.mozilla.social.core.repository.mastodon.StatusRepository
@@ -13,7 +12,6 @@ import org.mozilla.social.core.usecase.mastodon.R
 
 class BoostStatus internal constructor(
     private val externalScope: CoroutineScope,
-    private val socialDatabase: SocialDatabase,
     private val statusRepository: StatusRepository,
     private val saveStatusToDatabase: SaveStatusToDatabase,
     private val databaseDelegate: DatabaseDelegate,
@@ -26,15 +24,15 @@ class BoostStatus internal constructor(
     ) = externalScope.async(dispatcherIo) {
         try {
             databaseDelegate.withTransaction {
-                socialDatabase.statusDao().updateBoostCount(statusId, 1)
-                socialDatabase.statusDao().updateBoosted(statusId, true)
+                statusRepository.updateBoostCount(statusId, 1)
+                statusRepository.updateBoosted(statusId, true)
             }
             val status = statusRepository.boostStatus(statusId)
             saveStatusToDatabase(status)
         } catch (e: Exception) {
             databaseDelegate.withTransaction {
-                socialDatabase.statusDao().updateBoostCount(statusId, -1)
-                socialDatabase.statusDao().updateBoosted(statusId, false)
+                statusRepository.updateBoostCount(statusId, -1)
+                statusRepository.updateBoosted(statusId, false)
             }
             showSnackbar(
                 text = StringFactory.resource(R.string.error_boosting),

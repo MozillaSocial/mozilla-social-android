@@ -9,8 +9,8 @@ class StatusRepositoryTest : BaseRepositoryTest() {
     @BeforeTest
     fun setup() {
         subject = StatusRepository(
-            statusApi = statusApi,
-            statusDao = statusDao,
+            api = statusApi,
+            dao = statusDao,
         )
     }
 }

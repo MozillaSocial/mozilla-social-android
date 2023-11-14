@@ -24,15 +24,15 @@ class UndoFavoriteStatus internal constructor(
     ) = externalScope.async(dispatcherIo) {
         try {
             socialDatabase.withTransaction {
-                socialDatabase.statusDao().updateFavoriteCount(statusId, -1)
-                socialDatabase.statusDao().updateFavorited(statusId, false)
+                statusRepository.updateFavoriteCount(statusId, -1)
+                statusRepository.updateFavorited(statusId, false)
             }
             val status = statusRepository.unFavoriteStatus(statusId)
             saveStatusToDatabase(status)
         } catch (e: Exception) {
             socialDatabase.withTransaction {
-                socialDatabase.statusDao().updateFavoriteCount(statusId, 1)
-                socialDatabase.statusDao().updateFavorited(statusId, true)
+                statusRepository.updateFavoriteCount(statusId, 1)
+                statusRepository.updateFavorited(statusId, true)
             }
             showSnackbar(
                 text = StringFactory.resource(R.string.error_removing_favorite),
