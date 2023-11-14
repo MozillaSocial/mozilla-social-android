@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -37,6 +38,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.koin.androidx.compose.koinViewModel
 import org.mozilla.social.core.designsystem.component.MoSoBadge
 import org.mozilla.social.core.designsystem.component.MoSoButton
+import org.mozilla.social.core.designsystem.component.MoSoCircularProgressIndicator
 import org.mozilla.social.core.designsystem.component.MoSoSurface
 import org.mozilla.social.core.designsystem.font.MoSoFonts
 import org.mozilla.social.core.designsystem.theme.MoSoSpacing
@@ -77,24 +79,23 @@ private fun LoginScreen(
             heightClass == WindowHeightSizeClass.Compact && widthClass != WindowWidthSizeClass.Compact ||
             heightClass == WindowHeightSizeClass.Medium && widthClass == WindowWidthSizeClass.Expanded -> {
                 HorizontalLoginScreen(
+                    uiState = uiState,
                     loginInteractions = loginInteractions,
                 )
             }
             else -> {
                 VerticalLoginScreen(
+                    uiState = uiState,
                     loginInteractions = loginInteractions,
                 )
             }
-        }
-        if (uiState.isLoading) {
-            TransparentNoTouchOverlay()
-            MaxSizeLoading()
         }
     }
 }
 
 @Composable
 private fun HorizontalLoginScreen(
+    uiState: LoginUiState,
     loginInteractions: LoginInteractions,
 ) {
     Row(
@@ -115,6 +116,7 @@ private fun HorizontalLoginScreen(
         ) {
             LoginBox(
                 modifier = Modifier.align(Alignment.Center),
+                uiState = uiState,
                 loginInteractions = loginInteractions,
             )
         }
@@ -123,6 +125,7 @@ private fun HorizontalLoginScreen(
 
 @Composable
 private fun VerticalLoginScreen(
+    uiState: LoginUiState,
     loginInteractions: LoginInteractions,
 ) {
     Column(
@@ -142,6 +145,7 @@ private fun VerticalLoginScreen(
         Spacer(modifier = Modifier.weight(1f))
         LoginBox(
             modifier = Modifier.weight(1f),
+            uiState = uiState,
             loginInteractions = loginInteractions,
         )
     }
@@ -177,6 +181,7 @@ private fun ImageBox(
 @Composable
 private fun LoginBox(
     modifier: Modifier = Modifier,
+    uiState: LoginUiState,
     loginInteractions: LoginInteractions,
 ) {
     val context = LocalContext.current
@@ -207,17 +212,26 @@ private fun LoginBox(
         Spacer(modifier = Modifier.height(24.dp))
         MoSoButton(
             modifier = Modifier.fillMaxWidth(),
+            enabled = !uiState.isLoading,
             onClick = { loginInteractions.onSignInClicked(context) }
         ) {
-            Text(
-                text = stringResource(id = R.string.sign_in_button),
-            )
+            if (uiState.isLoading) {
+                MoSoCircularProgressIndicator(
+                    modifier = Modifier.size(20.dp)
+                )
+            } else {
+                Text(
+                    text = stringResource(id = R.string.sign_in_button),
+                )
+            }
         }
         Spacer(modifier = Modifier.height(24.dp))
         Text(
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
-                .clickable { loginInteractions.onChooseServerClicked() },
+                .clickable(
+                    enabled = !uiState.isLoading,
+                ) { loginInteractions.onChooseServerClicked() },
             text = stringResource(id = R.string.choose_server_option),
             style = MoSoTheme.typography.labelSmallLink,
             textDecoration = TextDecoration.Underline,
