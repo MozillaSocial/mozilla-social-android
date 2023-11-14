@@ -55,6 +55,10 @@ class StatusRepository(
         api.deleteStatus(statusId)
     }
 
+    suspend fun deleteStatusLocal(statusId: String) {
+        dao.deleteStatus(statusId)
+    }
+
     suspend fun getStatusLocal(
         statusId: String
     ): Status? {
@@ -72,10 +76,6 @@ class StatusRepository(
 
     suspend fun updateIsBeingDeleted(statusId: String, isBeingDeleted: Boolean) {
         dao.updateIsBeingDeleted(statusId = statusId, isBeingDeleted = isBeingDeleted)
-    }
-
-    suspend fun deleteStatusLocal(statusId: String) {
-        dao.deleteStatus(statusId)
     }
 
     suspend fun updateFavoriteCount(statusId: String, valueChange: Long) {
