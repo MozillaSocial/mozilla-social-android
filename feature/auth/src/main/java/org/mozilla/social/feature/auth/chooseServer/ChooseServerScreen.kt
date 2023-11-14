@@ -19,7 +19,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -35,9 +34,7 @@ import org.mozilla.social.core.designsystem.theme.MoSoRadius
 import org.mozilla.social.core.designsystem.theme.MoSoSpacing
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.navigation.navigationModule
-import org.mozilla.social.core.ui.common.TransparentNoTouchOverlay
 import org.mozilla.social.core.ui.common.appbar.MoSoCloseableTopAppBar
-import org.mozilla.social.core.ui.common.loading.MaxSizeLoading
 import org.mozilla.social.feature.auth.R
 
 @Composable
@@ -73,7 +70,6 @@ private fun ChooseServerScreen(
                 modifier = Modifier
                     .padding(MoSoSpacing.md),
             ) {
-                val context = LocalContext.current
                 Text(
                     text = stringResource(id = R.string.choose_a_server_message),
                     style = MoSoTheme.typography.bodyMedium,
@@ -103,7 +99,7 @@ private fun ChooseServerScreen(
                 MoSoButton(
                     modifier = Modifier.fillMaxWidth(),
                     enabled = uiState.nextButtonEnabled && !uiState.isLoading,
-                    onClick = { chooseServerInteractions.onNextClicked(context) }
+                    onClick = { chooseServerInteractions.onNextClicked() }
                 ) {
                     if (uiState.isLoading) {
                         MoSoCircularProgressIndicator(

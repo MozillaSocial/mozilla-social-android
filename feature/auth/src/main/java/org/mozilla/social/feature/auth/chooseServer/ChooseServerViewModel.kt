@@ -1,6 +1,5 @@
 package org.mozilla.social.feature.auth.chooseServer
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -25,17 +24,14 @@ class ChooseServerViewModel(
         ) }
     }
 
-    override fun onNextClicked(context: Context) {
+    override fun onNextClicked() {
         _uiState.edit { copy(
             isLoading = true,
             loginFailed = false,
         ) }
         viewModelScope.launch {
             try {
-                login(
-                    context,
-                    uiState.value.serverText
-                )
+                login(uiState.value.serverText)
             } catch (e: Login.LoginFailedException) {
                 _uiState.edit { copy(
                     loginFailed = true,

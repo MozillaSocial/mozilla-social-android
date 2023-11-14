@@ -1,6 +1,5 @@
 package org.mozilla.social.feature.auth.login
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -28,16 +27,13 @@ class LoginViewModel(
     private val _uiState = MutableStateFlow(LoginUiState())
     val uiState = _uiState.asStateFlow()
 
-    override fun onSignInClicked(context: Context) {
+    override fun onSignInClicked() {
         _uiState.edit { copy(
             isLoading = true,
         ) }
         viewModelScope.launch {
             try {
-                login(
-                    context,
-                    if (BuildConfig.DEBUG) BuildConfig.stagingUrl else PROD
-                )
+                login(if (BuildConfig.DEBUG) BuildConfig.stagingUrl else PROD)
             } catch (e: Login.LoginFailedException) {
                 showSnackbar(
                     text = StringFactory.resource(R.string.error_connecting),

@@ -26,7 +26,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight.Companion.W700
@@ -43,8 +42,6 @@ import org.mozilla.social.core.designsystem.component.MoSoSurface
 import org.mozilla.social.core.designsystem.font.MoSoFonts
 import org.mozilla.social.core.designsystem.theme.MoSoSpacing
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
-import org.mozilla.social.core.ui.common.TransparentNoTouchOverlay
-import org.mozilla.social.core.ui.common.loading.MaxSizeLoading
 import org.mozilla.social.core.ui.common.utils.getWindowHeightClass
 import org.mozilla.social.core.ui.common.utils.getWindowWidthClass
 import org.mozilla.social.feature.auth.R
@@ -184,7 +181,6 @@ private fun LoginBox(
     uiState: LoginUiState,
     loginInteractions: LoginInteractions,
 ) {
-    val context = LocalContext.current
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -213,7 +209,7 @@ private fun LoginBox(
         MoSoButton(
             modifier = Modifier.fillMaxWidth(),
             enabled = !uiState.isLoading,
-            onClick = { loginInteractions.onSignInClicked(context) }
+            onClick = { loginInteractions.onSignInClicked() }
         ) {
             if (uiState.isLoading) {
                 MoSoCircularProgressIndicator(
