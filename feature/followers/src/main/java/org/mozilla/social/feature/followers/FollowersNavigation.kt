@@ -17,7 +17,7 @@ fun NavGraphBuilder.followersScreen() {
         val accountId: String = it.arguments?.getString(NavigationDestination.Followers.NAV_PARAM_ACCOUNT_ID)!!
         FollowersScreen(
             accountId = accountId,
-            followersScreenType = FollowerScreenType.FOLLOWERS,
+            startingTab = FollowType.FOLLOWERS,
         )
     }
 }

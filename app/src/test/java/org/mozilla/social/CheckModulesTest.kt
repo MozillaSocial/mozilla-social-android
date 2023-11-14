@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.StateFlow
 import org.koin.core.annotation.KoinExperimentalAPI
 import org.koin.test.KoinTest
 import org.koin.test.verify.verify
-import org.mozilla.social.feature.followers.FollowerScreenType
+import org.mozilla.social.feature.followers.FollowType
 import org.mozilla.social.feature.report.ReportType
 import kotlin.test.Test
 
@@ -26,7 +26,7 @@ class CheckModulesTest : KoinTest {
                 ReportType::class,
                 List::class,
                 Boolean::class,
-                FollowerScreenType::class,
+                FollowType::class,
                 CoroutineScope::class,
             )
         )

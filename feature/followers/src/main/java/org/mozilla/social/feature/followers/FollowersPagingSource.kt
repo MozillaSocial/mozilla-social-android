@@ -11,7 +11,7 @@ import timber.log.Timber
 class FollowersPagingSource(
     private val accountRepository: AccountRepository,
     private val accountId: String,
-    private val followerScreenType: FollowerScreenType,
+    private val followType: FollowType,
 ) : PagingSource<String, Account>() {
 
     override fun getRefreshKey(state: PagingState<String, Account>): String? {
@@ -20,13 +20,13 @@ class FollowersPagingSource(
 
     override suspend fun load(params: LoadParams<String>): LoadResult<String, Account> {
         return try {
-            val response = when(followerScreenType) {
-                FollowerScreenType.FOLLOWERS -> accountRepository.getAccountFollowers(
+            val response = when(followType) {
+                FollowType.FOLLOWERS -> accountRepository.getAccountFollowers(
                     accountId = accountId,
                     olderThanId = params.key,
                     loadSize = params.loadSize,
                 )
-                FollowerScreenType.FOLLOWING -> accountRepository.getAccountFollowing(
+                FollowType.FOLLOWING -> accountRepository.getAccountFollowing(
                     accountId = accountId,
                     olderThanId = params.key,
                     loadSize = params.loadSize,

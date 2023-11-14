@@ -7,7 +7,6 @@ val followersModule = module {
     viewModel { parameters ->
         FollowersViewModel(
             accountId = parameters[0],
-            followerScreenType = parameters[1],
             accountRepository = get(),
             navigateTo = get(),
             analytics = get(),

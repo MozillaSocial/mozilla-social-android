@@ -31,7 +31,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
-import org.mozilla.social.core.designsystem.component.MoSoDivider
 import org.mozilla.social.core.designsystem.component.MoSoSurface
 import org.mozilla.social.core.designsystem.component.MoSoTab
 import org.mozilla.social.core.designsystem.component.MoSoTabRow
@@ -48,17 +47,17 @@ import org.mozilla.social.core.ui.common.utils.PreviewTheme
 @Composable
 internal fun FollowersScreen(
     accountId: String,
-    followersScreenType: FollowerScreenType,
+    startingTab: FollowType,
     viewModel: FollowersViewModel = koinViewModel(
         parameters = {
             parametersOf(
                 accountId,
-                followersScreenType,
             )
         }
     )
 ) {
     FollowersScreen(
+        startingTab = startingTab,
         followers = viewModel.followers,
         following = viewModel.following,
         followersInteractions = viewModel,
@@ -71,6 +70,7 @@ internal fun FollowersScreen(
 
 @Composable
 private fun FollowersScreen(
+    startingTab: FollowType,
     followers: Flow<PagingData<AccountQuickViewUiState>>,
     following: Flow<PagingData<AccountQuickViewUiState>>,
     followersInteractions: FollowersInteractions,
@@ -86,14 +86,14 @@ private fun FollowersScreen(
                 title = "",
             )
 
-            var selectedTab: FollowerScreenType by remember {
-                mutableStateOf(FollowerScreenType.FOLLOWERS)
+            var selectedTab: FollowType by remember {
+                mutableStateOf(startingTab)
             }
 
             MoSoTabRow(
                 selectedTabIndex = selectedTab.ordinal,
             ) {
-                FollowerScreenType.entries.forEach { tabType ->
+                FollowType.entries.forEach { tabType ->
                     MoSoTab(
                         modifier = Modifier
                             .height(40.dp),
@@ -102,9 +102,9 @@ private fun FollowersScreen(
                         content = {
                             Text(
                                 text = when (tabType) {
-                                    FollowerScreenType.FOLLOWERS ->
+                                    FollowType.FOLLOWERS ->
                                         stringResource(id = R.string.followers)
-                                    FollowerScreenType.FOLLOWING ->
+                                    FollowType.FOLLOWING ->
                                         stringResource(id = R.string.following)
                                 },
                                 style = MoSoTheme.typography.labelMedium
@@ -116,8 +116,8 @@ private fun FollowersScreen(
 
             FollowersList(
                 list = when (selectedTab) {
-                    FollowerScreenType.FOLLOWERS -> followers
-                    FollowerScreenType.FOLLOWING -> following
+                    FollowType.FOLLOWERS -> followers
+                    FollowType.FOLLOWING -> following
                 },
                 followersInteractions = followersInteractions
             )
@@ -217,6 +217,7 @@ private fun FollowersList(
 private fun FollowersScreenPreview() {
     PreviewTheme {
         FollowersScreen(
+            startingTab = FollowType.FOLLOWERS,
             followers = flowOf(
                 PagingData.from(
                     listOf(
