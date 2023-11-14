@@ -7,7 +7,6 @@ import kotlinx.coroutines.flow.StateFlow
 import org.koin.core.annotation.KoinExperimentalAPI
 import org.koin.test.KoinTest
 import org.koin.test.verify.verify
-import org.mozilla.social.core.usecase.mastodon.timeline.TimelineType
 import org.mozilla.social.feature.followers.FollowerScreenType
 import org.mozilla.social.feature.report.ReportType
 import kotlin.test.Test

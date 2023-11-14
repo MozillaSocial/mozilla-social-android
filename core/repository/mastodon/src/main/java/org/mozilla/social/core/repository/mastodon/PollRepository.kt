@@ -8,20 +8,19 @@ import org.mozilla.social.core.model.Emoji
 import org.mozilla.social.core.model.Poll
 import org.mozilla.social.core.model.PollOption
 
-class PollRepository internal constructor(private val pollsDao: PollsDao) {
-    fun updateOwnVotes(pollId: String, choices: List<Int>?) = pollsDao.updateOwnVotes(
+class PollRepository internal constructor(private val dao: PollsDao) {
+    fun updateOwnVotes(pollId: String, choices: List<Int>?) = dao.updateOwnVotes(
         pollId = pollId,
         choices = choices
     )
 
-    suspend fun deletePoll(pollId: String) = pollsDao.deletePoll(pollId = pollId)
+    suspend fun deletePoll(pollId: String) = dao.deletePoll(pollId = pollId)
     fun insertAll(polls: List<Poll>) {
-        pollsDao.insertAll(polls.map { it.toDatabaseModel() })
+        dao.insertAll(polls.map { it.toDatabaseModel() })
     }
 
-    fun update(poll: Poll) = pollsDao.update(poll.toDatabaseModel())
+    fun update(poll: Poll) = dao.update(poll.toDatabaseModel())
 }
-
 
 private fun Poll.toDatabaseModel(): DatabasePoll =
     DatabasePoll(
