@@ -35,6 +35,7 @@ import org.mozilla.social.core.repository.mastodon.ReportRepository
 import org.mozilla.social.core.repository.mastodon.SearchRepository
 import org.mozilla.social.core.repository.mastodon.StatusRepository
 import org.mozilla.social.core.repository.mastodon.TimelineRepository
+import org.mozilla.social.core.usecase.mastodon.status.SaveStatusToDatabase
 import org.mozilla.social.core.usecase.mastodon.utils.TransactionUtils
 import kotlin.test.BeforeTest
 import kotlin.test.fail
@@ -63,11 +64,11 @@ open class BaseUseCaseTest {
     protected val homeTimelineDao = mockk<HomeTimelineStatusDao>(relaxed = true)
     protected val localTimelineDao = mockk<LocalTimelineStatusDao>(relaxed = true)
     protected val relationshipsDao = mockk<RelationshipsDao>(relaxed = true)
-    protected val statusDao = mockk<StatusDao>(relaxed = true)
 
     @OptIn(ExperimentalCoroutinesApi::class)
     protected val testDispatcher: TestDispatcher = UnconfinedTestDispatcher()
     protected val databaseDelegate = mockk<DatabaseDelegate>(relaxed = true)
+    internal val saveStatusToDatabase = mockk<SaveStatusToDatabase>(relaxed = true)
 
     protected val showSnackbar = mockk<ShowSnackbar>(relaxed = true)
 
@@ -81,7 +82,6 @@ open class BaseUseCaseTest {
         every { socialDatabase.homeTimelineDao() } returns homeTimelineDao
         every { socialDatabase.localTimelineDao() } returns localTimelineDao
         every { socialDatabase.relationshipsDao() } returns relationshipsDao
-        every { socialDatabase.statusDao() } returns statusDao
 
         TransactionUtils.setupTransactionMock(socialDatabase)
     }

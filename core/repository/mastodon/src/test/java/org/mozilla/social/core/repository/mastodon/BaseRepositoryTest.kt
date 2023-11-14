@@ -10,9 +10,9 @@ import org.mozilla.social.core.database.dao.HashTagTimelineStatusDao
 import org.mozilla.social.core.database.dao.HashtagDao
 import org.mozilla.social.core.database.dao.HomeTimelineStatusDao
 import org.mozilla.social.core.database.dao.LocalTimelineStatusDao
+import org.mozilla.social.core.database.dao.PollsDao
 import org.mozilla.social.core.database.dao.RelationshipsDao
 import org.mozilla.social.core.database.dao.StatusDao
-import org.mozilla.social.core.database.datasource.PollLocalDataSource
 import org.mozilla.social.core.network.mastodon.AccountApi
 import org.mozilla.social.core.network.mastodon.AppApi
 import org.mozilla.social.core.network.mastodon.InstanceApi
@@ -37,7 +37,7 @@ open class BaseRepositoryTest {
     protected val timelineApi = mockk<TimelineApi>(relaxed = true)
 
     protected val socialDatabase = mockk<SocialDatabase>(relaxed = true)
-    protected val pollLocalDataSource = mockk<PollLocalDataSource>(relaxed = true)
+    protected val pollsDao = mockk<PollsDao>(relaxed = true)
 
     protected val accountsDao = mockk<AccountsDao>(relaxed = true)
     protected val accountTimelineDao = mockk<AccountTimelineStatusDao>(relaxed = true)

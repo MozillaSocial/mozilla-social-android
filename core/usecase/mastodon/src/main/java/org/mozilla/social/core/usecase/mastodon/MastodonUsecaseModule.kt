@@ -1,5 +1,6 @@
 package org.mozilla.social.core.usecase.mastodon
 
+import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 import org.mozilla.social.common.appscope.AppScope
 import org.mozilla.social.core.usecase.mastodon.account.BlockAccount
@@ -24,7 +25,11 @@ import org.mozilla.social.core.usecase.mastodon.status.SaveStatusToDatabase
 import org.mozilla.social.core.usecase.mastodon.status.UndoBoostStatus
 import org.mozilla.social.core.usecase.mastodon.status.UndoFavoriteStatus
 import org.mozilla.social.core.usecase.mastodon.status.VoteOnPoll
-import org.mozilla.social.core.usecase.mastodon.thread.GetThreadUseCase
+import org.mozilla.social.core.usecase.mastodon.thread.GetThread
+import org.mozilla.social.core.usecase.mastodon.timeline.RefreshAccountTimeline
+import org.mozilla.social.core.usecase.mastodon.timeline.RefreshFederatedTimeline
+import org.mozilla.social.core.usecase.mastodon.timeline.RefreshHomeTimeline
+import org.mozilla.social.core.usecase.mastodon.timeline.RefreshLocalTimeline
 
 val mastodonUsecaseModule = module {
     factory { parametersHolder ->
@@ -36,7 +41,7 @@ val mastodonUsecaseModule = module {
             parametersHolder[0]
         )
     }
-    single { GetThreadUseCase(get()) }
+    single { GetThread(get(), get()) }
     single { Login(get(), get(), get(), get(), get(), get(), get()) }
     single {
         Logout(
@@ -118,15 +123,17 @@ val mastodonUsecaseModule = module {
             externalScope = get<AppScope>(),
             mediaApi = get(),
             statusRepository = get(),
+            saveStatusToDatabase = get(),
             timelineRepository = get(),
             showSnackbar = get(),
-        )
+
+            )
     }
     single {
         BoostStatus(
             externalScope = get(),
-            socialDatabase = get(),
             statusRepository = get(),
+            saveStatusToDatabase = get(),
             databaseDelegate = get(),
             showSnackbar = get(),
         )
@@ -137,14 +144,16 @@ val mastodonUsecaseModule = module {
             statusRepository = get(),
             showSnackbar = get(),
             socialDatabase = get(),
+            saveStatusToDatabase = get(),
         )
     }
     single {
         UndoBoostStatus(
             externalScope = get<AppScope>(),
+            socialDatabase = get(),
             statusRepository = get(),
             showSnackbar = get(),
-            socialDatabase = get(),
+            saveStatusToDatabase = get(),
         )
     }
     single {
@@ -153,6 +162,7 @@ val mastodonUsecaseModule = module {
             statusRepository = get(),
             showSnackbar = get(),
             socialDatabase = get(),
+            saveStatusToDatabase = get(),
         )
     }
     single {
@@ -172,5 +182,18 @@ val mastodonUsecaseModule = module {
         )
     }
 
-    single { SaveStatusToDatabase(socialDatabase = get(), pollRepository = get()) }
+    singleOf(::SaveStatusToDatabase)
+
+    single { RefreshLocalTimeline(get(), get(), get(), get()) }
+    single { RefreshFederatedTimeline(get(), get(), get(), get()) }
+    singleOf(::RefreshHomeTimeline)
+    single {
+        RefreshAccountTimeline(
+            accountRepository = get(),
+            socialDatabase = get(),
+            saveStatusToDatabase = get(),
+            accountId = it[0],
+            timelineType = it[1],
+        )
+    }
 }

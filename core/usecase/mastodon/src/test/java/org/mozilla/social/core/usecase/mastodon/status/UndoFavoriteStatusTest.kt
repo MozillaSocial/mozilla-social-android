@@ -1,6 +1,7 @@
 package org.mozilla.social.core.usecase.mastodon.status
 
 import kotlinx.coroutines.test.TestScope
+import org.mozilla.social.core.model.Status
 import org.mozilla.social.core.usecase.mastodon.BaseUseCaseTest
 import org.mozilla.social.core.test.fakes.Models
 import kotlin.test.BeforeTest
@@ -20,6 +21,7 @@ class UndoFavoriteStatusTest : BaseUseCaseTest() {
             statusRepository = statusRepository,
             socialDatabase = socialDatabase,
             dispatcherIo = testDispatcher,
+            saveStatusToDatabase = saveStatusToDatabase,
         )
     }
 
@@ -34,7 +36,7 @@ class UndoFavoriteStatusTest : BaseUseCaseTest() {
                 subject("id")
             },
             verifyBlock = {
-                statusRepository.saveStatusToDatabase(any())
+                saveStatusToDatabase(any<Status>())
             }
         )
     }

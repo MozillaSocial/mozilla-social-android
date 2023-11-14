@@ -5,10 +5,12 @@ import org.mozilla.social.core.database.SocialDatabase
 import org.mozilla.social.core.database.model.DatabaseStatus
 import org.mozilla.social.core.model.Status
 import org.mozilla.social.core.repository.mastodon.PollRepository
+import org.mozilla.social.core.repository.mastodon.StatusRepository
 import org.mozilla.social.core.repository.mastodon.model.status.toDatabaseModel
 
-class SaveStatusToDatabase internal constructor(
+internal class SaveStatusToDatabase internal constructor(
     private val socialDatabase: SocialDatabase,
+    private val statusRepository: StatusRepository,
     private val pollRepository: PollRepository,
 ) {
     suspend operator fun invoke(vararg statuses: Status) {
@@ -20,9 +22,7 @@ class SaveStatusToDatabase internal constructor(
             socialDatabase.accountsDao().insertAll(boostedStatuses.map {
                 it.account.toDatabaseModel()
             })
-            socialDatabase.statusDao().insertAll(boostedStatuses.map {
-                it.toDatabaseModel()
-            })
+            statusRepository.insertAll(boostedStatuses)
 
             pollRepository.insertAll(statuses.mapNotNull {
                 it.poll
@@ -30,9 +30,7 @@ class SaveStatusToDatabase internal constructor(
             socialDatabase.accountsDao().insertAll(statuses.map {
                 it.account.toDatabaseModel()
             })
-            socialDatabase.statusDao().insertAll(statuses.map {
-                it.toDatabaseModel()
-            })
+            statusRepository.insertAll(statuses.asList())
         }
     }
 
@@ -41,38 +39,3 @@ class SaveStatusToDatabase internal constructor(
     }
 }
 
-private fun Status.toDatabaseModel(): DatabaseStatus =
-    DatabaseStatus(
-        statusId = statusId,
-        uri = uri,
-        createdAt = createdAt,
-        accountId = account.accountId,
-        content = content,
-        visibility = visibility.toDatabaseModel(),
-        isSensitive = isSensitive,
-        contentWarningText = contentWarningText,
-        mediaAttachments = mediaAttachments.map { it.toDatabaseModel() },
-        mentions = mentions.map { it.toDatabaseModel() },
-        hashTags = hashTags.map { it.toDatabaseModel() },
-        emojis = emojis.map { it.toDatabaseModel() },
-        boostsCount = boostsCount,
-        favouritesCount = favouritesCount,
-        repliesCount = repliesCount,
-        application = application?.toDatabaseModel(),
-        url = url,
-        inReplyToId = inReplyToId,
-        inReplyToAccountId = inReplyToAccountId,
-        inReplyToAccountName = inReplyToAccountName,
-        boostedStatusId = boostedStatus?.statusId,
-        boostedStatusAccountId = boostedStatus?.account?.accountId,
-        pollId = poll?.pollId,
-        card = card?.toDatabaseModel(),
-        language = language,
-        plainText = plainText,
-        isFavorited = isFavourited,
-        isBoosted = isBoosted,
-        isMuted = isMuted,
-        isBookmarked = isBookmarked,
-        isPinned = isPinned,
-        isBeingDeleted = isBeingDeleted,
-    )
