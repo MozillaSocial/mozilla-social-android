@@ -1,9 +1,6 @@
 package org.mozilla.social.core.usecase.mastodon.auth
 
-import android.content.Context
 import android.content.Intent
-import androidx.browser.customtabs.CustomTabsIntent
-import androidx.core.net.toUri
 import okhttp3.HttpUrl
 import org.mozilla.social.core.analytics.Analytics
 import org.mozilla.social.core.datastore.UserPreferencesDatastore
@@ -12,6 +9,7 @@ import org.mozilla.social.core.repository.mastodon.AppRepository
 import org.mozilla.social.core.repository.mastodon.OauthRepository
 import org.mozilla.social.core.usecase.mastodon.auth.Login.Companion.AUTH_SCHEME
 import org.mozilla.social.core.model.Account
+import org.mozilla.social.core.navigation.usecases.OpenLink
 import timber.log.Timber
 
 /**
@@ -23,7 +21,7 @@ class Login(
     private val userPreferencesDatastore: UserPreferencesDatastore,
     private val appRepository: AppRepository,
     private val analytics: Analytics,
-    private val openLoginCustomTab: OpenLoginCustomTab,
+    private val openLink: OpenLink,
     private val logout: Logout,
 ) {
 
@@ -33,7 +31,7 @@ class Login(
     /**
      * When a  logging in by registering this client with the given domain
      */
-    suspend operator fun invoke(context: Context, domain: String) {
+    suspend operator fun invoke(domain: String) {
         try {
             userPreferencesDatastore.saveDomain(domain)
             val application = appRepository.createApplication(
@@ -43,12 +41,21 @@ class Login(
             )
             clientId = application.clientId!!
             clientSecret = application.clientSecret!!
-            openLoginCustomTab(
-                context = context, clientId = application.clientId!!, host = domain
+            openLink(
+                HttpUrl.Builder()
+                    .scheme(HTTPS)
+                    .host(domain)
+                    .addPathSegments(OAUTH_AUTHORIZE)
+                    .addQueryParameter(RESPONSE_TYPE_QUERY_PARAM, CODE)
+                    .addQueryParameter(REDIRECT_URI_QUERY_PARAM, AUTH_SCHEME)
+                    .addQueryParameter(SCOPE_QUERY_PARAM, READ_WRITE_PUSH)
+                    .addQueryParameter(CLIENT_ID_QUERY_PARAM, application.clientId!!)
+                    .build()
+                    .toString()
             )
         } catch (exception: Exception) {
             logout()
-            Timber.e(exception)
+            throw LoginFailedException(exception)
         }
     }
 
@@ -109,25 +116,6 @@ class Login(
         const val READ_WRITE_PUSH = "read write push"
         const val TAG = "Login"
     }
-}
 
-class OpenLoginCustomTab {
-    operator fun invoke(context: Context, clientId: String, host: String) {
-        CustomTabsIntent.Builder()
-            .build()
-            .launchUrl(
-                context,
-                HttpUrl.Builder()
-                    .scheme(Login.HTTPS)
-                    .host(host)
-                    .addPathSegments(Login.OAUTH_AUTHORIZE)
-                    .addQueryParameter(Login.RESPONSE_TYPE_QUERY_PARAM, Login.CODE)
-                    .addQueryParameter(Login.REDIRECT_URI_QUERY_PARAM, Login.AUTH_SCHEME)
-                    .addQueryParameter(Login.SCOPE_QUERY_PARAM, Login.READ_WRITE_PUSH)
-                    .addQueryParameter(Login.CLIENT_ID_QUERY_PARAM, clientId)
-                    .build()
-                    .toString()
-                    .toUri()
-            )
-    }
+    class LoginFailedException(e: Exception) : Exception(e)
 }

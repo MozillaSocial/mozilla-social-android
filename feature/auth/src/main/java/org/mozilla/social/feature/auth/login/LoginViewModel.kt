@@ -1,30 +1,50 @@
 package org.mozilla.social.feature.auth.login
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import org.mozilla.social.common.utils.StringFactory
+import org.mozilla.social.common.utils.edit
 import org.mozilla.social.core.analytics.Analytics
 import org.mozilla.social.core.analytics.AnalyticsIdentifiers
 import org.mozilla.social.core.navigation.AuthNavigationDestination
 import org.mozilla.social.core.navigation.usecases.NavigateTo
+import org.mozilla.social.core.navigation.usecases.ShowSnackbar
 import org.mozilla.social.core.usecase.mastodon.auth.Login
 import org.mozilla.social.feature.auth.BuildConfig
+import org.mozilla.social.feature.auth.R
+import timber.log.Timber
 
 class LoginViewModel(
     private val analytics: Analytics,
     private val login: Login,
     private val navigateTo: NavigateTo,
+    private val showSnackbar: ShowSnackbar,
 ) : ViewModel(), LoginInteractions {
 
-    //TODO remove context
-    //TODO make login rethrow
-    override fun onSignInClicked(context: Context) {
+    private val _uiState = MutableStateFlow(LoginUiState())
+    val uiState = _uiState.asStateFlow()
+
+    override fun onSignInClicked() {
+        _uiState.edit { copy(
+            isLoading = true,
+        ) }
         viewModelScope.launch {
-            login(
-                context,
-                if (BuildConfig.DEBUG) BuildConfig.stagingUrl else prod
-            )
+            try {
+                login(if (BuildConfig.DEBUG) BuildConfig.stagingUrl else PROD)
+            } catch (e: Login.LoginFailedException) {
+                showSnackbar(
+                    text = StringFactory.resource(R.string.error_connecting),
+                    isError = true,
+                )
+                Timber.e(e)
+            } finally {
+                _uiState.edit { copy(
+                    isLoading = false,
+                ) }
+            }
         }
     }
 
@@ -39,6 +59,6 @@ class LoginViewModel(
     }
 
     companion object {
-        private const val prod = "mozilla.social"
+        private const val PROD = "mozilla.social"
     }
 }

@@ -14,7 +14,6 @@ import org.mozilla.social.core.usecase.mastodon.account.UpdateMyAccount
 import org.mozilla.social.core.usecase.mastodon.auth.IsSignedInFlow
 import org.mozilla.social.core.usecase.mastodon.auth.Login
 import org.mozilla.social.core.usecase.mastodon.auth.Logout
-import org.mozilla.social.core.usecase.mastodon.auth.OpenLoginCustomTab
 import org.mozilla.social.core.usecase.mastodon.remotemediators.HashTagTimelineRemoteMediator
 import org.mozilla.social.core.usecase.mastodon.report.Report
 import org.mozilla.social.core.usecase.mastodon.status.BoostStatus
@@ -39,7 +38,6 @@ val mastodonUsecaseModule = module {
     }
     single { GetThreadUseCase(get()) }
     single { Login(get(), get(), get(), get(), get(), get(), get()) }
-    single { OpenLoginCustomTab() }
     single {
         Logout(
             userPreferencesDatastore = get(),

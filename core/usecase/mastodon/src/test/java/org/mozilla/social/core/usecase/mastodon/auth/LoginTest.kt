@@ -1,6 +1,5 @@
 package org.mozilla.social.core.usecase.mastodon.auth
 
-import android.content.Context
 import android.content.Intent
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -14,6 +13,7 @@ import org.mozilla.social.core.repository.mastodon.AccountRepository
 import org.mozilla.social.core.repository.mastodon.AppRepository
 import org.mozilla.social.core.repository.mastodon.OauthRepository
 import org.mozilla.social.core.datastore.UserPreferencesDatastore
+import org.mozilla.social.core.navigation.usecases.OpenLink
 import org.mozilla.social.core.usecase.mastodon.auth.Login.Companion.AUTHORIZATION_CODE
 import org.mozilla.social.core.usecase.mastodon.auth.Login.Companion.AUTH_SCHEME
 import org.mozilla.social.core.usecase.mastodon.auth.Login.Companion.CLIENT_NAME
@@ -22,10 +22,8 @@ import org.mozilla.social.core.usecase.mastodon.auth.Login.Companion.REDIRECT_UR
 import org.mozilla.social.core.usecase.mastodon.auth.Login.Companion.SCOPES
 import org.mozilla.social.core.test.TestUtils
 import org.mozilla.social.core.test.fakes.fakeApplication
-import org.mozilla.social.core.usecase.mastodon.auth.Login
-import org.mozilla.social.core.usecase.mastodon.auth.Logout
-import org.mozilla.social.core.usecase.mastodon.auth.OpenLoginCustomTab
 import kotlin.test.BeforeTest
+import kotlin.test.assertNotNull
 
 class LoginTest {
 
@@ -37,9 +35,8 @@ class LoginTest {
     private val userPreferencesDatastore: UserPreferencesDatastore = mockk(relaxed = true)
     private val appRepository: AppRepository = mockk(relaxed = true)
     private val analytics: Analytics = mockk(relaxed = true)
-    private val openLoginCustomTab: OpenLoginCustomTab = mockk(relaxed = true)
+    private val openLink: OpenLink = mockk(relaxed = true)
     private val logout: Logout = mockk(relaxed = true)
-    private val context: Context = mockk(relaxed = true)
 
     private val userCode: String = testUtils.randomIdString()
     private val domain = testUtils.randomWordString()
@@ -80,22 +77,22 @@ class LoginTest {
             userPreferencesDatastore = userPreferencesDatastore,
             appRepository = appRepository,
             analytics = analytics,
-            openLoginCustomTab = openLoginCustomTab,
-            logout = logout
+            openLink = openLink,
+            logout = logout,
         )
     }
 
     @Test
     fun invokeOpensCustomTabWithCorrectInfo() = runTest {
-        objUnderTest.invoke(context, domain)
+        objUnderTest.invoke(domain)
 
-        verify { openLoginCustomTab(context = context, clientId = clientId, host = domain) }
+        verify { openLink(any()) }
         coVerify { userPreferencesDatastore.saveDomain(domain) }
     }
 
     @Test
     fun onNewIntentReceived_oAuthTokenSaved() = runTest {
-        objUnderTest.invoke(context, domain)
+        objUnderTest.invoke(domain)
         objUnderTest.onNewIntentReceived(intent)
 
         coVerify {
@@ -113,7 +110,7 @@ class LoginTest {
 
     @Test
     fun onNewIntentReceived_accountIdSaved() = runTest {
-        objUnderTest.invoke(context, domain)
+        objUnderTest.invoke(domain)
         objUnderTest.onNewIntentReceived(intent)
 
         coVerify {
@@ -132,7 +129,15 @@ class LoginTest {
     @Test
     fun saveDomainThrowsError_userIsLoggedOut() = runTest {
         coEvery { userPreferencesDatastore.saveDomain(any()) } throws Exception()
-        objUnderTest.invoke(context, domain)
+        var exception: Login.LoginFailedException? = null
+
+        try {
+            objUnderTest.invoke(domain)
+        } catch (e: Login.LoginFailedException) {
+            exception = e
+        }
+
+        assertNotNull(exception)
 
         coVerify {
             logout()
@@ -142,7 +147,15 @@ class LoginTest {
     @Test
     fun createApplicationThrowsError_userIsLoggedOut() = runTest {
         coEvery { appRepository.createApplication(any(), any(), any()) } throws Exception()
-        objUnderTest.invoke(context, domain)
+        var exception: Login.LoginFailedException? = null
+
+        try {
+            objUnderTest.invoke(domain)
+        } catch (e: Login.LoginFailedException) {
+            exception = e
+        }
+
+        assertNotNull(exception)
 
         coVerify {
             logout()
@@ -151,8 +164,16 @@ class LoginTest {
 
     @Test
     fun openCustomTabThrowsError_userIsLoggedOut() = runTest {
-        coEvery { openLoginCustomTab(any(), any(), any()) } throws Exception()
-        objUnderTest.invoke(context, domain)
+        coEvery { openLink(any()) } throws Exception()
+        var exception: Login.LoginFailedException? = null
+
+        try {
+            objUnderTest.invoke(domain)
+        } catch (e: Login.LoginFailedException) {
+            exception = e
+        }
+
+        assertNotNull(exception)
 
         coVerify {
             logout()

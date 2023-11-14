@@ -1,6 +1,5 @@
 package org.mozilla.social.feature.auth.login
 
-import android.content.res.Configuration
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -14,17 +13,19 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
+import androidx.compose.material3.windowsizeclass.WindowHeightSizeClass
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight.Companion.W700
@@ -32,29 +33,28 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.koin.androidx.compose.koinViewModel
 import org.mozilla.social.core.designsystem.component.MoSoBadge
 import org.mozilla.social.core.designsystem.component.MoSoButton
+import org.mozilla.social.core.designsystem.component.MoSoCircularProgressIndicator
 import org.mozilla.social.core.designsystem.component.MoSoSurface
 import org.mozilla.social.core.designsystem.font.MoSoFonts
 import org.mozilla.social.core.designsystem.theme.MoSoSpacing
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
+import org.mozilla.social.core.ui.common.utils.getWindowHeightClass
+import org.mozilla.social.core.ui.common.utils.getWindowWidthClass
 import org.mozilla.social.feature.auth.R
 
 @Composable
 internal fun LoginScreen(
     viewModel: LoginViewModel = koinViewModel(),
 ) {
-    val configuration = LocalConfiguration.current
-    if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-        HorizontalLoginScreen(
-            loginInteractions = viewModel,
-        )
-    } else {
-        VerticalLoginScreen(
-            loginInteractions = viewModel,
-        )
-    }
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    LoginScreen(
+        uiState = uiState,
+        loginInteractions = viewModel,
+    )
 
     LaunchedEffect(Unit) {
         viewModel.onScreenViewed()
@@ -62,30 +62,27 @@ internal fun LoginScreen(
 }
 
 @Composable
-private fun HorizontalLoginScreen(
+private fun LoginScreen(
+    uiState: LoginUiState,
     loginInteractions: LoginInteractions,
 ) {
     MoSoSurface(
+        modifier = Modifier.fillMaxSize(),
         color = MoSoTheme.colors.layer2
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxSize(),
-        ) {
-            ImageBox(
-                modifier = Modifier
-                    .weight(1f)
-                    .systemBarsPadding(),
-            )
-            Box(
-                modifier = Modifier
-                    .weight(1f)
-                    .align(Alignment.CenterVertically)
-                    .fillMaxHeight()
-                    .background(MoSoTheme.colors.layer1),
-            ) {
-                LoginBox(
-                    modifier = Modifier.align(Alignment.Center),
+        val heightClass = getWindowHeightClass()
+        val widthClass = getWindowWidthClass()
+        when {
+            heightClass == WindowHeightSizeClass.Compact && widthClass != WindowWidthSizeClass.Compact ||
+            heightClass == WindowHeightSizeClass.Medium && widthClass == WindowWidthSizeClass.Expanded -> {
+                HorizontalLoginScreen(
+                    uiState = uiState,
+                    loginInteractions = loginInteractions,
+                )
+            }
+            else -> {
+                VerticalLoginScreen(
+                    uiState = uiState,
                     loginInteractions = loginInteractions,
                 )
             }
@@ -94,33 +91,60 @@ private fun HorizontalLoginScreen(
 }
 
 @Composable
-private fun VerticalLoginScreen(
+private fun HorizontalLoginScreen(
+    uiState: LoginUiState,
     loginInteractions: LoginInteractions,
 ) {
-    MoSoSurface(
-        color = MoSoTheme.colors.layer2
+    Row(
+        modifier = Modifier
+            .fillMaxSize(),
     ) {
-        Column(
+        ImageBox(
             modifier = Modifier
-                .fillMaxSize()
+                .weight(1f)
                 .systemBarsPadding(),
-            verticalArrangement = Arrangement.Top,
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            ImageBox()
-        }
-
-        Column(
+        )
+        Box(
             modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
+                .weight(1f)
+                .align(Alignment.CenterVertically)
+                .fillMaxHeight()
+                .background(MoSoTheme.colors.layer1),
         ) {
-            Spacer(modifier = Modifier.weight(1f))
             LoginBox(
-                modifier = Modifier.weight(1f),
+                modifier = Modifier.align(Alignment.Center),
+                uiState = uiState,
                 loginInteractions = loginInteractions,
             )
         }
+    }
+}
+
+@Composable
+private fun VerticalLoginScreen(
+    uiState: LoginUiState,
+    loginInteractions: LoginInteractions,
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .systemBarsPadding(),
+        verticalArrangement = Arrangement.Top,
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        ImageBox()
+    }
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+    ) {
+        Spacer(modifier = Modifier.weight(1f))
+        LoginBox(
+            modifier = Modifier.weight(1f),
+            uiState = uiState,
+            loginInteractions = loginInteractions,
+        )
     }
 }
 
@@ -154,9 +178,9 @@ private fun ImageBox(
 @Composable
 private fun LoginBox(
     modifier: Modifier = Modifier,
+    uiState: LoginUiState,
     loginInteractions: LoginInteractions,
 ) {
-    val context = LocalContext.current
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -184,17 +208,26 @@ private fun LoginBox(
         Spacer(modifier = Modifier.height(24.dp))
         MoSoButton(
             modifier = Modifier.fillMaxWidth(),
-            onClick = { loginInteractions.onSignInClicked(context) }
+            enabled = !uiState.isLoading,
+            onClick = { loginInteractions.onSignInClicked() }
         ) {
-            Text(
-                text = stringResource(id = R.string.sign_in_button),
-            )
+            if (uiState.isLoading) {
+                MoSoCircularProgressIndicator(
+                    modifier = Modifier.size(20.dp)
+                )
+            } else {
+                Text(
+                    text = stringResource(id = R.string.sign_in_button),
+                )
+            }
         }
         Spacer(modifier = Modifier.height(24.dp))
         Text(
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
-                .clickable { loginInteractions.onChooseServerClicked() },
+                .clickable(
+                    enabled = !uiState.isLoading,
+                ) { loginInteractions.onChooseServerClicked() },
             text = stringResource(id = R.string.choose_server_option),
             style = MoSoTheme.typography.labelSmallLink,
             textDecoration = TextDecoration.Underline,
@@ -207,7 +240,8 @@ private fun LoginBox(
 @Composable
 internal fun AuthVerticalScreenPreview() {
     MoSoTheme {
-        VerticalLoginScreen(
+        LoginScreen(
+            uiState = LoginUiState(),
             loginInteractions = object : LoginInteractions {},
         )
     }
@@ -217,7 +251,21 @@ internal fun AuthVerticalScreenPreview() {
 @Composable
 internal fun AuthHorizontalScreenPreview() {
     MoSoTheme {
-        HorizontalLoginScreen(
+        LoginScreen(
+            uiState = LoginUiState(),
+            loginInteractions = object : LoginInteractions {},
+        )
+    }
+}
+
+@Preview
+@Composable
+internal fun AuthScreenLoadingPreview() {
+    MoSoTheme {
+        LoginScreen(
+            uiState = LoginUiState(
+                isLoading = true,
+            ),
             loginInteractions = object : LoginInteractions {},
         )
     }
