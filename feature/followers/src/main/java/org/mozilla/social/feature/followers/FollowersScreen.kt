@@ -15,12 +15,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -56,11 +58,9 @@ internal fun FollowersScreen(
         }
     )
 ) {
-    val selectedTab by viewModel.selectedTab.collectAsStateWithLifecycle()
-
     FollowersScreen(
-        selectedTab = selectedTab,
         followers = viewModel.followers,
+        following = viewModel.following,
         followersInteractions = viewModel,
     )
 
@@ -71,8 +71,8 @@ internal fun FollowersScreen(
 
 @Composable
 private fun FollowersScreen(
-    selectedTab: FollowerScreenType,
     followers: Flow<PagingData<AccountQuickViewUiState>>,
+    following: Flow<PagingData<AccountQuickViewUiState>>,
     followersInteractions: FollowersInteractions,
 ) {
     MoSoSurface {
@@ -81,12 +81,14 @@ private fun FollowersScreen(
                 .fillMaxSize()
                 .systemBarsPadding()
         ) {
+            //TODO set title to user's name
             MoSoCloseableTopAppBar(
-                title = when (selectedTab) {
-                    FollowerScreenType.FOLLOWERS -> stringResource(id = R.string.followers)
-                    FollowerScreenType.FOLLOWING -> stringResource(id = R.string.following)
-                },
+                title = "",
             )
+
+            var selectedTab: FollowerScreenType by remember {
+                mutableStateOf(FollowerScreenType.FOLLOWERS)
+            }
 
             MoSoTabRow(
                 selectedTabIndex = selectedTab.ordinal,
@@ -96,7 +98,7 @@ private fun FollowersScreen(
                         modifier = Modifier
                             .height(40.dp),
                         selected = selectedTab == tabType,
-                        onClick = {  },
+                        onClick = { selectedTab = tabType },
                         content = {
                             Text(
                                 text = when (tabType) {
@@ -113,7 +115,10 @@ private fun FollowersScreen(
             }
 
             FollowersList(
-                list = followers,
+                list = when (selectedTab) {
+                    FollowerScreenType.FOLLOWERS -> followers
+                    FollowerScreenType.FOLLOWING -> following
+                },
                 followersInteractions = followersInteractions
             )
         }
@@ -213,8 +218,8 @@ private fun FollowersList(
 private fun FollowersScreenPreview() {
     PreviewTheme {
         FollowersScreen(
-            selectedTab = FollowerScreenType.FOLLOWERS,
             followers = flowOf(),
+            following = flowOf(),
             followersInteractions = object : FollowersInteractions {},
         )
     }

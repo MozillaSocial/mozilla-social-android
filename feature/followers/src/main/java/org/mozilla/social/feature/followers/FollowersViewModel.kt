@@ -6,8 +6,6 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
 import androidx.paging.map
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import org.mozilla.social.core.analytics.Analytics
 import org.mozilla.social.core.analytics.AnalyticsIdentifiers
@@ -24,16 +22,26 @@ class FollowersViewModel(
     private val analytics: Analytics,
 ) : ViewModel(), FollowersInteractions {
 
-    private val _selectedTab = MutableStateFlow(FollowerScreenType.FOLLOWERS)
-    val selectedTab = _selectedTab.asStateFlow()
-
     val followers = Pager(
         PagingConfig(
             pageSize = 40,
             initialLoadSize = 40,
         )
     ) {
-        FollowersPagingSource(accountRepository, accountId, followerScreenType)
+        FollowersPagingSource(accountRepository, accountId, FollowerScreenType.FOLLOWERS)
+    }.flow.map { pagingData ->
+        pagingData.map {
+            it.toQuickViewUiState()
+        }
+    }.cachedIn(viewModelScope)
+
+    val following = Pager(
+        PagingConfig(
+            pageSize = 40,
+            initialLoadSize = 40,
+        )
+    ) {
+        FollowersPagingSource(accountRepository, accountId, FollowerScreenType.FOLLOWING)
     }.flow.map { pagingData ->
         pagingData.map {
             it.toQuickViewUiState()
