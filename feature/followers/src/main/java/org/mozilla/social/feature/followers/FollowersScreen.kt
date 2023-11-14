@@ -16,12 +16,14 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 import org.mozilla.social.core.designsystem.component.MoSoDivider
@@ -34,6 +36,7 @@ import org.mozilla.social.core.ui.common.error.GenericError
 import org.mozilla.social.core.ui.common.pullrefresh.PullRefreshIndicator
 import org.mozilla.social.core.ui.common.pullrefresh.pullRefresh
 import org.mozilla.social.core.ui.common.pullrefresh.rememberPullRefreshState
+import org.mozilla.social.core.ui.common.utils.PreviewTheme
 
 @Composable
 internal fun FollowersScreen(
@@ -160,5 +163,17 @@ private fun FollowersScreen(
                 )
             }
         }
+    }
+}
+
+@Preview
+@Composable
+private fun FollowersScreenPreview() {
+    PreviewTheme {
+        FollowersScreen(
+            followersScreenType = FollowerScreenType.FOLLOWERS,
+            followers = flowOf(),
+            followersInteractions = object : FollowersInteractions {},
+        )
     }
 }
