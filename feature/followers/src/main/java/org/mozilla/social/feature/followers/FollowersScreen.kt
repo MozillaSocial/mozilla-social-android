@@ -218,7 +218,18 @@ private fun FollowersList(
 private fun FollowersScreenPreview() {
     PreviewTheme {
         FollowersScreen(
-            followers = flowOf(),
+            followers = flowOf(
+                PagingData.from(
+                    listOf(
+                        AccountQuickViewUiState(
+                            accountId = "",
+                            displayName = "Person",
+                            webFinger = "person",
+                            avatarUrl = ""
+                        )
+                    )
+                )
+            ),
             following = flowOf(),
             followersInteractions = object : FollowersInteractions {},
         )

@@ -1,5 +1,6 @@
 package org.mozilla.social.core.ui.common.account.quickview
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -19,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.designsystem.theme.defaultTypography
+import org.mozilla.social.core.ui.common.utils.PreviewTheme
 
 @Composable
 fun AccountQuickView(
@@ -39,6 +41,7 @@ fun AccountQuickView(
             Row {
                 AsyncImage(
                     modifier = Modifier
+                        .background(MoSoTheme.colors.layer2)
                         .height(50.dp)
                         .width(50.dp)
                         .clip(RoundedCornerShape(4.dp)),
@@ -66,7 +69,7 @@ fun AccountQuickView(
 @Preview
 @Composable
 private fun AccountQuickViewPreview() {
-    MoSoTheme {
+    PreviewTheme {
         AccountQuickView(
             uiState = AccountQuickViewUiState(
                 accountId = "",
