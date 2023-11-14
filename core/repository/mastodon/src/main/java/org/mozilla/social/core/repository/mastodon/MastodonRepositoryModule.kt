@@ -1,12 +1,13 @@
 package org.mozilla.social.core.repository.mastodon
 
+import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 import org.mozilla.social.core.network.mastodon.mastodonNetworkModule
 
 fun mastodonRepositoryModule(isDebug: Boolean) = module {
     single { AuthCredentialObserver(get(), get()) }
-    single { StatusRepository(get(), get(), get()) }
-    single { AccountRepository(get(), get()) }
+    singleOf(::StatusRepository)
+    singleOf(::AccountRepository)
     single { TimelineRepository(get(), get()) }
     single { OauthRepository(get()) }
     single { MediaRepository(get()) }

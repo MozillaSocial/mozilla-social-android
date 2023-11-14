@@ -11,7 +11,6 @@ import org.mozilla.social.core.database.model.DatabaseHashTag
 import org.mozilla.social.core.database.model.DatabaseHistory
 import org.mozilla.social.core.database.model.DatabaseMention
 import org.mozilla.social.core.database.model.DatabaseSource
-import org.mozilla.social.core.database.model.DatabaseStatus
 import org.mozilla.social.core.database.model.DatabaseStatusVisibility
 import org.mozilla.social.core.model.Account
 import org.mozilla.social.core.model.Application
@@ -24,44 +23,7 @@ import org.mozilla.social.core.model.HashTag
 import org.mozilla.social.core.model.History
 import org.mozilla.social.core.model.Mention
 import org.mozilla.social.core.model.Source
-import org.mozilla.social.core.model.Status
 import org.mozilla.social.core.model.StatusVisibility
-
-internal fun Status.toDatabaseModel(): DatabaseStatus =
-    DatabaseStatus(
-        statusId = statusId,
-        uri = uri,
-        createdAt = createdAt,
-        accountId = account.accountId,
-        content = content,
-        visibility = visibility.toDatabaseModel(),
-        isSensitive = isSensitive,
-        contentWarningText = contentWarningText,
-        mediaAttachments = mediaAttachments.map { it.toDatabaseModel() },
-        mentions = mentions.map { it.toDatabaseModel() },
-        hashTags = hashTags.map { it.toDatabaseModel() },
-        emojis = emojis.map { it.toDatabaseModel() },
-        boostsCount = boostsCount,
-        favouritesCount = favouritesCount,
-        repliesCount = repliesCount,
-        application = application?.toDatabaseModel(),
-        url = url,
-        inReplyToId = inReplyToId,
-        inReplyToAccountId = inReplyToAccountId,
-        inReplyToAccountName = inReplyToAccountName,
-        boostedStatusId = boostedStatus?.statusId,
-        boostedStatusAccountId = boostedStatus?.account?.accountId,
-        pollId = poll?.pollId,
-        card = card?.toDatabaseModel(),
-        language = language,
-        plainText = plainText,
-        isFavorited = isFavourited,
-        isBoosted = isBoosted,
-        isMuted = isMuted,
-        isBookmarked = isBookmarked,
-        isPinned = isPinned,
-        isBeingDeleted = isBeingDeleted,
-    )
 
 fun Account.toDatabaseModel(): DatabaseAccount = DatabaseAccount(
     accountId = accountId,

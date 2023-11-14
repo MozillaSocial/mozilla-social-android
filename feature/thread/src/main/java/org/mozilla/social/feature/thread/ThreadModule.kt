@@ -7,7 +7,7 @@ val threadModule = module {
     viewModel { parametersHolder -> ThreadViewModel(
         analytics = get(),
         getLoggedInUserAccountId = get(),
-        getThreadUseCase = get(),
+        getThread = get(),
         mainStatusId = parametersHolder[0],
     ) }
 }

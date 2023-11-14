@@ -13,18 +13,18 @@ import org.mozilla.social.core.usecase.mastodon.account.GetLoggedInUserAccountId
 import org.mozilla.social.core.ui.postcard.PostCardDelegate
 import org.mozilla.social.core.ui.postcard.PostCardUiState
 import org.mozilla.social.core.ui.postcard.toPostCardUiState
-import org.mozilla.social.core.usecase.mastodon.thread.GetThreadUseCase
+import org.mozilla.social.core.usecase.mastodon.thread.GetThread
 import timber.log.Timber
 
 class ThreadViewModel(
     private val analytics: Analytics,
-    getThreadUseCase: GetThreadUseCase,
+    getThread: GetThread,
     mainStatusId: String,
     getLoggedInUserAccountId: GetLoggedInUserAccountId,
 ) : ViewModel(), ThreadInteractions {
 
     var statuses: Flow<List<PostCardUiState>> =
-        getThreadUseCase.invoke(mainStatusId).map { statuses ->
+        getThread.invoke(mainStatusId).map { statuses ->
             statuses.map { it.toPostCardUiState(getLoggedInUserAccountId()) }
         }.catch {
             Timber.e(it)

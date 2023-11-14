@@ -9,8 +9,11 @@ import androidx.paging.cachedIn
 import androidx.paging.map
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import org.koin.core.parameter.parametersOf
 import org.koin.java.KoinJavaComponent
@@ -81,12 +84,17 @@ class AccountViewModel(
     private val _timelineType = MutableStateFlow(TimelineType.POSTS)
     val timelineType = _timelineType.asStateFlow()
 
+    private val externalTimelineType: StateFlow<org.mozilla.social.core.usecase.mastodon.timeline.TimelineType> =
+        timelineType.map { it.toExternalModel() }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(),
+            org.mozilla.social.core.usecase.mastodon.timeline.TimelineType.POSTS
+        )
+
     private val accountTimelineRemoteMediator: AccountTimelineRemoteMediator by inject(
         AccountTimelineRemoteMediator::class.java
     ) {
         parametersOf(
             accountId,
-            timelineType,
+            externalTimelineType,
         )
     }
 
@@ -231,4 +239,10 @@ class AccountViewModel(
     override fun onEditAccountClicked() {
         navigateTo(NavigationDestination.EditAccount)
     }
+}
+
+private fun TimelineType.toExternalModel() = when (this) {
+    TimelineType.POSTS -> org.mozilla.social.core.usecase.mastodon.timeline.TimelineType.POSTS
+    TimelineType.POSTS_AND_REPLIES -> org.mozilla.social.core.usecase.mastodon.timeline.TimelineType.POSTS_AND_REPLIES
+    TimelineType.MEDIA -> org.mozilla.social.core.usecase.mastodon.timeline.TimelineType.MEDIA
 }

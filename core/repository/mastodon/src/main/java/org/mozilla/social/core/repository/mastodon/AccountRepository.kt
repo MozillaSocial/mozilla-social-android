@@ -5,7 +5,7 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import org.mozilla.social.common.parseMastodonLinkHeader
-import org.mozilla.social.core.database.SocialDatabase
+import org.mozilla.social.core.database.dao.AccountsDao
 import org.mozilla.social.core.network.mastodon.AccountApi
 import org.mozilla.social.core.repository.mastodon.model.account.toExternal
 import org.mozilla.social.core.model.paging.FollowersPagingWrapper
@@ -18,15 +18,15 @@ import retrofit2.HttpException
 import java.io.File
 
 class AccountRepository internal constructor(
-    private val accountApi: AccountApi,
-    private val socialDatabase: SocialDatabase,
+    private val api: AccountApi,
+    private val dao: AccountsDao,
 ) {
     suspend fun getAccount(accountId: String): Account {
-        return accountApi.getAccount(accountId).toExternalModel()
+        return api.getAccount(accountId).toExternalModel()
     }
 
     suspend fun verifyUserCredentials(): Account {
-        return accountApi.verifyCredentials().toExternalModel()
+        return api.verifyCredentials().toExternalModel()
     }
 
     suspend fun getAccountFollowers(
@@ -35,7 +35,7 @@ class AccountRepository internal constructor(
         newerThanId: String? = null,
         loadSize: Int? = null,
     ): FollowersPagingWrapper {
-        val response = accountApi.getAccountFollowers(
+        val response = api.getAccountFollowers(
             accountId = accountId,
             olderThanId = olderThanId,
             newerThanId = newerThanId,
@@ -56,7 +56,7 @@ class AccountRepository internal constructor(
         newerThanId: String? = null,
         loadSize: Int? = null,
     ): FollowersPagingWrapper {
-        val response = accountApi.getAccountFollowing(
+        val response = api.getAccountFollowing(
             accountId = accountId,
             olderThanId = olderThanId,
             newerThanId = newerThanId,
@@ -80,7 +80,7 @@ class AccountRepository internal constructor(
         excludeReplies: Boolean = false,
         excludeBoosts: Boolean = false,
     ): StatusPagingWrapper {
-        val response = accountApi.getAccountStatuses(
+        val response = api.getAccountStatuses(
             accountId = accountId,
             olderThanId = olderThanId,
             immediatelyNewerThanId = immediatelyNewerThanId,
@@ -101,31 +101,31 @@ class AccountRepository internal constructor(
     }
 
     suspend fun getAccountBookmarks(): List<Status> =
-        accountApi.getAccountBookmarks().map { it.toExternalModel() }
+        api.getAccountBookmarks().map { it.toExternalModel() }
 
     suspend fun getAccountFavourites(): List<Status> =
-        accountApi.getAccountFavourites().map { it.toExternalModel() }
+        api.getAccountFavourites().map { it.toExternalModel() }
 
-    suspend fun followAccount(accountId: String) = accountApi.followAccount(accountId = accountId)
+    suspend fun followAccount(accountId: String) = api.followAccount(accountId = accountId)
 
     suspend fun unfollowAccount(accountId: String) =
-        accountApi.unfollowAccount(accountId = accountId)
+        api.unfollowAccount(accountId = accountId)
 
-    suspend fun blockAccount(accountId: String) = accountApi.blockAccount(accountId = accountId)
-    suspend fun unblockAccount(accountId: String) = accountApi.unblockAccount(accountId = accountId)
+    suspend fun blockAccount(accountId: String) = api.blockAccount(accountId = accountId)
+    suspend fun unblockAccount(accountId: String) = api.unblockAccount(accountId = accountId)
 
 
-    suspend fun muteAccount(accountId: String) = accountApi.muteAccount(accountId = accountId)
-    suspend fun unmuteAccount(accountId: String) = accountApi.unmuteAccount(accountId = accountId)
+    suspend fun muteAccount(accountId: String) = api.muteAccount(accountId = accountId)
+    suspend fun unmuteAccount(accountId: String) = api.unmuteAccount(accountId = accountId)
 
     suspend fun getAccountRelationships(
         accountIds: List<String>,
     ): List<Relationship> =
-        accountApi.getRelationships(accountIds.toTypedArray()).map { it.toExternal() }
+        api.getRelationships(accountIds.toTypedArray()).map { it.toExternal() }
 
     // TODO@DA move to use case
     suspend fun getAccountFromDatabase(accountId: String): Account? =
-        socialDatabase.accountsDao().getAccount(accountId)?.toExternalModel()
+        dao.getAccount(accountId)?.toExternalModel()
 
     @Suppress("MagicNumber")
     suspend fun updateAccount(
@@ -136,7 +136,7 @@ class AccountRepository internal constructor(
         avatar: File? = null,
         header: File? = null,
         fields: List<Pair<String, String>>? = null
-    ) = accountApi.updateAccount(
+    ) = api.updateAccount(
         displayName = displayName?.toRequestBody(MultipartBody.FORM),
         bio = bio?.toRequestBody(MultipartBody.FORM),
         locked = locked?.toString()?.toRequestBody(MultipartBody.FORM),

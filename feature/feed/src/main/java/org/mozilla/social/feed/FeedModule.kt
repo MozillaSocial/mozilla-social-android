@@ -11,24 +11,15 @@ val feedModule = module {
     single {
         HomeTimelineRemoteMediator(
             get(),
-            get(),
-            get(),
-            get(),
         )
     }
     single {
         LocalTimelineRemoteMediator(
             get(),
-            get(),
-            get(),
-            get(),
         )
     }
     single {
         FederatedTimelineRemoteMediator(
-            get(),
-            get(),
-            get(),
             get(),
         )
     }

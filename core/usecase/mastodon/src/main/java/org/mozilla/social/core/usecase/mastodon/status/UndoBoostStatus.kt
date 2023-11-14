@@ -6,34 +6,33 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import org.mozilla.social.common.utils.StringFactory
-import org.mozilla.social.core.repository.mastodon.StatusRepository
-import org.mozilla.social.core.repository.mastodon.model.status.toExternalModel
 import org.mozilla.social.core.database.SocialDatabase
 import org.mozilla.social.core.navigation.usecases.ShowSnackbar
+import org.mozilla.social.core.repository.mastodon.StatusRepository
 import org.mozilla.social.core.usecase.mastodon.R
 
-class UndoBoostStatus(
+class UndoBoostStatus internal constructor(
     private val externalScope: CoroutineScope,
     private val socialDatabase: SocialDatabase,
     private val statusRepository: StatusRepository,
     private val showSnackbar: ShowSnackbar,
     private val dispatcherIo: CoroutineDispatcher = Dispatchers.IO,
+    private val saveStatusToDatabase: SaveStatusToDatabase,
 ) {
-
     suspend operator fun invoke(
         boostedStatusId: String,
     ) = externalScope.async(dispatcherIo) {
         try {
             socialDatabase.withTransaction {
-                socialDatabase.statusDao().updateBoostCount(boostedStatusId, -1)
-                socialDatabase.statusDao().updateBoosted(boostedStatusId, false)
+                statusRepository.updateBoostCount(boostedStatusId, -1)
+                statusRepository.updateBoosted(boostedStatusId, false)
             }
             val status = statusRepository.unBoostStatus(boostedStatusId)
-            statusRepository.saveStatusToDatabase(status)
+            saveStatusToDatabase(status)
         } catch (e: Exception) {
             socialDatabase.withTransaction {
-                socialDatabase.statusDao().updateBoostCount(boostedStatusId, 1)
-                socialDatabase.statusDao().updateBoosted(boostedStatusId, true)
+                statusRepository.updateBoostCount(boostedStatusId, 1)
+                statusRepository.updateBoosted(boostedStatusId, true)
             }
             showSnackbar(
                 text = StringFactory.resource(R.string.error_undoing_boost),

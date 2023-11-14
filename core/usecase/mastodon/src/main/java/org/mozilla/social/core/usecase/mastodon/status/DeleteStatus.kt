@@ -23,7 +23,7 @@ class DeleteStatus(
         statusId: String,
     ) = externalScope.async(dispatcherIo) {
         try {
-            socialDatabase.statusDao().updateIsBeingDeleted(statusId, true)
+            statusRepository.updateIsBeingDeleted(statusId, true)
             statusRepository.deleteStatus(statusId)
             socialDatabase.withTransaction {
                 socialDatabase.homeTimelineDao().deletePost(statusId)
@@ -31,10 +31,10 @@ class DeleteStatus(
                 socialDatabase.federatedTimelineDao().deletePost(statusId)
                 socialDatabase.hashTagTimelineDao().deletePost(statusId)
                 socialDatabase.accountTimelineDao().deletePost(statusId)
-                socialDatabase.statusDao().deleteStatus(statusId)
+                statusRepository.deleteStatusLocal(statusId)
             }
         } catch (e: Exception) {
-            socialDatabase.statusDao().updateIsBeingDeleted(statusId, false)
+            statusRepository.updateIsBeingDeleted(statusId, false)
             showSnackbar(
                 text = StringFactory.resource(R.string.error_deleting_post),
                 isError = true,

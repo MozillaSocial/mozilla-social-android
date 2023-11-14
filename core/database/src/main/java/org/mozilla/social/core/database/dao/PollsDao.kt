@@ -6,7 +6,7 @@ import androidx.room.Transaction
 import org.mozilla.social.core.database.model.DatabasePoll
 
 @Dao
-internal interface PollsDao : BaseDao<DatabasePoll> {
+interface PollsDao : BaseDao<DatabasePoll> {
     /**
      * Updates the user's own votes on a poll
      */

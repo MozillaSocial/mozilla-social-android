@@ -5,9 +5,11 @@ import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
 import org.mozilla.social.core.repository.mastodon.StatusRepository
 import org.mozilla.social.core.model.Status
+import org.mozilla.social.core.usecase.mastodon.status.SaveStatusToDatabase
 
-class GetThreadUseCase(
+class GetThread internal constructor(
     private val statusRepository: StatusRepository,
+    private val saveStatusToDatabase: SaveStatusToDatabase,
 ) {
 
     operator fun invoke(
@@ -19,8 +21,8 @@ class GetThreadUseCase(
         }
 
         val context = statusRepository.getStatusContext(statusId)
-        statusRepository.saveStatusesToDatabase(context.ancestors)
-        statusRepository.saveStatusesToDatabase(context.descendants)
+        saveStatusToDatabase(context.ancestors)
+        saveStatusToDatabase(context.descendants)
 
         val statuses = buildList {
             addAll(context.ancestors.map { it.statusId })

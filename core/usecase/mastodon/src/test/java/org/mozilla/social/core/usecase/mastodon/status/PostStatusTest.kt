@@ -1,6 +1,7 @@
 package org.mozilla.social.core.usecase.mastodon.status
 
 import kotlinx.coroutines.test.TestScope
+import org.mozilla.social.core.model.Status
 import org.mozilla.social.core.usecase.mastodon.BaseUseCaseTest
 import org.mozilla.social.core.test.fakes.Models
 import org.mozilla.social.core.model.StatusVisibility
@@ -8,8 +9,6 @@ import kotlin.test.BeforeTest
 import kotlin.test.Test
 
 class PostStatusTest : BaseUseCaseTest() {
-
-
     private lateinit var subject: PostStatus
 
     private val networkStatus = Models.status
@@ -23,6 +22,7 @@ class PostStatusTest : BaseUseCaseTest() {
             statusRepository = statusRepository,
             timelineRepository = timelineRepository,
             dispatcherIo = testDispatcher,
+            saveStatusToDatabase = saveStatusToDatabase,
         )
     }
 
@@ -44,7 +44,7 @@ class PostStatusTest : BaseUseCaseTest() {
                 )
             },
             verifyBlock = {
-                statusRepository.saveStatusToDatabase(any())
+                saveStatusToDatabase(any<Status>())
             }
         )
     }
