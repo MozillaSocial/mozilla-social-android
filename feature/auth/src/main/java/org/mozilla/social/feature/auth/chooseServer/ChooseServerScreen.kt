@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -26,6 +27,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.KoinApplication
 import org.mozilla.social.core.designsystem.component.MoSoButton
+import org.mozilla.social.core.designsystem.component.MoSoCircularProgressIndicator
 import org.mozilla.social.core.designsystem.component.MoSoSurface
 import org.mozilla.social.core.designsystem.component.MoSoTextField
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
@@ -79,6 +81,7 @@ private fun ChooseServerScreen(
                 Spacer(modifier = Modifier.height(21.dp))
                 MoSoTextField(
                     modifier = Modifier.fillMaxWidth(),
+                    enabled = !uiState.isLoading,
                     value = uiState.serverText,
                     onValueChange = { chooseServerInteractions.onServerTextChanged(it) },
                     label = {
@@ -99,16 +102,18 @@ private fun ChooseServerScreen(
                 Spacer(modifier = Modifier.height(21.dp))
                 MoSoButton(
                     modifier = Modifier.fillMaxWidth(),
-                    enabled = uiState.nextButtonEnabled,
+                    enabled = uiState.nextButtonEnabled && !uiState.isLoading,
                     onClick = { chooseServerInteractions.onNextClicked(context) }
                 ) {
-                    Text(text = stringResource(id = R.string.choose_server_next_button))
+                    if (uiState.isLoading) {
+                        MoSoCircularProgressIndicator(
+                            modifier = Modifier.size(20.dp)
+                        )
+                    } else {
+                        Text(text = stringResource(id = R.string.choose_server_next_button))
+                    }
                 }
             }
-        }
-        if (uiState.isLoading) {
-            TransparentNoTouchOverlay()
-            MaxSizeLoading()
         }
     }
 }
