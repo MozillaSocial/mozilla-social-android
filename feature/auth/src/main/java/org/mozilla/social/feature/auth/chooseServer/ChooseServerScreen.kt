@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -90,6 +91,12 @@ private fun ChooseServerScreen(
                         )
                     },
                     isError = uiState.loginFailed,
+                    singleLine = true,
+                    keyboardActions = KeyboardActions(
+                        onDone = {
+                            chooseServerInteractions.onNextClicked()
+                        }
+                    )
                 )
                 if (uiState.loginFailed) {
                     Spacer(modifier = Modifier.height(MoSoSpacing.sm))
