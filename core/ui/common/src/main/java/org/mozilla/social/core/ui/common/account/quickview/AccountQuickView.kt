@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -41,10 +42,10 @@ fun AccountQuickView(
             Row {
                 AsyncImage(
                     modifier = Modifier
-                        .background(MoSoTheme.colors.layer2)
                         .height(50.dp)
                         .width(50.dp)
-                        .clip(RoundedCornerShape(4.dp)),
+                        .clip(CircleShape)
+                        .background(MoSoTheme.colors.layer2),
                     model = uiState.avatarUrl,
                     contentDescription = null,
                 )

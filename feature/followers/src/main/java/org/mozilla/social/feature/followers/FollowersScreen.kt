@@ -157,7 +157,6 @@ private fun FollowersList(
                             uiState = uiState,
                             onClick = followersInteractions::onAccountClicked
                         )
-                        MoSoDivider()
                     }
                 }
             }
