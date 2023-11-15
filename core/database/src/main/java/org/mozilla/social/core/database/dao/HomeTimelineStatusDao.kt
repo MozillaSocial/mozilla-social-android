@@ -3,11 +3,14 @@ package org.mozilla.social.core.database.dao
 import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Query
+import androidx.room.Transaction
 import org.mozilla.social.core.database.model.statusCollections.HomeTimelineStatus
 import org.mozilla.social.core.database.model.statusCollections.HomeTimelineStatusWrapper
 
 @Dao
 interface HomeTimelineStatusDao : BaseDao<HomeTimelineStatus> {
+
+    @Transaction
     @Query(
         "SELECT * FROM homeTimeline " +
         "ORDER BY statusId DESC"

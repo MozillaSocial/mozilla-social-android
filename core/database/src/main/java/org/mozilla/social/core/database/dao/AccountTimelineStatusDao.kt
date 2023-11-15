@@ -3,12 +3,14 @@ package org.mozilla.social.core.database.dao
 import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Query
+import androidx.room.Transaction
 import org.mozilla.social.core.database.model.statusCollections.AccountTimelineStatus
 import org.mozilla.social.core.database.model.statusCollections.AccountTimelineStatusWrapper
 
 @Dao
 interface AccountTimelineStatusDao : BaseDao<AccountTimelineStatus> {
 
+    @Transaction
     @Query(
         "SELECT * FROM accountTimeline " +
                 "WHERE  accountId = :accountId " +

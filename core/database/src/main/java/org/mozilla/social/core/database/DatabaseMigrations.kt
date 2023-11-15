@@ -33,4 +33,19 @@ object DatabaseMigrations {
         columnName = "createdAt"
     )
     class Schema7to8 : AutoMigrationSpec
+
+    @RenameColumn(
+        tableName = "followings",
+        fromColumnName = "followingAccountId",
+        toColumnName = "followeeAccountId",
+    )
+    @DeleteColumn(
+        tableName = "followings",
+        columnName = "relationshipAccountId",
+    )
+    @DeleteColumn(
+        tableName = "followers",
+        columnName = "relationshipAccountId"
+    )
+    class Schema10to11 : AutoMigrationSpec
 }

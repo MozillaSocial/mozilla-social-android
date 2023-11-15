@@ -6,17 +6,20 @@ import androidx.room.Relation
 import org.mozilla.social.core.database.model.DatabaseAccount
 import org.mozilla.social.core.database.model.DatabaseRelationship
 
+/**
+ * @param accountId the account ID of the user we are examining
+ * @param followeeAccountId the account ID of the followee
+ */
 @Entity(
     tableName = "followings",
     primaryKeys = [
         "accountId",
-        "followingAccountId",
+        "followeeAccountId",
     ]
 )
 data class Followee(
     val accountId: String,
-    val followingAccountId: String,
-    val relationshipAccountId: String,
+    val followeeAccountId: String,
 )
 
 data class FolloweeWrapper(
@@ -24,13 +27,13 @@ data class FolloweeWrapper(
     val followee: Followee,
 
     @Relation(
-        parentColumn = "followingAccountId",
+        parentColumn = "followeeAccountId",
         entityColumn = "accountId",
     )
     val followingAccount: DatabaseAccount,
 
     @Relation(
-        parentColumn = "relationshipAccountId",
+        parentColumn = "followeeAccountId",
         entityColumn = "accountId",
     )
     val relationship: DatabaseRelationship,

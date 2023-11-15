@@ -13,7 +13,6 @@ import org.mozilla.social.core.repository.mastodon.AccountRepository
 import org.mozilla.social.core.repository.mastodon.DatabaseDelegate
 import org.mozilla.social.core.repository.mastodon.FollowersRepository
 import org.mozilla.social.core.repository.mastodon.RelationshipRepository
-import org.mozilla.social.core.usecase.mastodon.account.GetLoggedInUserAccountId
 
 @OptIn(ExperimentalPagingApi::class)
 class FollowersRemoteMediator internal constructor(
@@ -21,11 +20,8 @@ class FollowersRemoteMediator internal constructor(
     private val databaseDelegate: DatabaseDelegate,
     private val followersRepository: FollowersRepository,
     private val relationshipRepository: RelationshipRepository,
-    getLoggedInUserAccountId: GetLoggedInUserAccountId,
     private val accountId: String,
 ) : RemoteMediator<Int, FollowerWrapper>() {
-
-    private val loggedInUserAccountId = getLoggedInUserAccountId()
 
     private var nextKey: String? = null
 
@@ -75,7 +71,6 @@ class FollowersRemoteMediator internal constructor(
                         Follower(
                             accountId = accountId,
                             followerAccountId = it.accountId,
-                            relationshipAccountId = loggedInUserAccountId,
                         )
                     }
                 )

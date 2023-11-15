@@ -3,12 +3,14 @@ package org.mozilla.social.core.database.dao
 import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Query
+import androidx.room.Transaction
 import org.mozilla.social.core.database.model.accountCollections.Followee
 import org.mozilla.social.core.database.model.accountCollections.FolloweeWrapper
 
 @Dao
 interface FollowingsDao : BaseDao<Followee> {
 
+    @Transaction
     @Query(
         "SELECT * FROM followings " +
         "WHERE  accountId = :accountId " +
