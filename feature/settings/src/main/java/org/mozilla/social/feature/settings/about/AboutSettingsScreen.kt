@@ -113,27 +113,25 @@ private fun Divider() {
 @Composable
 fun AboutSettingsScreenPreview() {
     PreviewTheme {
-        MoSoSurface {
-            AboutSettingsScreen(
-                aboutSettings = AboutSettings(
-                    title = "mozilla.social",
-                    administeredBy = AccountQuickViewUiState(
-                        accountId = "",
-                        displayName = "Mozilla Social",
-                        webFinger = "@social",
-                        avatarUrl = "",
-                        isFollowing = null,
-                    ),
-                    contactEmail = "support@mozilla-social.zendesk.com",
-                    extendedDescription = "We’re here to build a social platform that puts " +
-                            "people first. Mozilla.social is currently available to a closed " +
-                            "beta group as we experiment, gain input from participants, learn, " +
-                            "and improve the experience. Eventually we hope to build a safe, " +
-                            "well-organized space within Mastodon that is open to all audiences.",
-                    thumbnailUrl = "",
-                )
+        AboutSettingsScreen(
+            aboutSettings = AboutSettings(
+                title = "mozilla.social",
+                administeredBy = AccountQuickViewUiState(
+                    accountId = "",
+                    displayName = "Mozilla Social",
+                    webFinger = "@social",
+                    avatarUrl = "",
+                    isFollowing = null,
+                ),
+                contactEmail = "support@mozilla-social.zendesk.com",
+                extendedDescription = "We’re here to build a social platform that puts " +
+                        "people first. Mozilla.social is currently available to a closed " +
+                        "beta group as we experiment, gain input from participants, learn, " +
+                        "and improve the experience. Eventually we hope to build a safe, " +
+                        "well-organized space within Mastodon that is open to all audiences.",
+                thumbnailUrl = "",
             )
-        }
+        )
     }
 }
 
