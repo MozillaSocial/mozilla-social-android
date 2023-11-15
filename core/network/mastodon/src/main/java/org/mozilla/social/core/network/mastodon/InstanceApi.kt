@@ -1,6 +1,6 @@
 package org.mozilla.social.core.network.mastodon
 
-import kotlinx.serialization.Serializable
+import org.mozilla.social.core.model.NetworkExtendedDescription
 import org.mozilla.social.core.network.mastodon.model.NetworkInstance
 import org.mozilla.social.core.network.mastodon.model.NetworkInstanceRule
 import retrofit2.http.GET
@@ -17,5 +17,3 @@ interface InstanceApi {
     suspend fun getExtendedDescription(): NetworkExtendedDescription
 }
 
-@Serializable
-data class NetworkExtendedDescription(val content: String)
