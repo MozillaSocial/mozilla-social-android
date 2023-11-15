@@ -6,6 +6,7 @@ import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import kotlinx.coroutines.delay
 import org.mozilla.social.common.Rel
+import org.mozilla.social.common.getSinceIdValue
 import org.mozilla.social.core.database.model.accountCollections.Follower
 import org.mozilla.social.core.database.model.accountCollections.FollowerWrapper
 import org.mozilla.social.core.repository.mastodon.AccountRepository
@@ -80,6 +81,8 @@ class FollowersRemoteMediator internal constructor(
                 )
 
             }
+
+            nextKey = response.pagingLinks?.find { it.rel == Rel.NEXT }?.getSinceIdValue()
 
             // There seems to be some race condition for refreshes.  Subsequent pages do
             // not get loaded because once we return a mediator result, the next append
