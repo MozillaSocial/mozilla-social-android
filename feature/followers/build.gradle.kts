@@ -16,7 +16,6 @@ dependencies {
     implementation(project(":core:usecase:mastodon"))
     implementation(project(":core:navigation"))
     implementation(project(":core:analytics"))
-    implementation(project(":core:database"))
 
     implementation(libs.coil)
 

@@ -3,8 +3,6 @@ package org.mozilla.social.feature.followers
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.ExperimentalPagingApi
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
 import androidx.paging.map
 import kotlinx.coroutines.flow.map
@@ -23,8 +21,8 @@ import org.mozilla.social.core.usecase.mastodon.remotemediators.FollowingsRemote
 @OptIn(ExperimentalPagingApi::class)
 class FollowersViewModel(
     private val accountId: String,
-    private val followersRepository: FollowersRepository,
-    private val followingsRepository: FollowingsRepository,
+    followersRepository: FollowersRepository,
+    followingsRepository: FollowingsRepository,
     private val navigateTo: NavigateTo,
     private val analytics: Analytics,
 ) : ViewModel(), FollowersInteractions {
@@ -37,29 +35,19 @@ class FollowersViewModel(
         FollowingsRemoteMediator::class.java
     ) { parametersOf(accountId) }
 
-    val followers = Pager(
-        PagingConfig(
-            pageSize = 40,
-            initialLoadSize = 40,
-        ),
+    val followers = followersRepository.getFollowersPager(
+        accountId = accountId,
         remoteMediator = followersRemoteMediator,
-    ) {
-        followersRepository.getFollowersPagingSource(accountId = accountId)
-    }.flow.map { pagingData ->
+    ).map { pagingData ->
         pagingData.map {
             it.toQuickViewUiState()
         }
     }.cachedIn(viewModelScope)
 
-    val following = Pager(
-        PagingConfig(
-            pageSize = 40,
-            initialLoadSize = 40,
-        ),
-        remoteMediator = followingsRemoteMediator
-    ) {
-        followingsRepository.getFollowingsPagingSource(accountId = accountId)
-    }.flow.map { pagingData ->
+    val following = followingsRepository.getFollowingsPager(
+        accountId = accountId,
+        remoteMediator = followingsRemoteMediator,
+    ).map { pagingData ->
         pagingData.map {
             it.toQuickViewUiState()
         }
