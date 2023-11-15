@@ -7,8 +7,9 @@ import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -33,21 +34,23 @@ fun BottomBarTabScreen(
     appState: AppState,
 ) {
     appState.tabbedNavController = rememberNavController()
-    val currentDestination = appState.currentBottomBarNavigationDestination.collectAsState().value!!
+    val currentDestination by appState.currentBottomBarNavigationDestination.collectAsStateWithLifecycle()
 
     Column(
         modifier = Modifier.windowInsetsPadding(WindowInsets.systemBars.only(WindowInsetsSides.Bottom))
     ) {
-        val tabbedNavController = appState.tabbedNavControllerFlow.collectAsState().value
-        if (tabbedNavController != null) {
+        val tabbedNavController by appState.tabbedNavControllerFlow.collectAsStateWithLifecycle()
+        tabbedNavController?.let {
             BottomTabNavHost(
                 modifier = Modifier.weight(1f),
-                tabbedNavController = tabbedNavController,
+                tabbedNavController = it,
             )
         }
-        BottomBar(
-            currentDestination = currentDestination,
-        )
+        currentDestination?.let {
+            BottomBar(
+                currentDestination = it,
+            )
+        }
     }
 }
 
@@ -63,7 +66,7 @@ private fun BottomBar(
         MoSoDivider()
         MoSoBottomNavigationBar(
             currentDestination = currentDestination,
-            bottomBarTabs = BottomBarTabs.values().map { it.bottomBarTab },
+            bottomBarTabs = BottomBarTabs.entries.map { it.bottomBarTab },
             navigateTo = {
                 when (it) {
                     is Destination.BottomBar -> {

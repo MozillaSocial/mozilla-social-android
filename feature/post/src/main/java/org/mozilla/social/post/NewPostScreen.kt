@@ -37,7 +37,7 @@ import androidx.compose.material3.windowsizeclass.WindowHeightSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -54,6 +54,7 @@ import androidx.compose.ui.text.input.TransformedText
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
@@ -98,25 +99,37 @@ internal fun NewPostScreen(
     replyStatusId: String?,
     viewModel: NewPostViewModel = koinViewModel(parameters = { parametersOf(replyStatusId) })
 ) {
+    val statusText by viewModel.statusText.collectAsStateWithLifecycle()
+    val sendButtonEnabled by viewModel.sendButtonEnabled.collectAsStateWithLifecycle()
+    val mediaStates by viewModel.mediaStates.collectAsStateWithLifecycle()
+    val isSendingPost by viewModel.isSendingPost.collectAsStateWithLifecycle()
+    val visibility by viewModel.visibility.collectAsStateWithLifecycle()
+    val poll by viewModel.poll.collectAsStateWithLifecycle()
+    val contextWarningText by viewModel.contentWarningText.collectAsStateWithLifecycle()
+    val accounts by viewModel.accountList.collectAsStateWithLifecycle()
+    val hashTags by viewModel.hashtagList.collectAsStateWithLifecycle()
+    val inReplyToAccountName by viewModel.inReplyToAccountName.collectAsStateWithLifecycle()
+    val userHeaderState by viewModel.userHeaderState.collectAsStateWithLifecycle(initialValue = null)
+    val bottomBarState by viewModel.bottomBarState.collectAsStateWithLifecycle()
     NewPostScreen(
-        statusText = viewModel.statusText.collectAsState().value,
+        statusText = statusText,
         statusInteractions = viewModel.statusInteractions,
         onPostClicked = viewModel::onPostClicked,
-        sendButtonEnabled = viewModel.sendButtonEnabled.collectAsState().value,
-        imageStates = viewModel.mediaStates.collectAsState().value,
+        sendButtonEnabled = sendButtonEnabled,
+        imageStates = mediaStates,
         mediaInteractions = viewModel.mediaInteractions,
-        isSendingPost = viewModel.isSendingPost.collectAsState().value,
-        visibility = viewModel.visibility.collectAsState().value,
+        isSendingPost = isSendingPost,
+        visibility = visibility,
         onVisibilitySelected = viewModel::onVisibilitySelected,
-        poll = viewModel.poll.collectAsState().value,
+        poll = poll,
         pollInteractions = viewModel.pollInteractions,
-        contentWarningText = viewModel.contentWarningText.collectAsState().value,
+        contentWarningText = contextWarningText,
         contentWarningInteractions = viewModel.contentWarningInteractions,
-        accounts = viewModel.accountList.collectAsState().value,
-        hashTags = viewModel.hashtagList.collectAsState().value,
-        inReplyToAccountName = viewModel.inReplyToAccountName.collectAsState().value,
-        userHeaderState = viewModel.userHeaderState.collectAsState(initial = null).value,
-        bottomBarState = viewModel.bottomBarState.collectAsState().value,
+        accounts = accounts,
+        hashTags = hashTags,
+        inReplyToAccountName = inReplyToAccountName,
+        userHeaderState = userHeaderState,
+        bottomBarState = bottomBarState,
     )
 
     LaunchedEffect(Unit) {
