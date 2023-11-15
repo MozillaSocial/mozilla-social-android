@@ -7,30 +7,30 @@ import org.mozilla.social.core.database.model.DatabaseAccount
 import org.mozilla.social.core.database.model.DatabaseRelationship
 
 @Entity(
-    tableName = "followers",
+    tableName = "followings",
     primaryKeys = [
         "accountId",
-        "followerAccountId",
+        "followingAccountId",
     ]
 )
-data class Followers(
+data class Followee(
     val accountId: String,
-    val followerAccountId: String,
-    val usersAccountId: String,
+    val followingAccountId: String,
+    val relationshipAccountId: String,
 )
 
-data class FollowerWrapper(
+data class FolloweeWrapper(
     @Embedded
-    val followers: Followers,
+    val followee: Followee,
 
     @Relation(
-        parentColumn = "followerAccountId",
+        parentColumn = "followingAccountId",
         entityColumn = "accountId",
     )
-    val followerAccount: DatabaseAccount,
+    val followingAccount: DatabaseAccount,
 
     @Relation(
-        parentColumn = "usersAccountId",
+        parentColumn = "relationshipAccountId",
         entityColumn = "accountId",
     )
     val relationship: DatabaseRelationship,

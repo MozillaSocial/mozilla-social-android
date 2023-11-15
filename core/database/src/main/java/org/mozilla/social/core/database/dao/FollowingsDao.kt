@@ -3,11 +3,11 @@ package org.mozilla.social.core.database.dao
 import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Query
-import org.mozilla.social.core.database.model.accountCollections.Followings
-import org.mozilla.social.core.database.model.accountCollections.FollowingsWrapper
+import org.mozilla.social.core.database.model.accountCollections.Followee
+import org.mozilla.social.core.database.model.accountCollections.FolloweeWrapper
 
 @Dao
-interface FollowingsDao : BaseDao<Followings> {
+interface FollowingsDao : BaseDao<Followee> {
 
     @Query(
         "SELECT * FROM followings " +
@@ -16,5 +16,11 @@ interface FollowingsDao : BaseDao<Followings> {
     )
     fun followingsPagingSource(
         accountId: String,
-    ): PagingSource<Int, FollowingsWrapper>
+    ): PagingSource<Int, FolloweeWrapper>
+
+    @Query(
+        "DELETE FROM followings " +
+        "WHERE accountId = :accountId"
+    )
+    suspend fun deleteFollowings(accountId: String)
 }

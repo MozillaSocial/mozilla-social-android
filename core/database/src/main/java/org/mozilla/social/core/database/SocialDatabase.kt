@@ -32,8 +32,8 @@ import org.mozilla.social.core.database.model.DatabaseHashTag
 import org.mozilla.social.core.database.model.DatabasePoll
 import org.mozilla.social.core.database.model.DatabaseRelationship
 import org.mozilla.social.core.database.model.DatabaseStatus
-import org.mozilla.social.core.database.model.accountCollections.Followers
-import org.mozilla.social.core.database.model.accountCollections.Followings
+import org.mozilla.social.core.database.model.accountCollections.Follower
+import org.mozilla.social.core.database.model.accountCollections.Followee
 import org.mozilla.social.core.database.model.statusCollections.AccountTimelineStatus
 import org.mozilla.social.core.database.model.statusCollections.FederatedTimelineStatus
 import org.mozilla.social.core.database.model.statusCollections.HashTagTimelineStatus
@@ -53,8 +53,8 @@ import org.mozilla.social.core.database.model.statusCollections.LocalTimelineSta
         DatabaseRelationship::class,
         LocalTimelineStatus::class,
         FederatedTimelineStatus::class,
-        Followers::class,
-        Followings::class,
+        Follower::class,
+        Followee::class,
     ],
     version = 10,
     autoMigrations = [
