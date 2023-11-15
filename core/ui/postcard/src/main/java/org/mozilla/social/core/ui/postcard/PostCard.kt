@@ -1,6 +1,8 @@
 package org.mozilla.social.core.ui.postcard
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
@@ -16,22 +18,28 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredWidth
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
@@ -40,16 +48,19 @@ import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.common.utils.timeSinceNow
 import org.mozilla.social.core.designsystem.component.MoSoCircularProgressIndicator
 import org.mozilla.social.core.designsystem.component.MoSoDropdownMenu
-import org.mozilla.social.core.designsystem.component.MoSoSurface
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
+import org.mozilla.social.core.designsystem.theme.MoSoRadius
+import org.mozilla.social.core.designsystem.theme.MoSoSpacing
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.designsystem.utils.NoRipple
 import org.mozilla.social.core.ui.common.DropDownItem
-import org.mozilla.social.core.ui.common.R
 import org.mozilla.social.core.ui.common.TransparentNoTouchOverlay
 import org.mozilla.social.core.ui.common.getMaxWidth
 import org.mozilla.social.core.ui.common.media.MediaDisplay
 import org.mozilla.social.core.ui.common.shareUrl
+import org.mozilla.social.core.ui.common.utils.PreviewTheme
+import org.mozilla.social.core.ui.htmlcontent.HtmlContent
+import org.mozilla.social.core.ui.poll.Poll
 
 /**
  * @param threadId if viewing this post from a thread, pass the threadId in to prevent
@@ -82,7 +93,7 @@ fun PostCard(
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                 }
-                MainPost(post.mainPostCardUiState, postCardInteractions)
+                Post(post.mainPostCardUiState, postCardInteractions)
             }
 
             AnimatedVisibility(
@@ -125,7 +136,7 @@ private fun TopRowMetaData(
 }
 
 @Composable
-private fun MainPost(
+private fun Post(
     post: MainPostCardUiState,
     postCardInteractions: PostCardInteractions,
 ) {
@@ -137,24 +148,11 @@ private fun MainPost(
                 post = post,
                 postCardInteractions = postCardInteractions,
             )
-            org.mozilla.social.core.ui.htmlcontent.HtmlContent(
-                mentions = post.mentions,
-                htmlText = post.statusTextHtml,
-                htmlContentInteractions = postCardInteractions,
+
+            MainContent(
+                post = post,
+                postCardInteractions = postCardInteractions
             )
-            Spacer(modifier = Modifier.padding(top = 8.dp))
-
-            MediaDisplay(attachments = post.mediaAttachments)
-
-            post.pollUiState?.let { org.mozilla.social.core.ui.poll.Poll(it, postCardInteractions) }
-
-            // only display preview card if there are no other media attachments
-            if (post.previewCard != null && post.mediaAttachments.isEmpty()) {
-                PreviewCard(
-                    previewCard = post.previewCard,
-                    postCardInteractions = postCardInteractions,
-                )
-            }
 
             BottomRow(
                 modifier = Modifier,
@@ -210,6 +208,116 @@ private fun MetaData(
             post = post,
             postCardInteractions = postCardInteractions,
         )
+    }
+}
+
+@Composable
+private fun MainContent(
+    post: MainPostCardUiState,
+    postCardInteractions: PostCardInteractions,
+) {
+    ContentWarning(
+        contentWarningText = post.contentWarning
+    ) {
+        Column {
+            HtmlContent(
+                mentions = post.mentions,
+                htmlText = post.statusTextHtml,
+                htmlContentInteractions = postCardInteractions,
+            )
+            Spacer(modifier = Modifier.padding(top = 8.dp))
+
+            MediaDisplay(attachments = post.mediaAttachments)
+
+            post.pollUiState?.let { Poll(it, postCardInteractions) }
+
+            // only display preview card if there are no other media attachments
+            if (post.previewCard != null && post.mediaAttachments.isEmpty()) {
+                PreviewCard(
+                    previewCard = post.previewCard,
+                    postCardInteractions = postCardInteractions,
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun ContentWarning(
+    contentWarningText: String,
+    content: @Composable () -> Unit,
+) {
+    Column {
+        val hasContentWarning by remember(contentWarningText) {
+            mutableStateOf(contentWarningText.isNotBlank())
+        }
+        var isShowing by remember(hasContentWarning) {
+            mutableStateOf(!hasContentWarning)
+        }
+
+        if (hasContentWarning) {
+            Column(
+                modifier = Modifier
+                    .clickable { isShowing = !isShowing }
+            ) {
+                Row(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(MoSoRadius.sm))
+                        .background(MoSoTheme.colors.layerActionWarning)
+                        .padding(horizontal = MoSoSpacing.sm, vertical = MoSoSpacing.xs)
+                ) {
+                    Icon(
+                        modifier = Modifier
+                            .size(14.dp)
+                            .align(Alignment.CenterVertically),
+                        painter = MoSoIcons.warning(),
+                        contentDescription = "",
+                    )
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text(
+                        modifier = Modifier
+                            .align(Alignment.CenterVertically),
+                        text = contentWarningText,
+                        style = MoSoTheme.typography.labelSmall,
+                    )
+                }
+                Spacer(modifier = Modifier.height(8.dp))
+                Row {
+                    Text(
+                        modifier = Modifier
+                            .align(Alignment.CenterVertically)
+                            .sizeIn(minWidth = 80.dp),
+                        text = if (isShowing) {
+                            stringResource(id = R.string.hide_post)
+                        } else {
+                            stringResource(id = R.string.show_post)
+                        },
+                        style = MoSoTheme.typography.bodyMedium,
+                        textDecoration = TextDecoration.Underline,
+                    )
+
+                    val rotatedDegrees = 90f
+                    val rotation: Float by animateFloatAsState(
+                        targetValue = if (isShowing) rotatedDegrees else 0f,
+                        animationSpec = tween(),
+                        label = ""
+                    )
+                    Icon(
+                        modifier = Modifier
+                            .rotate(rotation)
+                            .align(Alignment.CenterVertically),
+                        painter = MoSoIcons.caretRight(),
+                        contentDescription = null,
+                    )
+                }
+                Spacer(modifier = Modifier.height(8.dp))
+            }
+
+        }
+
+        AnimatedVisibility(visible = isShowing) {
+            content()
+        }
     }
 }
 
@@ -361,39 +469,78 @@ private fun BottomIconButton(
 @Preview
 @Composable
 private fun PostCardPreview() {
-    MoSoTheme {
-        MoSoSurface {
-            PostCard(
-                post = PostCardUiState(
-                    statusId = "",
-                    topRowMetaDataUiState = TopRowMetaDataUiState(
-                        TopRowIconType.REPLY,
-                        StringFactory.literal("in reply to Other person")
-                    ),
-                    mainPostCardUiState = MainPostCardUiState(
-                        url = "",
-                        pollUiState = null,
-                        username = "Cool guy",
-                        statusTextHtml = "<p><span class=\"h-card\"><a href=\"https://mozilla.social/@obez\" class=\"u-url mention\" rel=\"nofollow noopener noreferrer\" target=\"_blank\">@<span>obez</span></a></span> This is a text status.  Here is the text and that is all I have to say about that.</p>",
-                        mediaAttachments = emptyList(),
-                        profilePictureUrl = "",
-                        postTimeSince = Instant.fromEpochMilliseconds(1695308821000L).timeSinceNow(),
-                        accountName = StringFactory.literal("coolguy"),
-                        replyCount = 4000L,
-                        boostCount = 30000L,
-                        favoriteCount = 7L,
-                        statusId = "",
-                        userBoosted = false,
-                        isFavorited = false,
-                        accountId = "",
-                        mentions = emptyList(),
-                        previewCard = null,
-                        isUsersPost = false,
-                        isBeingDeleted = false,
-                    ),
+    PreviewTheme {
+        PostCard(
+            post = PostCardUiState(
+                statusId = "",
+                topRowMetaDataUiState = TopRowMetaDataUiState(
+                    TopRowIconType.REPLY,
+                    StringFactory.literal("in reply to Other person")
                 ),
-                postCardInteractions = object : PostCardInteractions {},
-            )
-        }
+                mainPostCardUiState = MainPostCardUiState(
+                    url = "",
+                    pollUiState = null,
+                    username = "Cool guy",
+                    statusTextHtml = "<p><span class=\"h-card\"><a href=\"https://mozilla.social/@obez\" class=\"u-url mention\" rel=\"nofollow noopener noreferrer\" target=\"_blank\">@<span>obez</span></a></span> This is a text status.  Here is the text and that is all I have to say about that.</p>",
+                    mediaAttachments = emptyList(),
+                    profilePictureUrl = "",
+                    postTimeSince = Instant.fromEpochMilliseconds(1695308821000L).timeSinceNow(),
+                    accountName = StringFactory.literal("coolguy"),
+                    replyCount = 4000L,
+                    boostCount = 30000L,
+                    favoriteCount = 7L,
+                    statusId = "",
+                    userBoosted = false,
+                    isFavorited = false,
+                    accountId = "",
+                    mentions = emptyList(),
+                    previewCard = null,
+                    isUsersPost = false,
+                    isBeingDeleted = false,
+                    contentWarning = "",
+                ),
+            ),
+            postCardInteractions = object : PostCardInteractions {},
+        )
+    }
+}
+
+@Suppress("MagicNumber", "MaxLineLength")
+@Preview
+@Composable
+private fun PostCardWithContentWarningPreview() {
+    PreviewTheme {
+        PostCard(
+            post = PostCardUiState(
+                statusId = "",
+                topRowMetaDataUiState = TopRowMetaDataUiState(
+                    TopRowIconType.REPLY,
+                    StringFactory.literal("in reply to Other person")
+                ),
+                mainPostCardUiState = MainPostCardUiState(
+                    url = "",
+                    pollUiState = null,
+                    username = "Cool guy",
+                    statusTextHtml = "<p><span class=\"h-card\"><a href=\"https://mozilla.social/@obez\" class=\"u-url mention\" rel=\"nofollow noopener noreferrer\" target=\"_blank\">@<span>obez</span></a></span> This is a text status.  Here is the text and that is all I have to say about that.</p>",
+                    mediaAttachments = emptyList(),
+                    profilePictureUrl = "",
+                    postTimeSince = Instant.fromEpochMilliseconds(1695308821000L).timeSinceNow(),
+                    accountName = StringFactory.literal("coolguy"),
+                    replyCount = 4000L,
+                    boostCount = 30000L,
+                    favoriteCount = 7L,
+                    statusId = "",
+                    userBoosted = false,
+                    isFavorited = false,
+                    accountId = "",
+                    mentions = emptyList(),
+                    previewCard = null,
+                    isUsersPost = false,
+                    isBeingDeleted = false,
+                    contentWarning = "Micky mouse spoilers!",
+                ),
+            ),
+            postCardInteractions = object : PostCardInteractions {},
+        )
     }
 }

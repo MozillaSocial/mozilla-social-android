@@ -64,7 +64,7 @@ fun VisibilityDropDownButton(
             }
             Spacer(modifier = Modifier.padding(start = 8.dp))
             Icon(
-                MoSoIcons.caret_down(),
+                MoSoIcons.caretDown(),
                 "",
                 Modifier.size(MoSoIcons.Sizes.small),
                 tint = MoSoTheme.colors.iconPrimary,

@@ -42,7 +42,7 @@ object MoSoIcons {
     fun robot() = painterResource(id = R.drawable.robot)
 
     @Composable
-    fun caret_down() = painterResource(id = R.drawable.caret_down)
+    fun caretDown() = painterResource(id = R.drawable.caret_down)
 
     @Composable
     fun chartBar() = painterResource(id = R.drawable.chart_bar)
@@ -130,6 +130,9 @@ object MoSoIcons {
 
     @Composable
     fun lock() = painterResource(id = R.drawable.lock)
+
+    @Composable
+    fun caretRight() = painterResource(id = R.drawable.caret_right)
 
     // Material- avoid using these, and instead use the drawable based resources
     @Composable
