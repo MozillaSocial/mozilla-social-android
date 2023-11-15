@@ -2,9 +2,10 @@ package org.mozilla.social.feature.settings.privacy
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.koin.androidx.compose.koinViewModel
 import org.mozilla.social.core.designsystem.component.MoSoSurface
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
@@ -17,10 +18,10 @@ import org.mozilla.social.feature.settings.ui.SettingsSwitch
 fun PrivacySettingsScreen(
     viewModel: PrivacySettingsViewModel = koinViewModel()
 ) {
-    val isAnalyticsToggled = viewModel.allowAnalytics.collectAsState()
+    val isAnalyticsToggled by viewModel.allowAnalytics.collectAsStateWithLifecycle()
 
     PrivacySettingsScreen(
-        isAnalyticsToggledOn = isAnalyticsToggled.value,
+        isAnalyticsToggledOn = isAnalyticsToggled,
         toggleAnalyticsSwitch = viewModel::toggleAllowAnalytics,
     )
 }

@@ -11,11 +11,12 @@ import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight.Companion.W600
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 import org.mozilla.social.core.designsystem.component.MoSoButton
@@ -43,12 +44,15 @@ internal fun ReportScreen3(
         )
     })
 ) {
+    val unfollowVisible by viewModel.unfollowVisible.collectAsStateWithLifecycle()
+    val muteVisible by viewModel.muteVisible.collectAsStateWithLifecycle()
+    val blockVisible by viewModel.blockVisible.collectAsStateWithLifecycle()
     ReportScreen3(
         reportAccountHandle = reportAccountHandle,
         didUserReportAccount = didUserReportAccount,
-        unfollowVisible = viewModel.unfollowVisible.collectAsState().value,
-        muteVisible = viewModel.muteVisible.collectAsState().value,
-        blockVisible = viewModel.blockVisible.collectAsState().value,
+        unfollowVisible = unfollowVisible,
+        muteVisible = muteVisible,
+        blockVisible = blockVisible,
         reportInteractions = viewModel,
     )
 }
