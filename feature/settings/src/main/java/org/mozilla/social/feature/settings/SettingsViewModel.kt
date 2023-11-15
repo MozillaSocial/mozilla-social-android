@@ -37,6 +37,10 @@ class SettingsViewModel(
         navigateTo(SettingsNavigationDestination.AccountSettings)
     }
 
+    fun onContentPreferencesClicked() {
+        navigateTo(SettingsNavigationDestination.ContentPreferencesSettings)
+    }
+
     fun onPrivacyClicked() {
         navigateTo(SettingsNavigationDestination.PrivacySettings)
     }
