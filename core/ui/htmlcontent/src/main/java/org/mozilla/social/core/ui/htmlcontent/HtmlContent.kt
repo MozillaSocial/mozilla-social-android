@@ -25,7 +25,7 @@ import kotlin.math.min
 @Composable
 fun HtmlContent(
     modifier: Modifier = Modifier,
-    mentions: List<Mention>,
+    mentions: List<Mention> = emptyList(),
     htmlText: String,
     htmlContentInteractions: HtmlContentInteractions,
     maximumLineCount: Int = Int.MAX_VALUE,

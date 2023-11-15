@@ -5,7 +5,7 @@ import org.mozilla.social.core.database.model.accountCollections.FollowerWrapper
 import org.mozilla.social.core.model.Account
 
 fun Account.toQuickViewUiState(
-    isFollowing: Boolean,
+    isFollowing: Boolean? = null,
 ): AccountQuickViewUiState = AccountQuickViewUiState(
     accountId = accountId,
     displayName = displayName,
