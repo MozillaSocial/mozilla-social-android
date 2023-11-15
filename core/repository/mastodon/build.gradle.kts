@@ -29,4 +29,5 @@ dependencies {
 
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room)
+    implementation(libs.androidx.room.paging)
 }

@@ -14,4 +14,7 @@ val databaseModule = module {
     single { get<SocialDatabase>().pollDao() }
     single { get<SocialDatabase>().statusDao() }
     single { get<SocialDatabase>().accountsDao() }
+    single { get<SocialDatabase>().followersDao() }
+    single { get<SocialDatabase>().followingsDao() }
+    single { get<SocialDatabase>().relationshipsDao() }
 }

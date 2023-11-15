@@ -14,6 +14,7 @@ import org.mozilla.social.core.repository.mastodon.model.status.toExternalModel
 import org.mozilla.social.core.model.Account
 import org.mozilla.social.core.model.Relationship
 import org.mozilla.social.core.model.Status
+import org.mozilla.social.core.repository.mastodon.model.status.toDatabaseModel
 import retrofit2.HttpException
 import java.io.File
 
@@ -46,7 +47,7 @@ class AccountRepository internal constructor(
         }
         return FollowersPagingWrapper(
             accounts = response.body()?.map { it.toExternalModel() } ?: emptyList(),
-            link = response.headers().get("link"),
+            pagingLinks = response.headers().get("link")?.parseMastodonLinkHeader(),
         )
     }
 
@@ -67,7 +68,7 @@ class AccountRepository internal constructor(
         }
         return FollowersPagingWrapper(
             accounts = response.body()?.map { it.toExternalModel() } ?: emptyList(),
-            link = response.headers().get("link"),
+            pagingLinks = response.headers().get("link")?.parseMastodonLinkHeader(),
         )
     }
 
@@ -164,4 +165,7 @@ class AccountRepository internal constructor(
         fieldLabel3 = fields?.getOrNull(3)?.first?.toRequestBody(MultipartBody.FORM),
         fieldContent3 = fields?.getOrNull(3)?.second?.toRequestBody(MultipartBody.FORM),
     ).toExternalModel()
+
+    fun insertAll(accounts: List<Account>) =
+        dao.insertAll(accounts.map { it.toDatabaseModel() })
 }

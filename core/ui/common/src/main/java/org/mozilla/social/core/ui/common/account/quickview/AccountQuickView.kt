@@ -1,5 +1,6 @@
 package org.mozilla.social.core.ui.common.account.quickview
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -9,6 +10,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -19,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.designsystem.theme.defaultTypography
+import org.mozilla.social.core.ui.common.utils.PreviewTheme
 
 @Composable
 fun AccountQuickView(
@@ -41,7 +44,8 @@ fun AccountQuickView(
                     modifier = Modifier
                         .height(50.dp)
                         .width(50.dp)
-                        .clip(RoundedCornerShape(4.dp)),
+                        .clip(CircleShape)
+                        .background(MoSoTheme.colors.layer2),
                     model = uiState.avatarUrl,
                     contentDescription = null,
                 )
@@ -66,13 +70,14 @@ fun AccountQuickView(
 @Preview
 @Composable
 private fun AccountQuickViewPreview() {
-    MoSoTheme {
+    PreviewTheme {
         AccountQuickView(
             uiState = AccountQuickViewUiState(
                 accountId = "",
                 displayName = "name",
                 webFinger = "webfinger",
-                avatarUrl = "url"
+                avatarUrl = "url",
+                isFollowing = false,
             ),
             onClick = {}
         )

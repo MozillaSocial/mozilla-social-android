@@ -26,3 +26,11 @@ enum class Rel {
     PREV,
     NEXT,
 }
+
+fun MastodonPagingLink.getSinceIdValue(): String =
+    link
+        .substringAfter("since_id=")
+        .split(">")
+        .first()
+        .split("&")
+        .first()

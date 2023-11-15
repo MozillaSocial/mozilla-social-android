@@ -31,7 +31,7 @@ fun MoSoTabRow(
         }
     },
     divider: @Composable () -> Unit = @Composable {
-        Divider()
+        MoSoDivider()
     },
     tabs: @Composable () -> Unit
 ) {

@@ -257,7 +257,7 @@ private fun MainContent(
                 modifier = Modifier.padding(top = 20.dp),
                 selectedTabIndex = selectedTimelineType.ordinal,
             ) {
-                TimelineType.values().forEach { timelineType ->
+                TimelineType.entries.forEach { timelineType ->
                     MoSoTab(
                         modifier = Modifier
                             .height(40.dp),

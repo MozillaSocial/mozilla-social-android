@@ -15,6 +15,8 @@ import org.mozilla.social.core.usecase.mastodon.account.UpdateMyAccount
 import org.mozilla.social.core.usecase.mastodon.auth.IsSignedInFlow
 import org.mozilla.social.core.usecase.mastodon.auth.Login
 import org.mozilla.social.core.usecase.mastodon.auth.Logout
+import org.mozilla.social.core.usecase.mastodon.remotemediators.FollowersRemoteMediator
+import org.mozilla.social.core.usecase.mastodon.remotemediators.FollowingsRemoteMediator
 import org.mozilla.social.core.usecase.mastodon.remotemediators.HashTagTimelineRemoteMediator
 import org.mozilla.social.core.usecase.mastodon.report.Report
 import org.mozilla.social.core.usecase.mastodon.status.BoostStatus
@@ -194,6 +196,26 @@ val mastodonUsecaseModule = module {
             saveStatusToDatabase = get(),
             accountId = it[0],
             timelineType = it[1],
+        )
+    }
+    factory {
+        FollowersRemoteMediator(
+            accountRepository = get(),
+            databaseDelegate = get(),
+            followersRepository = get(),
+            relationshipRepository = get(),
+            getLoggedInUserAccountId = get(),
+            accountId = it[0]
+        )
+    }
+    factory {
+        FollowingsRemoteMediator(
+            accountRepository = get(),
+            databaseDelegate = get(),
+            followingsRepository = get(),
+            relationshipRepository = get(),
+            getLoggedInUserAccountId = get(),
+            accountId = it[0]
         )
     }
 }

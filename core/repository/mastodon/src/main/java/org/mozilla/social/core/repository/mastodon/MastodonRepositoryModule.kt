@@ -17,5 +17,8 @@ fun mastodonRepositoryModule(isDebug: Boolean) = module {
     single { ReportRepository(get()) }
     single { DatabaseDelegate(get()) }
     single { PollRepository(get()) }
+    singleOf(::FollowersRepository)
+    singleOf(::FollowingsRepository)
+    singleOf(::RelationshipRepository)
     includes(mastodonNetworkModule(isDebug))
 }
