@@ -21,7 +21,7 @@ fun mastodonNetworkModule(isDebug: Boolean) = module {
             .connectTimeout(OKHTTP_TIMEOUT, TimeUnit.SECONDS)
             .addNetworkInterceptor(HttpLoggingInterceptor().apply {
                 level = if (isDebug) {
-                    HttpLoggingInterceptor.Level.BASIC
+                    HttpLoggingInterceptor.Level.BODY
                 } else {
                     HttpLoggingInterceptor.Level.NONE
                 }
