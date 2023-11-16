@@ -27,9 +27,23 @@ enum class Rel {
     NEXT,
 }
 
-fun MastodonPagingLink.getSinceIdValue(): String =
+fun List<MastodonPagingLink>.getSinceIdValue(): String? =
+    find { it.rel == Rel.PREV }?.getSinceIdValue()
+
+fun List<MastodonPagingLink>.getMaxIdValue(): String? =
+    find { it.rel == Rel.NEXT }?.getMaxIdValue()
+
+private fun MastodonPagingLink.getSinceIdValue(): String =
     link
         .substringAfter("since_id=")
+        .split(">")
+        .first()
+        .split("&")
+        .first()
+
+private fun MastodonPagingLink.getMaxIdValue(): String =
+    link
+        .substringAfter("max_id=")
         .split(">")
         .first()
         .split("&")
