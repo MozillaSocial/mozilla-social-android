@@ -7,16 +7,16 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import org.mozilla.social.core.designsystem.component.LargeTextBody
+import org.mozilla.social.core.designsystem.component.MediumTextBody
 import org.mozilla.social.core.designsystem.theme.MoSoSpacing
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
-import org.mozilla.social.core.designsystem.theme.defaultTypography
 import org.mozilla.social.core.ui.common.utils.PreviewTheme
 
 @Composable
@@ -31,8 +31,8 @@ fun AccountQuickView(
         Spacer(modifier = Modifier.width(MoSoSpacing.sm))
 
         Column {
-            DisplayName(displayName = uiState.displayName)
-            WebFinger(webFinger = uiState.webFinger)
+            LargeTextBody(text = uiState.displayName)
+            MediumTextBody(text = "@${uiState.webFinger}")
         }
 
         Spacer(modifier = Modifier.weight(1f))
@@ -42,23 +42,6 @@ fun AccountQuickView(
 }
 
 val CIRCLE_AVATAR_SIZE = 50.dp
-
-@Composable
-private fun DisplayName(modifier: Modifier = Modifier, displayName: String) {
-    Text(
-        modifier = modifier,
-        text = displayName,
-        style = defaultTypography.bodyLarge
-    )
-}
-
-@Composable
-private fun WebFinger(webFinger: String) {
-    Text(
-        text = "@${webFinger}",
-        style = defaultTypography.bodyMedium
-    )
-}
 
 @Composable
 private fun CircleAvatar(avatarUrl: String, modifier: Modifier = Modifier) {
