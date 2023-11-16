@@ -27,6 +27,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -249,7 +250,7 @@ private fun ContentWarning(
 ) {
     Column {
         val hasContentWarning by remember(contentWarningText) {
-            mutableStateOf(contentWarningText.isNotBlank())
+            derivedStateOf { contentWarningText.isNotBlank() }
         }
         var isShowing by remember(hasContentWarning) {
             mutableStateOf(!hasContentWarning)
