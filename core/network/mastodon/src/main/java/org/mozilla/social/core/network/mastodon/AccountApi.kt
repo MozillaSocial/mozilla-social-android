@@ -110,7 +110,7 @@ interface AccountApi {
 
     @GET("/api/v1/accounts/relationships")
     suspend fun getRelationships(
-        @Query("id") ids: Array<String>
+        @Query("id[]") ids: Array<String>
     ): List<NetworkRelationship>
 
     @Multipart

@@ -13,6 +13,7 @@ import org.mozilla.social.core.repository.mastodon.AccountRepository
 import org.mozilla.social.core.repository.mastodon.DatabaseDelegate
 import org.mozilla.social.core.repository.mastodon.FollowingsRepository
 import org.mozilla.social.core.repository.mastodon.RelationshipRepository
+import timber.log.Timber
 
 @OptIn(ExperimentalPagingApi::class)
 class FollowingsRemoteMediator internal constructor(
@@ -99,6 +100,7 @@ class FollowingsRemoteMediator internal constructor(
                 }
             )
         } catch (e: Exception) {
+            Timber.e(e)
             MediatorResult.Error(e)
         }
     }
