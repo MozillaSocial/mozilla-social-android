@@ -16,7 +16,6 @@ val settingsModule = module {
     viewModel { PrivacySettingsViewModel(get()) }
     viewModel { AboutSettingsViewModel(get()) }
     viewModel { ContentPreferencesSettingsViewModel(get()) }
-    viewModel { BlockedUsersViewModel(get()) }
     viewModelOf(::BlockedUsersViewModel)
     viewModelOf(::MutedUsersSettingsViewModel)
 }
