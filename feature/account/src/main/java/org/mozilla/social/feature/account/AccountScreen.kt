@@ -32,7 +32,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -48,6 +47,7 @@ import androidx.compose.ui.text.font.FontWeight.Companion.W700
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.PagingData
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -76,8 +76,6 @@ import org.mozilla.social.core.navigation.navigationModule
 import org.mozilla.social.core.ui.common.DropDownItem
 import org.mozilla.social.core.ui.common.appbar.MoSoCloseableTopAppBar
 import org.mozilla.social.core.ui.common.error.GenericError
-import org.mozilla.social.core.ui.htmlcontent.HtmlContent
-import org.mozilla.social.core.ui.htmlcontent.HtmlContentInteractions
 import org.mozilla.social.core.ui.postcard.PostCardInteractions
 import org.mozilla.social.core.ui.postcard.PostCardList
 import org.mozilla.social.core.ui.postcard.PostCardUiState
@@ -88,8 +86,9 @@ internal fun AccountScreen(
     accountId: String?,
     viewModel: AccountViewModel = koinViewModel(parameters = { parametersOf(accountId) }),
 ) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     AccountScreen(
-        resource = viewModel.uiState.collectAsState().value,
+        uiState = uiState,
         closeButtonVisible = viewModel.shouldShowCloseButton,
         isUsersProfile = viewModel.isOwnProfile,
         feed = viewModel.feed,
@@ -107,7 +106,7 @@ internal fun AccountScreen(
 
 @Composable
 private fun AccountScreen(
-    resource: Resource<AccountUiState>,
+    uiState: Resource<AccountUiState>,
     closeButtonVisible: Boolean,
     isUsersProfile: Boolean,
     feed: Flow<PagingData<PostCardUiState>>,
@@ -122,7 +121,7 @@ private fun AccountScreen(
             modifier = Modifier
                 .windowInsetsPadding(windowInsets)
         ) {
-            when (resource) {
+            when (uiState) {
                 is Resource.Loading -> {
                     MoSoCloseableTopAppBar(showCloseButton = closeButtonVisible)
                     Box(
@@ -138,11 +137,11 @@ private fun AccountScreen(
 
                 is Resource.Loaded<AccountUiState> -> {
                     MoSoCloseableTopAppBar(
-                        title = resource.data.displayName,
+                        title = uiState.data.displayName,
                         showCloseButton = closeButtonVisible,
                         actions = {
                             OverflowMenu(
-                                account = resource.data,
+                                account = uiState.data,
                                 isUsersProfile = isUsersProfile,
                                 overflowInteractions = accountInteractions,
                                 navigateToSettings = accountInteractions::onSettingsClicked,
@@ -152,7 +151,7 @@ private fun AccountScreen(
                     )
 
                     MainContent(
-                        account = resource.data,
+                        account = uiState.data,
                         isUsersProfile = isUsersProfile,
                         feed = feed,
                         htmlContentInteractions = htmlContentInteractions,
@@ -193,7 +192,7 @@ private fun MainContent(
     postCardInteractions: PostCardInteractions,
     accountInteractions: AccountInteractions,
 ) {
-    val selectedTimelineType = timelineTypeFlow.collectAsState().value
+    val selectedTimelineType by timelineTypeFlow.collectAsStateWithLifecycle()
     val context = LocalContext.current
 
     Column(
@@ -570,7 +569,7 @@ fun AccountScreenPreview() {
     }) {
         MoSoTheme {
             AccountScreen(
-                resource = Resource.Loaded(
+                uiState = Resource.Loaded(
                     data = AccountUiState(
                         accountId = "",
                         username = "Coolguy",

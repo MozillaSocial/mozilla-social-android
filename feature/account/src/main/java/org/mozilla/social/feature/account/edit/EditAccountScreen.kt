@@ -23,7 +23,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -32,6 +32,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight.Companion.W700
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.KoinApplication
 import org.mozilla.social.common.Resource
@@ -55,10 +56,12 @@ import org.mozilla.social.feature.account.R
 internal fun EditAccountScreen(
     viewModel: EditAccountViewModel = koinViewModel(),
 ) {
+    val uiState by viewModel.editAccountUiState.collectAsStateWithLifecycle()
+    val isUploading by viewModel.isUploading.collectAsStateWithLifecycle()
     EditAccountScreen(
         editAccountInteractions = viewModel,
-        uiState = viewModel.editAccountUiState.collectAsState().value,
-        isUploading = viewModel.isUploading.collectAsState().value,
+        uiState = uiState,
+        isUploading = isUploading,
     )
 }
 

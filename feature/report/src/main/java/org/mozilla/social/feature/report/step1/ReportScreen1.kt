@@ -17,7 +17,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -26,6 +26,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.KoinApplication
 import org.koin.core.parameter.parametersOf
@@ -63,18 +64,23 @@ internal fun ReportScreen1(
         )
     })
 ) {
+    val instanceRules by viewModel.instanceRules.collectAsStateWithLifecycle()
+    val selectedReportType by viewModel.selectedReportType.collectAsStateWithLifecycle()
+    val checkedRules by viewModel.checkedRules.collectAsStateWithLifecycle()
+    val additionalCommentText by viewModel.additionalCommentText.collectAsStateWithLifecycle()
+    val sendToExternalServer by viewModel.sendToExternalServerChecked.collectAsStateWithLifecycle()
     ReportScreen1(
         reportTarget = if (reportStatusId != null) {
             ReportTarget.POST
         } else {
             ReportTarget.ACCOUNT
         },
-        instanceRules = viewModel.instanceRules.collectAsState().value,
-        selectedReportType = viewModel.selectedReportType.collectAsState().value,
-        checkedRules = viewModel.checkedRules.collectAsState().value,
-        additionalCommentText = viewModel.additionalCommentText.collectAsState().value,
+        instanceRules = instanceRules,
+        selectedReportType = selectedReportType,
+        checkedRules = checkedRules,
+        additionalCommentText = additionalCommentText,
         reportAccountHandle = reportAccountHandle,
-        sendToExternalServer = viewModel.sendToExternalServerChecked.collectAsState().value,
+        sendToExternalServer = sendToExternalServer,
         reportInteractions = viewModel
     )
 }
