@@ -40,7 +40,10 @@ import org.mozilla.social.core.navigation.NavigationEventFlow
 import org.mozilla.social.core.navigation.SettingsNavigationDestination
 import org.mozilla.social.core.navigation.SettingsNavigationDestination.AboutSettings.navigateToAboutSettings
 import org.mozilla.social.core.navigation.SettingsNavigationDestination.AccountSettings.navigateToAccountSettings
+import org.mozilla.social.core.navigation.SettingsNavigationDestination.BlockedUsersSettings.navigateToBlockedUsers
+import org.mozilla.social.core.navigation.SettingsNavigationDestination.ContentPreferencesSettings.navigateToContentPreferencesSettings
 import org.mozilla.social.core.navigation.SettingsNavigationDestination.MainSettings.navigateToMainSettings
+import org.mozilla.social.core.navigation.SettingsNavigationDestination.MutedUsersSettings.navigateToMutedUsers
 import org.mozilla.social.core.navigation.SettingsNavigationDestination.PrivacySettings.navigateToPrivacySettings
 import timber.log.Timber
 
@@ -248,6 +251,16 @@ class AppState(
 
             SettingsNavigationDestination.MainSettings -> {
                 mainNavController.navigateToMainSettings()
+            }
+
+            SettingsNavigationDestination.BlockedUsersSettings -> {
+                mainNavController.navigateToBlockedUsers()
+            }
+            SettingsNavigationDestination.ContentPreferencesSettings -> {
+                mainNavController.navigateToContentPreferencesSettings()
+            }
+            SettingsNavigationDestination.MutedUsersSettings -> {
+                mainNavController.navigateToMutedUsers()
             }
         }
     }

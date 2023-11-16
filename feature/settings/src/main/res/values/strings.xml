@@ -3,6 +3,9 @@
     <string name="settings_title">Settings</string>
 
     <string name="account_settings_title">Account</string>
+    <string name="content_preferences_title">Content Preferences</string>
+    <string name="muted_users_title">Muted Users</string>
+    <string name="blocked_users_title">Blocked Users</string>
     <string name="privacy_settings_title">Privacy</string>
     <string name="about_settings_title">About</string>
     <string name="administered_by">Administered by</string>

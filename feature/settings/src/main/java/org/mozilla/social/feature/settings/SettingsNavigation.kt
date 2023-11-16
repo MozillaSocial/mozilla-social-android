@@ -7,6 +7,9 @@ import org.mozilla.social.core.navigation.NavigationDestination
 import org.mozilla.social.core.navigation.SettingsNavigationDestination
 import org.mozilla.social.feature.settings.about.AboutSettingsScreen
 import org.mozilla.social.feature.settings.account.AccountSettingsScreen
+import org.mozilla.social.feature.settings.contentpreferences.ContentPreferencesSettingsScreen
+import org.mozilla.social.feature.settings.contentpreferences.blockedusers.BlockedUsersSettingsScreen
+import org.mozilla.social.feature.settings.contentpreferences.mutedusers.MutedUsersSettingsScreen
 import org.mozilla.social.feature.settings.privacy.PrivacySettingsScreen
 
 fun NavGraphBuilder.settingsFlow() {
@@ -16,6 +19,9 @@ fun NavGraphBuilder.settingsFlow() {
     ) {
         mainSettingsScreen()
         accountSettingsScreen()
+        contentPreferencesSettingsScreen()
+        mutedUsersSettingsScreen()
+        blockedUsersSettingsScreen()
         privacySettingsScreen()
         aboutSettingsScreen()
     }
@@ -30,6 +36,24 @@ fun NavGraphBuilder.mainSettingsScreen() {
 fun NavGraphBuilder.accountSettingsScreen() {
     composable(route = SettingsNavigationDestination.AccountSettings.route) {
         AccountSettingsScreen()
+    }
+}
+
+fun NavGraphBuilder.contentPreferencesSettingsScreen() {
+    composable(route = SettingsNavigationDestination.ContentPreferencesSettings.route) {
+        ContentPreferencesSettingsScreen()
+    }
+}
+
+fun NavGraphBuilder.mutedUsersSettingsScreen() {
+    composable(route = SettingsNavigationDestination.MutedUsersSettings.route) {
+        MutedUsersSettingsScreen()
+    }
+}
+
+fun NavGraphBuilder.blockedUsersSettingsScreen() {
+    composable(route = SettingsNavigationDestination.BlockedUsersSettings.route) {
+        BlockedUsersSettingsScreen()
     }
 }
 
