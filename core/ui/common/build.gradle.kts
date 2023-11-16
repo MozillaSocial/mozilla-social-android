@@ -13,7 +13,6 @@ dependencies {
     implementation(project(":core:common"))
     implementation(project(":core:repository:mastodon"))
     implementation(project(":core:navigation"))
-    implementation(project(":core:database"))
 
     implementation(libs.androidx.paging.compose)
 

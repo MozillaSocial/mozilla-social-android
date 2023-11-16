@@ -204,7 +204,6 @@ val mastodonUsecaseModule = module {
             databaseDelegate = get(),
             followersRepository = get(),
             relationshipRepository = get(),
-            getLoggedInUserAccountId = get(),
             accountId = it[0]
         )
     }
@@ -214,7 +213,6 @@ val mastodonUsecaseModule = module {
             databaseDelegate = get(),
             followingsRepository = get(),
             relationshipRepository = get(),
-            getLoggedInUserAccountId = get(),
             accountId = it[0]
         )
     }

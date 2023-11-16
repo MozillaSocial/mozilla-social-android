@@ -1,18 +1,42 @@
 package org.mozilla.social.core.repository.mastodon
 
-import androidx.paging.PagingSource
+import androidx.paging.ExperimentalPagingApi
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.RemoteMediator
+import androidx.paging.map
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import org.mozilla.social.core.database.dao.FollowingsDao
 import org.mozilla.social.core.database.model.accountCollections.Followee
 import org.mozilla.social.core.database.model.accountCollections.FolloweeWrapper
+import org.mozilla.social.core.model.wrappers.DetailedAccountWrapper
+import org.mozilla.social.core.repository.mastodon.model.account.toDetailedAccount
 
 class FollowingsRepository(
     private val dao: FollowingsDao,
 ) {
 
-    fun getFollowingsPagingSource(
+    @ExperimentalPagingApi
+    fun getFollowingsPager(
         accountId: String,
-    ): PagingSource<Int, FolloweeWrapper> =
+        remoteMediator: RemoteMediator<Int, FolloweeWrapper>,
+        pageSize: Int = 40,
+        initialLoadSize: Int = 40,
+    ): Flow<PagingData<DetailedAccountWrapper>> = Pager(
+        config = PagingConfig(
+            pageSize = pageSize,
+            initialLoadSize = initialLoadSize,
+        ),
+        remoteMediator = remoteMediator,
+    ) {
         dao.followingsPagingSource(accountId)
+    }.flow.map { pagingData ->
+        pagingData.map {
+            it.toDetailedAccount()
+        }
+    }
 
     suspend fun deleteFollowings(
         accountId: String

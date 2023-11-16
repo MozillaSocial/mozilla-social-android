@@ -3,13 +3,14 @@ package org.mozilla.social.core.database.dao
 import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Query
+import androidx.room.Transaction
 import org.mozilla.social.core.database.model.statusCollections.HashTagTimelineStatus
 import org.mozilla.social.core.database.model.statusCollections.HashTagTimelineStatusWrapper
-import org.mozilla.social.core.database.model.statusCollections.HomeTimelineStatusWrapper
 
 @Dao
 interface HashTagTimelineStatusDao : BaseDao<HashTagTimelineStatus> {
 
+    @Transaction
     @Query(
         "SELECT * FROM hashTagTimeline " +
         "WHERE  hashTag = :hashTag " +
