@@ -42,7 +42,10 @@ object MoSoIcons {
     fun boost() = repeat()
 
     @Composable
-    fun caret_down() = painterResource(id = R.drawable.caret_down)
+    fun caretDown() = painterResource(id = R.drawable.caret_down)
+
+    @Composable
+    fun caretRight() = painterResource(id = R.drawable.caret_right)
 
     @Composable
     fun chartBar() = painterResource(id = R.drawable.chart_bar)

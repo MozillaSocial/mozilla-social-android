@@ -30,7 +30,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.windowsizeclass.WindowHeightSizeClass
@@ -498,20 +497,14 @@ private fun ContentWarningEntry(
     contentWarningText: String,
     contentWarningInteractions: ContentWarningInteractions,
 ) {
-    OutlinedTextField(
+    MoSoTextField(
         modifier = Modifier
             .padding(16.dp)
             .fillMaxWidth(),
         value = contentWarningText,
         onValueChange = { contentWarningInteractions.onContentWarningTextChanged(it) },
         label = { Text(text = stringResource(id = R.string.content_warning_label)) },
-        colors = OutlinedTextFieldDefaults.colors(
-            unfocusedBorderColor = MoSoTheme.colors.borderWarning,
-            focusedBorderColor = MoSoTheme.colors.borderWarning,
-            focusedLabelColor = MoSoTheme.colors.textWarning,
-            unfocusedLabelColor = MoSoTheme.colors.textWarning,
-            cursorColor = MoSoTheme.colors.textWarning,
-        )
+        borderColor = MoSoTheme.colors.borderAccent
     )
 }
 

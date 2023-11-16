@@ -8,8 +8,6 @@
 
     <string name="error_oops">Oops, something went wrong</string>
 
-
-
     <string name="mute_user">Mute %s</string>
     <string name="unmute_user">Unmute %s</string>
     <string name="block_user">Block %s</string>

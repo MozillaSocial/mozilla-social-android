@@ -49,7 +49,8 @@ fun MoSoTextField(
     minLines: Int = 1,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     shape: Shape = TextFieldDefaults.shape,
-    colors: TextFieldColors = MoSoTextFieldDefaults.colors()
+    colors: TextFieldColors = MoSoTextFieldDefaults.colors(),
+    borderColor: Color = MoSoTheme.colors.borderInputEnabled,
 ) {
     TextField(
         value = value,
@@ -60,7 +61,7 @@ fun MoSoTextField(
                 color = if (isError) {
                     MoSoTheme.colors.borderWarning
                 } else {
-                    MoSoTheme.colors.borderInputEnabled
+                    borderColor
                 },
                 shape = RoundedCornerShape(MoSoRadius.md)
             ),
@@ -142,21 +143,36 @@ fun MoSoTextField(
 
 object MoSoTextFieldDefaults {
     @Composable
-    fun colors(): TextFieldColors = TextFieldDefaults.colors(
-        cursorColor = MoSoTheme.colors.textPrimary,
-        errorCursorColor = MoSoTheme.colors.textPrimary,
-        unfocusedLabelColor = MoSoTheme.colors.textSecondary,
-        focusedLabelColor = MoSoTheme.colors.textSecondary,
-        disabledLabelColor = MoSoTheme.colors.textSecondary,
-        errorLabelColor = MoSoTheme.colors.textWarning,
-        focusedIndicatorColor = Color.Transparent,
-        unfocusedIndicatorColor = Color.Transparent,
-        disabledIndicatorColor = Color.Transparent,
-        errorIndicatorColor = Color.Transparent,
-        disabledContainerColor = Color.Transparent,
-        errorContainerColor = Color.Transparent,
-        unfocusedContainerColor = Color.Transparent,
-        focusedContainerColor = Color.Transparent,
+    fun colors(
+        cursorColor: Color = MoSoTheme.colors.textPrimary,
+        errorCursorColor: Color = MoSoTheme.colors.textPrimary,
+        unfocusedLabelColor: Color = MoSoTheme.colors.textSecondary,
+        focusedLabelColor: Color = MoSoTheme.colors.textSecondary,
+        disabledLabelColor: Color = MoSoTheme.colors.textSecondary,
+        errorLabelColor: Color = MoSoTheme.colors.textWarning,
+        focusedIndicatorColor: Color = Color.Transparent,
+        unfocusedIndicatorColor: Color = Color.Transparent,
+        disabledIndicatorColor: Color = Color.Transparent,
+        errorIndicatorColor: Color = Color.Transparent,
+        disabledContainerColor: Color = Color.Transparent,
+        errorContainerColor: Color = Color.Transparent,
+        unfocusedContainerColor: Color = Color.Transparent,
+        focusedContainerColor: Color = Color.Transparent,
+    ): TextFieldColors = TextFieldDefaults.colors(
+        cursorColor = cursorColor,
+        errorCursorColor = errorCursorColor,
+        unfocusedLabelColor = unfocusedLabelColor,
+        focusedLabelColor = focusedLabelColor,
+        disabledLabelColor = disabledLabelColor,
+        errorLabelColor = errorLabelColor,
+        focusedIndicatorColor = focusedIndicatorColor,
+        unfocusedIndicatorColor = unfocusedIndicatorColor,
+        disabledIndicatorColor = disabledIndicatorColor,
+        errorIndicatorColor = errorIndicatorColor,
+        disabledContainerColor = disabledContainerColor,
+        errorContainerColor = errorContainerColor,
+        unfocusedContainerColor = unfocusedContainerColor,
+        focusedContainerColor = focusedContainerColor,
     )
 }
 

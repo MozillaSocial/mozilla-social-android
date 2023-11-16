@@ -45,6 +45,7 @@ private fun Status.toMainPostCardUiState(
         previewCard = card?.toPreviewCard(),
         isUsersPost = currentUserAccountId == account.accountId,
         isBeingDeleted = isBeingDeleted,
+        contentWarning = contentWarningText,
     )
 
 private fun Status.toTopRowMetaDataUiState(): TopRowMetaDataUiState? =

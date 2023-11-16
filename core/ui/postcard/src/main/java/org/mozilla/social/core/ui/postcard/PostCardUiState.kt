@@ -33,6 +33,7 @@ data class MainPostCardUiState(
     val previewCard: PreviewCard?,
     val isUsersPost: Boolean,
     val isBeingDeleted: Boolean,
+    val contentWarning: String,
 )
 
 data class TopRowMetaDataUiState(
