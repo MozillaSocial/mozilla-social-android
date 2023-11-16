@@ -189,7 +189,7 @@ val mastodonUsecaseModule = module {
     single { RefreshLocalTimeline(get(), get(), get(), get()) }
     single { RefreshFederatedTimeline(get(), get(), get(), get()) }
     singleOf(::RefreshHomeTimeline)
-    single {
+    factory {
         RefreshAccountTimeline(
             accountRepository = get(),
             socialDatabase = get(),
