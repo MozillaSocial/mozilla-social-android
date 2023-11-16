@@ -4,6 +4,7 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
+import org.mozilla.social.common.PreferUseCase
 import org.mozilla.social.common.parseMastodonLinkHeader
 import org.mozilla.social.core.database.dao.AccountsDao
 import org.mozilla.social.core.network.mastodon.AccountApi
@@ -115,7 +116,7 @@ class AccountRepository internal constructor(
     suspend fun blockAccount(accountId: String) = api.blockAccount(accountId = accountId)
     suspend fun unblockAccount(accountId: String) = api.unblockAccount(accountId = accountId)
 
-
+    @PreferUseCase("test")
     suspend fun muteAccount(accountId: String) = api.muteAccount(accountId = accountId)
     suspend fun unmuteAccount(accountId: String) = api.unmuteAccount(accountId = accountId)
 
