@@ -20,5 +20,7 @@ fun mastodonRepositoryModule(isDebug: Boolean) = module {
     singleOf(::FollowersRepository)
     singleOf(::FollowingsRepository)
     singleOf(::RelationshipRepository)
+    singleOf(::MutesRepository)
+    singleOf(::BlocksRepository)
     includes(mastodonNetworkModule(isDebug))
 }

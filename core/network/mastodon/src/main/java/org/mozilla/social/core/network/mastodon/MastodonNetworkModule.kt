@@ -21,7 +21,7 @@ fun mastodonNetworkModule(isDebug: Boolean) = module {
             .connectTimeout(OKHTTP_TIMEOUT, TimeUnit.SECONDS)
             .addNetworkInterceptor(HttpLoggingInterceptor().apply {
                 level = if (isDebug) {
-                    HttpLoggingInterceptor.Level.BASIC
+                    HttpLoggingInterceptor.Level.BODY
                 } else {
                     HttpLoggingInterceptor.Level.NONE
                 }
@@ -38,14 +38,16 @@ fun mastodonNetworkModule(isDebug: Boolean) = module {
     }
 
     single { get<Retrofit>().create(AccountApi::class.java) }
+    single { get<Retrofit>().create(AppApi::class.java) }
+    single { get<Retrofit>().create(BlocksApi::class.java) }
+    single { get<Retrofit>().create(InstanceApi::class.java) }
     single { get<Retrofit>().create(MediaApi::class.java) }
+    single { get<Retrofit>().create(MutesApi::class.java) }
     single { get<Retrofit>().create(OauthApi::class.java) }
+    single { get<Retrofit>().create(ReportApi::class.java) }
     single { get<Retrofit>().create(SearchApi::class.java) }
     single { get<Retrofit>().create(StatusApi::class.java) }
     single { get<Retrofit>().create(TimelineApi::class.java) }
-    single { get<Retrofit>().create(InstanceApi::class.java) }
-    single { get<Retrofit>().create(ReportApi::class.java) }
-    single { get<Retrofit>().create(AppApi::class.java) }
 }
 
 private var json: Json = Json { ignoreUnknownKeys = true }
