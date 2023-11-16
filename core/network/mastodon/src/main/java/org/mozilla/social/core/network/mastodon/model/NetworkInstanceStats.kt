@@ -1,8 +1,11 @@
 package org.mozilla.social.core.network.mastodon.model
 
+import kotlinx.serialization.Serializable
+
 /**
  * Usage statistics about the Mastodon instance.
  */
+@Serializable
 data class NetworkInstanceStats(
 
     /**

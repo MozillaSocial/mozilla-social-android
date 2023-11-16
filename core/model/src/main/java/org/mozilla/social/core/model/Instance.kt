@@ -21,16 +21,6 @@ data class Instance(
     val description: String,
 
     /**
-     * A shorter description of the instance defined by the admin.
-     */
-    val shortDescription: String,
-
-    /**
-     * An email that may be contacted for any inquiries.
-     */
-    val email: String,
-
-    /**
      * The version of Mastodon installed on the instance.
      */
     val version: String,
@@ -43,31 +33,6 @@ data class Instance(
     val languages: List<String>,
 
     /**
-     * Whether registrations are enabled.
-     */
-    val areRegistrationsEnabled: Boolean,
-
-    /**
-     * Whether registrations require moderator approval.
-     */
-    val isApprovalRequired: Boolean,
-
-    /**
-     * Whether invites are enabled.
-     */
-    val areInvitesEnabled: Boolean,
-
-    /**
-     * URLs of interest for clients apps.
-     */
-    val urls: InstanceUrls,
-
-    /**
-     * Statistics about how much information the instance contains.
-     */
-    val stats: InstanceStats,
-
-    /**
      * URL of a banner image for the instance.
      */
     val thumbnail: String? = null,
@@ -75,5 +40,7 @@ data class Instance(
     /**
      * A staff user that can be contacted, as an alternative to [email].
      */
-    val contactAccount: Account? = null
+    val contactAccount: Account? = null,
+
+    val contactEmail: String? = null,
 )

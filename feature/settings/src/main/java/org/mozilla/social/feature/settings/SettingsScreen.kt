@@ -16,6 +16,7 @@ fun SettingsScreen(
 ) {
     SettingsScreen(
         onAccountClicked = viewModel::onAccountClicked,
+        onContentPreferencesClicked = viewModel::onContentPreferencesClicked,
         onPrivacyClicked = viewModel::onPrivacyClicked,
         onAboutClicked = viewModel::onAboutClicked,
     )
@@ -24,6 +25,7 @@ fun SettingsScreen(
 @Composable
 fun SettingsScreen(
     onAccountClicked: () -> Unit,
+    onContentPreferencesClicked: () -> Unit,
     onPrivacyClicked: () -> Unit,
     onAboutClicked: () -> Unit,
 ) {
@@ -33,6 +35,11 @@ fun SettingsScreen(
                 title = stringResource(id = R.string.account_settings_title),
                 iconPainter = MoSoIcons.identificationCard(),
                 onClick = onAccountClicked,
+            )
+            SettingsSection(
+                title = stringResource(id = R.string.content_preferences_title),
+                iconPainter = MoSoIcons.listChecks(),
+                onClick = onContentPreferencesClicked,
             )
             SettingsSection(
                 title = stringResource(id = R.string.privacy_settings_title),

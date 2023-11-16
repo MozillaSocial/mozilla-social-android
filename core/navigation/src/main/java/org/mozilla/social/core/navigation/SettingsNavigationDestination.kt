@@ -11,10 +11,33 @@ sealed class SettingsNavigationDestination(val route: String) {
             navigate(route = route)
         }
     }
+
     data object AccountSettings : SettingsNavigationDestination(
         route = "accountSettings"
     ) {
         fun NavController.navigateToAccountSettings() {
+            navigate(route = route)
+        }
+    }
+
+    data object ContentPreferencesSettings : SettingsNavigationDestination(
+        route = "contentPreferencesSettings"
+    ) {
+        fun NavController.navigateToContentPreferencesSettings() {
+            navigate(route = route)
+        }
+    }
+
+    data object BlockedUsersSettings : SettingsNavigationDestination(
+        route = "blockedUsersSettings"
+    ) {
+        fun NavController.navigateToBlockedUsers() {
+            navigate(route = route)
+        }
+    }
+
+    data object MutedUsersSettings : SettingsNavigationDestination(route = "mutedUsersSettings") {
+        fun NavController.navigateToMutedUsers() {
             navigate(route = route)
         }
     }

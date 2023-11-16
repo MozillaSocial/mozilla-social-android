@@ -1,17 +1,19 @@
 package org.mozilla.social.core.network.mastodon.model
 
 import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
 /**
  * Information about the software instance of Mastodon running on this domain.
  */
+@Serializable
 data class NetworkInstance(
 
     /**
      * The domain name of the instance.
      */
-    @SerialName("uri")
-    val uri: String,
+    @SerialName("domain")
+    val domain: String,
 
     /**
      * The title of the instance.
@@ -24,18 +26,6 @@ data class NetworkInstance(
      */
     @SerialName("description")
     val description: String,
-
-    /**
-     * A shorter description of the instance defined by the admin.
-     */
-    @SerialName("shortDescription")
-    val shortDescription: String,
-
-    /**
-     * An email that may be contacted for any inquiries.
-     */
-    @SerialName("email")
-    val email: String,
 
     /**
      * The version of Mastodon installed on the instance.
@@ -52,38 +42,23 @@ data class NetworkInstance(
     val languages: List<String>,
 
     /**
-     * Whether registrations are enabled.
-     */
-    @SerialName("areRegistrationsEnabled")
-    val areRegistrationsEnabled: Boolean,
-
-    /**
-     * Whether registrations require moderator approval.
-     */
-    val isApprovalRequired: Boolean,
-
-    /**
-     * Whether invites are enabled.
-     */
-    val areInvitesEnabled: Boolean,
-
-    /**
-     * URLs of interest for clients apps.
-     */
-    val urls: NetworkInstanceUrls,
-
-    /**
-     * Statistics about how much information the instance contains.
-     */
-    val stats: NetworkInstanceStats,
-
-    /**
      * URL of a banner image for the instance.
      */
-    val thumbnail: String? = null,
+    val thumbnail: NetworkInstanceThumbnail,
 
     /**
      * A staff user that can be contacted, as an alternative to [email].
      */
-    val contactAccount: NetworkAccount? = null
+    val contact: NetworkInstanceContact? = null,
+)
+
+@Serializable
+data class NetworkInstanceThumbnail(
+    val url: String,
+)
+
+@Serializable
+data class NetworkInstanceContact(
+    val email: String,
+    val account: NetworkAccount,
 )

@@ -3,8 +3,14 @@
     <string name="settings_title">Settings</string>
 
     <string name="account_settings_title">Account</string>
+    <string name="content_preferences_title">Content Preferences</string>
+    <string name="muted_users_title">Muted Users</string>
+    <string name="blocked_users_title">Blocked Users</string>
     <string name="privacy_settings_title">Privacy</string>
     <string name="about_settings_title">About</string>
+    <string name="administered_by">Administered by</string>
+    <string name="decentralized_social_media_powered_by_mastodon">Decentralized social media powered by Mastodon</string>
+    <string name="contact_email">Contact: %s</string>
 
     <string name="profile_settings_title">Profile settings</string>
     <string name="manage_your_account">Manage your account on %1$s</string>

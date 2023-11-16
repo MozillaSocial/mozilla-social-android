@@ -39,10 +39,13 @@ object MoSoIcons {
     fun bookmarkFill() = painterResource(R.drawable.bookmark_simple_fill)
 
     @Composable
-    fun robot() = painterResource(id = R.drawable.robot)
+    fun boost() = repeat()
 
     @Composable
     fun caretDown() = painterResource(id = R.drawable.caret_down)
+
+    @Composable
+    fun caretRight() = painterResource(id = R.drawable.caret_right)
 
     @Composable
     fun chartBar() = painterResource(id = R.drawable.chart_bar)
@@ -93,6 +96,12 @@ object MoSoIcons {
     fun list() = painterResource(id = R.drawable.list)
 
     @Composable
+    fun listChecks() = painterResource(id = R.drawable.list_checks)
+
+    @Composable
+    fun lock() = painterResource(id = R.drawable.lock)
+
+    @Composable
     fun lockKey() = painterResource(id = R.drawable.lock_key)
 
     @Composable
@@ -104,14 +113,20 @@ object MoSoIcons {
     @Composable
     fun plus() = painterResource(id = R.drawable.plus)
 
-    @Composable
-    fun boost() = repeat()
+   @Composable
+   fun prohibit() = painterResource(id = R.drawable.prohibit)
 
     @Composable
     fun repeat() = painterResource(id = R.drawable.repeat)
 
     @Composable
+    fun robot() = painterResource(id = R.drawable.robot)
+
+    @Composable
     fun share() = painterResource(id = R.drawable.share)
+
+    @Composable
+    fun speakerX() = painterResource(id = R.drawable.speaker_x)
 
     @Composable
     fun userCircle() = painterResource(id = R.drawable.user_circle)
@@ -127,12 +142,6 @@ object MoSoIcons {
 
     @Composable
     fun x() = painterResource(id = R.drawable.x)
-
-    @Composable
-    fun lock() = painterResource(id = R.drawable.lock)
-
-    @Composable
-    fun caretRight() = painterResource(id = R.drawable.caret_right)
 
     // Material- avoid using these, and instead use the drawable based resources
     @Composable
