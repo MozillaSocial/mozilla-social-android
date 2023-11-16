@@ -66,6 +66,9 @@ object MoSoIcons {
     fun connect() = painterResource(id = R.drawable.connect)
 
     @Composable
+    fun gear() = painterResource(id = R.drawable.gear)
+
+    @Composable
     fun globeHemisphereWest() = painterResource(id = R.drawable.globe_hemisphere_west)
 
     @Composable
