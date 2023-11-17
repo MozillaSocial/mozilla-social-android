@@ -19,6 +19,7 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
 import org.mozilla.social.configureAndroidCompose
+import org.mozilla.social.configureUiTests
 
 class AndroidApplicationComposeConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) {
@@ -29,6 +30,7 @@ class AndroidApplicationComposeConventionPlugin : Plugin<Project> {
 
             extensions.configure<ApplicationExtension> {
                 configureAndroidCompose(this)
+                configureUiTests(this)
             }
         }
     }

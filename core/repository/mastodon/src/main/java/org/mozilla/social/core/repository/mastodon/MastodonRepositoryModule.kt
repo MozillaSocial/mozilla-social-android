@@ -2,6 +2,7 @@ package org.mozilla.social.core.repository.mastodon
 
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
+import org.mozilla.social.core.database.databaseModule
 import org.mozilla.social.core.network.mastodon.mastodonNetworkModule
 
 fun mastodonRepositoryModule(isDebug: Boolean) = module {
@@ -22,5 +23,8 @@ fun mastodonRepositoryModule(isDebug: Boolean) = module {
     singleOf(::RelationshipRepository)
     singleOf(::MutesRepository)
     singleOf(::BlocksRepository)
-    includes(mastodonNetworkModule(isDebug))
+    includes(
+        mastodonNetworkModule(isDebug),
+        databaseModule,
+    )
 }

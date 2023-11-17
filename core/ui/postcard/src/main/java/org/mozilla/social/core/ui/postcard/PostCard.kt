@@ -39,6 +39,7 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
@@ -395,6 +396,7 @@ private fun BottomRow(
             .requiredWidth(getMaxWidth() + 20.dp)
     ) {
         BottomIconButton(
+            modifier = Modifier.testTag("reply"),
             onClick = { postCardInteractions.onReplyClicked(post.statusId) },
             painter = MoSoIcons.chatBubbles(),
             count = post.replyCount,
