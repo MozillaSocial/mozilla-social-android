@@ -16,7 +16,7 @@ class CheckModulesTest : KoinTest {
     @OptIn(KoinExperimentalAPI::class)
     @Test
     fun checkAllModules() {
-        appModules.verify(
+        featureModules.verify(
             extraTypes = listOf(
                 Context::class,
                 CoroutineDispatcher::class,

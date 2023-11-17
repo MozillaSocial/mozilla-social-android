@@ -3,6 +3,10 @@ package org.mozilla.social.core.usecase.mastodon
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 import org.mozilla.social.common.appscope.AppScope
+import org.mozilla.social.core.analytics.analyticsModule
+import org.mozilla.social.core.database.databaseModule
+import org.mozilla.social.core.navigation.navigationModule
+import org.mozilla.social.core.repository.mastodon.mastodonRepositoryModule
 import org.mozilla.social.core.usecase.mastodon.account.BlockAccount
 import org.mozilla.social.core.usecase.mastodon.account.FollowAccount
 import org.mozilla.social.core.usecase.mastodon.account.GetDetailedAccount
@@ -34,6 +38,13 @@ import org.mozilla.social.core.usecase.mastodon.timeline.RefreshHomeTimeline
 import org.mozilla.social.core.usecase.mastodon.timeline.RefreshLocalTimeline
 
 val mastodonUsecaseModule = module {
+    includes(
+        mastodonRepositoryModule,
+        databaseModule,
+        analyticsModule,
+        navigationModule,
+    )
+
     factory { parametersHolder ->
         HashTagTimelineRemoteMediator(
             get(),

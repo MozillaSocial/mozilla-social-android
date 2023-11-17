@@ -5,6 +5,10 @@ plugins {
 
 android {
     namespace = "org.mozilla.social.core.network.mastodon"
+
+    buildFeatures {
+        buildConfig = true
+    }
 }
 
 dependencies {

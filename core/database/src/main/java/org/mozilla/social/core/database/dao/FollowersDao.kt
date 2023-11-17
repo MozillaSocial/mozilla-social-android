@@ -14,7 +14,7 @@ interface FollowersDao : BaseDao<Follower> {
     @Query(
         "SELECT * FROM followers " +
         "WHERE  accountId = :accountId " +
-        "ORDER BY accountId DESC"
+        "ORDER BY position ASC"
     )
     fun followersPagingSource(
         accountId: String,
