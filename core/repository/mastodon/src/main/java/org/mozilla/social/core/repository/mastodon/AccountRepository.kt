@@ -4,6 +4,7 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
+import org.mozilla.social.common.annotations.PreferUseCase
 import org.mozilla.social.common.parseMastodonLinkHeader
 import org.mozilla.social.core.database.dao.AccountsDao
 import org.mozilla.social.core.network.mastodon.AccountApi
@@ -107,16 +108,22 @@ class AccountRepository internal constructor(
     suspend fun getAccountFavourites(): List<Status> =
         api.getAccountFavourites().map { it.toExternalModel() }
 
+    @PreferUseCase
     suspend fun followAccount(accountId: String) = api.followAccount(accountId = accountId)
 
-    suspend fun unfollowAccount(accountId: String) =
-        api.unfollowAccount(accountId = accountId)
+    @PreferUseCase
+    suspend fun unfollowAccount(accountId: String) = api.unfollowAccount(accountId = accountId)
 
+    @PreferUseCase
     suspend fun blockAccount(accountId: String) = api.blockAccount(accountId = accountId)
+
+    @PreferUseCase
     suspend fun unblockAccount(accountId: String) = api.unblockAccount(accountId = accountId)
 
-
+    @PreferUseCase
     suspend fun muteAccount(accountId: String) = api.muteAccount(accountId = accountId)
+
+    @PreferUseCase
     suspend fun unmuteAccount(accountId: String) = api.unmuteAccount(accountId = accountId)
 
     suspend fun getAccountRelationships(
@@ -128,6 +135,7 @@ class AccountRepository internal constructor(
     suspend fun getAccountFromDatabase(accountId: String): Account? =
         dao.getAccount(accountId)?.toExternalModel()
 
+    @PreferUseCase
     @Suppress("MagicNumber")
     suspend fun updateAccount(
         displayName: String? = null,

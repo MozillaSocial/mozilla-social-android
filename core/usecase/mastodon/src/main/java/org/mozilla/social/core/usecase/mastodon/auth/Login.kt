@@ -2,6 +2,7 @@ package org.mozilla.social.core.usecase.mastodon.auth
 
 import android.content.Intent
 import okhttp3.HttpUrl
+import org.mozilla.social.common.annotations.PreferUseCase
 import org.mozilla.social.core.analytics.Analytics
 import org.mozilla.social.core.datastore.UserPreferencesDatastore
 import org.mozilla.social.core.repository.mastodon.AccountRepository
@@ -31,6 +32,7 @@ class Login(
     /**
      * When a  logging in by registering this client with the given domain
      */
+    @OptIn(PreferUseCase::class)
     suspend operator fun invoke(domain: String) {
         try {
             userPreferencesDatastore.saveDomain(domain)
@@ -72,6 +74,7 @@ class Login(
         }
     }
 
+    @OptIn(PreferUseCase::class)
     private suspend fun onUserCodeReceived(code: String) {
         try {
             Timber.tag(TAG).d("user code received")
