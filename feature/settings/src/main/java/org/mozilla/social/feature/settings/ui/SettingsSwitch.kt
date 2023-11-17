@@ -16,9 +16,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import org.mozilla.social.core.designsystem.component.MoSoDivider
-import org.mozilla.social.core.designsystem.component.MoSoSurface
-import org.mozilla.social.core.designsystem.component.MoSoSwitch
+import org.mozilla.social.core.ui.common.MoSoSurface
+import org.mozilla.social.core.ui.common.MoSoSwitch
+import org.mozilla.social.core.ui.common.divider.MoSoDivider
 
 
 @Suppress("LongParameterList", "MagicNumber")

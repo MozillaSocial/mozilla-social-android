@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import org.mozilla.social.core.designsystem.component.MoSoCircularProgressIndicator
 
 @Composable
 fun MaxSizeLoading() {

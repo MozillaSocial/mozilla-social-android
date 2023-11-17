@@ -26,16 +26,16 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.KoinApplication
-import org.mozilla.social.core.designsystem.component.MoSoButton
-import org.mozilla.social.core.designsystem.component.MoSoCircularProgressIndicator
-import org.mozilla.social.core.designsystem.component.MoSoSurface
-import org.mozilla.social.core.designsystem.component.MoSoTextField
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.designsystem.theme.MoSoRadius
 import org.mozilla.social.core.designsystem.theme.MoSoSpacing
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.navigation.navigationModule
+import org.mozilla.social.core.ui.common.MoSoSurface
 import org.mozilla.social.core.ui.common.appbar.MoSoCloseableTopAppBar
+import org.mozilla.social.core.ui.common.button.MoSoButton
+import org.mozilla.social.core.ui.common.loading.MoSoCircularProgressIndicator
+import org.mozilla.social.core.ui.common.text.MoSoTextField
 import org.mozilla.social.feature.auth.R
 
 @Composable
@@ -130,7 +130,7 @@ private fun NoServerError(
             .fillMaxWidth()
             .background(
                 color = MoSoTheme.colors.snackbarBkgError,
-                shape = RoundedCornerShape(MoSoRadius.md),
+                shape = RoundedCornerShape(MoSoRadius.md_8_dp),
             ),
     ) {
         Text(

@@ -12,9 +12,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import org.mozilla.social.common.utils.mosoFadeIn
 import org.mozilla.social.common.utils.mosoFadeOut
-import org.mozilla.social.core.designsystem.component.MoSoSurface
+import org.mozilla.social.core.ui.common.MoSoSurface
 import org.mozilla.social.core.navigation.BottomBarNavigationDestination
-import org.mozilla.social.core.navigation.NavigationDestination
 import org.mozilla.social.feature.account.myAccountScreen
 import org.mozilla.social.feature.discover.discoverScreen
 import org.mozilla.social.feed.feedScreen

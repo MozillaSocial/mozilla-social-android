@@ -14,10 +14,10 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import org.koin.compose.koinInject
-import org.mozilla.social.core.designsystem.component.MoSoDivider
 import org.mozilla.social.core.navigation.BottomBarNavigationDestination
 import org.mozilla.social.core.navigation.NavigationDestination
 import org.mozilla.social.core.navigation.usecases.NavigateTo
+import org.mozilla.social.core.ui.common.divider.MoSoDivider
 import org.mozilla.social.navigation.BottomTabNavHost
 import org.mozilla.social.ui.AppState
 

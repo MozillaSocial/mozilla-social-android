@@ -30,5 +30,4 @@ val mastodonRepositoryModule = module {
     singleOf(::RelationshipRepository)
     singleOf(::MutesRepository)
     singleOf(::BlocksRepository)
-
 }

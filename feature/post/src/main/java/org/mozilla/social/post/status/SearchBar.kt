@@ -24,8 +24,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import org.mozilla.social.core.designsystem.component.MoSoDivider
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
+import org.mozilla.social.core.ui.common.divider.MoSoDivider
 
 @Composable
 fun AccountSearchBar(

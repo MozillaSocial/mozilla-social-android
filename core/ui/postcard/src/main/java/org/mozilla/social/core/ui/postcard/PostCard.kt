@@ -47,18 +47,18 @@ import coil.compose.AsyncImage
 import kotlinx.datetime.Instant
 import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.common.utils.timeSinceNow
-import org.mozilla.social.core.designsystem.component.MoSoCircularProgressIndicator
-import org.mozilla.social.core.designsystem.component.MoSoDropdownMenu
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.designsystem.theme.MoSoRadius
 import org.mozilla.social.core.designsystem.theme.MoSoSpacing
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.designsystem.utils.NoRipple
-import org.mozilla.social.core.ui.common.DropDownItem
+import org.mozilla.social.core.ui.common.dropdown.DropDownItem
 import org.mozilla.social.core.ui.common.TransparentNoTouchOverlay
-import org.mozilla.social.core.ui.common.getMaxWidth
+import org.mozilla.social.core.ui.common.dropdown.MoSoDropdownMenu
+import org.mozilla.social.core.ui.common.loading.MoSoCircularProgressIndicator
+import org.mozilla.social.core.ui.common.utils.getMaxWidth
 import org.mozilla.social.core.ui.common.media.MediaDisplay
-import org.mozilla.social.core.ui.common.shareUrl
+import org.mozilla.social.core.ui.common.utils.shareUrl
 import org.mozilla.social.core.ui.common.utils.PreviewTheme
 import org.mozilla.social.core.ui.htmlcontent.HtmlContent
 import org.mozilla.social.core.ui.poll.Poll
@@ -263,7 +263,7 @@ private fun ContentWarning(
             ) {
                 Row(
                     modifier = Modifier
-                        .clip(RoundedCornerShape(MoSoRadius.sm))
+                        .clip(RoundedCornerShape(MoSoRadius.sm_4_dp))
                         .background(MoSoTheme.colors.layerActionWarning)
                         .padding(horizontal = MoSoSpacing.sm, vertical = MoSoSpacing.xs)
                 ) {

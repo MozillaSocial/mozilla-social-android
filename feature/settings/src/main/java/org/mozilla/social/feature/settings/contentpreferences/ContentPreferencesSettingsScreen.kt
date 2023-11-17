@@ -3,8 +3,8 @@ package org.mozilla.social.feature.settings.contentpreferences
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import org.koin.androidx.compose.koinViewModel
-import org.mozilla.social.core.designsystem.component.MoSoSurface
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
+import org.mozilla.social.core.ui.common.MoSoSurface
 import org.mozilla.social.feature.settings.R
 import org.mozilla.social.feature.settings.ui.SettingsColumn
 import org.mozilla.social.feature.settings.ui.SettingsSection

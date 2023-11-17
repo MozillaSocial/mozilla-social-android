@@ -1,4 +1,4 @@
-package org.mozilla.social.core.designsystem.component
+package org.mozilla.social.core.ui.common.text
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.TextUnit
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 
 @Composable
-fun SmallTextBody(
+fun SmallTextDisplay(
     text: String,
     modifier: Modifier = Modifier,
     color: Color = Color.Unspecified,
@@ -50,12 +50,12 @@ fun SmallTextBody(
         maxLines = maxLines,
         minLines = minLines,
         onTextLayout = onTextLayout,
-        style = MoSoTheme.typography.bodySmall,
+        style = MoSoTheme.typography.displaySmall,
     )
 }
 
 @Composable
-fun MediumTextBody(
+fun MediumTextDisplay(
     text: String,
     modifier: Modifier = Modifier,
     color: Color = Color.Unspecified,
@@ -90,12 +90,12 @@ fun MediumTextBody(
         maxLines = maxLines,
         minLines = minLines,
         onTextLayout = onTextLayout,
-        style = MoSoTheme.typography.bodyMedium,
+        style = MoSoTheme.typography.displayMedium,
     )
 }
 
 @Composable
-fun LargeTextBody(
+fun LargeTextDisplay(
     text: String,
     modifier: Modifier = Modifier,
     color: Color = Color.Unspecified,
@@ -130,6 +130,6 @@ fun LargeTextBody(
         maxLines = maxLines,
         minLines = minLines,
         onTextLayout = onTextLayout,
-        style = MoSoTheme.typography.bodyLarge,
+        style = MoSoTheme.typography.displayLarge,
     )
 }

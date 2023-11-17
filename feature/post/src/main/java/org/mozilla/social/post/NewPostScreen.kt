@@ -59,16 +59,12 @@ import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 import org.mozilla.social.common.LoadState
 import org.mozilla.social.common.utils.buildAnnotatedStringForAccountsAndHashtags
-import org.mozilla.social.core.designsystem.component.MoSoButton
-import org.mozilla.social.core.designsystem.component.MoSoSurface
-import org.mozilla.social.core.designsystem.component.MoSoTextField
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.designsystem.theme.MoSoSpacing
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.designsystem.utils.NoIndication
 import org.mozilla.social.core.ui.common.TransparentNoTouchOverlay
-import org.mozilla.social.core.ui.common.VerticalDivider
-import org.mozilla.social.core.ui.common.VisibilityDropDownButton
+import org.mozilla.social.core.ui.common.divider.MoSoVerticalDivider
 import org.mozilla.social.core.ui.common.appbar.MoSoCloseableTopAppBar
 import org.mozilla.social.core.ui.common.media.MediaUpload
 import org.mozilla.social.core.ui.common.transparentTextFieldColors
@@ -76,6 +72,10 @@ import org.mozilla.social.core.ui.common.utils.getWindowHeightClass
 import org.mozilla.social.feature.post.R
 import org.mozilla.social.core.model.ImageState
 import org.mozilla.social.core.model.StatusVisibility
+import org.mozilla.social.core.ui.common.MoSoSurface
+import org.mozilla.social.core.ui.common.button.MoSoButton
+import org.mozilla.social.core.ui.common.dropdown.VisibilityDropDownButton
+import org.mozilla.social.core.ui.common.text.MoSoTextField
 import org.mozilla.social.post.NewPostViewModel.Companion.MAX_POLL_COUNT
 import org.mozilla.social.post.NewPostViewModel.Companion.MIN_POLL_COUNT
 import org.mozilla.social.post.bottombar.BottomBar
@@ -639,13 +639,13 @@ private fun PollSettings(
         Row(
             modifier = Modifier.padding(top = 4.dp)
         ) {
-            VerticalDivider(
+            MoSoVerticalDivider(
                 modifier = Modifier
                     .padding(start = 8.dp, end = 8.dp)
                     .height(40.dp)
             )
             PollDurationDropDown(poll = poll, pollInteractions = pollInteractions)
-            VerticalDivider(
+            MoSoVerticalDivider(
                 modifier = Modifier
                     .padding(start = 8.dp, end = 8.dp)
                     .height(40.dp)

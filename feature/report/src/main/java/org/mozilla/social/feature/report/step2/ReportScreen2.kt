@@ -31,20 +31,20 @@ import coil.compose.AsyncImage
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 import org.mozilla.social.common.Resource
-import org.mozilla.social.core.designsystem.component.MoSoButton
-import org.mozilla.social.core.designsystem.component.MoSoCheckBox
-import org.mozilla.social.core.designsystem.component.MoSoCircularProgressIndicator
-import org.mozilla.social.core.designsystem.component.MoSoDivider
-import org.mozilla.social.core.designsystem.component.MoSoSurface
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.designsystem.utils.NoRipple
+import org.mozilla.social.core.model.InstanceRule
+import org.mozilla.social.core.ui.common.MoSoCheckBox
+import org.mozilla.social.core.ui.common.MoSoSurface
 import org.mozilla.social.core.ui.common.appbar.MoSoCloseableTopAppBar
+import org.mozilla.social.core.ui.common.button.MoSoButton
+import org.mozilla.social.core.ui.common.divider.MoSoDivider
 import org.mozilla.social.core.ui.common.error.GenericError
 import org.mozilla.social.core.ui.common.loading.MaxSizeLoading
+import org.mozilla.social.core.ui.common.loading.MoSoCircularProgressIndicator
 import org.mozilla.social.feature.report.R
 import org.mozilla.social.feature.report.ReportDataBundle
 import org.mozilla.social.feature.report.ReportType
-import org.mozilla.social.core.model.InstanceRule
 
 @Composable
 internal fun ReportScreen2(

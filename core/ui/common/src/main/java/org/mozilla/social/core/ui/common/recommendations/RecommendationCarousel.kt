@@ -21,12 +21,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import org.mozilla.social.core.designsystem.component.MoSoDivider
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.designsystem.theme.Typography
 import org.mozilla.social.core.ui.common.R
 import org.mozilla.social.core.model.Recommendation
+import org.mozilla.social.core.ui.common.divider.MoSoDivider
 
 @Composable
 fun RecommendationCarousel(reccs: List<Recommendation>, onMoreInfoClicked: () -> Unit) {

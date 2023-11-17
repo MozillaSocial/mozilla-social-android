@@ -30,12 +30,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.KoinApplication
 import org.koin.core.parameter.parametersOf
-import org.mozilla.social.core.designsystem.component.MoSoButton
-import org.mozilla.social.core.designsystem.component.MoSoCheckBox
-import org.mozilla.social.core.designsystem.component.MoSoDivider
-import org.mozilla.social.core.designsystem.component.MoSoRadioButton
-import org.mozilla.social.core.designsystem.component.MoSoSurface
-import org.mozilla.social.core.designsystem.component.MoSoTextField
+import org.mozilla.social.core.ui.common.MoSoSurface
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.designsystem.utils.NoRipple
 import org.mozilla.social.core.navigation.navigationModule
@@ -46,6 +41,11 @@ import org.mozilla.social.feature.report.ReportDataBundle
 import org.mozilla.social.feature.report.ReportTarget
 import org.mozilla.social.feature.report.ReportType
 import org.mozilla.social.core.model.InstanceRule
+import org.mozilla.social.core.ui.common.MoSoCheckBox
+import org.mozilla.social.core.ui.common.button.MoSoButton
+import org.mozilla.social.core.ui.common.button.MoSoRadioButton
+import org.mozilla.social.core.ui.common.divider.MoSoDivider
+import org.mozilla.social.core.ui.common.text.MoSoTextField
 
 @Composable
 internal fun ReportScreen1(

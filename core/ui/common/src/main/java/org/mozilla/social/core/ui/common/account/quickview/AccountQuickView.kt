@@ -13,10 +13,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import org.mozilla.social.core.designsystem.component.LargeTextBody
-import org.mozilla.social.core.designsystem.component.MediumTextBody
 import org.mozilla.social.core.designsystem.theme.MoSoSpacing
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
+import org.mozilla.social.core.ui.common.text.LargeTextBody
+import org.mozilla.social.core.ui.common.text.MediumTextBody
 import org.mozilla.social.core.ui.common.utils.PreviewTheme
 
 @Composable

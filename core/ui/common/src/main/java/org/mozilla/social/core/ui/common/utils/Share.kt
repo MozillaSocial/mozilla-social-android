@@ -1,4 +1,4 @@
-package org.mozilla.social.core.ui.common
+package org.mozilla.social.core.ui.common.utils
 
 import android.content.Context
 import android.content.Intent

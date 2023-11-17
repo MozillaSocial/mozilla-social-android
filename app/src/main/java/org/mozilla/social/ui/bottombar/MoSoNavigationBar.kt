@@ -25,7 +25,7 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import org.mozilla.social.common.utils.StringFactory
-import org.mozilla.social.core.designsystem.component.MoSoSurface
+import org.mozilla.social.core.ui.common.MoSoSurface
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.navigation.BottomBarNavigationDestination

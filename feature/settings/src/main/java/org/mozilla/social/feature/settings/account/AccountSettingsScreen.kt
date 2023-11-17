@@ -22,10 +22,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import org.koin.androidx.compose.koinViewModel
 import org.mozilla.social.common.Resource
-import org.mozilla.social.core.designsystem.component.MoSoButtonSecondary
-import org.mozilla.social.core.designsystem.component.MoSoSurface
 import org.mozilla.social.core.designsystem.theme.MoSoSpacing
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
+import org.mozilla.social.core.ui.common.MoSoSurface
+import org.mozilla.social.core.ui.common.button.MoSoButtonSecondary
 import org.mozilla.social.core.ui.common.utils.PreviewTheme
 import org.mozilla.social.feature.settings.R
 import org.mozilla.social.feature.settings.ui.SettingsColumn

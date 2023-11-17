@@ -7,8 +7,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.koin.androidx.compose.koinViewModel
-import org.mozilla.social.core.designsystem.component.MoSoSurface
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
+import org.mozilla.social.core.ui.common.MoSoSurface
 import org.mozilla.social.feature.settings.R
 import org.mozilla.social.feature.settings.ui.SettingsColumn
 import org.mozilla.social.feature.settings.ui.SettingsGroup

@@ -1,8 +1,7 @@
-package org.mozilla.social.core.designsystem.component
+package org.mozilla.social.core.ui.common
 
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.ColumnScope
-import androidx.compose.material3.Divider
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabPosition
 import androidx.compose.material3.TabRow
@@ -15,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
+import org.mozilla.social.core.ui.common.divider.MoSoDivider
 
 @Composable
 fun MoSoTabRow(

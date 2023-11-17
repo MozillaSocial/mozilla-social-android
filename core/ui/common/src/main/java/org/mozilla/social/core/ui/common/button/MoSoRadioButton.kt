@@ -1,4 +1,4 @@
-package org.mozilla.social.core.designsystem.component
+package org.mozilla.social.core.ui.common.button
 
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.material3.RadioButton
@@ -9,6 +9,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
+import org.mozilla.social.core.ui.common.MoSoSurface
 
 @Composable
 fun MoSoRadioButton(

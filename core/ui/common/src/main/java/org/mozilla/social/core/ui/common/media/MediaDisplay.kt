@@ -15,8 +15,9 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import coil.compose.AsyncImage
-import org.mozilla.social.core.ui.common.Radius
+import org.mozilla.social.core.designsystem.theme.MoSoRadius
 import org.mozilla.social.core.model.Attachment
+import org.mozilla.social.core.ui.common.utils.media
 
 @Suppress("MagicNumber")
 @Composable
@@ -127,7 +128,7 @@ private fun Attachment(
     AsyncImage(
         modifier = modifier
             .padding(2.dp)
-            .clip(RoundedCornerShape(Radius.media)),
+            .clip(RoundedCornerShape(MoSoRadius.media)),
         model = attachment.previewUrl,
         contentDescription = attachment.description,
         contentScale = ContentScale.Crop,

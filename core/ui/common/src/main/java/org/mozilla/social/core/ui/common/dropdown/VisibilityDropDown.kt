@@ -1,4 +1,4 @@
-package org.mozilla.social.core.ui.common
+package org.mozilla.social.core.ui.common.dropdown
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Box
@@ -18,11 +18,10 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import org.mozilla.social.core.designsystem.component.MoSoDropdownMenu
-import org.mozilla.social.core.designsystem.component.MoSoDropdownMenuItem
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.model.StatusVisibility
+import org.mozilla.social.core.ui.common.R
 
 @Composable
 fun VisibilityDropDownButton(

@@ -1,4 +1,4 @@
-package org.mozilla.social.core.designsystem.component
+package org.mozilla.social.core.ui.common.loading
 
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ProgressIndicatorDefaults
