@@ -71,4 +71,16 @@ class BottomIconsTest : KoinComponent {
             )
         )
     }
+
+    @Test
+    fun boostButtonClickTest() {
+        composeTestRule.onNodeWithTag(
+            testTag = "boost",
+            useUnmergedTree = true,
+        ).performClick()
+
+        //TODO assert something...
+
+        composeTestRule.waitForIdle()
+    }
 }

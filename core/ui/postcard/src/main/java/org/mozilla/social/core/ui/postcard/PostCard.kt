@@ -403,6 +403,7 @@ private fun BottomRow(
         )
         Spacer(modifier = Modifier.weight(1f))
         BottomIconButton(
+            modifier = Modifier.testTag("boost"),
             onClick = { postCardInteractions.onBoostClicked(post.statusId, !post.userBoosted) },
             painter = MoSoIcons.boost(),
             count = post.boostCount,
