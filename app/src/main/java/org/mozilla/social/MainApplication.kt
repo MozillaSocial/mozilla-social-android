@@ -34,6 +34,7 @@ import org.mozilla.social.feature.followers.followersModule
 import org.mozilla.social.feature.hashtag.hashTagModule
 import org.mozilla.social.feature.report.reportModule
 import org.mozilla.social.feature.thread.threadModule
+import timber.log.Timber
 
 class MainApplication : Application(), ImageLoaderFactory {
 
@@ -43,6 +44,9 @@ class MainApplication : Application(), ImageLoaderFactory {
 
     override fun onCreate() {
         super.onCreate()
+        if (BuildConfig.DEBUG) {
+            Timber.plant(Timber.DebugTree())
+        }
 
         startKoin {
             androidLogger()

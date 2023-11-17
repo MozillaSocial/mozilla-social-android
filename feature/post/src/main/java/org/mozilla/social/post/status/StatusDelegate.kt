@@ -41,8 +41,6 @@ class StatusDelegate(
     private val _inReplyToAccountName = MutableStateFlow<String?>(null)
     val inReplyToAccountName = _inReplyToAccountName.asStateFlow()
 
-
-
     private var searchJob: Job? = null
 
     init {
@@ -62,9 +60,11 @@ class StatusDelegate(
     }
 
     override fun onStatusTextUpdated(textFieldValue: TextFieldValue) {
-        if (textFieldValue.text.length + (contentWarningText.value?.length ?: 0) > NewPostViewModel.MAX_POST_LENGTH) return
+        if (textFieldValue.text.length + (contentWarningText.value?.length ?: 0) >
+            NewPostViewModel.MAX_POST_LENGTH
+        ) return
+        Timber.tag(TAG).d("updating onStatusTextUpdated ${textFieldValue.text}")
         _statusText.update {
-            Timber.d("updating onStatusTextUpdated")
             textFieldValue
         }
 
@@ -86,7 +86,7 @@ class StatusDelegate(
 
         searchJob = coroutineScope.launch {
             // let the user stop typing before trying to search
-            delay(500)
+            delay(SEARCH_DELAY)
 
             if (!accountText.isNullOrBlank()) {
                 try {
@@ -136,5 +136,11 @@ class StatusDelegate(
     override fun onContentWarningTextChanged(text: String) {
         if (text.length + statusText.value.text.length > NewPostViewModel.MAX_POST_LENGTH) return
         _contentWarningText.update { text }
+    }
+
+    companion object {
+        const val SEARCH_DELAY = 500L
+        val TAG
+            get() = StatusDelegate::class.simpleName ?: ""
     }
 }
