@@ -1,6 +1,6 @@
 package org.mozilla.social.core.model
 
-enum class SearchType(public val value: String) {
+enum class SearchType(val value: String) {
 
     /**
      * Search for accounts.

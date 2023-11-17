@@ -1,6 +1,6 @@
 package org.mozilla.social.core.model
 
-enum class NotificationType(public val value: String) {
+enum class NotificationType(val value: String) {
 
     /**
      * Someone followed the account.
