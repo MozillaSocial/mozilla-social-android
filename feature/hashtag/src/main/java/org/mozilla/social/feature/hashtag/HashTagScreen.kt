@@ -18,7 +18,7 @@ import org.mozilla.social.core.ui.postcard.PostCardUiState
 @Composable
 internal fun HashTagScreen(
     hashTag: String,
-    viewModel: HashTagViewModel = koinViewModel(parameters = { parametersOf(hashTag) })
+    viewModel: HashTagViewModel = koinViewModel(parameters = { parametersOf(hashTag) }),
 ) {
     HashTagScreen(
         hashTag = hashTag,
@@ -39,7 +39,7 @@ private fun HashTagScreen(
 ) {
     MoSoSurface {
         Column(
-            modifier = Modifier.systemBarsPadding()
+            modifier = Modifier.systemBarsPadding(),
         ) {
             MoSoCloseableTopAppBar(
                 title = "#$hashTag",

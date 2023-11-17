@@ -19,20 +19,22 @@ fun GenericError(
     onRetryClicked: () -> Unit,
 ) {
     Column(
-        modifier = modifier
-            .padding(8.dp)
-            .fillMaxWidth()
-            .wrapContentSize(align = Alignment.Center)
+        modifier =
+            modifier
+                .padding(8.dp)
+                .fillMaxWidth()
+                .wrapContentSize(align = Alignment.Center),
     ) {
         Text(
             modifier = Modifier.align(Alignment.CenterHorizontally),
-            text = stringResource(id = R.string.error_oops)
+            text = stringResource(id = R.string.error_oops),
         )
         Button(
-            modifier = Modifier
-                .padding(8.dp)
-                .align(Alignment.CenterHorizontally),
-            onClick = { onRetryClicked() }
+            modifier =
+                Modifier
+                    .padding(8.dp)
+                    .align(Alignment.CenterHorizontally),
+            onClick = { onRetryClicked() },
         ) {
             Text(text = stringResource(id = R.string.retry))
         }

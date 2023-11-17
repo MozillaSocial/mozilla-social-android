@@ -3,11 +3,9 @@ package org.mozilla.social.core.network.mastodon
 import org.mozilla.social.core.network.mastodon.model.NetworkAccessToken
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
-import retrofit2.http.Header
 import retrofit2.http.POST
 
 interface OauthApi {
-
     @FormUrlEncoded
     @POST("oauth/token")
     suspend fun fetchOAuthToken(
@@ -16,6 +14,6 @@ interface OauthApi {
         @Field("client_secret") clientSecret: String,
         @Field("redirect_uri") redirectUri: String,
         @Field("code") code: String,
-        @Field("grant_type") grantType: String
+        @Field("grant_type") grantType: String,
     ): NetworkAccessToken
 }

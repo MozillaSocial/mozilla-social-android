@@ -22,10 +22,10 @@ import org.koin.androidx.compose.koinViewModel
 import org.mozilla.social.core.designsystem.theme.MoSoRadius
 import org.mozilla.social.core.designsystem.theme.MoSoSpacing
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
-import org.mozilla.social.core.ui.common.divider.MoSoDivider
 import org.mozilla.social.core.ui.common.MoSoSurface
 import org.mozilla.social.core.ui.common.account.quickview.AccountQuickView
 import org.mozilla.social.core.ui.common.account.quickview.AccountQuickViewUiState
+import org.mozilla.social.core.ui.common.divider.MoSoDivider
 import org.mozilla.social.core.ui.common.utils.PreviewTheme
 import org.mozilla.social.core.ui.htmlcontent.HtmlContent
 import org.mozilla.social.core.ui.htmlcontent.HtmlContentInteractions
@@ -43,16 +43,19 @@ fun AboutSettingsScreen(aboutSettings: AboutSettings) {
     MoSoSurface {
         SettingsColumn(
             title = stringResource(id = R.string.about_settings_title),
-            modifier = Modifier
-                .verticalScroll(rememberScrollState())
-                .padding(MoSoSpacing.lg),
+            modifier =
+                Modifier
+                    .verticalScroll(rememberScrollState())
+                    .padding(MoSoSpacing.lg),
         ) {
             AsyncImage(
-                modifier = Modifier
-                    .clip(RoundedCornerShape(MoSoRadius.lg_16_dp))
-                    .fillMaxWidth()
-                    .wrapContentHeight(),
-                model = aboutSettings.thumbnailUrl, contentDescription = null,
+                modifier =
+                    Modifier
+                        .clip(RoundedCornerShape(MoSoRadius.lg_16_dp))
+                        .fillMaxWidth()
+                        .wrapContentHeight(),
+                model = aboutSettings.thumbnailUrl,
+                contentDescription = null,
                 contentScale = ContentScale.FillWidth,
             )
 
@@ -60,12 +63,11 @@ fun AboutSettingsScreen(aboutSettings: AboutSettings) {
 
             Text(text = aboutSettings.title, style = MoSoTheme.typography.labelLarge)
 
-
             Spacer(modifier = Modifier.height(MoSoSpacing.lg))
 
             Text(
                 text = stringResource(id = R.string.decentralized_social_media_powered_by_mastodon),
-                style = MoSoTheme.typography.bodyMedium
+                style = MoSoTheme.typography.bodyMedium,
             )
 
             Divider()
@@ -114,23 +116,26 @@ private fun Divider() {
 fun AboutSettingsScreenPreview() {
     PreviewTheme {
         AboutSettingsScreen(
-            aboutSettings = AboutSettings(
-                title = "mozilla.social",
-                administeredBy = AccountQuickViewUiState(
-                    accountId = "",
-                    displayName = "Mozilla Social",
-                    webFinger = "@social",
-                    avatarUrl = "",
-                    isFollowing = null,
+            aboutSettings =
+                AboutSettings(
+                    title = "mozilla.social",
+                    administeredBy =
+                        AccountQuickViewUiState(
+                            accountId = "",
+                            displayName = "Mozilla Social",
+                            webFinger = "@social",
+                            avatarUrl = "",
+                            isFollowing = null,
+                        ),
+                    contactEmail = "support@mozilla-social.zendesk.com",
+                    extendedDescription =
+                        "We’re here to build a social platform that puts " +
+                            "people first. Mozilla.social is currently available to a closed " +
+                            "beta group as we experiment, gain input from participants, learn, " +
+                            "and improve the experience. Eventually we hope to build a safe, " +
+                            "well-organized space within Mastodon that is open to all audiences.",
+                    thumbnailUrl = "",
                 ),
-                contactEmail = "support@mozilla-social.zendesk.com",
-                extendedDescription = "We’re here to build a social platform that puts " +
-                        "people first. Mozilla.social is currently available to a closed " +
-                        "beta group as we experiment, gain input from participants, learn, " +
-                        "and improve the experience. Eventually we hope to build a safe, " +
-                        "well-organized space within Mastodon that is open to all audiences.",
-                thumbnailUrl = "",
-            )
         )
     }
 }
@@ -140,5 +145,5 @@ data class AboutSettings(
     val administeredBy: AccountQuickViewUiState?,
     val contactEmail: String?,
     val extendedDescription: String?,
-    val thumbnailUrl: String?
+    val thumbnailUrl: String?,
 )

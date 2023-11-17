@@ -42,21 +42,23 @@ fun VideoPlayer(
     aspectRatio: Float = 1f,
 ) {
     Box(
-        modifier = Modifier
-            .aspectRatio(aspectRatio)
-            .clip(RoundedCornerShape(MoSoRadius.media))
+        modifier =
+            Modifier
+                .aspectRatio(aspectRatio)
+                .clip(RoundedCornerShape(MoSoRadius.media)),
     ) {
         val context = LocalContext.current
 
-        val exoPlayer = remember(uri) {
-            Timber.tag(TAG).d("Exoplayer created")
-            ExoPlayer.Builder(context).build().apply {
-                repeatMode = Player.REPEAT_MODE_ALL
-                volume = 0f
-                setMediaItem(MediaItem.fromUri(uri))
-                prepare()
+        val exoPlayer =
+            remember(uri) {
+                Timber.tag(TAG).d("Exoplayer created")
+                ExoPlayer.Builder(context).build().apply {
+                    repeatMode = Player.REPEAT_MODE_ALL
+                    volume = 0f
+                    setMediaItem(MediaItem.fromUri(uri))
+                    prepare()
+                }
             }
-        }
 
         if (loadState == LoadState.LOADED) {
             LaunchedEffect(Unit) {
@@ -93,9 +95,7 @@ fun VideoPlayer(
 }
 
 @Composable
-private fun BoxScope.MuteButton(
-    exoPlayer: ExoPlayer,
-) {
+private fun BoxScope.MuteButton(exoPlayer: ExoPlayer) {
     val muted = remember { mutableStateOf(exoPlayer.volume == 0f) }
     IconButton(
         modifier = Modifier.align(Alignment.BottomEnd),
@@ -107,7 +107,7 @@ private fun BoxScope.MuteButton(
                 muted.value = true
                 exoPlayer.volume = 0f
             }
-        }
+        },
     ) {
         if (muted.value) {
             Icon(

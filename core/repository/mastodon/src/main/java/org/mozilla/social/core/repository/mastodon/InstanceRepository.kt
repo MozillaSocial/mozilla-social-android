@@ -8,11 +8,9 @@ import org.mozilla.social.core.repository.mastodon.model.instance.toExternalMode
 class InstanceRepository(
     private val instanceApi: InstanceApi,
 ) {
-    suspend fun getInstanceRules(): List<InstanceRule> =
-        instanceApi.getRules().toExternalModel()
+    suspend fun getInstanceRules(): List<InstanceRule> = instanceApi.getRules().toExternalModel()
 
-    suspend fun getInstance(): Instance =
-        instanceApi.getInstance().toExternalModel()
+    suspend fun getInstance(): Instance = instanceApi.getInstance().toExternalModel()
 
     suspend fun getExtendedDescription() = instanceApi.getExtendedDescription().content
 }

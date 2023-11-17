@@ -1,4 +1,5 @@
 @file:Suppress("detekt:all")
+
 package org.mozilla.social.feature.discover
 
 import androidx.browser.customtabs.CustomTabsIntent
@@ -40,18 +41,16 @@ import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.designsystem.theme.MoSoRadius
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.designsystem.utils.NoRipple
+import org.mozilla.social.core.model.Recommendation
+import org.mozilla.social.core.ui.common.MoSoSurface
+import org.mozilla.social.core.ui.common.divider.MoSoDivider
 import org.mozilla.social.core.ui.common.error.GenericError
 import org.mozilla.social.core.ui.common.loading.MaxSizeLoading
-import org.mozilla.social.core.ui.common.utils.shareUrl
-import org.mozilla.social.core.model.Recommendation
-import org.mozilla.social.core.ui.common.divider.MoSoDivider
-import org.mozilla.social.core.ui.common.MoSoSurface
 import org.mozilla.social.core.ui.common.utils.media
+import org.mozilla.social.core.ui.common.utils.shareUrl
 
 @Composable
-internal fun DiscoverScreen(
-    viewModel: DiscoverViewModel = koinViewModel()
-) {
+internal fun DiscoverScreen(viewModel: DiscoverViewModel = koinViewModel()) {
     val recommendations by viewModel.recommendations.collectAsStateWithLifecycle()
     DiscoverScreen(
         recommendations = recommendations,
@@ -69,12 +68,15 @@ private fun DiscoverScreen(
     discoverInteractions: DiscoverInteractions,
 ) {
     MoSoSurface(
-        modifier = Modifier
-            .fillMaxSize()
+        modifier =
+            Modifier
+                .fillMaxSize(),
     ) {
-        Box(modifier = Modifier
-            .fillMaxSize()
-            .windowInsetsPadding(WindowInsets.systemBars.only(WindowInsetsSides.Top))
+        Box(
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .windowInsetsPadding(WindowInsets.systemBars.only(WindowInsetsSides.Top)),
         ) {
             when (recommendations) {
                 is Resource.Loaded -> {
@@ -92,7 +94,7 @@ private fun DiscoverScreen(
                     GenericError(
                         onRetryClicked = {
                             discoverInteractions.onRetryClicked()
-                        }
+                        },
                     )
                 }
             }
@@ -108,16 +110,17 @@ private fun MainContent(
     LazyColumn {
         item {
             Text(
-                modifier = Modifier
-                    .padding(start = 16.dp, top = 8.dp),
+                modifier =
+                    Modifier
+                        .padding(start = 16.dp, top = 8.dp),
                 text = stringResource(id = R.string.discover_title),
                 style = MoSoTheme.typography.titleLarge,
             )
         }
         items(
             count = recommendations.size,
-            key = { recommendations[it].id }
-        ) {index ->
+            key = { recommendations[it].id },
+        ) { index ->
             Recommendation(
                 recommendation = recommendations[index],
                 discoverInteractions = discoverInteractions,
@@ -140,24 +143,26 @@ private fun Recommendation(
     }
     NoRipple {
         Column(
-            modifier = Modifier
-                .padding(16.dp)
-                .clickable {
-                    discoverInteractions.onRecommendationClicked(recommendation.id)
-                    CustomTabsIntent
-                        .Builder()
-                        .build()
-                        .launchUrl(
-                            context,
-                            recommendation.url.toUri(),
-                        )
-                }
+            modifier =
+                Modifier
+                    .padding(16.dp)
+                    .clickable {
+                        discoverInteractions.onRecommendationClicked(recommendation.id)
+                        CustomTabsIntent
+                            .Builder()
+                            .build()
+                            .launchUrl(
+                                context,
+                                recommendation.url.toUri(),
+                            )
+                    },
         ) {
             Row {
                 Column(
-                    modifier = Modifier
-                        .weight(2f)
-                        .semantics { isTraversalGroup = true },
+                    modifier =
+                        Modifier
+                            .weight(2f)
+                            .semantics { isTraversalGroup = true },
                 ) {
                     Text(
                         text = recommendation.publisher,
@@ -175,10 +180,11 @@ private fun Recommendation(
                     )
                 }
                 AsyncImage(
-                    modifier = Modifier
-                        .padding(start = 16.dp)
-                        .weight(1f)
-                        .clip(RoundedCornerShape(MoSoRadius.media)),
+                    modifier =
+                        Modifier
+                            .padding(start = 16.dp)
+                            .weight(1f)
+                            .clip(RoundedCornerShape(MoSoRadius.media)),
                     model = recommendation.image.firstOrNull()?.url,
                     contentDescription = null,
                     contentScale = ContentScale.Crop,

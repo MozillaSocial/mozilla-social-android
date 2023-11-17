@@ -20,31 +20,32 @@ import org.mozilla.social.core.ui.common.MoSoSurface
 import org.mozilla.social.core.ui.common.MoSoSwitch
 import org.mozilla.social.core.ui.common.divider.MoSoDivider
 
-
 @Suppress("LongParameterList", "MagicNumber")
 @Composable
 internal fun SettingsSwitch(
     @StringRes title: Int,
     @StringRes description: Int? = null,
     checked: Boolean,
-    onCheckedChanged: () -> Unit
+    onCheckedChanged: () -> Unit,
 ) {
     MoSoSurface(
         color = Color.Transparent,
-        modifier = Modifier
-            .fillMaxWidth(),
+        modifier =
+            Modifier
+                .fillMaxWidth(),
         onClick = onCheckedChanged,
     ) {
         Column {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 Row {
                     Column(
-                        modifier = Modifier
-                            .weight(9f)
-                            .padding(bottom = 8.dp)
+                        modifier =
+                            Modifier
+                                .weight(9f)
+                                .padding(bottom = 8.dp),
                     ) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Text(
@@ -67,8 +68,9 @@ internal fun SettingsSwitch(
                     MoSoSwitch(
                         checked = checked,
                         onCheckChanged = { onCheckedChanged() },
-                        modifier = Modifier
-                            .padding(end = 16.dp)
+                        modifier =
+                            Modifier
+                                .padding(end = 16.dp),
                     )
                 }
             }

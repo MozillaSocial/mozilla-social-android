@@ -39,7 +39,7 @@ private fun ColorSchemePreview() {
 @Composable
 private fun RowScope.LightPalette() {
     Column(
-        Modifier.weight(1f)
+        Modifier.weight(1f),
     ) {
         Text(text = "Light Scheme", style = Typography.headlineMedium)
         ColorSchemePalette(colorScheme = MaterialLightColorScheme)
@@ -49,7 +49,7 @@ private fun RowScope.LightPalette() {
 @Composable
 private fun RowScope.DarkPalette() {
     Column(
-        Modifier.weight(1f)
+        Modifier.weight(1f),
     ) {
         Text(text = "Dark Scheme", style = Typography.headlineMedium)
         ColorSchemePalette(colorScheme = MaterialDarkColorScheme)
@@ -59,58 +59,57 @@ private fun RowScope.DarkPalette() {
 @Composable
 private fun ColorSchemePalette(colorScheme: ColorScheme) {
     Column(
-        modifier = Modifier.background(colorScheme.background)
+        modifier = Modifier.background(colorScheme.background),
     ) {
         TestBox(
             text = "primary",
             textColor = colorScheme.onPrimary,
-            backgroundColor = colorScheme.primary
+            backgroundColor = colorScheme.primary,
         )
         TestBox(
             text = "primary container",
             textColor = colorScheme.onPrimaryContainer,
-            backgroundColor = colorScheme.primaryContainer
+            backgroundColor = colorScheme.primaryContainer,
         )
         TestBox(
             text = "secondary",
             textColor = colorScheme.onSecondary,
-            backgroundColor = colorScheme.secondary
+            backgroundColor = colorScheme.secondary,
         )
         TestBox(
             text = "secondary container",
             textColor = colorScheme.onSecondaryContainer,
-            backgroundColor = colorScheme.secondaryContainer
+            backgroundColor = colorScheme.secondaryContainer,
         )
         TestBox(
             text = "tertiary",
             textColor = colorScheme.onTertiary,
-            backgroundColor = colorScheme.tertiary
+            backgroundColor = colorScheme.tertiary,
         )
         TestBox(
             text = "tertiary container",
             textColor = colorScheme.onTertiaryContainer,
-            backgroundColor = colorScheme.tertiaryContainer
+            backgroundColor = colorScheme.tertiaryContainer,
         )
         TestBox(
             text = "background",
             textColor = colorScheme.onBackground,
-            backgroundColor = colorScheme.background
+            backgroundColor = colorScheme.background,
         )
         TestBox(
             text = "surface",
             textColor = colorScheme.onSurface,
-            backgroundColor = colorScheme.surface
+            backgroundColor = colorScheme.surface,
         )
         TestBox(
             text = "surface variant",
             textColor = colorScheme.onSurfaceVariant,
-            backgroundColor = colorScheme.surfaceVariant
+            backgroundColor = colorScheme.surfaceVariant,
         )
         TestBox(
             textColor = colorScheme.onSurfaceVariant,
-            backgroundColor = colorScheme.surfaceVariant
+            backgroundColor = colorScheme.surfaceVariant,
         )
-
     }
 }
 
@@ -119,12 +118,13 @@ private fun TestBox(
     modifier: Modifier = Modifier,
     text: String = "some text",
     textColor: Color,
-    backgroundColor: Color
+    backgroundColor: Color,
 ) {
     Box(
-        modifier = modifier
-            .padding(4.dp)
-            .background(color = backgroundColor)
+        modifier =
+            modifier
+                .padding(4.dp)
+                .background(color = backgroundColor),
     ) {
         Text(modifier = Modifier.padding(16.dp), text = text, color = textColor)
     }
@@ -133,69 +133,71 @@ private fun TestBox(
 /**
  * This is for compatability purposes only- please use [MoSoColors] instead
  */
-internal val MaterialLightColorScheme = lightColorScheme(
-    primary = FirefoxColor.Violet60,
-    onPrimary = FirefoxColor.Violet10,
-    primaryContainer = FirefoxColor.Violet10,
-    onPrimaryContainer = FirefoxColor.Violet80,
-    inversePrimary = FirefoxColor.DarkGrey90,
-    secondary = FirefoxColor.LightGrey40,
-    onSecondary = FirefoxColor.DarkGrey05,
-    secondaryContainer = FirefoxColor.LightGrey40,
-    onSecondaryContainer = FirefoxColor.DarkGrey05,
-    tertiary = FirefoxColor.Violet60,
-    onTertiary = FirefoxColor.LightGrey05,
-    tertiaryContainer = FirefoxColor.Violet60,
-    onTertiaryContainer = FirefoxColor.LightGrey05,
-    background = FirefoxColor.White,
-    onBackground = FirefoxColor.DarkGrey90,
-    surface = FirefoxColor.LightGrey20,
-    onSurface = FirefoxColor.DarkGrey90,
-    surfaceVariant = FirefoxColor.LightGrey20,
-    onSurfaceVariant = FirefoxColor.Ink20,
-    surfaceTint = FirefoxColor.Violet05,
-    inverseSurface = FirefoxColor.DarkGrey05,
-    inverseOnSurface = FirefoxColor.LightGrey05,
-    error = FirefoxColor.Red70,
-    onError = FirefoxColor.LightGrey05,
-    errorContainer = FirefoxColor.Red70,
-    onErrorContainer = FirefoxColor.LightGrey05,
-    outline = FirefoxColor.Violet60,
-    outlineVariant = FirefoxColor.LightGrey30,
-    scrim = FirefoxColor.DarkGrey30,
-)
+internal val MaterialLightColorScheme =
+    lightColorScheme(
+        primary = FirefoxColor.Violet60,
+        onPrimary = FirefoxColor.Violet10,
+        primaryContainer = FirefoxColor.Violet10,
+        onPrimaryContainer = FirefoxColor.Violet80,
+        inversePrimary = FirefoxColor.DarkGrey90,
+        secondary = FirefoxColor.LightGrey40,
+        onSecondary = FirefoxColor.DarkGrey05,
+        secondaryContainer = FirefoxColor.LightGrey40,
+        onSecondaryContainer = FirefoxColor.DarkGrey05,
+        tertiary = FirefoxColor.Violet60,
+        onTertiary = FirefoxColor.LightGrey05,
+        tertiaryContainer = FirefoxColor.Violet60,
+        onTertiaryContainer = FirefoxColor.LightGrey05,
+        background = FirefoxColor.White,
+        onBackground = FirefoxColor.DarkGrey90,
+        surface = FirefoxColor.LightGrey20,
+        onSurface = FirefoxColor.DarkGrey90,
+        surfaceVariant = FirefoxColor.LightGrey20,
+        onSurfaceVariant = FirefoxColor.Ink20,
+        surfaceTint = FirefoxColor.Violet05,
+        inverseSurface = FirefoxColor.DarkGrey05,
+        inverseOnSurface = FirefoxColor.LightGrey05,
+        error = FirefoxColor.Red70,
+        onError = FirefoxColor.LightGrey05,
+        errorContainer = FirefoxColor.Red70,
+        onErrorContainer = FirefoxColor.LightGrey05,
+        outline = FirefoxColor.Violet60,
+        outlineVariant = FirefoxColor.LightGrey30,
+        scrim = FirefoxColor.DarkGrey30,
+    )
 
 /**
  * This is for compatability purposes only- please use [MoSoColors] instead
  */
-internal val MaterialDarkColorScheme = darkColorScheme(
-    primary = FirefoxColor.Violet90,
-    onPrimary = FirefoxColor.Violet10,
-    primaryContainer = FirefoxColor.Violet80,
-    onPrimaryContainer = FirefoxColor.Violet20,
-    inversePrimary = FirefoxColor.LightGrey05,
-    secondary = FirefoxColor.DarkGrey80,
-    onSecondary = FirefoxColor.LightGrey30,
-    secondaryContainer = FirefoxColor.DarkGrey80,
-    onSecondaryContainer = FirefoxColor.LightGrey30,
-    tertiary = FirefoxColor.Violet60,
-    onTertiary = FirefoxColor.LightGrey30,
-    tertiaryContainer = FirefoxColor.Violet60,
-    onTertiaryContainer = FirefoxColor.LightGrey30,
-    background = FirefoxColor.DarkGrey60,
-    onBackground = FirefoxColor.LightGrey30,
-    surface = FirefoxColor.DarkGrey40,
-    onSurface = FirefoxColor.LightGrey30,
-    surfaceVariant = FirefoxColor.DarkGrey80,
-    onSurfaceVariant = FirefoxColor.Violet20,
-    surfaceTint = FirefoxColor.Violet80,
-    inverseSurface = FirefoxColor.LightGrey10,
-    inverseOnSurface = FirefoxColor.DarkGrey60,
-    error = FirefoxColor.Red50,
-    onError = FirefoxColor.LightGrey10,
-    errorContainer = FirefoxColor.Red70,
-    onErrorContainer = FirefoxColor.LightGrey10,
-    outline = FirefoxColor.Violet60,
-    outlineVariant = FirefoxColor.DarkGrey80,
-    scrim = FirefoxColor.DarkGrey90,
-)
+internal val MaterialDarkColorScheme =
+    darkColorScheme(
+        primary = FirefoxColor.Violet90,
+        onPrimary = FirefoxColor.Violet10,
+        primaryContainer = FirefoxColor.Violet80,
+        onPrimaryContainer = FirefoxColor.Violet20,
+        inversePrimary = FirefoxColor.LightGrey05,
+        secondary = FirefoxColor.DarkGrey80,
+        onSecondary = FirefoxColor.LightGrey30,
+        secondaryContainer = FirefoxColor.DarkGrey80,
+        onSecondaryContainer = FirefoxColor.LightGrey30,
+        tertiary = FirefoxColor.Violet60,
+        onTertiary = FirefoxColor.LightGrey30,
+        tertiaryContainer = FirefoxColor.Violet60,
+        onTertiaryContainer = FirefoxColor.LightGrey30,
+        background = FirefoxColor.DarkGrey60,
+        onBackground = FirefoxColor.LightGrey30,
+        surface = FirefoxColor.DarkGrey40,
+        onSurface = FirefoxColor.LightGrey30,
+        surfaceVariant = FirefoxColor.DarkGrey80,
+        onSurfaceVariant = FirefoxColor.Violet20,
+        surfaceTint = FirefoxColor.Violet80,
+        inverseSurface = FirefoxColor.LightGrey10,
+        inverseOnSurface = FirefoxColor.DarkGrey60,
+        error = FirefoxColor.Red50,
+        onError = FirefoxColor.LightGrey10,
+        errorContainer = FirefoxColor.Red70,
+        onErrorContainer = FirefoxColor.LightGrey10,
+        outline = FirefoxColor.Violet60,
+        outlineVariant = FirefoxColor.DarkGrey80,
+        scrim = FirefoxColor.DarkGrey90,
+    )

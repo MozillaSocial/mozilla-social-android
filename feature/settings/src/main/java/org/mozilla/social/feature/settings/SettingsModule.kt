@@ -16,21 +16,22 @@ import org.mozilla.social.feature.settings.contentpreferences.blockedusers.Block
 import org.mozilla.social.feature.settings.contentpreferences.mutedusers.MutedUsersSettingsViewModel
 import org.mozilla.social.feature.settings.privacy.PrivacySettingsViewModel
 
-val settingsModule = module {
-    includes(
-        commonModule,
-        analyticsModule,
-        dataStoreModule,
-        navigationModule,
-        mastodonRepositoryModule,
-        mastodonUsecaseModule,
-    )
+val settingsModule =
+    module {
+        includes(
+            commonModule,
+            analyticsModule,
+            dataStoreModule,
+            navigationModule,
+            mastodonRepositoryModule,
+            mastodonUsecaseModule,
+        )
 
-    viewModel { _ -> SettingsViewModel(get(), get(), get()) }
-    viewModel { AccountSettingsViewModel(get(), get(), get()) }
-    viewModel { PrivacySettingsViewModel(get()) }
-    viewModel { AboutSettingsViewModel(get()) }
-    viewModel { ContentPreferencesSettingsViewModel(get()) }
-    viewModelOf(::BlockedUsersViewModel)
-    viewModelOf(::MutedUsersSettingsViewModel)
-}
+        viewModel { _ -> SettingsViewModel(get(), get(), get()) }
+        viewModel { AccountSettingsViewModel(get(), get(), get()) }
+        viewModel { PrivacySettingsViewModel(get()) }
+        viewModel { AboutSettingsViewModel(get()) }
+        viewModel { ContentPreferencesSettingsViewModel(get()) }
+        viewModelOf(::BlockedUsersViewModel)
+        viewModelOf(::MutedUsersSettingsViewModel)
+    }

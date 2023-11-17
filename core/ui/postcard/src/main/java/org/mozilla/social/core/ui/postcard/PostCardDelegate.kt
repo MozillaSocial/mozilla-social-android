@@ -2,12 +2,12 @@ package org.mozilla.social.core.ui.postcard
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import org.mozilla.social.core.usecase.mastodon.status.BoostStatus
 import org.mozilla.social.core.navigation.NavigationDestination
 import org.mozilla.social.core.navigation.usecases.NavigateTo
 import org.mozilla.social.core.navigation.usecases.OpenLink
 import org.mozilla.social.core.usecase.mastodon.account.BlockAccount
 import org.mozilla.social.core.usecase.mastodon.account.MuteAccount
+import org.mozilla.social.core.usecase.mastodon.status.BoostStatus
 import org.mozilla.social.core.usecase.mastodon.status.DeleteStatus
 import org.mozilla.social.core.usecase.mastodon.status.FavoriteStatus
 import org.mozilla.social.core.usecase.mastodon.status.UndoBoostStatus
@@ -28,8 +28,10 @@ class PostCardDelegate(
     private val undoFavoriteStatus: UndoFavoriteStatus,
     private val deleteStatus: DeleteStatus,
 ) : PostCardInteractions {
-
-    override fun onVoteClicked(pollId: String, choices: List<Int>) {
+    override fun onVoteClicked(
+        pollId: String,
+        choices: List<Int>,
+    ) {
         coroutineScope.launch {
             try {
                 voteOnPoll(pollId, choices)
@@ -43,7 +45,10 @@ class PostCardDelegate(
         navigateTo(NavigationDestination.NewPost(replyStatusId = statusId))
     }
 
-    override fun onBoostClicked(statusId: String, isBoosting: Boolean) {
+    override fun onBoostClicked(
+        statusId: String,
+        isBoosting: Boolean,
+    ) {
         coroutineScope.launch {
             if (isBoosting) {
                 try {
@@ -61,7 +66,10 @@ class PostCardDelegate(
         }
     }
 
-    override fun onFavoriteClicked(statusId: String, isFavoriting: Boolean) {
+    override fun onFavoriteClicked(
+        statusId: String,
+        isFavoriting: Boolean,
+    ) {
         coroutineScope.launch {
             if (isFavoriting) {
                 try {
@@ -108,16 +116,16 @@ class PostCardDelegate(
         accountHandle: String,
         statusId: String,
     ) {
-        navigateTo(NavigationDestination.Report(
-            reportAccountId = accountId,
-            reportAccountHandle = accountHandle,
-            reportStatusId = statusId,
-        ))
+        navigateTo(
+            NavigationDestination.Report(
+                reportAccountId = accountId,
+                reportAccountHandle = accountHandle,
+                reportStatusId = statusId,
+            ),
+        )
     }
 
-    override fun onOverflowDeleteClicked(
-        statusId: String,
-    ) {
+    override fun onOverflowDeleteClicked(statusId: String) {
         coroutineScope.launch {
             try {
                 deleteStatus(statusId)
@@ -137,7 +145,6 @@ class PostCardDelegate(
 
     override fun onAccountClicked(accountId: String) {
         navigateTo(NavigationDestination.Account(accountId))
-
     }
 
     override fun onHashTagClicked(hashTag: String) {

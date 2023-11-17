@@ -6,14 +6,12 @@ package org.mozilla.social.core.model
  * Used for reconstructing threads of statuses.
  */
 data class Context(
-
     /**
      * Parent statuses in the thread.
      */
     val ancestors: List<Status>,
-
     /**
      * Children statuses in the thread.
      */
-    val descendants: List<Status>
+    val descendants: List<Status>,
 )

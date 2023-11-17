@@ -6,18 +6,18 @@ import kotlin.test.BeforeTest
 import kotlin.test.Test
 
 class MuteAccountTest : BaseUseCaseTest() {
-
     private lateinit var subject: MuteAccount
 
     @BeforeTest
     fun setup() {
-        subject = MuteAccount(
-            externalScope = TestScope(testDispatcher),
-            showSnackbar = showSnackbar,
-            accountRepository = accountRepository,
-            socialDatabase = socialDatabase,
-            dispatcherIo = testDispatcher,
-        )
+        subject =
+            MuteAccount(
+                externalScope = TestScope(testDispatcher),
+                showSnackbar = showSnackbar,
+                accountRepository = accountRepository,
+                socialDatabase = socialDatabase,
+                dispatcherIo = testDispatcher,
+            )
     }
 
     @Test
@@ -32,7 +32,7 @@ class MuteAccountTest : BaseUseCaseTest() {
             },
             verifyBlock = {
                 accountRepository.muteAccount(accountId)
-            }
+            },
         )
     }
 

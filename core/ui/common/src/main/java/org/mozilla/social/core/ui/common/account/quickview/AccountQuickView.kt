@@ -44,12 +44,16 @@ fun AccountQuickView(
 val CIRCLE_AVATAR_SIZE = 50.dp
 
 @Composable
-private fun CircleAvatar(avatarUrl: String, modifier: Modifier = Modifier) {
+private fun CircleAvatar(
+    avatarUrl: String,
+    modifier: Modifier = Modifier,
+) {
     AsyncImage(
-        modifier = modifier
-            .size(CIRCLE_AVATAR_SIZE)
-            .clip(CircleShape)
-            .background(MoSoTheme.colors.layer2),
+        modifier =
+            modifier
+                .size(CIRCLE_AVATAR_SIZE)
+                .clip(CircleShape)
+                .background(MoSoTheme.colors.layer2),
         model = avatarUrl,
         contentDescription = null,
     )
@@ -60,13 +64,14 @@ private fun CircleAvatar(avatarUrl: String, modifier: Modifier = Modifier) {
 private fun AccountQuickViewPreview() {
     PreviewTheme {
         AccountQuickView(
-            uiState = AccountQuickViewUiState(
-                accountId = "",
-                displayName = "name",
-                webFinger = "webfinger",
-                avatarUrl = "url",
-                isFollowing = false,
-            ),
+            uiState =
+                AccountQuickViewUiState(
+                    accountId = "",
+                    displayName = "name",
+                    webFinger = "webfinger",
+                    avatarUrl = "url",
+                    isFollowing = false,
+                ),
         )
     }
 }

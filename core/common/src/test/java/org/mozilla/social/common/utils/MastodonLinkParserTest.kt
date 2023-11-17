@@ -1,6 +1,5 @@
 package org.mozilla.social.common.utils
 
-import org.mozilla.social.common.Rel
 import org.mozilla.social.common.getMaxIdValue
 import org.mozilla.social.common.getSinceIdValue
 import org.mozilla.social.common.parseMastodonLinkHeader
@@ -9,7 +8,6 @@ import kotlin.test.assertEquals
 
 @Suppress("MaxLineLength")
 class MastodonLinkParserTest {
-
     @Test
     fun `Since ID parsing works when since_id is the last query param`() {
         val linkHeader = "<https://mozilla.social/following?limit=40&since_id=215>; rel=\"prev\""

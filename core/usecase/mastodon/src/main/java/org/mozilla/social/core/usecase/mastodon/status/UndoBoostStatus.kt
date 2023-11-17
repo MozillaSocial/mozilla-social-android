@@ -21,28 +21,27 @@ class UndoBoostStatus internal constructor(
     private val saveStatusToDatabase: SaveStatusToDatabase,
 ) {
     @OptIn(PreferUseCase::class)
-    suspend operator fun invoke(
-        boostedStatusId: String,
-    ) = externalScope.async(dispatcherIo) {
-        try {
-            socialDatabase.withTransaction {
-                statusRepository.updateBoostCount(boostedStatusId, -1)
-                statusRepository.updateBoosted(boostedStatusId, false)
+    suspend operator fun invoke(boostedStatusId: String) =
+        externalScope.async(dispatcherIo) {
+            try {
+                socialDatabase.withTransaction {
+                    statusRepository.updateBoostCount(boostedStatusId, -1)
+                    statusRepository.updateBoosted(boostedStatusId, false)
+                }
+                val status = statusRepository.unBoostStatus(boostedStatusId)
+                saveStatusToDatabase(status)
+            } catch (e: Exception) {
+                socialDatabase.withTransaction {
+                    statusRepository.updateBoostCount(boostedStatusId, 1)
+                    statusRepository.updateBoosted(boostedStatusId, true)
+                }
+                showSnackbar(
+                    text = StringFactory.resource(R.string.error_undoing_boost),
+                    isError = true,
+                )
+                throw UndoBoostStatusFailedException(e)
             }
-            val status = statusRepository.unBoostStatus(boostedStatusId)
-            saveStatusToDatabase(status)
-        } catch (e: Exception) {
-            socialDatabase.withTransaction {
-                statusRepository.updateBoostCount(boostedStatusId, 1)
-                statusRepository.updateBoosted(boostedStatusId, true)
-            }
-            showSnackbar(
-                text = StringFactory.resource(R.string.error_undoing_boost),
-                isError = true,
-            )
-            throw UndoBoostStatusFailedException(e)
-        }
-    }.await()
+        }.await()
 
     class UndoBoostStatusFailedException(e: Exception) : Exception(e)
 }

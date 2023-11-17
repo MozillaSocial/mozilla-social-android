@@ -19,12 +19,13 @@ class Logout(
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
     private val appScope: AppScope,
 ) {
-    operator fun invoke() = GlobalScope.launch(ioDispatcher) {
-        appScope.reset()
-        userPreferencesDatastore.clearData()
-        socialDatabase.clearAllTables()
+    operator fun invoke() =
+        GlobalScope.launch(ioDispatcher) {
+            appScope.reset()
+            userPreferencesDatastore.clearData()
+            socialDatabase.clearAllTables()
 
-        /** Possible use of analytics...destroy() **/
-        analytics.clearLoggedInIdentifiers()
-    }
+            /** Possible use of analytics...destroy() **/
+            analytics.clearLoggedInIdentifiers()
+        }
 }

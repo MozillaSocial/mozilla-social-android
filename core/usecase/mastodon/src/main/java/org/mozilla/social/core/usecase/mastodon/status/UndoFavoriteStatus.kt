@@ -21,28 +21,27 @@ class UndoFavoriteStatus internal constructor(
     private val dispatcherIo: CoroutineDispatcher = Dispatchers.IO,
 ) {
     @OptIn(PreferUseCase::class)
-    suspend operator fun invoke(
-        statusId: String,
-    ) = externalScope.async(dispatcherIo) {
-        try {
-            socialDatabase.withTransaction {
-                statusRepository.updateFavoriteCount(statusId, -1)
-                statusRepository.updateFavorited(statusId, false)
+    suspend operator fun invoke(statusId: String) =
+        externalScope.async(dispatcherIo) {
+            try {
+                socialDatabase.withTransaction {
+                    statusRepository.updateFavoriteCount(statusId, -1)
+                    statusRepository.updateFavorited(statusId, false)
+                }
+                val status = statusRepository.unFavoriteStatus(statusId)
+                saveStatusToDatabase(status)
+            } catch (e: Exception) {
+                socialDatabase.withTransaction {
+                    statusRepository.updateFavoriteCount(statusId, 1)
+                    statusRepository.updateFavorited(statusId, true)
+                }
+                showSnackbar(
+                    text = StringFactory.resource(R.string.error_removing_favorite),
+                    isError = true,
+                )
+                throw UndoFavoriteStatusFailedException(e)
             }
-            val status = statusRepository.unFavoriteStatus(statusId)
-            saveStatusToDatabase(status)
-        } catch (e: Exception) {
-            socialDatabase.withTransaction {
-                statusRepository.updateFavoriteCount(statusId, 1)
-                statusRepository.updateFavorited(statusId, true)
-            }
-            showSnackbar(
-                text = StringFactory.resource(R.string.error_removing_favorite),
-                isError = true,
-            )
-            throw UndoFavoriteStatusFailedException(e)
-        }
-    }.await()
+        }.await()
 
     class UndoFavoriteStatusFailedException(e: Exception) : Exception(e)
 }

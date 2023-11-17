@@ -50,7 +50,7 @@ fun MoSoCloseableTopAppBar(
         icon = if (showCloseButton) MoSoIcons.backArrow() else null,
         onIconClicked = { popBackstack() },
         actions = actions,
-        showDivider = showDivider
+        showDivider = showDivider,
     )
 }
 
@@ -65,7 +65,7 @@ fun MoSoTopBar(
     showDivider: Boolean = true,
 ) {
     Column(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier.fillMaxWidth(),
     ) {
         MoSoTopBar(
             title = { TopBarTitle(title = title) },
@@ -74,7 +74,7 @@ fun MoSoTopBar(
                 icon?.let {
                     TopBarIconButton(
                         painter = it,
-                        onIconClicked = onIconClicked
+                        onIconClicked = onIconClicked,
                     )
                 }
             },
@@ -105,7 +105,7 @@ fun MoSoTopBar(
     actions: @Composable RowScope.() -> Unit = {},
     windowInsets: WindowInsets = TopAppBarDefaults.windowInsets,
     colors: TopAppBarColors = MoSoTopBarDefaults.colors(),
-    scrollBehavior: TopAppBarScrollBehavior? = null
+    scrollBehavior: TopAppBarScrollBehavior? = null,
 ) {
     TopAppBar(
         title = title,
@@ -118,9 +118,11 @@ fun MoSoTopBar(
     )
 }
 
-
 @Composable
-private fun TopBarIconButton(painter: Painter, onIconClicked: () -> Unit) {
+private fun TopBarIconButton(
+    painter: Painter,
+    onIconClicked: () -> Unit,
+) {
     IconButton(
         onClick = { onIconClicked() },
     ) {
@@ -135,13 +137,14 @@ private fun TopBarIconButton(painter: Painter, onIconClicked: () -> Unit) {
 object MoSoTopBarDefaults {
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    fun colors(): TopAppBarColors = TopAppBarDefaults.topAppBarColors(
-        containerColor = MoSoTheme.colors.layer1,
-        scrolledContainerColor = MoSoTheme.colors.layer1,
-        navigationIconContentColor = MoSoTheme.colors.iconPrimary,
-        titleContentColor = MoSoTheme.colors.textPrimary,
-        actionIconContentColor = MoSoTheme.colors.iconPrimary,
-    )
+    fun colors(): TopAppBarColors =
+        TopAppBarDefaults.topAppBarColors(
+            containerColor = MoSoTheme.colors.layer1,
+            scrolledContainerColor = MoSoTheme.colors.layer1,
+            navigationIconContentColor = MoSoTheme.colors.iconPrimary,
+            titleContentColor = MoSoTheme.colors.textPrimary,
+            actionIconContentColor = MoSoTheme.colors.iconPrimary,
+        )
 }
 
 @Preview
@@ -152,7 +155,7 @@ private fun MoSoTopBarPreview() {
             title = "test",
             actions = {
                 Text(text = "rightSide")
-            }
+            },
         )
     }
 }

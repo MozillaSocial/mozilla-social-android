@@ -17,7 +17,6 @@ import org.mozilla.social.ui.MainActivityScreen
 import timber.log.Timber
 
 class MainActivity : ComponentActivity() {
-
     private val viewModel: MainViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,4 +46,3 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-

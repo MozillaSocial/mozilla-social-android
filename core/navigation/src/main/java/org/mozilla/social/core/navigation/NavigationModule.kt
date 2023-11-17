@@ -7,16 +7,16 @@ import org.mozilla.social.core.navigation.usecases.OpenLink
 import org.mozilla.social.core.navigation.usecases.PopNavBackstack
 import org.mozilla.social.core.navigation.usecases.ShowSnackbar
 
+val navigationModule =
+    module {
+        includes(
+            commonModule,
+        )
 
-val navigationModule = module {
-    includes(
-        commonModule,
-    )
-
-    single { EventRelay() }
-    single { NavigationEventFlow(get()) }
-    single { NavigateTo(get()) }
-    single { PopNavBackstack(get()) }
-    single { OpenLink(get()) }
-    single { ShowSnackbar(get()) }
-}
+        single { EventRelay() }
+        single { NavigationEventFlow(get()) }
+        single { NavigateTo(get()) }
+        single { PopNavBackstack(get()) }
+        single { OpenLink(get()) }
+        single { ShowSnackbar(get()) }
+    }

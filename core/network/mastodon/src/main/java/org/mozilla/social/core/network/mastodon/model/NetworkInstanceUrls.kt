@@ -7,11 +7,10 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 data class NetworkInstanceUrls(
-
     /**
      * WebSockets API base URL.
      *
      * e.g. wss://mastodon.example
      */
-    val streamingApiUrl: String
+    val streamingApiUrl: String,
 )

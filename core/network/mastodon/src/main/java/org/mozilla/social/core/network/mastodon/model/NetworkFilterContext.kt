@@ -1,7 +1,6 @@
 package org.mozilla.social.core.network.mastodon.model
 
 enum class NetworkFilterContext {
-
     /**
      * Home timeline and lists.
      */
@@ -20,5 +19,5 @@ enum class NetworkFilterContext {
     /**
      * Expanded thread of a detailed status.
      */
-    Thread
+    Thread,
 }

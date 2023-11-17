@@ -13,12 +13,12 @@ sealed class ReportDataBundle {
         val checkedInstanceRules: List<InstanceRule>,
         val additionalText: String,
         val sendToExternalServer: Boolean,
-    ): ReportDataBundle()
+    ) : ReportDataBundle()
 
     @Serializable
     data class ReportDataBundleForScreen3(
         val reportAccountId: String,
         val reportAccountHandle: String,
         val didUserReportAccount: Boolean,
-    ): ReportDataBundle()
+    ) : ReportDataBundle()
 }

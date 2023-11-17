@@ -3,9 +3,8 @@ package org.mozilla.social.core.navigation
 import androidx.navigation.NavController
 
 sealed class SettingsNavigationDestination(val route: String) {
-
     data object MainSettings : SettingsNavigationDestination(
-        route = "mainSettings"
+        route = "mainSettings",
     ) {
         fun NavController.navigateToMainSettings() {
             navigate(route = route)
@@ -13,7 +12,7 @@ sealed class SettingsNavigationDestination(val route: String) {
     }
 
     data object AccountSettings : SettingsNavigationDestination(
-        route = "accountSettings"
+        route = "accountSettings",
     ) {
         fun NavController.navigateToAccountSettings() {
             navigate(route = route)
@@ -21,7 +20,7 @@ sealed class SettingsNavigationDestination(val route: String) {
     }
 
     data object ContentPreferencesSettings : SettingsNavigationDestination(
-        route = "contentPreferencesSettings"
+        route = "contentPreferencesSettings",
     ) {
         fun NavController.navigateToContentPreferencesSettings() {
             navigate(route = route)
@@ -29,7 +28,7 @@ sealed class SettingsNavigationDestination(val route: String) {
     }
 
     data object BlockedUsersSettings : SettingsNavigationDestination(
-        route = "blockedUsersSettings"
+        route = "blockedUsersSettings",
     ) {
         fun NavController.navigateToBlockedUsers() {
             navigate(route = route)
@@ -43,7 +42,7 @@ sealed class SettingsNavigationDestination(val route: String) {
     }
 
     data object PrivacySettings : SettingsNavigationDestination(
-        route = "privacySettings"
+        route = "privacySettings",
     ) {
         fun NavController.navigateToPrivacySettings() {
             navigate(route = route)
@@ -51,7 +50,7 @@ sealed class SettingsNavigationDestination(val route: String) {
     }
 
     data object AboutSettings : SettingsNavigationDestination(
-        route = "aboutSettings"
+        route = "aboutSettings",
     ) {
         fun NavController.navigateToAboutSettings() {
             navigate(route = route)

@@ -11,25 +11,25 @@ import org.mozilla.social.core.analytics.Analytics
 import org.mozilla.social.core.analytics.AnalyticsIdentifiers
 import org.mozilla.social.core.analytics.EngagementType
 import org.mozilla.social.core.analytics.utils.ImpressionTracker
-import org.mozilla.social.core.usecase.mozilla.GetRecommendations
 import org.mozilla.social.core.model.Recommendation
+import org.mozilla.social.core.usecase.mozilla.GetRecommendations
 import timber.log.Timber
 
 class DiscoverViewModel(
     private val getRecommendations: GetRecommendations,
     private val analytics: Analytics,
 ) : ViewModel(), DiscoverInteractions {
-
     private val _recommendations =
         MutableStateFlow<Resource<List<Recommendation>>>(Resource.Loading())
     val recommendations = _recommendations.asStateFlow()
 
-    private val recommendationImpressionTracker = ImpressionTracker<String> { recommendationId ->
-        analytics.uiImpression(
-            uiIdentifier = AnalyticsIdentifiers.DISCOVER_RECOMMENDATION_IMPRESSION,
-            recommendationId = recommendationId,
-        )
-    }
+    private val recommendationImpressionTracker =
+        ImpressionTracker<String> { recommendationId ->
+            analytics.uiImpression(
+                uiIdentifier = AnalyticsIdentifiers.DISCOVER_RECOMMENDATION_IMPRESSION,
+                recommendationId = recommendationId,
+            )
+        }
 
     init {
         getRecs()

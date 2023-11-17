@@ -6,5 +6,5 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class NetworkPollVote(
     @SerialName("choices")
-    val choices: List<Int>
+    val choices: List<Int>,
 )

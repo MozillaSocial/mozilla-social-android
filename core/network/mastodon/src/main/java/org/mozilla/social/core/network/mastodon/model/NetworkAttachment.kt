@@ -8,7 +8,6 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 sealed class NetworkAttachment {
-
     abstract val attachmentId: String
 
     /**

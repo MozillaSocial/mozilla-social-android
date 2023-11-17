@@ -33,17 +33,17 @@ fun PollDurationDropDown(
         Column {
             Text(
                 text = stringResource(id = R.string.poll_duration),
-                fontSize = 12.sp
+                fontSize = 12.sp,
             )
             Text(
-                text = poll.pollDuration.label.build(LocalContext.current)
+                text = poll.pollDuration.label.build(LocalContext.current),
             )
         }
     }
 
     MoSoDropdownMenu(
         expanded = expanded.value,
-        onDismissRequest = { expanded.value = false }
+        onDismissRequest = { expanded.value = false },
     ) {
         PollDuration.values().forEach { pollDuration ->
             DropdownMenuItem(
@@ -53,10 +53,9 @@ fun PollDurationDropDown(
                 onClick = {
                     pollInteractions.onPollDurationSelected(pollDuration)
                     expanded.value = false
-                }
+                },
             )
         }
-
     }
 }
 
@@ -65,13 +64,14 @@ fun PollDurationDropDown(
 private fun PollDurationDropDownPreview() {
     MoSoTheme {
         PollDurationDropDown(
-            poll = Poll(
-                options = listOf("option 1", "option 2"),
-                style = PollStyle.SINGLE_CHOICE,
-                pollDuration = PollDuration.ONE_DAY,
-                hideTotals = false
-            ),
-            pollInteractions = object : PollInteractions {}
+            poll =
+                Poll(
+                    options = listOf("option 1", "option 2"),
+                    style = PollStyle.SINGLE_CHOICE,
+                    pollDuration = PollDuration.ONE_DAY,
+                    hideTotals = false,
+                ),
+            pollInteractions = object : PollInteractions {},
         )
     }
 }

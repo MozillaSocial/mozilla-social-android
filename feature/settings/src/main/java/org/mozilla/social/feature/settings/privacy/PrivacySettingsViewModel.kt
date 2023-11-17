@@ -10,7 +10,6 @@ import org.mozilla.social.core.datastore.AppPreferencesDatastore
 class PrivacySettingsViewModel(
     private val appPreferencesDatastore: AppPreferencesDatastore,
 ) : ViewModel() {
-
     val allowAnalytics =
         appPreferencesDatastore.allowAnalytics.stateIn(viewModelScope, SharingStarted.Eagerly, true)
 

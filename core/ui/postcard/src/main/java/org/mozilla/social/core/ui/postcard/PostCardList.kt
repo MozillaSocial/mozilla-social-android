@@ -59,19 +59,20 @@ fun PostCardList(
         }
     }
 
-    val pullRefreshState = rememberPullRefreshState(
-        refreshing = lazyingPagingItems.loadState.refresh == LoadState.Loading,
-        onRefresh = { lazyingPagingItems.refresh() }
-    )
+    val pullRefreshState =
+        rememberPullRefreshState(
+            refreshing = lazyingPagingItems.loadState.refresh == LoadState.Loading,
+            onRefresh = { lazyingPagingItems.refresh() },
+        )
 
     Box(
-        modifier = Modifier
-            .pullRefresh(
-                pullRefreshState,
-                enabled = pullToRefreshEnabled,
-            ),
+        modifier =
+            Modifier
+                .pullRefresh(
+                    pullRefreshState,
+                    enabled = pullToRefreshEnabled,
+                ),
     ) {
-
         PostCardLazyColumn(
             lazyingPagingItems = lazyingPagingItems,
             postCardInteractions = postCardInteractions,
@@ -84,9 +85,10 @@ fun PostCardList(
 
         if (lazyingPagingItems.loadState.refresh is LoadState.Error && isFullScreenLoading) {
             GenericError(
-                modifier = Modifier
-                    .fillMaxSize(),
-                onRetryClicked = { lazyingPagingItems.refresh() }
+                modifier =
+                    Modifier
+                        .fillMaxSize(),
+                onRetryClicked = { lazyingPagingItems.refresh() },
             )
         }
 
@@ -114,7 +116,6 @@ private fun PostCardLazyColumn(
     emptyListState: LazyListState,
     headerContent: @Composable () -> Unit,
 ) {
-
     // When navigating back to a list, the lazyPagingItems seem to have a list size of 0
     // for a split second before going back to where it was.  This causes the list scroll state
     // to reset at 0, losing the scroll position.  The emptyListState variable fixes this by
@@ -127,13 +128,13 @@ private fun PostCardLazyColumn(
     LazyColumn(
         Modifier
             .fillMaxSize(),
-        state = if (lazyingPagingItems.itemCount == 0) {
-            emptyListState
-        } else {
-            scrollState
-        },
+        state =
+            if (lazyingPagingItems.itemCount == 0) {
+                emptyListState
+            } else {
+                scrollState
+            },
     ) {
-
         item { headerContent() }
 
         when (lazyingPagingItems.loadState.refresh) {
@@ -141,9 +142,10 @@ private fun PostCardLazyColumn(
                 if (!isFullScreenLoading) {
                     item {
                         GenericError(
-                            modifier = Modifier
-                                .fillMaxSize(),
-                            onRetryClicked = { lazyingPagingItems.refresh() }
+                            modifier =
+                                Modifier
+                                    .fillMaxSize(),
+                            onRetryClicked = { lazyingPagingItems.refresh() },
                         )
                     }
                 }
@@ -152,10 +154,11 @@ private fun PostCardLazyColumn(
                 if (!isFullScreenLoading && !pullToRefreshEnabled) {
                     item {
                         Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .wrapContentWidth(Alignment.CenterHorizontally)
-                                .padding(top = 40.dp)
+                            modifier =
+                                Modifier
+                                    .fillMaxWidth()
+                                    .wrapContentWidth(Alignment.CenterHorizontally)
+                                    .padding(top = 40.dp),
                         ) {
                             MoSoCircularProgressIndicator()
                         }
@@ -174,10 +177,11 @@ private fun PostCardLazyColumn(
             is LoadState.Loading -> {
                 item {
                     CircularProgressIndicator(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .wrapContentWidth(Alignment.CenterHorizontally)
-                            .padding(16.dp)
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .wrapContentWidth(Alignment.CenterHorizontally)
+                                .padding(16.dp),
                     )
                 }
             }
@@ -185,7 +189,7 @@ private fun PostCardLazyColumn(
             is LoadState.Error -> {
                 item {
                     GenericError(
-                        onRetryClicked = { lazyingPagingItems.retry() }
+                        onRetryClicked = { lazyingPagingItems.retry() },
                     )
                 }
             }
@@ -201,7 +205,7 @@ private fun LazyListScope.listContent(
 ) {
     items(
         count = lazyingPagingItems.itemCount,
-        key = lazyingPagingItems.itemKey { it.statusId }
+        key = lazyingPagingItems.itemKey { it.statusId },
     ) { index ->
         lazyingPagingItems[index]?.let { item ->
             PostCard(
@@ -225,7 +229,6 @@ fun PostCardList(
     postCardInteractions: PostCardInteractions,
     threadId: String? = null,
 ) {
-
     LazyColumn(
         Modifier
             .fillMaxSize()
@@ -233,13 +236,13 @@ fun PostCardList(
     ) {
         items(
             count = items.count(),
-            key = { items[it].statusId }
+            key = { items[it].statusId },
         ) { index ->
             val item = items[index]
             PostCard(
                 post = item,
                 postCardInteractions = postCardInteractions,
-                threadId = threadId
+                threadId = threadId,
             )
             if (index < items.count()) {
                 MoSoDivider()

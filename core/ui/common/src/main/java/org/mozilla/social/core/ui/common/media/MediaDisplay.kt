@@ -21,9 +21,7 @@ import org.mozilla.social.core.ui.common.utils.media
 
 @Suppress("MagicNumber")
 @Composable
-fun MediaDisplay(
-    attachments: List<Attachment>
-) {
+fun MediaDisplay(attachments: List<Attachment>) {
     when (attachments.size) {
         1 -> {
             SingleAttachment(attachment = attachments.first())
@@ -31,40 +29,39 @@ fun MediaDisplay(
         2 -> {
             AttachmentRow(
                 attachment1 = attachments.first(),
-                attachment2 = attachments[1]
+                attachment2 = attachments[1],
             )
         }
         3 -> {
             SingleAttachment(attachment = attachments.first())
             AttachmentRow(
                 attachment1 = attachments[1],
-                attachment2 = attachments[2]
+                attachment2 = attachments[2],
             )
         }
         4 -> {
             AttachmentRow(
                 attachment1 = attachments.first(),
-                attachment2 = attachments[1]
+                attachment2 = attachments[1],
             )
             AttachmentRow(
                 attachment1 = attachments[2],
-                attachment2 = attachments[3]
+                attachment2 = attachments[3],
             )
         }
     }
 }
 
 @Composable
-private fun SingleAttachment(
-    attachment: Attachment,
-) {
+private fun SingleAttachment(attachment: Attachment) {
     when (attachment) {
         is Attachment.Image -> {
             Attachment(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .aspectRatio(attachment.meta.calculateAspectRatio()),
-                attachment = attachment
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .aspectRatio(attachment.meta.calculateAspectRatio()),
+                attachment = attachment,
             )
         }
         is Attachment.Gifv -> {
@@ -85,7 +82,7 @@ private fun SingleAttachment(
             attachment.url?.toUri()?.let {
                 VideoPlayer(
                     uri = it,
-                    aspectRatio = aspectRatio
+                    aspectRatio = aspectRatio,
                 )
             }
         }
@@ -123,12 +120,13 @@ private fun Attachment.Video.Meta.calculateAspectRatio(): Float =
 @Composable
 private fun Attachment(
     modifier: Modifier = Modifier,
-    attachment: Attachment
+    attachment: Attachment,
 ) {
     AsyncImage(
-        modifier = modifier
-            .padding(2.dp)
-            .clip(RoundedCornerShape(MoSoRadius.media)),
+        modifier =
+            modifier
+                .padding(2.dp)
+                .clip(RoundedCornerShape(MoSoRadius.media)),
         model = attachment.previewUrl,
         contentDescription = attachment.description,
         contentScale = ContentScale.Crop,
@@ -142,16 +140,18 @@ private fun AttachmentRow(
 ) {
     Row {
         Attachment(
-            modifier = Modifier
-                .weight(1f)
-                .aspectRatio(1f),
-            attachment = attachment1
+            modifier =
+                Modifier
+                    .weight(1f)
+                    .aspectRatio(1f),
+            attachment = attachment1,
         )
         Attachment(
-            modifier = Modifier
-                .weight(1f)
-                .aspectRatio(1f),
-            attachment = attachment2
+            modifier =
+                Modifier
+                    .weight(1f)
+                    .aspectRatio(1f),
+            attachment = attachment2,
         )
     }
 }

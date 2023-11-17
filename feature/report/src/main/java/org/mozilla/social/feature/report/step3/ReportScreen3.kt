@@ -21,12 +21,12 @@ import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 import org.mozilla.social.core.designsystem.theme.MoSoRadius
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
-import org.mozilla.social.core.ui.common.divider.MoSoDivider
 import org.mozilla.social.core.ui.common.MoSoSurface
 import org.mozilla.social.core.ui.common.animation.ExpandingAnimation
 import org.mozilla.social.core.ui.common.appbar.MoSoCloseableTopAppBar
 import org.mozilla.social.core.ui.common.button.MoSoButton
 import org.mozilla.social.core.ui.common.button.MoSoButtonSecondary
+import org.mozilla.social.core.ui.common.divider.MoSoDivider
 import org.mozilla.social.feature.report.R
 
 @Composable
@@ -36,13 +36,14 @@ internal fun ReportScreen3(
     reportAccountId: String,
     reportAccountHandle: String,
     didUserReportAccount: Boolean,
-    viewModel: ReportScreen3ViewModel = koinViewModel(parameters = {
-        parametersOf(
-            onDoneClicked,
-            onCloseClicked,
-            reportAccountId
-        )
-    })
+    viewModel: ReportScreen3ViewModel =
+        koinViewModel(parameters = {
+            parametersOf(
+                onDoneClicked,
+                onCloseClicked,
+                reportAccountId,
+            )
+        }),
 ) {
     val unfollowVisible by viewModel.unfollowVisible.collectAsStateWithLifecycle()
     val muteVisible by viewModel.muteVisible.collectAsStateWithLifecycle()
@@ -68,9 +69,10 @@ private fun ReportScreen3(
 ) {
     MoSoSurface {
         Column(
-            modifier = Modifier
-                .fillMaxHeight()
-                .systemBarsPadding()
+            modifier =
+                Modifier
+                    .fillMaxHeight()
+                    .systemBarsPadding(),
         ) {
             MoSoCloseableTopAppBar(title = stringResource(id = R.string.report_screen_title))
 
@@ -106,29 +108,34 @@ private fun TopContent(
     didUserReportAccount: Boolean,
 ) {
     Column(
-        modifier = Modifier.padding(16.dp)
+        modifier = Modifier.padding(16.dp),
     ) {
         Text(
-            text = stringResource(
-                id = if (didUserReportAccount) {
-                    R.string.reported_user_title
-                } else {
-                    R.string.limiting_user_title
-                }, "@$reportAccountHandle"
-            ),
+            text =
+                stringResource(
+                    id =
+                        if (didUserReportAccount) {
+                            R.string.reported_user_title
+                        } else {
+                            R.string.limiting_user_title
+                        },
+                    "@$reportAccountHandle",
+                ),
             style = MoSoTheme.typography.bodyMedium,
         )
 
         Spacer(modifier = Modifier.height(4.dp))
 
         Text(
-            text = stringResource(
-                id = if (didUserReportAccount) {
-                    R.string.reported_user_description
-                } else {
-                    R.string.limiting_user_description
-                }
-            ),
+            text =
+                stringResource(
+                    id =
+                        if (didUserReportAccount) {
+                            R.string.reported_user_description
+                        } else {
+                            R.string.limiting_user_description
+                        },
+                ),
             style = MoSoTheme.typography.titleMedium,
         )
     }
@@ -145,19 +152,22 @@ private fun MiddleContent(
     reportInteractions: ReportScreen3Interactions,
 ) {
     Column(
-        modifier = modifier
-            .padding(16.dp),
+        modifier =
+            modifier
+                .padding(16.dp),
     ) {
         Text(
-            text = stringResource(
-                id = if (didUserReportAccount) {
-                    R.string.reported_user_options
-                } else {
-                    R.string.limiting_user_options
-                }
-            ),
+            text =
+                stringResource(
+                    id =
+                        if (didUserReportAccount) {
+                            R.string.reported_user_options
+                        } else {
+                            R.string.limiting_user_options
+                        },
+                ),
             style = MoSoTheme.typography.titleSmall,
-            fontWeight = W600
+            fontWeight = W600,
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -167,11 +177,12 @@ private fun MiddleContent(
                 Column {
                     ActionableOption(
                         onClick = { reportInteractions.onUnfollowClicked() },
-                        buttonText = stringResource(
-                            id = R.string.unfollow_user,
-                            "@$reportAccountHandle"
-                        ),
-                        description = stringResource(id = R.string.unfollow_user_description)
+                        buttonText =
+                            stringResource(
+                                id = R.string.unfollow_user,
+                                "@$reportAccountHandle",
+                            ),
+                        description = stringResource(id = R.string.unfollow_user_description),
                     )
 
                     Spacer(modifier = Modifier.height(16.dp))
@@ -182,11 +193,12 @@ private fun MiddleContent(
                 Column {
                     ActionableOption(
                         onClick = { reportInteractions.onMuteClicked() },
-                        buttonText = stringResource(
-                            id = R.string.mute_user,
-                            "@$reportAccountHandle"
-                        ),
-                        description = stringResource(id = R.string.mute_user_description)
+                        buttonText =
+                            stringResource(
+                                id = R.string.mute_user,
+                                "@$reportAccountHandle",
+                            ),
+                        description = stringResource(id = R.string.mute_user_description),
                     )
 
                     Spacer(modifier = Modifier.height(16.dp))
@@ -196,11 +208,12 @@ private fun MiddleContent(
             ExpandingAnimation(visible = blockVisible) {
                 ActionableOption(
                     onClick = { reportInteractions.onBlockClicked() },
-                    buttonText = stringResource(
-                        id = R.string.block_user,
-                        "@$reportAccountHandle"
-                    ),
-                    description = stringResource(id = R.string.block_user_description)
+                    buttonText =
+                        stringResource(
+                            id = R.string.block_user,
+                            "@$reportAccountHandle",
+                        ),
+                    description = stringResource(id = R.string.block_user_description),
                 )
             }
         }
@@ -208,13 +221,12 @@ private fun MiddleContent(
 }
 
 @Composable
-private fun BottomContent(
-    reportInteractions: ReportScreen3Interactions,
-) {
+private fun BottomContent(reportInteractions: ReportScreen3Interactions) {
     MoSoButton(
-        modifier = Modifier
-            .padding(16.dp)
-            .fillMaxWidth(),
+        modifier =
+            Modifier
+                .padding(16.dp)
+                .fillMaxWidth(),
         onClick = { reportInteractions.onDoneClicked() },
     ) {
         Text(text = stringResource(id = R.string.done_button))
@@ -229,13 +241,14 @@ private fun ActionableOption(
     description: String,
 ) {
     Column(
-        modifier = modifier
-            .border(
-                width = 1.dp,
-                color = MoSoTheme.colors.borderPrimary,
-                shape = RoundedCornerShape(MoSoRadius.md_8_dp)
-            )
-            .padding(16.dp),
+        modifier =
+            modifier
+                .border(
+                    width = 1.dp,
+                    color = MoSoTheme.colors.borderPrimary,
+                    shape = RoundedCornerShape(MoSoRadius.md_8_dp),
+                )
+                .padding(16.dp),
     ) {
         MoSoButtonSecondary(
             modifier = Modifier.fillMaxWidth(),

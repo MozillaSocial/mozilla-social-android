@@ -8,34 +8,36 @@ import org.mozilla.social.core.model.PollOption
 /**
  * @param isUserCreatedPoll refers to if the current user is the creator of the poll
  */
-fun Poll.toPollUiState(
-    isUserCreatedPoll: Boolean,
-): PollUiState =
+fun Poll.toPollUiState(isUserCreatedPoll: Boolean): PollUiState =
     PollUiState(
-        pollOptions = options.map { pollOption ->
-            val voteFraction = getVoteFraction(votesCount, pollOption)
-            PollOptionUiState(
-                fillFraction = voteFraction,
-                title = pollOption.title,
-                voteInfo = getVoteCountText(pollOption, voteFraction),
-            )
-        },
-        isUserCreatedPoll = isUserCreatedPoll,
-        pollInfoText = StringFactory.collection(
-            StringFactory.quantityResource(
-                R.plurals.vote_count,
-                votesCount.toInt(),
-                votesCount.toInt(),
-            ),
-            StringFactory.literal(" - "),
-            expiresAt?.timeLeft() ?: StringFactory.resource(R.string.poll_closed),
-            if (allowsMultipleChoices) {
-                StringFactory.collection(
-                    StringFactory.literal(" - "),
-                    StringFactory.resource(R.string.poll_choose_one_or_more_options)
+        pollOptions =
+            options.map { pollOption ->
+                val voteFraction = getVoteFraction(votesCount, pollOption)
+                PollOptionUiState(
+                    fillFraction = voteFraction,
+                    title = pollOption.title,
+                    voteInfo = getVoteCountText(pollOption, voteFraction),
                 )
-            } else StringFactory.literal("")
-        ),
+            },
+        isUserCreatedPoll = isUserCreatedPoll,
+        pollInfoText =
+            StringFactory.collection(
+                StringFactory.quantityResource(
+                    R.plurals.vote_count,
+                    votesCount.toInt(),
+                    votesCount.toInt(),
+                ),
+                StringFactory.literal(" - "),
+                expiresAt?.timeLeft() ?: StringFactory.resource(R.string.poll_closed),
+                if (allowsMultipleChoices) {
+                    StringFactory.collection(
+                        StringFactory.literal(" - "),
+                        StringFactory.resource(R.string.poll_choose_one_or_more_options),
+                    )
+                } else {
+                    StringFactory.literal("")
+                },
+            ),
         showResults = (hasVoted ?: false || isExpired) && options.first().votesCount != null,
         pollId = pollId,
         isMultipleChoice = allowsMultipleChoices,
@@ -61,10 +63,11 @@ private fun getVoteCountText(
 private fun getVoteFraction(
     votesCount: Long,
     pollOption: PollOption,
-): Float = if (votesCount == 0L) {
-    0f
-} else {
-    pollOption.votesCount?.let {
-        it.toFloat() / votesCount
-    } ?: 0f
-}
+): Float =
+    if (votesCount == 0L) {
+        0f
+    } else {
+        pollOption.votesCount?.let {
+            it.toFloat() / votesCount
+        } ?: 0f
+    }

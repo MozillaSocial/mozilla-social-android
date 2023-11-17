@@ -17,7 +17,7 @@ import org.mozilla.social.core.database.model.DatabaseRelationship
     primaryKeys = [
         "accountId",
         "followeeAccountId",
-    ]
+    ],
 )
 data class Followee(
     val accountId: String,
@@ -29,13 +29,11 @@ data class Followee(
 data class FolloweeWrapper(
     @Embedded
     val followee: Followee,
-
     @Relation(
         parentColumn = "followeeAccountId",
         entityColumn = "accountId",
     )
     val followingAccount: DatabaseAccount,
-
     @Relation(
         parentColumn = "followeeAccountId",
         entityColumn = "accountId",

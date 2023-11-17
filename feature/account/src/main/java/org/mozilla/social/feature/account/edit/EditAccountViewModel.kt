@@ -22,7 +22,6 @@ class EditAccountViewModel(
     private val popNavBackstack: PopNavBackstack,
     private val updateMyAccount: UpdateMyAccount,
 ) : ViewModel(), EditAccountInteractions {
-
     private val accountId = getLoggedInUserAccountId()
 
     private val _editAccountUiState = MutableStateFlow<Resource<EditAccountUiState>>(Resource.Loading())
@@ -45,7 +44,7 @@ class EditAccountViewModel(
                 val account = accountRepository.getAccountFromDatabase(accountId)!!
                 _editAccountUiState.update {
                     Resource.Loaded(
-                        data = account.toUiState()
+                        data = account.toUiState(),
                     )
                 }
             } catch (e: Exception) {
@@ -67,12 +66,13 @@ class EditAccountViewModel(
                         header = newHeader,
                         locked = data.lockChecked,
                         bot = data.botChecked,
-                        fields = data.fields.map {
-                            Pair(
-                                first = it.label,
-                                second = it.content,
-                            )
-                        }
+                        fields =
+                            data.fields.map {
+                                Pair(
+                                    first = it.label,
+                                    second = it.content,
+                                )
+                            },
                     )
                     popNavBackstack()
                 } catch (e: UpdateMyAccount.UpdateAccountFailedException) {
@@ -84,99 +84,135 @@ class EditAccountViewModel(
     }
 
     override fun onDisplayNameTextChanged(text: String) {
-        _editAccountUiState.updateData { copy(
-            displayName = text
-        ) }
+        _editAccountUiState.updateData {
+            copy(
+                displayName = text,
+            )
+        }
     }
 
     override fun onBioTextChanged(text: String) {
         if (text.length > MAX_BIO_LENGTH) return
-        _editAccountUiState.updateData { copy(
-            bio = text,
-            bioCharacterCount = text.length
-        ) }
+        _editAccountUiState.updateData {
+            copy(
+                bio = text,
+                bioCharacterCount = text.length,
+            )
+        }
     }
 
-    override fun onNewAvatarSelected(uri: Uri, file: File) {
-        _editAccountUiState.updateData { copy(
-            avatarUrl = uri.toString()
-        ) }
+    override fun onNewAvatarSelected(
+        uri: Uri,
+        file: File,
+    ) {
+        _editAccountUiState.updateData {
+            copy(
+                avatarUrl = uri.toString(),
+            )
+        }
         newAvatar = file
     }
 
-    override fun onNewHeaderSelected(uri: Uri, file: File) {
-        _editAccountUiState.updateData { copy(
-            headerUrl = uri.toString()
-        ) }
+    override fun onNewHeaderSelected(
+        uri: Uri,
+        file: File,
+    ) {
+        _editAccountUiState.updateData {
+            copy(
+                headerUrl = uri.toString(),
+            )
+        }
         newHeader = file
     }
 
     override fun onLockClicked() {
-        _editAccountUiState.updateData { copy(
-            lockChecked = !lockChecked
-        ) }
+        _editAccountUiState.updateData {
+            copy(
+                lockChecked = !lockChecked,
+            )
+        }
     }
 
     override fun onBotClicked() {
-        _editAccountUiState.updateData { copy(
-            botChecked = !botChecked
-        ) }
+        _editAccountUiState.updateData {
+            copy(
+                botChecked = !botChecked,
+            )
+        }
     }
 
     override fun onRetryClicked() {
         loadAccount()
     }
 
-    override fun onLabelTextChanged(index: Int, text: String) {
+    override fun onLabelTextChanged(
+        index: Int,
+        text: String,
+    ) {
         if (text.length > MAX_FIELD_LENGTH) return
-        _editAccountUiState.updateData { copy(
-            fields = fields.toMutableList().apply {
-                val content = get(index).content
-                removeAt(index)
-                add(
-                    index,
-                    EditAccountUiStateField(
-                        label = text,
-                        content = content,
-                    )
-                )
-                modifyFieldCount()
-            }
-        ) }
+        _editAccountUiState.updateData {
+            copy(
+                fields =
+                    fields.toMutableList().apply {
+                        val content = get(index).content
+                        removeAt(index)
+                        add(
+                            index,
+                            EditAccountUiStateField(
+                                label = text,
+                                content = content,
+                            ),
+                        )
+                        modifyFieldCount()
+                    },
+            )
+        }
     }
 
-    override fun onContentTextChanged(index: Int, text: String) {
+    override fun onContentTextChanged(
+        index: Int,
+        text: String,
+    ) {
         if (text.length > MAX_FIELD_LENGTH) return
-        _editAccountUiState.updateData { copy(
-            fields = fields.toMutableList().apply {
-                val label = get(index).label
-                removeAt(index)
-                add(
-                    index,
-                    EditAccountUiStateField(
-                        label = label,
-                        content = text,
-                    )
-                )
-                modifyFieldCount()
-            }
-        ) }
+        _editAccountUiState.updateData {
+            copy(
+                fields =
+                    fields.toMutableList().apply {
+                        val label = get(index).label
+                        removeAt(index)
+                        add(
+                            index,
+                            EditAccountUiStateField(
+                                label = label,
+                                content = text,
+                            ),
+                        )
+                        modifyFieldCount()
+                    },
+            )
+        }
     }
 
     override fun onFieldDeleteClicked(index: Int) {
-        _editAccountUiState.updateData { copy(
-            fields = fields.toMutableList().apply {
-                removeAt(index)
-            }
-        ) }
+        _editAccountUiState.updateData {
+            copy(
+                fields =
+                    fields.toMutableList().apply {
+                        removeAt(index)
+                    },
+            )
+        }
     }
 
     override fun onAddFieldClicked() {
-        _editAccountUiState.updateData { copy(
-            fields = fields.toMutableList().apply {
-                add(EditAccountUiStateField("", ""))
-            }
-        ) }
+        _editAccountUiState.updateData {
+            copy(
+                fields =
+                    fields.toMutableList().apply {
+                        add(EditAccountUiStateField("", ""))
+                    },
+            )
+        }
     }
 
     private fun MutableList<EditAccountUiStateField>.modifyFieldCount() {

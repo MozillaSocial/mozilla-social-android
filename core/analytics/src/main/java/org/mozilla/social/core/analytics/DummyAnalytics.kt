@@ -4,7 +4,6 @@ import android.content.Context
 import timber.log.Timber
 
 class DummyAnalytics : Analytics {
-
     private val tag: String = DummyAnalytics::class.simpleName ?: ""
 
     override fun initialize(context: Context) {
@@ -19,7 +18,7 @@ class DummyAnalytics : Analytics {
         mastodonStatusId: String?,
         recommendationId: String?,
         uiAdditionalDetail: String?,
-        uiIdentifier: String?
+        uiIdentifier: String?,
     ) {
         Timber.tag(tag).d("==========")
         Timber.tag(tag).d("engagementType: ${engagementType?.value}")
@@ -38,7 +37,7 @@ class DummyAnalytics : Analytics {
         mastodonStatusId: String?,
         recommendationId: String?,
         uiAdditionalDetail: String?,
-        uiIdentifier: String?
+        uiIdentifier: String?,
     ) {
         Timber.tag(tag).d("==========")
         Timber.tag(tag).d("mastodonAccountHandle: $mastodonAccountHandle")

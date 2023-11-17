@@ -18,26 +18,24 @@ class UnblockAccount(
     private val socialDatabase: SocialDatabase,
     private val dispatcherIo: CoroutineDispatcher = Dispatchers.IO,
 ) {
-
     /**
      * @throws UnblockFailedException if any error occurred
      */
     @OptIn(PreferUseCase::class)
-    suspend operator fun invoke(
-        accountId: String
-    ) = externalScope.async(dispatcherIo) {
-        try {
-            socialDatabase.relationshipsDao().updateBlocked(accountId, false)
-            accountRepository.unblockAccount(accountId)
-        } catch (e: Exception) {
-            socialDatabase.relationshipsDao().updateBlocked(accountId, true)
-            showSnackbar(
-                text = StringFactory.resource(R.string.error_unblocking_account),
-                isError = true,
-            )
-            throw UnblockFailedException(e)
-        }
-    }.await()
+    suspend operator fun invoke(accountId: String) =
+        externalScope.async(dispatcherIo) {
+            try {
+                socialDatabase.relationshipsDao().updateBlocked(accountId, false)
+                accountRepository.unblockAccount(accountId)
+            } catch (e: Exception) {
+                socialDatabase.relationshipsDao().updateBlocked(accountId, true)
+                showSnackbar(
+                    text = StringFactory.resource(R.string.error_unblocking_account),
+                    isError = true,
+                )
+                throw UnblockFailedException(e)
+            }
+        }.await()
 
     class UnblockFailedException(e: Exception) : Exception(e)
 }

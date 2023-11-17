@@ -4,7 +4,6 @@ package org.mozilla.social.core.model
  * Visibility of a [Status] to other users.
  */
 enum class StatusVisibility(val value: String) {
-
     /**
      * Visible to everyone, shown in public timelines.
      */
@@ -23,5 +22,5 @@ enum class StatusVisibility(val value: String) {
     /**
      * Visible only to mentioned users.
      */
-    Direct("direct")
+    Direct("direct"),
 }

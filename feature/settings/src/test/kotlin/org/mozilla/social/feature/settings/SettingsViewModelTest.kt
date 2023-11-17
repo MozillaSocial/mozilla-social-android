@@ -13,7 +13,6 @@ import org.mozilla.social.core.navigation.usecases.NavigateTo
 import kotlin.test.BeforeTest
 
 class SettingsViewModelTest {
-
     private lateinit var objUnderTest: SettingsViewModel
 
     private val navigateTo: NavigateTo = mockk(relaxed = true)
@@ -23,11 +22,12 @@ class SettingsViewModelTest {
     @BeforeTest
     fun setup() {
         Dispatchers.setMain(UnconfinedTestDispatcher())
-        objUnderTest = SettingsViewModel(
-            analytics = analytics,
-            appPreferencesDatastore = appPreferencesDatastore,
-            navigateTo = navigateTo
-        )
+        objUnderTest =
+            SettingsViewModel(
+                analytics = analytics,
+                appPreferencesDatastore = appPreferencesDatastore,
+                navigateTo = navigateTo,
+            )
     }
 
     @Test

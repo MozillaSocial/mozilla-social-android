@@ -44,7 +44,7 @@ class MoSoSnackbarHostState(val snackbarHostState: SnackbarHostState = SnackbarH
         actionLabel: String? = null,
         withDismissAction: Boolean = false,
         duration: SnackbarDuration =
-            if (actionLabel == null) SnackbarDuration.Short else SnackbarDuration.Indefinite
+            if (actionLabel == null) SnackbarDuration.Short else SnackbarDuration.Indefinite,
     ): SnackbarResult {
         mutex.withLock {
             currentSnackbarType = snackbarType
@@ -52,7 +52,7 @@ class MoSoSnackbarHostState(val snackbarHostState: SnackbarHostState = SnackbarH
                 message,
                 actionLabel,
                 withDismissAction,
-                duration
+                duration,
             )
         }
     }

@@ -22,7 +22,6 @@ import org.mozilla.social.core.database.dao.HashtagDao
 import org.mozilla.social.core.database.dao.HomeTimelineStatusDao
 import org.mozilla.social.core.database.dao.LocalTimelineStatusDao
 import org.mozilla.social.core.database.dao.RelationshipsDao
-import org.mozilla.social.core.database.dao.StatusDao
 import org.mozilla.social.core.navigation.usecases.ShowSnackbar
 import org.mozilla.social.core.repository.mastodon.AccountRepository
 import org.mozilla.social.core.repository.mastodon.AppRepository
@@ -41,7 +40,6 @@ import kotlin.test.BeforeTest
 import kotlin.test.fail
 
 open class BaseUseCaseTest {
-
     protected val accountRepository = mockk<AccountRepository>(relaxed = true)
     protected val appRepository = mockk<AppRepository>(relaxed = true)
     protected val instanceRepository = mockk<InstanceRepository>(relaxed = true)
@@ -52,7 +50,6 @@ open class BaseUseCaseTest {
     protected val statusRepository = mockk<StatusRepository>(relaxed = true)
     protected val pollRepository = mockk<PollRepository>(relaxed = true)
     protected val timelineRepository = mockk<TimelineRepository>(relaxed = true)
-
 
     protected val socialDatabase = mockk<SocialDatabase>(relaxed = true)
 
@@ -113,9 +110,10 @@ open class BaseUseCaseTest {
             delayedCallBlockReturnValue
         }
 
-        val outerJob = launch {
-            subjectCallBlock()
-        }
+        val outerJob =
+            launch {
+                subjectCallBlock()
+            }
 
         println("wait to cancel")
         waitToCancel.await()
@@ -151,18 +149,19 @@ open class BaseUseCaseTest {
             throw TestException()
         }
 
-        val outerJob = launch {
-            try {
-                subjectCallBlock()
-            } catch (e: CancellationException) {
-                println("canceled")
-            } catch (e: Exception) {
-                // fail the test if the exception gets caught here
-                // the outer job should have already been canceled
-                println("failing $e")
-                fail("The exception should have been caught outside this scope")
+        val outerJob =
+            launch {
+                try {
+                    subjectCallBlock()
+                } catch (e: CancellationException) {
+                    println("canceled")
+                } catch (e: Exception) {
+                    // fail the test if the exception gets caught here
+                    // the outer job should have already been canceled
+                    println("failing $e")
+                    fail("The exception should have been caught outside this scope")
+                }
             }
-        }
 
         println("wait to cancel")
         waitToCancel.await()

@@ -10,9 +10,10 @@ import androidx.compose.ui.Modifier
 @Composable
 fun MaxSizeLoading() {
     Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .wrapContentSize(Alignment.Center)
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .wrapContentSize(Alignment.Center),
     ) {
         MoSoCircularProgressIndicator()
     }

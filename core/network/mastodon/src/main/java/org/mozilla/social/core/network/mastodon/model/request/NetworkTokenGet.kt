@@ -7,17 +7,14 @@ import org.mozilla.social.core.network.mastodon.model.NetworkToken
  * Object used to get a new [NetworkToken].
  */
 data class NetworkTokenGet(
-
     /**
      * Client ID, obtained during app registration.
      */
     val clientId: String,
-
     /**
      * Client secret, obtained during app registration.
      */
     val clientSecret: String,
-
     /**
      * URI to redirect the user to.
      *
@@ -27,7 +24,6 @@ data class NetworkTokenGet(
      * Must match one of the redirect URIs declared during app registration.
      */
     val redirectUri: String,
-
     /**
      * Grant type, set to [NetworkGrantType.AuthorizationCode] if code
      * is provided in order to gain user-level access.
@@ -36,7 +32,6 @@ data class NetworkTokenGet(
      * obtain app-level access only.
      */
     val grantType: NetworkGrantType,
-
     /**
      * List of requested OAuth scopes, separated by spaces.
      *
@@ -44,9 +39,8 @@ data class NetworkTokenGet(
      * If not provided, defaults to read.
      */
     val scope: String?,
-
     /**
      * A user authorization code, obtained via /oauth/authorize.
      */
-    val code: String?
+    val code: String?,
 )

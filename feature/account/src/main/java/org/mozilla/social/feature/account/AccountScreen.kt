@@ -62,17 +62,17 @@ import org.koin.compose.KoinApplication
 import org.koin.core.parameter.parametersOf
 import org.mozilla.social.common.Resource
 import org.mozilla.social.common.utils.DateTimeFormatters
-import org.mozilla.social.core.ui.common.MoSoSurface
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.designsystem.utils.NoRipple
 import org.mozilla.social.core.navigation.navigationModule
+import org.mozilla.social.core.ui.common.MoSoSurface
 import org.mozilla.social.core.ui.common.MoSoTab
 import org.mozilla.social.core.ui.common.MoSoTabRow
-import org.mozilla.social.core.ui.common.dropdown.DropDownItem
 import org.mozilla.social.core.ui.common.appbar.MoSoCloseableTopAppBar
 import org.mozilla.social.core.ui.common.button.MoSoButton
 import org.mozilla.social.core.ui.common.button.MoSoButtonSecondary
+import org.mozilla.social.core.ui.common.dropdown.DropDownItem
 import org.mozilla.social.core.ui.common.dropdown.MoSoDropdownMenu
 import org.mozilla.social.core.ui.common.error.GenericError
 import org.mozilla.social.core.ui.common.loading.MoSoCircularProgressIndicator
@@ -120,18 +120,20 @@ private fun AccountScreen(
 ) {
     MoSoSurface {
         Column(
-            modifier = Modifier
-                .windowInsetsPadding(windowInsets)
+            modifier =
+                Modifier
+                    .windowInsetsPadding(windowInsets),
         ) {
             when (uiState) {
                 is Resource.Loading -> {
                     MoSoCloseableTopAppBar(showCloseButton = closeButtonVisible)
                     Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .wrapContentSize(
-                                align = Alignment.Center
-                            )
+                        modifier =
+                            Modifier
+                                .fillMaxSize()
+                                .wrapContentSize(
+                                    align = Alignment.Center,
+                                ),
                     ) {
                         MoSoCircularProgressIndicator()
                     }
@@ -166,16 +168,17 @@ private fun AccountScreen(
                 is Resource.Error -> {
                     MoSoCloseableTopAppBar(showCloseButton = closeButtonVisible)
                     Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .wrapContentSize(
-                                align = Alignment.Center
-                            )
+                        modifier =
+                            Modifier
+                                .fillMaxSize()
+                                .wrapContentSize(
+                                    align = Alignment.Center,
+                                ),
                     ) {
                         GenericError(
                             onRetryClicked = {
                                 accountInteractions.onRetryClicked()
-                            }
+                            },
                         )
                     }
                 }
@@ -198,14 +201,14 @@ private fun MainContent(
     val context = LocalContext.current
 
     Column(
-        modifier = Modifier
-            .fillMaxSize(),
+        modifier =
+            Modifier
+                .fillMaxSize(),
     ) {
-
         PostCardList(
             feed = feed,
             refreshSignalFlow = timelineTypeFlow,
-            postCardInteractions = postCardInteractions
+            postCardInteractions = postCardInteractions,
         ) {
             Header(
                 headerUrl = account.headerUrl,
@@ -218,12 +221,10 @@ private fun MainContent(
                         if (isUsersProfile) {
                             MoSoButtonSecondary(
                                 modifier = buttonModifier,
-                                onClick = { accountInteractions.onEditAccountClicked() }
+                                onClick = { accountInteractions.onEditAccountClicked() },
                             ) {
                                 Text(text = stringResource(id = R.string.edit_button))
                             }
-
-
                         } else {
                             MoSoButton(
                                 modifier = buttonModifier,
@@ -233,14 +234,15 @@ private fun MainContent(
                                     } else {
                                         accountInteractions.onFollowClicked()
                                     }
-                                }
+                                },
                             ) {
                                 Text(
-                                    text = if (account.isFollowing) {
-                                        stringResource(id = R.string.unfollow_button)
-                                    } else {
-                                        stringResource(id = R.string.follow_button)
-                                    }
+                                    text =
+                                        if (account.isFollowing) {
+                                            stringResource(id = R.string.unfollow_button)
+                                        } else {
+                                            stringResource(id = R.string.follow_button)
+                                        },
                                 )
                             }
                         }
@@ -270,14 +272,15 @@ private fun MainContent(
             ) {
                 TimelineType.entries.forEach { timelineType ->
                     MoSoTab(
-                        modifier = Modifier
-                            .height(40.dp),
+                        modifier =
+                            Modifier
+                                .height(40.dp),
                         selected = selectedTimelineType == timelineType,
                         onClick = { accountInteractions.onTabClicked(timelineType) },
                         content = {
                             Text(
                                 text = timelineType.tabTitle.build(context),
-                                style = MoSoTheme.typography.labelMedium
+                                style = MoSoTheme.typography.labelMedium,
                             )
                         },
                     )
@@ -297,7 +300,7 @@ private fun OverflowMenu(
     val context = LocalContext.current
     IconButton(
         modifier = Modifier.width(IntrinsicSize.Max),
-        onClick = { overflowMenuExpanded.value = true }
+        onClick = { overflowMenuExpanded.value = true },
     ) {
         Icon(painter = MoSoIcons.moreVertical(), contentDescription = null)
 
@@ -305,74 +308,80 @@ private fun OverflowMenu(
             expanded = overflowMenuExpanded.value,
             onDismissRequest = {
                 overflowMenuExpanded.value = false
-            }
+            },
         ) {
             DropDownItem(
                 text = stringResource(R.string.share_option),
                 expanded = overflowMenuExpanded,
                 onClick = {
-                    val sendIntent: Intent = Intent().apply {
-                        action = Intent.ACTION_SEND
-                        putExtra(Intent.EXTRA_TEXT, account.accountUrl)
-                        type = "text/plain"
-                    }
+                    val sendIntent: Intent =
+                        Intent().apply {
+                            action = Intent.ACTION_SEND
+                            putExtra(Intent.EXTRA_TEXT, account.accountUrl)
+                            type = "text/plain"
+                        }
 
                     ContextCompat.startActivity(
                         context,
                         Intent.createChooser(sendIntent, null),
-                        null
+                        null,
                     )
-                }
+                },
             )
 
             if (!isUsersProfile) {
                 if (account.isMuted) {
                     DropDownItem(
-                        text = stringResource(
-                            id = org.mozilla.social.core.ui.common.R.string.unmute_user,
-                            account.username
-                        ),
+                        text =
+                            stringResource(
+                                id = org.mozilla.social.core.ui.common.R.string.unmute_user,
+                                account.username,
+                            ),
                         expanded = overflowMenuExpanded,
-                        onClick = { overflowInteractions.onOverflowUnmuteClicked() }
+                        onClick = { overflowInteractions.onOverflowUnmuteClicked() },
                     )
                 } else {
                     DropDownItem(
-                        text = stringResource(
-                            id = org.mozilla.social.core.ui.common.R.string.mute_user,
-                            account.username
-                        ),
+                        text =
+                            stringResource(
+                                id = org.mozilla.social.core.ui.common.R.string.mute_user,
+                                account.username,
+                            ),
                         expanded = overflowMenuExpanded,
-                        onClick = { overflowInteractions.onOverflowMuteClicked() }
+                        onClick = { overflowInteractions.onOverflowMuteClicked() },
                     )
                 }
 
                 if (account.isBlocked) {
                     DropDownItem(
-                        text = stringResource(
-                            id = org.mozilla.social.core.ui.common.R.string.unblock_user,
-                            account.username
-                        ),
+                        text =
+                            stringResource(
+                                id = org.mozilla.social.core.ui.common.R.string.unblock_user,
+                                account.username,
+                            ),
                         expanded = overflowMenuExpanded,
-                        onClick = { overflowInteractions.onOverflowUnblockClicked() }
+                        onClick = { overflowInteractions.onOverflowUnblockClicked() },
                     )
                 } else {
                     DropDownItem(
-                        text = stringResource(
-                            id = org.mozilla.social.core.ui.common.R.string.block_user,
-                            account.username
-                        ),
+                        text =
+                            stringResource(
+                                id = org.mozilla.social.core.ui.common.R.string.block_user,
+                                account.username,
+                            ),
                         expanded = overflowMenuExpanded,
-                        onClick = { overflowInteractions.onOverflowBlockClicked() }
+                        onClick = { overflowInteractions.onOverflowBlockClicked() },
                     )
                 }
 
                 DropDownItem(
-                    text = stringResource(
-                        id = org.mozilla.social.core.ui.common.R.string.report_user,
-                        account.username
-                    ),
+                    text =
+                        stringResource(
+                            id = org.mozilla.social.core.ui.common.R.string.report_user,
+                            account.username,
+                        ),
                     expanded = overflowMenuExpanded,
-                    onClick = { overflowInteractions.onOverflowReportClicked() }
+                    onClick = { overflowInteractions.onOverflowReportClicked() },
                 )
             }
         }
@@ -386,19 +395,20 @@ private fun UserFollow(
 ) {
     NoRipple {
         Row(
-            modifier = Modifier
-                .padding(8.dp)
+            modifier =
+                Modifier
+                    .padding(8.dp),
         ) {
             Counter(
                 value = account.followersCount.toString(),
                 label = stringResource(id = R.string.followers),
-                onClick = { accountInteractions.onFollowersClicked() }
+                onClick = { accountInteractions.onFollowersClicked() },
             )
             Spacer(modifier = Modifier.width(24.dp))
             Counter(
                 value = account.followingCount.toString(),
                 label = stringResource(id = R.string.following),
-                onClick = { accountInteractions.onFollowingClicked() }
+                onClick = { accountInteractions.onFollowingClicked() },
             )
             Spacer(modifier = Modifier.width(24.dp))
             Counter(
@@ -417,8 +427,9 @@ private fun Counter(
     onClick: () -> Unit = {},
 ) {
     Column(
-        modifier = modifier
-            .clickable { onClick() },
+        modifier =
+            modifier
+                .clickable { onClick() },
     ) {
         Text(
             text = value,
@@ -441,37 +452,39 @@ private fun UserBio(
     var expanded by remember { mutableStateOf(false) }
     NoRipple {
         Box(
-            modifier = modifier
-                .fillMaxWidth()
-                .padding(start = 8.dp, end = 8.dp)
-                .clickable { expanded = !expanded },
+            modifier =
+                modifier
+                    .fillMaxWidth()
+                    .padding(start = 8.dp, end = 8.dp)
+                    .clickable { expanded = !expanded },
         ) {
             val animationDuration = 150
 
             AnimatedContent(
-                modifier = Modifier
-                    .padding(end = 32.dp),
+                modifier =
+                    Modifier
+                        .padding(end = 32.dp),
                 targetState = expanded,
                 label = "",
                 transitionSpec = {
                     // expanding
                     if (targetState) {
                         EnterTransition.None togetherWith ExitTransition.None using
-                                SizeTransform { _, _ ->
-                                    keyframes {
-                                        durationMillis = animationDuration
-                                    }
+                            SizeTransform { _, _ ->
+                                keyframes {
+                                    durationMillis = animationDuration
                                 }
+                            }
                     } else { // shrinking
                         fadeIn(animationSpec = tween(0, 0)) togetherWith
-                                fadeOut(animationSpec = tween(animationDuration)) using
-                                SizeTransform { _, _ ->
-                                    keyframes {
-                                        durationMillis = animationDuration
-                                    }
+                            fadeOut(animationSpec = tween(animationDuration)) using
+                            SizeTransform { _, _ ->
+                                keyframes {
+                                    durationMillis = animationDuration
                                 }
+                            }
                     }
-                }
+                },
             ) { targetState ->
                 Column {
                     org.mozilla.social.core.ui.htmlcontent.HtmlContent(
@@ -486,17 +499,18 @@ private fun UserBio(
                             UserLabel(
                                 label = field.name,
                                 text = field.value,
-                                htmlContentInteractions = htmlContentInteractions
+                                htmlContentInteractions = htmlContentInteractions,
                             )
                         }
                         UserLabel(
                             icon = MoSoIcons.userJoin(),
                             label = "",
-                            text = stringResource(
-                                id = R.string.joined_date,
-                                DateTimeFormatters.standard.format(account.joinDate.toJavaLocalDateTime())
-                            ),
-                            htmlContentInteractions = htmlContentInteractions
+                            text =
+                                stringResource(
+                                    id = R.string.joined_date,
+                                    DateTimeFormatters.standard.format(account.joinDate.toJavaLocalDateTime()),
+                                ),
+                            htmlContentInteractions = htmlContentInteractions,
                         )
                     }
                 }
@@ -507,12 +521,13 @@ private fun UserBio(
             val rotation: Float by animateFloatAsState(
                 targetValue = if (expanded) rotatedDegrees else 0f,
                 animationSpec = tween(animationDuration),
-                label = ""
+                label = "",
             )
             Icon(
-                modifier = Modifier
-                    .rotate(rotation)
-                    .align(Alignment.TopEnd),
+                modifier =
+                    Modifier
+                        .rotate(rotation)
+                        .align(Alignment.TopEnd),
                 painter = MoSoIcons.caret(),
                 contentDescription = null,
             )
@@ -530,8 +545,9 @@ private fun UserLabel(
     Row {
         icon?.let {
             Icon(
-                modifier = Modifier
-                    .size(16.dp),
+                modifier =
+                    Modifier
+                        .size(16.dp),
                 painter = icon,
                 contentDescription = null,
                 tint = MoSoTheme.colors.textSecondary,
@@ -551,8 +567,9 @@ private fun UserLabel(
         }
 
         org.mozilla.social.core.ui.htmlcontent.HtmlContent(
-            modifier = Modifier
-                .weight(1f),
+            modifier =
+                Modifier
+                    .weight(1f),
             mentions = emptyList(),
             htmlText = text,
             htmlContentInteractions = htmlContentInteractions,
@@ -575,36 +592,40 @@ fun AccountScreenPreview() {
     }) {
         MoSoTheme {
             AccountScreen(
-                uiState = Resource.Loaded(
-                    data = AccountUiState(
-                        accountId = "",
-                        username = "Coolguy",
-                        webFinger = "@coolguy",
-                        displayName = "Cool Guy",
-                        accountUrl = "",
-                        bio = "I'm pretty cool",
-                        avatarUrl = "",
-                        headerUrl = "",
-                        followersCount = 1,
-                        followingCount = 500,
-                        statusesCount = 4000,
-                        fields = listOf(),
-                        isBot = false,
-                        isFollowing = false,
-                        isMuted = false,
-                        isBlocked = false,
-                        joinDate = LocalDateTime(
-                            LocalDate(2023, 7, 3),
-                            LocalTime(0, 0, 0)
-                        ),
-                    )
-                ),
+                uiState =
+                    Resource.Loaded(
+                        data =
+                            AccountUiState(
+                                accountId = "",
+                                username = "Coolguy",
+                                webFinger = "@coolguy",
+                                displayName = "Cool Guy",
+                                accountUrl = "",
+                                bio = "I'm pretty cool",
+                                avatarUrl = "",
+                                headerUrl = "",
+                                followersCount = 1,
+                                followingCount = 500,
+                                statusesCount = 4000,
+                                fields = listOf(),
+                                isBot = false,
+                                isFollowing = false,
+                                isMuted = false,
+                                isBlocked = false,
+                                joinDate =
+                                    LocalDateTime(
+                                        LocalDate(2023, 7, 3),
+                                        LocalTime(0, 0, 0),
+                                    ),
+                            ),
+                    ),
                 closeButtonVisible = true,
                 isUsersProfile = false,
                 feed = flowOf(),
                 timelineTypeFlow = MutableStateFlow(TimelineType.POSTS),
-                htmlContentInteractions = object :
-                    org.mozilla.social.core.ui.htmlcontent.HtmlContentInteractions {},
+                htmlContentInteractions =
+                    object :
+                        org.mozilla.social.core.ui.htmlcontent.HtmlContentInteractions {},
                 postCardInteractions = object : PostCardInteractions {},
                 accountInteractions = object : AccountInteractions {},
                 windowInsets = WindowInsets.systemBars,

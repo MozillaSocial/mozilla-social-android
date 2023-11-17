@@ -19,31 +19,29 @@ class DeleteStatus(
     private val showSnackbar: ShowSnackbar,
     private val dispatcherIo: CoroutineDispatcher = Dispatchers.IO,
 ) {
-
     @OptIn(PreferUseCase::class)
-    suspend operator fun invoke(
-        statusId: String,
-    ) = externalScope.async(dispatcherIo) {
-        try {
-            statusRepository.updateIsBeingDeleted(statusId, true)
-            statusRepository.deleteStatus(statusId)
-            socialDatabase.withTransaction {
-                socialDatabase.homeTimelineDao().deletePost(statusId)
-                socialDatabase.localTimelineDao().deletePost(statusId)
-                socialDatabase.federatedTimelineDao().deletePost(statusId)
-                socialDatabase.hashTagTimelineDao().deletePost(statusId)
-                socialDatabase.accountTimelineDao().deletePost(statusId)
-                statusRepository.deleteStatusLocal(statusId)
+    suspend operator fun invoke(statusId: String) =
+        externalScope.async(dispatcherIo) {
+            try {
+                statusRepository.updateIsBeingDeleted(statusId, true)
+                statusRepository.deleteStatus(statusId)
+                socialDatabase.withTransaction {
+                    socialDatabase.homeTimelineDao().deletePost(statusId)
+                    socialDatabase.localTimelineDao().deletePost(statusId)
+                    socialDatabase.federatedTimelineDao().deletePost(statusId)
+                    socialDatabase.hashTagTimelineDao().deletePost(statusId)
+                    socialDatabase.accountTimelineDao().deletePost(statusId)
+                    statusRepository.deleteStatusLocal(statusId)
+                }
+            } catch (e: Exception) {
+                statusRepository.updateIsBeingDeleted(statusId, false)
+                showSnackbar(
+                    text = StringFactory.resource(R.string.error_deleting_post),
+                    isError = true,
+                )
+                throw DeleteStatusFailedException(e)
             }
-        } catch (e: Exception) {
-            statusRepository.updateIsBeingDeleted(statusId, false)
-            showSnackbar(
-                text = StringFactory.resource(R.string.error_deleting_post),
-                isError = true,
-            )
-            throw DeleteStatusFailedException(e)
-        }
-    }.await()
+        }.await()
 
     class DeleteStatusFailedException(e: Exception) : Exception(e)
 }

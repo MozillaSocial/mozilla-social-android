@@ -63,19 +63,19 @@ import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.designsystem.theme.MoSoSpacing
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.designsystem.utils.NoIndication
-import org.mozilla.social.core.ui.common.TransparentNoTouchOverlay
-import org.mozilla.social.core.ui.common.divider.MoSoVerticalDivider
-import org.mozilla.social.core.ui.common.appbar.MoSoCloseableTopAppBar
-import org.mozilla.social.core.ui.common.media.MediaUpload
-import org.mozilla.social.core.ui.common.transparentTextFieldColors
-import org.mozilla.social.core.ui.common.utils.getWindowHeightClass
-import org.mozilla.social.feature.post.R
 import org.mozilla.social.core.model.ImageState
 import org.mozilla.social.core.model.StatusVisibility
 import org.mozilla.social.core.ui.common.MoSoSurface
+import org.mozilla.social.core.ui.common.TransparentNoTouchOverlay
+import org.mozilla.social.core.ui.common.appbar.MoSoCloseableTopAppBar
 import org.mozilla.social.core.ui.common.button.MoSoButton
+import org.mozilla.social.core.ui.common.divider.MoSoVerticalDivider
 import org.mozilla.social.core.ui.common.dropdown.VisibilityDropDownButton
+import org.mozilla.social.core.ui.common.media.MediaUpload
 import org.mozilla.social.core.ui.common.text.MoSoTextField
+import org.mozilla.social.core.ui.common.transparentTextFieldColors
+import org.mozilla.social.core.ui.common.utils.getWindowHeightClass
+import org.mozilla.social.feature.post.R
 import org.mozilla.social.post.NewPostViewModel.Companion.MAX_POLL_COUNT
 import org.mozilla.social.post.NewPostViewModel.Companion.MIN_POLL_COUNT
 import org.mozilla.social.post.bottombar.BottomBar
@@ -96,7 +96,7 @@ import org.mozilla.social.post.status.StatusInteractions
 @Composable
 internal fun NewPostScreen(
     replyStatusId: String?,
-    viewModel: NewPostViewModel = koinViewModel(parameters = { parametersOf(replyStatusId) })
+    viewModel: NewPostViewModel = koinViewModel(parameters = { parametersOf(replyStatusId) }),
 ) {
     val statusText by viewModel.statusText.collectAsStateWithLifecycle()
     val sendButtonEnabled by viewModel.sendButtonEnabled.collectAsStateWithLifecycle()
@@ -160,10 +160,11 @@ private fun NewPostScreen(
     userHeaderState: UserHeaderState?,
 ) {
     Box(
-        modifier = Modifier
-            .systemBarsPadding()
-            .imePadding()
-            .background(MoSoTheme.colors.layer1)
+        modifier =
+            Modifier
+                .systemBarsPadding()
+                .imePadding()
+                .background(MoSoTheme.colors.layer1),
     ) {
         if (getWindowHeightClass() == WindowHeightSizeClass.Compact) {
             Row {
@@ -199,14 +200,14 @@ private fun NewPostScreen(
                 accounts = accounts,
                 hashTags = hashTags,
                 inReplyToAccountName = inReplyToAccountName,
-                userHeaderState = userHeaderState
+                userHeaderState = userHeaderState,
             )
         }
 
         if (isSendingPost) {
             TransparentNoTouchOverlay()
             CircularProgressIndicator(
-                modifier = Modifier.align(Alignment.Center)
+                modifier = Modifier.align(Alignment.Center),
             )
         }
     }
@@ -228,8 +229,9 @@ private fun CompactNewPostScreenContent(
 ) {
     Row {
         Box(
-            modifier = Modifier
-                .weight(1f)
+            modifier =
+                Modifier
+                    .weight(1f),
         ) {
             MainBox(
                 statusText = statusText,
@@ -281,8 +283,9 @@ private fun NewPostScreenContent(
             )
         }
         Box(
-            modifier = Modifier
-                .weight(1f)
+            modifier =
+                Modifier
+                    .weight(1f),
         ) {
             MainBox(
                 statusText = statusText,
@@ -309,27 +312,26 @@ private fun NewPostScreenContent(
             contentWarningInteractions = contentWarningInteractions,
         )
     }
-
-
 }
 
 @Composable
 fun UserHeader(
     userHeaderState: UserHeaderState,
     visibility: StatusVisibility,
-    onVisibilitySelected: (StatusVisibility) -> Unit
+    onVisibilitySelected: (StatusVisibility) -> Unit,
 ) {
     Row {
         AsyncImage(
-            modifier = Modifier
-                .padding(horizontal = MoSoSpacing.sm)
-                .size(92.dp)
-                .clip(CircleShape)
-                .border(
-                    width = 3.dp,
-                    color = MoSoTheme.colors.layer1,
-                    shape = CircleShape
-                ),
+            modifier =
+                Modifier
+                    .padding(horizontal = MoSoSpacing.sm)
+                    .size(92.dp)
+                    .clip(CircleShape)
+                    .border(
+                        width = 3.dp,
+                        color = MoSoTheme.colors.layer1,
+                        shape = CircleShape,
+                    ),
             model = userHeaderState.avatarUrl,
             contentDescription = null,
         )
@@ -342,7 +344,6 @@ fun UserHeader(
                 onVisibilitySelected = onVisibilitySelected,
             )
         }
-
     }
 }
 
@@ -354,20 +355,22 @@ private fun TopBar(
     MoSoCloseableTopAppBar(
         actions = {
             PostButton(onPostClicked = onPostClicked, sendButtonEnabled = sendButtonEnabled)
-        }
+        },
     )
 }
 
 @Composable
-private fun PostButton(onPostClicked: () -> Unit, sendButtonEnabled: Boolean) {
+private fun PostButton(
+    onPostClicked: () -> Unit,
+    sendButtonEnabled: Boolean,
+) {
     MoSoButton(onClick = onPostClicked, enabled = sendButtonEnabled) {
         Text(
             text = stringResource(id = R.string.post),
-            style = MoSoTheme.typography.labelSmall
+            style = MoSoTheme.typography.labelSmall,
         )
     }
 }
-
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -385,22 +388,23 @@ private fun MainBox(
     val localIndication = LocalIndication.current
     // disable ripple on click for the background
     CompositionLocalProvider(
-        LocalIndication provides NoIndication
+        LocalIndication provides NoIndication,
     ) {
         val keyboard = LocalSoftwareKeyboardController.current
 
         val textFieldFocusRequester = remember { FocusRequester() }
         MoSoSurface(
-            modifier = Modifier
-                .fillMaxSize()
-                .clickable {
-                    textFieldFocusRequester.requestFocus()
-                    keyboard?.show()
-                }
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .clickable {
+                        textFieldFocusRequester.requestFocus()
+                        keyboard?.show()
+                    },
         ) {
             // re-enable ripple
             CompositionLocalProvider(
-                LocalIndication provides localIndication
+                LocalIndication provides localIndication,
             ) {
                 LazyColumn {
                     item {
@@ -415,14 +419,15 @@ private fun MainBox(
                     item {
                         val highlightColor = MoSoTheme.colors.textLink
                         MoSoTextField(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .focusRequester(textFieldFocusRequester),
+                            modifier =
+                                Modifier
+                                    .fillMaxWidth()
+                                    .focusRequester(textFieldFocusRequester),
                             value = statusText,
                             onValueChange = { statusInteractions.onStatusTextUpdated(it) },
                             label = {
                                 Text(
-                                    text = stringResource(id = R.string.new_post_text_field_label)
+                                    text = stringResource(id = R.string.new_post_text_field_label),
                                 )
                             },
                             visualTransformation = {
@@ -430,12 +435,12 @@ private fun MainBox(
                                     buildAnnotatedStringForAccountsAndHashtags(
                                         it.text,
                                         SpanStyle(
-                                            color = highlightColor
-                                        )
+                                            color = highlightColor,
+                                        ),
                                     ),
-                                    OffsetMapping.Identity
+                                    OffsetMapping.Identity,
                                 )
-                            }
+                            },
                         )
                         LaunchedEffect(Unit) {
                             textFieldFocusRequester.requestFocus()
@@ -447,7 +452,7 @@ private fun MainBox(
                             PollChoice(
                                 index = index,
                                 poll = poll,
-                                pollInteractions = pollInteractions
+                                pollInteractions = pollInteractions,
                             )
                         }
                         item { PollSettings(poll = poll, pollInteractions = pollInteractions) }
@@ -466,26 +471,26 @@ private fun MainBox(
 }
 
 @Composable
-private fun InReplyToText(
-    inReplyToAccountName: String?,
-) {
+private fun InReplyToText(inReplyToAccountName: String?) {
     if (inReplyToAccountName != null) {
         Row(
             modifier = Modifier.padding(start = 12.dp),
         ) {
             Icon(
-                modifier = Modifier
-                    .size(20.dp)
-                    .align(Alignment.CenterVertically),
+                modifier =
+                    Modifier
+                        .size(20.dp)
+                        .align(Alignment.CenterVertically),
                 painter = MoSoIcons.chatBubbles(),
-                contentDescription = ""
+                contentDescription = "",
             )
             Spacer(modifier = Modifier.padding(start = 8.dp))
             Text(
-                text = stringResource(
-                    id = R.string.in_reply_to_account_name_label,
-                    inReplyToAccountName
-                ),
+                text =
+                    stringResource(
+                        id = R.string.in_reply_to_account_name_label,
+                        inReplyToAccountName,
+                    ),
                 fontSize = 14.sp,
             )
         }
@@ -498,13 +503,14 @@ private fun ContentWarningEntry(
     contentWarningInteractions: ContentWarningInteractions,
 ) {
     MoSoTextField(
-        modifier = Modifier
-            .padding(16.dp)
-            .fillMaxWidth(),
+        modifier =
+            Modifier
+                .padding(16.dp)
+                .fillMaxWidth(),
         value = contentWarningText,
         onValueChange = { contentWarningInteractions.onContentWarningTextChanged(it) },
         label = { Text(text = stringResource(id = R.string.content_warning_label)) },
-        borderColor = MoSoTheme.colors.borderAccent
+        borderColor = MoSoTheme.colors.borderAccent,
     )
 }
 
@@ -515,17 +521,18 @@ private fun ImageUploadBox(
 ) {
     val outlineShape = RoundedCornerShape(12.dp)
     Column(
-        modifier = Modifier
-            .padding(16.dp)
-            .border(
-                width = 2.dp,
-                color = MoSoTheme.colors.borderPrimary,
-                shape = outlineShape
-            )
-            .clip(
-                outlineShape
-            )
-            .fillMaxWidth(),
+        modifier =
+            Modifier
+                .padding(16.dp)
+                .border(
+                    width = 2.dp,
+                    color = MoSoTheme.colors.borderPrimary,
+                    shape = outlineShape,
+                )
+                .clip(
+                    outlineShape,
+                )
+                .fillMaxWidth(),
     ) {
         MediaUpload(
             uri = imageState.uri,
@@ -542,12 +549,12 @@ private fun ImageUploadBox(
                     onValueChange = {
                         mediaInteractions.onMediaDescriptionTextUpdated(
                             imageState.uri,
-                            it
+                            it,
                         )
                     },
                     label = {
                         Text(
-                            text = stringResource(id = R.string.media_alt_text_label)
+                            text = stringResource(id = R.string.media_alt_text_label),
                         )
                     },
                     colors = transparentTextFieldColors(),
@@ -558,11 +565,11 @@ private fun ImageUploadBox(
             IconButton(
                 onClick = {
                     mediaInteractions.onDeleteMediaClicked(imageState.uri)
-                }
+                },
             ) {
                 Icon(
                     MoSoIcons.delete(),
-                    stringResource(id = R.string.delete_button_content_description)
+                    stringResource(id = R.string.delete_button_content_description),
                 )
             }
         }
@@ -577,33 +584,37 @@ private fun PollChoice(
 ) {
     val deleteEnabled = remember(poll) { poll.options.size > MIN_POLL_COUNT }
     Row(
-        modifier = Modifier
-            .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 0.dp)
+        modifier =
+            Modifier
+                .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 0.dp),
     ) {
         OutlinedTextField(
-            modifier = Modifier
-                .weight(1f)
-                .align(Alignment.CenterVertically),
+            modifier =
+                Modifier
+                    .weight(1f)
+                    .align(Alignment.CenterVertically),
             value = poll.options[index],
             onValueChange = { pollInteractions.onPollOptionTextChanged(index, it) },
             label = {
                 Text(
-                    text = stringResource(id = R.string.poll_choice_label, index + 1)
+                    text = stringResource(id = R.string.poll_choice_label, index + 1),
                 )
-            }
+            },
         )
         IconButton(
-            modifier = Modifier
-                .align(Alignment.CenterVertically),
+            modifier =
+                Modifier
+                    .align(Alignment.CenterVertically),
             onClick = {
                 pollInteractions.onPollOptionDeleteClicked(index)
             },
-            enabled = deleteEnabled
+            enabled = deleteEnabled,
         ) {
             Icon(
-                modifier = Modifier
-                    .width(40.dp)
-                    .height(40.dp),
+                modifier =
+                    Modifier
+                        .width(40.dp)
+                        .height(40.dp),
                 painter = MoSoIcons.deleteOutline(),
                 contentDescription = stringResource(id = R.string.remove_poll_option_button_content_description),
             )
@@ -617,8 +628,9 @@ private fun PollSettings(
     pollInteractions: PollInteractions,
 ) {
     Row(
-        modifier = Modifier
-            .padding(start = 8.dp, end = 16.dp, top = 16.dp, bottom = 0.dp),
+        modifier =
+            Modifier
+                .padding(start = 8.dp, end = 16.dp, top = 16.dp, bottom = 0.dp),
     ) {
         val addNewOptionEnabled = remember(poll) { poll.options.size < MAX_POLL_COUNT }
         IconButton(
@@ -628,35 +640,39 @@ private fun PollSettings(
             enabled = addNewOptionEnabled,
         ) {
             Icon(
-                modifier = Modifier
-                    .width(40.dp)
-                    .height(40.dp),
+                modifier =
+                    Modifier
+                        .width(40.dp)
+                        .height(40.dp),
                 painter = MoSoIcons.addCircleOutline(),
                 contentDescription = stringResource(id = R.string.add_poll_option_button_content_description),
             )
         }
 
         Row(
-            modifier = Modifier.padding(top = 4.dp)
+            modifier = Modifier.padding(top = 4.dp),
         ) {
             MoSoVerticalDivider(
-                modifier = Modifier
-                    .padding(start = 8.dp, end = 8.dp)
-                    .height(40.dp)
+                modifier =
+                    Modifier
+                        .padding(start = 8.dp, end = 8.dp)
+                        .height(40.dp),
             )
             PollDurationDropDown(poll = poll, pollInteractions = pollInteractions)
             MoSoVerticalDivider(
-                modifier = Modifier
-                    .padding(start = 8.dp, end = 8.dp)
-                    .height(40.dp)
+                modifier =
+                    Modifier
+                        .padding(start = 8.dp, end = 8.dp)
+                        .height(40.dp),
             )
             PollStyleDropDown(poll = poll, pollInteractions = pollInteractions)
         }
     }
     Row(
-        modifier = Modifier
-            .padding(start = 8.dp, top = 8.dp, end = 8.dp)
-            .clickable { pollInteractions.onHideCountUntilEndClicked() }
+        modifier =
+            Modifier
+                .padding(start = 8.dp, top = 8.dp, end = 8.dp)
+                .clickable { pollInteractions.onHideCountUntilEndClicked() },
     ) {
         Checkbox(
             modifier = Modifier.align(Alignment.CenterVertically),
@@ -666,7 +682,7 @@ private fun PollSettings(
         Text(
             modifier = Modifier.align(Alignment.CenterVertically),
             text = stringResource(id = R.string.poll_option_hide_results),
-            fontSize = 16.sp
+            fontSize = 16.sp,
         )
         Spacer(modifier = Modifier.width(8.dp))
     }
@@ -676,7 +692,7 @@ private fun PollSettings(
 @Composable
 private fun NewPostScreenPreview() {
     MoSoTheme(
-        false
+        false,
     ) {
         NewPostScreen(
             statusText = TextFieldValue(),
@@ -696,7 +712,7 @@ private fun NewPostScreenPreview() {
             hashTags = null,
             inReplyToAccountName = null,
             userHeaderState = UserHeaderState("", "Barack Obama"),
-            bottomBarState = BottomBarState()
+            bottomBarState = BottomBarState(),
         )
     }
 }
@@ -705,7 +721,7 @@ private fun NewPostScreenPreview() {
 @Composable
 private fun NewPostScreenWithPollPreview() {
     MoSoTheme(
-        false
+        false,
     ) {
         NewPostScreen(
             statusText = TextFieldValue(),
@@ -717,12 +733,13 @@ private fun NewPostScreenWithPollPreview() {
             isSendingPost = false,
             visibility = StatusVisibility.Private,
             onVisibilitySelected = {},
-            poll = Poll(
-                options = listOf("option 1", "option 2"),
-                style = PollStyle.SINGLE_CHOICE,
-                pollDuration = PollDuration.ONE_DAY,
-                hideTotals = false
-            ),
+            poll =
+                Poll(
+                    options = listOf("option 1", "option 2"),
+                    style = PollStyle.SINGLE_CHOICE,
+                    pollDuration = PollDuration.ONE_DAY,
+                    hideTotals = false,
+                ),
             pollInteractions = object : PollInteractions {},
             contentWarningText = null,
             contentWarningInteractions = object : ContentWarningInteractions {},
@@ -739,7 +756,7 @@ private fun NewPostScreenWithPollPreview() {
 @Composable
 private fun NewPostScreenWithContentWarningPreview() {
     MoSoTheme(
-        false
+        false,
     ) {
         NewPostScreen(
             statusText = TextFieldValue(),

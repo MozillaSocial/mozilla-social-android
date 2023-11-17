@@ -4,7 +4,6 @@ package org.mozilla.social.core.model
  * Represents a file or media attachment that can be added to a status.
  */
 sealed class Attachment {
-
     abstract val attachmentId: String
 
     /**

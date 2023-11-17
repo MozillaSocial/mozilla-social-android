@@ -21,38 +21,42 @@ class StatusRepository(
     private val dao: StatusDao,
 ) {
     @PreferUseCase
-    suspend fun postStatus(statusCreate: StatusCreate): Status =
-        api.postStatus(statusCreate.toNetworkModel()).toExternalModel()
+    suspend fun postStatus(statusCreate: StatusCreate): Status = api.postStatus(statusCreate.toNetworkModel()).toExternalModel()
 
     @PreferUseCase
-    suspend fun voteOnPoll(pollId: String, pollVote: PollVote): Poll {
+    suspend fun voteOnPoll(
+        pollId: String,
+        pollVote: PollVote,
+    ): Poll {
         return api.voteOnPoll(pollId = pollId, body = pollVote.toNetworkModel())
             .toExternalModel()
     }
 
     @PreferUseCase
-    suspend fun boostStatus(statusId: String): Status =
-        api.boostStatus(statusId = statusId).toExternalModel()
+    suspend fun boostStatus(statusId: String): Status = api.boostStatus(statusId = statusId).toExternalModel()
 
-    suspend fun updateBoostCount(statusId: String, valueChange: Long) {
+    suspend fun updateBoostCount(
+        statusId: String,
+        valueChange: Long,
+    ) {
         dao.updateBoostCount(statusId = statusId, valueChange = valueChange)
     }
 
-    suspend fun updateBoosted(statusId: String, isBoosted: Boolean) {
+    suspend fun updateBoosted(
+        statusId: String,
+        isBoosted: Boolean,
+    ) {
         dao.updateBoosted(statusId = statusId, isBoosted = isBoosted)
     }
 
     @PreferUseCase
-    suspend fun unBoostStatus(statusId: String): Status =
-        api.unBoostStatus(statusId = statusId).toExternalModel()
+    suspend fun unBoostStatus(statusId: String): Status = api.unBoostStatus(statusId = statusId).toExternalModel()
 
     @PreferUseCase
-    suspend fun favoriteStatus(statusId: String): Status =
-        api.favoriteStatus(statusId = statusId).toExternalModel()
+    suspend fun favoriteStatus(statusId: String): Status = api.favoriteStatus(statusId = statusId).toExternalModel()
 
     @PreferUseCase
-    suspend fun unFavoriteStatus(statusId: String): Status =
-        api.unFavoriteStatus(statusId = statusId).toExternalModel()
+    suspend fun unFavoriteStatus(statusId: String): Status = api.unFavoriteStatus(statusId = statusId).toExternalModel()
 
     suspend fun getStatusContext(statusId: String): Context {
         return api.getStatusContext(statusId).toExternalModel()
@@ -67,30 +71,36 @@ class StatusRepository(
         dao.deleteStatus(statusId)
     }
 
-    suspend fun getStatusLocal(
-        statusId: String
-    ): Status? {
+    suspend fun getStatusLocal(statusId: String): Status? {
         val status = dao.getStatus(statusId)
         return status?.toExternalModel()
     }
 
-    fun getStatusesFlow(
-        statusIds: List<String>,
-    ): Flow<List<Status>> = dao.getStatuses(statusIds).map {
-        it.map { statusWrapper ->
-            statusWrapper.toExternalModel()
+    fun getStatusesFlow(statusIds: List<String>): Flow<List<Status>> =
+        dao.getStatuses(statusIds).map {
+            it.map { statusWrapper ->
+                statusWrapper.toExternalModel()
+            }
         }
-    }
 
-    suspend fun updateIsBeingDeleted(statusId: String, isBeingDeleted: Boolean) {
+    suspend fun updateIsBeingDeleted(
+        statusId: String,
+        isBeingDeleted: Boolean,
+    ) {
         dao.updateIsBeingDeleted(statusId = statusId, isBeingDeleted = isBeingDeleted)
     }
 
-    suspend fun updateFavoriteCount(statusId: String, valueChange: Long) {
+    suspend fun updateFavoriteCount(
+        statusId: String,
+        valueChange: Long,
+    ) {
         dao.updateFavoriteCount(statusId, valueChange)
     }
 
-    suspend fun updateFavorited(statusId: String, isFavorited: Boolean) {
+    suspend fun updateFavorited(
+        statusId: String,
+        isFavorited: Boolean,
+    ) {
         dao.updateFavorited(statusId, isFavorited)
     }
 

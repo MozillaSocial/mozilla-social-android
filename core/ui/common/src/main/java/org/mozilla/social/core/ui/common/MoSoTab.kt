@@ -33,7 +33,7 @@ fun MoSoTabRow(
     divider: @Composable () -> Unit = @Composable {
         MoSoDivider()
     },
-    tabs: @Composable () -> Unit
+    tabs: @Composable () -> Unit,
 ) {
     TabRow(
         selectedTabIndex = selectedTabIndex,
@@ -42,7 +42,7 @@ fun MoSoTabRow(
         contentColor = contentColor,
         indicator = indicator,
         divider = divider,
-        tabs = tabs
+        tabs = tabs,
     )
 }
 
@@ -55,7 +55,7 @@ fun MoSoTab(
     selectedContentColor: Color = MoSoTheme.colors.textLink,
     unselectedContentColor: Color = MoSoTheme.colors.textPrimary,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
-    content: @Composable ColumnScope.() -> Unit
+    content: @Composable ColumnScope.() -> Unit,
 ) {
     Tab(
         selected = selected,
@@ -65,7 +65,7 @@ fun MoSoTab(
         selectedContentColor = selectedContentColor,
         unselectedContentColor = unselectedContentColor,
         interactionSource = interactionSource,
-        content = content
+        content = content,
     )
 }
 

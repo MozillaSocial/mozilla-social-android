@@ -1,7 +1,6 @@
 package org.mozilla.social.feature.account
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -38,14 +37,16 @@ internal fun Header(
             modifier = modifier.fillMaxWidth(),
             headerImage = {
                 Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(120.dp)
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .height(120.dp),
                 ) {
                     AsyncImage(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .background(MoSoTheme.colors.layer2),
+                        modifier =
+                            Modifier
+                                .fillMaxSize()
+                                .background(MoSoTheme.colors.layer2),
                         model = headerUrl,
                         contentDescription = null,
                         contentScale = ContentScale.Crop,
@@ -59,18 +60,20 @@ internal fun Header(
                 Box(
                     // Don't use a border on the AsyncImage.  Some pixels of the image leak through
                     // the edges.
-                    modifier = Modifier
-                        .padding(start = 8.dp)
-                        .size(92.dp)
-                        .clip(CircleShape)
-                        .background(MoSoTheme.colors.layer1)
+                    modifier =
+                        Modifier
+                            .padding(start = 8.dp)
+                            .size(92.dp)
+                            .clip(CircleShape)
+                            .background(MoSoTheme.colors.layer1),
                 ) {
                     AsyncImage(
-                        modifier = Modifier
-                            .align(Alignment.Center)
-                            .size(86.dp)
-                            .clip(CircleShape)
-                            .background(MoSoTheme.colors.layer2),
+                        modifier =
+                            Modifier
+                                .align(Alignment.Center)
+                                .size(86.dp)
+                                .clip(CircleShape)
+                                .background(MoSoTheme.colors.layer2),
                         model = avatarUrl,
                         contentDescription = null,
                         contentScale = ContentScale.Crop,
@@ -93,13 +96,14 @@ private fun UserInfo(
     handle: String,
 ) {
     Column(
-        modifier = Modifier
-            .padding(start = 8.dp, top = 8.dp)
-            .fillMaxWidth()
+        modifier =
+            Modifier
+                .padding(start = 8.dp, top = 8.dp)
+                .fillMaxWidth(),
     ) {
         Text(
             text = displayName,
-            style = MoSoTheme.typography.titleLarge
+            style = MoSoTheme.typography.titleLarge,
         )
         Text(
             text = handle,
@@ -129,19 +133,23 @@ private fun HeaderLayout(
             Box { rightSideContent() }
         },
     ) { measurables, constraints ->
-        val placeables = measurables.map {
-            it.measure(constraints.copy(
-                minWidth = 0,
-                minHeight = 0,
-            ))
-        }
+        val placeables =
+            measurables.map {
+                it.measure(
+                    constraints.copy(
+                        minWidth = 0,
+                        minHeight = 0,
+                    ),
+                )
+            }
         val headerImagePlaceable = placeables[0]
         val avatarImagePlaceable = placeables[1]
         val rightSideContentPlaceable = placeables[2]
         layout(
             width = constraints.maxWidth,
-            height = headerImagePlaceable.height
-                    + max(avatarImagePlaceable.height / 2, rightSideContentPlaceable.height),
+            height =
+                headerImagePlaceable.height +
+                    max(avatarImagePlaceable.height / 2, rightSideContentPlaceable.height),
         ) {
             headerImagePlaceable.placeRelative(
                 x = 0,
@@ -149,11 +157,11 @@ private fun HeaderLayout(
             )
             avatarImagePlaceable.placeRelative(
                 x = 0,
-                y = headerImagePlaceable.height - avatarImagePlaceable.height / 2
+                y = headerImagePlaceable.height - avatarImagePlaceable.height / 2,
             )
             rightSideContentPlaceable.placeRelative(
                 x = (constraints.maxWidth - rightSideContentPlaceable.width),
-                y = headerImagePlaceable.height
+                y = headerImagePlaceable.height,
             )
         }
     }

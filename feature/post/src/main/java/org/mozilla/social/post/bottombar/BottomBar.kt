@@ -45,20 +45,22 @@ internal fun BottomBar(
 ) {
     val context = LocalContext.current
 
-    val multipleMediaLauncher = rememberLauncherForActivityResult(
-        ActivityResultContracts.PickMultipleVisualMedia(
-            maxItems = bottomBarState.maxImages.coerceAtLeast(2),
-        )
-    ) { uris ->
-        uris.forEach {
-            onMediaInserted(it, it.toFile(context), it.getFileType(context))
+    val multipleMediaLauncher =
+        rememberLauncherForActivityResult(
+            ActivityResultContracts.PickMultipleVisualMedia(
+                maxItems = bottomBarState.maxImages.coerceAtLeast(2),
+            ),
+        ) { uris ->
+            uris.forEach {
+                onMediaInserted(it, it.toFile(context), it.getFileType(context))
+            }
         }
-    }
-    val singleMediaLauncher = rememberLauncherForActivityResult(
-        ActivityResultContracts.PickVisualMedia()
-    ) { uri ->
-        uri?.let { onMediaInserted(it, it.toFile(context), it.getFileType(context)) }
-    }
+    val singleMediaLauncher =
+        rememberLauncherForActivityResult(
+            ActivityResultContracts.PickVisualMedia(),
+        ) { uri ->
+            uri?.let { onMediaInserted(it, it.toFile(context), it.getFileType(context)) }
+        }
 
     BottomBar(
         bottomBarState = bottomBarState,
@@ -66,21 +68,20 @@ internal fun BottomBar(
             when (bottomBarState.maxImages) {
                 1 -> {
                     singleMediaLauncher.launch(
-                        PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                        PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly),
                     )
                 }
                 in 2..NewPostViewModel.MAX_IMAGES -> {
                     multipleMediaLauncher.launch(
-                        PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                        PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly),
                     )
                 }
                 else -> {}
             }
-
         },
         onUploadVideoClicked = {
             singleMediaLauncher.launch(
-                PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.VideoOnly)
+                PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.VideoOnly),
             )
         },
         pollInteractions = pollInteractions,
@@ -123,13 +124,14 @@ internal fun BottomBar(
 ) {
     Column {
         MoSoDivider(
-            color = MoSoTheme.colors.borderPrimary
+            color = MoSoTheme.colors.borderPrimary,
         )
         Row(
-            modifier = Modifier
-                .height(60.dp)
-                .fillMaxWidth()
-                .background(MoSoTheme.colors.layer1),
+            modifier =
+                Modifier
+                    .height(60.dp)
+                    .fillMaxWidth()
+                    .background(MoSoTheme.colors.layer1),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             IconButton(
@@ -157,7 +159,7 @@ internal fun BottomBar(
             Spacer(modifier = Modifier.width(MoSoSpacing.sm))
             AddPollButton(
                 pollInteractions = pollInteractions,
-                pollButtonEnabled = pollButtonEnabled
+                pollButtonEnabled = pollButtonEnabled,
             )
             Spacer(modifier = Modifier.width(MoSoSpacing.sm))
             ContentWarningButton(
@@ -171,7 +173,10 @@ internal fun BottomBar(
 }
 
 @Composable
-private fun AddPollButton(pollInteractions: PollInteractions, pollButtonEnabled: Boolean) {
+private fun AddPollButton(
+    pollInteractions: PollInteractions,
+    pollButtonEnabled: Boolean,
+) {
     IconButton(
         onClick = { pollInteractions.onNewPollClicked() },
         enabled = pollButtonEnabled,
@@ -194,11 +199,12 @@ private fun ContentWarningButton(
         Icon(
             MoSoIcons.warning(),
             stringResource(id = R.string.content_warning_button_content_description),
-            tint = if (contentWarningText == null) {
-                LocalContentColor.current
-            } else {
-                MoSoTheme.colors.textWarning
-            },
+            tint =
+                if (contentWarningText == null) {
+                    LocalContentColor.current
+                } else {
+                    MoSoTheme.colors.textWarning
+                },
         )
     }
 }
@@ -206,9 +212,10 @@ private fun ContentWarningButton(
 @Composable
 private fun CharacterCountLabel(characterCountText: String) {
     Text(
-        modifier = Modifier
-            .wrapContentSize()
-            .padding(MoSoSpacing.md),
+        modifier =
+            Modifier
+                .wrapContentSize()
+                .padding(MoSoSpacing.md),
         text = characterCountText,
         style = MoSoTheme.typography.labelSmall,
         color = MoSoTheme.colors.textSecondary,

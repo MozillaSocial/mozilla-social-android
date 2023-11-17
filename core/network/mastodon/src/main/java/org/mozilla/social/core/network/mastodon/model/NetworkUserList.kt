@@ -5,14 +5,12 @@ package org.mozilla.social.core.network.mastodon.model
  */
 data class NetworkUserList(
     val listId: String,
-
     /**
      * The user-defined title of the list.
      */
     val title: String,
-
     /**
      * The reply policy of this list.
      */
-    val replyPolicy: NetworkListReplyPolicy
+    val replyPolicy: NetworkListReplyPolicy,
 )

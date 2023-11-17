@@ -6,9 +6,7 @@ import org.mozilla.social.core.navigation.usecases.NavigateTo
 
 class ContentPreferencesSettingsViewModel(
     private val navigateTo: NavigateTo,
-
-    ): ViewModel() {
-
+) : ViewModel() {
     fun onMutedUsersClicked() {
         navigateTo(SettingsNavigationDestination.MutedUsersSettings)
     }

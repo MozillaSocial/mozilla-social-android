@@ -19,7 +19,6 @@ class FollowAccount(
     private val socialDatabase: SocialDatabase,
     private val dispatcherIo: CoroutineDispatcher = Dispatchers.IO,
 ) {
-
     /**
      * @throws FollowFailedException if any error occurred
      */

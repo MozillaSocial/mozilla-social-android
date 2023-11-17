@@ -27,23 +27,24 @@ fun Account.toUiState(): EditAccountUiState {
         topBarTitle = displayName,
         headerUrl = headerUrl,
         avatarUrl = avatarUrl,
-        handle = "@${acct}",
+        handle = "@$acct",
         displayName = displayName,
         bio = bio,
         bioCharacterCount = bio.length,
         lockChecked = isLocked,
         botChecked = isBot ?: false,
-        fields = fields?.map {
-            EditAccountUiStateField(
-                label = it.name,
-                content = HtmlCompat.fromHtml(it.value, 0).toString(),
-            )
-        }?.toMutableList()?.apply {
-            if (size < EditAccountViewModel.MAX_FIELDS) {
-                add(EditAccountUiStateField("", ""))
-            }
-        } ?: listOf(
-            EditAccountUiStateField("", "")
-        )
+        fields =
+            fields?.map {
+                EditAccountUiStateField(
+                    label = it.name,
+                    content = HtmlCompat.fromHtml(it.value, 0).toString(),
+                )
+            }?.toMutableList()?.apply {
+                if (size < EditAccountViewModel.MAX_FIELDS) {
+                    add(EditAccountUiStateField("", ""))
+                }
+            } ?: listOf(
+                EditAccountUiStateField("", ""),
+            ),
     )
 }

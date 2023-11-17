@@ -1,7 +1,6 @@
 package org.mozilla.social.core.model
 
 enum class NotificationType(val value: String) {
-
     /**
      * Someone followed the account.
      */
@@ -35,5 +34,5 @@ enum class NotificationType(val value: String) {
     /**
      * Someone we enabled notifications for has posted a status.
      */
-    Status("status")
+    Status("status"),
 }

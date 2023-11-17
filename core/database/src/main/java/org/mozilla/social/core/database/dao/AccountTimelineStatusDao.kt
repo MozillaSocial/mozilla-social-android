@@ -9,20 +9,17 @@ import org.mozilla.social.core.database.model.statusCollections.AccountTimelineS
 
 @Dao
 interface AccountTimelineStatusDao : BaseDao<AccountTimelineStatus> {
-
     @Transaction
     @Query(
         "SELECT * FROM accountTimeline " +
-                "WHERE  accountId = :accountId " +
-                "ORDER BY statusId DESC"
+            "WHERE  accountId = :accountId " +
+            "ORDER BY statusId DESC",
     )
-    fun accountTimelinePagingSource(
-        accountId: String,
-    ): PagingSource<Int, AccountTimelineStatusWrapper>
+    fun accountTimelinePagingSource(accountId: String): PagingSource<Int, AccountTimelineStatusWrapper>
 
     @Query(
         "DELETE FROM accountTimeline " +
-                "WHERE accountId = :accountId "
+            "WHERE accountId = :accountId ",
     )
     suspend fun deleteAccountTimeline(accountId: String)
 
@@ -31,8 +28,8 @@ interface AccountTimelineStatusDao : BaseDao<AccountTimelineStatus> {
 
     @Query(
         "DELETE FROM accountTimeline " +
-        "WHERE statusId = :statusId " +
-        "OR boostedStatusId = :statusId"
+            "WHERE statusId = :statusId " +
+            "OR boostedStatusId = :statusId",
     )
     suspend fun deletePost(statusId: String)
 }

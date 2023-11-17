@@ -19,7 +19,6 @@ class VoteOnPoll(
     private val showSnackbar: ShowSnackbar,
     private val dispatcherIo: CoroutineDispatcher = Dispatchers.IO,
 ) {
-
     @OptIn(PreferUseCase::class)
     suspend operator fun invoke(
         pollId: String,
@@ -27,10 +26,11 @@ class VoteOnPoll(
     ) = externalScope.async(dispatcherIo) {
         try {
             pollRepository.updateOwnVotes(pollId, pollChoices)
-            val poll = statusRepository.voteOnPoll(
-                pollId,
-                PollVote(pollChoices),
-            )
+            val poll =
+                statusRepository.voteOnPoll(
+                    pollId,
+                    PollVote(pollChoices),
+                )
             pollRepository.update(poll)
         } catch (e: Exception) {
             pollRepository.updateOwnVotes(pollId, null)

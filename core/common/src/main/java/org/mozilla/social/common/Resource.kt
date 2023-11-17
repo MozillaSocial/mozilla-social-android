@@ -36,21 +36,22 @@ fun <T> MutableStateFlow<Resource<T>>.updateData(block: T.() -> T) {
     with(value as? Resource.Loaded ?: return) {
         update {
             Resource.Loaded(
-                data = data.block()
+                data = data.block(),
             )
         }
     }
 }
 
-fun <T> loadResource(block: suspend () -> T) = flow {
-    this.emit(Resource.Loading())
-    try {
-        this.emit(Resource.Loaded(block()))
-    } catch (e: Exception) {
-        Timber.e(e)
-        this.emit(Resource.Error(e))
+fun <T> loadResource(block: suspend () -> T) =
+    flow {
+        this.emit(Resource.Loading())
+        try {
+            this.emit(Resource.Loaded(block()))
+        } catch (e: Exception) {
+            Timber.e(e)
+            this.emit(Resource.Error(e))
+        }
     }
-}
 
 fun <I, O> Resource<I>.mapData(transform: (I) -> O): Resource<O> {
     return when (this) {

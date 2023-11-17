@@ -8,23 +8,19 @@ import org.mozilla.social.core.network.mastodon.model.paging.NetworkPageable
  */
 data class NetworkScheduledStatus(
     val statusId: String,
-
     /**
      * Time at which the status should be posted.
      */
     val scheduledAt: Instant,
-
     /**
      * Status details.
      */
     val params: NetworkScheduledStatusParams,
-
     /**
      * Media attached to this status.
      */
-    val mediaAttachments: List<NetworkAttachment>
+    val mediaAttachments: List<NetworkAttachment>,
 ) : NetworkPageable {
-
     override val id: String
         get() = statusId
 }

@@ -9,11 +9,10 @@ import org.mozilla.social.core.database.model.statusCollections.FederatedTimelin
 
 @Dao
 interface FederatedTimelineStatusDao : BaseDao<FederatedTimelineStatus> {
-
     @Transaction
     @Query(
         "SELECT * FROM federatedTimeline " +
-        "ORDER BY statusId DESC"
+            "ORDER BY statusId DESC",
     )
     fun federatedTimelinePagingSource(): PagingSource<Int, FederatedTimelineStatusWrapper>
 
@@ -22,15 +21,15 @@ interface FederatedTimelineStatusDao : BaseDao<FederatedTimelineStatus> {
 
     @Query(
         "DELETE FROM federatedTimeline " +
-        "WHERE accountId = :accountId " +
-        "OR boostedStatusAccountId = :accountId"
+            "WHERE accountId = :accountId " +
+            "OR boostedStatusAccountId = :accountId",
     )
     suspend fun removePostsFromAccount(accountId: String)
 
     @Query(
         "DELETE FROM federatedTimeline " +
-        "WHERE statusId = :statusId " +
-        "OR boostedStatusId = :statusId"
+            "WHERE statusId = :statusId " +
+            "OR boostedStatusId = :statusId",
     )
     suspend fun deletePost(statusId: String)
 }

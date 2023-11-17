@@ -11,7 +11,7 @@ import androidx.navigation.NavBackStackEntry
 fun AnimatedContentTransitionScope<NavBackStackEntry>.mosoSlideIn(): EnterTransition =
     slideIntoContainer(
         towards = AnimatedContentTransitionScope.SlideDirection.Up,
-        animationSpec = tween(TWEEN_DURATION)
+        animationSpec = tween(TWEEN_DURATION),
     )
 
 fun AnimatedContentTransitionScope<NavBackStackEntry>.mosoSlideOut(): ExitTransition =
@@ -20,10 +20,8 @@ fun AnimatedContentTransitionScope<NavBackStackEntry>.mosoSlideOut(): ExitTransi
         animationSpec = tween(TWEEN_DURATION),
     )
 
-fun mosoFadeIn(): EnterTransition =
-    fadeIn(tween(durationMillis = TWEEN_DURATION))
+fun mosoFadeIn(): EnterTransition = fadeIn(tween(durationMillis = TWEEN_DURATION))
 
-fun mosoFadeOut(): ExitTransition =
-    fadeOut(tween(durationMillis = TWEEN_DURATION))
+fun mosoFadeOut(): ExitTransition = fadeOut(tween(durationMillis = TWEEN_DURATION))
 
 const val TWEEN_DURATION = 250

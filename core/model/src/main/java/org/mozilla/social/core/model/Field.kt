@@ -10,9 +10,8 @@ import kotlinx.datetime.Instant
 data class Field(
     val name: String,
     val value: String,
-
     /**
      * Timestamp of the time the server verified a URL value for a `rel="me”` link.
      */
-    val verifiedAt: Instant? = null
+    val verifiedAt: Instant? = null,
 )

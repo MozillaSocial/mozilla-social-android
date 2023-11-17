@@ -8,22 +8,19 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 data class NetworkSearchResult(
-
     /**
      * Accounts which matched the query.
      */
     @SerialName("accounts")
     val accounts: List<NetworkAccount>,
-
     /**
      * Statuses which matched the query.
      */
     @SerialName("statuses")
     val statuses: List<NetworkStatus>,
-
     /**
      * Hashtags which matched the query.
      */
     @SerialName("hashtags")
-    val hashtags: List<NetworkHashTag>
+    val hashtags: List<NetworkHashTag>,
 )

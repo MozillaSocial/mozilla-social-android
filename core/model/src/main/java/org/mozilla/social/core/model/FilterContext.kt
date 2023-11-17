@@ -1,7 +1,6 @@
 package org.mozilla.social.core.model
 
 enum class FilterContext {
-
     /**
      * Home timeline and lists.
      */
@@ -20,5 +19,5 @@ enum class FilterContext {
     /**
      * Expanded thread of a detailed status.
      */
-    Thread
+    Thread,
 }

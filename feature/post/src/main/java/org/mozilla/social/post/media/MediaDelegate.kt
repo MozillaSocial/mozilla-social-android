@@ -10,8 +10,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.mozilla.social.common.LoadState
 import org.mozilla.social.common.utils.FileType
-import org.mozilla.social.core.repository.mastodon.MediaRepository
 import org.mozilla.social.core.model.ImageState
+import org.mozilla.social.core.repository.mastodon.MediaRepository
 import org.mozilla.social.post.NewPostViewModel
 import timber.log.Timber
 import java.io.File
@@ -20,7 +20,6 @@ class MediaDelegate(
     private val coroutineScope: CoroutineScope,
     private val mediaRepository: MediaRepository,
 ) : MediaInteractions {
-
     private val _imageStates = MutableStateFlow<List<ImageState>>(emptyList())
     val imageStates: StateFlow<List<ImageState>> = _imageStates.asStateFlow()
 
@@ -63,24 +62,27 @@ class MediaDelegate(
                 .apply { add(ImageState(uri, loadState = LoadState.LOADING, fileType = fileType)) }
         }
         updateImageState(uri) { copy(loadState = LoadState.LOADING) }
-        uploadJobs[uri] = coroutineScope.launch {
-            try {
-                val imageId = mediaRepository.uploadMedia(
-                    file = file,
-                    description = imageStates.value.firstOrNull { it.uri == uri }
-                        ?.description?.ifBlank { null }
-                ).attachmentId
-                updateImageState(uri) {
-                    copy(
-                        attachmentId = imageId,
-                        loadState = LoadState.LOADED
-                    )
+        uploadJobs[uri] =
+            coroutineScope.launch {
+                try {
+                    val imageId =
+                        mediaRepository.uploadMedia(
+                            file = file,
+                            description =
+                                imageStates.value.firstOrNull { it.uri == uri }
+                                    ?.description?.ifBlank { null },
+                        ).attachmentId
+                    updateImageState(uri) {
+                        copy(
+                            attachmentId = imageId,
+                            loadState = LoadState.LOADED,
+                        )
+                    }
+                } catch (e: Exception) {
+                    Timber.e(e)
+                    updateImageState(uri) { copy(loadState = LoadState.ERROR) }
                 }
-            } catch (e: Exception) {
-                Timber.e(e)
-                updateImageState(uri) { copy(loadState = LoadState.ERROR) }
             }
-        }
         uploadJobs[uri]?.invokeOnCompletion {
             Timber.d("removed")
             uploadJobs.remove(uri)
@@ -90,11 +92,15 @@ class MediaDelegate(
     /**
      * Updates the state with the given uri with the given transform function
      */
-    private inline fun updateImageState(uri: Uri, transform: ImageState.() -> ImageState) {
+    private inline fun updateImageState(
+        uri: Uri,
+        transform: ImageState.() -> ImageState,
+    ) {
         _imageStates.update {
             it.toMutableList().apply {
-                val oldState = firstOrNull { it.uri == uri }
-                    ?: error("The media isn't in the list yet")
+                val oldState =
+                    firstOrNull { it.uri == uri }
+                        ?: error("The media isn't in the list yet")
                 this[this.indexOf(oldState)] = transform(oldState)
             }
         }

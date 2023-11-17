@@ -53,9 +53,7 @@ import org.mozilla.social.feature.account.Header
 import org.mozilla.social.feature.account.R
 
 @Composable
-internal fun EditAccountScreen(
-    viewModel: EditAccountViewModel = koinViewModel(),
-) {
+internal fun EditAccountScreen(viewModel: EditAccountViewModel = koinViewModel()) {
     val uiState by viewModel.editAccountUiState.collectAsStateWithLifecycle()
     val isUploading by viewModel.isUploading.collectAsStateWithLifecycle()
     EditAccountScreen(
@@ -72,23 +70,26 @@ fun EditAccountScreen(
     isUploading: Boolean,
 ) {
     MoSoSurface(
-        modifier = Modifier
-            .fillMaxSize(),
+        modifier =
+            Modifier
+                .fillMaxSize(),
     ) {
         Column(
-            modifier = Modifier
-                .systemBarsPadding()
-                .imePadding(),
+            modifier =
+                Modifier
+                    .systemBarsPadding()
+                    .imePadding(),
         ) {
             MoSoCloseableTopAppBar(
                 title = (uiState as? Resource.Loaded)?.data?.topBarTitle ?: "",
                 actions = {
                     if (uiState is Resource.Loaded) {
                         MoSoButton(
-                            modifier = Modifier
-                                .padding(8.dp)
-                                .height(38.dp),
-                            onClick = { editAccountInteractions.onSaveClicked() }
+                            modifier =
+                                Modifier
+                                    .padding(8.dp)
+                                    .height(38.dp),
+                            onClick = { editAccountInteractions.onSaveClicked() },
                         ) {
                             Text(text = stringResource(id = R.string.edit_account_save_button))
                         }
@@ -96,7 +97,6 @@ fun EditAccountScreen(
                 },
                 showDivider = false,
             )
-
 
             when (uiState) {
                 is Resource.Loading -> {
@@ -111,7 +111,7 @@ fun EditAccountScreen(
 
                 is Resource.Error -> {
                     GenericError(
-                        onRetryClicked = editAccountInteractions::onRetryClicked
+                        onRetryClicked = editAccountInteractions::onRetryClicked,
                     )
                 }
             }
@@ -132,20 +132,23 @@ private fun LoadedState(
     val context = LocalContext.current
 
     Column(
-        modifier = Modifier
-            .verticalScroll(rememberScrollState())
+        modifier =
+            Modifier
+                .verticalScroll(rememberScrollState()),
     ) {
-        val avatarSelectionLauncher = rememberLauncherForActivityResult(
-            ActivityResultContracts.PickVisualMedia()
-        ) { uri ->
-            uri?.let { editAccountInteractions.onNewAvatarSelected(it, it.toFile(context)) }
-        }
+        val avatarSelectionLauncher =
+            rememberLauncherForActivityResult(
+                ActivityResultContracts.PickVisualMedia(),
+            ) { uri ->
+                uri?.let { editAccountInteractions.onNewAvatarSelected(it, it.toFile(context)) }
+            }
 
-        val headerSelectionLauncher = rememberLauncherForActivityResult(
-            ActivityResultContracts.PickVisualMedia()
-        ) { uri ->
-            uri?.let { editAccountInteractions.onNewHeaderSelected(it, it.toFile(context)) }
-        }
+        val headerSelectionLauncher =
+            rememberLauncherForActivityResult(
+                ActivityResultContracts.PickVisualMedia(),
+            ) { uri ->
+                uri?.let { editAccountInteractions.onNewHeaderSelected(it, it.toFile(context)) }
+            }
 
         Header(
             headerUrl = uiState.headerUrl,
@@ -156,18 +159,18 @@ private fun LoadedState(
                 EditImageOverlay(
                     onClick = {
                         avatarSelectionLauncher.launch(
-                            PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                            PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly),
                         )
-                    }
+                    },
                 )
             },
             headerOverlay = {
                 EditImageOverlay(
                     onClick = {
                         headerSelectionLauncher.launch(
-                            PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                            PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly),
                         )
-                    }
+                    },
                 )
             },
             rightSideContent = {
@@ -175,34 +178,36 @@ private fun LoadedState(
                     uiState = uiState,
                     editAccountInteractions = editAccountInteractions,
                 )
-            }
+            },
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
         Column(
-            modifier = Modifier.padding(horizontal = 8.dp)
+            modifier = Modifier.padding(horizontal = 8.dp),
         ) {
             MoSoTextField(
-                modifier = Modifier
-                    .fillMaxWidth(),
+                modifier =
+                    Modifier
+                        .fillMaxWidth(),
                 value = uiState.displayName,
                 onValueChange = editAccountInteractions::onDisplayNameTextChanged,
                 label = {
                     Text(text = stringResource(id = R.string.edit_account_display_name_label))
-                }
+                },
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
             MoSoTextField(
-                modifier = Modifier
-                    .fillMaxWidth(),
+                modifier =
+                    Modifier
+                        .fillMaxWidth(),
                 value = uiState.bio,
                 onValueChange = editAccountInteractions::onBioTextChanged,
                 label = {
                     Text(text = stringResource(id = R.string.edit_account_bio_label))
-                }
+                },
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -216,26 +221,26 @@ private fun LoadedState(
 
             Metadata(
                 editAccountInteractions = editAccountInteractions,
-                fields = uiState.fields
+                fields = uiState.fields,
             )
         }
     }
 }
 
 @Composable
-private fun EditImageOverlay(
-    onClick: () -> Unit,
-) {
+private fun EditImageOverlay(onClick: () -> Unit) {
     Box(
-        modifier = Modifier
-            .size(48.dp)
-            .clip(CircleShape)
-            .background(MoSoTheme.colors.actionOverlay)
-            .clickable { onClick() }
+        modifier =
+            Modifier
+                .size(48.dp)
+                .clip(CircleShape)
+                .background(MoSoTheme.colors.actionOverlay)
+                .clickable { onClick() },
     ) {
         Icon(
-            modifier = Modifier
-                .align(Alignment.Center),
+            modifier =
+                Modifier
+                    .align(Alignment.Center),
             painter = MoSoIcons.image(),
             contentDescription = "",
         )
@@ -248,11 +253,11 @@ private fun BotAndLock(
     uiState: EditAccountUiState,
 ) {
     Row(
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         MoSoCheckBox(
             checked = uiState.lockChecked,
-            onCheckedChange = { editAccountInteractions.onLockClicked() }
+            onCheckedChange = { editAccountInteractions.onLockClicked() },
         )
         Icon(
             painter = MoSoIcons.lock(),
@@ -269,7 +274,7 @@ private fun BotAndLock(
 
         MoSoCheckBox(
             checked = uiState.botChecked,
-            onCheckedChange = { editAccountInteractions.onBotClicked() }
+            onCheckedChange = { editAccountInteractions.onBotClicked() },
         )
         Icon(
             painter = MoSoIcons.robot(),
@@ -294,7 +299,7 @@ private fun Metadata(
         Text(
             text = stringResource(id = R.string.edit_account_metadata_title),
             style = MoSoTheme.typography.bodyMedium,
-            fontWeight = W700
+            fontWeight = W700,
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
@@ -337,20 +342,22 @@ private fun PreviewEditAccountScreen() {
     }) {
         MoSoTheme {
             EditAccountScreen(
-                uiState = Resource.Loaded(
-                    data = EditAccountUiState(
-                        topBarTitle = "John",
-                        headerUrl = "",
-                        avatarUrl = "",
-                        handle = "@john",
-                        displayName = "John New",
-                        bio = "I'm super cool",
-                        bioCharacterCount = 20,
-                        lockChecked = false,
-                        botChecked = false,
-                        fields = listOf(),
-                    )
-                ),
+                uiState =
+                    Resource.Loaded(
+                        data =
+                            EditAccountUiState(
+                                topBarTitle = "John",
+                                headerUrl = "",
+                                avatarUrl = "",
+                                handle = "@john",
+                                displayName = "John New",
+                                bio = "I'm super cool",
+                                bioCharacterCount = 20,
+                                lockChecked = false,
+                                botChecked = false,
+                                fields = listOf(),
+                            ),
+                    ),
                 editAccountInteractions = object : EditAccountInteractions {},
                 isUploading = false,
             )
