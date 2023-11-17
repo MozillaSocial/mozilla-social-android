@@ -114,7 +114,7 @@ sealed class NetworkAttachment {
         @SerialName("blurhash")
         override val blurHash: String? = null,
         @SerialName("meta")
-        val meta: NetworkAttachment.Video.Meta = NetworkAttachment.Video.Meta(),
+        val meta: Meta = Meta(),
     ) : NetworkAttachment() {
         @Serializable
         data class Meta(
@@ -131,9 +131,9 @@ sealed class NetworkAttachment {
             @SerialName("audio_channels")
             val audioChannels: String? = null,
             @SerialName("original")
-            val original: NetworkAttachment.Video.Meta.VideoInfo? = null,
+            val original: VideoInfo? = null,
             @SerialName("small")
-            val small: NetworkAttachment.Video.Meta.VideoInfo? = null,
+            val small: VideoInfo? = null,
         ) {
             @Serializable
             data class VideoInfo(
@@ -167,7 +167,7 @@ sealed class NetworkAttachment {
         @SerialName("blurhash")
         override val blurHash: String? = null,
         @SerialName("meta")
-        val meta: NetworkAttachment.Gifv.Meta = NetworkAttachment.Gifv.Meta(),
+        val meta: Meta = Meta(),
     ) : NetworkAttachment() {
         @Serializable
         data class Meta(
@@ -180,9 +180,9 @@ sealed class NetworkAttachment {
             @SerialName("bitrate")
             val bitrate: Long? = null,
             @SerialName("original")
-            val original: NetworkAttachment.Gifv.Meta.GifvInfo? = null,
+            val original: GifvInfo? = null,
             @SerialName("small")
-            val small: NetworkAttachment.Gifv.Meta.GifvInfo? = null,
+            val small: GifvInfo? = null,
         ) {
             @Serializable
             data class GifvInfo(
@@ -216,7 +216,7 @@ sealed class NetworkAttachment {
         @SerialName("blurhash")
         override val blurHash: String? = null,
         @SerialName("meta")
-        val meta: NetworkAttachment.Audio.Meta = NetworkAttachment.Audio.Meta(),
+        val meta: Meta = Meta(),
     ) : NetworkAttachment() {
         @Serializable
         data class Meta(
@@ -229,7 +229,7 @@ sealed class NetworkAttachment {
             @SerialName("audio_channels")
             val audioChannels: String? = null,
             @SerialName("original")
-            val original: NetworkAttachment.Audio.Meta.AudioInfo? = null,
+            val original: AudioInfo? = null,
         ) {
             @Serializable
             data class AudioInfo(

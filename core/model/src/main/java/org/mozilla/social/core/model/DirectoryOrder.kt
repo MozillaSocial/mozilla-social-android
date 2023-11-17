@@ -1,6 +1,6 @@
 package org.mozilla.social.core.model
 
-enum class DirectoryOrder(public val value: String) {
+enum class DirectoryOrder(val value: String) {
 
     /**
      * Sort by most recently posted statuses.
