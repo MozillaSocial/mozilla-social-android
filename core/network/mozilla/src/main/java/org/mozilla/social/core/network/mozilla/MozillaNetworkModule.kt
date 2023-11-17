@@ -10,14 +10,14 @@ import org.koin.dsl.module
 import retrofit2.Retrofit
 import java.util.concurrent.TimeUnit
 
-fun mozillaNetworkModule(isDebug: Boolean) = module {
+val mozillaNetworkModule = module {
 
     single(named(RECCS_CLIENT)) {
         OkHttpClient.Builder()
             .readTimeout(OKHTTP_TIMEOUT, TimeUnit.SECONDS)
             .connectTimeout(OKHTTP_TIMEOUT, TimeUnit.SECONDS)
             .addNetworkInterceptor(HttpLoggingInterceptor().apply {
-                level = if (isDebug) {
+                level = if (BuildConfig.DEBUG) {
                     HttpLoggingInterceptor.Level.BASIC
                 } else {
                     HttpLoggingInterceptor.Level.NONE

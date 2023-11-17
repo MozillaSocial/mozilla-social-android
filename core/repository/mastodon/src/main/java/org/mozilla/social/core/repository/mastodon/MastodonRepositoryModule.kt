@@ -2,9 +2,17 @@ package org.mozilla.social.core.repository.mastodon
 
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
+import org.mozilla.social.core.database.databaseModule
+import org.mozilla.social.core.datastore.dataStoreModule
 import org.mozilla.social.core.network.mastodon.mastodonNetworkModule
 
-fun mastodonRepositoryModule(isDebug: Boolean) = module {
+val mastodonRepositoryModule = module {
+    includes(
+        mastodonNetworkModule,
+        dataStoreModule,
+        databaseModule,
+    )
+
     single { AuthCredentialObserver(get(), get()) }
     singleOf(::StatusRepository)
     singleOf(::AccountRepository)
@@ -22,5 +30,5 @@ fun mastodonRepositoryModule(isDebug: Boolean) = module {
     singleOf(::RelationshipRepository)
     singleOf(::MutesRepository)
     singleOf(::BlocksRepository)
-    includes(mastodonNetworkModule(isDebug))
+
 }
