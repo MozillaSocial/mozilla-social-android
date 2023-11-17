@@ -30,7 +30,6 @@ class AndroidLibraryComposeConventionPlugin : Plugin<Project> {
 
             extensions.configure<LibraryExtension> {
                 configureAndroidCompose(this)
-                configureUiTests(this)
             }
         }
     }
