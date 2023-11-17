@@ -16,15 +16,16 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import org.mozilla.social.core.designsystem.theme.MoSoRadius
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
-import org.mozilla.social.core.ui.common.Radius
+import org.mozilla.social.core.ui.common.utils.media
 
 @Composable
 fun PreviewCard(
     previewCard: PreviewCard,
     postCardInteractions: PostCardInteractions,
 ) {
-    val borderShape = RoundedCornerShape(Radius.media)
+    val borderShape = RoundedCornerShape(MoSoRadius.media)
     Column(
         modifier = Modifier
             .clip(borderShape)

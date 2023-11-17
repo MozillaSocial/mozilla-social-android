@@ -28,10 +28,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import org.mozilla.social.core.designsystem.component.MoSoCard
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.designsystem.theme.Typography
 import org.mozilla.social.core.model.Recommendation
+import org.mozilla.social.core.ui.common.MoSoCard
 
 @Composable
 fun RecommendationCarouselCard(modifier: Modifier, recommendation: Recommendation) {

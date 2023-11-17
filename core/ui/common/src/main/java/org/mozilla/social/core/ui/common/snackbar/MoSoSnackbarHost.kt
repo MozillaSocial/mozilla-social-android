@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.mozilla.social.core.designsystem.component
+package org.mozilla.social.core.ui.common.snackbar
 
 import androidx.compose.material3.SnackbarData
 import androidx.compose.material3.SnackbarHost

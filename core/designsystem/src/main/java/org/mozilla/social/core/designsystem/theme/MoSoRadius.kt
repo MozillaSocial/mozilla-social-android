@@ -3,8 +3,8 @@ package org.mozilla.social.core.designsystem.theme
 import androidx.compose.ui.unit.dp
 
 object MoSoRadius {
-    val sm = 4.dp
-    val md = 8.dp
-    val lg = 16.dp
-    val full = 360.dp
+    val sm_4_dp = 4.dp
+    val md_8_dp = 8.dp
+    val lg_16_dp = 16.dp
+    val full_360_dp = 360.dp
 }

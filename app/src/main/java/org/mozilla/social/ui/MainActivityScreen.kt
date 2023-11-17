@@ -10,9 +10,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import org.mozilla.social.MainViewModel
-import org.mozilla.social.core.designsystem.component.MoSoSnackbar
-import org.mozilla.social.core.designsystem.component.MoSoSnackbarHost
+import org.mozilla.social.core.ui.common.snackbar.MoSoSnackbar
+import org.mozilla.social.core.ui.common.snackbar.MoSoSnackbarHost
 import org.mozilla.social.navigation.MainNavHost
 import org.mozilla.social.ui.bottombar.MoSoNavigationBarDefaults.bottomBarPadding
 

@@ -1,4 +1,4 @@
-package org.mozilla.social.core.designsystem.component
+package org.mozilla.social.core.ui.common.text
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable

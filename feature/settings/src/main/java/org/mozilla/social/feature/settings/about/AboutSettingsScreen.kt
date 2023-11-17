@@ -19,11 +19,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import org.koin.androidx.compose.koinViewModel
-import org.mozilla.social.core.designsystem.component.MoSoDivider
-import org.mozilla.social.core.designsystem.component.MoSoSurface
 import org.mozilla.social.core.designsystem.theme.MoSoRadius
 import org.mozilla.social.core.designsystem.theme.MoSoSpacing
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
+import org.mozilla.social.core.ui.common.divider.MoSoDivider
+import org.mozilla.social.core.ui.common.MoSoSurface
 import org.mozilla.social.core.ui.common.account.quickview.AccountQuickView
 import org.mozilla.social.core.ui.common.account.quickview.AccountQuickViewUiState
 import org.mozilla.social.core.ui.common.utils.PreviewTheme
@@ -49,7 +49,7 @@ fun AboutSettingsScreen(aboutSettings: AboutSettings) {
         ) {
             AsyncImage(
                 modifier = Modifier
-                    .clip(RoundedCornerShape(MoSoRadius.lg))
+                    .clip(RoundedCornerShape(MoSoRadius.lg_16_dp))
                     .fillMaxWidth()
                     .wrapContentHeight(),
                 model = aboutSettings.thumbnailUrl, contentDescription = null,

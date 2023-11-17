@@ -1,4 +1,4 @@
-package org.mozilla.social.core.ui.common
+package org.mozilla.social.core.ui.common.divider
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -13,7 +13,7 @@ import androidx.compose.ui.unit.dp
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 
 @Composable
-fun VerticalDivider(
+fun MoSoVerticalDivider(
     modifier: Modifier = Modifier,
     color: Color = MoSoTheme.colors.borderPrimary,
     thickness: Dp = 1.dp
@@ -30,6 +30,6 @@ fun VerticalDivider(
 @Composable
 private fun VerticalDividerPreview() {
     MoSoTheme {
-        VerticalDivider()
+        MoSoVerticalDivider()
     }
 }

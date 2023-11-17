@@ -26,10 +26,10 @@ import androidx.compose.ui.unit.dp
 import org.mozilla.social.common.utils.FileType
 import org.mozilla.social.common.utils.getFileType
 import org.mozilla.social.common.utils.toFile
-import org.mozilla.social.core.designsystem.component.MoSoDivider
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.designsystem.theme.MoSoSpacing
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
+import org.mozilla.social.core.ui.common.divider.MoSoDivider
 import org.mozilla.social.feature.post.R
 import org.mozilla.social.post.NewPostViewModel
 import org.mozilla.social.post.poll.PollInteractions

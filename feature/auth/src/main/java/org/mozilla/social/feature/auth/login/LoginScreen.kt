@@ -35,13 +35,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.koin.androidx.compose.koinViewModel
-import org.mozilla.social.core.designsystem.component.MoSoBadge
-import org.mozilla.social.core.designsystem.component.MoSoButton
-import org.mozilla.social.core.designsystem.component.MoSoCircularProgressIndicator
-import org.mozilla.social.core.designsystem.component.MoSoSurface
+import org.mozilla.social.core.ui.common.MoSoBadge
 import org.mozilla.social.core.designsystem.font.MoSoFonts
 import org.mozilla.social.core.designsystem.theme.MoSoSpacing
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
+import org.mozilla.social.core.ui.common.MoSoSurface
+import org.mozilla.social.core.ui.common.button.MoSoButton
+import org.mozilla.social.core.ui.common.loading.MoSoCircularProgressIndicator
 import org.mozilla.social.core.ui.common.utils.getWindowHeightClass
 import org.mozilla.social.core.ui.common.utils.getWindowWidthClass
 import org.mozilla.social.feature.auth.R
