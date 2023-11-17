@@ -2,6 +2,7 @@ package org.mozilla.social.core.repository.mastodon
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import org.mozilla.social.common.annotations.PreferUseCase
 import org.mozilla.social.core.database.dao.StatusDao
 import org.mozilla.social.core.database.model.DatabaseStatus
 import org.mozilla.social.core.model.Context
@@ -19,14 +20,17 @@ class StatusRepository(
     private val api: StatusApi,
     private val dao: StatusDao,
 ) {
+    @PreferUseCase
     suspend fun postStatus(statusCreate: StatusCreate): Status =
         api.postStatus(statusCreate.toNetworkModel()).toExternalModel()
 
+    @PreferUseCase
     suspend fun voteOnPoll(pollId: String, pollVote: PollVote): Poll {
         return api.voteOnPoll(pollId = pollId, body = pollVote.toNetworkModel())
             .toExternalModel()
     }
 
+    @PreferUseCase
     suspend fun boostStatus(statusId: String): Status =
         api.boostStatus(statusId = statusId).toExternalModel()
 
@@ -38,12 +42,15 @@ class StatusRepository(
         dao.updateBoosted(statusId = statusId, isBoosted = isBoosted)
     }
 
+    @PreferUseCase
     suspend fun unBoostStatus(statusId: String): Status =
         api.unBoostStatus(statusId = statusId).toExternalModel()
 
+    @PreferUseCase
     suspend fun favoriteStatus(statusId: String): Status =
         api.favoriteStatus(statusId = statusId).toExternalModel()
 
+    @PreferUseCase
     suspend fun unFavoriteStatus(statusId: String): Status =
         api.unFavoriteStatus(statusId = statusId).toExternalModel()
 
@@ -51,6 +58,7 @@ class StatusRepository(
         return api.getStatusContext(statusId).toExternalModel()
     }
 
+    @PreferUseCase
     suspend fun deleteStatus(statusId: String) {
         api.deleteStatus(statusId)
     }
