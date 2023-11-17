@@ -34,7 +34,7 @@ style:
   UnusedPrivateMember:
     ignoreAnnotated:
     - 'Preview' # Recommended configuration for Compose.
-  WildcardImport:
-    active: false # Carried over from Pocket configuration.
+#  WildcardImport:
+#    active: false # Carried over from Pocket configuration.
   ReturnCount:
     active: false

@@ -1,7 +1,0 @@
-<?xml version="1.0" ?>
-<SmellBaseline>
-  <ManuallySuppressedIssues></ManuallySuppressedIssues>
-  <CurrentIssues>
-    <ID>LongMethod:FollowersScreen.kt$@Composable private fun FollowersScreen( followersScreenType: FollowerScreenType, followers: Flow&lt;PagingData&lt;AccountQuickViewUiState&gt;&gt;, followersInteractions: FollowersInteractions, )</ID>
-  </CurrentIssues>
-</SmellBaseline>

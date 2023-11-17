@@ -59,7 +59,9 @@ class StatusDelegate(
     }
 
     override fun onStatusTextUpdated(textFieldValue: TextFieldValue) {
-        if (textFieldValue.text.length + (contentWarningText.value?.length ?: 0) > NewPostViewModel.MAX_POST_LENGTH) return
+        if (textFieldValue.text.length + (contentWarningText.value?.length
+                ?: 0) > NewPostViewModel.MAX_POST_LENGTH
+        ) return
         _statusText.update {
             Timber.d("updating onStatusTextUpdated")
             textFieldValue
@@ -84,7 +86,7 @@ class StatusDelegate(
         searchJob =
             coroutineScope.launch {
                 // let the user stop typing before trying to search
-                delay(500)
+                delay(SEARCH_DELAY)
 
                 if (!accountText.isNullOrBlank()) {
                     try {
@@ -136,3 +138,5 @@ class StatusDelegate(
         _contentWarningText.update { text }
     }
 }
+
+private const val SEARCH_DELAY = 500L

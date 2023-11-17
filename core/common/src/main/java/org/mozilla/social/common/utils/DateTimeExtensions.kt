@@ -5,6 +5,8 @@ import kotlinx.datetime.Instant
 import org.mozilla.social.core.common.R
 import kotlin.time.Duration
 
+@Suppress("MagicNumber")
+
 fun Instant.timeSinceNow(): StringFactory {
     val durationSince: Duration = Clock.System.now() - this
 
@@ -36,6 +38,7 @@ fun Instant.timeSinceNow(): StringFactory {
     }
 }
 
+@Suppress("MagicNumber")
 fun Instant.timeLeft(): StringFactory? {
     val durationUntil: Duration = this - Clock.System.now()
 
