@@ -28,22 +28,23 @@ fun MoSoSwitch(
         thumbContent = thumbContent,
         enabled = enabled,
         colors = colors,
-        interactionSource = interactionSource
+        interactionSource = interactionSource,
     )
 }
 
 object MoSoSwitchPrimaryDefaults {
     @Composable
-    fun colors(): SwitchColors = SwitchDefaults.colors(
-        checkedThumbColor = MoSoTheme.colors.layer1,
-        checkedTrackColor = MoSoTheme.colors.layerActionPrimaryEnabled,
-        uncheckedThumbColor = MoSoTheme.colors.layerActionDisabled,
-        uncheckedBorderColor = MoSoTheme.colors.layerActionDisabled,
-        disabledCheckedTrackColor = MoSoTheme.colors.layerActionDisabled,
-        disabledUncheckedThumbColor = MoSoTheme.colors.layer2,
-        disabledUncheckedTrackColor = MoSoTheme.colors.textActionDisabled,
-        disabledUncheckedBorderColor = MoSoTheme.colors.textActionDisabled
-    )
+    fun colors(): SwitchColors =
+        SwitchDefaults.colors(
+            checkedThumbColor = MoSoTheme.colors.layer1,
+            checkedTrackColor = MoSoTheme.colors.layerActionPrimaryEnabled,
+            uncheckedThumbColor = MoSoTheme.colors.layerActionDisabled,
+            uncheckedBorderColor = MoSoTheme.colors.layerActionDisabled,
+            disabledCheckedTrackColor = MoSoTheme.colors.layerActionDisabled,
+            disabledUncheckedThumbColor = MoSoTheme.colors.layer2,
+            disabledUncheckedTrackColor = MoSoTheme.colors.textActionDisabled,
+            disabledUncheckedBorderColor = MoSoTheme.colors.textActionDisabled,
+        )
 }
 
 @Preview
@@ -53,21 +54,21 @@ private fun SwitchPreview() {
         MoSoTheme {
             MoSoSwitch(
                 checked = true,
-                onCheckChanged = { /*TODO*/ }
+                onCheckChanged = { /*TODO*/ },
             )
             MoSoSwitch(
                 checked = false,
-                onCheckChanged = { /*TODO*/ }
+                onCheckChanged = { /*TODO*/ },
             )
             MoSoSwitch(
                 checked = true,
                 enabled = false,
-                onCheckChanged = { /*TODO*/ }
+                onCheckChanged = { /*TODO*/ },
             )
             MoSoSwitch(
                 checked = false,
                 enabled = false,
-                onCheckChanged = { /*TODO*/ }
+                onCheckChanged = { /*TODO*/ },
             )
         }
     }

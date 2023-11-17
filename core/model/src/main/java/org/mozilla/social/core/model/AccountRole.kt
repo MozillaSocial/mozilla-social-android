@@ -6,5 +6,5 @@ package org.mozilla.social.core.model
 enum class AccountRole {
     Admin,
     Moderator,
-    User
+    User,
 }

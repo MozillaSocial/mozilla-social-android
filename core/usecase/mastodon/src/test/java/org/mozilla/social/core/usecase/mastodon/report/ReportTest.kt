@@ -6,17 +6,17 @@ import kotlin.test.BeforeTest
 import kotlin.test.Test
 
 class ReportTest : BaseUseCaseTest() {
-
     private lateinit var subject: Report
 
     @BeforeTest
     fun setup() {
-        subject = Report(
-            externalScope = TestScope(testDispatcher),
-            showSnackbar = showSnackbar,
-            reportRepository = reportRepository,
-            dispatcherIo = testDispatcher,
-        )
+        subject =
+            Report(
+                externalScope = TestScope(testDispatcher),
+                showSnackbar = showSnackbar,
+                reportRepository = reportRepository,
+                dispatcherIo = testDispatcher,
+            )
     }
 
     @Test
@@ -31,7 +31,7 @@ class ReportTest : BaseUseCaseTest() {
             },
             verifyBlock = {
                 reportRepository.report(any())
-            }
+            },
         )
     }
 
@@ -46,7 +46,7 @@ class ReportTest : BaseUseCaseTest() {
             },
             verifyBlock = {
                 showSnackbar(any(), any())
-            }
+            },
         )
     }
 }

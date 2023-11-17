@@ -23,16 +23,17 @@ fun MoSoDropdownMenu(
     modifier: Modifier = Modifier,
     offset: DpOffset = DpOffset(0.dp, 0.dp),
     properties: PopupProperties = PopupProperties(focusable = true),
-    content: @Composable ColumnScope.() -> Unit
+    content: @Composable ColumnScope.() -> Unit,
 ) {
     DropdownMenu(
         expanded = expanded,
         onDismissRequest = onDismissRequest,
-        modifier = modifier
-            .background(MoSoTheme.colors.layer1),
+        modifier =
+            modifier
+                .background(MoSoTheme.colors.layer1),
         offset = offset,
         properties = properties,
-        content = content
+        content = content,
     )
 }
 
@@ -57,6 +58,6 @@ fun MoSoDropdownMenuItem(
         enabled = enabled,
         colors = colors,
         contentPadding = contentPadding,
-        interactionSource = interactionSource
+        interactionSource = interactionSource,
     )
 }

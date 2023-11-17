@@ -34,13 +34,19 @@ fun Uri.toFile(context: Context): File {
     return tempFile
 }
 
-private fun getFileExtension(context: Context, uri: Uri): String? {
+private fun getFileExtension(
+    context: Context,
+    uri: Uri,
+): String? {
     val fileType: String? = context.contentResolver.getType(uri)
     return MimeTypeMap.getSingleton().getExtensionFromMimeType(fileType)
 }
 
 @Throws(IOException::class)
-private fun copy(source: InputStream, target: OutputStream) {
+private fun copy(
+    source: InputStream,
+    target: OutputStream,
+) {
     val buf = ByteArray(8192)
     var length: Int
     while (source.read(buf).also { length = it } > 0) {
@@ -56,5 +62,4 @@ private fun Uri.fileName(): String {
     } else {
         fileName
     }
-
 }

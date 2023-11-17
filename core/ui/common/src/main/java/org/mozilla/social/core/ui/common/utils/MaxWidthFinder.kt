@@ -22,13 +22,14 @@ fun getMaxWidth(): Dp {
     var maxWidth by remember { mutableStateOf(0.dp) }
 
     Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .onSizeChanged {
-                with(density) {
-                    maxWidth = it.width.toDp()
-                }
-            }
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .onSizeChanged {
+                    with(density) {
+                        maxWidth = it.width.toDp()
+                    }
+                },
     )
     return maxWidth
 }

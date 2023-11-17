@@ -20,9 +20,10 @@ fun String.reduceHtmlLinks(): String {
         val spanStartIndex = reducedHtml.indexOf(ELLIPSIS_SPAN, startIndex = loopStartIndex)
         if (spanStartIndex == -1) break
         val endIndex = reducedHtml.indexOf(SPAN_END, spanStartIndex)
-        reducedHtml = StringBuilder(reducedHtml).apply {
-            insert(endIndex, "…")
-        }.toString()
+        reducedHtml =
+            StringBuilder(reducedHtml).apply {
+                insert(endIndex, "…")
+            }.toString()
         loopStartIndex = endIndex
     } while (true)
     return reducedHtml

@@ -4,7 +4,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 enum class DatabaseStatusVisibility(val value: String) {
-
     /**
      * Visible to everyone, shown in public timelines.
      */
@@ -23,5 +22,5 @@ enum class DatabaseStatusVisibility(val value: String) {
     /**
      * Visible only to mentioned users.
      */
-    Direct("direct")
+    Direct("direct"),
 }

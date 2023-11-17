@@ -35,9 +35,10 @@ fun MediaUpload(
     Box {
         val context = LocalContext.current
 
-        val fileType = remember(uri) {
-            uri.getFileType(context)
-        }
+        val fileType =
+            remember(uri) {
+                uri.getFileType(context)
+            }
         when (fileType) {
             FileType.VIDEO -> {
                 VideoPlayer(uri = uri, loadState = loadState)
@@ -50,17 +51,19 @@ fun MediaUpload(
             LoadState.LOADING -> {
                 TransparentOverlay()
                 Column(
-                    modifier = Modifier
-                        .align(Alignment.Center),
+                    modifier =
+                        Modifier
+                            .align(Alignment.Center),
                 ) {
                     Text(
                         text = stringResource(id = R.string.media_uploading),
                         color = FirefoxColor.White,
                     )
                     CircularProgressIndicator(
-                        modifier = Modifier
-                            .align(Alignment.CenterHorizontally)
-                            .padding(16.dp),
+                        modifier =
+                            Modifier
+                                .align(Alignment.CenterHorizontally)
+                                .padding(16.dp),
                     )
                 }
             }
@@ -74,12 +77,13 @@ fun MediaUpload(
                         color = FirefoxColor.White,
                     )
                     Button(
-                        modifier = Modifier
-                            .align(Alignment.CenterHorizontally)
-                            .padding(16.dp),
+                        modifier =
+                            Modifier
+                                .align(Alignment.CenterHorizontally)
+                                .padding(16.dp),
                         onClick = {
                             onRetryClicked(uri, uri.toFile(context), fileType)
-                        }
+                        },
                     ) {
                         Text(
                             text = stringResource(id = R.string.retry),
@@ -94,12 +98,11 @@ fun MediaUpload(
 }
 
 @Composable
-private fun Image(
-    imageUri: Uri,
-) {
+private fun Image(imageUri: Uri) {
     AsyncImage(
-        modifier = Modifier
-            .fillMaxWidth(),
+        modifier =
+            Modifier
+                .fillMaxWidth(),
         model = imageUri,
         contentDescription = "",
         contentScale = ContentScale.FillWidth,

@@ -7,11 +7,11 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.mozilla.social.common.Resource
+import org.mozilla.social.core.model.InstanceRule
 import org.mozilla.social.core.repository.mastodon.AccountRepository
 import org.mozilla.social.core.usecase.mastodon.report.Report
 import org.mozilla.social.feature.report.ReportDataBundle
 import org.mozilla.social.feature.report.ReportType
-import org.mozilla.social.core.model.InstanceRule
 import timber.log.Timber
 
 class ReportScreen2ViewModel(
@@ -27,7 +27,6 @@ class ReportScreen2ViewModel(
     private val additionalText: String,
     private val sendToExternalServer: Boolean,
 ) : ViewModel(), ReportScreen2Interactions {
-
     private val _statuses = MutableStateFlow<Resource<List<ReportStatusUiState>>>(Resource.Loading())
     val statuses = _statuses.asStateFlow()
 
@@ -42,15 +41,16 @@ class ReportScreen2ViewModel(
         _statuses.update { Resource.Loading() }
         viewModelScope.launch {
             try {
-                val uiStateList = accountRepository.getAccountStatuses(
-                    accountId = reportAccountId,
-                    loadSize = 40,
-                    excludeBoosts = true,
-                ).statuses.map {
-                    it.toReportStatusUiState()
-                }.filterNot {
-                    it.statusId == reportStatusId
-                }
+                val uiStateList =
+                    accountRepository.getAccountStatuses(
+                        accountId = reportAccountId,
+                        loadSize = 40,
+                        excludeBoosts = true,
+                    ).statuses.map {
+                        it.toReportStatusUiState()
+                    }.filterNot {
+                        it.statusId == reportStatusId
+                    }
                 _statuses.update {
                     Resource.Loaded(uiStateList)
                 }
@@ -67,12 +67,13 @@ class ReportScreen2ViewModel(
             try {
                 report(
                     accountId = reportAccountId,
-                    statusIds = buildList {
-                        reportStatusId?.let { add(it) }
-                        (statuses.value as? Resource.Loaded)?.data?.forEach {
-                            if (it.checked) add(it.statusId)
-                        }
-                    },
+                    statusIds =
+                        buildList {
+                            reportStatusId?.let { add(it) }
+                            (statuses.value as? Resource.Loaded)?.data?.forEach {
+                                if (it.checked) add(it.statusId)
+                            }
+                        },
                     comment = additionalText,
                     category = reportType.stringValue,
                     ruleViolations = checkedInstanceRules.map { it.id },
@@ -83,7 +84,7 @@ class ReportScreen2ViewModel(
                         reportAccountId = reportAccountId,
                         reportAccountHandle = reportAccountHandle,
                         didUserReportAccount = true,
-                    )
+                    ),
                 )
             } catch (e: Report.ReportFailedException) {
                 Timber.e(e)
@@ -99,15 +100,16 @@ class ReportScreen2ViewModel(
     override fun onStatusClicked(statusId: String) {
         _statuses.update {
             Resource.Loaded(
-                data = (statuses.value as Resource.Loaded).data.map {
-                    if (it.statusId == statusId) {
-                        it.copy(
-                            checked = !it.checked
-                        )
-                    } else {
-                        it
-                    }
-                }
+                data =
+                    (statuses.value as Resource.Loaded).data.map {
+                        if (it.statusId == statusId) {
+                            it.copy(
+                                checked = !it.checked,
+                            )
+                        } else {
+                            it
+                        }
+                    },
             )
         }
     }

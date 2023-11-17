@@ -32,8 +32,8 @@ import org.mozilla.social.core.database.model.DatabaseHashTag
 import org.mozilla.social.core.database.model.DatabasePoll
 import org.mozilla.social.core.database.model.DatabaseRelationship
 import org.mozilla.social.core.database.model.DatabaseStatus
-import org.mozilla.social.core.database.model.accountCollections.Follower
 import org.mozilla.social.core.database.model.accountCollections.Followee
+import org.mozilla.social.core.database.model.accountCollections.Follower
 import org.mozilla.social.core.database.model.statusCollections.AccountTimelineStatus
 import org.mozilla.social.core.database.model.statusCollections.FederatedTimelineStatus
 import org.mozilla.social.core.database.model.statusCollections.HashTagTimelineStatus
@@ -70,7 +70,7 @@ import org.mozilla.social.core.database.model.statusCollections.LocalTimelineSta
         AutoMigration(10, 11, DatabaseMigrations.Schema10to11::class),
         AutoMigration(11, 12),
     ],
-    exportSchema = true
+    exportSchema = true,
 )
 @TypeConverters(
     InstantConverter::class,
@@ -85,18 +85,28 @@ import org.mozilla.social.core.database.model.statusCollections.LocalTimelineSta
     IntListConverter::class,
     CardConverter::class,
 )
-
 abstract class SocialDatabase : RoomDatabase() {
     abstract fun statusDao(): StatusDao
+
     abstract fun accountsDao(): AccountsDao
+
     abstract fun hashtagDao(): HashtagDao
+
     abstract fun homeTimelineDao(): HomeTimelineStatusDao
+
     abstract fun pollDao(): PollsDao
+
     abstract fun hashTagTimelineDao(): HashTagTimelineStatusDao
+
     abstract fun accountTimelineDao(): AccountTimelineStatusDao
+
     abstract fun relationshipsDao(): RelationshipsDao
+
     abstract fun localTimelineDao(): LocalTimelineStatusDao
+
     abstract fun federatedTimelineDao(): FederatedTimelineStatusDao
+
     abstract fun followersDao(): FollowersDao
+
     abstract fun followingsDao(): FollowingsDao
 }

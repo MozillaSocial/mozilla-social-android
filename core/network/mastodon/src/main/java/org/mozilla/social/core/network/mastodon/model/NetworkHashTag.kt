@@ -9,26 +9,22 @@ import org.mozilla.social.core.network.mastodon.model.paging.NetworkPageable
  */
 @Serializable
 data class NetworkHashTag(
-
     /**
      * The value of the hashtag after the # sign.
      */
     @SerialName("name")
     val name: String,
-
     /**
      * URL to the hashtag on the instance.
      */
     @SerialName("url")
     val url: String,
-
     /**
      * Hashtag usage statistics for given days.
      */
     @SerialName("history")
-    val history: List<NetworkHistory>? = null
+    val history: List<NetworkHistory>? = null,
 ) : NetworkPageable {
-
     override val id: String
         get() = name
 }

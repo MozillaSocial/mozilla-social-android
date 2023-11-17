@@ -9,31 +9,26 @@ import org.mozilla.social.core.database.model.DatabaseStatus
 data class StatusWrapper(
     @Embedded
     val status: DatabaseStatus,
-
     @Relation(
         parentColumn = "accountId",
         entityColumn = "accountId",
     )
     val account: DatabaseAccount,
-
     @Relation(
         parentColumn = "pollId",
         entityColumn = "pollId",
     )
     val poll: DatabasePoll?,
-
     @Relation(
         parentColumn = "boostedStatusId",
-        entityColumn = "statusId"
+        entityColumn = "statusId",
     )
     val boostedStatus: DatabaseStatus?,
-
     @Relation(
         parentColumn = "boostedStatusAccountId",
         entityColumn = "accountId",
     )
     val boostedAccount: DatabaseAccount?,
-
     @Relation(
         parentColumn = "boostedPollId",
         entityColumn = "pollId",

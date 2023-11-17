@@ -34,18 +34,20 @@ fun HtmlContent(
     linkColor: Color = MoSoTheme.colors.textLink,
     clickableLinks: Boolean = true,
 ) {
-    val textContent = remember(htmlText) {
-        val spannable = htmlText.reduceHtmlLinks().htmlToSpannable(
-            mentions = mentions,
-            linkColor = linkColor,
-            onLinkClick = htmlContentInteractions::onLinkClicked,
-            onHashTagClicked = htmlContentInteractions::onHashTagClicked,
-            onAccountClicked = htmlContentInteractions::onAccountClicked,
-        )
-        mutableStateOf(
-            spannable
-        )
-    }
+    val textContent =
+        remember(htmlText) {
+            val spannable =
+                htmlText.reduceHtmlLinks().htmlToSpannable(
+                    mentions = mentions,
+                    linkColor = linkColor,
+                    onLinkClick = htmlContentInteractions::onLinkClicked,
+                    onHashTagClicked = htmlContentInteractions::onHashTagClicked,
+                    onAccountClicked = htmlContentInteractions::onAccountClicked,
+                )
+            mutableStateOf(
+                spannable,
+            )
+        }
 
     AndroidView(
         modifier = modifier,
@@ -54,13 +56,14 @@ fun HtmlContent(
                 textSize = textStyle.fontSize.value
                 setTextColor(textColor.toArgb())
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                    typeface = textStyle.fontWeight?.let { fontWeight ->
-                        Typeface.create(
-                            typeface,
-                            fontWeight.weight,
-                            false
-                        )
-                    }
+                    typeface =
+                        textStyle.fontWeight?.let { fontWeight ->
+                            Typeface.create(
+                                typeface,
+                                fontWeight.weight,
+                                false,
+                            )
+                        }
                 }
 
                 if (clickableLinks) {
@@ -84,12 +87,13 @@ fun HtmlContent(
                         val indexOfLastChar = layout.getLineEnd(maximumLineCount - 1)
                         val indexToEndAt = indexOfLastChar - min(3, indexOfLastChar)
                         val spanned = textView.text.subSequence(0, indexToEndAt).trim() as? Spanned
-                        textView.text = SpannableStringBuilder()
-                            .append(spanned)
-                            .append("…")
+                        textView.text =
+                            SpannableStringBuilder()
+                                .append(spanned)
+                                .append("…")
                     }
                 }
             }
-        }
+        },
     )
 }

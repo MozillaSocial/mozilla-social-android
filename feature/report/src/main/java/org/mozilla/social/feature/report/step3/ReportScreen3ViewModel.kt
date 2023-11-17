@@ -21,7 +21,6 @@ class ReportScreen3ViewModel(
     private val closeClicked: () -> Unit,
     private val reportAccountId: String,
 ) : ViewModel(), ReportScreen3Interactions {
-
     /**
      * The account ID of the logged in user
      */

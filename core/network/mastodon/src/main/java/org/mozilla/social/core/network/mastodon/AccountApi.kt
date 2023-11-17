@@ -19,11 +19,11 @@ import retrofit2.http.Query
 interface AccountApi {
     @GET("/api/v1/accounts/{id}")
     suspend fun getAccount(
-        @Path("id") accountId: String
+        @Path("id") accountId: String,
     ): NetworkAccount
 
     @GET("/api/v1/accounts/verify_credentials")
-    suspend fun verifyCredentials() : NetworkAccount
+    suspend fun verifyCredentials(): NetworkAccount
 
     @GET("/api/v1/accounts/{id}/followers")
     suspend fun getAccountFollowers(
@@ -75,12 +75,12 @@ interface AccountApi {
 
     @POST("/api/v1/accounts/{accountId}/follow")
     suspend fun followAccount(
-        @Path("accountId") accountId: String
+        @Path("accountId") accountId: String,
     )
 
     @POST("/api/v1/accounts/{accountId}/unfollow")
     suspend fun unfollowAccount(
-        @Path("accountId") accountId: String
+        @Path("accountId") accountId: String,
     )
 
     @POST("/api/v1/accounts/{accountId}/block")
@@ -110,7 +110,7 @@ interface AccountApi {
 
     @GET("/api/v1/accounts/relationships")
     suspend fun getRelationships(
-        @Query("id[]") ids: Array<String>
+        @Query("id[]") ids: Array<String>,
     ): List<NetworkRelationship>
 
     @Multipart

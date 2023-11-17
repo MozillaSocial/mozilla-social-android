@@ -8,16 +8,14 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 data class NetworkFocalPoint(
-
     /**
      * x coordinate in [-1, +1]
      */
     @SerialName("x")
     val x: Double,
-
     /**
      * y coordinate in [-1, +1]
      */
     @SerialName("y")
-    val y: Double
+    val y: Double,
 )

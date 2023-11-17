@@ -9,10 +9,10 @@ import kotlinx.coroutines.launch
 import org.mozilla.social.common.utils.edit
 import org.mozilla.social.core.analytics.Analytics
 import org.mozilla.social.core.analytics.AnalyticsIdentifiers
+import org.mozilla.social.core.model.InstanceRule
 import org.mozilla.social.core.repository.mastodon.InstanceRepository
 import org.mozilla.social.feature.report.ReportDataBundle
 import org.mozilla.social.feature.report.ReportType
-import org.mozilla.social.core.model.InstanceRule
 import timber.log.Timber
 
 class ReportScreen1ViewModel(
@@ -24,7 +24,6 @@ class ReportScreen1ViewModel(
     private val reportAccountHandle: String,
     private val reportStatusId: String?,
 ) : ViewModel(), ReportScreen1Interactions {
-
     private val _selectedReportType = MutableStateFlow<ReportType?>(null)
     val selectedReportType = _selectedReportType.asStateFlow()
 
@@ -88,22 +87,25 @@ class ReportScreen1ViewModel(
     }
 
     override fun onNextClicked() {
-        val bundle = when (selectedReportType.value) {
-            ReportType.DO_NOT_LIKE -> ReportDataBundle.ReportDataBundleForScreen3(
-                reportAccountId = reportAccountId,
-                reportAccountHandle = reportAccountHandle,
-                didUserReportAccount = false,
-            )
-            else -> ReportDataBundle.ReportDataBundleForScreen2(
-                reportAccountId = reportAccountId,
-                reportAccountHandle = reportAccountHandle,
-                reportStatusId = reportStatusId,
-                reportType = selectedReportType.value ?: ReportType.DO_NOT_LIKE,
-                checkedInstanceRules = checkedRules.value,
-                additionalText = additionalCommentText.value,
-                sendToExternalServer = sendToExternalServerChecked.value,
-            )
-        }
+        val bundle =
+            when (selectedReportType.value) {
+                ReportType.DO_NOT_LIKE ->
+                    ReportDataBundle.ReportDataBundleForScreen3(
+                        reportAccountId = reportAccountId,
+                        reportAccountHandle = reportAccountHandle,
+                        didUserReportAccount = false,
+                    )
+                else ->
+                    ReportDataBundle.ReportDataBundleForScreen2(
+                        reportAccountId = reportAccountId,
+                        reportAccountHandle = reportAccountHandle,
+                        reportStatusId = reportStatusId,
+                        reportType = selectedReportType.value ?: ReportType.DO_NOT_LIKE,
+                        checkedInstanceRules = checkedRules.value,
+                        additionalText = additionalCommentText.value,
+                        sendToExternalServer = sendToExternalServerChecked.value,
+                    )
+            }
         onNextClicked(bundle)
     }
 

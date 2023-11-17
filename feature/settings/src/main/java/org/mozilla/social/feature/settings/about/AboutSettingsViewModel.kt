@@ -12,26 +12,27 @@ import org.mozilla.social.core.repository.mastodon.InstanceRepository
 import org.mozilla.social.core.ui.common.account.quickview.toQuickViewUiState
 import org.mozilla.social.core.ui.htmlcontent.HtmlContentInteractions
 
-
-class AboutSettingsViewModel(private val instanceRepository: InstanceRepository) : ViewModel(),
+class AboutSettingsViewModel(private val instanceRepository: InstanceRepository) :
+    ViewModel(),
     HtmlContentInteractions {
-    val aboutSettings: StateFlow<AboutSettings?> = flow {
-        val instanceDeferred = viewModelScope.async { instanceRepository.getInstance() }
-        val extendedDescriptionDeferred =
-            viewModelScope.async { instanceRepository.getExtendedDescription() }
+    val aboutSettings: StateFlow<AboutSettings?> =
+        flow {
+            val instanceDeferred = viewModelScope.async { instanceRepository.getInstance() }
+            val extendedDescriptionDeferred =
+                viewModelScope.async { instanceRepository.getExtendedDescription() }
 
-        val instance = instanceDeferred.await()
-        val extendedDescription = extendedDescriptionDeferred.await()
+            val instance = instanceDeferred.await()
+            val extendedDescription = extendedDescriptionDeferred.await()
 
-        emit(instance.toAboutSettings(extendedDescription))
-
-    }.stateIn(viewModelScope, SharingStarted.Eagerly, null)
+            emit(instance.toAboutSettings(extendedDescription))
+        }.stateIn(viewModelScope, SharingStarted.Eagerly, null)
 }
 
-fun Instance.toAboutSettings(extendedDescription: String) = AboutSettings(
-    title = title,
-    administeredBy = contactAccount?.toQuickViewUiState(),
-    contactEmail = contactEmail,
-    extendedDescription = extendedDescription,
-    thumbnailUrl = thumbnail,
-)
+fun Instance.toAboutSettings(extendedDescription: String) =
+    AboutSettings(
+        title = title,
+        administeredBy = contactAccount?.toQuickViewUiState(),
+        contactEmail = contactEmail,
+        extendedDescription = extendedDescription,
+        thumbnailUrl = thumbnail,
+    )

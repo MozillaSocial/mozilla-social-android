@@ -5,7 +5,6 @@ package org.mozilla.social.core.model
  * using OpenGraph tags from a URL.
  */
 sealed class Card {
-
     /**
      * URL of linked resource.
      */
@@ -87,8 +86,7 @@ sealed class Card {
         override val height: Long? = null,
         override val image: String? = null,
         override val embedUrl: String? = null,
-        override val blurHash: String? = null
-
+        override val blurHash: String? = null,
     ) : Card()
 
     data class Photo(
@@ -104,7 +102,7 @@ sealed class Card {
         override val height: Long? = null,
         override val image: String? = null,
         override val embedUrl: String? = null,
-        override val blurHash: String? = null
+        override val blurHash: String? = null,
     ) : Card()
 
     data class Link(
@@ -120,7 +118,7 @@ sealed class Card {
         override val height: Long? = null,
         override val image: String? = null,
         override val embedUrl: String? = null,
-        override val blurHash: String? = null
+        override val blurHash: String? = null,
     ) : Card()
 
     data class Rich(
@@ -136,7 +134,6 @@ sealed class Card {
         override val height: Long? = null,
         override val image: String? = null,
         override val embedUrl: String? = null,
-        override val blurHash: String? = null
-
+        override val blurHash: String? = null,
     ) : Card()
 }

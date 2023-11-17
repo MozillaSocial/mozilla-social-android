@@ -2,27 +2,27 @@ package org.mozilla.social.core.usecase.mastodon.status
 
 import kotlinx.coroutines.test.TestScope
 import org.mozilla.social.core.model.Status
-import org.mozilla.social.core.usecase.mastodon.BaseUseCaseTest
 import org.mozilla.social.core.test.fakes.Models
+import org.mozilla.social.core.usecase.mastodon.BaseUseCaseTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 
 class UndoBoostStatusTest : BaseUseCaseTest() {
-
     private lateinit var subject: UndoBoostStatus
 
     private val networkStatus = Models.status
 
     @BeforeTest
     fun setup() {
-        subject = UndoBoostStatus(
-            externalScope = TestScope(testDispatcher),
-            socialDatabase = socialDatabase,
-            statusRepository = statusRepository,
-            showSnackbar = showSnackbar,
-            dispatcherIo = testDispatcher,
-            saveStatusToDatabase = saveStatusToDatabase,
-        )
+        subject =
+            UndoBoostStatus(
+                externalScope = TestScope(testDispatcher),
+                socialDatabase = socialDatabase,
+                statusRepository = statusRepository,
+                showSnackbar = showSnackbar,
+                dispatcherIo = testDispatcher,
+                saveStatusToDatabase = saveStatusToDatabase,
+            )
     }
 
     @Test
@@ -37,7 +37,7 @@ class UndoBoostStatusTest : BaseUseCaseTest() {
             },
             verifyBlock = {
                 saveStatusToDatabase(any<Status>())
-            }
+            },
         )
     }
 
@@ -52,7 +52,7 @@ class UndoBoostStatusTest : BaseUseCaseTest() {
             },
             verifyBlock = {
                 showSnackbar(any(), any())
-            }
+            },
         )
     }
 }

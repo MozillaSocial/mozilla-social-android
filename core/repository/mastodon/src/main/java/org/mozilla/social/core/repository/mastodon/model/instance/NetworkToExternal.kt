@@ -16,25 +16,25 @@ fun NetworkInstanceRule.toExternalModel(): InstanceRule =
         text = text,
     )
 
-fun List<NetworkInstanceRule>.toExternalModel(): List<InstanceRule> =
-    map { it.toExternalModel() }
+fun List<NetworkInstanceRule>.toExternalModel(): List<InstanceRule> = map { it.toExternalModel() }
 
-fun NetworkInstance.toExternalModel(): Instance = Instance(
-    uri = domain,
-    title = title,
-    description = description,
-    version = version,
-    languages = languages,
-    thumbnail = thumbnail.url,
-    contactAccount = contact?.account?.toExternalModel(),
-    contactEmail = contact?.email,
-)
+fun NetworkInstance.toExternalModel(): Instance =
+    Instance(
+        uri = domain,
+        title = title,
+        description = description,
+        version = version,
+        languages = languages,
+        thumbnail = thumbnail.url,
+        contactAccount = contact?.account?.toExternalModel(),
+        contactEmail = contact?.email,
+    )
 
-fun NetworkInstanceUrls.toExternalModel(): InstanceUrls =
-    InstanceUrls(streamingApiUrl = streamingApiUrl)
+fun NetworkInstanceUrls.toExternalModel(): InstanceUrls = InstanceUrls(streamingApiUrl = streamingApiUrl)
 
-fun NetworkInstanceStats.toExternalModel() = InstanceStats(
-    userCount = userCount,
-    statusCount = statusCount,
-    domainCount = domainCount
-)
+fun NetworkInstanceStats.toExternalModel() =
+    InstanceStats(
+        userCount = userCount,
+        statusCount = statusCount,
+        domainCount = domainCount,
+    )

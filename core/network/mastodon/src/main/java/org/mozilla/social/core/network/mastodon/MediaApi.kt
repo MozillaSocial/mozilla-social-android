@@ -11,7 +11,6 @@ import retrofit2.http.Part
 import retrofit2.http.Path
 
 interface MediaApi {
-
     @Multipart
     @POST("/api/v2/media")
     suspend fun uploadMedia(

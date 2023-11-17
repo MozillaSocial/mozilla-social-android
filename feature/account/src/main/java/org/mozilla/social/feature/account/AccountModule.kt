@@ -12,46 +12,47 @@ import org.mozilla.social.core.ui.postcard.postCardModule
 import org.mozilla.social.core.usecase.mastodon.mastodonUsecaseModule
 import org.mozilla.social.feature.account.edit.EditAccountViewModel
 
-val accountModule = module {
-    includes(
-        commonModule,
-        dataStoreModule,
-        mastodonUsecaseModule,
-        mastodonRepositoryModule,
-        postCardModule,
-        databaseModule,
-        navigationModule,
-        analyticsModule,
-    )
+val accountModule =
+    module {
+        includes(
+            commonModule,
+            dataStoreModule,
+            mastodonUsecaseModule,
+            mastodonRepositoryModule,
+            postCardModule,
+            databaseModule,
+            navigationModule,
+            analyticsModule,
+        )
 
-    viewModel { parametersHolder ->
-        AccountViewModel(
-            analytics = get(),
-            getLoggedInUserAccountId = get(),
-            socialDatabase = get(),
-            getDetailedAccount = get(),
-            navigateTo = get(),
-            initialAccountId = parametersHolder[0],
-            followAccount = get(),
-            unfollowAccount = get(),
-            blockAccount = get(),
-            unblockAccount = get(),
-            muteAccount = get(),
-            unmuteAccount = get(),
-        )
+        viewModel { parametersHolder ->
+            AccountViewModel(
+                analytics = get(),
+                getLoggedInUserAccountId = get(),
+                socialDatabase = get(),
+                getDetailedAccount = get(),
+                navigateTo = get(),
+                initialAccountId = parametersHolder[0],
+                followAccount = get(),
+                unfollowAccount = get(),
+                blockAccount = get(),
+                unblockAccount = get(),
+                muteAccount = get(),
+                unmuteAccount = get(),
+            )
+        }
+        factory { parametersHolder ->
+            AccountTimelineRemoteMediator(
+                accountId = parametersHolder[0],
+                timelineType = parametersHolder[1],
+            )
+        }
+        viewModel {
+            EditAccountViewModel(
+                get(),
+                get(),
+                get(),
+                get(),
+            )
+        }
     }
-    factory { parametersHolder ->
-        AccountTimelineRemoteMediator(
-            accountId = parametersHolder[0],
-            timelineType = parametersHolder[1],
-        )
-    }
-    viewModel {
-        EditAccountViewModel(
-            get(),
-            get(),
-            get(),
-            get(),
-        )
-    }
-}

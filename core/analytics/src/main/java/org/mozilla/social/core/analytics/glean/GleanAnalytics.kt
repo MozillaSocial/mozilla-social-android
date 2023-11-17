@@ -31,7 +31,7 @@ class GleanAnalytics(
                 Glean.initialize(
                     applicationContext = context,
                     uploadEnabled = it,
-                    buildInfo = buildInfo
+                    buildInfo = buildInfo,
                 )
             }
         }
@@ -51,18 +51,21 @@ class GleanAnalytics(
         mastodonStatusId: String?,
         recommendationId: String?,
         uiAdditionalDetail: String?,
-        uiIdentifier: String?
+        uiIdentifier: String?,
     ) {
-        Ui.engagement.record(extra = Ui.EngagementExtra(
-            engagementType = engagementType?.value,
-            engagementValue = engagementValue,
-            mastodonAccountHandle = mastodonAccountHandle,
-            mastodonAccountId = mastodonAccountId,
-            mastodonStatusId = mastodonStatusId,
-            recommendationId = recommendationId,
-            uiAdditionalDetail = uiAdditionalDetail,
-            uiIdentifier = uiIdentifier,
-        ))
+        Ui.engagement.record(
+            extra =
+                Ui.EngagementExtra(
+                    engagementType = engagementType?.value,
+                    engagementValue = engagementValue,
+                    mastodonAccountHandle = mastodonAccountHandle,
+                    mastodonAccountId = mastodonAccountId,
+                    mastodonStatusId = mastodonStatusId,
+                    recommendationId = recommendationId,
+                    uiAdditionalDetail = uiAdditionalDetail,
+                    uiIdentifier = uiIdentifier,
+                ),
+        )
     }
 
     override fun uiImpression(
@@ -71,16 +74,19 @@ class GleanAnalytics(
         mastodonStatusId: String?,
         recommendationId: String?,
         uiAdditionalDetail: String?,
-        uiIdentifier: String?
+        uiIdentifier: String?,
     ) {
-        Ui.impression.record(extra = Ui.ImpressionExtra(
-            mastodonAccountHandle = mastodonAccountHandle,
-            mastodonAccountId = mastodonAccountId,
-            mastodonStatusId = mastodonStatusId,
-            recommendationId = recommendationId,
-            uiAdditionalDetail = uiAdditionalDetail,
-            uiIdentifier = uiIdentifier
-        ))
+        Ui.impression.record(
+            extra =
+                Ui.ImpressionExtra(
+                    mastodonAccountHandle = mastodonAccountHandle,
+                    mastodonAccountId = mastodonAccountId,
+                    mastodonStatusId = mastodonStatusId,
+                    recommendationId = recommendationId,
+                    uiAdditionalDetail = uiAdditionalDetail,
+                    uiIdentifier = uiIdentifier,
+                ),
+        )
     }
 
     override fun setAdjustDeviceId(adjustDeviceId: String) {

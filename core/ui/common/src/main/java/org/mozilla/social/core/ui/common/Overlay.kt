@@ -10,39 +10,36 @@ import androidx.compose.ui.graphics.Color
 import org.mozilla.social.core.designsystem.utils.NoRipple
 
 @Composable
-fun TransparentOverlay(
-    modifier: Modifier = Modifier,
-) {
+fun TransparentOverlay(modifier: Modifier = Modifier) {
     Box(
-        modifier = modifier
-            .fillMaxSize()
-            .background(Color(0xAA000000)),
+        modifier =
+            modifier
+                .fillMaxSize()
+                .background(Color(0xAA000000)),
     )
 }
 
 @Composable
-fun TransparentNoTouchOverlay(
-    modifier: Modifier = Modifier,
-) {
+fun TransparentNoTouchOverlay(modifier: Modifier = Modifier) {
     NoRipple {
         Box(
-            modifier = modifier
-                .fillMaxSize()
-                .background(Color(0xAA000000))
-                .clickable { },
+            modifier =
+                modifier
+                    .fillMaxSize()
+                    .background(Color(0xAA000000))
+                    .clickable { },
         )
     }
 }
 
 @Composable
-fun NoTouchOverlay(
-    modifier: Modifier = Modifier,
-) {
+fun NoTouchOverlay(modifier: Modifier = Modifier) {
     NoRipple {
         Box(
-            modifier = modifier
-                .fillMaxSize()
-                .clickable { },
+            modifier =
+                modifier
+                    .fillMaxSize()
+                    .clickable { },
         )
     }
 }

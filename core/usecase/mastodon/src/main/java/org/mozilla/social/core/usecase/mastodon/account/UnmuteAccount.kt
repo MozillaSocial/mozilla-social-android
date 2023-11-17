@@ -18,26 +18,24 @@ class UnmuteAccount(
     private val socialDatabase: SocialDatabase,
     private val dispatcherIo: CoroutineDispatcher = Dispatchers.IO,
 ) {
-
     /**
      * @throws UnmuteFailedException if any error occurred
      */
     @OptIn(PreferUseCase::class)
-    suspend operator fun invoke(
-        accountId: String
-    ) = externalScope.async(dispatcherIo) {
-        try {
-            socialDatabase.relationshipsDao().updateMuted(accountId, false)
-            accountRepository.unmuteAccount(accountId)
-        } catch (e: Exception) {
-            socialDatabase.relationshipsDao().updateMuted(accountId, true)
-            showSnackbar(
-                text = StringFactory.resource(R.string.error_unmuting_account),
-                isError = true,
-            )
-            throw UnmuteFailedException(e)
-        }
-    }.await()
+    suspend operator fun invoke(accountId: String) =
+        externalScope.async(dispatcherIo) {
+            try {
+                socialDatabase.relationshipsDao().updateMuted(accountId, false)
+                accountRepository.unmuteAccount(accountId)
+            } catch (e: Exception) {
+                socialDatabase.relationshipsDao().updateMuted(accountId, true)
+                showSnackbar(
+                    text = StringFactory.resource(R.string.error_unmuting_account),
+                    isError = true,
+                )
+                throw UnmuteFailedException(e)
+            }
+        }.await()
 
     class UnmuteFailedException(e: Exception) : Exception(e)
 }

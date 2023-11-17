@@ -15,20 +15,19 @@ import org.koin.core.context.startKoin
 import org.koin.dsl.module
 import org.mozilla.social.core.analytics.Analytics
 import org.mozilla.social.core.repository.mastodon.AuthCredentialObserver
-import org.mozilla.social.feature.auth.authModule
-import org.mozilla.social.feature.settings.settingsModule
-import org.mozilla.social.feed.feedModule
-import org.mozilla.social.post.newPostModule
-import org.mozilla.social.search.searchModule
 import org.mozilla.social.feature.account.accountModule
+import org.mozilla.social.feature.auth.authModule
 import org.mozilla.social.feature.discover.discoverModule
 import org.mozilla.social.feature.followers.followersModule
 import org.mozilla.social.feature.hashtag.hashTagModule
 import org.mozilla.social.feature.report.reportModule
+import org.mozilla.social.feature.settings.settingsModule
 import org.mozilla.social.feature.thread.threadModule
+import org.mozilla.social.feed.feedModule
+import org.mozilla.social.post.newPostModule
+import org.mozilla.social.search.searchModule
 
 class MainApplication : Application(), ImageLoaderFactory {
-
     private lateinit var authCredentialObserver: AuthCredentialObserver
 
     private val analytics: Analytics by inject()
@@ -64,18 +63,19 @@ class MainApplication : Application(), ImageLoaderFactory {
             .build()
 }
 
-val featureModules = module {
-    includes(
-        accountModule,
-        authModule,
-        discoverModule,
-        feedModule,
-        followersModule,
-        hashTagModule,
-        newPostModule,
-        reportModule,
-        searchModule,
-        settingsModule,
-        threadModule,
-    )
-}
+val featureModules =
+    module {
+        includes(
+            accountModule,
+            authModule,
+            discoverModule,
+            feedModule,
+            followersModule,
+            hashTagModule,
+            newPostModule,
+            reportModule,
+            searchModule,
+            settingsModule,
+            threadModule,
+        )
+    }

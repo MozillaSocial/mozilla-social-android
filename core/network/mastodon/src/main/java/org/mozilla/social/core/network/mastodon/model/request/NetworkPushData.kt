@@ -6,5 +6,5 @@ import org.mozilla.social.core.network.mastodon.model.NetworkAlerts
  * Object used to set notification alert settings.
  */
 data class NetworkPushData(
-    val alerts: NetworkAlerts
+    val alerts: NetworkAlerts,
 )

@@ -6,5 +6,5 @@ package org.mozilla.social.core.network.mastodon.model
 enum class NetworkAccountRole {
     Admin,
     Moderator,
-    User
+    User,
 }

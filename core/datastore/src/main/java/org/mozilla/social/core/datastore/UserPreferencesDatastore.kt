@@ -13,21 +13,25 @@ import java.io.IOException
 class UserPreferencesDatastore(context: Context) {
     private val dataStore = context.userPreferencesDataStore
 
-    val accessToken: Flow<String?> = dataStore.data.mapLatest {
-        it.accessToken
-    }
+    val accessToken: Flow<String?> =
+        dataStore.data.mapLatest {
+            it.accessToken
+        }
 
-    val domain: Flow<String?> = dataStore.data.mapLatest {
-        it.domain
-    }
+    val domain: Flow<String?> =
+        dataStore.data.mapLatest {
+            it.domain
+        }
 
-    val accountId: Flow<String> = dataStore.data.mapLatest {
-        it.accountId
-    }
+    val accountId: Flow<String> =
+        dataStore.data.mapLatest {
+            it.accountId
+        }
 
-    val isSignedIn: Flow<Boolean> = dataStore.data.mapLatest {
-        !it.accountId.isNullOrBlank() && !it.accessToken.isNullOrBlank()
-    }.distinctUntilChanged()
+    val isSignedIn: Flow<Boolean> =
+        dataStore.data.mapLatest {
+            !it.accountId.isNullOrBlank() && !it.accessToken.isNullOrBlank()
+        }.distinctUntilChanged()
 
     /**
      * Preload the data so that it's available in the cache

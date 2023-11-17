@@ -9,7 +9,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class NetworkHistory(
-
     // changing this to string for now. Can't get deserializer to work right and I'm not actually
     // using this property
     /**
@@ -17,16 +16,14 @@ data class NetworkHistory(
      */
     @SerialName("day")
     val day: String,
-
     /**
      * The counted usage of the tag within that day.
      */
     @SerialName("uses")
     val usageCount: Long,
-
     /**
      * the total of accounts using the tag within that day.
      */
     @SerialName("accounts")
-    val accountCount: Long
+    val accountCount: Long,
 )

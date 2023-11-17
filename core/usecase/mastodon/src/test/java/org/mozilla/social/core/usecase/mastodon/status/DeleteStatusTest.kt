@@ -11,65 +11,67 @@ import kotlin.test.Test
 import kotlin.test.assertNotNull
 
 class DeleteStatusTest : BaseUseCaseTest() {
-
     private lateinit var subject: DeleteStatus
 
     private val networkStatus = Models.status
 
     @BeforeTest
     fun setup() {
-        subject = DeleteStatus(
-            externalScope = TestScope(testDispatcher),
-            showSnackbar = showSnackbar,
-            statusRepository = statusRepository,
-            socialDatabase = socialDatabase,
-            dispatcherIo = testDispatcher,
-        )
+        subject =
+            DeleteStatus(
+                externalScope = TestScope(testDispatcher),
+                showSnackbar = showSnackbar,
+                statusRepository = statusRepository,
+                socialDatabase = socialDatabase,
+                dispatcherIo = testDispatcher,
+            )
     }
 
     @Test
-    fun successTest() = runTest {
-        subject("id")
-
-        coVerify(exactly = 1) {
-            statusRepository.updateIsBeingDeleted("id", true)
-            statusRepository.deleteStatus("id")
-            homeTimelineDao.deletePost("id")
-            localTimelineDao.deletePost("id")
-            federatedTimelineDao.deletePost("id")
-            hashTagTimelineDao.deletePost("id")
-            accountTimelineDao.deletePost("id")
-            statusRepository.deleteStatusLocal("id")
-        }
-    }
-
-    @Test
-    fun networkFailureTest() = runTest {
-        coEvery { statusRepository.deleteStatus("id") } throws Exception()
-        var exception: Exception? = null
-        try {
+    fun successTest() =
+        runTest {
             subject("id")
-        } catch (e: Exception) {
-            exception = e
+
+            coVerify(exactly = 1) {
+                statusRepository.updateIsBeingDeleted("id", true)
+                statusRepository.deleteStatus("id")
+                homeTimelineDao.deletePost("id")
+                localTimelineDao.deletePost("id")
+                federatedTimelineDao.deletePost("id")
+                hashTagTimelineDao.deletePost("id")
+                accountTimelineDao.deletePost("id")
+                statusRepository.deleteStatusLocal("id")
+            }
         }
 
-        assertNotNull(exception)
+    @Test
+    fun networkFailureTest() =
+        runTest {
+            coEvery { statusRepository.deleteStatus("id") } throws Exception()
+            var exception: Exception? = null
+            try {
+                subject("id")
+            } catch (e: Exception) {
+                exception = e
+            }
 
-        coVerify(exactly = 1) {
-            statusRepository.updateIsBeingDeleted("id", true)
-            statusRepository.deleteStatus("id")
-            statusRepository.updateIsBeingDeleted("id", false)
-        }
+            assertNotNull(exception)
 
-        coVerify(exactly = 0) {
-            homeTimelineDao.deletePost("id")
-            localTimelineDao.deletePost("id")
-            federatedTimelineDao.deletePost("id")
-            hashTagTimelineDao.deletePost("id")
-            accountTimelineDao.deletePost("id")
-            statusRepository.deleteStatusLocal("id")
+            coVerify(exactly = 1) {
+                statusRepository.updateIsBeingDeleted("id", true)
+                statusRepository.deleteStatus("id")
+                statusRepository.updateIsBeingDeleted("id", false)
+            }
+
+            coVerify(exactly = 0) {
+                homeTimelineDao.deletePost("id")
+                localTimelineDao.deletePost("id")
+                federatedTimelineDao.deletePost("id")
+                hashTagTimelineDao.deletePost("id")
+                accountTimelineDao.deletePost("id")
+                statusRepository.deleteStatusLocal("id")
+            }
         }
-    }
 
     @Test
     fun testCancelledScope() {
@@ -83,7 +85,7 @@ class DeleteStatusTest : BaseUseCaseTest() {
             },
             verifyBlock = {
                 statusRepository.deleteStatusLocal(any())
-            }
+            },
         )
     }
 
@@ -98,7 +100,7 @@ class DeleteStatusTest : BaseUseCaseTest() {
             },
             verifyBlock = {
                 showSnackbar(any(), any())
-            }
+            },
         )
     }
 }

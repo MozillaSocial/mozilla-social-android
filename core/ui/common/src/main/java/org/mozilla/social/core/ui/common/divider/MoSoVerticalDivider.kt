@@ -16,13 +16,14 @@ import org.mozilla.social.core.designsystem.theme.MoSoTheme
 fun MoSoVerticalDivider(
     modifier: Modifier = Modifier,
     color: Color = MoSoTheme.colors.borderPrimary,
-    thickness: Dp = 1.dp
+    thickness: Dp = 1.dp,
 ) {
     Box(
-        modifier = modifier
-            .fillMaxHeight()
-            .width(thickness)
-            .background(color = color)
+        modifier =
+            modifier
+                .fillMaxHeight()
+                .width(thickness)
+                .background(color = color),
     )
 }
 

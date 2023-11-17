@@ -22,7 +22,7 @@ fun MoSoSurface(
     tonalElevation: Dp = 0.dp,
     shadowElevation: Dp = 0.dp,
     border: BorderStroke? = null,
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
     Surface(
         modifier = modifier,
@@ -32,7 +32,7 @@ fun MoSoSurface(
         tonalElevation = tonalElevation,
         shadowElevation = shadowElevation,
         border = border,
-        content = content
+        content = content,
     )
 }
 
@@ -48,7 +48,7 @@ fun MoSoSurface(
     shadowElevation: Dp = 0.dp,
     border: BorderStroke? = null,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
     Surface(
         onClick = onClick,
@@ -61,6 +61,6 @@ fun MoSoSurface(
         shadowElevation = shadowElevation,
         border = border,
         interactionSource = interactionSource,
-        content = content
+        content = content,
     )
 }

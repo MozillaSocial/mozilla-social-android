@@ -16,16 +16,13 @@ class MutedUsersSettingsViewModel(
     private val accountRepository: AccountRepository,
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : ViewModel() {
-
-    val mutes: Flow<List<Account>> = flow<List<Account>> {
-        emit(repository.getMutes())
-    }
+    val mutes: Flow<List<Account>> =
+        flow<List<Account>> {
+            emit(repository.getMutes())
+        }
 
     // TODO@DA hook up
-    fun onMuteButtonClicked(
-        accountId: String,
-    ) {
+    fun onMuteButtonClicked(accountId: String) {
         viewModelScope.launch(ioDispatcher) { accountRepository.muteAccount(accountId) }
     }
 }
-

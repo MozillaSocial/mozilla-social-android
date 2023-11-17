@@ -5,9 +5,8 @@ package org.mozilla.social.core.model
  */
 data class Report(
     val reportId: String,
-
     /**
      * Whether an action was taken to resolve this report.
      */
-    val wasActionTaken: Boolean
+    val wasActionTaken: Boolean,
 )

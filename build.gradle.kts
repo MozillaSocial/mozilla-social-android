@@ -2,6 +2,7 @@
 
 // Lists all plugins used throughout the project without applying them.
 @file:Suppress("DSL_SCOPE_VIOLATION")
+
 plugins {
     alias(libs.plugins.android.application) apply false
     alias(libs.plugins.android.library) apply false

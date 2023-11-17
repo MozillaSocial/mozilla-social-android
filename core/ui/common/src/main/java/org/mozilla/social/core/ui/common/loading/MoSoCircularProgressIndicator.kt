@@ -22,6 +22,6 @@ fun MoSoCircularProgressIndicator(
         color = color,
         strokeWidth = strokeWidth,
         trackColor = trackColor,
-        strokeCap = strokeCap
+        strokeCap = strokeCap,
     )
 }

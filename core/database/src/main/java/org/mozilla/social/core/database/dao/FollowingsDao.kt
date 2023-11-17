@@ -9,20 +9,17 @@ import org.mozilla.social.core.database.model.accountCollections.FolloweeWrapper
 
 @Dao
 interface FollowingsDao : BaseDao<Followee> {
-
     @Transaction
     @Query(
         "SELECT * FROM followings " +
-        "WHERE  accountId = :accountId " +
-        "ORDER BY position ASC"
+            "WHERE  accountId = :accountId " +
+            "ORDER BY position ASC",
     )
-    fun followingsPagingSource(
-        accountId: String,
-    ): PagingSource<Int, FolloweeWrapper>
+    fun followingsPagingSource(accountId: String): PagingSource<Int, FolloweeWrapper>
 
     @Query(
         "DELETE FROM followings " +
-        "WHERE accountId = :accountId"
+            "WHERE accountId = :accountId",
     )
     suspend fun deleteFollowings(accountId: String)
 }

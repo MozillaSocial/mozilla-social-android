@@ -24,12 +24,15 @@ import androidx.compose.ui.unit.dp
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.designsystem.theme.Typography
-import org.mozilla.social.core.ui.common.R
 import org.mozilla.social.core.model.Recommendation
+import org.mozilla.social.core.ui.common.R
 import org.mozilla.social.core.ui.common.divider.MoSoDivider
 
 @Composable
-fun RecommendationCarousel(reccs: List<Recommendation>, onMoreInfoClicked: () -> Unit) {
+fun RecommendationCarousel(
+    reccs: List<Recommendation>,
+    onMoreInfoClicked: () -> Unit,
+) {
     val configuration = LocalConfiguration.current
 
     val widthInDp = configuration.screenWidthDp.dp
@@ -58,7 +61,7 @@ fun RecommendationCarousel(reccs: List<Recommendation>, onMoreInfoClicked: () ->
             items(count = reccs.size) {
                 RecommendationCarouselCard(
                     modifier = Modifier.width(carouselItemWidth),
-                    recommendation = reccs[it]
+                    recommendation = reccs[it],
                 )
             }
         }
@@ -72,12 +75,12 @@ fun RecommendationCarousel(reccs: List<Recommendation>, onMoreInfoClicked: () ->
             ) {
                 Text(
                     text = stringResource(id = R.string.recommendations_discover_more),
-                    color = MoSoTheme.colors.actionPrimary
+                    color = MoSoTheme.colors.actionPrimary,
                 )
                 Icon(
                     painter = MoSoIcons.chevronRight(),
                     tint = MoSoTheme.colors.actionPrimary,
-                    contentDescription = null
+                    contentDescription = null,
                 )
             }
         }
@@ -106,7 +109,7 @@ fun MoreInfoDialog(
             TextButton(
                 onClick = {
                     onConfirmation()
-                }
+                },
             ) {
                 Text(stringResource(id = R.string.ok))
             }

@@ -21,7 +21,7 @@ data class NetworkRecommendation(
 
 @Serializable
 data class NetworkRecommendationImageSizes(
-    @SerialName("sizes") val sizes: List<NetworkRecommendationImage>
+    @SerialName("sizes") val sizes: List<NetworkRecommendationImage>,
 )
 
 @Serializable

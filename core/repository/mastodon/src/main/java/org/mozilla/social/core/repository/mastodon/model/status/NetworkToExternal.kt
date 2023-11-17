@@ -1,20 +1,5 @@
 package org.mozilla.social.core.repository.mastodon.model.status
 
-import org.mozilla.social.core.network.mastodon.model.NetworkAccount
-import org.mozilla.social.core.network.mastodon.model.NetworkApplication
-import org.mozilla.social.core.network.mastodon.model.NetworkAttachment
-import org.mozilla.social.core.network.mastodon.model.NetworkCard
-import org.mozilla.social.core.network.mastodon.model.NetworkEmoji
-import org.mozilla.social.core.network.mastodon.model.NetworkField
-import org.mozilla.social.core.network.mastodon.model.NetworkFocalPoint
-import org.mozilla.social.core.network.mastodon.model.NetworkHashTag
-import org.mozilla.social.core.network.mastodon.model.NetworkHistory
-import org.mozilla.social.core.network.mastodon.model.NetworkMention
-import org.mozilla.social.core.network.mastodon.model.NetworkPoll
-import org.mozilla.social.core.network.mastodon.model.NetworkPollOption
-import org.mozilla.social.core.network.mastodon.model.NetworkSource
-import org.mozilla.social.core.network.mastodon.model.NetworkStatus
-import org.mozilla.social.core.network.mastodon.model.NetworkStatusVisibility
 import org.mozilla.social.core.model.Account
 import org.mozilla.social.core.model.Application
 import org.mozilla.social.core.model.Attachment
@@ -30,6 +15,21 @@ import org.mozilla.social.core.model.PollOption
 import org.mozilla.social.core.model.Source
 import org.mozilla.social.core.model.Status
 import org.mozilla.social.core.model.StatusVisibility
+import org.mozilla.social.core.network.mastodon.model.NetworkAccount
+import org.mozilla.social.core.network.mastodon.model.NetworkApplication
+import org.mozilla.social.core.network.mastodon.model.NetworkAttachment
+import org.mozilla.social.core.network.mastodon.model.NetworkCard
+import org.mozilla.social.core.network.mastodon.model.NetworkEmoji
+import org.mozilla.social.core.network.mastodon.model.NetworkField
+import org.mozilla.social.core.network.mastodon.model.NetworkFocalPoint
+import org.mozilla.social.core.network.mastodon.model.NetworkHashTag
+import org.mozilla.social.core.network.mastodon.model.NetworkHistory
+import org.mozilla.social.core.network.mastodon.model.NetworkMention
+import org.mozilla.social.core.network.mastodon.model.NetworkPoll
+import org.mozilla.social.core.network.mastodon.model.NetworkPollOption
+import org.mozilla.social.core.network.mastodon.model.NetworkSource
+import org.mozilla.social.core.network.mastodon.model.NetworkStatus
+import org.mozilla.social.core.network.mastodon.model.NetworkStatusVisibility
 
 fun NetworkStatus.toExternalModel(): Status =
     Status(
@@ -64,36 +64,37 @@ fun NetworkStatus.toExternalModel(): Status =
         isPinned = isPinned,
     )
 
-fun NetworkAccount.toExternalModel(): Account = Account(
-    accountId = accountId,
-    username = username,
-    acct = acct,
-    url = url,
-    displayName = displayName,
-    bio = bio,
-    avatarUrl = avatarUrl,
-    avatarStaticUrl = avatarStaticUrl,
-    headerUrl = headerUrl,
-    headerStaticUrl = headerStaticUrl,
-    isLocked = isLocked,
-    emojis = emojis.map { it.toExternalModel() },
-    createdAt = createdAt,
-    lastStatusAt = lastStatusAt,
-    statusesCount = statusesCount,
-    followersCount = followersCount,
-    followingCount = followingCount,
-    isDiscoverable = isDiscoverable,
-    movedTo = movedTo?.toExternalModel(),
-    isGroup = isGroup,
-    fields = fields?.map { it.toExternalModel() },
-    isBot = isBot,
-    source = source?.toExternalModel(),
-    isSuspended = isSuspended,
-    muteExpiresAt = muteExpiresAt,
-)
+fun NetworkAccount.toExternalModel(): Account =
+    Account(
+        accountId = accountId,
+        username = username,
+        acct = acct,
+        url = url,
+        displayName = displayName,
+        bio = bio,
+        avatarUrl = avatarUrl,
+        avatarStaticUrl = avatarStaticUrl,
+        headerUrl = headerUrl,
+        headerStaticUrl = headerStaticUrl,
+        isLocked = isLocked,
+        emojis = emojis.map { it.toExternalModel() },
+        createdAt = createdAt,
+        lastStatusAt = lastStatusAt,
+        statusesCount = statusesCount,
+        followersCount = followersCount,
+        followingCount = followingCount,
+        isDiscoverable = isDiscoverable,
+        movedTo = movedTo?.toExternalModel(),
+        isGroup = isGroup,
+        fields = fields?.map { it.toExternalModel() },
+        isBot = isBot,
+        source = source?.toExternalModel(),
+        isSuspended = isSuspended,
+        muteExpiresAt = muteExpiresAt,
+    )
 
 fun NetworkStatusVisibility.toExternalModel(): StatusVisibility =
-    when(this) {
+    when (this) {
         NetworkStatusVisibility.Direct -> StatusVisibility.Direct
         NetworkStatusVisibility.Private -> StatusVisibility.Private
         NetworkStatusVisibility.Public -> StatusVisibility.Public
@@ -102,59 +103,64 @@ fun NetworkStatusVisibility.toExternalModel(): StatusVisibility =
 
 fun NetworkAttachment.toExternalModel(): Attachment =
     when (this) {
-        is NetworkAttachment.Image -> Attachment.Image(
-            attachmentId = attachmentId,
-            url = url,
-            previewUrl = previewUrl,
-            remoteUrl = remoteUrl,
-            previewRemoteUrl = previewRemoteUrl,
-            textUrl = textUrl,
-            description = description,
-            blurHash = blurHash,
-            meta = meta.toExternalModel(),
-        )
-        is NetworkAttachment.Gifv -> Attachment.Gifv(
-            attachmentId = attachmentId,
-            url = url,
-            previewUrl = previewUrl,
-            remoteUrl = remoteUrl,
-            previewRemoteUrl = previewRemoteUrl,
-            textUrl = textUrl,
-            description = description,
-            meta = meta.toExternalModel(),
-        )
-        is NetworkAttachment.Video -> Attachment.Video(
-            attachmentId = attachmentId,
-            url = url,
-            previewUrl = previewUrl,
-            remoteUrl = remoteUrl,
-            previewRemoteUrl = previewRemoteUrl,
-            textUrl = textUrl,
-            description = description,
-            blurHash = blurHash,
-            meta = meta.toExternalModel(),
-        )
-        is NetworkAttachment.Audio -> Attachment.Audio(
-            attachmentId = attachmentId,
-            url = url,
-            previewUrl = previewUrl,
-            remoteUrl = remoteUrl,
-            previewRemoteUrl = previewRemoteUrl,
-            textUrl = textUrl,
-            description = description,
-            blurHash = blurHash,
-            meta = meta.toExternalModel(),
-        )
-        is NetworkAttachment.Unknown -> Attachment.Unknown(
-            attachmentId = attachmentId,
-            url = url,
-            previewUrl = previewUrl,
-            remoteUrl = remoteUrl,
-            previewRemoteUrl = previewRemoteUrl,
-            textUrl = textUrl,
-            description = description,
-            blurHash = blurHash
-        )
+        is NetworkAttachment.Image ->
+            Attachment.Image(
+                attachmentId = attachmentId,
+                url = url,
+                previewUrl = previewUrl,
+                remoteUrl = remoteUrl,
+                previewRemoteUrl = previewRemoteUrl,
+                textUrl = textUrl,
+                description = description,
+                blurHash = blurHash,
+                meta = meta.toExternalModel(),
+            )
+        is NetworkAttachment.Gifv ->
+            Attachment.Gifv(
+                attachmentId = attachmentId,
+                url = url,
+                previewUrl = previewUrl,
+                remoteUrl = remoteUrl,
+                previewRemoteUrl = previewRemoteUrl,
+                textUrl = textUrl,
+                description = description,
+                meta = meta.toExternalModel(),
+            )
+        is NetworkAttachment.Video ->
+            Attachment.Video(
+                attachmentId = attachmentId,
+                url = url,
+                previewUrl = previewUrl,
+                remoteUrl = remoteUrl,
+                previewRemoteUrl = previewRemoteUrl,
+                textUrl = textUrl,
+                description = description,
+                blurHash = blurHash,
+                meta = meta.toExternalModel(),
+            )
+        is NetworkAttachment.Audio ->
+            Attachment.Audio(
+                attachmentId = attachmentId,
+                url = url,
+                previewUrl = previewUrl,
+                remoteUrl = remoteUrl,
+                previewRemoteUrl = previewRemoteUrl,
+                textUrl = textUrl,
+                description = description,
+                blurHash = blurHash,
+                meta = meta.toExternalModel(),
+            )
+        is NetworkAttachment.Unknown ->
+            Attachment.Unknown(
+                attachmentId = attachmentId,
+                url = url,
+                previewUrl = previewUrl,
+                remoteUrl = remoteUrl,
+                previewRemoteUrl = previewRemoteUrl,
+                textUrl = textUrl,
+                description = description,
+                blurHash = blurHash,
+            )
     }
 
 fun NetworkAttachment.Audio.Meta.toExternalModel(): Attachment.Audio.Meta =
@@ -163,7 +169,7 @@ fun NetworkAttachment.Audio.Meta.toExternalModel(): Attachment.Audio.Meta =
         audioCodec = audioCodec,
         audioBitrate = audioBitrate,
         audioChannels = audioChannels,
-        original = original?.toExternalModel()
+        original = original?.toExternalModel(),
     )
 
 fun NetworkAttachment.Audio.Meta.AudioInfo.toExternalModel(): Attachment.Audio.Meta.AudioInfo =
@@ -233,21 +239,21 @@ fun NetworkMention.toExternalModel(): Mention =
         accountId = accountId,
         username = username,
         acct = acct,
-        url = url
+        url = url,
     )
 
 fun NetworkHashTag.toExternalModel(): HashTag =
     HashTag(
         name = name,
         url = url,
-        history = history?.map { it.toExternalModel() }
+        history = history?.map { it.toExternalModel() },
     )
 
 fun NetworkHistory.toExternalModel(): History =
     History(
         day = day,
         usageCount = usageCount,
-        accountCount = accountCount
+        accountCount = accountCount,
     )
 
 fun NetworkEmoji.toExternalModel(): Emoji =
@@ -256,7 +262,7 @@ fun NetworkEmoji.toExternalModel(): Emoji =
         url = url,
         staticUrl = staticUrl,
         isVisibleInPicker = isVisibleInPicker,
-        category = category
+        category = category,
     )
 
 fun NetworkApplication.toExternalModel(): Application =
@@ -265,7 +271,7 @@ fun NetworkApplication.toExternalModel(): Application =
         website = website,
         vapidKey = vapidKey,
         clientId = clientId,
-        clientSecret = clientSecret
+        clientSecret = clientSecret,
     )
 
 fun NetworkPoll.toExternalModel(): Poll =
@@ -279,20 +285,20 @@ fun NetworkPoll.toExternalModel(): Poll =
         expiresAt = expiresAt,
         votersCount = votersCount,
         hasVoted = hasVoted,
-        ownVotes = ownVotes
+        ownVotes = ownVotes,
     )
 
 fun NetworkPollOption.toExternalModel(): PollOption =
     PollOption(
         title = title,
-        votesCount = votesCount
+        votesCount = votesCount,
     )
 
 fun NetworkField.toExternalModel(): Field =
     Field(
         name = name,
         value = value,
-        verifiedAt = verifiedAt
+        verifiedAt = verifiedAt,
     )
 
 fun NetworkSource.toExternalModel(): Source =
@@ -302,70 +308,74 @@ fun NetworkSource.toExternalModel(): Source =
         defaultPrivacy = defaultPrivacy?.toExternalModel(),
         defaultSensitivity = defaultSensitivity,
         defaultLanguage = defaultLanguage,
-        followRequestsCount = followRequestsCount
+        followRequestsCount = followRequestsCount,
     )
 
 fun NetworkCard.toExternalModel(): Card =
     when (type) {
-        "video" -> Card.Video(
-            url = url,
-            title = title,
-            description = description,
-            authorName = authorName,
-            authorUrl = authorUrl,
-            providerName = providerName,
-            providerUrl = providerUrl,
-            html = html,
-            width = width,
-            height = height,
-            image = image,
-            embedUrl = embedUrl,
-            blurHash = blurHash
-        )
-        "link" -> Card.Link(
-            url = url,
-            title = title,
-            description = description,
-            authorName = authorName,
-            authorUrl = authorUrl,
-            providerName = providerName,
-            providerUrl = providerUrl,
-            html = html,
-            width = width,
-            height = height,
-            image = image,
-            embedUrl = embedUrl,
-            blurHash = blurHash
-        )
-        "photo" -> Card.Photo(
-            url = url,
-            title = title,
-            description = description,
-            authorName = authorName,
-            authorUrl = authorUrl,
-            providerName = providerName,
-            providerUrl = providerUrl,
-            html = html,
-            width = width,
-            height = height,
-            image = image,
-            embedUrl = embedUrl,
-            blurHash = blurHash
-        )
-        "rich" -> Card.Rich(
-            url = url,
-            title = title,
-            description = description,
-            authorName = authorName,
-            authorUrl = authorUrl,
-            providerName = providerName,
-            providerUrl = providerUrl,
-            html = html,
-            width = width,
-            height = height,
-            image = image,
-            embedUrl = embedUrl,
-            blurHash = blurHash
-        )
+        "video" ->
+            Card.Video(
+                url = url,
+                title = title,
+                description = description,
+                authorName = authorName,
+                authorUrl = authorUrl,
+                providerName = providerName,
+                providerUrl = providerUrl,
+                html = html,
+                width = width,
+                height = height,
+                image = image,
+                embedUrl = embedUrl,
+                blurHash = blurHash,
+            )
+        "link" ->
+            Card.Link(
+                url = url,
+                title = title,
+                description = description,
+                authorName = authorName,
+                authorUrl = authorUrl,
+                providerName = providerName,
+                providerUrl = providerUrl,
+                html = html,
+                width = width,
+                height = height,
+                image = image,
+                embedUrl = embedUrl,
+                blurHash = blurHash,
+            )
+        "photo" ->
+            Card.Photo(
+                url = url,
+                title = title,
+                description = description,
+                authorName = authorName,
+                authorUrl = authorUrl,
+                providerName = providerName,
+                providerUrl = providerUrl,
+                html = html,
+                width = width,
+                height = height,
+                image = image,
+                embedUrl = embedUrl,
+                blurHash = blurHash,
+            )
+        "rich" ->
+            Card.Rich(
+                url = url,
+                title = title,
+                description = description,
+                authorName = authorName,
+                authorUrl = authorUrl,
+                providerName = providerName,
+                providerUrl = providerUrl,
+                html = html,
+                width = width,
+                height = height,
+                image = image,
+                embedUrl = embedUrl,
+                blurHash = blurHash,
+            )
         else -> error("type value is incorrect")
     }

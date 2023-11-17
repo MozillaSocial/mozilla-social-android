@@ -31,7 +31,7 @@ fun MoSoSnackbarHost(
     modifier: Modifier = Modifier,
     snackbar: @Composable (SnackbarData, SnackbarType) -> Unit = { snackbarData, snackbarType ->
         MoSoSnackbar(snackbarData = snackbarData, snackbarType = snackbarType)
-    }
+    },
 ) {
     val currentSnackbarType = hostState.currentSnackbarType
 

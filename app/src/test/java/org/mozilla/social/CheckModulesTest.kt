@@ -12,23 +12,23 @@ import org.mozilla.social.feature.report.ReportType
 import kotlin.test.Test
 
 class CheckModulesTest : KoinTest {
-
     @OptIn(KoinExperimentalAPI::class)
     @Test
     fun checkAllModules() {
         featureModules.verify(
-            extraTypes = listOf(
-                Context::class,
-                CoroutineDispatcher::class,
-                StateFlow::class,
-                Function0::class,
-                Function1::class,
-                ReportType::class,
-                List::class,
-                Boolean::class,
-                FollowType::class,
-                CoroutineScope::class,
-            )
+            extraTypes =
+                listOf(
+                    Context::class,
+                    CoroutineDispatcher::class,
+                    StateFlow::class,
+                    Function0::class,
+                    Function1::class,
+                    ReportType::class,
+                    List::class,
+                    Boolean::class,
+                    FollowType::class,
+                    CoroutineScope::class,
+                ),
         )
     }
 }

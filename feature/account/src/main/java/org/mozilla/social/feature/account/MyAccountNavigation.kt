@@ -7,10 +7,8 @@ import androidx.compose.foundation.layout.systemBars
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import org.mozilla.social.core.navigation.BottomBarNavigationDestination
-import org.mozilla.social.core.navigation.NavigationDestination
 
-fun NavGraphBuilder.myAccountScreen(
-) {
+fun NavGraphBuilder.myAccountScreen() {
     composable(
         route = BottomBarNavigationDestination.MyAccount.route,
     ) {

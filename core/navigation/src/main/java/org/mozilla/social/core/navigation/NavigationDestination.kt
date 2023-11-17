@@ -10,9 +10,7 @@ sealed class NavigationDestination(
     val route: String,
 ) {
     data class Account(val accountId: String) : NavigationDestination(route = ROUTE) {
-        fun NavController.navigateToAccount(
-            navOptions: NavOptions? = null,
-        ) {
+        fun NavController.navigateToAccount(navOptions: NavOptions? = null) {
             navigate(route(accountIdValue = accountId), navOptions)
         }
 
@@ -20,23 +18,21 @@ sealed class NavigationDestination(
             private const val ROUTE = "account"
             const val NAV_PARAM_ACCOUNT_ID = "accountId"
             val fullRoute: String = route("{$NAV_PARAM_ACCOUNT_ID}")
-            private fun route(accountIdValue: String) =
-                "${ROUTE}?$NAV_PARAM_ACCOUNT_ID=$accountIdValue"
+
+            private fun route(accountIdValue: String) = "$ROUTE?$NAV_PARAM_ACCOUNT_ID=$accountIdValue"
         }
     }
 
     data object EditAccount : NavigationDestination(
-        route = "editAccount"
+        route = "editAccount",
     ) {
-        fun NavController.navigateToEditAccount(
-            navOptions: NavOptions? = null,
-        ) {
+        fun NavController.navigateToEditAccount(navOptions: NavOptions? = null) {
             navigate(route, navOptions)
         }
     }
 
     data object Auth : NavigationDestination(
-        route = "auth"
+        route = "auth",
     ) {
         fun NavController.navigateToAuthFlow(navOptions: NavOptions? = null) {
             this.navigate(route, navOptions)
@@ -44,7 +40,7 @@ sealed class NavigationDestination(
     }
 
     data object Tabs : NavigationDestination(
-        route = "tabs"
+        route = "tabs",
     ) {
         fun NavController.navigateToTabs(navOptions: NavOptions? = null) {
             this.navigate(route, navOptions)
@@ -52,11 +48,9 @@ sealed class NavigationDestination(
     }
 
     data class Followers(val accountId: String) : NavigationDestination(
-        route = ROUTE
+        route = ROUTE,
     ) {
-        fun NavController.navigateToFollowers(
-            navOptions: NavOptions? = null,
-        ) {
+        fun NavController.navigateToFollowers(navOptions: NavOptions? = null) {
             navigate(route(accountId), navOptions)
         }
 
@@ -64,17 +58,15 @@ sealed class NavigationDestination(
             private const val ROUTE = "followers"
             const val NAV_PARAM_ACCOUNT_ID = "accountId"
             val fullRoute = route("{$NAV_PARAM_ACCOUNT_ID}")
-            private fun route(paramValue: String) = "${ROUTE}?$NAV_PARAM_ACCOUNT_ID=$paramValue"
+
+            private fun route(paramValue: String) = "$ROUTE?$NAV_PARAM_ACCOUNT_ID=$paramValue"
         }
     }
 
     data class Following(val accountId: String) : NavigationDestination(
-        route = ROUTE
+        route = ROUTE,
     ) {
-
-        fun NavController.navigateToFollowing(
-            navOptions: NavOptions? = null,
-        ) {
+        fun NavController.navigateToFollowing(navOptions: NavOptions? = null) {
             navigate(route(accountId), navOptions)
         }
 
@@ -82,16 +74,15 @@ sealed class NavigationDestination(
             private const val ROUTE = "following"
             const val NAV_PARAM_ACCOUNT_ID = "accountId"
             val fullRoute = route("{$NAV_PARAM_ACCOUNT_ID}")
+
             fun route(accountId: String): String = "$ROUTE?${NAV_PARAM_ACCOUNT_ID}=$accountId"
         }
     }
 
     data class HashTag(val hashtag: String) : NavigationDestination(
-        route = ROUTE
+        route = ROUTE,
     ) {
-        fun NavController.navigateToHashTag(
-            navOptions: NavOptions? = null,
-        ) {
+        fun NavController.navigateToHashTag(navOptions: NavOptions? = null) {
             navigate(route(hashtag), navOptions)
         }
 
@@ -99,17 +90,15 @@ sealed class NavigationDestination(
             private const val ROUTE = "hashtag"
             const val NAV_PARAM_HASH_TAG = "hashTagValue"
             val fullRoute = route("{${NAV_PARAM_HASH_TAG}}")
-            private fun route(paramValue: String) =
-                "$ROUTE?$NAV_PARAM_HASH_TAG=$paramValue"
+
+            private fun route(paramValue: String) = "$ROUTE?$NAV_PARAM_HASH_TAG=$paramValue"
         }
     }
 
     data class NewPost(val replyStatusId: String? = null) : NavigationDestination(
         route = ROUTE,
     ) {
-        fun NavController.navigateToNewPost(
-            navOptions: NavOptions? = null,
-        ) {
+        fun NavController.navigateToNewPost(navOptions: NavOptions? = null) {
             navigate(route(replyStatusId), navOptions)
         }
 
@@ -119,10 +108,11 @@ sealed class NavigationDestination(
             val fullRoute = route("{$NAV_PARAM_REPLY_STATUS_ID}")
 
             fun route(replyStatusId: String?): String {
-                val a = when {
-                    replyStatusId != null -> "$ROUTE?$NAV_PARAM_REPLY_STATUS_ID=$replyStatusId"
-                    else -> ROUTE
-                }
+                val a =
+                    when {
+                        replyStatusId != null -> "$ROUTE?$NAV_PARAM_REPLY_STATUS_ID=$replyStatusId"
+                        else -> ROUTE
+                    }
 
                 println(a)
                 return a
@@ -133,20 +123,18 @@ sealed class NavigationDestination(
     data class Report(
         val reportAccountId: String,
         val reportAccountHandle: String,
-        val reportStatusId: String? = null
+        val reportStatusId: String? = null,
     ) : NavigationDestination(
-        route = ROUTE
-    ) {
-        fun NavController.navigateToReport(
-            navOptions: NavOptions? = null,
+            route = ROUTE,
         ) {
+        fun NavController.navigateToReport(navOptions: NavOptions? = null) {
             navigate(
                 route(
                     reportAccountId = reportAccountId,
                     reportAccountHandle = reportAccountHandle,
                     reportStatusId = reportStatusId,
                 ),
-                navOptions
+                navOptions,
             )
         }
 
@@ -155,7 +143,8 @@ sealed class NavigationDestination(
             const val NAV_PARAM_REPORT_STATUS_ID = "reportStatusId"
             const val NAV_PARAM_REPORT_ACCOUNT_ID = "reportAccountId"
             const val NAV_PARAM_REPORT_ACCOUNT_HANDLE = "reportAccountHandle"
-            val fullRoute = "$ROUTE?" +
+            val fullRoute =
+                "$ROUTE?" +
                     "$NAV_PARAM_REPORT_STATUS_ID={$NAV_PARAM_REPORT_STATUS_ID}" +
                     "&$NAV_PARAM_REPORT_ACCOUNT_ID={$NAV_PARAM_REPORT_ACCOUNT_ID}" +
                     "&$NAV_PARAM_REPORT_ACCOUNT_HANDLE={$NAV_PARAM_REPORT_ACCOUNT_HANDLE}"
@@ -164,7 +153,8 @@ sealed class NavigationDestination(
                 reportAccountId: String,
                 reportAccountHandle: String,
                 reportStatusId: String? = null,
-            ): String = "$ROUTE?" +
+            ): String =
+                "$ROUTE?" +
                     "$NAV_PARAM_REPORT_ACCOUNT_ID=$reportAccountId" +
                     "&$NAV_PARAM_REPORT_ACCOUNT_HANDLE=$reportAccountHandle" +
                     if (reportStatusId != null) {
@@ -176,7 +166,7 @@ sealed class NavigationDestination(
     }
 
     data object Settings : NavigationDestination(
-        route = "settings"
+        route = "settings",
     ) {
         fun NavController.navigateToSettings(navOptions: NavOptions? = null) {
             navigate(route, navOptions)
@@ -184,12 +174,9 @@ sealed class NavigationDestination(
     }
 
     data class Thread(val threadStatusId: String) : NavigationDestination(
-        route = ROUTE
+        route = ROUTE,
     ) {
-
-        fun NavController.navigateToThread(
-            navOptions: NavOptions? = null,
-        ) {
+        fun NavController.navigateToThread(navOptions: NavOptions? = null) {
             navigate(route(threadStatusId), navOptions)
         }
 

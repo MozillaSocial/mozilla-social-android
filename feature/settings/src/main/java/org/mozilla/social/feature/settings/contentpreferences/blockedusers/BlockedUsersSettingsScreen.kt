@@ -45,7 +45,7 @@ fun BlockedUserRow(
     Row(
         Modifier
             .fillMaxWidth()
-            .wrapContentHeight()
+            .wrapContentHeight(),
     ) {
         AccountQuickView(
             uiState = block.quickViewUiState,

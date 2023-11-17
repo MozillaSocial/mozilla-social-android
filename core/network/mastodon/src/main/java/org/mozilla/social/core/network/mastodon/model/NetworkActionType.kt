@@ -4,7 +4,6 @@ package org.mozilla.social.core.network.mastodon.model
  * Type of moderating action to be taken.
  */
 enum class NetworkActionType {
-
     /**
      * No action.
      */
@@ -23,5 +22,5 @@ enum class NetworkActionType {
     /**
      * Suspend the account.
      */
-    Suspend
+    Suspend,
 }

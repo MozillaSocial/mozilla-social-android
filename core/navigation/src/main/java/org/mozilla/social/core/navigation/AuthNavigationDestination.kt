@@ -4,9 +4,8 @@ import androidx.navigation.NavController
 import androidx.navigation.NavOptions
 
 sealed class AuthNavigationDestination(val route: String) {
-
     data object Login : AuthNavigationDestination(
-        route = "login"
+        route = "login",
     ) {
         fun NavController.navigateToLoginScreen(navOptions: NavOptions? = null) {
             this.navigate(route, navOptions)
@@ -14,7 +13,7 @@ sealed class AuthNavigationDestination(val route: String) {
     }
 
     data object ChooseServer : AuthNavigationDestination(
-        route = "chooseServer"
+        route = "chooseServer",
     ) {
         fun NavController.navigateToChooseServerScreen(navOptions: NavOptions? = null) {
             this.navigate(route, navOptions)

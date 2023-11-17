@@ -18,29 +18,27 @@ class MuteAccount(
     private val socialDatabase: SocialDatabase,
     private val dispatcherIo: CoroutineDispatcher = Dispatchers.IO,
 ) {
-
     /**
      * @throws MuteFailedException if any error occurred
      */
     @OptIn(PreferUseCase::class)
-    suspend operator fun invoke(
-        accountId: String
-    ) = externalScope.async(dispatcherIo) {
-        try {
-            socialDatabase.homeTimelineDao().removePostsFromAccount(accountId)
-            socialDatabase.localTimelineDao().removePostsFromAccount(accountId)
-            socialDatabase.federatedTimelineDao().removePostsFromAccount(accountId)
-            socialDatabase.relationshipsDao().updateMuted(accountId, true)
-            accountRepository.muteAccount(accountId)
-        } catch (e: Exception) {
-            socialDatabase.relationshipsDao().updateMuted(accountId, false)
-            showSnackbar(
-                text = StringFactory.resource(R.string.error_muting_account),
-                isError = true,
-            )
-            throw MuteFailedException(e)
-        }
-    }.await()
+    suspend operator fun invoke(accountId: String) =
+        externalScope.async(dispatcherIo) {
+            try {
+                socialDatabase.homeTimelineDao().removePostsFromAccount(accountId)
+                socialDatabase.localTimelineDao().removePostsFromAccount(accountId)
+                socialDatabase.federatedTimelineDao().removePostsFromAccount(accountId)
+                socialDatabase.relationshipsDao().updateMuted(accountId, true)
+                accountRepository.muteAccount(accountId)
+            } catch (e: Exception) {
+                socialDatabase.relationshipsDao().updateMuted(accountId, false)
+                showSnackbar(
+                    text = StringFactory.resource(R.string.error_muting_account),
+                    isError = true,
+                )
+                throw MuteFailedException(e)
+            }
+        }.await()
 
     class MuteFailedException(e: Exception) : Exception(e)
 }

@@ -33,17 +33,17 @@ fun PollStyleDropDown(
         Column {
             Text(
                 text = stringResource(id = R.string.poll_style),
-                fontSize = 12.sp
+                fontSize = 12.sp,
             )
             Text(
-                text = poll.style.label.build(LocalContext.current)
+                text = poll.style.label.build(LocalContext.current),
             )
         }
     }
 
     MoSoDropdownMenu(
         expanded = expanded.value,
-        onDismissRequest = { expanded.value = false }
+        onDismissRequest = { expanded.value = false },
     ) {
         PollStyle.values().forEach { pollStyle ->
             DropdownMenuItem(
@@ -53,10 +53,9 @@ fun PollStyleDropDown(
                 onClick = {
                     pollInteractions.onPollStyleSelected(pollStyle)
                     expanded.value = false
-                }
+                },
             )
         }
-
     }
 }
 
@@ -65,13 +64,14 @@ fun PollStyleDropDown(
 private fun PollStyleDropDownPreview() {
     MoSoTheme {
         PollStyleDropDown(
-            poll = Poll(
-                options = listOf("option 1", "option 2"),
-                style = PollStyle.SINGLE_CHOICE,
-                pollDuration = PollDuration.ONE_DAY,
-                hideTotals = false
-            ),
-            pollInteractions = object : PollInteractions {}
+            poll =
+                Poll(
+                    options = listOf("option 1", "option 2"),
+                    style = PollStyle.SINGLE_CHOICE,
+                    pollDuration = PollDuration.ONE_DAY,
+                    hideTotals = false,
+                ),
+            pollInteractions = object : PollInteractions {},
         )
     }
 }

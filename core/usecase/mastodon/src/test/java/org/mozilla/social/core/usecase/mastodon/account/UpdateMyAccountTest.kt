@@ -1,26 +1,26 @@
 package org.mozilla.social.core.usecase.mastodon.account
 
 import kotlinx.coroutines.test.TestScope
-import org.mozilla.social.core.usecase.mastodon.BaseUseCaseTest
 import org.mozilla.social.core.test.fakes.Models
+import org.mozilla.social.core.usecase.mastodon.BaseUseCaseTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 
 class UpdateMyAccountTest : BaseUseCaseTest() {
-
     private lateinit var subject: UpdateMyAccount
 
     private val networkAccountMock = Models.networkAccount
 
     @BeforeTest
     fun setup() {
-        subject = UpdateMyAccount(
-            externalScope = TestScope(testDispatcher),
-            showSnackbar = showSnackbar,
-            accountRepository = accountRepository,
-            socialDatabase = socialDatabase,
-            dispatcherIo = testDispatcher,
-        )
+        subject =
+            UpdateMyAccount(
+                externalScope = TestScope(testDispatcher),
+                showSnackbar = showSnackbar,
+                accountRepository = accountRepository,
+                socialDatabase = socialDatabase,
+                dispatcherIo = testDispatcher,
+            )
     }
 
     @Test
@@ -43,7 +43,7 @@ class UpdateMyAccountTest : BaseUseCaseTest() {
             },
             verifyBlock = {
                 accountsDao.insert(any())
-            }
+            },
         )
     }
 

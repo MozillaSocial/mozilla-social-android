@@ -30,7 +30,7 @@ fun MoSoButton(
     border: BorderStroke? = null,
     contentPadding: PaddingValues = ButtonDefaults.ContentPadding,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
-    content: @Composable RowScope.() -> Unit
+    content: @Composable RowScope.() -> Unit,
 ) {
     Button(
         onClick = onClick,
@@ -42,7 +42,7 @@ fun MoSoButton(
         border = border,
         contentPadding = contentPadding,
         interactionSource = interactionSource,
-        content = content
+        content = content,
     )
 }
 
@@ -54,13 +54,14 @@ fun MoSoButtonSecondary(
     shape: Shape = ButtonDefaults.shape,
     colors: ButtonColors = MoSoButtonSecondaryDefaults.colors(),
     elevation: ButtonElevation? = ButtonDefaults.buttonElevation(),
-    border: BorderStroke? = BorderStroke(
-        width = 1.dp,
-        brush = SolidColor(MoSoTheme.colors.borderPrimary)
-    ),
+    border: BorderStroke? =
+        BorderStroke(
+            width = 1.dp,
+            brush = SolidColor(MoSoTheme.colors.borderPrimary),
+        ),
     contentPadding: PaddingValues = ButtonDefaults.ContentPadding,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
-    content: @Composable RowScope.() -> Unit
+    content: @Composable RowScope.() -> Unit,
 ) {
     MoSoButton(
         onClick = onClick,
@@ -72,28 +73,30 @@ fun MoSoButtonSecondary(
         border = border,
         contentPadding = contentPadding,
         interactionSource = interactionSource,
-        content = content
+        content = content,
     )
 }
 
 object MoSoButtonPrimaryDefaults {
     @Composable
-    fun colors(): ButtonColors = ButtonDefaults.buttonColors(
-        containerColor = MoSoTheme.colors.layerActionPrimaryEnabled,
-        contentColor = MoSoTheme.colors.textActionPrimary,
-        disabledContainerColor = MoSoTheme.colors.layerActionDisabled,
-        disabledContentColor = MoSoTheme.colors.textActionPrimary,
-    )
+    fun colors(): ButtonColors =
+        ButtonDefaults.buttonColors(
+            containerColor = MoSoTheme.colors.layerActionPrimaryEnabled,
+            contentColor = MoSoTheme.colors.textActionPrimary,
+            disabledContainerColor = MoSoTheme.colors.layerActionDisabled,
+            disabledContentColor = MoSoTheme.colors.textActionPrimary,
+        )
 }
 
 object MoSoButtonSecondaryDefaults {
     @Composable
-    fun colors(): ButtonColors = ButtonDefaults.buttonColors(
-        containerColor = MoSoTheme.colors.layer1,
-        contentColor = MoSoTheme.colors.textActionSecondary,
-        disabledContainerColor = MoSoTheme.colors.layer2,
-        disabledContentColor = MoSoTheme.colors.textActionDisabled,
-    )
+    fun colors(): ButtonColors =
+        ButtonDefaults.buttonColors(
+            containerColor = MoSoTheme.colors.layer1,
+            contentColor = MoSoTheme.colors.textActionSecondary,
+            disabledContainerColor = MoSoTheme.colors.layer2,
+            disabledContentColor = MoSoTheme.colors.textActionDisabled,
+        )
 }
 
 @Preview
@@ -106,7 +109,7 @@ private fun ButtonPreview() {
             }
             MoSoButton(
                 enabled = false,
-                onClick = { /*TODO*/ }
+                onClick = { /*TODO*/ },
             ) {
                 Text(text = "Primary Disabled")
             }
@@ -115,21 +118,21 @@ private fun ButtonPreview() {
             }
             MoSoButtonSecondary(
                 enabled = false,
-                onClick = { /*TODO*/ }
+                onClick = { /*TODO*/ },
             ) {
                 Text(text = "Secondary Disabled")
             }
         }
 
         MoSoTheme(
-            darkTheme = true
+            darkTheme = true,
         ) {
             MoSoButton(onClick = { /*TODO*/ }) {
                 Text(text = "Dark mode Primary")
             }
             MoSoButton(
                 enabled = false,
-                onClick = { /*TODO*/ }
+                onClick = { /*TODO*/ },
             ) {
                 Text(text = "Dark mode Primary Disabled")
             }
@@ -138,7 +141,7 @@ private fun ButtonPreview() {
             }
             MoSoButtonSecondary(
                 enabled = false,
-                onClick = { /*TODO*/ }
+                onClick = { /*TODO*/ },
             ) {
                 Text(text = "Dark mode Secondary Disabled")
             }

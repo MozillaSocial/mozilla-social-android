@@ -48,20 +48,21 @@ fun Poll(
                 pollUiState = pollUiState,
                 pollOptionUiState = pollOptionUiState,
                 onOptionSelected = { optionIndex ->
-                    userVotes.value = if (pollUiState.isMultipleChoice) {
-                        if (userVotes.value.contains(optionIndex)) {
-                            userVotes.value.toMutableList().apply { remove(optionIndex) }
+                    userVotes.value =
+                        if (pollUiState.isMultipleChoice) {
+                            if (userVotes.value.contains(optionIndex)) {
+                                userVotes.value.toMutableList().apply { remove(optionIndex) }
+                            } else {
+                                userVotes.value.toMutableList().apply { add(optionIndex) }
+                            }
                         } else {
-                            userVotes.value.toMutableList().apply { add(optionIndex) }
+                            if (userVotes.value.contains(optionIndex)) {
+                                userVotes.value.toMutableList().apply { remove(optionIndex) }
+                            } else {
+                                listOf(optionIndex)
+                            }
                         }
-                    } else {
-                        if (userVotes.value.contains(optionIndex)) {
-                            userVotes.value.toMutableList().apply { remove(optionIndex) }
-                        } else {
-                            listOf(optionIndex)
-                        }
-                    }
-                }
+                },
             )
             Spacer(modifier = Modifier.padding(top = 4.dp))
         }
@@ -71,8 +72,9 @@ fun Poll(
         )
         if (pollUiState.canVote) {
             MoSoButton(
-                modifier = Modifier
-                    .fillMaxWidth(),
+                modifier =
+                    Modifier
+                        .fillMaxWidth(),
                 onClick = { pollInteractions.onVoteClicked(pollUiState.pollId, userVotes.value) },
                 enabled = userVotes.value.isNotEmpty(),
             ) {
@@ -92,20 +94,21 @@ private fun PollOption(
 ) {
     val height = 40.dp
     Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(height)
-            .clip(RoundedCornerShape(90.dp))
-            .border(
-                width = 1.dp,
-                color = MoSoTheme.colors.borderPrimary,
-                shape = RoundedCornerShape(90.dp),
-            ),
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .height(height)
+                .clip(RoundedCornerShape(90.dp))
+                .border(
+                    width = 1.dp,
+                    color = MoSoTheme.colors.borderPrimary,
+                    shape = RoundedCornerShape(90.dp),
+                ),
     ) {
         PollOptionFill(
             height = height,
             pollUiState = pollUiState,
-            pollOptionUiState = pollOptionUiState
+            pollOptionUiState = pollOptionUiState,
         )
         PollOptionText(
             height = height,
@@ -126,15 +129,17 @@ private fun PollOptionFill(
 ) {
     if (pollUiState.showResults) {
         Box(
-            modifier = Modifier
-                .height(height)
-                .fillMaxWidth(fraction = pollOptionUiState.fillFraction)
-                .clip(RoundedCornerShape(90.dp)),
+            modifier =
+                Modifier
+                    .height(height)
+                    .fillMaxWidth(fraction = pollOptionUiState.fillFraction)
+                    .clip(RoundedCornerShape(90.dp)),
         ) {
             Box(
-                modifier = Modifier
-                    .background(color = MaterialTheme.colorScheme.secondary)
-                    .fillMaxSize()
+                modifier =
+                    Modifier
+                        .background(color = MaterialTheme.colorScheme.secondary)
+                        .fillMaxSize(),
             )
         }
     }
@@ -151,46 +156,51 @@ private fun PollOptionText(
 ) {
     NoRipple {
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(height)
-                .clickable(
-                    enabled = pollUiState.canVote
-                ) {
-                    onOptionSelected(optionIndex)
-                },
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .height(height)
+                    .clickable(
+                        enabled = pollUiState.canVote,
+                    ) {
+                        onOptionSelected(optionIndex)
+                    },
         ) {
             Row(
-                modifier = Modifier
-                    .align(Alignment.CenterVertically)
-                    .weight(1f)
-            ) {
-                Text(
-                    modifier = Modifier
-                        .padding(
-                            start = 12.dp,
-                        )
+                modifier =
+                    Modifier
                         .align(Alignment.CenterVertically)
                         .weight(1f),
+            ) {
+                Text(
+                    modifier =
+                        Modifier
+                            .padding(
+                                start = 12.dp,
+                            )
+                            .align(Alignment.CenterVertically)
+                            .weight(1f),
                     text = pollOptionUiState.title,
                     style = MoSoTheme.typography.labelMedium,
                 )
                 if (userVotes.value.contains(optionIndex)) {
                     Icon(
-                        modifier = Modifier
-                            .align(Alignment.CenterVertically)
-                            .padding(horizontal = 8.dp),
+                        modifier =
+                            Modifier
+                                .align(Alignment.CenterVertically)
+                                .padding(horizontal = 8.dp),
                         painter = MoSoIcons.check(),
-                        contentDescription = ""
+                        contentDescription = "",
                     )
                 }
             }
 
             if (pollUiState.showResults) {
                 Text(
-                    modifier = Modifier
-                        .padding(8.dp)
-                        .align(Alignment.CenterVertically),
+                    modifier =
+                        Modifier
+                            .padding(8.dp)
+                            .align(Alignment.CenterVertically),
                     text = pollOptionUiState.voteInfo.build(LocalContext.current),
                     style = MoSoTheme.typography.labelMedium,
                 )
@@ -205,33 +215,35 @@ private fun PollPreview() {
     MoSoTheme {
         MoSoSurface {
             Poll(
-                pollUiState = PollUiState(
-                    pollOptions = listOf(
-                        PollOptionUiState(
-                            fillFraction = 0.5f,
-                            title = "option 1",
-                            voteInfo = StringFactory.literal("50%")
-                        ),
-                        PollOptionUiState(
-                            fillFraction = 0.25f,
-                            title = "option 2 jfkdlsa jfdlsa jfd sjaf io jfkdlsj afod aj fid jifd",
-                            voteInfo = StringFactory.literal("25%")
-                        ),
-                        PollOptionUiState(
-                            fillFraction = 0.25f,
-                            title = "option 3 with a really really long title that extends just too far",
-                            voteInfo = StringFactory.literal("25%")
-                        ),
+                pollUiState =
+                    PollUiState(
+                        pollOptions =
+                            listOf(
+                                PollOptionUiState(
+                                    fillFraction = 0.5f,
+                                    title = "option 1",
+                                    voteInfo = StringFactory.literal("50%"),
+                                ),
+                                PollOptionUiState(
+                                    fillFraction = 0.25f,
+                                    title = "option 2 jfkdlsa jfdlsa jfd sjaf io jfkdlsj afod aj fid jifd",
+                                    voteInfo = StringFactory.literal("25%"),
+                                ),
+                                PollOptionUiState(
+                                    fillFraction = 0.25f,
+                                    title = "option 3 with a really really long title that extends just too far",
+                                    voteInfo = StringFactory.literal("25%"),
+                                ),
+                            ),
+                        pollInfoText = StringFactory.literal("3 votes - 5 hours left"),
+                        isUserCreatedPoll = false,
+                        showResults = true,
+                        pollId = "",
+                        isMultipleChoice = true,
+                        usersVotes = listOf(0, 1, 2),
+                        isExpired = false,
+                        canVote = true,
                     ),
-                    pollInfoText = StringFactory.literal("3 votes - 5 hours left"),
-                    isUserCreatedPoll = false,
-                    showResults = true,
-                    pollId = "",
-                    isMultipleChoice = true,
-                    usersVotes = listOf(0, 1, 2),
-                    isExpired = false,
-                    canVote = true
-                ),
                 pollInteractions = object : PollInteractions {},
             )
         }

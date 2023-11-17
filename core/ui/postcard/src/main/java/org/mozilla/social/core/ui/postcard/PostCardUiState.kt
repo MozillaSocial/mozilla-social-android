@@ -50,5 +50,5 @@ data class PreviewCard(
     val url: String,
     val title: String,
     val imageUrl: String,
-    val providerName: String?
+    val providerName: String?,
 )

@@ -12,12 +12,12 @@ import org.koin.core.parameter.parametersOf
 import org.koin.java.KoinJavaComponent.inject
 import org.mozilla.social.core.analytics.Analytics
 import org.mozilla.social.core.analytics.AnalyticsIdentifiers
-import org.mozilla.social.core.repository.mastodon.model.status.toExternalModel
 import org.mozilla.social.core.database.SocialDatabase
 import org.mozilla.social.core.database.model.statusCollections.toStatusWrapper
-import org.mozilla.social.core.usecase.mastodon.account.GetLoggedInUserAccountId
+import org.mozilla.social.core.repository.mastodon.model.status.toExternalModel
 import org.mozilla.social.core.ui.postcard.PostCardDelegate
 import org.mozilla.social.core.ui.postcard.toPostCardUiState
+import org.mozilla.social.core.usecase.mastodon.account.GetLoggedInUserAccountId
 import org.mozilla.social.core.usecase.mastodon.remotemediators.HashTagTimelineRemoteMediator
 
 class HashTagViewModel(
@@ -26,25 +26,26 @@ class HashTagViewModel(
     socialDatabase: SocialDatabase,
     userAccountId: GetLoggedInUserAccountId,
 ) : ViewModel(), HashTagInteractions {
-
     private val hashTagTimelineRemoteMediator: HashTagTimelineRemoteMediator by inject(
-        HashTagTimelineRemoteMediator::class.java
+        HashTagTimelineRemoteMediator::class.java,
     ) { parametersOf(hashTag) }
 
     @OptIn(ExperimentalPagingApi::class)
-    val feed = Pager(
-        config = PagingConfig(
-            pageSize = 20,
-            initialLoadSize = 40
-        ),
-        remoteMediator = hashTagTimelineRemoteMediator
-    ) {
-        socialDatabase.hashTagTimelineDao().hashTagTimelinePagingSource(hashTag)
-    }.flow.map { pagingData ->
-        pagingData.map {
-            it.toStatusWrapper().toExternalModel().toPostCardUiState(userAccountId())
-        }
-    }.cachedIn(viewModelScope)
+    val feed =
+        Pager(
+            config =
+                PagingConfig(
+                    pageSize = 20,
+                    initialLoadSize = 40,
+                ),
+            remoteMediator = hashTagTimelineRemoteMediator,
+        ) {
+            socialDatabase.hashTagTimelineDao().hashTagTimelinePagingSource(hashTag)
+        }.flow.map { pagingData ->
+            pagingData.map {
+                it.toStatusWrapper().toExternalModel().toPostCardUiState(userAccountId())
+            }
+        }.cachedIn(viewModelScope)
 
     override fun onScreenViewed() {
         analytics.uiImpression(
@@ -53,6 +54,6 @@ class HashTagViewModel(
     }
 
     val postCardDelegate: PostCardDelegate by inject(
-        PostCardDelegate::class.java
+        PostCardDelegate::class.java,
     ) { parametersOf(viewModelScope) }
 }

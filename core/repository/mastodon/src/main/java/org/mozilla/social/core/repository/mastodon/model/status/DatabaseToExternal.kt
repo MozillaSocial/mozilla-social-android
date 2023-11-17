@@ -103,37 +103,38 @@ fun DatabaseStatus.toExternalModel(
         isPinned = isPinned,
     )
 
-fun DatabaseAccount.toExternalModel(): Account = Account(
-    accountId = accountId,
-    username = username,
-    acct = acct,
-    url = url,
-    displayName = displayName,
-    bio = bio,
-    avatarUrl = avatarUrl,
-    avatarStaticUrl = avatarStaticUrl,
-    headerUrl = headerUrl,
-    headerStaticUrl = headerStaticUrl,
-    isLocked = isLocked,
-    emojis = emojis.map { it.toExternalModel() },
-    createdAt = createdAt,
-    lastStatusAt = lastStatusAt,
-    statusesCount = statusesCount,
-    followersCount = followersCount,
-    followingCount = followingCount,
-    isDiscoverable = isDiscoverable,
-    //TODO fix
+fun DatabaseAccount.toExternalModel(): Account =
+    Account(
+        accountId = accountId,
+        username = username,
+        acct = acct,
+        url = url,
+        displayName = displayName,
+        bio = bio,
+        avatarUrl = avatarUrl,
+        avatarStaticUrl = avatarStaticUrl,
+        headerUrl = headerUrl,
+        headerStaticUrl = headerStaticUrl,
+        isLocked = isLocked,
+        emojis = emojis.map { it.toExternalModel() },
+        createdAt = createdAt,
+        lastStatusAt = lastStatusAt,
+        statusesCount = statusesCount,
+        followersCount = followersCount,
+        followingCount = followingCount,
+        isDiscoverable = isDiscoverable,
+        // TODO fix
 //    movedTo = movedTo?.toExternalModel(),
-    isGroup = isGroup,
-    fields = fields?.map { it.toExternalModel() },
-    isBot = isBot,
-    source = source?.toExternalModel(),
-    isSuspended = isSuspended,
-    muteExpiresAt = muteExpiresAt,
-)
+        isGroup = isGroup,
+        fields = fields?.map { it.toExternalModel() },
+        isBot = isBot,
+        source = source?.toExternalModel(),
+        isSuspended = isSuspended,
+        muteExpiresAt = muteExpiresAt,
+    )
 
 fun DatabaseStatusVisibility.toExternalModel(): StatusVisibility =
-    when(this) {
+    when (this) {
         DatabaseStatusVisibility.Direct -> StatusVisibility.Direct
         DatabaseStatusVisibility.Private -> StatusVisibility.Private
         DatabaseStatusVisibility.Public -> StatusVisibility.Public
@@ -142,59 +143,64 @@ fun DatabaseStatusVisibility.toExternalModel(): StatusVisibility =
 
 fun DatabaseAttachment.toExternalModel(): Attachment =
     when (this) {
-        is DatabaseAttachment.Image -> Attachment.Image(
-            attachmentId = attachmentId,
-            url = url,
-            previewUrl = previewUrl,
-            remoteUrl = remoteUrl,
-            previewRemoteUrl = previewRemoteUrl,
-            textUrl = textUrl,
-            description = description,
-            blurHash = blurHash,
-            meta = meta.toExternalModel(),
-        )
-        is DatabaseAttachment.Gifv -> Attachment.Gifv(
-            attachmentId = attachmentId,
-            url = url,
-            previewUrl = previewUrl,
-            remoteUrl = remoteUrl,
-            previewRemoteUrl = previewRemoteUrl,
-            textUrl = textUrl,
-            description = description,
-            meta = meta.toExternalModel(),
-        )
-        is DatabaseAttachment.Video -> Attachment.Video(
-            attachmentId = attachmentId,
-            url = url,
-            previewUrl = previewUrl,
-            remoteUrl = remoteUrl,
-            previewRemoteUrl = previewRemoteUrl,
-            textUrl = textUrl,
-            description = description,
-            blurHash = blurHash,
-            meta = meta.toExternalModel(),
-        )
-        is DatabaseAttachment.Audio -> Attachment.Audio(
-            attachmentId = attachmentId,
-            url = url,
-            previewUrl = previewUrl,
-            remoteUrl = remoteUrl,
-            previewRemoteUrl = previewRemoteUrl,
-            textUrl = textUrl,
-            description = description,
-            blurHash = blurHash,
-            meta = meta.toExternalModel(),
-        )
-        is DatabaseAttachment.Unknown -> Attachment.Unknown(
-            attachmentId = attachmentId,
-            url = url,
-            previewUrl = previewUrl,
-            remoteUrl = remoteUrl,
-            previewRemoteUrl = previewRemoteUrl,
-            textUrl = textUrl,
-            description = description,
-            blurHash = blurHash,
-        )
+        is DatabaseAttachment.Image ->
+            Attachment.Image(
+                attachmentId = attachmentId,
+                url = url,
+                previewUrl = previewUrl,
+                remoteUrl = remoteUrl,
+                previewRemoteUrl = previewRemoteUrl,
+                textUrl = textUrl,
+                description = description,
+                blurHash = blurHash,
+                meta = meta.toExternalModel(),
+            )
+        is DatabaseAttachment.Gifv ->
+            Attachment.Gifv(
+                attachmentId = attachmentId,
+                url = url,
+                previewUrl = previewUrl,
+                remoteUrl = remoteUrl,
+                previewRemoteUrl = previewRemoteUrl,
+                textUrl = textUrl,
+                description = description,
+                meta = meta.toExternalModel(),
+            )
+        is DatabaseAttachment.Video ->
+            Attachment.Video(
+                attachmentId = attachmentId,
+                url = url,
+                previewUrl = previewUrl,
+                remoteUrl = remoteUrl,
+                previewRemoteUrl = previewRemoteUrl,
+                textUrl = textUrl,
+                description = description,
+                blurHash = blurHash,
+                meta = meta.toExternalModel(),
+            )
+        is DatabaseAttachment.Audio ->
+            Attachment.Audio(
+                attachmentId = attachmentId,
+                url = url,
+                previewUrl = previewUrl,
+                remoteUrl = remoteUrl,
+                previewRemoteUrl = previewRemoteUrl,
+                textUrl = textUrl,
+                description = description,
+                blurHash = blurHash,
+                meta = meta.toExternalModel(),
+            )
+        is DatabaseAttachment.Unknown ->
+            Attachment.Unknown(
+                attachmentId = attachmentId,
+                url = url,
+                previewUrl = previewUrl,
+                remoteUrl = remoteUrl,
+                previewRemoteUrl = previewRemoteUrl,
+                textUrl = textUrl,
+                description = description,
+                blurHash = blurHash,
+            )
     }
 
 fun DatabaseAttachment.Audio.Meta.toExternalModel(): Attachment.Audio.Meta =
@@ -203,7 +209,7 @@ fun DatabaseAttachment.Audio.Meta.toExternalModel(): Attachment.Audio.Meta =
         audioCodec = audioCodec,
         audioBitrate = audioBitrate,
         audioChannels = audioChannels,
-        original = original?.toExternalModel()
+        original = original?.toExternalModel(),
     )
 
 fun DatabaseAttachment.Audio.Meta.AudioInfo.toExternalModel(): Attachment.Audio.Meta.AudioInfo =
@@ -273,21 +279,21 @@ fun DatabaseMention.toExternalModel(): Mention =
         accountId = accountId,
         username = username,
         acct = acct,
-        url = url
+        url = url,
     )
 
 fun DatabaseHashTag.toExternalModel(): HashTag =
     HashTag(
         name = name,
         url = url,
-        history = history?.map { it.toExternalModel() }
+        history = history?.map { it.toExternalModel() },
     )
 
 fun DatabaseHistory.toExternalModel(): History =
     History(
         day = day,
         usageCount = usageCount,
-        accountCount = accountCount
+        accountCount = accountCount,
     )
 
 fun DatabaseEmoji.toExternalModel(): Emoji =
@@ -296,7 +302,7 @@ fun DatabaseEmoji.toExternalModel(): Emoji =
         url = url,
         staticUrl = staticUrl,
         isVisibleInPicker = isVisibleInPicker,
-        category = category
+        category = category,
     )
 
 fun DatabaseApplication.toExternalModel(): Application =
@@ -305,7 +311,7 @@ fun DatabaseApplication.toExternalModel(): Application =
         website = website,
         vapidKey = vapidKey,
         clientId = clientId,
-        clientSecret = clientSecret
+        clientSecret = clientSecret,
     )
 
 fun DatabasePoll.toExternalModel(): Poll =
@@ -319,20 +325,20 @@ fun DatabasePoll.toExternalModel(): Poll =
         expiresAt = expiresAt,
         votersCount = votersCount,
         hasVoted = hasVoted,
-        ownVotes = ownVotes
+        ownVotes = ownVotes,
     )
 
 fun DatabasePollOption.toExternalModel(): PollOption =
     PollOption(
         title = title,
-        votesCount = votesCount
+        votesCount = votesCount,
     )
 
 fun DatabaseField.toExternalModel(): Field =
     Field(
         name = name,
         value = value,
-        verifiedAt = verifiedAt
+        verifiedAt = verifiedAt,
     )
 
 fun DatabaseSource.toExternalModel(): Source =
@@ -342,69 +348,73 @@ fun DatabaseSource.toExternalModel(): Source =
         defaultPrivacy = defaultPrivacy?.toExternalModel(),
         defaultSensitivity = defaultSensitivity,
         defaultLanguage = defaultLanguage,
-        followRequestsCount = followRequestsCount
+        followRequestsCount = followRequestsCount,
     )
 
 fun DatabaseCard.toExternalModel(): Card =
     when (this) {
-        is DatabaseCard.Video -> Card.Video(
-            url = url,
-            title = title,
-            description = description,
-            authorName = authorName,
-            authorUrl = authorUrl,
-            providerName = providerName,
-            providerUrl = providerUrl,
-            html = html,
-            width = width,
-            height = height,
-            image = image,
-            embedUrl = embedUrl,
-            blurHash = blurHash
-        )
-        is DatabaseCard.Link -> Card.Link(
-            url = url,
-            title = title,
-            description = description,
-            authorName = authorName,
-            authorUrl = authorUrl,
-            providerName = providerName,
-            providerUrl = providerUrl,
-            html = html,
-            width = width,
-            height = height,
-            image = image,
-            embedUrl = embedUrl,
-            blurHash = blurHash
-        )
-        is DatabaseCard.Photo -> Card.Photo(
-            url = url,
-            title = title,
-            description = description,
-            authorName = authorName,
-            authorUrl = authorUrl,
-            providerName = providerName,
-            providerUrl = providerUrl,
-            html = html,
-            width = width,
-            height = height,
-            image = image,
-            embedUrl = embedUrl,
-            blurHash = blurHash
-        )
-        is DatabaseCard.Rich -> Card.Rich(
-            url = url,
-            title = title,
-            description = description,
-            authorName = authorName,
-            authorUrl = authorUrl,
-            providerName = providerName,
-            providerUrl = providerUrl,
-            html = html,
-            width = width,
-            height = height,
-            image = image,
-            embedUrl = embedUrl,
-            blurHash = blurHash
-        )
+        is DatabaseCard.Video ->
+            Card.Video(
+                url = url,
+                title = title,
+                description = description,
+                authorName = authorName,
+                authorUrl = authorUrl,
+                providerName = providerName,
+                providerUrl = providerUrl,
+                html = html,
+                width = width,
+                height = height,
+                image = image,
+                embedUrl = embedUrl,
+                blurHash = blurHash,
+            )
+        is DatabaseCard.Link ->
+            Card.Link(
+                url = url,
+                title = title,
+                description = description,
+                authorName = authorName,
+                authorUrl = authorUrl,
+                providerName = providerName,
+                providerUrl = providerUrl,
+                html = html,
+                width = width,
+                height = height,
+                image = image,
+                embedUrl = embedUrl,
+                blurHash = blurHash,
+            )
+        is DatabaseCard.Photo ->
+            Card.Photo(
+                url = url,
+                title = title,
+                description = description,
+                authorName = authorName,
+                authorUrl = authorUrl,
+                providerName = providerName,
+                providerUrl = providerUrl,
+                html = html,
+                width = width,
+                height = height,
+                image = image,
+                embedUrl = embedUrl,
+                blurHash = blurHash,
+            )
+        is DatabaseCard.Rich ->
+            Card.Rich(
+                url = url,
+                title = title,
+                description = description,
+                authorName = authorName,
+                authorUrl = authorUrl,
+                providerName = providerName,
+                providerUrl = providerUrl,
+                html = html,
+                width = width,
+                height = height,
+                image = image,
+                embedUrl = embedUrl,
+                blurHash = blurHash,
+            )
     }

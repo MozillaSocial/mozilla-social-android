@@ -15,9 +15,7 @@ import org.mozilla.social.feature.settings.ui.SettingsGroup
 import org.mozilla.social.feature.settings.ui.SettingsSwitch
 
 @Composable
-fun PrivacySettingsScreen(
-    viewModel: PrivacySettingsViewModel = koinViewModel()
-) {
+fun PrivacySettingsScreen(viewModel: PrivacySettingsViewModel = koinViewModel()) {
     val isAnalyticsToggled by viewModel.allowAnalytics.collectAsStateWithLifecycle()
 
     PrivacySettingsScreen(
@@ -35,7 +33,7 @@ fun PrivacySettingsScreen(
         SettingsColumn(title = stringResource(id = R.string.privacy_settings_title)) {
             AllowAnalyticsSwitch(
                 initialAllowAnalytics = isAnalyticsToggledOn,
-                onAllowAnalyticsSwitchToggled = toggleAnalyticsSwitch
+                onAllowAnalyticsSwitchToggled = toggleAnalyticsSwitch,
             )
         }
     }
@@ -44,7 +42,7 @@ fun PrivacySettingsScreen(
 @Composable
 private fun AllowAnalyticsSwitch(
     initialAllowAnalytics: Boolean,
-    onAllowAnalyticsSwitchToggled: () -> Unit
+    onAllowAnalyticsSwitchToggled: () -> Unit,
 ) {
     Column {
         SettingsGroup(name = R.string.data_collection_and_use) {
@@ -52,12 +50,11 @@ private fun AllowAnalyticsSwitch(
                 title = R.string.data_collection_title,
                 description = R.string.data_collection_description,
                 checked = initialAllowAnalytics,
-                onCheckedChanged = onAllowAnalyticsSwitchToggled
+                onCheckedChanged = onAllowAnalyticsSwitchToggled,
             )
         }
     }
 }
-
 
 @Preview
 @Composable

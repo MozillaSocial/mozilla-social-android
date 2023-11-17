@@ -10,14 +10,15 @@ import java.io.OutputStream
 internal object UserPreferencesSerializer : Serializer<UserPreferences> {
     override val defaultValue: UserPreferences = UserPreferences.getDefaultInstance()
 
-    override suspend fun readFrom(input: InputStream): UserPreferences =
-        UserPreferences.parseFrom(input)
+    override suspend fun readFrom(input: InputStream): UserPreferences = UserPreferences.parseFrom(input)
 
-    override suspend fun writeTo(t: UserPreferences, output: OutputStream) =
-        t.writeTo(output)
+    override suspend fun writeTo(
+        t: UserPreferences,
+        output: OutputStream,
+    ) = t.writeTo(output)
 }
 
 internal val Context.userPreferencesDataStore: DataStore<UserPreferences> by dataStore(
     fileName = "userPreferences.pb",
-    serializer = UserPreferencesSerializer
+    serializer = UserPreferencesSerializer,
 )

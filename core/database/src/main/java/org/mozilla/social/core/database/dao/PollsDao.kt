@@ -12,21 +12,24 @@ interface PollsDao : BaseDao<DatabasePoll> {
      */
     @Query(
         "UPDATE polls " +
-        "SET ownVotes = :choices " +
-        "WHERE pollId = :pollId"
+            "SET ownVotes = :choices " +
+            "WHERE pollId = :pollId",
     )
-    fun updateOwnVotes(pollId: String, choices: List<Int>?)
+    fun updateOwnVotes(
+        pollId: String,
+        choices: List<Int>?,
+    )
 
     @Query(
         "DELETE FROM polls " +
-        "WHERE pollId = :pollId"
+            "WHERE pollId = :pollId",
     )
     suspend fun deletePoll(pollId: String)
 
     @Transaction
     @Query(
         "SELECT * FROM polls " +
-        "WHERE pollId = :pollId"
+            "WHERE pollId = :pollId",
     )
     suspend fun getPoll(pollId: String): DatabasePoll
 }

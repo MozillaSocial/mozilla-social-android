@@ -6,10 +6,7 @@ import org.koin.androidx.compose.koinViewModel
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 
 @Composable
-internal fun SearchScreen(
-    viewModel: SearchViewModel = koinViewModel()
-) {
-
+internal fun SearchScreen(viewModel: SearchViewModel = koinViewModel()) {
 }
 
 @Preview

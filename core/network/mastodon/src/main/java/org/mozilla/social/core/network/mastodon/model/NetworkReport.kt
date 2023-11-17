@@ -5,9 +5,8 @@ package org.mozilla.social.core.network.mastodon.model
  */
 data class NetworkReport(
     val reportId: String,
-
     /**
      * Whether an action was taken to resolve this report.
      */
-    val wasActionTaken: Boolean
+    val wasActionTaken: Boolean,
 )

@@ -23,11 +23,12 @@ fun TextFieldValue.hashtagText(): String? = findSymbolText('#')
 fun TextFieldValue.findSymbolText(symbol: Char): String? {
     if (!text.contains(symbol) || selection.start != selection.end) return null
     val firstSpaceIndexAfterCursor = text.indexOf(' ', startIndex = selection.end)
-    val textBeforeSpaceOrEnd = if (firstSpaceIndexAfterCursor != -1) {
-        text.substring(0, firstSpaceIndexAfterCursor)
-    } else {
-        text
-    }
+    val textBeforeSpaceOrEnd =
+        if (firstSpaceIndexAfterCursor != -1) {
+            text.substring(0, firstSpaceIndexAfterCursor)
+        } else {
+            text
+        }
     if (!textBeforeSpaceOrEnd.contains(symbol)) return null
     val textBetweenSymbolAndCursor = textBeforeSpaceOrEnd.substringAfterLast(symbol)
     return if (!textBetweenSymbolAndCursor.contains(" ")) {
@@ -41,36 +42,51 @@ fun TextFieldValue.replaceAccount(newText: String): TextFieldValue = replaceSymb
 
 fun TextFieldValue.replaceHashtag(newText: String): TextFieldValue = replaceSymbolText('#', newText)
 
-fun TextFieldValue.replaceSymbolText(symbol: Char, newText: String): TextFieldValue {
+fun TextFieldValue.replaceSymbolText(
+    symbol: Char,
+    newText: String,
+): TextFieldValue {
     if (!text.contains(symbol)) return this
     val firstSpaceIndexAfterCursor = text.indexOf(' ', startIndex = selection.end)
-    val textBeforeSpaceOrEnd = if (firstSpaceIndexAfterCursor != -1) {
-        text.substring(0, firstSpaceIndexAfterCursor)
-    } else {
-        text
+    val textBeforeSpaceOrEnd =
+        if (firstSpaceIndexAfterCursor != -1) {
+            text.substring(0, firstSpaceIndexAfterCursor)
+        } else {
+            text
+        }
+    if (!textBeforeSpaceOrEnd.contains(symbol) ||
+        textBeforeSpaceOrEnd.substringAfterLast(symbol).contains(" ")
+    ) {
+        return this
     }
-    if (!textBeforeSpaceOrEnd.contains(symbol)
-        || textBeforeSpaceOrEnd.substringAfterLast(symbol).contains(" ")) return this
     val rangeStart = textBeforeSpaceOrEnd.lastIndexOf(symbol) + 1
-    val rangeEnd = if (firstSpaceIndexAfterCursor != -1) {
-        firstSpaceIndexAfterCursor
-    } else {
-        text.length - 1
-    }
-    val finalText = text.replaceRange(
-        rangeStart..rangeEnd,
-        "$newText ",
-    )
+    val rangeEnd =
+        if (firstSpaceIndexAfterCursor != -1) {
+            firstSpaceIndexAfterCursor
+        } else {
+            text.length - 1
+        }
+    val finalText =
+        text.replaceRange(
+            rangeStart..rangeEnd,
+            "$newText ",
+        )
     return copy(
         text = finalText,
-        selection = TextRange(rangeStart + newText.length + 1)
+        selection = TextRange(rangeStart + newText.length + 1),
     )
 }
 
-fun buildAnnotatedStringForAccountsAndHashtags(baseText: String, style: SpanStyle): AnnotatedString =
-    buildAnnotatedStringWithSymbols(listOf('@', '#'), baseText, style)
+fun buildAnnotatedStringForAccountsAndHashtags(
+    baseText: String,
+    style: SpanStyle,
+): AnnotatedString = buildAnnotatedStringWithSymbols(listOf('@', '#'), baseText, style)
 
-fun buildAnnotatedStringWithSymbols(symbols: List<Char>, text: String, style: SpanStyle): AnnotatedString {
+fun buildAnnotatedStringWithSymbols(
+    symbols: List<Char>,
+    text: String,
+    style: SpanStyle,
+): AnnotatedString {
     return buildAnnotatedString {
         var searchingForSymbol = true // if false then we are searching for a space
         text.forEachIndexed { index, character ->

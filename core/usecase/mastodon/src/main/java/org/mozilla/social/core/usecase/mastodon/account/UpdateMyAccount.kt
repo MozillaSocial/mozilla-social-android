@@ -20,7 +20,6 @@ class UpdateMyAccount(
     private val socialDatabase: SocialDatabase,
     private val dispatcherIo: CoroutineDispatcher = Dispatchers.IO,
 ) {
-
     /**
      * @throws UpdateAccountFailedException if any error occurred
      */
@@ -32,19 +31,20 @@ class UpdateMyAccount(
         bot: Boolean? = null,
         avatar: File? = null,
         header: File? = null,
-        fields: List<Pair<String, String>>? = null
+        fields: List<Pair<String, String>>? = null,
     ) = externalScope.async(dispatcherIo) {
         try {
             println("johnny 1")
-            val updatedAccount = accountRepository.updateAccount(
-                displayName = displayName,
-                bio = bio,
-                locked = locked,
-                bot = bot,
-                avatar = avatar,
-                header = header,
-                fields = fields
-            )
+            val updatedAccount =
+                accountRepository.updateAccount(
+                    displayName = displayName,
+                    bio = bio,
+                    locked = locked,
+                    bot = bot,
+                    avatar = avatar,
+                    header = header,
+                    fields = fields,
+                )
             println("johnny 2")
             socialDatabase.accountsDao().insert(updatedAccount.toDatabaseModel())
         } catch (e: Exception) {

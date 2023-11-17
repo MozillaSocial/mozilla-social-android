@@ -14,39 +14,42 @@ import org.mozilla.social.feed.remoteMediators.FederatedTimelineRemoteMediator
 import org.mozilla.social.feed.remoteMediators.HomeTimelineRemoteMediator
 import org.mozilla.social.feed.remoteMediators.LocalTimelineRemoteMediator
 
-val feedModule = module {
-    includes(
-        commonModule,
-        mastodonUsecaseModule,
-        dataStoreModule,
-        mastodonRepositoryModule,
-        postCardModule,
-        databaseModule,
-        navigationModule,
-        analyticsModule,
-    )
+val feedModule =
+    module {
+        includes(
+            commonModule,
+            mastodonUsecaseModule,
+            dataStoreModule,
+            mastodonRepositoryModule,
+            postCardModule,
+            databaseModule,
+            navigationModule,
+            analyticsModule,
+        )
 
-    single {
-        HomeTimelineRemoteMediator(
-            get(),
-        )
+        single {
+            HomeTimelineRemoteMediator(
+                get(),
+            )
+        }
+        single {
+            LocalTimelineRemoteMediator(
+                get(),
+            )
+        }
+        single {
+            FederatedTimelineRemoteMediator(
+                get(),
+            )
+        }
+        viewModel { _ ->
+            FeedViewModel(
+                analytics = get(),
+                homeTimelineRemoteMediator = get(),
+                localTimelineRemoteMediator = get(),
+                federatedTimelineRemoteMediator = get(),
+                getLoggedInUserAccountId = get(),
+                socialDatabase = get(),
+            )
+        }
     }
-    single {
-        LocalTimelineRemoteMediator(
-            get(),
-        )
-    }
-    single {
-        FederatedTimelineRemoteMediator(
-            get(),
-        )
-    }
-    viewModel { _ -> FeedViewModel(
-        analytics = get(),
-        homeTimelineRemoteMediator = get(),
-        localTimelineRemoteMediator = get(),
-        federatedTimelineRemoteMediator = get(),
-        getLoggedInUserAccountId = get(),
-        socialDatabase = get(),
-    ) }
-}

@@ -5,12 +5,12 @@ import okhttp3.HttpUrl
 import org.mozilla.social.common.annotations.PreferUseCase
 import org.mozilla.social.core.analytics.Analytics
 import org.mozilla.social.core.datastore.UserPreferencesDatastore
+import org.mozilla.social.core.model.Account
+import org.mozilla.social.core.navigation.usecases.OpenLink
 import org.mozilla.social.core.repository.mastodon.AccountRepository
 import org.mozilla.social.core.repository.mastodon.AppRepository
 import org.mozilla.social.core.repository.mastodon.OauthRepository
 import org.mozilla.social.core.usecase.mastodon.auth.Login.Companion.AUTH_SCHEME
-import org.mozilla.social.core.model.Account
-import org.mozilla.social.core.navigation.usecases.OpenLink
 import timber.log.Timber
 
 /**
@@ -25,7 +25,6 @@ class Login(
     private val openLink: OpenLink,
     private val logout: Logout,
 ) {
-
     private var clientId: String? = null
     private var clientSecret: String? = null
 
@@ -36,11 +35,12 @@ class Login(
     suspend operator fun invoke(domain: String) {
         try {
             userPreferencesDatastore.saveDomain(domain)
-            val application = appRepository.createApplication(
-                clientName = CLIENT_NAME,
-                redirectUris = REDIRECT_URI,
-                scopes = SCOPES,
-            )
+            val application =
+                appRepository.createApplication(
+                    clientName = CLIENT_NAME,
+                    redirectUris = REDIRECT_URI,
+                    scopes = SCOPES,
+                )
             clientId = application.clientId!!
             clientSecret = application.clientSecret!!
             openLink(
@@ -53,7 +53,7 @@ class Login(
                     .addQueryParameter(SCOPE_QUERY_PARAM, READ_WRITE_PUSH)
                     .addQueryParameter(CLIENT_ID_QUERY_PARAM, application.clientId!!)
                     .build()
-                    .toString()
+                    .toString(),
             )
         } catch (exception: Exception) {
             logout()
@@ -78,13 +78,14 @@ class Login(
     private suspend fun onUserCodeReceived(code: String) {
         try {
             Timber.tag(TAG).d("user code received")
-            val token = oauthRepository.fetchOAuthToken(
-                clientId = clientId!!,
-                clientSecret = clientSecret!!,
-                redirectUri = REDIRECT_URI,
-                code = code,
-                grantType = AUTHORIZATION_CODE,
-            )
+            val token =
+                oauthRepository.fetchOAuthToken(
+                    clientId = clientId!!,
+                    clientSecret = clientSecret!!,
+                    redirectUri = REDIRECT_URI,
+                    code = code,
+                    grantType = AUTHORIZATION_CODE,
+                )
             onOAuthTokenReceived(token)
         } catch (exception: Exception) {
             logout()

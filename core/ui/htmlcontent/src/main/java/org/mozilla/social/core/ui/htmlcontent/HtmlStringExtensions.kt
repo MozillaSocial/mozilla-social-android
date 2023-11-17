@@ -18,11 +18,12 @@ fun String.htmlToSpannable(
     onAccountClicked: (accountName: String) -> Unit,
 ): Spannable {
     // the html must be wrapped in a <p> tag in order for it to be parsed by HtmlCompat.fromHtml
-    val html = if (!startsWith("<p>")) {
-        "<p>$this</p>"
-    } else {
-        this
-    }
+    val html =
+        if (!startsWith("<p>")) {
+            "<p>$this</p>"
+        } else {
+            this
+        }
     return HtmlCompat.fromHtml(html, 0)
         .trim('\n')
         .toSpannable()
@@ -34,15 +35,15 @@ fun String.htmlToSpannable(
                 val flags = getSpanFlags(span)
                 val spanText = substring(start, end)
                 setSpan(
-                    object: URLSpan(span.url) {
+                    object : URLSpan(span.url) {
                         override fun onClick(view: View) {
                             when {
                                 spanText.startsWith("@") -> {
                                     // find the correct mention
                                     mentions.find {
                                         // check the user name and the domain
-                                        it.acct.substringBeforeLast("@") == spanText.substringAfter("@")
-                                                && url.contains(it.acct.substringAfter("@"))
+                                        it.acct.substringBeforeLast("@") == spanText.substringAfter("@") &&
+                                            url.contains(it.acct.substringAfter("@"))
                                     }?.accountId?.let {
                                         onAccountClicked(it)
                                     }
@@ -52,6 +53,7 @@ fun String.htmlToSpannable(
                                 else -> onLinkClick(url)
                             }
                         }
+
                         override fun updateDrawState(ds: TextPaint) {
                             super.updateDrawState(ds)
                             ds.color = linkColor.toArgb()
