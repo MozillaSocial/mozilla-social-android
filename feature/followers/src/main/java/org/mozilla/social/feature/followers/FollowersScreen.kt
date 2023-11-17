@@ -1,6 +1,7 @@
 package org.mozilla.social.feature.followers
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -104,6 +105,7 @@ private fun FollowersScreen(
                                 text = when (tabType) {
                                     FollowType.FOLLOWERS ->
                                         stringResource(id = R.string.followers)
+
                                     FollowType.FOLLOWING ->
                                         stringResource(id = R.string.following)
                                 },
@@ -155,7 +157,10 @@ private fun FollowersList(
                     lazyPagingItems[index]?.let { uiState ->
                         AccountQuickView(
                             uiState = uiState,
-                            onClick = followersInteractions::onAccountClicked
+                            modifier = Modifier.clickable {
+                                followersInteractions
+                                    .onAccountClicked(accountId = uiState.accountId)
+                            }
                         )
                     }
                 }

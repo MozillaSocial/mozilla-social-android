@@ -25,8 +25,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -97,6 +97,7 @@ internal fun AccountScreen(
         postCardInteractions = viewModel.postCardDelegate,
         accountInteractions = viewModel,
         windowInsets = windowInsets,
+        navigateToSettings = viewModel::onSettingsClicked,
     )
 
     LaunchedEffect(Unit) {
@@ -106,6 +107,7 @@ internal fun AccountScreen(
 
 @Composable
 private fun AccountScreen(
+    navigateToSettings: () -> Unit,
     uiState: Resource<AccountUiState>,
     closeButtonVisible: Boolean,
     isUsersProfile: Boolean,
@@ -140,12 +142,12 @@ private fun AccountScreen(
                         title = uiState.data.displayName,
                         showCloseButton = closeButtonVisible,
                         actions = {
-                            OverflowMenu(
-                                account = uiState.data,
-                                isUsersProfile = isUsersProfile,
-                                overflowInteractions = accountInteractions,
-                                navigateToSettings = accountInteractions::onSettingsClicked,
-                            )
+                            IconButton(
+                                modifier = Modifier.width(IntrinsicSize.Max),
+                                onClick = navigateToSettings,
+                            ) {
+                                Icon(painter = MoSoIcons.gear(), contentDescription = "Settings")
+                            }
                         },
                         showDivider = false,
                     )
@@ -212,32 +214,42 @@ private fun MainContent(
                 handle = "@${account.webFinger}",
                 rightSideContent = {
                     val buttonModifier = Modifier.padding(end = 8.dp)
-                    if (isUsersProfile) {
-                        MoSoButtonSecondary(
-                            modifier = buttonModifier,
-                            onClick = { accountInteractions.onEditAccountClicked() }
-                        ) {
-                            Text(text = stringResource(id = R.string.edit_button))
-                        }
-                    } else {
-                        MoSoButton(
-                            modifier = buttonModifier,
-                            onClick = {
-                                if (account.isFollowing) {
-                                    accountInteractions.onUnfollowClicked()
-                                } else {
-                                    accountInteractions.onFollowClicked()
-                                }
+                    Row {
+                        if (isUsersProfile) {
+                            MoSoButtonSecondary(
+                                modifier = buttonModifier,
+                                onClick = { accountInteractions.onEditAccountClicked() }
+                            ) {
+                                Text(text = stringResource(id = R.string.edit_button))
                             }
-                        ) {
-                            Text(
-                                text = if (account.isFollowing) {
-                                    stringResource(id = R.string.unfollow_button)
-                                } else {
-                                    stringResource(id = R.string.follow_button)
+
+
+                        } else {
+                            MoSoButton(
+                                modifier = buttonModifier,
+                                onClick = {
+                                    if (account.isFollowing) {
+                                        accountInteractions.onUnfollowClicked()
+                                    } else {
+                                        accountInteractions.onFollowClicked()
+                                    }
                                 }
-                            )
+                            ) {
+                                Text(
+                                    text = if (account.isFollowing) {
+                                        stringResource(id = R.string.unfollow_button)
+                                    } else {
+                                        stringResource(id = R.string.follow_button)
+                                    }
+                                )
+                            }
                         }
+
+                        OverflowMenu(
+                            account = account,
+                            isUsersProfile = isUsersProfile,
+                            overflowInteractions = accountInteractions,
+                        )
                     }
                 },
             )
@@ -280,7 +292,6 @@ private fun OverflowMenu(
     account: AccountUiState,
     isUsersProfile: Boolean,
     overflowInteractions: OverflowInteractions,
-    navigateToSettings: () -> Unit,
 ) {
     val overflowMenuExpanded = remember { mutableStateOf(false) }
     val context = LocalContext.current
@@ -312,11 +323,6 @@ private fun OverflowMenu(
                         null
                     )
                 }
-            )
-            DropDownItem(
-                text = stringResource(R.string.settings),
-                expanded = overflowMenuExpanded,
-                onClick = navigateToSettings,
             )
 
             if (!isUsersProfile) {
@@ -602,6 +608,7 @@ fun AccountScreenPreview() {
                 postCardInteractions = object : PostCardInteractions {},
                 accountInteractions = object : AccountInteractions {},
                 windowInsets = WindowInsets.systemBars,
+                navigateToSettings = {},
             )
         }
     }

@@ -75,7 +75,7 @@ fun AboutSettingsScreen(aboutSettings: AboutSettings) {
                     text = stringResource(id = R.string.administered_by),
                     style = MoSoTheme.typography.titleSmall,
                 )
-                AccountQuickView(uiState = state, onClick = {})
+                AccountQuickView(uiState = state)
             }
 
             Divider()
