@@ -4,6 +4,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
+import org.mozilla.social.common.annotations.PreferUseCase
 import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.core.database.SocialDatabase
 import org.mozilla.social.core.navigation.usecases.ShowSnackbar
@@ -21,6 +22,7 @@ class MuteAccount(
     /**
      * @throws MuteFailedException if any error occurred
      */
+    @OptIn(PreferUseCase::class)
     suspend operator fun invoke(
         accountId: String
     ) = externalScope.async(dispatcherIo) {

@@ -5,6 +5,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
+import org.mozilla.social.common.annotations.PreferUseCase
 import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.core.repository.mastodon.StatusRepository
 import org.mozilla.social.core.database.SocialDatabase
@@ -20,6 +21,7 @@ class FavoriteStatus internal constructor(
     private val dispatcherIo: CoroutineDispatcher = Dispatchers.IO,
 ) {
 
+    @OptIn(PreferUseCase::class)
     suspend operator fun invoke(
         statusId: String,
     ) = externalScope.async(dispatcherIo) {
