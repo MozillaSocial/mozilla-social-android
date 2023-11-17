@@ -24,8 +24,6 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 import org.mozilla.social.common.utils.StringFactory
-import org.mozilla.social.core.designsystem.component.MoSoSnackbarHostState
-import org.mozilla.social.core.designsystem.component.SnackbarType
 import org.mozilla.social.core.navigation.AuthNavigationDestination
 import org.mozilla.social.core.navigation.AuthNavigationDestination.ChooseServer.navigateToChooseServerScreen
 import org.mozilla.social.core.navigation.AuthNavigationDestination.Login.navigateToLoginScreen
@@ -45,6 +43,8 @@ import org.mozilla.social.core.navigation.SettingsNavigationDestination.ContentP
 import org.mozilla.social.core.navigation.SettingsNavigationDestination.MainSettings.navigateToMainSettings
 import org.mozilla.social.core.navigation.SettingsNavigationDestination.MutedUsersSettings.navigateToMutedUsers
 import org.mozilla.social.core.navigation.SettingsNavigationDestination.PrivacySettings.navigateToPrivacySettings
+import org.mozilla.social.core.ui.common.snackbar.MoSoSnackbarHostState
+import org.mozilla.social.core.ui.common.snackbar.SnackbarType
 import timber.log.Timber
 
 @Composable

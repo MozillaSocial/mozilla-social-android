@@ -36,16 +36,17 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import org.koin.androidx.compose.koinViewModel
 import org.mozilla.social.common.Resource
-import org.mozilla.social.core.designsystem.component.MoSoDivider
-import org.mozilla.social.core.designsystem.component.MoSoSurface
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
+import org.mozilla.social.core.designsystem.theme.MoSoRadius
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.designsystem.utils.NoRipple
-import org.mozilla.social.core.ui.common.Radius
 import org.mozilla.social.core.ui.common.error.GenericError
 import org.mozilla.social.core.ui.common.loading.MaxSizeLoading
-import org.mozilla.social.core.ui.common.shareUrl
+import org.mozilla.social.core.ui.common.utils.shareUrl
 import org.mozilla.social.core.model.Recommendation
+import org.mozilla.social.core.ui.common.divider.MoSoDivider
+import org.mozilla.social.core.ui.common.MoSoSurface
+import org.mozilla.social.core.ui.common.utils.media
 
 @Composable
 internal fun DiscoverScreen(
@@ -177,7 +178,7 @@ private fun Recommendation(
                     modifier = Modifier
                         .padding(start = 16.dp)
                         .weight(1f)
-                        .clip(RoundedCornerShape(Radius.media)),
+                        .clip(RoundedCornerShape(MoSoRadius.media)),
                     model = recommendation.image.firstOrNull()?.url,
                     contentDescription = null,
                     contentScale = ContentScale.Crop,

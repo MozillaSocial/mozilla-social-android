@@ -1,4 +1,4 @@
-package org.mozilla.social.core.designsystem.component
+package org.mozilla.social.core.ui.common
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.ColumnScope

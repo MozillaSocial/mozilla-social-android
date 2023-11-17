@@ -1,4 +1,4 @@
-package org.mozilla.social.core.designsystem.component
+package org.mozilla.social.core.ui.common.text
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -24,6 +24,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.mozilla.social.core.designsystem.theme.MoSoRadius
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
+import org.mozilla.social.core.ui.common.MoSoSurface
 
 @Composable
 fun MoSoTextField(
@@ -63,7 +64,7 @@ fun MoSoTextField(
                 } else {
                     borderColor
                 },
-                shape = RoundedCornerShape(MoSoRadius.md)
+                shape = RoundedCornerShape(MoSoRadius.md_8_dp)
             ),
         enabled = enabled,
         readOnly = readOnly,

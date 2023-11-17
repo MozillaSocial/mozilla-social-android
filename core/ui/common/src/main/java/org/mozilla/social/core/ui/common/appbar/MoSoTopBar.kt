@@ -21,10 +21,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import org.koin.compose.koinInject
 import org.mozilla.social.core.designsystem.R
-import org.mozilla.social.core.designsystem.component.MoSoDivider
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.navigation.usecases.PopNavBackstack
+import org.mozilla.social.core.ui.common.divider.MoSoDivider
 
 /**
  * Top app bar which defaults to showing an X button which defaults to popping the navigation

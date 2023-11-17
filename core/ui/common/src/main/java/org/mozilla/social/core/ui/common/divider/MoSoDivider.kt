@@ -1,4 +1,4 @@
-package org.mozilla.social.core.designsystem.component
+package org.mozilla.social.core.ui.common.divider
 
 import androidx.compose.material3.Divider
 import androidx.compose.runtime.Composable

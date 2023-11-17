@@ -1,4 +1,4 @@
-package org.mozilla.social.core.ui.common
+package org.mozilla.social.core.ui.common.utils
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth

@@ -1,4 +1,4 @@
-package org.mozilla.social.core.ui.common
+package org.mozilla.social.core.ui.common.dropdown
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer

@@ -32,10 +32,10 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
-import org.mozilla.social.core.designsystem.component.MoSoSurface
-import org.mozilla.social.core.designsystem.component.MoSoTab
-import org.mozilla.social.core.designsystem.component.MoSoTabRow
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
+import org.mozilla.social.core.ui.common.MoSoSurface
+import org.mozilla.social.core.ui.common.MoSoTab
+import org.mozilla.social.core.ui.common.MoSoTabRow
 import org.mozilla.social.core.ui.common.account.quickview.AccountQuickView
 import org.mozilla.social.core.ui.common.account.quickview.AccountQuickViewUiState
 import org.mozilla.social.core.ui.common.appbar.MoSoCloseableTopAppBar
