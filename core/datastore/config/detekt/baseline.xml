@@ -1,7 +1,0 @@
-<?xml version="1.0" ?>
-<SmellBaseline>
-  <ManuallySuppressedIssues></ManuallySuppressedIssues>
-  <CurrentIssues>
-    <ID>UnusedPrivateProperty:UserPreferencesDatastore.kt$private val UserPreferences.mastodonInstance: MastodonInstance? get() = if (clientId != null &amp;&amp; clientSecret != null) { MastodonInstance(clientId = clientId, clientSecret = clientSecret) } else null</ID>
-  </CurrentIssues>
-</SmellBaseline>
