@@ -247,6 +247,7 @@ class AccountViewModel(
 private fun TimelineType.toExternalModel() =
     when (this) {
         TimelineType.POSTS -> org.mozilla.social.core.usecase.mastodon.timeline.TimelineType.POSTS
-        TimelineType.POSTS_AND_REPLIES -> org.mozilla.social.core.usecase.mastodon.timeline.TimelineType.POSTS_AND_REPLIES
+        TimelineType.POSTS_AND_REPLIES -> 
+            org.mozilla.social.core.usecase.mastodon.timeline.TimelineType.POSTS_AND_REPLIES
         TimelineType.MEDIA -> org.mozilla.social.core.usecase.mastodon.timeline.TimelineType.MEDIA
     }

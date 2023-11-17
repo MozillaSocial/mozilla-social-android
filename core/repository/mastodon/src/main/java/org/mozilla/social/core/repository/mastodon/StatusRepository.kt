@@ -21,7 +21,8 @@ class StatusRepository(
     private val dao: StatusDao,
 ) {
     @PreferUseCase
-    suspend fun postStatus(statusCreate: StatusCreate): Status = api.postStatus(statusCreate.toNetworkModel()).toExternalModel()
+    suspend fun postStatus(statusCreate: StatusCreate): Status =
+        api.postStatus(statusCreate.toNetworkModel()).toExternalModel()
 
     @PreferUseCase
     suspend fun voteOnPoll(
