@@ -11,7 +11,7 @@ import org.mozilla.social.core.network.mastodon.interceptors.AuthCredentialInter
 import retrofit2.Retrofit
 import java.util.concurrent.TimeUnit
 
-fun mastodonNetworkModule(isDebug: Boolean) = module {
+val mastodonNetworkModule = module {
     single { AuthCredentialInterceptor() }
     single(
         named(AUTHORIZED_CLIENT)
@@ -20,7 +20,7 @@ fun mastodonNetworkModule(isDebug: Boolean) = module {
             .readTimeout(OKHTTP_TIMEOUT, TimeUnit.SECONDS)
             .connectTimeout(OKHTTP_TIMEOUT, TimeUnit.SECONDS)
             .addNetworkInterceptor(HttpLoggingInterceptor().apply {
-                level = if (isDebug) {
+                level = if (BuildConfig.DEBUG) {
                     HttpLoggingInterceptor.Level.BODY
                 } else {
                     HttpLoggingInterceptor.Level.NONE

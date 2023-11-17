@@ -13,16 +13,8 @@ import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
 import org.koin.dsl.module
-import org.mozilla.social.common.appscope.appScopeModule
 import org.mozilla.social.core.analytics.Analytics
-import org.mozilla.social.core.analytics.analyticsModule
-import org.mozilla.social.core.database.databaseModule
-import org.mozilla.social.core.datastore.dataStoreModule
-import org.mozilla.social.core.navigation.navigationModule
 import org.mozilla.social.core.repository.mastodon.AuthCredentialObserver
-import org.mozilla.social.core.repository.mastodon.mastodonRepositoryModule
-import org.mozilla.social.core.repository.mozilla.mozillaRepositoryModule
-import org.mozilla.social.core.ui.postcard.postCardModule
 import org.mozilla.social.feature.auth.authModule
 import org.mozilla.social.feature.settings.settingsModule
 import org.mozilla.social.feed.feedModule
@@ -48,7 +40,8 @@ class MainApplication : Application(), ImageLoaderFactory {
             androidLogger()
             androidContext(this@MainApplication)
             modules(
-                appModules,
+                featureModules,
+                mainModule,
             )
         }
 
@@ -71,27 +64,18 @@ class MainApplication : Application(), ImageLoaderFactory {
             .build()
 }
 
-val appModules = module {
+val featureModules = module {
     includes(
-        authModule,
-        dataStoreModule,
-        mainModule,
-        feedModule,
-        searchModule,
-        mastodonRepositoryModule(BuildConfig.DEBUG),
-        mozillaRepositoryModule(BuildConfig.DEBUG),
-        newPostModule,
-        settingsModule,
         accountModule,
-        databaseModule,
-        threadModule,
-        reportModule,
-        hashTagModule,
-        analyticsModule,
-        followersModule,
+        authModule,
         discoverModule,
-        navigationModule,
-        postCardModule,
-        appScopeModule,
+        feedModule,
+        followersModule,
+        hashTagModule,
+        newPostModule,
+        reportModule,
+        searchModule,
+        settingsModule,
+        threadModule,
     )
 }
