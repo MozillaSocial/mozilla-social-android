@@ -7,7 +7,6 @@ import androidx.paging.RemoteMediator
 import kotlinx.coroutines.delay
 import org.mozilla.social.common.Rel
 import org.mozilla.social.common.getMaxIdValue
-import org.mozilla.social.common.getSinceIdValue
 import org.mozilla.social.core.database.model.accountCollections.Follower
 import org.mozilla.social.core.database.model.accountCollections.FollowerWrapper
 import org.mozilla.social.core.repository.mastodon.AccountRepository
@@ -26,6 +25,7 @@ class FollowersRemoteMediator internal constructor(
 ) : RemoteMediator<Int, FollowerWrapper>() {
 
     private var nextKey: String? = null
+    private var nextPositionIndex = 0
 
     @Suppress("ReturnCount")
     override suspend fun load(
@@ -64,22 +64,24 @@ class FollowersRemoteMediator internal constructor(
             databaseDelegate.withTransaction {
                 if (loadType == LoadType.REFRESH) {
                     followersRepository.deleteFollowers(accountId)
+                    nextPositionIndex = 0
                 }
 
                 accountRepository.insertAll(response.accounts)
                 relationshipRepository.insertAll(relationships)
                 followersRepository.insertAll(
-                    response.accounts.map {
+                    response.accounts.mapIndexed { index, account ->
                         Follower(
                             accountId = accountId,
-                            followerAccountId = it.accountId,
+                            followerAccountId = account.accountId,
+                            position = nextPositionIndex + index
                         )
                     }
                 )
-
             }
 
             nextKey = response.pagingLinks?.getMaxIdValue()
+            nextPositionIndex += response.accounts.size
 
             // There seems to be some race condition for refreshes.  Subsequent pages do
             // not get loaded because once we return a mediator result, the next append
