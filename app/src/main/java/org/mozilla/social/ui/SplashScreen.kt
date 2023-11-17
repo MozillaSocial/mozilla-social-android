@@ -7,8 +7,6 @@ fun SplashScreen() {
     LoadingScreen()
 }
 
-
 @Composable
 fun LoadingScreen() {
-
 }

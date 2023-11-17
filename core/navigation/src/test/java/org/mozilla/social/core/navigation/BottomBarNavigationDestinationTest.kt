@@ -1,6 +1,5 @@
 package org.mozilla.social.core.navigation
 
-
 import androidx.navigation.NavController
 import io.mockk.mockk
 import io.mockk.verify

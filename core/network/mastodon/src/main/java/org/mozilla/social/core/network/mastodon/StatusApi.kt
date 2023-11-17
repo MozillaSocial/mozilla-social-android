@@ -14,7 +14,7 @@ import retrofit2.http.Path
 interface StatusApi {
     @POST("api/v1/statuses")
     suspend fun postStatus(
-        @Body status: NetworkStatusCreate
+        @Body status: NetworkStatusCreate,
     ): NetworkStatus
 
     @POST("/api/v1/polls/{pollId}/votes")

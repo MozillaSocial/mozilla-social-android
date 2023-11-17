@@ -5,9 +5,7 @@ class ImpressionTracker<T>(
 ) {
     private val trackedValues: MutableList<T> = mutableListOf()
 
-    fun track(
-        key: T,
-    ) {
+    fun track(key: T) {
         if (trackedValues.contains(key)) return
         trackedValues.add(key)
         onTrack(key)

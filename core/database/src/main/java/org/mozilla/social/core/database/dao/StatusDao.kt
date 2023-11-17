@@ -9,62 +9,76 @@ import org.mozilla.social.core.database.model.wrappers.StatusWrapper
 
 @Dao
 interface StatusDao : BaseDao<DatabaseStatus> {
-
     @Transaction
     @Query(
         "SELECT * FROM statuses " +
-        "WHERE statusId = :statusId"
+            "WHERE statusId = :statusId",
     )
     suspend fun getStatus(statusId: String): StatusWrapper?
 
     @Transaction
     @Query(
         "SELECT * FROM statuses " +
-        "WHERE statusId IN (:statusIds)"
+            "WHERE statusId IN (:statusIds)",
     )
     fun getStatuses(statusIds: List<String>): Flow<List<StatusWrapper>>
 
     @Query(
         "UPDATE statuses " +
-        "SET isBoosted = :isBoosted " +
-        "WHERE statusId = :statusId"
+            "SET isBoosted = :isBoosted " +
+            "WHERE statusId = :statusId",
     )
-    suspend fun updateBoosted(statusId: String, isBoosted: Boolean)
+    suspend fun updateBoosted(
+        statusId: String,
+        isBoosted: Boolean,
+    )
 
     @Query(
         "UPDATE statuses " +
-        "SET boostsCount = boostsCount + :valueChange " +
-        "WHERE statusId = :statusId"
+            "SET boostsCount = boostsCount + :valueChange " +
+            "WHERE statusId = :statusId",
     )
-    suspend fun updateBoostCount(statusId: String, valueChange: Long)
+    suspend fun updateBoostCount(
+        statusId: String,
+        valueChange: Long,
+    )
 
     @Query(
         "UPDATE statuses " +
-        "SET isFavorited = :isFavorited " +
-        "WHERE statusId = :statusId"
+            "SET isFavorited = :isFavorited " +
+            "WHERE statusId = :statusId",
     )
-    suspend fun updateFavorited(statusId: String, isFavorited: Boolean)
+    suspend fun updateFavorited(
+        statusId: String,
+        isFavorited: Boolean,
+    )
 
     @Query(
         "UPDATE statuses " +
-        "SET favouritesCount = favouritesCount + :valueChange " +
-        "WHERE statusId = :statusId"
+            "SET favouritesCount = favouritesCount + :valueChange " +
+            "WHERE statusId = :statusId",
     )
-    suspend fun updateFavoriteCount(statusId: String, valueChange: Long)
+    suspend fun updateFavoriteCount(
+        statusId: String,
+        valueChange: Long,
+    )
 
     @Query("DELETE FROM statuses")
     fun deleteAll()
 
     @Query(
         "DELETE FROM statuses " +
-        "WHERE statusId = :statusId"
+            "WHERE statusId = :statusId",
     )
     suspend fun deleteStatus(statusId: String)
 
     @Query(
         "UPDATE statuses " +
-        "SET isBeingDeleted = :isBeingDeleted " +
-        "WHERE statusId = :statusId"
+            "SET isBeingDeleted = :isBeingDeleted " +
+            "WHERE statusId = :statusId",
     )
-    suspend fun updateIsBeingDeleted(statusId: String, isBeingDeleted: Boolean)
+    suspend fun updateIsBeingDeleted(
+        statusId: String,
+        isBeingDeleted: Boolean,
+    )
 }

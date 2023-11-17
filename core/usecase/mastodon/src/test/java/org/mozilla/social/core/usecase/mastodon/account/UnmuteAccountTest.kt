@@ -6,18 +6,18 @@ import kotlin.test.BeforeTest
 import kotlin.test.Test
 
 class UnmuteAccountTest : BaseUseCaseTest() {
-
     private lateinit var subject: UnmuteAccount
 
     @BeforeTest
     fun setup() {
-        subject = UnmuteAccount(
-            externalScope = TestScope(testDispatcher),
-            showSnackbar = showSnackbar,
-            accountRepository = accountRepository,
-            socialDatabase = socialDatabase,
-            dispatcherIo = testDispatcher,
-        )
+        subject =
+            UnmuteAccount(
+                externalScope = TestScope(testDispatcher),
+                showSnackbar = showSnackbar,
+                accountRepository = accountRepository,
+                socialDatabase = socialDatabase,
+                dispatcherIo = testDispatcher,
+            )
     }
 
     @Test
@@ -32,7 +32,7 @@ class UnmuteAccountTest : BaseUseCaseTest() {
             },
             verifyBlock = {
                 accountRepository.unmuteAccount(accountId)
-            }
+            },
         )
     }
 

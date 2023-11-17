@@ -25,11 +25,11 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import org.mozilla.social.common.utils.StringFactory
-import org.mozilla.social.core.ui.common.MoSoSurface
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.navigation.BottomBarNavigationDestination
 import org.mozilla.social.core.navigation.NavigationDestination
+import org.mozilla.social.core.ui.common.MoSoSurface
 import org.mozilla.social.ui.bottombar.Destination.Main
 
 @Composable
@@ -48,14 +48,15 @@ fun MoSoBottomNavigationBar(
         containerColor = containerColor,
         contentColor = contentColor,
         tonalElevation = tonalElevation,
-        windowInsets = windowInsets
+        windowInsets = windowInsets,
     ) {
         bottomBarTabs.forEach {
             when (it.navigationDestination) {
                 is Destination.BottomBar -> {
                     MoSoNavigationBarItem(
                         destination = it,
-                        isSelected = currentDestination ==
+                        isSelected =
+                            currentDestination ==
                                 (it.navigationDestination as? Destination.BottomBar)?.bottomBarNavigationDestination,
                         navigateTo = navigateTo,
                     )
@@ -70,8 +71,9 @@ fun MoSoBottomNavigationBar(
                         icon = {
                             Icon(
                                 painter = MoSoIcons.connect(),
-                                modifier = Modifier
-                                    .size(40.dp),
+                                modifier =
+                                    Modifier
+                                        .size(40.dp),
                                 contentDescription = null,
                                 tint = MoSoTheme.colors.actionPrimary,
                             )
@@ -91,22 +93,23 @@ private fun MoSoNavigationBar(
     tonalElevation: Dp = MoSoNavigationBarDefaults.Elevation,
     windowInsets: WindowInsets = MoSoNavigationBarDefaults.windowInsets,
     height: Dp = MoSoNavigationBarDefaults.height,
-    content: @Composable RowScope.() -> Unit
+    content: @Composable RowScope.() -> Unit,
 ) {
     MoSoSurface(
         color = containerColor,
         contentColor = contentColor,
         tonalElevation = tonalElevation,
-        modifier = modifier
+        modifier = modifier,
     ) {
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .windowInsetsPadding(windowInsets)
-                .height(height)
-                .selectableGroup(),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .windowInsetsPadding(windowInsets)
+                    .height(height)
+                    .selectableGroup(),
             horizontalArrangement = Arrangement.SpaceEvenly,
-            content = content
+            content = content,
         )
     }
 }
@@ -116,7 +119,7 @@ private fun RowScope.MoSoNavigationBarItem(
     modifier: Modifier = Modifier,
     destination: BottomBarTab,
     isSelected: Boolean,
-    navigateTo: (route: Destination) -> Unit
+    navigateTo: (route: Destination) -> Unit,
 ) {
     NavigationBarItem(
         modifier = modifier.height(48.dp),
@@ -140,8 +143,9 @@ private fun BottomBarIcon(
     if (isSelected) {
         Icon(
             painter = destination.selectedIcon(),
-            modifier = Modifier
-                .size(24.dp),
+            modifier =
+                Modifier
+                    .size(24.dp),
             contentDescription = null,
         )
     } else {
@@ -162,6 +166,7 @@ interface BottomBarTab {
 
     @Composable
     fun unselectedIcon(): Painter
+
     val tabText: StringFactory
     val navigationDestination: Destination
 }
@@ -178,7 +183,6 @@ sealed interface Destination {
 }
 
 object MoSoNavigationDefaults {
-
     @Composable
     fun unselectedItemColor() = MoSoTheme.colors.iconPrimary
 
@@ -187,7 +191,6 @@ object MoSoNavigationDefaults {
 
     @Composable
     fun indicatorColor() = MoSoTheme.colors.layer1
-
 }
 
 object MoSoNavigationBarItemDefaults {
@@ -215,17 +218,17 @@ object MoSoNavigationBarDefaults {
      */
     val windowInsets: WindowInsets
         @Composable
-        get() = WindowInsets.systemBars
-            .only(WindowInsetsSides.Horizontal + WindowInsetsSides.Bottom)
+        get() =
+            WindowInsets.systemBars
+                .only(WindowInsetsSides.Horizontal + WindowInsetsSides.Bottom)
 
     val height: Dp
         get() = 48.dp
 
-    fun Modifier.bottomBarPadding(
-        currentDestination: NavigationDestination?
-    ): Modifier = if (currentDestination == NavigationDestination.Tabs) {
-        padding(bottom = height)
-    } else {
-        this
-    }
+    fun Modifier.bottomBarPadding(currentDestination: NavigationDestination?): Modifier =
+        if (currentDestination == NavigationDestination.Tabs) {
+            padding(bottom = height)
+        } else {
+            this
+        }
 }

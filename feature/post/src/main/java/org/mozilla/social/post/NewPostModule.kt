@@ -9,28 +9,29 @@ import org.mozilla.social.core.navigation.navigationModule
 import org.mozilla.social.core.repository.mastodon.mastodonRepositoryModule
 import org.mozilla.social.core.usecase.mastodon.mastodonUsecaseModule
 
-val newPostModule = module {
-    includes(
-        commonModule,
-        mastodonRepositoryModule,
-        dataStoreModule,
-        mastodonUsecaseModule,
-        navigationModule,
-        analyticsModule,
-    )
-
-    viewModel { parametersHolder ->
-        NewPostViewModel(
-            analytics = get(),
-            replyStatusId = parametersHolder.getOrNull(),
-            mediaRepository = get(),
-            searchRepository = get(),
-            statusRepository = get(),
-            postStatus = get(),
-            popNavBackstack = get(),
-            showSnackbar = get(),
-            getLoggedInUserAccountId = get(),
-            accountRepository = get(),
+val newPostModule =
+    module {
+        includes(
+            commonModule,
+            mastodonRepositoryModule,
+            dataStoreModule,
+            mastodonUsecaseModule,
+            navigationModule,
+            analyticsModule,
         )
+
+        viewModel { parametersHolder ->
+            NewPostViewModel(
+                analytics = get(),
+                replyStatusId = parametersHolder.getOrNull(),
+                mediaRepository = get(),
+                searchRepository = get(),
+                statusRepository = get(),
+                postStatus = get(),
+                popNavBackstack = get(),
+                showSnackbar = get(),
+                getLoggedInUserAccountId = get(),
+                accountRepository = get(),
+            )
+        }
     }
-}

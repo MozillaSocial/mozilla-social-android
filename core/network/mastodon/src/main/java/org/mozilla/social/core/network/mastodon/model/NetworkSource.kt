@@ -10,31 +10,26 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 data class NetworkSource(
-
     /**
      * The account's bio.
      */
     @SerialName("note")
     val bio: String,
-
     /**
      * Metadata about the account as a list of name/values.
      */
     @SerialName("fields")
     val fields: List<NetworkField>,
-
     /**
      * The default post privacy to be used for new statuses.
      */
     @SerialName("privacy")
     val defaultPrivacy: NetworkStatusVisibility? = null,
-
     /**
      * Whether new statuses should be marked sensitive by default.
      */
     @SerialName("sensitive")
     val defaultSensitivity: Boolean? = null,
-
     /**
      * The default posting language for new statuses.
      *
@@ -42,10 +37,9 @@ data class NetworkSource(
      */
     @SerialName("language")
     val defaultLanguage: String? = null,
-
     /**
      * The number of pending follow requests.
      */
     @SerialName("follow_requests_count")
-    val followRequestsCount: Long? = null
+    val followRequestsCount: Long? = null,
 )

@@ -13,11 +13,10 @@ import org.mozilla.social.core.ui.common.MoSoSurface
 import org.mozilla.social.core.ui.common.appbar.MoSoCloseableTopAppBar
 import org.mozilla.social.core.ui.postcard.PostCardList
 
-
 @Composable
 internal fun ThreadScreen(
     threadStatusId: String,
-    viewModel: ThreadViewModel = koinViewModel(parameters = { parametersOf(threadStatusId) })
+    viewModel: ThreadViewModel = koinViewModel(parameters = { parametersOf(threadStatusId) }),
 ) {
     MoSoSurface {
         Column(Modifier.systemBarsPadding()) {

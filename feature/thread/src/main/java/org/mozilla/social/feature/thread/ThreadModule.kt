@@ -10,21 +10,24 @@ import org.mozilla.social.core.repository.mastodon.mastodonRepositoryModule
 import org.mozilla.social.core.ui.postcard.postCardModule
 import org.mozilla.social.core.usecase.mastodon.mastodonUsecaseModule
 
-val threadModule = module {
-    includes(
-        commonModule,
-        mastodonUsecaseModule,
-        mastodonRepositoryModule,
-        dataStoreModule,
-        postCardModule,
-        navigationModule,
-        analyticsModule,
-    )
+val threadModule =
+    module {
+        includes(
+            commonModule,
+            mastodonUsecaseModule,
+            mastodonRepositoryModule,
+            dataStoreModule,
+            postCardModule,
+            navigationModule,
+            analyticsModule,
+        )
 
-    viewModel { parametersHolder -> ThreadViewModel(
-        analytics = get(),
-        getLoggedInUserAccountId = get(),
-        getThread = get(),
-        mainStatusId = parametersHolder[0],
-    ) }
-}
+        viewModel { parametersHolder ->
+            ThreadViewModel(
+                analytics = get(),
+                getLoggedInUserAccountId = get(),
+                getThread = get(),
+                mainStatusId = parametersHolder[0],
+            )
+        }
+    }

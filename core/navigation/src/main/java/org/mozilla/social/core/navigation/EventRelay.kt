@@ -36,6 +36,7 @@ sealed class Event {
     data object PopBackStack : Event()
 
     data class OpenLink(val url: String) : Event()
+
     data class ShowSnackbar(val text: StringFactory, val isError: Boolean) : Event()
 
     data class NavigateToDestination(val destination: NavigationDestination) :

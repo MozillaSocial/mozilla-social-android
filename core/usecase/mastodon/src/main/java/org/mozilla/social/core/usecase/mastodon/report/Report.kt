@@ -6,10 +6,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import org.mozilla.social.common.annotations.PreferUseCase
 import org.mozilla.social.common.utils.StringFactory
+import org.mozilla.social.core.model.request.ReportCreate
 import org.mozilla.social.core.navigation.usecases.ShowSnackbar
 import org.mozilla.social.core.repository.mastodon.ReportRepository
 import org.mozilla.social.core.usecase.mastodon.R
-import org.mozilla.social.core.model.request.ReportCreate
 
 class Report(
     private val externalScope: CoroutineScope,
@@ -17,7 +17,6 @@ class Report(
     private val reportRepository: ReportRepository,
     private val dispatcherIo: CoroutineDispatcher = Dispatchers.IO,
 ) {
-
     /**
      * @throws ReportFailedException if any error occurred
      */
@@ -32,14 +31,15 @@ class Report(
     ) = externalScope.async(dispatcherIo) {
         try {
             reportRepository.report(
-                body = ReportCreate(
-                    accountId = accountId,
-                    statusIds = statusIds,
-                    comment = comment,
-                    forward = forward,
-                    category = category,
-                    ruleViolations = ruleViolations
-                )
+                body =
+                    ReportCreate(
+                        accountId = accountId,
+                        statusIds = statusIds,
+                        comment = comment,
+                        forward = forward,
+                        category = category,
+                        ruleViolations = ruleViolations,
+                    ),
             )
         } catch (e: Exception) {
             showSnackbar(

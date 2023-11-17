@@ -60,7 +60,7 @@ interface Analytics {
         mastodonStatusId: String? = null,
         recommendationId: String? = null,
         uiAdditionalDetail: String? = null,
-        uiIdentifier: String? = null
+        uiIdentifier: String? = null,
     ) = Unit
 
     /**
@@ -102,7 +102,7 @@ interface Analytics {
         mastodonStatusId: String? = null,
         recommendationId: String? = null,
         uiAdditionalDetail: String? = null,
-        uiIdentifier: String? = null
+        uiIdentifier: String? = null,
     ) = Unit
 
     /**

@@ -10,9 +10,7 @@ import org.mozilla.social.feature.settings.ui.SettingsColumn
 import org.mozilla.social.feature.settings.ui.SettingsSection
 
 @Composable
-fun ContentPreferencesSettingsScreen(
-    viewModel: ContentPreferencesSettingsViewModel = koinViewModel()
-) {
+fun ContentPreferencesSettingsScreen(viewModel: ContentPreferencesSettingsViewModel = koinViewModel()) {
     ContentPreferencesSettingsScreen(
         onBlockedUsersClicked = viewModel::onBlockedUsersClicked,
         onMutedUsersClicked = viewModel::onMutedUsersClicked,
@@ -22,7 +20,7 @@ fun ContentPreferencesSettingsScreen(
 @Composable
 private fun ContentPreferencesSettingsScreen(
     onMutedUsersClicked: () -> Unit,
-    onBlockedUsersClicked: () -> Unit
+    onBlockedUsersClicked: () -> Unit,
 ) {
     MoSoSurface {
         SettingsColumn(title = stringResource(id = R.string.content_preferences_title)) {
@@ -37,9 +35,6 @@ private fun ContentPreferencesSettingsScreen(
                 iconPainter = MoSoIcons.prohibit(),
                 onClick = onBlockedUsersClicked,
             )
-
-
         }
     }
-
 }

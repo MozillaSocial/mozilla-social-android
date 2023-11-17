@@ -35,10 +35,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.koin.androidx.compose.koinViewModel
-import org.mozilla.social.core.ui.common.MoSoBadge
 import org.mozilla.social.core.designsystem.font.MoSoFonts
 import org.mozilla.social.core.designsystem.theme.MoSoSpacing
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
+import org.mozilla.social.core.ui.common.MoSoBadge
 import org.mozilla.social.core.ui.common.MoSoSurface
 import org.mozilla.social.core.ui.common.button.MoSoButton
 import org.mozilla.social.core.ui.common.loading.MoSoCircularProgressIndicator
@@ -47,9 +47,7 @@ import org.mozilla.social.core.ui.common.utils.getWindowWidthClass
 import org.mozilla.social.feature.auth.R
 
 @Composable
-internal fun LoginScreen(
-    viewModel: LoginViewModel = koinViewModel(),
-) {
+internal fun LoginScreen(viewModel: LoginViewModel = koinViewModel()) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     LoginScreen(
         uiState = uiState,
@@ -68,13 +66,13 @@ private fun LoginScreen(
 ) {
     MoSoSurface(
         modifier = Modifier.fillMaxSize(),
-        color = MoSoTheme.colors.layer2
+        color = MoSoTheme.colors.layer2,
     ) {
         val heightClass = getWindowHeightClass()
         val widthClass = getWindowWidthClass()
         when {
             heightClass == WindowHeightSizeClass.Compact && widthClass != WindowWidthSizeClass.Compact ||
-            heightClass == WindowHeightSizeClass.Medium && widthClass == WindowWidthSizeClass.Expanded -> {
+                heightClass == WindowHeightSizeClass.Medium && widthClass == WindowWidthSizeClass.Expanded -> {
                 HorizontalLoginScreen(
                     uiState = uiState,
                     loginInteractions = loginInteractions,
@@ -96,20 +94,23 @@ private fun HorizontalLoginScreen(
     loginInteractions: LoginInteractions,
 ) {
     Row(
-        modifier = Modifier
-            .fillMaxSize(),
+        modifier =
+            Modifier
+                .fillMaxSize(),
     ) {
         ImageBox(
-            modifier = Modifier
-                .weight(1f)
-                .systemBarsPadding(),
+            modifier =
+                Modifier
+                    .weight(1f)
+                    .systemBarsPadding(),
         )
         Box(
-            modifier = Modifier
-                .weight(1f)
-                .align(Alignment.CenterVertically)
-                .fillMaxHeight()
-                .background(MoSoTheme.colors.layer1),
+            modifier =
+                Modifier
+                    .weight(1f)
+                    .align(Alignment.CenterVertically)
+                    .fillMaxHeight()
+                    .background(MoSoTheme.colors.layer1),
         ) {
             LoginBox(
                 modifier = Modifier.align(Alignment.Center),
@@ -126,18 +127,20 @@ private fun VerticalLoginScreen(
     loginInteractions: LoginInteractions,
 ) {
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .systemBarsPadding(),
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .systemBarsPadding(),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         ImageBox()
     }
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState())
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState()),
     ) {
         Spacer(modifier = Modifier.weight(1f))
         LoginBox(
@@ -149,28 +152,28 @@ private fun VerticalLoginScreen(
 }
 
 @Composable
-private fun ImageBox(
-    modifier: Modifier = Modifier,
-) {
+private fun ImageBox(modifier: Modifier = Modifier) {
     Box(
         modifier = modifier,
     ) {
         Text(
-            modifier = Modifier
-                .align(Alignment.TopCenter)
-                .padding(top = 12.dp),
+            modifier =
+                Modifier
+                    .align(Alignment.TopCenter)
+                    .padding(top = 12.dp),
             text = stringResource(id = R.string.title_text),
             fontSize = 24.sp,
             fontWeight = W700,
             fontFamily = MoSoFonts.zillaSlab,
         )
         Image(
-            modifier = Modifier
-                .fillMaxWidth(),
+            modifier =
+                Modifier
+                    .fillMaxWidth(),
             painter = painterResource(id = R.drawable.login_art),
             contentDescription = "",
             contentScale = ContentScale.FillWidth,
-            alignment = Alignment.TopCenter
+            alignment = Alignment.TopCenter,
         )
     }
 }
@@ -182,10 +185,11 @@ private fun LoginBox(
     loginInteractions: LoginInteractions,
 ) {
     Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .background(MoSoTheme.colors.layer1)
-            .padding(MoSoSpacing.lg),
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .background(MoSoTheme.colors.layer1)
+                .padding(MoSoSpacing.lg),
     ) {
         MoSoBadge {
             Text(
@@ -209,11 +213,11 @@ private fun LoginBox(
         MoSoButton(
             modifier = Modifier.fillMaxWidth(),
             enabled = !uiState.isLoading,
-            onClick = { loginInteractions.onSignInClicked() }
+            onClick = { loginInteractions.onSignInClicked() },
         ) {
             if (uiState.isLoading) {
                 MoSoCircularProgressIndicator(
-                    modifier = Modifier.size(20.dp)
+                    modifier = Modifier.size(20.dp),
                 )
             } else {
                 Text(
@@ -223,11 +227,12 @@ private fun LoginBox(
         }
         Spacer(modifier = Modifier.height(24.dp))
         Text(
-            modifier = Modifier
-                .align(Alignment.CenterHorizontally)
-                .clickable(
-                    enabled = !uiState.isLoading,
-                ) { loginInteractions.onChooseServerClicked() },
+            modifier =
+                Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .clickable(
+                        enabled = !uiState.isLoading,
+                    ) { loginInteractions.onChooseServerClicked() },
             text = stringResource(id = R.string.choose_server_option),
             style = MoSoTheme.typography.labelSmallLink,
             textDecoration = TextDecoration.Underline,
@@ -263,9 +268,10 @@ internal fun AuthHorizontalScreenPreview() {
 internal fun AuthScreenLoadingPreview() {
     MoSoTheme {
         LoginScreen(
-            uiState = LoginUiState(
-                isLoading = true,
-            ),
+            uiState =
+                LoginUiState(
+                    isLoading = true,
+                ),
             loginInteractions = object : LoginInteractions {},
         )
     }

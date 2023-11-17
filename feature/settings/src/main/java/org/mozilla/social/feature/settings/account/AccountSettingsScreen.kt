@@ -31,14 +31,11 @@ import org.mozilla.social.feature.settings.R
 import org.mozilla.social.feature.settings.ui.SettingsColumn
 
 @Composable
-fun AccountSettingsScreen(
-    viewModel: AccountSettingsViewModel = koinViewModel()
-) {
+fun AccountSettingsScreen(viewModel: AccountSettingsViewModel = koinViewModel()) {
     MoSoSurface {
         SettingsColumn(title = stringResource(id = R.string.account_settings_title)) {
-
             val userHeader by viewModel.userHeader.collectAsStateWithLifecycle(
-                initialValue = Resource.Loading()
+                initialValue = Resource.Loading(),
             )
             when (userHeader) {
                 is Resource.Error -> {}
@@ -57,7 +54,7 @@ fun AccountSettingsScreen(
 private fun UserHeader(userHeader: UserHeader) {
     Row(
         modifier = Modifier.padding(MoSoSpacing.sm),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Avatar(userHeader.avatarUrl)
         Spacer(modifier = Modifier.width(8.dp))
@@ -68,10 +65,11 @@ private fun UserHeader(userHeader: UserHeader) {
 @Composable
 private fun Avatar(avatarUrl: String) {
     AsyncImage(
-        modifier = Modifier
-            .size(40.dp)
-            .clip(CircleShape)
-            .background(MoSoTheme.colors.layer2),
+        modifier =
+            Modifier
+                .size(40.dp)
+                .clip(CircleShape)
+                .background(MoSoTheme.colors.layer2),
         model = avatarUrl,
         contentDescription = "",
     )
@@ -80,10 +78,11 @@ private fun Avatar(avatarUrl: String) {
 @Composable
 private fun SignoutButton(onLogoutClicked: () -> Unit) {
     MoSoButtonSecondary(
-        modifier = Modifier
-            .wrapContentHeight()
-            .fillMaxWidth()
-            .padding(8.dp),
+        modifier =
+            Modifier
+                .wrapContentHeight()
+                .fillMaxWidth()
+                .padding(8.dp),
         onClick = onLogoutClicked,
     ) { Text(text = stringResource(id = R.string.sign_out)) }
 }

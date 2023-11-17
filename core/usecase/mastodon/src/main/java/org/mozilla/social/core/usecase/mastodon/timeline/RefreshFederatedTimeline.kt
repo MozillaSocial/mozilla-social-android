@@ -22,47 +22,49 @@ class RefreshFederatedTimeline internal constructor(
     private val socialDatabase: SocialDatabase,
     private val saveStatusToDatabase: SaveStatusToDatabase,
 ) {
-
     @OptIn(ExperimentalPagingApi::class)
     suspend operator fun invoke(
         loadType: LoadType,
-        state: PagingState<Int, FederatedTimelineStatusWrapper>
+        state: PagingState<Int, FederatedTimelineStatusWrapper>,
     ): RemoteMediator.MediatorResult {
         return try {
             var pageSize: Int = state.config.pageSize
-            val response = when (loadType) {
-                LoadType.REFRESH -> {
-                    pageSize = state.config.initialLoadSize
-                    timelineRepository.getPublicTimeline(
-                        federatedOnly = true,
-                        olderThanId = null,
-                        immediatelyNewerThanId = null,
-                        loadSize = pageSize,
-                    )
-                }
+            val response =
+                when (loadType) {
+                    LoadType.REFRESH -> {
+                        pageSize = state.config.initialLoadSize
+                        timelineRepository.getPublicTimeline(
+                            federatedOnly = true,
+                            olderThanId = null,
+                            immediatelyNewerThanId = null,
+                            loadSize = pageSize,
+                        )
+                    }
 
-                LoadType.PREPEND -> {
-                    val firstItem = state.firstItemOrNull()
-                        ?: return RemoteMediator.MediatorResult.Success(endOfPaginationReached = true)
-                    timelineRepository.getPublicTimeline(
-                        federatedOnly = true,
-                        olderThanId = null,
-                        immediatelyNewerThanId = firstItem.status.statusId,
-                        loadSize = pageSize,
-                    )
-                }
+                    LoadType.PREPEND -> {
+                        val firstItem =
+                            state.firstItemOrNull()
+                                ?: return RemoteMediator.MediatorResult.Success(endOfPaginationReached = true)
+                        timelineRepository.getPublicTimeline(
+                            federatedOnly = true,
+                            olderThanId = null,
+                            immediatelyNewerThanId = firstItem.status.statusId,
+                            loadSize = pageSize,
+                        )
+                    }
 
-                LoadType.APPEND -> {
-                    val lastItem = state.lastItemOrNull()
-                        ?: return RemoteMediator.MediatorResult.Success(endOfPaginationReached = true)
-                    timelineRepository.getPublicTimeline(
-                        federatedOnly = true,
-                        olderThanId = lastItem.status.statusId,
-                        immediatelyNewerThanId = null,
-                        loadSize = pageSize,
-                    )
+                    LoadType.APPEND -> {
+                        val lastItem =
+                            state.lastItemOrNull()
+                                ?: return RemoteMediator.MediatorResult.Success(endOfPaginationReached = true)
+                        timelineRepository.getPublicTimeline(
+                            federatedOnly = true,
+                            olderThanId = lastItem.status.statusId,
+                            immediatelyNewerThanId = null,
+                            loadSize = pageSize,
+                        )
+                    }
                 }
-            }
 
             val result = response.statuses.getInReplyToAccountNames(accountRepository)
 
@@ -73,16 +75,18 @@ class RefreshFederatedTimeline internal constructor(
 
                 saveStatusToDatabase(result)
 
-                socialDatabase.federatedTimelineDao().insertAll(result.map {
-                    FederatedTimelineStatus(
-                        statusId = it.statusId,
-                        accountId = it.account.accountId,
-                        pollId = it.poll?.pollId,
-                        boostedStatusId = it.boostedStatus?.statusId,
-                        boostedStatusAccountId = it.boostedStatus?.account?.accountId,
-                        boostedPollId = it.boostedStatus?.poll?.pollId,
-                    )
-                })
+                socialDatabase.federatedTimelineDao().insertAll(
+                    result.map {
+                        FederatedTimelineStatus(
+                            statusId = it.statusId,
+                            accountId = it.account.accountId,
+                            pollId = it.poll?.pollId,
+                            boostedStatusId = it.boostedStatus?.statusId,
+                            boostedStatusAccountId = it.boostedStatus?.account?.accountId,
+                            boostedPollId = it.boostedStatus?.poll?.pollId,
+                        )
+                    },
+                )
             }
 
             // There seems to be some race condition for refreshes.  Subsequent pages do
@@ -97,11 +101,13 @@ class RefreshFederatedTimeline internal constructor(
             }
 
             RemoteMediator.MediatorResult.Success(
-                endOfPaginationReached = when (loadType) {
-                    LoadType.PREPEND -> response.pagingLinks?.find { it.rel == Rel.PREV } == null
-                    LoadType.REFRESH,
-                    LoadType.APPEND -> response.pagingLinks?.find { it.rel == Rel.NEXT } == null
-                }
+                endOfPaginationReached =
+                    when (loadType) {
+                        LoadType.PREPEND -> response.pagingLinks?.find { it.rel == Rel.PREV } == null
+                        LoadType.REFRESH,
+                        LoadType.APPEND,
+                        -> response.pagingLinks?.find { it.rel == Rel.NEXT } == null
+                    },
             )
         } catch (e: Exception) {
             Timber.e(e)

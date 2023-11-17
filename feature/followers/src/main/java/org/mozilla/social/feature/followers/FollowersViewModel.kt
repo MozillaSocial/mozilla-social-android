@@ -26,32 +26,33 @@ class FollowersViewModel(
     private val navigateTo: NavigateTo,
     private val analytics: Analytics,
 ) : ViewModel(), FollowersInteractions {
-
     private val followersRemoteMediator: FollowersRemoteMediator by KoinJavaComponent.inject(
-        FollowersRemoteMediator::class.java
+        FollowersRemoteMediator::class.java,
     ) { parametersOf(accountId) }
 
     private val followingsRemoteMediator: FollowingsRemoteMediator by KoinJavaComponent.inject(
-        FollowingsRemoteMediator::class.java
+        FollowingsRemoteMediator::class.java,
     ) { parametersOf(accountId) }
 
-    val followers = followersRepository.getFollowersPager(
-        accountId = accountId,
-        remoteMediator = followersRemoteMediator,
-    ).map { pagingData ->
-        pagingData.map {
-            it.toQuickViewUiState()
-        }
-    }.cachedIn(viewModelScope)
+    val followers =
+        followersRepository.getFollowersPager(
+            accountId = accountId,
+            remoteMediator = followersRemoteMediator,
+        ).map { pagingData ->
+            pagingData.map {
+                it.toQuickViewUiState()
+            }
+        }.cachedIn(viewModelScope)
 
-    val following = followingsRepository.getFollowingsPager(
-        accountId = accountId,
-        remoteMediator = followingsRemoteMediator,
-    ).map { pagingData ->
-        pagingData.map {
-            it.toQuickViewUiState()
-        }
-    }.cachedIn(viewModelScope)
+    val following =
+        followingsRepository.getFollowingsPager(
+            accountId = accountId,
+            remoteMediator = followingsRemoteMediator,
+        ).map { pagingData ->
+            pagingData.map {
+                it.toQuickViewUiState()
+            }
+        }.cachedIn(viewModelScope)
 
     override fun onAccountClicked(accountId: String) {
         navigateTo(NavigationDestination.Account(accountId))

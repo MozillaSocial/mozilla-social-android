@@ -1,7 +1,6 @@
 package org.mozilla.social.core.model
 
 enum class SearchType(val value: String) {
-
     /**
      * Search for accounts.
      */
@@ -15,5 +14,5 @@ enum class SearchType(val value: String) {
     /**
      * Search for statuses.
      */
-    Statuses("statuses")
+    Statuses("statuses"),
 }

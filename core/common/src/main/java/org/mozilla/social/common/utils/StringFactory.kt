@@ -33,31 +33,33 @@ sealed interface StringFactory {
      * have access to [Context] just yet.
      */
     private class FactoryCollection(
-        vararg val factories: StringFactory
-    ): StringFactory
+        vararg val factories: StringFactory,
+    ) : StringFactory
 
-    fun build(context: Context): String = when (this) {
-        is Literal -> literalValue
-        is Resource -> context.getString(
-            resId,
-            *formatArgs,
-        )
-        is QuantityResource -> context.resources.getQuantityString(
-            resId,
-            quantity,
-            *formatArgs,
-        )
-        is FactoryCollection -> buildString {
-            factories.forEach {
-                append(it.build(context))
-            }
+    fun build(context: Context): String =
+        when (this) {
+            is Literal -> literalValue
+            is Resource ->
+                context.getString(
+                    resId,
+                    *formatArgs,
+                )
+            is QuantityResource ->
+                context.resources.getQuantityString(
+                    resId,
+                    quantity,
+                    *formatArgs,
+                )
+            is FactoryCollection ->
+                buildString {
+                    factories.forEach {
+                        append(it.build(context))
+                    }
+                }
         }
-    }
 
     companion object {
-        fun literal(
-            literalValue: String
-        ): StringFactory = Literal(literalValue)
+        fun literal(literalValue: String): StringFactory = Literal(literalValue)
 
         fun resource(
             @StringRes resId: Int,
@@ -74,8 +76,6 @@ sealed interface StringFactory {
             vararg formatArgs: Any,
         ): StringFactory = QuantityResource(resId, quantity, *formatArgs)
 
-        fun collection(
-            vararg factories: StringFactory
-        ): StringFactory = FactoryCollection(*factories)
+        fun collection(vararg factories: StringFactory): StringFactory = FactoryCollection(*factories)
     }
 }

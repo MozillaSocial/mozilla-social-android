@@ -7,4 +7,3 @@ interface BlocksApi {
     @GET("/api/v1/blocks")
     suspend fun getBlocks(): List<NetworkAccount>
 }
-

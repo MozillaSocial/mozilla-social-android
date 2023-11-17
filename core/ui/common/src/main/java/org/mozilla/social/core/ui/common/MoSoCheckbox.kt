@@ -32,14 +32,15 @@ fun MoSoCheckBox(
 
 object MoSoCheckboxDefaults {
     @Composable
-    fun colors(): CheckboxColors = CheckboxDefaults.colors(
-        checkedColor = MoSoTheme.colors.iconActionActive,
-        uncheckedColor = MoSoTheme.colors.borderInputEnabled,
-        checkmarkColor = MoSoTheme.colors.textActionPrimary,
-        disabledCheckedColor = MoSoTheme.colors.iconActionActive,
-        disabledUncheckedColor = MoSoTheme.colors.iconActionDisabled,
-        disabledIndeterminateColor = MoSoTheme.colors.textActionPrimary,
-    )
+    fun colors(): CheckboxColors =
+        CheckboxDefaults.colors(
+            checkedColor = MoSoTheme.colors.iconActionActive,
+            uncheckedColor = MoSoTheme.colors.borderInputEnabled,
+            checkmarkColor = MoSoTheme.colors.textActionPrimary,
+            disabledCheckedColor = MoSoTheme.colors.iconActionActive,
+            disabledUncheckedColor = MoSoTheme.colors.iconActionDisabled,
+            disabledIndeterminateColor = MoSoTheme.colors.textActionPrimary,
+        )
 }
 
 @Preview
@@ -59,7 +60,7 @@ private fun Preview() {
 @Composable
 private fun PreviewDarkMode() {
     MoSoTheme(
-        darkTheme = true
+        darkTheme = true,
     ) {
         MoSoSurface {
             Column {

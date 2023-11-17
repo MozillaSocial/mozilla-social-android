@@ -17,11 +17,12 @@ import org.mozilla.social.core.designsystem.theme.MoSoTheme
 @Composable
 fun SettingsGroup(
     @StringRes name: Int,
-    content: @Composable ColumnScope.() -> Unit
+    content: @Composable ColumnScope.() -> Unit,
 ) {
     Column(
-        modifier = Modifier
-            .padding(start = 16.dp, top = 16.dp, bottom = 8.dp, end = 16.dp)
+        modifier =
+            Modifier
+                .padding(start = 16.dp, top = 16.dp, bottom = 8.dp, end = 16.dp),
     ) {
         Text(text = stringResource(id = name), style = MoSoTheme.typography.titleSmall)
         Spacer(modifier = Modifier.height(8.dp))

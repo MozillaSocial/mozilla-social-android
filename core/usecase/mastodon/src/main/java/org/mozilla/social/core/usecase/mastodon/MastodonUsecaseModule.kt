@@ -37,194 +37,194 @@ import org.mozilla.social.core.usecase.mastodon.timeline.RefreshFederatedTimelin
 import org.mozilla.social.core.usecase.mastodon.timeline.RefreshHomeTimeline
 import org.mozilla.social.core.usecase.mastodon.timeline.RefreshLocalTimeline
 
-val mastodonUsecaseModule = module {
-    includes(
-        mastodonRepositoryModule,
-        databaseModule,
-        analyticsModule,
-        navigationModule,
-    )
+val mastodonUsecaseModule =
+    module {
+        includes(
+            mastodonRepositoryModule,
+            databaseModule,
+            analyticsModule,
+            navigationModule,
+        )
 
-    factory { parametersHolder ->
-        HashTagTimelineRemoteMediator(
-            get(),
-            get(),
-            get(),
-            get(),
-            parametersHolder[0]
-        )
-    }
-    single { GetThread(get(), get()) }
-    single { Login(get(), get(), get(), get(), get(), get(), get()) }
-    single {
-        Logout(
-            userPreferencesDatastore = get(),
-            socialDatabase = get(),
-            analytics = get(),
-            appScope = get(),
-        )
-    }
-    single { IsSignedInFlow(get()) }
-    single { GetDetailedAccount(get(), get()) }
-    single { GetLoggedInUserAccountId(get()) }
-
-    single {
-        BlockAccount(
-            externalScope = get<AppScope>(),
-            showSnackbar = get(),
-            accountRepository = get(),
-            socialDatabase = get(),
-        )
-    }
-    single {
-        FollowAccount(
-            externalScope = get<AppScope>(),
-            showSnackbar = get(),
-            accountRepository = get(),
-            socialDatabase = get(),
-        )
-    }
-    single {
-        MuteAccount(
-            externalScope = get<AppScope>(),
-            showSnackbar = get(),
-            accountRepository = get(),
-            socialDatabase = get(),
-        )
-    }
-    single {
-        UnblockAccount(
-            externalScope = get<AppScope>(),
-            showSnackbar = get(),
-            accountRepository = get(),
-            socialDatabase = get(),
-        )
-    }
-    single {
-        UnfollowAccount(
-            externalScope = get<AppScope>(),
-            showSnackbar = get(),
-            accountRepository = get(),
-            socialDatabase = get(),
-        )
-    }
-    single {
-        UnmuteAccount(
-            externalScope = get<AppScope>(),
-            showSnackbar = get(),
-            accountRepository = get(),
-            socialDatabase = get(),
-        )
-    }
-    single {
-        UpdateMyAccount(
-            externalScope = get<AppScope>(),
-            showSnackbar = get(),
-            accountRepository = get(),
-            socialDatabase = get(),
-        )
-    }
-    single {
-        Report(
-            externalScope = get<AppScope>(),
-            showSnackbar = get(),
-            reportRepository = get(),
-        )
-    }
-    single {
-        PostStatus(
-            externalScope = get<AppScope>(),
-            mediaApi = get(),
-            statusRepository = get(),
-            saveStatusToDatabase = get(),
-            timelineRepository = get(),
-            showSnackbar = get(),
-
+        factory { parametersHolder ->
+            HashTagTimelineRemoteMediator(
+                get(),
+                get(),
+                get(),
+                get(),
+                parametersHolder[0],
             )
-    }
-    single {
-        BoostStatus(
-            externalScope = get(),
-            statusRepository = get(),
-            saveStatusToDatabase = get(),
-            databaseDelegate = get(),
-            showSnackbar = get(),
-        )
-    }
-    single {
-        FavoriteStatus(
-            externalScope = get<AppScope>(),
-            statusRepository = get(),
-            showSnackbar = get(),
-            socialDatabase = get(),
-            saveStatusToDatabase = get(),
-        )
-    }
-    single {
-        UndoBoostStatus(
-            externalScope = get<AppScope>(),
-            socialDatabase = get(),
-            statusRepository = get(),
-            showSnackbar = get(),
-            saveStatusToDatabase = get(),
-        )
-    }
-    single {
-        UndoFavoriteStatus(
-            externalScope = get<AppScope>(),
-            statusRepository = get(),
-            showSnackbar = get(),
-            socialDatabase = get(),
-            saveStatusToDatabase = get(),
-        )
-    }
-    single {
-        VoteOnPoll(
-            externalScope = get(),
-            statusRepository = get(),
-            pollRepository = get(),
-            showSnackbar = get(),
-        )
-    }
-    single {
-        DeleteStatus(
-            externalScope = get<AppScope>(),
-            statusRepository = get(),
-            showSnackbar = get(),
-            socialDatabase = get(),
-        )
-    }
+        }
+        single { GetThread(get(), get()) }
+        single { Login(get(), get(), get(), get(), get(), get(), get()) }
+        single {
+            Logout(
+                userPreferencesDatastore = get(),
+                socialDatabase = get(),
+                analytics = get(),
+                appScope = get(),
+            )
+        }
+        single { IsSignedInFlow(get()) }
+        single { GetDetailedAccount(get(), get()) }
+        single { GetLoggedInUserAccountId(get()) }
 
-    singleOf(::SaveStatusToDatabase)
+        single {
+            BlockAccount(
+                externalScope = get<AppScope>(),
+                showSnackbar = get(),
+                accountRepository = get(),
+                socialDatabase = get(),
+            )
+        }
+        single {
+            FollowAccount(
+                externalScope = get<AppScope>(),
+                showSnackbar = get(),
+                accountRepository = get(),
+                socialDatabase = get(),
+            )
+        }
+        single {
+            MuteAccount(
+                externalScope = get<AppScope>(),
+                showSnackbar = get(),
+                accountRepository = get(),
+                socialDatabase = get(),
+            )
+        }
+        single {
+            UnblockAccount(
+                externalScope = get<AppScope>(),
+                showSnackbar = get(),
+                accountRepository = get(),
+                socialDatabase = get(),
+            )
+        }
+        single {
+            UnfollowAccount(
+                externalScope = get<AppScope>(),
+                showSnackbar = get(),
+                accountRepository = get(),
+                socialDatabase = get(),
+            )
+        }
+        single {
+            UnmuteAccount(
+                externalScope = get<AppScope>(),
+                showSnackbar = get(),
+                accountRepository = get(),
+                socialDatabase = get(),
+            )
+        }
+        single {
+            UpdateMyAccount(
+                externalScope = get<AppScope>(),
+                showSnackbar = get(),
+                accountRepository = get(),
+                socialDatabase = get(),
+            )
+        }
+        single {
+            Report(
+                externalScope = get<AppScope>(),
+                showSnackbar = get(),
+                reportRepository = get(),
+            )
+        }
+        single {
+            PostStatus(
+                externalScope = get<AppScope>(),
+                mediaApi = get(),
+                statusRepository = get(),
+                saveStatusToDatabase = get(),
+                timelineRepository = get(),
+                showSnackbar = get(),
+            )
+        }
+        single {
+            BoostStatus(
+                externalScope = get(),
+                statusRepository = get(),
+                saveStatusToDatabase = get(),
+                databaseDelegate = get(),
+                showSnackbar = get(),
+            )
+        }
+        single {
+            FavoriteStatus(
+                externalScope = get<AppScope>(),
+                statusRepository = get(),
+                showSnackbar = get(),
+                socialDatabase = get(),
+                saveStatusToDatabase = get(),
+            )
+        }
+        single {
+            UndoBoostStatus(
+                externalScope = get<AppScope>(),
+                socialDatabase = get(),
+                statusRepository = get(),
+                showSnackbar = get(),
+                saveStatusToDatabase = get(),
+            )
+        }
+        single {
+            UndoFavoriteStatus(
+                externalScope = get<AppScope>(),
+                statusRepository = get(),
+                showSnackbar = get(),
+                socialDatabase = get(),
+                saveStatusToDatabase = get(),
+            )
+        }
+        single {
+            VoteOnPoll(
+                externalScope = get(),
+                statusRepository = get(),
+                pollRepository = get(),
+                showSnackbar = get(),
+            )
+        }
+        single {
+            DeleteStatus(
+                externalScope = get<AppScope>(),
+                statusRepository = get(),
+                showSnackbar = get(),
+                socialDatabase = get(),
+            )
+        }
 
-    single { RefreshLocalTimeline(get(), get(), get(), get()) }
-    single { RefreshFederatedTimeline(get(), get(), get(), get()) }
-    singleOf(::RefreshHomeTimeline)
-    factory {
-        RefreshAccountTimeline(
-            accountRepository = get(),
-            socialDatabase = get(),
-            saveStatusToDatabase = get(),
-            accountId = it[0],
-            timelineType = it[1],
-        )
+        singleOf(::SaveStatusToDatabase)
+
+        single { RefreshLocalTimeline(get(), get(), get(), get()) }
+        single { RefreshFederatedTimeline(get(), get(), get(), get()) }
+        singleOf(::RefreshHomeTimeline)
+        factory {
+            RefreshAccountTimeline(
+                accountRepository = get(),
+                socialDatabase = get(),
+                saveStatusToDatabase = get(),
+                accountId = it[0],
+                timelineType = it[1],
+            )
+        }
+        factory {
+            FollowersRemoteMediator(
+                accountRepository = get(),
+                databaseDelegate = get(),
+                followersRepository = get(),
+                relationshipRepository = get(),
+                accountId = it[0],
+            )
+        }
+        factory {
+            FollowingsRemoteMediator(
+                accountRepository = get(),
+                databaseDelegate = get(),
+                followingsRepository = get(),
+                relationshipRepository = get(),
+                accountId = it[0],
+            )
+        }
     }
-    factory {
-        FollowersRemoteMediator(
-            accountRepository = get(),
-            databaseDelegate = get(),
-            followersRepository = get(),
-            relationshipRepository = get(),
-            accountId = it[0]
-        )
-    }
-    factory {
-        FollowingsRemoteMediator(
-            accountRepository = get(),
-            databaseDelegate = get(),
-            followingsRepository = get(),
-            relationshipRepository = get(),
-            accountId = it[0]
-        )
-    }
-}

@@ -11,24 +11,25 @@ import org.mozilla.social.core.repository.mastodon.mastodonRepositoryModule
 import org.mozilla.social.core.ui.postcard.postCardModule
 import org.mozilla.social.core.usecase.mastodon.mastodonUsecaseModule
 
-val hashTagModule = module {
-    includes(
-        commonModule,
-        mastodonUsecaseModule,
-        mastodonRepositoryModule,
-        dataStoreModule,
-        postCardModule,
-        databaseModule,
-        navigationModule,
-        analyticsModule,
-    )
-
-    viewModel { parametersHolder ->
-        HashTagViewModel(
-            hashTag = parametersHolder[0],
-            socialDatabase = get(),
-            analytics = get(),
-            userAccountId = get(),
+val hashTagModule =
+    module {
+        includes(
+            commonModule,
+            mastodonUsecaseModule,
+            mastodonRepositoryModule,
+            dataStoreModule,
+            postCardModule,
+            databaseModule,
+            navigationModule,
+            analyticsModule,
         )
+
+        viewModel { parametersHolder ->
+            HashTagViewModel(
+                hashTag = parametersHolder[0],
+                socialDatabase = get(),
+                analytics = get(),
+                userAccountId = get(),
+            )
+        }
     }
-}

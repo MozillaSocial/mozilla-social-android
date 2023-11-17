@@ -31,12 +31,13 @@ fun MainActivityScreen() {
         val currentDestination by appState.currentNavigationDestination.collectAsStateWithLifecycle()
 
         MoSoSnackbarHost(
-            modifier = Modifier
-                .align(Alignment.BottomStart)
-                .systemBarsPadding()
-                .padding(bottom = 16.dp)
-                .padding(horizontal = 16.dp)
-                .bottomBarPadding(currentDestination),
+            modifier =
+                Modifier
+                    .align(Alignment.BottomStart)
+                    .systemBarsPadding()
+                    .padding(bottom = 16.dp)
+                    .padding(horizontal = 16.dp)
+                    .bottomBarPadding(currentDestination),
             hostState = appState.snackbarHostState,
         ) { snackbarData, snackbarType ->
             MoSoSnackbar(snackbarData = snackbarData, snackbarType = snackbarType)

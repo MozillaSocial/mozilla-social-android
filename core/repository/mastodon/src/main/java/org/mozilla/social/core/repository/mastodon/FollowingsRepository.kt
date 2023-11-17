@@ -17,31 +17,29 @@ import org.mozilla.social.core.repository.mastodon.model.account.toDetailedAccou
 class FollowingsRepository(
     private val dao: FollowingsDao,
 ) {
-
     @ExperimentalPagingApi
     fun getFollowingsPager(
         accountId: String,
         remoteMediator: RemoteMediator<Int, FolloweeWrapper>,
         pageSize: Int = 40,
         initialLoadSize: Int = 40,
-    ): Flow<PagingData<DetailedAccountWrapper>> = Pager(
-        config = PagingConfig(
-            pageSize = pageSize,
-            initialLoadSize = initialLoadSize,
-        ),
-        remoteMediator = remoteMediator,
-    ) {
-        dao.followingsPagingSource(accountId)
-    }.flow.map { pagingData ->
-        pagingData.map {
-            it.toDetailedAccount()
+    ): Flow<PagingData<DetailedAccountWrapper>> =
+        Pager(
+            config =
+                PagingConfig(
+                    pageSize = pageSize,
+                    initialLoadSize = initialLoadSize,
+                ),
+            remoteMediator = remoteMediator,
+        ) {
+            dao.followingsPagingSource(accountId)
+        }.flow.map { pagingData ->
+            pagingData.map {
+                it.toDetailedAccount()
+            }
         }
-    }
 
-    suspend fun deleteFollowings(
-        accountId: String
-    ) = dao.deleteFollowings(accountId)
+    suspend fun deleteFollowings(accountId: String) = dao.deleteFollowings(accountId)
 
-    fun insertAll(followees: List<Followee>) =
-        dao.insertAll(followees)
+    fun insertAll(followees: List<Followee>) = dao.insertAll(followees)
 }

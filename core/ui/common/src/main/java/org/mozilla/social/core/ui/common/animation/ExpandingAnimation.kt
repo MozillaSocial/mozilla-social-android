@@ -18,19 +18,21 @@ fun ExpandingAnimation(
     modifier: Modifier = Modifier,
     visible: Boolean,
     label: String = "AnimatedVisibility",
-    content: @Composable AnimatedVisibilityScope.() -> Unit
+    content: @Composable AnimatedVisibilityScope.() -> Unit,
 ) {
     AnimatedVisibility(
         modifier = modifier,
         visible = visible,
-        enter = expandVertically(
-            expandFrom = Alignment.Top
-        ) { 0 } + fadeIn(),
-        exit = shrinkVertically(
-            shrinkTowards = Alignment.Top
-        ) {
-            0
-        } + fadeOut(),
+        enter =
+            expandVertically(
+                expandFrom = Alignment.Top,
+            ) { 0 } + fadeIn(),
+        exit =
+            shrinkVertically(
+                shrinkTowards = Alignment.Top,
+            ) {
+                0
+            } + fadeOut(),
         label = label,
     ) {
         content()

@@ -5,7 +5,7 @@ import org.mozilla.social.feature.post.R
 
 enum class PollDuration(
     val inSeconds: Long,
-    val label: StringFactory
+    val label: StringFactory,
 ) {
     FIVE_MINUTES(300, StringFactory.resource(R.string.five_minutes)),
     THIRTY_MINUTES(1_800, StringFactory.resource(R.string.thirty_minutes)),

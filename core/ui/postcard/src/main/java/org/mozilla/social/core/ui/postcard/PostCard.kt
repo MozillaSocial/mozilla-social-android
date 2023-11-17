@@ -52,14 +52,14 @@ import org.mozilla.social.core.designsystem.theme.MoSoRadius
 import org.mozilla.social.core.designsystem.theme.MoSoSpacing
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.designsystem.utils.NoRipple
-import org.mozilla.social.core.ui.common.dropdown.DropDownItem
 import org.mozilla.social.core.ui.common.TransparentNoTouchOverlay
+import org.mozilla.social.core.ui.common.dropdown.DropDownItem
 import org.mozilla.social.core.ui.common.dropdown.MoSoDropdownMenu
 import org.mozilla.social.core.ui.common.loading.MoSoCircularProgressIndicator
-import org.mozilla.social.core.ui.common.utils.getMaxWidth
 import org.mozilla.social.core.ui.common.media.MediaDisplay
-import org.mozilla.social.core.ui.common.utils.shareUrl
 import org.mozilla.social.core.ui.common.utils.PreviewTheme
+import org.mozilla.social.core.ui.common.utils.getMaxWidth
+import org.mozilla.social.core.ui.common.utils.shareUrl
 import org.mozilla.social.core.ui.htmlcontent.HtmlContent
 import org.mozilla.social.core.ui.poll.Poll
 
@@ -72,7 +72,7 @@ fun PostCard(
     modifier: Modifier = Modifier,
     post: PostCardUiState,
     postCardInteractions: PostCardInteractions,
-    threadId: String? = null
+    threadId: String? = null,
 ) {
     NoRipple {
         Box(modifier = modifier) {
@@ -86,11 +86,11 @@ fun PostCard(
                         if (post.mainPostCardUiState.statusId != threadId) {
                             postCardInteractions.onPostCardClicked(post.mainPostCardUiState.statusId)
                         }
-                    }
+                    },
             ) {
                 post.topRowMetaDataUiState?.let {
                     TopRowMetaData(
-                        topRowMetaDataUiState = it
+                        topRowMetaDataUiState = it,
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                 }
@@ -118,20 +118,22 @@ private fun TopRowMetaData(
         modifier = modifier,
     ) {
         Icon(
-            modifier = Modifier
-                .size(20.dp)
-                .align(Alignment.CenterVertically),
-            painter = when(topRowMetaDataUiState.iconType) {
-                TopRowIconType.BOOSTED -> MoSoIcons.boost()
-                TopRowIconType.REPLY -> MoSoIcons.chatBubbles()
-            },
-            contentDescription = ""
+            modifier =
+                Modifier
+                    .size(20.dp)
+                    .align(Alignment.CenterVertically),
+            painter =
+                when (topRowMetaDataUiState.iconType) {
+                    TopRowIconType.BOOSTED -> MoSoIcons.boost()
+                    TopRowIconType.REPLY -> MoSoIcons.chatBubbles()
+                },
+            contentDescription = "",
         )
         Spacer(modifier = Modifier.padding(start = 8.dp))
         Text(
             modifier = Modifier.align(Alignment.CenterVertically),
             text = topRowMetaDataUiState.text.build(LocalContext.current),
-            style = MoSoTheme.typography.bodyMedium
+            style = MoSoTheme.typography.bodyMedium,
         )
     }
 }
@@ -152,13 +154,13 @@ private fun Post(
 
             MainContent(
                 post = post,
-                postCardInteractions = postCardInteractions
+                postCardInteractions = postCardInteractions,
             )
 
             BottomRow(
                 modifier = Modifier,
                 post = post,
-                postCardInteractions = postCardInteractions
+                postCardInteractions = postCardInteractions,
             )
         }
     }
@@ -171,11 +173,12 @@ private fun Avatar(
     postCardInteractions: PostCardInteractions,
 ) {
     AsyncImage(
-        modifier = modifier
-            .size(36.dp)
-            .clip(CircleShape)
-            .background(MoSoTheme.colors.layer2)
-            .clickable { postCardInteractions.onAccountImageClicked(post.accountId) },
+        modifier =
+            modifier
+                .size(36.dp)
+                .clip(CircleShape)
+                .background(MoSoTheme.colors.layer2)
+                .clickable { postCardInteractions.onAccountImageClicked(post.accountId) },
         model = post.profilePictureUrl,
         contentDescription = "",
     )
@@ -193,7 +196,7 @@ private fun MetaData(
         modifier = modifier,
     ) {
         Column(
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1f),
         ) {
             Text(
                 text = post.username,
@@ -218,7 +221,7 @@ private fun MainContent(
     postCardInteractions: PostCardInteractions,
 ) {
     ContentWarning(
-        contentWarningText = post.contentWarning
+        contentWarningText = post.contentWarning,
     ) {
         Column {
             HtmlContent(
@@ -258,26 +261,30 @@ private fun ContentWarning(
 
         if (hasContentWarning) {
             Column(
-                modifier = Modifier
-                    .clickable { isShowing = !isShowing }
+                modifier =
+                    Modifier
+                        .clickable { isShowing = !isShowing },
             ) {
                 Row(
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(MoSoRadius.sm_4_dp))
-                        .background(MoSoTheme.colors.layerActionWarning)
-                        .padding(horizontal = MoSoSpacing.sm, vertical = MoSoSpacing.xs)
+                    modifier =
+                        Modifier
+                            .clip(RoundedCornerShape(MoSoRadius.sm_4_dp))
+                            .background(MoSoTheme.colors.layerActionWarning)
+                            .padding(horizontal = MoSoSpacing.sm, vertical = MoSoSpacing.xs),
                 ) {
                     Icon(
-                        modifier = Modifier
-                            .size(14.dp)
-                            .align(Alignment.CenterVertically),
+                        modifier =
+                            Modifier
+                                .size(14.dp)
+                                .align(Alignment.CenterVertically),
                         painter = MoSoIcons.warning(),
                         contentDescription = "",
                     )
                     Spacer(modifier = Modifier.width(4.dp))
                     Text(
-                        modifier = Modifier
-                            .align(Alignment.CenterVertically),
+                        modifier =
+                            Modifier
+                                .align(Alignment.CenterVertically),
                         text = contentWarningText,
                         style = MoSoTheme.typography.labelSmall,
                     )
@@ -285,14 +292,16 @@ private fun ContentWarning(
                 Spacer(modifier = Modifier.height(8.dp))
                 Row {
                     Text(
-                        modifier = Modifier
-                            .align(Alignment.CenterVertically)
-                            .sizeIn(minWidth = 80.dp),
-                        text = if (isShowing) {
-                            stringResource(id = R.string.hide_post)
-                        } else {
-                            stringResource(id = R.string.show_post)
-                        },
+                        modifier =
+                            Modifier
+                                .align(Alignment.CenterVertically)
+                                .sizeIn(minWidth = 80.dp),
+                        text =
+                            if (isShowing) {
+                                stringResource(id = R.string.hide_post)
+                            } else {
+                                stringResource(id = R.string.show_post)
+                            },
                         style = MoSoTheme.typography.bodyMedium,
                         textDecoration = TextDecoration.Underline,
                     )
@@ -301,19 +310,19 @@ private fun ContentWarning(
                     val rotation: Float by animateFloatAsState(
                         targetValue = if (isShowing) rotatedDegrees else 0f,
                         animationSpec = tween(),
-                        label = ""
+                        label = "",
                     )
                     Icon(
-                        modifier = Modifier
-                            .rotate(rotation)
-                            .align(Alignment.CenterVertically),
+                        modifier =
+                            Modifier
+                                .rotate(rotation)
+                                .align(Alignment.CenterVertically),
                         painter = MoSoIcons.caretRight(),
                         contentDescription = null,
                     )
                 }
                 Spacer(modifier = Modifier.height(8.dp))
             }
-
         }
 
         AnimatedVisibility(visible = isShowing) {
@@ -332,12 +341,13 @@ private fun OverflowMenu(
 
     IconButton(
         modifier = Modifier.width(IntrinsicSize.Max),
-        onClick = { overflowMenuExpanded.value = true }
+        onClick = { overflowMenuExpanded.value = true },
     ) {
         if (post.isBeingDeleted) {
             MoSoCircularProgressIndicator(
-                modifier = Modifier
-                    .size(26.dp)
+                modifier =
+                    Modifier
+                        .size(26.dp),
             )
         } else {
             Icon(painter = MoSoIcons.moreVertical(), contentDescription = "")
@@ -347,24 +357,24 @@ private fun OverflowMenu(
             expanded = overflowMenuExpanded.value,
             onDismissRequest = {
                 overflowMenuExpanded.value = false
-            }
+            },
         ) {
             if (post.isUsersPost) {
                 DropDownItem(
                     text = stringResource(id = R.string.delete_post),
                     expanded = overflowMenuExpanded,
-                    onClick = { postCardInteractions.onOverflowDeleteClicked(post.statusId) }
+                    onClick = { postCardInteractions.onOverflowDeleteClicked(post.statusId) },
                 )
             } else {
                 DropDownItem(
                     text = stringResource(id = R.string.mute_user, post.username),
                     expanded = overflowMenuExpanded,
-                    onClick = { postCardInteractions.onOverflowMuteClicked(post.accountId) }
+                    onClick = { postCardInteractions.onOverflowMuteClicked(post.accountId) },
                 )
                 DropDownItem(
                     text = stringResource(id = R.string.block_user, post.username),
                     expanded = overflowMenuExpanded,
-                    onClick = { postCardInteractions.onOverflowBlockClicked(post.accountId) }
+                    onClick = { postCardInteractions.onOverflowBlockClicked(post.accountId) },
                 )
                 DropDownItem(
                     text = stringResource(id = R.string.report_user, post.username),
@@ -375,7 +385,7 @@ private fun OverflowMenu(
                             post.accountName.build(context),
                             post.statusId,
                         )
-                    }
+                    },
                 )
             }
         }
@@ -391,8 +401,9 @@ private fun BottomRow(
     val context = LocalContext.current
 
     Row(
-        modifier = modifier
-            .requiredWidth(getMaxWidth() + 20.dp)
+        modifier =
+            modifier
+                .requiredWidth(getMaxWidth() + 20.dp),
     ) {
         BottomIconButton(
             onClick = { postCardInteractions.onReplyClicked(post.statusId) },
@@ -412,7 +423,7 @@ private fun BottomRow(
             painter = if (post.isFavorited) MoSoIcons.heartFilled() else MoSoIcons.heart(),
             count = post.favoriteCount,
             highlighted = post.isFavorited,
-            highlightColor = MoSoTheme.colors.textWarning
+            highlightColor = MoSoTheme.colors.textWarning,
         )
         Spacer(modifier = Modifier.weight(1f))
         BottomIconButton(
@@ -440,27 +451,30 @@ private fun BottomIconButton(
         modifier = modifier,
     ) {
         IconButton(
-            modifier = Modifier
-                .width(IntrinsicSize.Max)
-                .align(Alignment.CenterVertically),
-            onClick = onClick
+            modifier =
+                Modifier
+                    .width(IntrinsicSize.Max)
+                    .align(Alignment.CenterVertically),
+            onClick = onClick,
         ) {
             Icon(
                 painter = painter,
                 contentDescription = "",
-                tint = if (highlighted) {
-                    highlightColor
-                } else {
-                    LocalContentColor.current
-                }
+                tint =
+                    if (highlighted) {
+                        highlightColor
+                    } else {
+                        LocalContentColor.current
+                    },
             )
         }
         if (count > 0) {
             Text(
-                modifier = Modifier
-                    .align(Alignment.CenterVertically)
-                    .offset(x = -6.dp),
-                text = "$count"
+                modifier =
+                    Modifier
+                        .align(Alignment.CenterVertically)
+                        .offset(x = -6.dp),
+                text = "$count",
             )
         }
     }
@@ -472,35 +486,38 @@ private fun BottomIconButton(
 private fun PostCardPreview() {
     PreviewTheme {
         PostCard(
-            post = PostCardUiState(
-                statusId = "",
-                topRowMetaDataUiState = TopRowMetaDataUiState(
-                    TopRowIconType.REPLY,
-                    StringFactory.literal("in reply to Other person")
-                ),
-                mainPostCardUiState = MainPostCardUiState(
-                    url = "",
-                    pollUiState = null,
-                    username = "Cool guy",
-                    statusTextHtml = "<p><span class=\"h-card\"><a href=\"https://mozilla.social/@obez\" class=\"u-url mention\" rel=\"nofollow noopener noreferrer\" target=\"_blank\">@<span>obez</span></a></span> This is a text status.  Here is the text and that is all I have to say about that.</p>",
-                    mediaAttachments = emptyList(),
-                    profilePictureUrl = "",
-                    postTimeSince = Instant.fromEpochMilliseconds(1695308821000L).timeSinceNow(),
-                    accountName = StringFactory.literal("coolguy"),
-                    replyCount = 4000L,
-                    boostCount = 30000L,
-                    favoriteCount = 7L,
+            post =
+                PostCardUiState(
                     statusId = "",
-                    userBoosted = false,
-                    isFavorited = false,
-                    accountId = "",
-                    mentions = emptyList(),
-                    previewCard = null,
-                    isUsersPost = false,
-                    isBeingDeleted = false,
-                    contentWarning = "",
+                    topRowMetaDataUiState =
+                        TopRowMetaDataUiState(
+                            TopRowIconType.REPLY,
+                            StringFactory.literal("in reply to Other person"),
+                        ),
+                    mainPostCardUiState =
+                        MainPostCardUiState(
+                            url = "",
+                            pollUiState = null,
+                            username = "Cool guy",
+                            statusTextHtml = "<p><span class=\"h-card\"><a href=\"https://mozilla.social/@obez\" class=\"u-url mention\" rel=\"nofollow noopener noreferrer\" target=\"_blank\">@<span>obez</span></a></span> This is a text status.  Here is the text and that is all I have to say about that.</p>",
+                            mediaAttachments = emptyList(),
+                            profilePictureUrl = "",
+                            postTimeSince = Instant.fromEpochMilliseconds(1695308821000L).timeSinceNow(),
+                            accountName = StringFactory.literal("coolguy"),
+                            replyCount = 4000L,
+                            boostCount = 30000L,
+                            favoriteCount = 7L,
+                            statusId = "",
+                            userBoosted = false,
+                            isFavorited = false,
+                            accountId = "",
+                            mentions = emptyList(),
+                            previewCard = null,
+                            isUsersPost = false,
+                            isBeingDeleted = false,
+                            contentWarning = "",
+                        ),
                 ),
-            ),
             postCardInteractions = object : PostCardInteractions {},
         )
     }
@@ -512,35 +529,38 @@ private fun PostCardPreview() {
 private fun PostCardWithContentWarningPreview() {
     PreviewTheme {
         PostCard(
-            post = PostCardUiState(
-                statusId = "",
-                topRowMetaDataUiState = TopRowMetaDataUiState(
-                    TopRowIconType.REPLY,
-                    StringFactory.literal("in reply to Other person")
-                ),
-                mainPostCardUiState = MainPostCardUiState(
-                    url = "",
-                    pollUiState = null,
-                    username = "Cool guy",
-                    statusTextHtml = "<p><span class=\"h-card\"><a href=\"https://mozilla.social/@obez\" class=\"u-url mention\" rel=\"nofollow noopener noreferrer\" target=\"_blank\">@<span>obez</span></a></span> This is a text status.  Here is the text and that is all I have to say about that.</p>",
-                    mediaAttachments = emptyList(),
-                    profilePictureUrl = "",
-                    postTimeSince = Instant.fromEpochMilliseconds(1695308821000L).timeSinceNow(),
-                    accountName = StringFactory.literal("coolguy"),
-                    replyCount = 4000L,
-                    boostCount = 30000L,
-                    favoriteCount = 7L,
+            post =
+                PostCardUiState(
                     statusId = "",
-                    userBoosted = false,
-                    isFavorited = false,
-                    accountId = "",
-                    mentions = emptyList(),
-                    previewCard = null,
-                    isUsersPost = false,
-                    isBeingDeleted = false,
-                    contentWarning = "Micky mouse spoilers!",
+                    topRowMetaDataUiState =
+                        TopRowMetaDataUiState(
+                            TopRowIconType.REPLY,
+                            StringFactory.literal("in reply to Other person"),
+                        ),
+                    mainPostCardUiState =
+                        MainPostCardUiState(
+                            url = "",
+                            pollUiState = null,
+                            username = "Cool guy",
+                            statusTextHtml = "<p><span class=\"h-card\"><a href=\"https://mozilla.social/@obez\" class=\"u-url mention\" rel=\"nofollow noopener noreferrer\" target=\"_blank\">@<span>obez</span></a></span> This is a text status.  Here is the text and that is all I have to say about that.</p>",
+                            mediaAttachments = emptyList(),
+                            profilePictureUrl = "",
+                            postTimeSince = Instant.fromEpochMilliseconds(1695308821000L).timeSinceNow(),
+                            accountName = StringFactory.literal("coolguy"),
+                            replyCount = 4000L,
+                            boostCount = 30000L,
+                            favoriteCount = 7L,
+                            statusId = "",
+                            userBoosted = false,
+                            isFavorited = false,
+                            accountId = "",
+                            mentions = emptyList(),
+                            previewCard = null,
+                            isUsersPost = false,
+                            isBeingDeleted = false,
+                            contentWarning = "Micky mouse spoilers!",
+                        ),
                 ),
-            ),
             postCardInteractions = object : PostCardInteractions {},
         )
     }

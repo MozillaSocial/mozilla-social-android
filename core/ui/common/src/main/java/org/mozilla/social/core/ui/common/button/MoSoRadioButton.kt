@@ -18,7 +18,7 @@ fun MoSoRadioButton(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     colors: RadioButtonColors = MoSoRadioButtonDefaults.colors(),
-    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() }
+    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
 ) {
     RadioButton(
         selected = selected,
@@ -26,18 +26,19 @@ fun MoSoRadioButton(
         modifier = modifier,
         enabled = enabled,
         colors = colors,
-        interactionSource = interactionSource
+        interactionSource = interactionSource,
     )
 }
 
 object MoSoRadioButtonDefaults {
     @Composable
-    fun colors() : RadioButtonColors = RadioButtonDefaults.colors(
-        selectedColor = MoSoTheme.colors.iconActionActive,
-        unselectedColor = MoSoTheme.colors.iconActionDisabled,
-        disabledSelectedColor = MoSoTheme.colors.iconActionActive,
-        disabledUnselectedColor = MoSoTheme.colors.iconActionDisabled,
-    )
+    fun colors(): RadioButtonColors =
+        RadioButtonDefaults.colors(
+            selectedColor = MoSoTheme.colors.iconActionActive,
+            unselectedColor = MoSoTheme.colors.iconActionDisabled,
+            disabledSelectedColor = MoSoTheme.colors.iconActionActive,
+            disabledUnselectedColor = MoSoTheme.colors.iconActionDisabled,
+        )
 }
 
 @Preview
@@ -54,7 +55,7 @@ private fun Preview() {
 @Composable
 private fun PreviewDarkMode() {
     MoSoTheme(
-        darkTheme = true
+        darkTheme = true,
     ) {
         MoSoSurface {
             MoSoRadioButton(selected = true, onClick = null)

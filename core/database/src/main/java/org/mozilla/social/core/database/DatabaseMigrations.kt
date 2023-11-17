@@ -14,23 +14,23 @@ object DatabaseMigrations {
 
     @DeleteColumn(
         tableName = "homeTimeline",
-        columnName = "createdAt"
+        columnName = "createdAt",
     )
     @DeleteColumn(
         tableName = "localTimeline",
-        columnName = "createdAt"
+        columnName = "createdAt",
     )
     @DeleteColumn(
         tableName = "federatedTimeline",
-        columnName = "createdAt"
+        columnName = "createdAt",
     )
     @DeleteColumn(
         tableName = "hashTagTimeline",
-        columnName = "createdAt"
+        columnName = "createdAt",
     )
     @DeleteColumn(
         tableName = "accountTimeline",
-        columnName = "createdAt"
+        columnName = "createdAt",
     )
     class Schema7to8 : AutoMigrationSpec
 
@@ -45,7 +45,7 @@ object DatabaseMigrations {
     )
     @DeleteColumn(
         tableName = "followers",
-        columnName = "relationshipAccountId"
+        columnName = "relationshipAccountId",
     )
     class Schema10to11 : AutoMigrationSpec
 }

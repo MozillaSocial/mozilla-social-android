@@ -8,18 +8,16 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 data class NetworkPollOption(
-
     /**
      * The label of the poll option.
      */
     @SerialName("title")
     val title: String,
-
     /**
      * The number of received votes for this option.
      *
      * null if results are not yet published.
      */
     @SerialName("votes_count")
-    val votesCount: Long? = null
+    val votesCount: Long? = null,
 )

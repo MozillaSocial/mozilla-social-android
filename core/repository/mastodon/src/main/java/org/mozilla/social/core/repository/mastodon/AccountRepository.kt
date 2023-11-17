@@ -7,15 +7,15 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import org.mozilla.social.common.annotations.PreferUseCase
 import org.mozilla.social.common.parseMastodonLinkHeader
 import org.mozilla.social.core.database.dao.AccountsDao
-import org.mozilla.social.core.network.mastodon.AccountApi
-import org.mozilla.social.core.repository.mastodon.model.account.toExternal
-import org.mozilla.social.core.model.paging.FollowersPagingWrapper
-import org.mozilla.social.core.model.paging.StatusPagingWrapper
-import org.mozilla.social.core.repository.mastodon.model.status.toExternalModel
 import org.mozilla.social.core.model.Account
 import org.mozilla.social.core.model.Relationship
 import org.mozilla.social.core.model.Status
+import org.mozilla.social.core.model.paging.FollowersPagingWrapper
+import org.mozilla.social.core.model.paging.StatusPagingWrapper
+import org.mozilla.social.core.network.mastodon.AccountApi
+import org.mozilla.social.core.repository.mastodon.model.account.toExternal
 import org.mozilla.social.core.repository.mastodon.model.status.toDatabaseModel
+import org.mozilla.social.core.repository.mastodon.model.status.toExternalModel
 import retrofit2.HttpException
 import java.io.File
 
@@ -37,12 +37,13 @@ class AccountRepository internal constructor(
         newerThanId: String? = null,
         loadSize: Int? = null,
     ): FollowersPagingWrapper {
-        val response = api.getAccountFollowers(
-            accountId = accountId,
-            olderThanId = olderThanId,
-            newerThanId = newerThanId,
-            limit = loadSize,
-        )
+        val response =
+            api.getAccountFollowers(
+                accountId = accountId,
+                olderThanId = olderThanId,
+                newerThanId = newerThanId,
+                limit = loadSize,
+            )
         if (!response.isSuccessful) {
             throw HttpException(response)
         }
@@ -58,12 +59,13 @@ class AccountRepository internal constructor(
         newerThanId: String? = null,
         loadSize: Int? = null,
     ): FollowersPagingWrapper {
-        val response = api.getAccountFollowing(
-            accountId = accountId,
-            olderThanId = olderThanId,
-            newerThanId = newerThanId,
-            limit = loadSize,
-        )
+        val response =
+            api.getAccountFollowing(
+                accountId = accountId,
+                olderThanId = olderThanId,
+                newerThanId = newerThanId,
+                limit = loadSize,
+            )
         if (!response.isSuccessful) {
             throw HttpException(response)
         }
@@ -82,15 +84,16 @@ class AccountRepository internal constructor(
         excludeReplies: Boolean = false,
         excludeBoosts: Boolean = false,
     ): StatusPagingWrapper {
-        val response = api.getAccountStatuses(
-            accountId = accountId,
-            olderThanId = olderThanId,
-            immediatelyNewerThanId = immediatelyNewerThanId,
-            limit = loadSize,
-            onlyMedia = onlyMedia,
-            excludeReplies = excludeReplies,
-            excludeBoosts = excludeBoosts,
-        )
+        val response =
+            api.getAccountStatuses(
+                accountId = accountId,
+                olderThanId = olderThanId,
+                immediatelyNewerThanId = immediatelyNewerThanId,
+                limit = loadSize,
+                onlyMedia = onlyMedia,
+                excludeReplies = excludeReplies,
+                excludeBoosts = excludeBoosts,
+            )
 
         if (!response.isSuccessful) {
             throw HttpException(response)
@@ -102,11 +105,9 @@ class AccountRepository internal constructor(
         )
     }
 
-    suspend fun getAccountBookmarks(): List<Status> =
-        api.getAccountBookmarks().map { it.toExternalModel() }
+    suspend fun getAccountBookmarks(): List<Status> = api.getAccountBookmarks().map { it.toExternalModel() }
 
-    suspend fun getAccountFavourites(): List<Status> =
-        api.getAccountFavourites().map { it.toExternalModel() }
+    suspend fun getAccountFavourites(): List<Status> = api.getAccountFavourites().map { it.toExternalModel() }
 
     @PreferUseCase
     suspend fun followAccount(accountId: String) = api.followAccount(accountId = accountId)
@@ -126,14 +127,11 @@ class AccountRepository internal constructor(
     @PreferUseCase
     suspend fun unmuteAccount(accountId: String) = api.unmuteAccount(accountId = accountId)
 
-    suspend fun getAccountRelationships(
-        accountIds: List<String>,
-    ): List<Relationship> =
+    suspend fun getAccountRelationships(accountIds: List<String>): List<Relationship> =
         api.getRelationships(accountIds.toTypedArray()).map { it.toExternal() }
 
     // TODO@DA move to use case
-    suspend fun getAccountFromDatabase(accountId: String): Account? =
-        dao.getAccount(accountId)?.toExternalModel()
+    suspend fun getAccountFromDatabase(accountId: String): Account? = dao.getAccount(accountId)?.toExternalModel()
 
     @PreferUseCase
     @Suppress("MagicNumber")
@@ -144,26 +142,28 @@ class AccountRepository internal constructor(
         bot: Boolean? = null,
         avatar: File? = null,
         header: File? = null,
-        fields: List<Pair<String, String>>? = null
+        fields: List<Pair<String, String>>? = null,
     ) = api.updateAccount(
         displayName = displayName?.toRequestBody(MultipartBody.FORM),
         bio = bio?.toRequestBody(MultipartBody.FORM),
         locked = locked?.toString()?.toRequestBody(MultipartBody.FORM),
         bot = bot?.toString()?.toRequestBody(MultipartBody.FORM),
-        avatar = avatar?.let {
-            MultipartBody.Part.createFormData(
-                "avatar",
-                avatar.name,
-                avatar.asRequestBody("image/*".toMediaTypeOrNull()),
-            )
-        },
-        header = header?.let {
-            MultipartBody.Part.createFormData(
-                "header",
-                header.name,
-                header.asRequestBody("image/*".toMediaTypeOrNull()),
-            )
-        },
+        avatar =
+            avatar?.let {
+                MultipartBody.Part.createFormData(
+                    "avatar",
+                    avatar.name,
+                    avatar.asRequestBody("image/*".toMediaTypeOrNull()),
+                )
+            },
+        header =
+            header?.let {
+                MultipartBody.Part.createFormData(
+                    "header",
+                    header.name,
+                    header.asRequestBody("image/*".toMediaTypeOrNull()),
+                )
+            },
         fieldLabel0 = fields?.getOrNull(0)?.first?.toRequestBody(MultipartBody.FORM),
         fieldContent0 = fields?.getOrNull(0)?.second?.toRequestBody(MultipartBody.FORM),
         fieldLabel1 = fields?.getOrNull(1)?.first?.toRequestBody(MultipartBody.FORM),
@@ -174,6 +174,5 @@ class AccountRepository internal constructor(
         fieldContent3 = fields?.getOrNull(3)?.second?.toRequestBody(MultipartBody.FORM),
     ).toExternalModel()
 
-    fun insertAll(accounts: List<Account>) =
-        dao.insertAll(accounts.map { it.toDatabaseModel() })
+    fun insertAll(accounts: List<Account>) = dao.insertAll(accounts.map { it.toDatabaseModel() })
 }

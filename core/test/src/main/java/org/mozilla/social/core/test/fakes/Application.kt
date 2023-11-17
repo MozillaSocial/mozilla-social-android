@@ -7,7 +7,7 @@ fun fakeApplication(
     website: String? = null,
     vapidKey: String? = null,
     clientId: String? = null,
-    clientSecret: String? = null
+    clientSecret: String? = null,
 ) = Application(
     name = name,
     website = website,

@@ -10,16 +10,14 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 data class NetworkContext(
-
     /**
      * Parent statuses in the thread.
      */
     @SerialName("ancestors")
     val ancestors: List<NetworkStatus>,
-
     /**
      * Children statuses in the thread.
      */
     @SerialName("descendants")
-    val descendants: List<NetworkStatus>
+    val descendants: List<NetworkStatus>,
 )

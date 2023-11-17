@@ -8,21 +8,21 @@ import kotlin.test.BeforeTest
 import kotlin.test.Test
 
 class BoostStatusTest : BaseUseCaseTest() {
-
     private lateinit var subject: BoostStatus
 
     private val networkStatus = Models.status
 
     @BeforeTest
     fun setup() {
-        subject = BoostStatus(
-            externalScope = TestScope(testDispatcher),
-            showSnackbar = showSnackbar,
-            statusRepository = statusRepository,
-            dispatcherIo = testDispatcher,
-            databaseDelegate = databaseDelegate,
-            saveStatusToDatabase = saveStatusToDatabase,
-        )
+        subject =
+            BoostStatus(
+                externalScope = TestScope(testDispatcher),
+                showSnackbar = showSnackbar,
+                statusRepository = statusRepository,
+                dispatcherIo = testDispatcher,
+                databaseDelegate = databaseDelegate,
+                saveStatusToDatabase = saveStatusToDatabase,
+            )
     }
 
     @Test
@@ -37,7 +37,7 @@ class BoostStatusTest : BaseUseCaseTest() {
             },
             verifyBlock = {
                 saveStatusToDatabase(any<Status>())
-            }
+            },
         )
     }
 
@@ -52,7 +52,7 @@ class BoostStatusTest : BaseUseCaseTest() {
             },
             verifyBlock = {
                 showSnackbar(any(), any())
-            }
+            },
         )
     }
 }

@@ -7,7 +7,7 @@ plugins {
 
 android {
     namespace = "org.mozilla.social.core.analytics"
-    
+
     buildTypes {
         release {
             isMinifyEnabled = false

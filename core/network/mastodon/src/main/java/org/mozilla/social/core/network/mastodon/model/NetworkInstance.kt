@@ -8,31 +8,26 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 data class NetworkInstance(
-
     /**
      * The domain name of the instance.
      */
     @SerialName("domain")
     val domain: String,
-
     /**
      * The title of the instance.
      */
     @SerialName("title")
     val title: String,
-
     /**
      * An admin-defined description of the instance.
      */
     @SerialName("description")
     val description: String,
-
     /**
      * The version of Mastodon installed on the instance.
      */
     @SerialName("version")
     val version: String,
-
     /**
      * Primary languages of the website and its staff.
      *
@@ -40,12 +35,10 @@ data class NetworkInstance(
      */
     @SerialName("languages")
     val languages: List<String>,
-
     /**
      * URL of a banner image for the instance.
      */
     val thumbnail: NetworkInstanceThumbnail,
-
     /**
      * A staff user that can be contacted, as an alternative to [email].
      */

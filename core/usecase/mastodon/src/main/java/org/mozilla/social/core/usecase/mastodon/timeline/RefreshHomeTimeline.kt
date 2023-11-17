@@ -11,7 +11,6 @@ import org.mozilla.social.core.database.SocialDatabase
 import org.mozilla.social.core.database.model.statusCollections.HomeTimelineStatus
 import org.mozilla.social.core.database.model.statusCollections.HomeTimelineStatusWrapper
 import org.mozilla.social.core.repository.mastodon.AccountRepository
-import org.mozilla.social.core.repository.mastodon.StatusRepository
 import org.mozilla.social.core.repository.mastodon.TimelineRepository
 import org.mozilla.social.core.usecase.mastodon.remotemediators.getInReplyToAccountNames
 import org.mozilla.social.core.usecase.mastodon.status.SaveStatusToDatabase
@@ -23,45 +22,47 @@ class RefreshHomeTimeline internal constructor(
     private val saveStatusToDatabase: SaveStatusToDatabase,
     private val socialDatabase: SocialDatabase,
 ) {
-
     @OptIn(ExperimentalPagingApi::class)
     @Suppress("ReturnCount", "MagicNumber")
     suspend operator fun invoke(
         loadType: LoadType,
-        state: PagingState<Int, HomeTimelineStatusWrapper>
+        state: PagingState<Int, HomeTimelineStatusWrapper>,
     ): RemoteMediator.MediatorResult {
         return try {
             var pageSize: Int = state.config.pageSize
-            val response = when (loadType) {
-                LoadType.REFRESH -> {
-                    pageSize = state.config.initialLoadSize
-                    timelineRepository.getHomeTimeline(
-                        olderThanId = null,
-                        immediatelyNewerThanId = null,
-                        loadSize = pageSize,
-                    )
-                }
+            val response =
+                when (loadType) {
+                    LoadType.REFRESH -> {
+                        pageSize = state.config.initialLoadSize
+                        timelineRepository.getHomeTimeline(
+                            olderThanId = null,
+                            immediatelyNewerThanId = null,
+                            loadSize = pageSize,
+                        )
+                    }
 
-                LoadType.PREPEND -> {
-                    val firstItem = state.firstItemOrNull()
-                        ?: return RemoteMediator.MediatorResult.Success(endOfPaginationReached = true)
-                    timelineRepository.getHomeTimeline(
-                        olderThanId = null,
-                        immediatelyNewerThanId = firstItem.status.statusId,
-                        loadSize = pageSize,
-                    )
-                }
+                    LoadType.PREPEND -> {
+                        val firstItem =
+                            state.firstItemOrNull()
+                                ?: return RemoteMediator.MediatorResult.Success(endOfPaginationReached = true)
+                        timelineRepository.getHomeTimeline(
+                            olderThanId = null,
+                            immediatelyNewerThanId = firstItem.status.statusId,
+                            loadSize = pageSize,
+                        )
+                    }
 
-                LoadType.APPEND -> {
-                    val lastItem = state.lastItemOrNull()
-                        ?: return RemoteMediator.MediatorResult.Success(endOfPaginationReached = true)
-                    timelineRepository.getHomeTimeline(
-                        olderThanId = lastItem.status.statusId,
-                        immediatelyNewerThanId = null,
-                        loadSize = pageSize,
-                    )
+                    LoadType.APPEND -> {
+                        val lastItem =
+                            state.lastItemOrNull()
+                                ?: return RemoteMediator.MediatorResult.Success(endOfPaginationReached = true)
+                        timelineRepository.getHomeTimeline(
+                            olderThanId = lastItem.status.statusId,
+                            immediatelyNewerThanId = null,
+                            loadSize = pageSize,
+                        )
+                    }
                 }
-            }
 
             val result = response.statuses.getInReplyToAccountNames(accountRepository)
 
@@ -72,16 +73,18 @@ class RefreshHomeTimeline internal constructor(
 
                 saveStatusToDatabase(result)
 
-                socialDatabase.homeTimelineDao().insertAll(result.map {
-                    HomeTimelineStatus(
-                        statusId = it.statusId,
-                        accountId = it.account.accountId,
-                        pollId = it.poll?.pollId,
-                        boostedStatusId = it.boostedStatus?.statusId,
-                        boostedStatusAccountId = it.boostedStatus?.account?.accountId,
-                        boostedPollId = it.boostedStatus?.poll?.pollId,
-                    )
-                })
+                socialDatabase.homeTimelineDao().insertAll(
+                    result.map {
+                        HomeTimelineStatus(
+                            statusId = it.statusId,
+                            accountId = it.account.accountId,
+                            pollId = it.poll?.pollId,
+                            boostedStatusId = it.boostedStatus?.statusId,
+                            boostedStatusAccountId = it.boostedStatus?.account?.accountId,
+                            boostedPollId = it.boostedStatus?.poll?.pollId,
+                        )
+                    },
+                )
             }
 
             // There seems to be some race condition for refreshes.  Subsequent pages do
@@ -96,16 +99,17 @@ class RefreshHomeTimeline internal constructor(
             }
 
             RemoteMediator.MediatorResult.Success(
-                endOfPaginationReached = when (loadType) {
-                    LoadType.PREPEND -> response.pagingLinks?.find { it.rel == Rel.PREV } == null
-                    LoadType.REFRESH,
-                    LoadType.APPEND -> response.pagingLinks?.find { it.rel == Rel.NEXT } == null
-                }
+                endOfPaginationReached =
+                    when (loadType) {
+                        LoadType.PREPEND -> response.pagingLinks?.find { it.rel == Rel.PREV } == null
+                        LoadType.REFRESH,
+                        LoadType.APPEND,
+                        -> response.pagingLinks?.find { it.rel == Rel.NEXT } == null
+                    },
             )
         } catch (e: Exception) {
             Timber.e(e)
             RemoteMediator.MediatorResult.Error(e)
         }
     }
-
 }

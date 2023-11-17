@@ -4,7 +4,6 @@ package org.mozilla.social.core.model
  * Type of moderating action to be taken.
  */
 enum class ActionType {
-
     /**
      * No action.
      */
@@ -23,5 +22,5 @@ enum class ActionType {
     /**
      * Suspend the account.
      */
-    Suspend
+    Suspend,
 }

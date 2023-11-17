@@ -24,16 +24,14 @@ data class NetworkPageInfo(
      * Non-inclusive.
      */
     val sinceId: String? = null,
-
     /**
      * If set, the API will not return items before this ID (not inclusive).
      * The page will therefore start just after the item with this ID.
      */
     val minId: String? = null,
-
     /**
      * If set, the API will not return items after this ID (not inclusive).
      * The page will therefore end just before the item with this ID.
      */
-    val maxId: String? = null
+    val maxId: String? = null,
 )

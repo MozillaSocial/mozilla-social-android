@@ -5,7 +5,7 @@ import androidx.navigation.NavOptions
 
 sealed class BottomBarNavigationDestination(val route: String) {
     data object Feed : BottomBarNavigationDestination(
-        route = "feed"
+        route = "feed",
     ) {
         fun NavController.navigateToFeed(navOptions: NavOptions? = null) {
             this.navigate(route, navOptions)
@@ -13,16 +13,15 @@ sealed class BottomBarNavigationDestination(val route: String) {
     }
 
     data object Discover : BottomBarNavigationDestination(
-        route = "discover"
+        route = "discover",
     ) {
-        fun NavController.navigateToDiscover(
-            navOptions: NavOptions? = null,
-        ) {
+        fun NavController.navigateToDiscover(navOptions: NavOptions? = null) {
             navigate(route, navOptions)
         }
     }
+
     data object Bookmarks : BottomBarNavigationDestination(
-        route = "bookmarks"
+        route = "bookmarks",
     ) {
         fun NavController.navigateToBookmarksScreen(navOptions: NavOptions? = null) {
             navigate(route, navOptions)
@@ -30,9 +29,7 @@ sealed class BottomBarNavigationDestination(val route: String) {
     }
 
     data object MyAccount : BottomBarNavigationDestination(route = "myAccount") {
-        fun NavController.navigateToMyAccount(
-            navOptions: NavOptions? = null,
-        ) {
+        fun NavController.navigateToMyAccount(navOptions: NavOptions? = null) {
             navigate(route, navOptions)
         }
     }

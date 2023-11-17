@@ -14,12 +14,13 @@ data class ReportStatusUiState(
     val checked: Boolean,
 )
 
-fun Status.toReportStatusUiState(): ReportStatusUiState = ReportStatusUiState(
-    statusId = statusId,
-    userName = account.displayName,
-    handle = account.acct,
-    avatarUrl = account.avatarStaticUrl,
-    htmlStatusText = content,
-    postTimeSince = createdAt.timeSinceNow(),
-    checked = false,
-)
+fun Status.toReportStatusUiState(): ReportStatusUiState =
+    ReportStatusUiState(
+        statusId = statusId,
+        userName = account.displayName,
+        handle = account.acct,
+        avatarUrl = account.avatarStaticUrl,
+        htmlStatusText = content,
+        postTimeSince = createdAt.timeSinceNow(),
+        checked = false,
+    )

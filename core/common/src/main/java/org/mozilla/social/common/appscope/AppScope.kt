@@ -10,7 +10,6 @@ import kotlin.coroutines.CoroutineContext
  * In MoSo, we are only canceling the supervisor job on logout.
  */
 class AppScope : CoroutineScope {
-
     private var supervisorJob = SupervisorJob()
 
     override val coroutineContext: CoroutineContext

@@ -5,7 +5,6 @@ package org.mozilla.social.core.network.mastodon.model
  * should be automatically displayed or blurred/hidden.
  */
 enum class NetworkMediaVisibility {
-
     /**
      * Hide media marked as sensitive.
      */
@@ -19,5 +18,5 @@ enum class NetworkMediaVisibility {
     /**
      * Always hide all media by default, regardless of sensitivity.
      */
-    HideAll
+    HideAll,
 }

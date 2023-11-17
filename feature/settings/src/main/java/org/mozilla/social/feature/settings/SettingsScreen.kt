@@ -11,9 +11,7 @@ import org.mozilla.social.feature.settings.ui.SettingsColumn
 import org.mozilla.social.feature.settings.ui.SettingsSection
 
 @Composable
-fun SettingsScreen(
-    viewModel: SettingsViewModel = koinViewModel(),
-) {
+fun SettingsScreen(viewModel: SettingsViewModel = koinViewModel()) {
     SettingsScreen(
         onAccountClicked = viewModel::onAccountClicked,
         onContentPreferencesClicked = viewModel::onContentPreferencesClicked,

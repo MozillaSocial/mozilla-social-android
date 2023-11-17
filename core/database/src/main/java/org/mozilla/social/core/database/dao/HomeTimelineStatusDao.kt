@@ -9,11 +9,10 @@ import org.mozilla.social.core.database.model.statusCollections.HomeTimelineStat
 
 @Dao
 interface HomeTimelineStatusDao : BaseDao<HomeTimelineStatus> {
-
     @Transaction
     @Query(
         "SELECT * FROM homeTimeline " +
-        "ORDER BY statusId DESC"
+            "ORDER BY statusId DESC",
     )
     fun homeTimelinePagingSource(): PagingSource<Int, HomeTimelineStatusWrapper>
 
@@ -22,22 +21,22 @@ interface HomeTimelineStatusDao : BaseDao<HomeTimelineStatus> {
 
     @Query(
         "DELETE FROM homeTimeline " +
-        "WHERE accountId = :accountId " +
-        "OR boostedStatusAccountId = :accountId"
+            "WHERE accountId = :accountId " +
+            "OR boostedStatusAccountId = :accountId",
     )
     suspend fun removePostsFromAccount(accountId: String)
 
     @Query(
         "DELETE FROM homeTimeline " +
-        "WHERE statusId = :statusId " +
-        "OR boostedStatusId = :statusId"
+            "WHERE statusId = :statusId " +
+            "OR boostedStatusId = :statusId",
     )
     suspend fun deletePost(statusId: String)
 
     @Query(
         "SELECT * FROM homeTimeline " +
-        "WHERE accountId = :accountId " +
-        "OR boostedStatusAccountId = :accountId"
+            "WHERE accountId = :accountId " +
+            "OR boostedStatusAccountId = :accountId",
     )
     suspend fun getPostsFromAccount(accountId: String): List<HomeTimelineStatus>
 }

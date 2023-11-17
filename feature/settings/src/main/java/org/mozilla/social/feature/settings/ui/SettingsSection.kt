@@ -30,14 +30,15 @@ internal fun SettingsSection(
     onClick: () -> Unit,
 ) {
     Row(
-        modifier = Modifier
-            .padding(MoSoSpacing.md)
-            .fillMaxWidth()
-            .wrapContentHeight()
-            .clickable { onClick() }
-            .semantics(mergeDescendants = true) {
-                isTraversalGroup = true
-            },
+        modifier =
+            Modifier
+                .padding(MoSoSpacing.md)
+                .fillMaxWidth()
+                .wrapContentHeight()
+                .clickable { onClick() }
+                .semantics(mergeDescendants = true) {
+                    isTraversalGroup = true
+                },
         verticalAlignment = Alignment.CenterVertically,
     ) {
         iconPainter?.let {

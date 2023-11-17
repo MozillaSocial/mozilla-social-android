@@ -16,23 +16,22 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import org.koin.core.parameter.parametersOf
-import org.koin.java.KoinJavaComponent
 import org.koin.java.KoinJavaComponent.inject
 import org.mozilla.social.common.Resource
 import org.mozilla.social.common.utils.edit
 import org.mozilla.social.core.analytics.Analytics
 import org.mozilla.social.core.analytics.AnalyticsIdentifiers
-import org.mozilla.social.core.repository.mastodon.model.status.toExternalModel
 import org.mozilla.social.core.database.SocialDatabase
 import org.mozilla.social.core.database.model.statusCollections.toStatusWrapper
-import org.mozilla.social.core.usecase.mastodon.account.GetDetailedAccount
-import org.mozilla.social.core.usecase.mastodon.account.GetLoggedInUserAccountId
 import org.mozilla.social.core.navigation.NavigationDestination
 import org.mozilla.social.core.navigation.usecases.NavigateTo
+import org.mozilla.social.core.repository.mastodon.model.status.toExternalModel
 import org.mozilla.social.core.ui.postcard.PostCardDelegate
 import org.mozilla.social.core.ui.postcard.toPostCardUiState
 import org.mozilla.social.core.usecase.mastodon.account.BlockAccount
 import org.mozilla.social.core.usecase.mastodon.account.FollowAccount
+import org.mozilla.social.core.usecase.mastodon.account.GetDetailedAccount
+import org.mozilla.social.core.usecase.mastodon.account.GetLoggedInUserAccountId
 import org.mozilla.social.core.usecase.mastodon.account.MuteAccount
 import org.mozilla.social.core.usecase.mastodon.account.UnblockAccount
 import org.mozilla.social.core.usecase.mastodon.account.UnfollowAccount
@@ -53,9 +52,8 @@ class AccountViewModel(
     private val unmuteAccount: UnmuteAccount,
     initialAccountId: String?,
 ) : ViewModel(), AccountInteractions {
-
     val postCardDelegate: PostCardDelegate by inject(
-        PostCardDelegate::class.java
+        PostCardDelegate::class.java,
     ) { parametersOf(viewModelScope) }
 
     /**
@@ -85,12 +83,14 @@ class AccountViewModel(
     val timelineType = _timelineType.asStateFlow()
 
     private val externalTimelineType: StateFlow<org.mozilla.social.core.usecase.mastodon.timeline.TimelineType> =
-        timelineType.map { it.toExternalModel() }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(),
-            org.mozilla.social.core.usecase.mastodon.timeline.TimelineType.POSTS
+        timelineType.map { it.toExternalModel() }.stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(),
+            org.mozilla.social.core.usecase.mastodon.timeline.TimelineType.POSTS,
         )
 
     private val accountTimelineRemoteMediator: AccountTimelineRemoteMediator by inject(
-        AccountTimelineRemoteMediator::class.java
+        AccountTimelineRemoteMediator::class.java,
     ) {
         parametersOf(
             accountId,
@@ -99,19 +99,21 @@ class AccountViewModel(
     }
 
     @OptIn(ExperimentalPagingApi::class)
-    val feed = Pager(
-        config = PagingConfig(
-            pageSize = 20,
-            initialLoadSize = 40
-        ),
-        remoteMediator = accountTimelineRemoteMediator
-    ) {
-        socialDatabase.accountTimelineDao().accountTimelinePagingSource(accountId)
-    }.flow.map { pagingData ->
-        pagingData.map {
-            it.toStatusWrapper().toExternalModel().toPostCardUiState(usersAccountId)
-        }
-    }.cachedIn(viewModelScope)
+    val feed =
+        Pager(
+            config =
+                PagingConfig(
+                    pageSize = 20,
+                    initialLoadSize = 40,
+                ),
+            remoteMediator = accountTimelineRemoteMediator,
+        ) {
+            socialDatabase.accountTimelineDao().accountTimelinePagingSource(accountId)
+        }.flow.map { pagingData ->
+            pagingData.map {
+                it.toStatusWrapper().toExternalModel().toPostCardUiState(usersAccountId)
+            }
+        }.cachedIn(viewModelScope)
 
     init {
         loadAccount()
@@ -120,16 +122,17 @@ class AccountViewModel(
     private fun loadAccount() {
         // ensure only one job happens at a time
         getAccountJob?.cancel()
-        getAccountJob = viewModelScope.launch {
-            getDetailedAccount(
-                accountId = accountId,
-                coroutineScope = viewModelScope,
-            ) { account, relationship ->
-                account.toUiState(relationship)
-            }.collect {
-                _uiState.edit { it }
+        getAccountJob =
+            viewModelScope.launch {
+                getDetailedAccount(
+                    accountId = accountId,
+                    coroutineScope = viewModelScope,
+                ) { account, relationship ->
+                    account.toUiState(relationship)
+                }.collect {
+                    _uiState.edit { it }
+                }
             }
-        }
     }
 
     override fun onScreenViewed() {
@@ -185,7 +188,7 @@ class AccountViewModel(
                 NavigationDestination.Report(
                     accountId,
                     webFinger,
-                )
+                ),
             )
         }
     }
@@ -203,7 +206,7 @@ class AccountViewModel(
             try {
                 followAccount(
                     accountId = accountId,
-                    loggedInUserAccountId = usersAccountId
+                    loggedInUserAccountId = usersAccountId,
                 )
             } catch (e: FollowAccount.FollowFailedException) {
                 Timber.e(e)
@@ -241,8 +244,9 @@ class AccountViewModel(
     }
 }
 
-private fun TimelineType.toExternalModel() = when (this) {
-    TimelineType.POSTS -> org.mozilla.social.core.usecase.mastodon.timeline.TimelineType.POSTS
-    TimelineType.POSTS_AND_REPLIES -> org.mozilla.social.core.usecase.mastodon.timeline.TimelineType.POSTS_AND_REPLIES
-    TimelineType.MEDIA -> org.mozilla.social.core.usecase.mastodon.timeline.TimelineType.MEDIA
-}
+private fun TimelineType.toExternalModel() =
+    when (this) {
+        TimelineType.POSTS -> org.mozilla.social.core.usecase.mastodon.timeline.TimelineType.POSTS
+        TimelineType.POSTS_AND_REPLIES -> org.mozilla.social.core.usecase.mastodon.timeline.TimelineType.POSTS_AND_REPLIES
+        TimelineType.MEDIA -> org.mozilla.social.core.usecase.mastodon.timeline.TimelineType.MEDIA
+    }

@@ -34,38 +34,46 @@ import org.mozilla.social.core.model.Recommendation
 import org.mozilla.social.core.ui.common.MoSoCard
 
 @Composable
-fun RecommendationCarouselCard(modifier: Modifier, recommendation: Recommendation) {
+fun RecommendationCarouselCard(
+    modifier: Modifier,
+    recommendation: Recommendation,
+) {
     val context = LocalContext.current
 
     MoSoCard(
-        modifier = modifier
-            .height(140.dp)
-            .padding(4.dp),
+        modifier =
+            modifier
+                .height(140.dp)
+                .padding(4.dp),
     ) {
-        Row(modifier = Modifier
-            .clickable {
-                CustomTabsIntent.Builder()
-                    .build()
-                    .launchUrl(context, Uri.parse(recommendation.url))
-            }
+        Row(
+            modifier =
+                Modifier
+                    .clickable {
+                        CustomTabsIntent.Builder()
+                            .build()
+                            .launchUrl(context, Uri.parse(recommendation.url))
+                    },
         ) {
             Column(
-                modifier = Modifier
-                    .padding(8.dp)
-                    .weight(2f)
+                modifier =
+                    Modifier
+                        .padding(8.dp)
+                        .weight(2f),
             ) {
-
                 Row(
-                    modifier = Modifier
-                        .weight(2f)
-                        .padding(8.dp),
+                    modifier =
+                        Modifier
+                            .weight(2f)
+                            .padding(8.dp),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween,
                 ) {
                     Text(
                         text = recommendation.title,
-                        modifier = Modifier
-                            .weight(2f),
+                        modifier =
+                            Modifier
+                                .weight(2f),
                         style = Typography.bodyMedium,
                         fontWeight = FontWeight.Bold,
                         overflow = TextOverflow.Ellipsis,
@@ -73,37 +81,36 @@ fun RecommendationCarouselCard(modifier: Modifier, recommendation: Recommendatio
 
                     Spacer(modifier = Modifier.width(8.dp))
                     AsyncImage(
-                        modifier = Modifier
-                            .weight(1f)
-                            .clip(RoundedCornerShape(4.dp)),
+                        modifier =
+                            Modifier
+                                .weight(1f)
+                                .clip(RoundedCornerShape(4.dp)),
                         model = recommendation.image.first().url,
                         contentDescription = "",
                         contentScale = ContentScale.Crop,
                     )
-
                 }
                 Row(
-                    modifier = Modifier
-                        .padding(8.dp)
-                        .weight(1f),
+                    modifier =
+                        Modifier
+                            .padding(8.dp)
+                            .weight(1f),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween,
                 ) {
-
                     Text(
                         text = recommendation.publisher,
                         style = Typography.bodySmall,
                         overflow = TextOverflow.Ellipsis,
-
-                        )
-
+                    )
 
                     Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .wrapContentHeight(),
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .wrapContentHeight(),
                         verticalAlignment = Alignment.Bottom,
-                        horizontalArrangement = Arrangement.End
+                        horizontalArrangement = Arrangement.End,
                     ) {
                         BottomIconButton(
                             onClick = { },
@@ -115,12 +122,8 @@ fun RecommendationCarouselCard(modifier: Modifier, recommendation: Recommendatio
                         )
                     }
                 }
-
-
             }
-
         }
-
 
 //            Column(
 //                modifier = Modifier
@@ -128,9 +131,7 @@ fun RecommendationCarouselCard(modifier: Modifier, recommendation: Recommendatio
 //                    .weight(1f)
 //            )
     }
-
 }
-
 
 @Composable
 private fun BottomIconButton(
@@ -139,7 +140,7 @@ private fun BottomIconButton(
 ) {
     IconButton(
         onClick = onClick,
-        modifier = Modifier.wrapContentSize()
+        modifier = Modifier.wrapContentSize(),
     ) {
         Icon(
             painter = painter,

@@ -30,8 +30,8 @@ import org.mozilla.social.core.navigation.AuthNavigationDestination.Login.naviga
 import org.mozilla.social.core.navigation.BottomBarNavigationDestination
 import org.mozilla.social.core.navigation.Event
 import org.mozilla.social.core.navigation.NavigationDestination
-import org.mozilla.social.core.navigation.NavigationDestination.EditAccount.navigateToEditAccount
 import org.mozilla.social.core.navigation.NavigationDestination.Auth.navigateToAuthFlow
+import org.mozilla.social.core.navigation.NavigationDestination.EditAccount.navigateToEditAccount
 import org.mozilla.social.core.navigation.NavigationDestination.Settings.navigateToSettings
 import org.mozilla.social.core.navigation.NavigationDestination.Tabs.navigateToTabs
 import org.mozilla.social.core.navigation.NavigationEventFlow
@@ -128,11 +128,14 @@ class AppState(
         }
     }
 
-    private fun showSnackbar(text: StringFactory, error: Boolean) {
+    private fun showSnackbar(
+        text: StringFactory,
+        error: Boolean,
+    ) {
         coroutineScope.launch {
             snackbarHostState.showSnackbar(
                 snackbarType = if (error) SnackbarType.ERROR else SnackbarType.SUCCESS,
-                message = text.build(context)
+                message = text.build(context),
             )
         }
     }
@@ -169,7 +172,7 @@ class AppState(
         }.stateIn(
             coroutineScope,
             started = SharingStarted.WhileSubscribed(),
-            initialBottomBarDestination
+            initialBottomBarDestination,
         )
 
     private fun clearBackstack() {
@@ -285,16 +288,17 @@ class AppState(
         if (destination == BottomBarNavigationDestination.Feed) {
             tabbedNavController?.popBackStack(
                 BottomBarNavigationDestination.Feed.route,
-                false
+                false,
             )
         }
-        val navOptions = navOptions {
-            popUpTo(BottomBarNavigationDestination.Feed.route) {
-                saveState = true
+        val navOptions =
+            navOptions {
+                popUpTo(BottomBarNavigationDestination.Feed.route) {
+                    saveState = true
+                }
+                launchSingleTop = true
+                restoreState = true
             }
-            launchSingleTop = true
-            restoreState = true
-        }
 
         tabbedNavController?.navigate(destination.route, navOptions)
     }

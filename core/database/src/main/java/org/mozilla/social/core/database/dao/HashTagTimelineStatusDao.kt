@@ -9,20 +9,17 @@ import org.mozilla.social.core.database.model.statusCollections.HashTagTimelineS
 
 @Dao
 interface HashTagTimelineStatusDao : BaseDao<HashTagTimelineStatus> {
-
     @Transaction
     @Query(
         "SELECT * FROM hashTagTimeline " +
-        "WHERE  hashTag = :hashTag " +
-        "ORDER BY statusId DESC"
+            "WHERE  hashTag = :hashTag " +
+            "ORDER BY statusId DESC",
     )
-    fun hashTagTimelinePagingSource(
-        hashTag: String,
-    ): PagingSource<Int, HashTagTimelineStatusWrapper>
+    fun hashTagTimelinePagingSource(hashTag: String): PagingSource<Int, HashTagTimelineStatusWrapper>
 
     @Query(
         "DELETE FROM hashTagTimeline " +
-        "WHERE hashTag = :hashTag "
+            "WHERE hashTag = :hashTag ",
     )
     suspend fun deleteHashTagTimeline(hashTag: String)
 
@@ -31,8 +28,8 @@ interface HashTagTimelineStatusDao : BaseDao<HashTagTimelineStatus> {
 
     @Query(
         "DELETE FROM hashTagTimeline " +
-        "WHERE statusId = :statusId " +
-        "OR boostedStatusId = :statusId"
+            "WHERE statusId = :statusId " +
+            "OR boostedStatusId = :statusId",
     )
     suspend fun deletePost(statusId: String)
 }

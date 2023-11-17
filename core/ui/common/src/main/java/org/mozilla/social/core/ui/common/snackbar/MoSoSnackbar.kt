@@ -45,7 +45,6 @@ import org.mozilla.social.core.designsystem.theme.MoSoSpacing
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.ui.common.button.MoSoButton
 
-
 /**
  * Wrapper for [Snackbar] which takes in a [SnackbarType], which is used to determine the styling
  * of the resulting snackbar. Note that this implementation does not include an action button
@@ -59,7 +58,10 @@ fun MoSoSnackbar(snackbarState: MoSoSnackbarState) =
  * of the resulting snackbar. Note that this implementation does not include an action button
  */
 @Composable
-fun MoSoSnackbar(snackbarData: SnackbarData, snackbarType: SnackbarType) {
+fun MoSoSnackbar(
+    snackbarData: SnackbarData,
+    snackbarType: SnackbarType,
+) {
     when (snackbarType) {
         SnackbarType.SUCCESS -> {
             MoSoSuccessSnackbar(snackbarData = snackbarData)
@@ -80,7 +82,7 @@ private fun MoSoSuccessSnackbar(snackbarData: SnackbarData) {
         snackbarData = snackbarData,
         backgroundColor = MoSoTheme.colors.snackbarBkgSuccess,
         borderColor = MoSoTheme.colors.snackbarBorderSuccess,
-        contentColor = MoSoTheme.colors.snackbarTextSuccess
+        contentColor = MoSoTheme.colors.snackbarTextSuccess,
     )
 }
 
@@ -109,16 +111,18 @@ private fun MoSoSnackbar(
     contentColor: Color,
 ) {
     Surface(
-        modifier = Modifier
-            .defaultMinSize(minHeight = 32.dp),
+        modifier =
+            Modifier
+                .defaultMinSize(minHeight = 32.dp),
         color = backgroundColor,
         border = BorderStroke(width = 1.dp, brush = SolidColor(borderColor)),
-        shape = RoundedCornerShape(MoSoRadius.md_8_dp)
+        shape = RoundedCornerShape(MoSoRadius.md_8_dp),
     ) {
         Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(MoSoSpacing.sm),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(MoSoSpacing.sm),
             contentAlignment = Alignment.Center,
         ) {
             Text(
@@ -135,11 +139,13 @@ private fun MoSoSnackbar(
  * Represents whether the snackbar is communicating success or an error
  */
 enum class SnackbarType {
-    SUCCESS, ERROR
+    SUCCESS,
+    ERROR,
 }
 
 data class MoSoSnackbarState(
-    val snackbarType: SnackbarType, val snackbarData: SnackbarData
+    val snackbarType: SnackbarType,
+    val snackbarData: SnackbarData,
 )
 
 @Preview
@@ -150,12 +156,12 @@ private fun SnackbarPreview() {
     MoSoTheme {
         Surface {
             Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(MoSoSpacing.lg),
-                verticalArrangement = Arrangement.Bottom
+                modifier =
+                    Modifier
+                        .fillMaxSize()
+                        .padding(MoSoSpacing.lg),
+                verticalArrangement = Arrangement.Bottom,
             ) {
-
                 MoSoSnackbarHost(snackbarHostState) { snackbarData, snackbarType ->
                     MoSoSnackbar(snackbarData = snackbarData, snackbarType = snackbarType)
                 }
@@ -167,7 +173,6 @@ private fun SnackbarPreview() {
                             message = "Here's a success snackbar",
                             duration = SnackbarDuration.Short,
                         )
-
                     }
                 }) {
                     Text(text = "show success snackbar")
@@ -180,7 +185,6 @@ private fun SnackbarPreview() {
                             message = "Here's an error snackbar",
                             duration = SnackbarDuration.Short,
                         )
-
                     }
                 }) {
                     Text(text = "show error snackbar")
@@ -190,11 +194,11 @@ private fun SnackbarPreview() {
                     scope.launch {
                         snackbarHostState.showSnackbar(
                             snackbarType = SnackbarType.ERROR,
-                            message = "Here's an error snackbar with a really long message that " +
+                            message =
+                                "Here's an error snackbar with a really long message that " +
                                     "will show on multiple lines because it's so long",
                             duration = SnackbarDuration.Short,
                         )
-
                     }
                 }) {
                     Text(text = "show snackbar with long text")

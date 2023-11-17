@@ -1,13 +1,12 @@
 package org.mozilla.social.core.navigation
 
-
 import androidx.navigation.NavController
 import com.google.common.truth.Truth.assertThat
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.Test
-import org.mozilla.social.core.navigation.NavigationDestination.EditAccount.navigateToEditAccount
 import org.mozilla.social.core.navigation.NavigationDestination.Auth.navigateToAuthFlow
+import org.mozilla.social.core.navigation.NavigationDestination.EditAccount.navigateToEditAccount
 import org.mozilla.social.core.navigation.NavigationDestination.Tabs.navigateToTabs
 import org.mozilla.social.core.test.TestUtils
 

@@ -6,16 +6,16 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import org.mozilla.social.common.annotations.PreferUseCase
 import org.mozilla.social.common.utils.StringFactory
-import org.mozilla.social.core.repository.mastodon.StatusRepository
-import org.mozilla.social.core.repository.mastodon.TimelineRepository
-import org.mozilla.social.core.navigation.usecases.ShowSnackbar
-import org.mozilla.social.core.repository.mastodon.MediaRepository
-import org.mozilla.social.core.model.MediaUpdate
-import org.mozilla.social.core.usecase.mastodon.R
 import org.mozilla.social.core.model.ImageState
+import org.mozilla.social.core.model.MediaUpdate
 import org.mozilla.social.core.model.StatusVisibility
 import org.mozilla.social.core.model.request.PollCreate
 import org.mozilla.social.core.model.request.StatusCreate
+import org.mozilla.social.core.navigation.usecases.ShowSnackbar
+import org.mozilla.social.core.repository.mastodon.MediaRepository
+import org.mozilla.social.core.repository.mastodon.StatusRepository
+import org.mozilla.social.core.repository.mastodon.TimelineRepository
+import org.mozilla.social.core.usecase.mastodon.R
 
 class PostStatus internal constructor(
     private val externalScope: CoroutineScope,
@@ -26,7 +26,6 @@ class PostStatus internal constructor(
     private val showSnackbar: ShowSnackbar,
     private val dispatcherIo: CoroutineDispatcher = Dispatchers.IO,
 ) {
-
     @OptIn(PreferUseCase::class)
     suspend operator fun invoke(
         statusText: String,
@@ -44,8 +43,8 @@ class PostStatus internal constructor(
                         mediaApi.updateMedia(
                             imageState.attachmentId!!,
                             MediaUpdate(
-                                imageState.description
-                            )
+                                imageState.description,
+                            ),
                         )
                     }
                 } else {
@@ -55,24 +54,27 @@ class PostStatus internal constructor(
                 it?.await()
             }
 
-            val status = statusRepository.postStatus(
-                StatusCreate(
-                    status = statusText,
-                    mediaIds = if (imageStates.isEmpty()) {
-                        null
-                    } else {
-                        imageStates.mapNotNull { it.attachmentId }
-                    },
-                    visibility = visibility,
-                    poll = pollCreate,
-                    contentWarningText = if (contentWarningText.isNullOrBlank()) {
-                        null
-                    } else {
-                        contentWarningText
-                    },
-                    inReplyToId = inReplyToId,
+            val status =
+                statusRepository.postStatus(
+                    StatusCreate(
+                        status = statusText,
+                        mediaIds =
+                            if (imageStates.isEmpty()) {
+                                null
+                            } else {
+                                imageStates.mapNotNull { it.attachmentId }
+                            },
+                        visibility = visibility,
+                        poll = pollCreate,
+                        contentWarningText =
+                            if (contentWarningText.isNullOrBlank()) {
+                                null
+                            } else {
+                                contentWarningText
+                            },
+                        inReplyToId = inReplyToId,
+                    ),
                 )
-            )
             saveStatusToDatabase(status)
             timelineRepository.insertStatusIntoTimelines(status)
         } catch (e: Exception) {

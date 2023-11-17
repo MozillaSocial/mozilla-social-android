@@ -5,14 +5,12 @@ package org.mozilla.social.core.model
  */
 data class UserList(
     val listId: String,
-
     /**
      * The user-defined title of the list.
      */
     val title: String,
-
     /**
      * The reply policy of this list.
      */
-    val replyPolicy: ListReplyPolicy
+    val replyPolicy: ListReplyPolicy,
 )

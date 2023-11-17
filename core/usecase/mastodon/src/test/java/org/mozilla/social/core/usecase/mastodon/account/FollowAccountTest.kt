@@ -10,63 +10,65 @@ import kotlin.test.Test
 import kotlin.test.assertNotNull
 
 class FollowAccountTest : BaseUseCaseTest() {
-
     private lateinit var subject: FollowAccount
 
     @BeforeTest
     fun setup() {
-        subject = FollowAccount(
-            externalScope = TestScope(testDispatcher),
-            showSnackbar = showSnackbar,
-            accountRepository = accountRepository,
-            socialDatabase = socialDatabase,
-            dispatcherIo = testDispatcher,
-        )
+        subject =
+            FollowAccount(
+                externalScope = TestScope(testDispatcher),
+                showSnackbar = showSnackbar,
+                accountRepository = accountRepository,
+                socialDatabase = socialDatabase,
+                dispatcherIo = testDispatcher,
+            )
     }
 
     @Test
-    fun successTest() = runTest {
-        val accountId = "id1"
-        val loggedInId = "id2"
-        subject(
-            accountId = accountId,
-            loggedInUserAccountId = loggedInId
-        )
-
-        coVerify(exactly = 1) {
-            accountsDao.updateFollowingCount(loggedInId, 1)
-            relationshipsDao.updateFollowing(accountId, true)
-            accountRepository.followAccount(accountId)
-        }
-    }
-
-    @Test
-    fun networkFailureTest() = runTest {
-        val accountId = "id1"
-        val loggedInId = "id2"
-
-        coEvery { accountRepository.followAccount(accountId) } throws Exception()
-
-        var exception: Exception? = null
-
-        try {
+    fun successTest() =
+        runTest {
+            val accountId = "id1"
+            val loggedInId = "id2"
             subject(
                 accountId = accountId,
-                loggedInUserAccountId = loggedInId
+                loggedInUserAccountId = loggedInId,
             )
-        } catch (e: Exception) {
-            exception = e
+
+            coVerify(exactly = 1) {
+                accountsDao.updateFollowingCount(loggedInId, 1)
+                relationshipsDao.updateFollowing(accountId, true)
+                accountRepository.followAccount(accountId)
+            }
         }
 
-        assertNotNull(exception)
+    @Test
+    fun networkFailureTest() =
+        runTest {
+            val accountId = "id1"
+            val loggedInId = "id2"
 
-        coVerify(exactly = 1) {
-            accountsDao.updateFollowingCount(loggedInId, 1)
-            relationshipsDao.updateFollowing(accountId, true)
-            accountsDao.updateFollowingCount(loggedInId, -1)
-            relationshipsDao.updateFollowing(accountId, false)
+            coEvery { accountRepository.followAccount(accountId) } throws Exception()
+
+            var exception: Exception? = null
+
+            try {
+                subject(
+                    accountId = accountId,
+                    loggedInUserAccountId = loggedInId,
+                )
+            } catch (e: Exception) {
+                exception = e
+            }
+
+            assertNotNull(exception)
+
+            coVerify(exactly = 1) {
+                accountsDao.updateFollowingCount(loggedInId, 1)
+                relationshipsDao.updateFollowing(accountId, true)
+                accountsDao.updateFollowingCount(loggedInId, -1)
+                relationshipsDao.updateFollowing(accountId, false)
+            }
         }
-    }
 
     @Test
     fun outerScopeCancelledTest() {
@@ -74,13 +76,13 @@ class FollowAccountTest : BaseUseCaseTest() {
         val loggedInId = "id2"
 
         testOuterScopeCancelled(
-            delayedCallBlock =  {
+            delayedCallBlock = {
                 relationshipsDao.updateFollowing(any(), true)
             },
             subjectCallBlock = {
                 subject(
                     accountId = accountId,
-                    loggedInUserAccountId = loggedInId
+                    loggedInUserAccountId = loggedInId,
                 )
             },
             verifyBlock = {
@@ -92,13 +94,13 @@ class FollowAccountTest : BaseUseCaseTest() {
     @Test
     fun testCancelledScopeWithError() {
         testOuterScopeCancelledAndInnerException(
-            delayedCallBlock =  {
+            delayedCallBlock = {
                 relationshipsDao.updateFollowing(any(), true)
             },
             subjectCallBlock = {
                 subject(
                     accountId = "id1",
-                    loggedInUserAccountId = "id2"
+                    loggedInUserAccountId = "id2",
                 )
             },
             verifyBlock = {

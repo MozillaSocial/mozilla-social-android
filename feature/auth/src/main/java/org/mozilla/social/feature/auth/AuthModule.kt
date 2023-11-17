@@ -11,16 +11,17 @@ import org.mozilla.social.core.usecase.mastodon.mastodonUsecaseModule
 import org.mozilla.social.feature.auth.chooseServer.ChooseServerViewModel
 import org.mozilla.social.feature.auth.login.LoginViewModel
 
-val authModule = module {
-    includes(
-        commonModule,
-        dataStoreModule,
-        mastodonUsecaseModule,
-        mastodonRepositoryModule,
-        navigationModule,
-        analyticsModule,
-    )
+val authModule =
+    module {
+        includes(
+            commonModule,
+            dataStoreModule,
+            mastodonUsecaseModule,
+            mastodonRepositoryModule,
+            navigationModule,
+            analyticsModule,
+        )
 
-    viewModel { LoginViewModel(get(), get(), get(), get()) }
-    viewModel { ChooseServerViewModel(get()) }
-}
+        viewModel { LoginViewModel(get(), get(), get(), get()) }
+        viewModel { ChooseServerViewModel(get()) }
+    }

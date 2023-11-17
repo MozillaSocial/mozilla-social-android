@@ -25,7 +25,6 @@ import org.mozilla.social.core.network.mastodon.TimelineApi
 import kotlin.test.BeforeTest
 
 open class BaseRepositoryTest {
-
     protected val accountApi = mockk<AccountApi>(relaxed = true)
     protected val appApi = mockk<AppApi>(relaxed = true)
     protected val instanceApi = mockk<InstanceApi>(relaxed = true)

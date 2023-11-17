@@ -11,16 +11,13 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 data class NetworkField(
-
     @SerialName("name")
     val name: String,
-
     @SerialName("value")
     val value: String,
-
     /**
      * Timestamp of the time the server verified a URL value for a `rel="me”` link.
      */
     @SerialName("verified_at")
-    val verifiedAt: Instant? = null
+    val verifiedAt: Instant? = null,
 )
