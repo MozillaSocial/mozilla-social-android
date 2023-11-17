@@ -30,7 +30,7 @@ style:
     ignorePropertyDeclaration: true # Recommended configuration for Compose.
     ignoreCompanionObjectPropertyDeclaration: true # Recommended configuration for Compose.
     ignoreLocalVariableDeclaration: true # Useful for compose
-  
+
   UnusedPrivateMember:
     ignoreAnnotated:
     - 'Preview' # Recommended configuration for Compose.
