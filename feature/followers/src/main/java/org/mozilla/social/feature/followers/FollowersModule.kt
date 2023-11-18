@@ -25,6 +25,9 @@ val followersModule =
                 followersRepository = get(),
                 navigateTo = get(),
                 analytics = get(),
+                followAccount = get(),
+                unfollowAccount = get(),
+                getLoggedInUserAccountId = get(),
             )
         }
     }

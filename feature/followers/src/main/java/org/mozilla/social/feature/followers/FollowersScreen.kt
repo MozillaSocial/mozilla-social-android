@@ -32,6 +32,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
+import org.mozilla.social.core.designsystem.theme.MoSoSpacing
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.navigation.navigationModule
 import org.mozilla.social.core.ui.accountfollower.AccountFollower
@@ -166,13 +167,19 @@ private fun FollowersList(
                         lazyPagingItems[index]?.let { uiState ->
                             AccountFollower(
                                 uiState = uiState,
-                                onButtonClicked = {},
-                                modifier = Modifier.clickable {
-                                    followersInteractions
+                                onButtonClicked = {
+                                    followersInteractions.onFollowClicked(
+                                        uiState.accountQuickViewUiState.accountId,
+                                        isFollowing = uiState.isFollowing,
+                                    )
+                                },
+                                modifier = Modifier
+                                    .padding(MoSoSpacing.md)
+                                    .clickable { followersInteractions
                                         .onAccountClicked(
                                             accountId = uiState.accountQuickViewUiState.accountId
                                         )
-                                },
+                                    },
                             )
                         }
                     }
