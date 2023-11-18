@@ -63,7 +63,6 @@ class StatusDelegate(
                 ?: 0) > NewPostViewModel.MAX_POST_LENGTH
         ) return
         _statusText.update {
-            Timber.d("updating onStatusTextUpdated")
             textFieldValue
         }
 
@@ -137,6 +136,8 @@ class StatusDelegate(
         if (text.length + statusText.value.text.length > NewPostViewModel.MAX_POST_LENGTH) return
         _contentWarningText.update { text }
     }
-}
 
-private const val SEARCH_DELAY = 500L
+    companion object {
+        const val SEARCH_DELAY = 500L
+    }
+}
