@@ -3,6 +3,7 @@ package org.mozilla.social.common.utils
 import android.content.Context
 import android.net.Uri
 import android.webkit.MimeTypeMap
+import timber.log.Timber
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -28,7 +29,7 @@ fun Uri.toFile(context: Context): File {
 
         oStream.flush()
     } catch (e: Exception) {
-        e.printStackTrace()
+        Timber.e(e)
     }
 
     return tempFile

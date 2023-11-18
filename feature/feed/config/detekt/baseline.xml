@@ -1,9 +1,0 @@
-<?xml version="1.0" ?>
-<SmellBaseline>
-  <ManuallySuppressedIssues></ManuallySuppressedIssues>
-  <CurrentIssues>
-    <ID>EmptyCatchBlock:FeedViewModel.kt$FeedViewModel${ }</ID>
-    <ID>SwallowedException:FeedViewModel.kt$FeedViewModel$exception: Exception</ID>
-    <ID>UnusedPrivateProperty:FeedViewModel.kt$FeedViewModel$private val currentFeedType = MutableStateFlow(INITIAL_FEED).also { viewModelScope.launch { it.collect { feedType -&gt; when (feedType) { FeedType.HOME -&gt; {} FeedType.LOCAL -&gt; {} } } } }</ID>
-  </CurrentIssues>
-</SmellBaseline>

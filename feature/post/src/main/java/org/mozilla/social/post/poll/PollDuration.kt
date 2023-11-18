@@ -3,6 +3,7 @@ package org.mozilla.social.post.poll
 import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.feature.post.R
 
+@Suppress("MagicNumber")
 enum class PollDuration(
     val inSeconds: Long,
     val label: StringFactory,

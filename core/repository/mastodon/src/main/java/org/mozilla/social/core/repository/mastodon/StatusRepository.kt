@@ -34,7 +34,8 @@ class StatusRepository(
     }
 
     @PreferUseCase
-    suspend fun boostStatus(statusId: String): Status = api.boostStatus(statusId = statusId).toExternalModel()
+    suspend fun boostStatus(statusId: String): Status =
+        api.boostStatus(statusId = statusId).toExternalModel()
 
     suspend fun updateBoostCount(
         statusId: String,
@@ -51,13 +52,16 @@ class StatusRepository(
     }
 
     @PreferUseCase
-    suspend fun unBoostStatus(statusId: String): Status = api.unBoostStatus(statusId = statusId).toExternalModel()
+    suspend fun unBoostStatus(statusId: String): Status =
+        api.unBoostStatus(statusId = statusId).toExternalModel()
 
     @PreferUseCase
-    suspend fun favoriteStatus(statusId: String): Status = api.favoriteStatus(statusId = statusId).toExternalModel()
+    suspend fun favoriteStatus(statusId: String): Status =
+        api.favoriteStatus(statusId = statusId).toExternalModel()
 
     @PreferUseCase
-    suspend fun unFavoriteStatus(statusId: String): Status = api.unFavoriteStatus(statusId = statusId).toExternalModel()
+    suspend fun unFavoriteStatus(statusId: String): Status =
+        api.unFavoriteStatus(statusId = statusId).toExternalModel()
 
     suspend fun getStatusContext(statusId: String): Context {
         return api.getStatusContext(statusId).toExternalModel()
