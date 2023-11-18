@@ -24,6 +24,7 @@ import org.koin.androidx.compose.koinViewModel
 import org.mozilla.social.common.Resource
 import org.mozilla.social.core.designsystem.theme.MoSoSpacing
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
+import org.mozilla.social.core.navigation.navigationModule
 import org.mozilla.social.core.ui.common.MoSoSurface
 import org.mozilla.social.core.ui.common.button.MoSoButtonSecondary
 import org.mozilla.social.core.ui.common.utils.PreviewTheme
@@ -90,7 +91,9 @@ private fun SignoutButton(onLogoutClicked: () -> Unit) {
 @Preview
 @Composable
 private fun AccountSettingsScreenPreview() {
-    PreviewTheme {
+    PreviewTheme(
+        modules = listOf(navigationModule)
+    ) {
         AccountSettingsScreen()
     }
 }

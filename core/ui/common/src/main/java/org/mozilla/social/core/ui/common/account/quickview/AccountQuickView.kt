@@ -7,14 +7,17 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import org.mozilla.social.core.designsystem.theme.MoSoSpacing
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
+import org.mozilla.social.core.ui.common.button.MoSoButton
 import org.mozilla.social.core.ui.common.text.LargeTextBody
 import org.mozilla.social.core.ui.common.text.MediumTextBody
 import org.mozilla.social.core.ui.common.utils.PreviewTheme
@@ -24,6 +27,7 @@ fun AccountQuickView(
     uiState: AccountQuickViewUiState,
     modifier: Modifier = Modifier,
     buttonSlot: @Composable () -> Unit = {},
+    extraInfoSlot: @Composable () -> Unit = {},
 ) {
     Row(modifier = modifier) {
         CircleAvatar(uiState.avatarUrl)
@@ -31,17 +35,30 @@ fun AccountQuickView(
         Spacer(modifier = Modifier.width(MoSoSpacing.sm))
 
         Column {
-            LargeTextBody(text = uiState.displayName)
-            MediumTextBody(text = "@${uiState.webFinger}")
+            Row {
+                Column(
+                    modifier = Modifier.weight(1f)
+                ) {
+                    LargeTextBody(
+                        text = uiState.displayName,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                    )
+                    MediumTextBody(
+                        text = "@${uiState.webFinger}",
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                    )
+                }
+
+                buttonSlot()
+            }
+            extraInfoSlot()
         }
-
-        Spacer(modifier = Modifier.weight(1f))
-
-        buttonSlot()
     }
 }
 
-val CIRCLE_AVATAR_SIZE = 50.dp
+val CIRCLE_AVATAR_SIZE = 48.dp
 
 @Composable
 private fun CircleAvatar(
@@ -50,10 +67,10 @@ private fun CircleAvatar(
 ) {
     AsyncImage(
         modifier =
-            modifier
-                .size(CIRCLE_AVATAR_SIZE)
-                .clip(CircleShape)
-                .background(MoSoTheme.colors.layer2),
+        modifier
+            .size(CIRCLE_AVATAR_SIZE)
+            .clip(CircleShape)
+            .background(MoSoTheme.colors.layer2),
         model = avatarUrl,
         contentDescription = null,
     )
@@ -72,6 +89,53 @@ private fun AccountQuickViewPreview() {
                     avatarUrl = "url",
                     isFollowing = false,
                 ),
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun AccountQuickViewPreview2() {
+    PreviewTheme {
+        AccountQuickView(
+            uiState =
+                AccountQuickViewUiState(
+                    accountId = "",
+                    displayName = "really long name really long name really long name",
+                    webFinger = "webfinger",
+                    avatarUrl = "url",
+                    isFollowing = false,
+                ),
+            buttonSlot = {
+                MoSoButton(onClick = { /*TODO*/ }) {
+                    Text(text = "button")
+                }
+            }
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun AccountQuickViewPreview3() {
+    PreviewTheme {
+        AccountQuickView(
+            uiState =
+            AccountQuickViewUiState(
+                accountId = "",
+                displayName = "really long name really long name really long name",
+                webFinger = "webfinger",
+                avatarUrl = "url",
+                isFollowing = false,
+            ),
+            buttonSlot = {
+                MoSoButton(onClick = { /*TODO*/ }) {
+                    Text(text = "button")
+                }
+            },
+            extraInfoSlot = {
+                Text(text = "this is more info")
+            }
         )
     }
 }

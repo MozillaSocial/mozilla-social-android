@@ -22,6 +22,7 @@ import org.koin.androidx.compose.koinViewModel
 import org.mozilla.social.core.designsystem.theme.MoSoRadius
 import org.mozilla.social.core.designsystem.theme.MoSoSpacing
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
+import org.mozilla.social.core.navigation.navigationModule
 import org.mozilla.social.core.ui.common.MoSoSurface
 import org.mozilla.social.core.ui.common.account.quickview.AccountQuickView
 import org.mozilla.social.core.ui.common.account.quickview.AccountQuickViewUiState
@@ -114,7 +115,9 @@ private fun Divider() {
 @Preview
 @Composable
 fun AboutSettingsScreenPreview() {
-    PreviewTheme {
+    PreviewTheme(
+        modules = listOf(navigationModule)
+    ) {
         AboutSettingsScreen(
             aboutSettings =
                 AboutSettings(

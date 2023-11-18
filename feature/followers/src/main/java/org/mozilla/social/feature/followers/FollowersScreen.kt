@@ -33,6 +33,7 @@ import kotlinx.coroutines.flow.flowOf
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
+import org.mozilla.social.core.navigation.navigationModule
 import org.mozilla.social.core.ui.common.MoSoSurface
 import org.mozilla.social.core.ui.common.MoSoTab
 import org.mozilla.social.core.ui.common.MoSoTabRow
@@ -231,7 +232,9 @@ private fun FollowersList(
 @Preview
 @Composable
 private fun FollowersScreenPreview() {
-    PreviewTheme {
+    PreviewTheme(
+        modules = listOf(navigationModule),
+    ) {
         FollowersScreen(
             startingTab = FollowType.FOLLOWERS,
             followers =

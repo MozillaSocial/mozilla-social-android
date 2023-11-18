@@ -17,11 +17,11 @@ import org.mozilla.social.core.ui.common.text.SmallTextLabel
 import org.mozilla.social.core.ui.common.utils.PreviewTheme
 
 /**
- * A toggle button which toggles between a primary and secondary state (primary being the more
- * visually prominent state)
+ * A toggle button which automatically toggles between a primary and secondary state
+ * (primary being the more visually prominent state)
  */
 @Composable
-fun MoSoToggleButton(
+fun MoSoAutomaticToggleButton(
     onClick: (ToggleButtonState) -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
@@ -34,9 +34,41 @@ fun MoSoToggleButton(
 ) {
     var toggleState by remember { mutableStateOf(initialToggleState) }
 
-    MoSoButton(
+    MoSoToggleButton(
         onClick = {
             toggleState = !toggleState
+            onClick(toggleState)
+        },
+        modifier = modifier,
+        enabled = enabled,
+        toggleState = toggleState,
+        shape = shape,
+        elevation = elevation,
+        contentPadding = contentPadding,
+        interactionSource = interactionSource,
+        content = content,
+    )
+}
+
+/**
+ * A toggle button which toggles between a primary and secondary state (primary being the more
+ * visually prominent state)
+ */
+@Composable
+fun MoSoToggleButton(
+    onClick: (ToggleButtonState) -> Unit,
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+    toggleState: ToggleButtonState = ToggleButtonState.Primary,
+    shape: Shape = ButtonDefaults.shape,
+    elevation: ButtonElevation? = ButtonDefaults.buttonElevation(),
+    contentPadding: PaddingValues = ButtonDefaults.ContentPadding,
+    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
+    content: @Composable RowScope.() -> Unit,
+) {
+
+    MoSoButton(
+        onClick = {
             onClick(toggleState)
         },
         modifier = modifier,
@@ -53,7 +85,7 @@ fun MoSoToggleButton(
 
 @Preview
 @Composable
-fun ToggleButtonPreview() {
+private fun ToggleButtonPreview() {
     PreviewTheme {
         var state: ToggleButtonState by remember { mutableStateOf(ToggleButtonState.Primary) }
 
