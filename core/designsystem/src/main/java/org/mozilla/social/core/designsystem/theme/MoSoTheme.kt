@@ -50,8 +50,8 @@ fun MoSoTheme(
     ) {
         ProvideMoSoColors(colors = colors) {
             val textSelectionColors = TextSelectionColors(
-                handleColor = MoSoTheme.colors.iconPrimary,
-                backgroundColor = MoSoTheme.colors.layer2
+                handleColor = MoSoTheme.colors.iconAccent,
+                backgroundColor = MoSoTheme.colors.layer2,
             )
 
             CompositionLocalProvider(
