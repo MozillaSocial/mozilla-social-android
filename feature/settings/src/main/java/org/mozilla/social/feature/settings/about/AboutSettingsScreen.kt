@@ -128,7 +128,6 @@ fun AboutSettingsScreenPreview() {
                             displayName = "Mozilla Social",
                             webFinger = "@social",
                             avatarUrl = "",
-                            isFollowing = null,
                         ),
                     contactEmail = "support@mozilla-social.zendesk.com",
                     extendedDescription =

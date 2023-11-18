@@ -14,7 +14,7 @@ import org.mozilla.social.core.navigation.NavigationDestination
 import org.mozilla.social.core.navigation.usecases.NavigateTo
 import org.mozilla.social.core.repository.mastodon.FollowersRepository
 import org.mozilla.social.core.repository.mastodon.FollowingsRepository
-import org.mozilla.social.core.ui.common.account.quickview.toQuickViewUiState
+import org.mozilla.social.core.ui.accountfollower.toAccountFollowerUiState
 import org.mozilla.social.core.usecase.mastodon.remotemediators.FollowersRemoteMediator
 import org.mozilla.social.core.usecase.mastodon.remotemediators.FollowingsRemoteMediator
 
@@ -40,7 +40,7 @@ class FollowersViewModel(
             remoteMediator = followersRemoteMediator,
         ).map { pagingData ->
             pagingData.map {
-                it.toQuickViewUiState()
+                it.toAccountFollowerUiState()
             }
         }.cachedIn(viewModelScope)
 
@@ -50,7 +50,7 @@ class FollowersViewModel(
             remoteMediator = followingsRemoteMediator,
         ).map { pagingData ->
             pagingData.map {
-                it.toQuickViewUiState()
+                it.toAccountFollowerUiState()
             }
         }.cachedIn(viewModelScope)
 

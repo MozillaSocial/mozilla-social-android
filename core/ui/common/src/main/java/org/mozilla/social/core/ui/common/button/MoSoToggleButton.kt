@@ -56,7 +56,7 @@ fun MoSoAutomaticToggleButton(
  */
 @Composable
 fun MoSoToggleButton(
-    onClick: (ToggleButtonState) -> Unit,
+    onClick: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     toggleState: ToggleButtonState = ToggleButtonState.Primary,
@@ -68,9 +68,7 @@ fun MoSoToggleButton(
 ) {
 
     MoSoButton(
-        onClick = {
-            onClick(toggleState)
-        },
+        onClick = onClick,
         modifier = modifier,
         enabled = enabled,
         shape = shape,
@@ -89,7 +87,7 @@ private fun ToggleButtonPreview() {
     PreviewTheme {
         var state: ToggleButtonState by remember { mutableStateOf(ToggleButtonState.Primary) }
 
-        MoSoToggleButton(
+        MoSoAutomaticToggleButton(
             onClick = { state = it }) {
             SmallTextLabel(
                 text = when (state) {

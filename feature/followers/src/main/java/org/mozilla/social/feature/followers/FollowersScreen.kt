@@ -34,10 +34,11 @@ import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.navigation.navigationModule
+import org.mozilla.social.core.ui.accountfollower.AccountFollower
+import org.mozilla.social.core.ui.accountfollower.AccountFollowerUiState
 import org.mozilla.social.core.ui.common.MoSoSurface
 import org.mozilla.social.core.ui.common.MoSoTab
 import org.mozilla.social.core.ui.common.MoSoTabRow
-import org.mozilla.social.core.ui.common.account.quickview.AccountQuickView
 import org.mozilla.social.core.ui.common.account.quickview.AccountQuickViewUiState
 import org.mozilla.social.core.ui.common.appbar.MoSoCloseableTopAppBar
 import org.mozilla.social.core.ui.common.error.GenericError
@@ -74,8 +75,8 @@ internal fun FollowersScreen(
 @Composable
 private fun FollowersScreen(
     startingTab: FollowType,
-    followers: Flow<PagingData<AccountQuickViewUiState>>,
-    following: Flow<PagingData<AccountQuickViewUiState>>,
+    followers: Flow<PagingData<AccountFollowerUiState>>,
+    following: Flow<PagingData<AccountFollowerUiState>>,
     followersInteractions: FollowersInteractions,
 ) {
     MoSoSurface {
@@ -135,7 +136,7 @@ private fun FollowersScreen(
 
 @Composable
 private fun FollowersList(
-    list: Flow<PagingData<AccountQuickViewUiState>>,
+    list: Flow<PagingData<AccountFollowerUiState>>,
     followersInteractions: FollowersInteractions,
 ) {
     val lazyPagingItems = list.collectAsLazyPagingItems()
@@ -160,16 +161,18 @@ private fun FollowersList(
                 else ->
                     items(
                         count = lazyPagingItems.itemCount,
-                        key = lazyPagingItems.itemKey { it.accountId },
+                        key = lazyPagingItems.itemKey { it.accountQuickViewUiState.accountId },
                     ) { index ->
                         lazyPagingItems[index]?.let { uiState ->
-                            AccountQuickView(
+                            AccountFollower(
                                 uiState = uiState,
-                                modifier =
-                                    Modifier.clickable {
-                                        followersInteractions
-                                            .onAccountClicked(accountId = uiState.accountId)
-                                    },
+                                onButtonClicked = {},
+                                modifier = Modifier.clickable {
+                                    followersInteractions
+                                        .onAccountClicked(
+                                            accountId = uiState.accountQuickViewUiState.accountId
+                                        )
+                                },
                             )
                         }
                     }
@@ -241,13 +244,16 @@ private fun FollowersScreenPreview() {
                 flowOf(
                     PagingData.from(
                         listOf(
-                            AccountQuickViewUiState(
-                                accountId = "",
-                                displayName = "Person",
-                                webFinger = "person",
-                                avatarUrl = "",
+                            AccountFollowerUiState(
+                                accountQuickViewUiState = AccountQuickViewUiState(
+                                    accountId = "",
+                                    displayName = "Person",
+                                    webFinger = "person",
+                                    avatarUrl = "",
+                                ),
                                 isFollowing = false,
-                            ),
+                                bioHtml = ""
+                            )
                         ),
                     ),
                 ),

@@ -19,6 +19,7 @@ import org.mozilla.social.core.ui.htmlcontent.HtmlContentInteractions
 @Composable
 fun AccountFollower(
     uiState: AccountFollowerUiState,
+    onButtonClicked: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     AccountQuickView(
@@ -27,7 +28,7 @@ fun AccountFollower(
         buttonSlot = {
             MoSoToggleButton(
                 modifier = Modifier.height(32.dp),
-                onClick = {},
+                onClick = { onButtonClicked() },
                 toggleState = if (uiState.isFollowing) {
                     ToggleButtonState.Secondary
                 } else {
@@ -67,11 +68,11 @@ private fun AccountFollowerPreview() {
                     displayName = "name",
                     webFinger = "webfinger",
                     avatarUrl = "url",
-                    isFollowing = false,
                 ),
                 isFollowing = true,
                 bioHtml = "Engineer at mozilla"
             ),
+            onButtonClicked = {},
         )
     }
 }

@@ -95,7 +95,6 @@ private fun AccountQuickViewPreview() {
                 displayName = "name",
                 webFinger = "webfinger",
                 avatarUrl = "url",
-                isFollowing = false,
             ),
         )
     }
@@ -112,7 +111,6 @@ private fun AccountQuickViewPreview2() {
                 displayName = "really long name really long name really long name",
                 webFinger = "webfinger",
                 avatarUrl = "url",
-                isFollowing = false,
             ),
             buttonSlot = {
                 MoSoButton(onClick = { /*TODO*/ }) {
@@ -134,7 +132,6 @@ private fun AccountQuickViewPreview3() {
                 displayName = "really long name really long name really long name",
                 webFinger = "webfinger",
                 avatarUrl = "url",
-                isFollowing = false,
             ),
             buttonSlot = {
                 MoSoButton(onClick = { /*TODO*/ }) {
