@@ -57,21 +57,21 @@ internal fun ReportScreen2(
     checkedInstanceRules: List<InstanceRule>,
     additionalText: String,
     sendToExternalServer: Boolean,
-    viewModel: ReportScreen2ViewModel = koinViewModel(parameters = {
-        parametersOf(
-            onCloseClicked,
-            onReportSubmitted,
-            reportAccountId,
-            reportAccountHandle,
-            reportStatusId,
-            reportType,
-            checkedInstanceRules,
-            additionalText,
-            sendToExternalServer,
-        )
-    })
+    viewModel: ReportScreen2ViewModel =
+        koinViewModel(parameters = {
+            parametersOf(
+                onCloseClicked,
+                onReportSubmitted,
+                reportAccountId,
+                reportAccountHandle,
+                reportStatusId,
+                reportType,
+                checkedInstanceRules,
+                additionalText,
+                sendToExternalServer,
+            )
+        }),
 ) {
-
     val uiState by viewModel.statuses.collectAsStateWithLifecycle()
     val reportIsSending by viewModel.reportIsSending.collectAsStateWithLifecycle()
     ReportScreen2(
@@ -79,7 +79,7 @@ internal fun ReportScreen2(
         uiState = uiState,
         reportIsSending = reportIsSending,
         hasPreAttachedStatus = reportStatusId != null,
-        reportInteractions = viewModel
+        reportInteractions = viewModel,
     )
 }
 
@@ -93,9 +93,10 @@ private fun ReportScreen2(
 ) {
     MoSoSurface {
         Column(
-            modifier = Modifier
-                .fillMaxHeight()
-                .systemBarsPadding()
+            modifier =
+                Modifier
+                    .fillMaxHeight()
+                    .systemBarsPadding(),
         ) {
             MoSoCloseableTopAppBar(
                 title = stringResource(id = R.string.report_screen_title),
@@ -130,7 +131,7 @@ private fun TopContent(
     hasPreAttachedStatus: Boolean,
 ) {
     Column(
-        modifier = Modifier.padding(16.dp)
+        modifier = Modifier.padding(16.dp),
     ) {
         Text(
             text = stringResource(id = R.string.report_prompt, "@$reportAccountHandle"),
@@ -140,13 +141,15 @@ private fun TopContent(
         Spacer(modifier = Modifier.height(4.dp))
 
         Text(
-            text = stringResource(
-                id = if (hasPreAttachedStatus) {
-                    R.string.screen_2_prompt_with_attached_status
-                } else {
-                    R.string.screen_2_prompt
-                }
-            ),
+            text =
+                stringResource(
+                    id =
+                        if (hasPreAttachedStatus) {
+                            R.string.screen_2_prompt_with_attached_status
+                        } else {
+                            R.string.screen_2_prompt
+                        },
+                ),
             style = MoSoTheme.typography.titleMedium,
         )
     }
@@ -159,7 +162,7 @@ private fun MiddleContent(
     reportInteractions: ReportScreen2Interactions,
 ) {
     Box(
-        modifier = modifier
+        modifier = modifier,
     ) {
         when (uiState) {
             is Resource.Loading -> {
@@ -167,27 +170,27 @@ private fun MiddleContent(
             }
             is Resource.Error -> {
                 GenericError(
-                    onRetryClicked = { reportInteractions.onRetryClicked() }
+                    onRetryClicked = { reportInteractions.onRetryClicked() },
                 )
             }
             is Resource.Loaded -> {
                 LazyColumn(
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier.fillMaxSize(),
                 ) {
                     item {
                         Text(
                             modifier = Modifier.padding(start = 16.dp, top = 16.dp, end = 16.dp),
-                            text = stringResource(id = R.string.select_all_that_apply)
+                            text = stringResource(id = R.string.select_all_that_apply),
                         )
                     }
                     items(
                         count = uiState.data.count(),
-                        key = { uiState.data[it].statusId }
+                        key = { uiState.data[it].statusId },
                     ) { index ->
                         val item = uiState.data[index]
                         SelectableStatusCard(
                             uiState = item,
-                            reportInteractions = reportInteractions
+                            reportInteractions = reportInteractions,
                         )
                         if (index < uiState.data.count() - 1) {
                             MoSoDivider()
@@ -205,15 +208,16 @@ private fun BottomContent(
     reportInteractions: ReportScreen2Interactions,
 ) {
     MoSoButton(
-        modifier = Modifier
-            .padding(16.dp)
-            .fillMaxWidth(),
+        modifier =
+            Modifier
+                .padding(16.dp)
+                .fillMaxWidth(),
         onClick = { reportInteractions.onReportClicked() },
         enabled = !reportIsSending,
     ) {
         if (reportIsSending) {
             MoSoCircularProgressIndicator(
-                modifier = Modifier.size(24.dp)
+                modifier = Modifier.size(24.dp),
             )
         } else {
             Text(text = stringResource(id = R.string.submit_report_button))
@@ -230,22 +234,24 @@ private fun SelectableStatusCard(
 
     NoRipple {
         Row(
-            modifier = Modifier
-                .padding(start = 8.dp, end = 16.dp, top = 16.dp, bottom = 16.dp)
-                .clickable { reportInteractions.onStatusClicked(uiState.statusId) }
+            modifier =
+                Modifier
+                    .padding(start = 8.dp, end = 16.dp, top = 16.dp, bottom = 16.dp)
+                    .clickable { reportInteractions.onStatusClicked(uiState.statusId) },
         ) {
             MoSoCheckBox(
                 modifier = Modifier.align(Alignment.CenterVertically),
                 checked = uiState.checked,
-                onCheckedChange = { reportInteractions.onStatusClicked(uiState.statusId) }
+                onCheckedChange = { reportInteractions.onStatusClicked(uiState.statusId) },
             )
 
             AsyncImage(
-                modifier = Modifier
-                    .size(36.dp)
-                    .clip(CircleShape)
-                    .background(MoSoTheme.colors.layer2)
-                    .align(Alignment.CenterVertically),
+                modifier =
+                    Modifier
+                        .size(36.dp)
+                        .clip(CircleShape)
+                        .background(MoSoTheme.colors.layer2)
+                        .align(Alignment.CenterVertically),
                 model = uiState.avatarUrl,
                 contentDescription = "",
             )
@@ -257,7 +263,7 @@ private fun SelectableStatusCard(
             ) {
                 Row {
                     Column(
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.weight(1f),
                     ) {
                         Text(
                             text = uiState.userName,
@@ -280,10 +286,11 @@ private fun SelectableStatusCard(
                 org.mozilla.social.core.ui.htmlcontent.HtmlContent(
                     mentions = emptyList(),
                     htmlText = uiState.htmlStatusText,
-                    htmlContentInteractions = object :
-                        org.mozilla.social.core.ui.htmlcontent.HtmlContentInteractions {},
+                    htmlContentInteractions =
+                        object :
+                            org.mozilla.social.core.ui.htmlcontent.HtmlContentInteractions {},
                     maximumLineCount = 2,
-                    clickableLinks = false
+                    clickableLinks = false,
                 )
             }
         }

@@ -12,35 +12,42 @@ import timber.log.Timber
 class ChooseServerViewModel(
     private val login: Login,
 ) : ViewModel(), ChooseServerInteractions {
-
     private val _uiState = MutableStateFlow(ChooseServerUiState())
     val uiState = _uiState.asStateFlow()
 
     override fun onServerTextChanged(text: String) {
         val isUrl = URL_REGEX.toRegex().matches(text)
-        _uiState.edit { copy(
-            serverText = text,
-            nextButtonEnabled = isUrl,
-        ) }
+        _uiState.edit {
+            copy(
+                serverText = text,
+                nextButtonEnabled = isUrl,
+            )
+        }
     }
 
     override fun onNextClicked() {
-        _uiState.edit { copy(
-            isLoading = true,
-            loginFailed = false,
-        ) }
+        _uiState.edit {
+            copy(
+                isLoading = true,
+                loginFailed = false,
+            )
+        }
         viewModelScope.launch {
             try {
                 login(uiState.value.serverText)
             } catch (e: Login.LoginFailedException) {
-                _uiState.edit { copy(
-                    loginFailed = true,
-                ) }
+                _uiState.edit {
+                    copy(
+                        loginFailed = true,
+                    )
+                }
                 Timber.e(e)
             } finally {
-                _uiState.edit { copy(
-                    isLoading = false,
-                ) }
+                _uiState.edit {
+                    copy(
+                        isLoading = false,
+                    )
+                }
             }
         }
     }

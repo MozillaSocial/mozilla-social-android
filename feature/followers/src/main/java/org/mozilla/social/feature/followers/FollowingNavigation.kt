@@ -8,11 +8,12 @@ import org.mozilla.social.core.navigation.NavigationDestination
 fun NavGraphBuilder.followingScreen() {
     composable(
         route = NavigationDestination.Following.fullRoute,
-        arguments = listOf(
-            navArgument(NavigationDestination.Following.NAV_PARAM_ACCOUNT_ID) {
-                nullable = false
-            }
-        )
+        arguments =
+            listOf(
+                navArgument(NavigationDestination.Following.NAV_PARAM_ACCOUNT_ID) {
+                    nullable = false
+                },
+            ),
     ) {
         val accountId: String = it.arguments?.getString(NavigationDestination.Following.NAV_PARAM_ACCOUNT_ID)!!
         FollowersScreen(

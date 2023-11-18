@@ -30,14 +30,12 @@ fun NavGraphBuilder.bottomTabScreen(appState: AppState) {
 }
 
 @Composable
-fun BottomBarTabScreen(
-    appState: AppState,
-) {
+fun BottomBarTabScreen(appState: AppState) {
     appState.tabbedNavController = rememberNavController()
     val currentDestination by appState.currentBottomBarNavigationDestination.collectAsStateWithLifecycle()
 
     Column(
-        modifier = Modifier.windowInsetsPadding(WindowInsets.systemBars.only(WindowInsetsSides.Bottom))
+        modifier = Modifier.windowInsetsPadding(WindowInsets.systemBars.only(WindowInsetsSides.Bottom)),
     ) {
         val tabbedNavController by appState.tabbedNavControllerFlow.collectAsStateWithLifecycle()
         tabbedNavController?.let {

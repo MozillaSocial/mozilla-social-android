@@ -26,6 +26,6 @@ fun DropDownItem(
         onClick = {
             onClick()
             expanded.value = false
-        }
+        },
     )
 }

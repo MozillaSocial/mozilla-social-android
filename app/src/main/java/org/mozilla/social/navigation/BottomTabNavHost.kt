@@ -12,8 +12,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import org.mozilla.social.common.utils.mosoFadeIn
 import org.mozilla.social.common.utils.mosoFadeOut
-import org.mozilla.social.core.ui.common.MoSoSurface
 import org.mozilla.social.core.navigation.BottomBarNavigationDestination
+import org.mozilla.social.core.ui.common.MoSoSurface
 import org.mozilla.social.feature.account.myAccountScreen
 import org.mozilla.social.feature.discover.discoverScreen
 import org.mozilla.social.feed.feedScreen
@@ -23,7 +23,6 @@ fun BottomTabNavHost(
     modifier: Modifier = Modifier,
     tabbedNavController: NavHostController,
 ) {
-
     NavHost(
         modifier = modifier,
         navController = tabbedNavController,
@@ -45,7 +44,7 @@ fun NavGraphBuilder.bookmarkScreen() {
         MoSoSurface(modifier = Modifier.fillMaxSize()) {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 Text(
-                    text = "bookmarks coming soon :)"
+                    text = "bookmarks coming soon :)",
                 )
             }
         }

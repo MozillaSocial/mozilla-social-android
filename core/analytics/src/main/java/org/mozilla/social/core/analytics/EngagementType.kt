@@ -1,7 +1,7 @@
 package org.mozilla.social.core.analytics
 
 enum class EngagementType(
-    val value: String
+    val value: String,
 ) {
     FOLLOW("follow"),
     POST("post"),

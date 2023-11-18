@@ -15,10 +15,10 @@ import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.Test
 import org.mozilla.social.common.Resource
+import org.mozilla.social.core.model.Account
 import org.mozilla.social.core.repository.mastodon.AccountRepository
 import org.mozilla.social.core.usecase.mastodon.account.GetLoggedInUserAccountId
 import org.mozilla.social.core.usecase.mastodon.auth.Logout
-import org.mozilla.social.core.model.Account
 import kotlin.test.BeforeTest
 
 class AccountSettingsViewModelTest {
@@ -42,11 +42,12 @@ class AccountSettingsViewModelTest {
         every { account.url } returns "url"
         every { getLoggedInUserAccountId() } returns accountId
         coEvery { accountRepository.getAccount(accountId) } returns account
-        objUnderTest = AccountSettingsViewModel(
-            logout = logout,
-            getLoggedInUserAccountId = getLoggedInUserAccountId,
-            accountRepository = accountRepository
-        )
+        objUnderTest =
+            AccountSettingsViewModel(
+                logout = logout,
+                getLoggedInUserAccountId = getLoggedInUserAccountId,
+                accountRepository = accountRepository,
+            )
     }
 
     @Test
@@ -56,12 +57,13 @@ class AccountSettingsViewModelTest {
     }
 
     @Test
-    fun userHeaderState() = runTest {
-        val userHeader = objUnderTest.userHeader.collectAsList()
-        verify { account.toUserHeader() }
-        assertThat(userHeader[0]).isInstanceOf(Resource.Loading::class.java)
-        assertThat(userHeader[1].data?.accountName).isEqualTo("acct")
-    }
+    fun userHeaderState() =
+        runTest {
+            val userHeader = objUnderTest.userHeader.collectAsList()
+            verify { account.toUserHeader() }
+            assertThat(userHeader[0]).isInstanceOf(Resource.Loading::class.java)
+            assertThat(userHeader[1].data?.accountName).isEqualTo("acct")
+        }
 }
 
 private fun <T> Flow<T>.collectAsList(): List<T> {

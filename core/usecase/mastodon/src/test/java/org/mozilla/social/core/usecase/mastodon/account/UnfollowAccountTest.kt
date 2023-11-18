@@ -11,83 +11,86 @@ import kotlin.test.Test
 import kotlin.test.assertNotNull
 
 class UnfollowAccountTest : BaseUseCaseTest() {
-
     private lateinit var subject: UnfollowAccount
 
     @BeforeTest
     fun setup() {
-        subject = UnfollowAccount(
-            externalScope = TestScope(testDispatcher),
-            showSnackbar = showSnackbar,
-            accountRepository = accountRepository,
-            socialDatabase = socialDatabase,
-            dispatcherIo = testDispatcher,
-        )
-    }
-
-    @Test
-    fun successTest() = runTest {
-        val accountId = "id1"
-        val loggedInId = "id2"
-
-        subject(
-            accountId = accountId,
-            loggedInUserAccountId = loggedInId
-        )
-
-        coVerify(exactly = 1) {
-            homeTimelineDao.getPostsFromAccount(accountId)
-            homeTimelineDao.removePostsFromAccount(accountId)
-            accountsDao.updateFollowingCount(loggedInId, -1)
-            relationshipsDao.updateFollowing(accountId, false)
-            accountRepository.unfollowAccount(accountId)
-        }
-    }
-
-    @Test
-    fun networkFailureTest() = runTest {
-        val accountId = "id1"
-        val loggedInId = "id2"
-
-        val homeTimelinePosts = listOf(
-            HomeTimelineStatus(
-                statusId = "",
-                accountId = accountId,
-                pollId = null,
-                boostedStatusId = null,
-                boostedStatusAccountId = null,
-                boostedPollId = null,
+        subject =
+            UnfollowAccount(
+                externalScope = TestScope(testDispatcher),
+                showSnackbar = showSnackbar,
+                accountRepository = accountRepository,
+                socialDatabase = socialDatabase,
+                dispatcherIo = testDispatcher,
             )
-        )
+    }
 
-        coEvery { homeTimelineDao.getPostsFromAccount(accountId) } returns homeTimelinePosts
+    @Test
+    fun successTest() =
+        runTest {
+            val accountId = "id1"
+            val loggedInId = "id2"
 
-        coEvery { accountRepository.unfollowAccount(accountId) } throws Exception()
-
-        var exception: Exception? = null
-
-        try {
             subject(
                 accountId = accountId,
-                loggedInUserAccountId = loggedInId
+                loggedInUserAccountId = loggedInId,
             )
-        } catch (e: Exception) {
-            exception = e
+
+            coVerify(exactly = 1) {
+                homeTimelineDao.getPostsFromAccount(accountId)
+                homeTimelineDao.removePostsFromAccount(accountId)
+                accountsDao.updateFollowingCount(loggedInId, -1)
+                relationshipsDao.updateFollowing(accountId, false)
+                accountRepository.unfollowAccount(accountId)
+            }
         }
 
-        assertNotNull(exception)
+    @Test
+    fun networkFailureTest() =
+        runTest {
+            val accountId = "id1"
+            val loggedInId = "id2"
 
-        coVerify(exactly = 1) {
-            homeTimelineDao.getPostsFromAccount(accountId)
-            homeTimelineDao.removePostsFromAccount(accountId)
-            accountsDao.updateFollowingCount(loggedInId, -1)
-            relationshipsDao.updateFollowing(accountId, false)
+            val homeTimelinePosts =
+                listOf(
+                    HomeTimelineStatus(
+                        statusId = "",
+                        accountId = accountId,
+                        pollId = null,
+                        boostedStatusId = null,
+                        boostedStatusAccountId = null,
+                        boostedPollId = null,
+                    ),
+                )
 
-            homeTimelineDao.insertAll(homeTimelinePosts)
-            accountsDao.updateFollowingCount(loggedInId, 1)
-            relationshipsDao.updateFollowing(accountId, true)
+            coEvery { homeTimelineDao.getPostsFromAccount(accountId) } returns homeTimelinePosts
+
+            coEvery { accountRepository.unfollowAccount(accountId) } throws Exception()
+
+            var exception: Exception? = null
+
+            try {
+                subject(
+                    accountId = accountId,
+                    loggedInUserAccountId = loggedInId,
+                )
+            } catch (e: Exception) {
+                exception = e
+            }
+
+            assertNotNull(exception)
+
+            coVerify(exactly = 1) {
+                homeTimelineDao.getPostsFromAccount(accountId)
+                homeTimelineDao.removePostsFromAccount(accountId)
+                accountsDao.updateFollowingCount(loggedInId, -1)
+                relationshipsDao.updateFollowing(accountId, false)
+
+                homeTimelineDao.insertAll(homeTimelinePosts)
+                accountsDao.updateFollowingCount(loggedInId, 1)
+                relationshipsDao.updateFollowing(accountId, true)
+            }
         }
-    }
 
     @Test
     fun outerScopeCancelledTest() {

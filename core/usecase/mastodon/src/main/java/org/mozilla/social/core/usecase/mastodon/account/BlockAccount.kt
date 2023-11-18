@@ -18,29 +18,27 @@ class BlockAccount(
     private val socialDatabase: SocialDatabase,
     private val dispatcherIo: CoroutineDispatcher = Dispatchers.IO,
 ) {
-
     /**
      * @throws BlockFailedException if any error occurred
      */
     @OptIn(PreferUseCase::class)
-    suspend operator fun invoke(
-        accountId: String
-    ) = externalScope.async(dispatcherIo) {
-        try {
-            socialDatabase.homeTimelineDao().removePostsFromAccount(accountId)
-            socialDatabase.localTimelineDao().removePostsFromAccount(accountId)
-            socialDatabase.federatedTimelineDao().removePostsFromAccount(accountId)
-            socialDatabase.relationshipsDao().updateBlocked(accountId, true)
-            accountRepository.blockAccount(accountId)
-        } catch (e: Exception) {
-            socialDatabase.relationshipsDao().updateBlocked(accountId, false)
-            showSnackbar(
-                text = StringFactory.resource(R.string.error_blocking_account),
-                isError = true,
-            )
-            throw BlockFailedException(e)
-        }
-    }.await()
+    suspend operator fun invoke(accountId: String) =
+        externalScope.async(dispatcherIo) {
+            try {
+                socialDatabase.homeTimelineDao().removePostsFromAccount(accountId)
+                socialDatabase.localTimelineDao().removePostsFromAccount(accountId)
+                socialDatabase.federatedTimelineDao().removePostsFromAccount(accountId)
+                socialDatabase.relationshipsDao().updateBlocked(accountId, true)
+                accountRepository.blockAccount(accountId)
+            } catch (e: Exception) {
+                socialDatabase.relationshipsDao().updateBlocked(accountId, false)
+                showSnackbar(
+                    text = StringFactory.resource(R.string.error_blocking_account),
+                    isError = true,
+                )
+                throw BlockFailedException(e)
+            }
+        }.await()
 
     class BlockFailedException(e: Exception) : Exception(e)
 }

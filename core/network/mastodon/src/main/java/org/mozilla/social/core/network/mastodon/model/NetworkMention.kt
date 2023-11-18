@@ -8,16 +8,13 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 data class NetworkMention(
-
     @SerialName("id")
     val accountId: String,
-
     /**
      * The username of the mentioned user.
      */
     @SerialName("username")
     val username: String,
-
     /**
      * The WebFinger URI of the mentioned user.
      *
@@ -25,10 +22,9 @@ data class NetworkMention(
      */
     @SerialName("acct")
     val acct: String,
-
     /**
      * The URL of the mentioned user's profile.
      */
     @SerialName("url")
-    val url: String
+    val url: String,
 )

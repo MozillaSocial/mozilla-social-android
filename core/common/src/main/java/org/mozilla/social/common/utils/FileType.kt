@@ -6,10 +6,10 @@ import android.net.Uri
 enum class FileType {
     VIDEO,
     IMAGE,
-    UNKNOWN
+    UNKNOWN,
 }
 
-fun Uri.getFileType(context: Context) : FileType {
+fun Uri.getFileType(context: Context): FileType {
     val mimeType: String? = context.contentResolver.getType(this)
     return when {
         mimeType?.startsWith("image") ?: false -> FileType.IMAGE
@@ -18,7 +18,7 @@ fun Uri.getFileType(context: Context) : FileType {
     }
 }
 
-fun Uri.getFileType() : FileType {
+fun Uri.getFileType(): FileType {
     val extension = toString().substring(toString().lastIndexOf('.') + 1)
     return when (extension) {
         "png", "webp", "jpg", "jpeg", "gif", "gifv" -> FileType.IMAGE

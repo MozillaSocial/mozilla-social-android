@@ -6,18 +6,18 @@ import kotlin.test.BeforeTest
 import kotlin.test.Test
 
 class BlockAccountTest : BaseUseCaseTest() {
-
     private lateinit var subject: BlockAccount
 
     @BeforeTest
     fun setup() {
-        subject = BlockAccount(
-            externalScope = TestScope(testDispatcher),
-            showSnackbar = showSnackbar,
-            accountRepository = accountRepository,
-            socialDatabase = socialDatabase,
-            dispatcherIo = testDispatcher,
-        )
+        subject =
+            BlockAccount(
+                externalScope = TestScope(testDispatcher),
+                showSnackbar = showSnackbar,
+                accountRepository = accountRepository,
+                socialDatabase = socialDatabase,
+                dispatcherIo = testDispatcher,
+            )
     }
 
     @Test
@@ -32,7 +32,7 @@ class BlockAccountTest : BaseUseCaseTest() {
             },
             verifyBlock = {
                 accountRepository.blockAccount(accountId)
-            }
+            },
         )
     }
 

@@ -20,7 +20,6 @@ class UnfollowAccount(
     private val socialDatabase: SocialDatabase,
     private val dispatcherIo: CoroutineDispatcher = Dispatchers.IO,
 ) {
-
     /**
      * @throws UnfollowFailedException if any error occurred
      */

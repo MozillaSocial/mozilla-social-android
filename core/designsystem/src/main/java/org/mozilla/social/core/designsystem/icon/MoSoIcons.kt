@@ -31,7 +31,6 @@ import org.mozilla.social.core.designsystem.R
  * TODO@release update material icons with phosphor icons
  */
 object MoSoIcons {
-
     @Composable
     fun bookmark() = painterResource(R.drawable.bookmark_simple)
 
@@ -116,8 +115,8 @@ object MoSoIcons {
     @Composable
     fun plus() = painterResource(id = R.drawable.plus)
 
-   @Composable
-   fun prohibit() = painterResource(id = R.drawable.prohibit)
+    @Composable
+    fun prohibit() = painterResource(id = R.drawable.prohibit)
 
     @Composable
     fun repeat() = painterResource(id = R.drawable.repeat)
@@ -200,7 +199,6 @@ object MoSoIcons {
 
     @Composable
     fun addCircleOutline() = rememberVectorPainter(image = Icons.Rounded.AddCircleOutline)
-
 
     // This isn't part of the design system
     object Sizes {

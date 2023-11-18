@@ -7,10 +7,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.mozilla.social.core.datastore.UserPreferencesDatastore
-import org.mozilla.social.core.usecase.mastodon.auth.Login
 import org.mozilla.social.core.navigation.NavigationDestination
 import org.mozilla.social.core.navigation.usecases.NavigateTo
 import org.mozilla.social.core.usecase.mastodon.auth.IsSignedInFlow
+import org.mozilla.social.core.usecase.mastodon.auth.Login
 
 /**
  * Main view model- handles login logic and logout navigation
@@ -21,7 +21,6 @@ class MainViewModel(
     private val isSignedInFlow: IsSignedInFlow,
     private val userPreferencesDatastore: UserPreferencesDatastore,
 ) : ViewModel() {
-
     init {
         viewModelScope.launch(Dispatchers.Main) {
             isSignedInFlow().collectLatest {

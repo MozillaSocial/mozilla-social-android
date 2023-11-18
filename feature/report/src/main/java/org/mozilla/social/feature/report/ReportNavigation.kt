@@ -15,20 +15,19 @@ import org.mozilla.social.feature.report.step1.reportScreen1
 import org.mozilla.social.feature.report.step2.reportScreen2
 import org.mozilla.social.feature.report.step3.reportScreen3
 
-fun NavGraphBuilder.reportFlow(
-    navController: NavController,
-) {
+fun NavGraphBuilder.reportFlow(navController: NavController) {
     navigation(
         startDestination = ReportNavigationDestination.ReportScreen1.route,
         route = NavigationDestination.Report.fullRoute,
-        arguments = listOf(
-            navArgument(NavigationDestination.Report.NAV_PARAM_REPORT_STATUS_ID) {
-                nullable = true
-            },
-            navArgument(NavigationDestination.Report.NAV_PARAM_REPORT_ACCOUNT_ID) {
-                nullable = true
-            }
-        ),
+        arguments =
+            listOf(
+                navArgument(NavigationDestination.Report.NAV_PARAM_REPORT_STATUS_ID) {
+                    nullable = true
+                },
+                navArgument(NavigationDestination.Report.NAV_PARAM_REPORT_ACCOUNT_ID) {
+                    nullable = true
+                },
+            ),
     ) {
         reportScreen1(
             onCloseClicked = navController::popBackStack,
@@ -41,7 +40,7 @@ fun NavGraphBuilder.reportFlow(
                         navController.navigateToReportScreen3(Json.encodeToString(bundle))
                     }
                 }
-            }
+            },
         )
         reportScreen2(
             onReportSubmitted = {
@@ -53,10 +52,10 @@ fun NavGraphBuilder.reportFlow(
                         popUpTo(NavigationDestination.Report.fullRoute) {
                             inclusive = true
                         }
-                    }
+                    },
                 )
             },
-            onCloseClicked = navController::popBackStack
+            onCloseClicked = navController::popBackStack,
         )
         reportScreen3(
             onDoneClicked = {
@@ -66,4 +65,3 @@ fun NavGraphBuilder.reportFlow(
         )
     }
 }
-

@@ -7,7 +7,6 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 sealed class DatabaseAttachment {
-
     abstract val attachmentId: String
 
     /**

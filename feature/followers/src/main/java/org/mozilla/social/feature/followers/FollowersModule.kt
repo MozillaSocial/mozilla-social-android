@@ -8,22 +8,23 @@ import org.mozilla.social.core.navigation.navigationModule
 import org.mozilla.social.core.repository.mastodon.mastodonRepositoryModule
 import org.mozilla.social.core.usecase.mastodon.mastodonUsecaseModule
 
-val followersModule = module {
-    includes(
-        commonModule,
-        mastodonUsecaseModule,
-        mastodonRepositoryModule,
-        navigationModule,
-        analyticsModule,
-    )
-
-    viewModel { parameters ->
-        FollowersViewModel(
-            accountId = parameters[0],
-            followingsRepository = get(),
-            followersRepository = get(),
-            navigateTo = get(),
-            analytics = get(),
+val followersModule =
+    module {
+        includes(
+            commonModule,
+            mastodonUsecaseModule,
+            mastodonRepositoryModule,
+            navigationModule,
+            analyticsModule,
         )
+
+        viewModel { parameters ->
+            FollowersViewModel(
+                accountId = parameters[0],
+                followingsRepository = get(),
+                followersRepository = get(),
+                navigateTo = get(),
+                analytics = get(),
+            )
+        }
     }
-}

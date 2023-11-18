@@ -11,9 +11,9 @@ import timber.log.Timber
 class GetLoggedInUserAccountId(
     private val userPreferencesDatastore: UserPreferencesDatastore,
 ) {
-
-    operator fun invoke(): String = runBlocking {
-        userPreferencesDatastore.accountId.first()
-            .also { if (it.isBlank()) Timber.e("account id was blank") }
-    }
+    operator fun invoke(): String =
+        runBlocking {
+            userPreferencesDatastore.accountId.first()
+                .also { if (it.isBlank()) Timber.e("account id was blank") }
+        }
 }

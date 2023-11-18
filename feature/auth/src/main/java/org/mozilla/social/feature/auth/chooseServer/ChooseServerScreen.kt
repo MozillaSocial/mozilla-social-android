@@ -39,9 +39,7 @@ import org.mozilla.social.core.ui.common.text.MoSoTextField
 import org.mozilla.social.feature.auth.R
 
 @Composable
-internal fun ChooseServerScreen(
-    viewModel: ChooseServerViewModel = koinViewModel()
-) {
+internal fun ChooseServerScreen(viewModel: ChooseServerViewModel = koinViewModel()) {
     val uiState: ChooseServerUiState by viewModel.uiState.collectAsStateWithLifecycle()
     ChooseServerScreen(
         uiState = uiState,
@@ -55,21 +53,23 @@ private fun ChooseServerScreen(
     chooseServerInteractions: ChooseServerInteractions,
 ) {
     MoSoSurface(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier.fillMaxSize(),
     ) {
         Column(
-            modifier = Modifier
-                .systemBarsPadding()
-                .imePadding()
-                .verticalScroll(rememberScrollState()),
+            modifier =
+                Modifier
+                    .systemBarsPadding()
+                    .imePadding()
+                    .verticalScroll(rememberScrollState()),
         ) {
             MoSoCloseableTopAppBar(
-                title = stringResource(id = R.string.choose_a_server_screen_title)
+                title = stringResource(id = R.string.choose_a_server_screen_title),
             )
 
             Column(
-                modifier = Modifier
-                    .padding(MoSoSpacing.md),
+                modifier =
+                    Modifier
+                        .padding(MoSoSpacing.md),
             ) {
                 Text(
                     text = stringResource(id = R.string.choose_a_server_message),
@@ -87,16 +87,17 @@ private fun ChooseServerScreen(
                     leadingIcon = {
                         Icon(
                             painter = MoSoIcons.globeHemisphereWest(),
-                            contentDescription = null
+                            contentDescription = null,
                         )
                     },
                     isError = uiState.loginFailed,
                     singleLine = true,
-                    keyboardActions = KeyboardActions(
-                        onDone = {
-                            chooseServerInteractions.onNextClicked()
-                        }
-                    )
+                    keyboardActions =
+                        KeyboardActions(
+                            onDone = {
+                                chooseServerInteractions.onNextClicked()
+                            },
+                        ),
                 )
                 if (uiState.loginFailed) {
                     Spacer(modifier = Modifier.height(MoSoSpacing.sm))
@@ -106,11 +107,11 @@ private fun ChooseServerScreen(
                 MoSoButton(
                     modifier = Modifier.fillMaxWidth(),
                     enabled = uiState.nextButtonEnabled && !uiState.isLoading,
-                    onClick = { chooseServerInteractions.onNextClicked() }
+                    onClick = { chooseServerInteractions.onNextClicked() },
                 ) {
                     if (uiState.isLoading) {
                         MoSoCircularProgressIndicator(
-                            modifier = Modifier.size(20.dp)
+                            modifier = Modifier.size(20.dp),
                         )
                     } else {
                         Text(text = stringResource(id = R.string.choose_server_next_button))
@@ -122,26 +123,26 @@ private fun ChooseServerScreen(
 }
 
 @Composable
-private fun NoServerError(
-    modifier: Modifier = Modifier,
-) {
+private fun NoServerError(modifier: Modifier = Modifier) {
     Box(
-        modifier = modifier
-            .fillMaxWidth()
-            .background(
-                color = MoSoTheme.colors.snackbarBkgError,
-                shape = RoundedCornerShape(MoSoRadius.md_8_dp),
-            ),
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .background(
+                    color = MoSoTheme.colors.snackbarBkgError,
+                    shape = RoundedCornerShape(MoSoRadius.md_8_dp),
+                ),
     ) {
         Text(
-            modifier = Modifier
-                .padding(
-                    vertical = MoSoSpacing.sm,
-                    horizontal = MoSoSpacing.md,
-                ),
+            modifier =
+                Modifier
+                    .padding(
+                        vertical = MoSoSpacing.sm,
+                        horizontal = MoSoSpacing.md,
+                    ),
             text = stringResource(id = R.string.choose_server_error_message),
             style = MoSoTheme.typography.labelSmall,
-            color = MoSoTheme.colors.snackbarTextError
+            color = MoSoTheme.colors.snackbarTextError,
         )
     }
 }
@@ -154,10 +155,11 @@ private fun ChooseServerScreenPreview() {
     }) {
         MoSoTheme {
             ChooseServerScreen(
-                uiState = ChooseServerUiState(
-                    serverText = "mozilla.social",
-                    nextButtonEnabled = true
-                ),
+                uiState =
+                    ChooseServerUiState(
+                        serverText = "mozilla.social",
+                        nextButtonEnabled = true,
+                    ),
                 chooseServerInteractions = object : ChooseServerInteractions {},
             )
         }
@@ -172,11 +174,12 @@ private fun ChooseServerScreenLoadingPreview() {
     }) {
         MoSoTheme {
             ChooseServerScreen(
-                uiState = ChooseServerUiState(
-                    serverText = "mozilla.social",
-                    nextButtonEnabled = true,
-                    isLoading = true,
-                ),
+                uiState =
+                    ChooseServerUiState(
+                        serverText = "mozilla.social",
+                        nextButtonEnabled = true,
+                        isLoading = true,
+                    ),
                 chooseServerInteractions = object : ChooseServerInteractions {},
             )
         }
@@ -191,11 +194,12 @@ private fun ChooseServerScreenErrorPreview() {
     }) {
         MoSoTheme {
             ChooseServerScreen(
-                uiState = ChooseServerUiState(
-                    serverText = "mozilla.social",
-                    nextButtonEnabled = true,
-                    loginFailed = true,
-                ),
+                uiState =
+                    ChooseServerUiState(
+                        serverText = "mozilla.social",
+                        nextButtonEnabled = true,
+                        loginFailed = true,
+                    ),
                 chooseServerInteractions = object : ChooseServerInteractions {},
             )
         }

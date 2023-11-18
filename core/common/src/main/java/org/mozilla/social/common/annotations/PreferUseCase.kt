@@ -4,6 +4,6 @@ package org.mozilla.social.common.annotations
 @Retention(AnnotationRetention.BINARY)
 @RequiresOptIn(
     message = "A use case exists for this method that should probably be used instead.",
-    level = RequiresOptIn.Level.WARNING
+    level = RequiresOptIn.Level.WARNING,
 )
 annotation class PreferUseCase

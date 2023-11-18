@@ -4,7 +4,6 @@ package org.mozilla.social.core.model
  * Reply policy set on a [UserList].
  */
 enum class ListReplyPolicy {
-
     /**
      * Show replies to any followed user.
      */
@@ -18,5 +17,5 @@ enum class ListReplyPolicy {
     /**
      * Show replies to no one.
      */
-    None
+    None,
 }

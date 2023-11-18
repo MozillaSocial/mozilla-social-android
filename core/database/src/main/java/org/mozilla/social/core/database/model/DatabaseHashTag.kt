@@ -10,20 +10,17 @@ import kotlinx.serialization.Serializable
 @Serializable
 @Entity(tableName = "hashTags")
 data class DatabaseHashTag(
-
     /**
      * The value of the hashtag after the # sign.
      */
     @PrimaryKey
     val name: String,
-
     /**
      * URL to the hashtag on the instance.
      */
     val url: String,
-
     /**
      * Hashtag usage statistics for given days.
      */
-    val history: List<DatabaseHistory>? = null
+    val history: List<DatabaseHistory>? = null,
 )

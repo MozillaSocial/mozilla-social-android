@@ -56,16 +56,18 @@ fun MoSoTextField(
     TextField(
         value = value,
         onValueChange = onValueChange,
-        modifier = modifier
-            .border(
-                width = 1.dp,
-                color = if (isError) {
-                    MoSoTheme.colors.borderWarning
-                } else {
-                    borderColor
-                },
-                shape = RoundedCornerShape(MoSoRadius.md_8_dp)
-            ),
+        modifier =
+            modifier
+                .border(
+                    width = 1.dp,
+                    color =
+                        if (isError) {
+                            MoSoTheme.colors.borderWarning
+                        } else {
+                            borderColor
+                        },
+                    shape = RoundedCornerShape(MoSoRadius.md_8_dp),
+                ),
         enabled = enabled,
         readOnly = readOnly,
         textStyle = textStyle,
@@ -85,7 +87,7 @@ fun MoSoTextField(
         minLines = minLines,
         interactionSource = interactionSource,
         shape = shape,
-        colors = colors
+        colors = colors,
     )
 }
 
@@ -113,7 +115,7 @@ fun MoSoTextField(
     minLines: Int = 1,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     shape: Shape = TextFieldDefaults.shape,
-    colors: TextFieldColors = MoSoTextFieldDefaults.colors()
+    colors: TextFieldColors = MoSoTextFieldDefaults.colors(),
 ) {
     TextField(
         value = value,
@@ -138,7 +140,7 @@ fun MoSoTextField(
         minLines = minLines,
         interactionSource = interactionSource,
         shape = shape,
-        colors = colors
+        colors = colors,
     )
 }
 
@@ -159,22 +161,23 @@ object MoSoTextFieldDefaults {
         errorContainerColor: Color = Color.Transparent,
         unfocusedContainerColor: Color = Color.Transparent,
         focusedContainerColor: Color = Color.Transparent,
-    ): TextFieldColors = TextFieldDefaults.colors(
-        cursorColor = cursorColor,
-        errorCursorColor = errorCursorColor,
-        unfocusedLabelColor = unfocusedLabelColor,
-        focusedLabelColor = focusedLabelColor,
-        disabledLabelColor = disabledLabelColor,
-        errorLabelColor = errorLabelColor,
-        focusedIndicatorColor = focusedIndicatorColor,
-        unfocusedIndicatorColor = unfocusedIndicatorColor,
-        disabledIndicatorColor = disabledIndicatorColor,
-        errorIndicatorColor = errorIndicatorColor,
-        disabledContainerColor = disabledContainerColor,
-        errorContainerColor = errorContainerColor,
-        unfocusedContainerColor = unfocusedContainerColor,
-        focusedContainerColor = focusedContainerColor,
-    )
+    ): TextFieldColors =
+        TextFieldDefaults.colors(
+            cursorColor = cursorColor,
+            errorCursorColor = errorCursorColor,
+            unfocusedLabelColor = unfocusedLabelColor,
+            focusedLabelColor = focusedLabelColor,
+            disabledLabelColor = disabledLabelColor,
+            errorLabelColor = errorLabelColor,
+            focusedIndicatorColor = focusedIndicatorColor,
+            unfocusedIndicatorColor = unfocusedIndicatorColor,
+            disabledIndicatorColor = disabledIndicatorColor,
+            errorIndicatorColor = errorIndicatorColor,
+            disabledContainerColor = disabledContainerColor,
+            errorContainerColor = errorContainerColor,
+            unfocusedContainerColor = unfocusedContainerColor,
+            focusedContainerColor = focusedContainerColor,
+        )
 }
 
 @Preview
@@ -183,7 +186,7 @@ private fun MoSoTextFieldPreview() {
     MoSoTheme {
         MoSoSurface {
             Box(
-                modifier = Modifier.padding(8.dp)
+                modifier = Modifier.padding(8.dp),
             ) {
                 MoSoTextField(
                     value = "test",
@@ -201,7 +204,7 @@ private fun MoSoTextFieldErrorPreview() {
     MoSoTheme {
         MoSoSurface {
             Box(
-                modifier = Modifier.padding(8.dp)
+                modifier = Modifier.padding(8.dp),
             ) {
                 MoSoTextField(
                     value = "test",

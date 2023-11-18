@@ -11,7 +11,7 @@ import org.mozilla.social.feature.auth.login.LoginScreen
 fun NavGraphBuilder.authFlow() {
     navigation(
         startDestination = AuthNavigationDestination.Login.route,
-        route = NavigationDestination.Auth.route
+        route = NavigationDestination.Auth.route,
     ) {
         loginScreen()
         chooseServerScreen()

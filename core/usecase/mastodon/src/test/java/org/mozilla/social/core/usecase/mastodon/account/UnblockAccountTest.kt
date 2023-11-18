@@ -5,19 +5,19 @@ import org.mozilla.social.core.usecase.mastodon.BaseUseCaseTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 
-class UnblockAccountTest: BaseUseCaseTest() {
-
+class UnblockAccountTest : BaseUseCaseTest() {
     private lateinit var subject: UnblockAccount
 
     @BeforeTest
     fun setup() {
-        subject = UnblockAccount(
-            externalScope = TestScope(testDispatcher),
-            showSnackbar = showSnackbar,
-            accountRepository = accountRepository,
-            socialDatabase = socialDatabase,
-            dispatcherIo = testDispatcher,
-        )
+        subject =
+            UnblockAccount(
+                externalScope = TestScope(testDispatcher),
+                showSnackbar = showSnackbar,
+                accountRepository = accountRepository,
+                socialDatabase = socialDatabase,
+                dispatcherIo = testDispatcher,
+            )
     }
 
     @Test
@@ -32,7 +32,7 @@ class UnblockAccountTest: BaseUseCaseTest() {
             },
             verifyBlock = {
                 accountRepository.unblockAccount(accountId)
-            }
+            },
         )
     }
 

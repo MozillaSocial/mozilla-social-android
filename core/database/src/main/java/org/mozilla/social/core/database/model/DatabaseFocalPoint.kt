@@ -7,14 +7,12 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 data class DatabaseFocalPoint(
-
     /**
      * x coordinate in [-1, +1]
      */
     val x: Double,
-
     /**
      * y coordinate in [-1, +1]
      */
-    val y: Double
+    val y: Double,
 )

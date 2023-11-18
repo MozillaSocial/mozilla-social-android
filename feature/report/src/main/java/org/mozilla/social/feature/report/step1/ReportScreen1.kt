@@ -30,22 +30,22 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.KoinApplication
 import org.koin.core.parameter.parametersOf
-import org.mozilla.social.core.ui.common.MoSoSurface
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.designsystem.utils.NoRipple
+import org.mozilla.social.core.model.InstanceRule
 import org.mozilla.social.core.navigation.navigationModule
+import org.mozilla.social.core.ui.common.MoSoCheckBox
+import org.mozilla.social.core.ui.common.MoSoSurface
 import org.mozilla.social.core.ui.common.animation.ExpandingAnimation
 import org.mozilla.social.core.ui.common.appbar.MoSoCloseableTopAppBar
-import org.mozilla.social.feature.report.R
-import org.mozilla.social.feature.report.ReportDataBundle
-import org.mozilla.social.feature.report.ReportTarget
-import org.mozilla.social.feature.report.ReportType
-import org.mozilla.social.core.model.InstanceRule
-import org.mozilla.social.core.ui.common.MoSoCheckBox
 import org.mozilla.social.core.ui.common.button.MoSoButton
 import org.mozilla.social.core.ui.common.button.MoSoRadioButton
 import org.mozilla.social.core.ui.common.divider.MoSoDivider
 import org.mozilla.social.core.ui.common.text.MoSoTextField
+import org.mozilla.social.feature.report.R
+import org.mozilla.social.feature.report.ReportDataBundle
+import org.mozilla.social.feature.report.ReportTarget
+import org.mozilla.social.feature.report.ReportType
 
 @Composable
 internal fun ReportScreen1(
@@ -54,15 +54,16 @@ internal fun ReportScreen1(
     reportAccountId: String,
     reportAccountHandle: String,
     reportStatusId: String?,
-    viewModel: ReportScreen1ViewModel = koinViewModel(parameters = {
-        parametersOf(
-            onNextClicked,
-            onCloseClicked,
-            reportAccountId,
-            reportAccountHandle,
-            reportStatusId,
-        )
-    })
+    viewModel: ReportScreen1ViewModel =
+        koinViewModel(parameters = {
+            parametersOf(
+                onNextClicked,
+                onCloseClicked,
+                reportAccountId,
+                reportAccountHandle,
+                reportStatusId,
+            )
+        }),
 ) {
     val instanceRules by viewModel.instanceRules.collectAsStateWithLifecycle()
     val selectedReportType by viewModel.selectedReportType.collectAsStateWithLifecycle()
@@ -70,18 +71,19 @@ internal fun ReportScreen1(
     val additionalCommentText by viewModel.additionalCommentText.collectAsStateWithLifecycle()
     val sendToExternalServer by viewModel.sendToExternalServerChecked.collectAsStateWithLifecycle()
     ReportScreen1(
-        reportTarget = if (reportStatusId != null) {
-            ReportTarget.POST
-        } else {
-            ReportTarget.ACCOUNT
-        },
+        reportTarget =
+            if (reportStatusId != null) {
+                ReportTarget.POST
+            } else {
+                ReportTarget.ACCOUNT
+            },
         instanceRules = instanceRules,
         selectedReportType = selectedReportType,
         checkedRules = checkedRules,
         additionalCommentText = additionalCommentText,
         reportAccountHandle = reportAccountHandle,
         sendToExternalServer = sendToExternalServer,
-        reportInteractions = viewModel
+        reportInteractions = viewModel,
     )
 }
 
@@ -98,10 +100,11 @@ private fun ReportScreen1(
 ) {
     MoSoSurface {
         Column(
-            modifier = Modifier
-                .fillMaxHeight()
-                .systemBarsPadding()
-                .imePadding(),
+            modifier =
+                Modifier
+                    .fillMaxHeight()
+                    .systemBarsPadding()
+                    .imePadding(),
         ) {
             MoSoCloseableTopAppBar(
                 title = stringResource(id = R.string.report_screen_title),
@@ -133,9 +136,10 @@ private fun MainContent(
     reportInteractions: ReportScreen1Interactions,
 ) {
     Column(
-        modifier = Modifier
-            .padding(horizontal = 16.dp)
-            .verticalScroll(rememberScrollState())
+        modifier =
+            Modifier
+                .padding(horizontal = 16.dp)
+                .verticalScroll(rememberScrollState()),
     ) {
         Spacer(modifier = Modifier.height(16.dp))
         Text(
@@ -144,11 +148,15 @@ private fun MainContent(
         )
         Spacer(modifier = Modifier.height(4.dp))
         Text(
-            text = stringResource(id = if (reportTarget == ReportTarget.POST) {
-                R.string.report_instructions_for_post
-            } else {
-                R.string.report_instructions_for_account
-            }),
+            text =
+                stringResource(
+                    id =
+                        if (reportTarget == ReportTarget.POST) {
+                            R.string.report_instructions_for_post
+                        } else {
+                            R.string.report_instructions_for_account
+                        },
+                ),
             style = MoSoTheme.typography.titleMedium,
         )
         Spacer(modifier = Modifier.height(16.dp))
@@ -161,7 +169,7 @@ private fun MainContent(
             instanceRules = instanceRules,
             selectedReportType = selectedReportType,
             checkedRules = checkedRules,
-            reportInteractions = reportInteractions
+            reportInteractions = reportInteractions,
         )
 
         Spacer(modifier = Modifier.height(32.dp))
@@ -174,10 +182,11 @@ private fun MainContent(
         )
 
         MoSoButton(
-            modifier = Modifier
-                .fillMaxWidth(),
+            modifier =
+                Modifier
+                    .fillMaxWidth(),
             enabled = selectedReportType != null,
-            onClick = { reportInteractions.onNextClicked() }
+            onClick = { reportInteractions.onNextClicked() },
         ) {
             Text(text = stringResource(id = R.string.next_button))
         }
@@ -261,22 +270,24 @@ private fun SelectableReportType(
 ) {
     NoRipple {
         Row(
-            modifier = Modifier
-                .padding(4.dp)
-                .clickable { reportInteractions.onReportTypeSelected(reportType) }
+            modifier =
+                Modifier
+                    .padding(4.dp)
+                    .clickable { reportInteractions.onReportTypeSelected(reportType) },
         ) {
             MoSoRadioButton(
-                modifier = Modifier
-                    .size(20.dp),
+                modifier =
+                    Modifier
+                        .size(20.dp),
                 selected = selectedReportType == reportType,
-                onClick = { reportInteractions.onReportTypeSelected(reportType) }
+                onClick = { reportInteractions.onReportTypeSelected(reportType) },
             )
             Spacer(modifier = Modifier.padding(4.dp))
             Column {
                 Text(
                     text = title,
                     style = MoSoTheme.typography.bodyMedium,
-                    fontWeight = FontWeight.W700
+                    fontWeight = FontWeight.W700,
                 )
                 content()
             }
@@ -299,10 +310,11 @@ private fun CheckableInstanceRule(
             .fillMaxWidth(),
     ) {
         MoSoCheckBox(
-            modifier = Modifier
-                .size(20.dp),
+            modifier =
+                Modifier
+                    .size(20.dp),
             checked = checked,
-            onCheckedChange = { reportInteractions.onServerRuleClicked(instanceRule) }
+            onCheckedChange = { reportInteractions.onServerRuleClicked(instanceRule) },
         )
         Spacer(modifier = Modifier.padding(4.dp))
         Text(
@@ -321,28 +333,30 @@ private fun AdditionalReportFields(
     reportInteractions: ReportScreen1Interactions,
 ) {
     // will be null if the user is on the same instance as you
-    val externalInstance = remember(reportAccountHandle) {
-        mutableStateOf(
-            if (reportAccountHandle.contains("@")) {
-                reportAccountHandle.substringAfterLast("@")
-            } else {
-                null
-            }
-        )
-    }
+    val externalInstance =
+        remember(reportAccountHandle) {
+            mutableStateOf(
+                if (reportAccountHandle.contains("@")) {
+                    reportAccountHandle.substringAfterLast("@")
+                } else {
+                    null
+                },
+            )
+        }
 
-    val showAdditionalFields = remember(selectedReportType) {
-        mutableStateOf(
-            selectedReportType != null
-                    && selectedReportType != ReportType.DO_NOT_LIKE
-        )
-    }
+    val showAdditionalFields =
+        remember(selectedReportType) {
+            mutableStateOf(
+                selectedReportType != null &&
+                    selectedReportType != ReportType.DO_NOT_LIKE,
+            )
+        }
 
     ExpandingAnimation(
         visible = showAdditionalFields.value,
     ) {
         Column(
-            modifier = Modifier.animateContentSize()
+            modifier = Modifier.animateContentSize(),
         ) {
             AdditionalComments(
                 additionalCommentText = additionalCommentText,
@@ -372,9 +386,10 @@ private fun AdditionalComments(
     )
     Spacer(modifier = Modifier.height(16.dp))
     MoSoTextField(
-        modifier = Modifier
-            .fillMaxWidth()
-            .defaultMinSize(minHeight = 150.dp),
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .defaultMinSize(minHeight = 150.dp),
         value = additionalCommentText,
         label = {
             Text(text = stringResource(id = R.string.extra_info_text_field_label))
@@ -408,16 +423,17 @@ private fun SendToOtherServerOption(
                 .fillMaxWidth(),
         ) {
             MoSoCheckBox(
-                modifier = Modifier
-                    .size(20.dp),
+                modifier =
+                    Modifier
+                        .size(20.dp),
                 checked = checked,
-                onCheckedChange = { reportInteractions.onSendToExternalServerClicked() }
+                onCheckedChange = { reportInteractions.onSendToExternalServerClicked() },
             )
             Spacer(modifier = Modifier.padding(4.dp))
             Text(
                 modifier = Modifier.align(Alignment.CenterVertically),
                 text = stringResource(id = R.string.external_instance_option, externalInstance),
-                style = MoSoTheme.typography.bodyMedium
+                style = MoSoTheme.typography.bodyMedium,
             )
         }
     }
@@ -426,25 +442,29 @@ private fun SendToOtherServerOption(
 @Preview
 @Composable
 private fun ReportScreenPreview() {
-    val noDummies = InstanceRule(
-        1,
-        "no dummies"
-    )
-    val noDogs = InstanceRule(
-        2,
-        "no dogs"
-    )
+    val noDummies =
+        InstanceRule(
+            1,
+            "no dummies",
+        )
+    val noDogs =
+        InstanceRule(
+            2,
+            "no dogs",
+        )
     MoSoTheme {
         ReportScreen1(
             reportTarget = ReportTarget.POST,
-            instanceRules = listOf(
-                noDummies,
-                noDogs
-            ),
+            instanceRules =
+                listOf(
+                    noDummies,
+                    noDogs,
+                ),
             selectedReportType = ReportType.VIOLATION,
-            checkedRules = listOf(
-                noDogs,
-            ),
+            checkedRules =
+                listOf(
+                    noDogs,
+                ),
             additionalCommentText = "",
             reportAccountHandle = "john@mozilla.com",
             sendToExternalServer = false,
@@ -456,30 +476,34 @@ private fun ReportScreenPreview() {
 @Preview
 @Composable
 private fun ReportScreenPreviewDarkMode() {
-    val noDummies = InstanceRule(
-        1,
-        "no dummies"
-    )
-    val noDogs = InstanceRule(
-        2,
-        "no dogs"
-    )
+    val noDummies =
+        InstanceRule(
+            1,
+            "no dummies",
+        )
+    val noDogs =
+        InstanceRule(
+            2,
+            "no dogs",
+        )
     KoinApplication(application = {
         modules(navigationModule)
     }) {
         MoSoTheme(
-            darkTheme = true
+            darkTheme = true,
         ) {
             ReportScreen1(
                 reportTarget = ReportTarget.POST,
-                instanceRules = listOf(
-                    noDummies,
-                    noDogs
-                ),
+                instanceRules =
+                    listOf(
+                        noDummies,
+                        noDogs,
+                    ),
                 selectedReportType = ReportType.VIOLATION,
-                checkedRules = listOf(
-                    noDogs,
-                ),
+                checkedRules =
+                    listOf(
+                        noDogs,
+                    ),
                 additionalCommentText = "",
                 reportAccountHandle = "john@mozilla.com",
                 sendToExternalServer = false,

@@ -9,19 +9,16 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 data class NetworkApplication(
-
     /**
      * The name of your application.
      */
     @SerialName("name")
     val name: String,
-
     /**
      * The website associated with your application.
      */
     @SerialName("website")
     val website: String? = null,
-
     /**
      * Used for Push Streaming API.
      *
@@ -29,13 +26,11 @@ data class NetworkApplication(
      */
     @SerialName("vapid_key")
     val vapidKey: String? = null,
-
     /**
      * Client ID key, used for obtaining OAuth tokens.
      */
     @SerialName("client_id")
     val clientId: String? = null,
-
     /**
      * Client secret key, used for obtaining OAuth tokens.
      */

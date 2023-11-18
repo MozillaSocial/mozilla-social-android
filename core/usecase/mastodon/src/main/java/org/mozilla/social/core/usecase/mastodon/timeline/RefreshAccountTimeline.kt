@@ -8,12 +8,10 @@ import androidx.room.withTransaction
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.StateFlow
 import org.mozilla.social.common.Rel
-import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.core.database.SocialDatabase
 import org.mozilla.social.core.database.model.statusCollections.AccountTimelineStatus
 import org.mozilla.social.core.database.model.statusCollections.AccountTimelineStatusWrapper
 import org.mozilla.social.core.repository.mastodon.AccountRepository
-import org.mozilla.social.core.repository.mastodon.StatusRepository
 import org.mozilla.social.core.usecase.mastodon.remotemediators.getInReplyToAccountNames
 import org.mozilla.social.core.usecase.mastodon.status.SaveStatusToDatabase
 import timber.log.Timber
@@ -28,49 +26,52 @@ class RefreshAccountTimeline internal constructor(
     @OptIn(ExperimentalPagingApi::class)
     suspend operator fun invoke(
         loadType: LoadType,
-        state: PagingState<Int, AccountTimelineStatusWrapper>
+        state: PagingState<Int, AccountTimelineStatusWrapper>,
     ): RemoteMediator.MediatorResult {
         return try {
             var pageSize: Int = state.config.pageSize
-            val response = when (loadType) {
-                LoadType.REFRESH -> {
-                    pageSize = state.config.initialLoadSize
-                    accountRepository.getAccountStatuses(
-                        accountId = accountId,
-                        olderThanId = null,
-                        immediatelyNewerThanId = null,
-                        loadSize = pageSize,
-                        onlyMedia = timelineType.value == TimelineType.MEDIA,
-                        excludeReplies = timelineType.value == TimelineType.POSTS,
-                    )
-                }
+            val response =
+                when (loadType) {
+                    LoadType.REFRESH -> {
+                        pageSize = state.config.initialLoadSize
+                        accountRepository.getAccountStatuses(
+                            accountId = accountId,
+                            olderThanId = null,
+                            immediatelyNewerThanId = null,
+                            loadSize = pageSize,
+                            onlyMedia = timelineType.value == TimelineType.MEDIA,
+                            excludeReplies = timelineType.value == TimelineType.POSTS,
+                        )
+                    }
 
-                LoadType.PREPEND -> {
-                    val firstItem = state.firstItemOrNull()
-                        ?: return RemoteMediator.MediatorResult.Success(endOfPaginationReached = true)
-                    accountRepository.getAccountStatuses(
-                        accountId = accountId,
-                        olderThanId = null,
-                        immediatelyNewerThanId = firstItem.status.statusId,
-                        loadSize = pageSize,
-                        onlyMedia = timelineType.value == TimelineType.MEDIA,
-                        excludeReplies = timelineType.value == TimelineType.POSTS,
-                    )
-                }
+                    LoadType.PREPEND -> {
+                        val firstItem =
+                            state.firstItemOrNull()
+                                ?: return RemoteMediator.MediatorResult.Success(endOfPaginationReached = true)
+                        accountRepository.getAccountStatuses(
+                            accountId = accountId,
+                            olderThanId = null,
+                            immediatelyNewerThanId = firstItem.status.statusId,
+                            loadSize = pageSize,
+                            onlyMedia = timelineType.value == TimelineType.MEDIA,
+                            excludeReplies = timelineType.value == TimelineType.POSTS,
+                        )
+                    }
 
-                LoadType.APPEND -> {
-                    val lastItem = state.lastItemOrNull()
-                        ?: return RemoteMediator.MediatorResult.Success(endOfPaginationReached = true)
-                    accountRepository.getAccountStatuses(
-                        accountId = accountId,
-                        olderThanId = lastItem.status.statusId,
-                        immediatelyNewerThanId = null,
-                        loadSize = pageSize,
-                        onlyMedia = timelineType.value == TimelineType.MEDIA,
-                        excludeReplies = timelineType.value == TimelineType.POSTS,
-                    )
+                    LoadType.APPEND -> {
+                        val lastItem =
+                            state.lastItemOrNull()
+                                ?: return RemoteMediator.MediatorResult.Success(endOfPaginationReached = true)
+                        accountRepository.getAccountStatuses(
+                            accountId = accountId,
+                            olderThanId = lastItem.status.statusId,
+                            immediatelyNewerThanId = null,
+                            loadSize = pageSize,
+                            onlyMedia = timelineType.value == TimelineType.MEDIA,
+                            excludeReplies = timelineType.value == TimelineType.POSTS,
+                        )
+                    }
                 }
-            }
 
             val result = response.statuses.getInReplyToAccountNames(accountRepository)
 
@@ -81,16 +82,18 @@ class RefreshAccountTimeline internal constructor(
 
                 saveStatusToDatabase(result)
 
-                socialDatabase.accountTimelineDao().insertAll(result.map {
-                    AccountTimelineStatus(
-                        statusId = it.statusId,
-                        accountId = it.account.accountId,
-                        pollId = it.poll?.pollId,
-                        boostedStatusId = it.boostedStatus?.statusId,
-                        boostedStatusAccountId = it.boostedStatus?.account?.accountId,
-                        boostedPollId = it.boostedStatus?.poll?.pollId,
-                    )
-                })
+                socialDatabase.accountTimelineDao().insertAll(
+                    result.map {
+                        AccountTimelineStatus(
+                            statusId = it.statusId,
+                            accountId = it.account.accountId,
+                            pollId = it.poll?.pollId,
+                            boostedStatusId = it.boostedStatus?.statusId,
+                            boostedStatusAccountId = it.boostedStatus?.account?.accountId,
+                            boostedPollId = it.boostedStatus?.poll?.pollId,
+                        )
+                    },
+                )
             }
 
             // There seems to be some race condition for refreshes.  Subsequent pages do
@@ -105,11 +108,13 @@ class RefreshAccountTimeline internal constructor(
             }
 
             RemoteMediator.MediatorResult.Success(
-                endOfPaginationReached = when (loadType) {
-                    LoadType.PREPEND -> response.pagingLinks?.find { it.rel == Rel.PREV } == null
-                    LoadType.REFRESH,
-                    LoadType.APPEND -> response.pagingLinks?.find { it.rel == Rel.NEXT } == null
-                }
+                endOfPaginationReached =
+                    when (loadType) {
+                        LoadType.PREPEND -> response.pagingLinks?.find { it.rel == Rel.PREV } == null
+                        LoadType.REFRESH,
+                        LoadType.APPEND,
+                        -> response.pagingLinks?.find { it.rel == Rel.NEXT } == null
+                    },
             )
         } catch (e: Exception) {
             Timber.e(e)
@@ -121,6 +126,7 @@ class RefreshAccountTimeline internal constructor(
         private const val REFRESH_DELAY = 200L
     }
 }
+
 enum class TimelineType {
     POSTS,
     POSTS_AND_REPLIES,

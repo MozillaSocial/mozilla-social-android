@@ -17,9 +17,8 @@ class AccountTimelineRemoteMediator(
     private val timelineType: StateFlow<TimelineType>,
 ) :
     RemoteMediator<Int, AccountTimelineStatusWrapper>() {
-
     private val refreshAccountTimeline: RefreshAccountTimeline by inject(
-        RefreshAccountTimeline::class.java
+        RefreshAccountTimeline::class.java,
     ) {
         parametersOf(
             accountId,
@@ -29,9 +28,8 @@ class AccountTimelineRemoteMediator(
 
     override suspend fun load(
         loadType: LoadType,
-        state: PagingState<Int, AccountTimelineStatusWrapper>
+        state: PagingState<Int, AccountTimelineStatusWrapper>,
     ): MediatorResult {
         return refreshAccountTimeline(loadType, state)
     }
 }
-

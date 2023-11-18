@@ -8,7 +8,6 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 enum class NetworkStatusVisibility(val value: String) {
-
     /**
      * Visible to everyone, shown in public timelines.
      */
@@ -31,5 +30,5 @@ enum class NetworkStatusVisibility(val value: String) {
      * Visible only to mentioned users.
      */
     @SerialName("direct")
-    Direct("direct")
+    Direct("direct"),
 }

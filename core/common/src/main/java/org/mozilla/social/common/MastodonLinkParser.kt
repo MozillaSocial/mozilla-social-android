@@ -9,10 +9,11 @@ fun String.parseMastodonLinkHeader(): List<MastodonPagingLink> {
     return separated.map { link ->
         MastodonPagingLink(
             link = link.substringAfter("<").substringBefore(">"),
-            rel = when(link.substringAfter("; rel=\"").substringBefore("\"")) {
-                "prev" -> Rel.PREV
-                else -> Rel.NEXT
-            }
+            rel =
+                when (link.substringAfter("; rel=\"").substringBefore("\"")) {
+                    "prev" -> Rel.PREV
+                    else -> Rel.NEXT
+                },
         )
     }
 }
@@ -27,11 +28,9 @@ enum class Rel {
     NEXT,
 }
 
-fun List<MastodonPagingLink>.getSinceIdValue(): String? =
-    find { it.rel == Rel.PREV }?.getSinceIdValue()
+fun List<MastodonPagingLink>.getSinceIdValue(): String? = find { it.rel == Rel.PREV }?.getSinceIdValue()
 
-fun List<MastodonPagingLink>.getMaxIdValue(): String? =
-    find { it.rel == Rel.NEXT }?.getMaxIdValue()
+fun List<MastodonPagingLink>.getMaxIdValue(): String? = find { it.rel == Rel.NEXT }?.getMaxIdValue()
 
 private fun MastodonPagingLink.getSinceIdValue(): String =
     link

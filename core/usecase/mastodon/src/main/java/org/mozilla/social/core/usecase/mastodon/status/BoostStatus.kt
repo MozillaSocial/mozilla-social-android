@@ -19,30 +19,28 @@ class BoostStatus internal constructor(
     private val showSnackbar: ShowSnackbar,
     private val dispatcherIo: CoroutineDispatcher = Dispatchers.IO,
 ) {
-
     @OptIn(PreferUseCase::class)
-    suspend operator fun invoke(
-        statusId: String,
-    ) = externalScope.async(dispatcherIo) {
-        try {
-            databaseDelegate.withTransaction {
-                statusRepository.updateBoostCount(statusId, 1)
-                statusRepository.updateBoosted(statusId, true)
+    suspend operator fun invoke(statusId: String) =
+        externalScope.async(dispatcherIo) {
+            try {
+                databaseDelegate.withTransaction {
+                    statusRepository.updateBoostCount(statusId, 1)
+                    statusRepository.updateBoosted(statusId, true)
+                }
+                val status = statusRepository.boostStatus(statusId)
+                saveStatusToDatabase(status)
+            } catch (e: Exception) {
+                databaseDelegate.withTransaction {
+                    statusRepository.updateBoostCount(statusId, -1)
+                    statusRepository.updateBoosted(statusId, false)
+                }
+                showSnackbar(
+                    text = StringFactory.resource(R.string.error_boosting),
+                    isError = true,
+                )
+                throw BoostStatusFailedException(e)
             }
-            val status = statusRepository.boostStatus(statusId)
-            saveStatusToDatabase(status)
-        } catch (e: Exception) {
-            databaseDelegate.withTransaction {
-                statusRepository.updateBoostCount(statusId, -1)
-                statusRepository.updateBoosted(statusId, false)
-            }
-            showSnackbar(
-                text = StringFactory.resource(R.string.error_boosting),
-                isError = true,
-            )
-            throw BoostStatusFailedException(e)
-        }
-    }.await()
+        }.await()
 
     class BoostStatusFailedException(e: Exception) : Exception(e)
 }

@@ -18,10 +18,11 @@ fun MoSoAppBar(
     navigationIcon: @Composable () -> Unit = {},
     actions: @Composable RowScope.() -> Unit = {},
     title: @Composable () -> Unit,
-    colors: TopAppBarColors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-        containerColor = MoSoTheme.colors.layer1,
-        navigationIconContentColor = MoSoTheme.colors.iconPrimary,
-    ),
+    colors: TopAppBarColors =
+        TopAppBarDefaults.centerAlignedTopAppBarColors(
+            containerColor = MoSoTheme.colors.layer1,
+            navigationIconContentColor = MoSoTheme.colors.iconPrimary,
+        ),
     scrollBehavior: TopAppBarScrollBehavior? = null,
 ) {
     CenterAlignedTopAppBar(

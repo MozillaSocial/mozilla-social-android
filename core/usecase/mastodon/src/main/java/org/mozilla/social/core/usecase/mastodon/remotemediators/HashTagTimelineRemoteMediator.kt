@@ -22,47 +22,49 @@ class HashTagTimelineRemoteMediator internal constructor(
     private val socialDatabase: SocialDatabase,
     private val hashTag: String,
 ) : RemoteMediator<Int, HashTagTimelineStatusWrapper>() {
-
     @Suppress("ReturnCount")
     override suspend fun load(
         loadType: LoadType,
-        state: PagingState<Int, HashTagTimelineStatusWrapper>
+        state: PagingState<Int, HashTagTimelineStatusWrapper>,
     ): MediatorResult {
         return try {
             var pageSize: Int = state.config.pageSize
-            val response = when (loadType) {
-                LoadType.REFRESH -> {
-                    pageSize = state.config.initialLoadSize
-                    timelineRepository.getHashtagTimeline(
-                        hashTag = hashTag,
-                        olderThanId = null,
-                        immediatelyNewerThanId = null,
-                        loadSize = pageSize,
-                    )
-                }
+            val response =
+                when (loadType) {
+                    LoadType.REFRESH -> {
+                        pageSize = state.config.initialLoadSize
+                        timelineRepository.getHashtagTimeline(
+                            hashTag = hashTag,
+                            olderThanId = null,
+                            immediatelyNewerThanId = null,
+                            loadSize = pageSize,
+                        )
+                    }
 
-                LoadType.PREPEND -> {
-                    val firstItem = state.firstItemOrNull()
-                        ?: return MediatorResult.Success(endOfPaginationReached = true)
-                    timelineRepository.getHashtagTimeline(
-                        hashTag = hashTag,
-                        olderThanId = null,
-                        immediatelyNewerThanId = firstItem.status.statusId,
-                        loadSize = pageSize,
-                    )
-                }
+                    LoadType.PREPEND -> {
+                        val firstItem =
+                            state.firstItemOrNull()
+                                ?: return MediatorResult.Success(endOfPaginationReached = true)
+                        timelineRepository.getHashtagTimeline(
+                            hashTag = hashTag,
+                            olderThanId = null,
+                            immediatelyNewerThanId = firstItem.status.statusId,
+                            loadSize = pageSize,
+                        )
+                    }
 
-                LoadType.APPEND -> {
-                    val lastItem = state.lastItemOrNull()
-                        ?: return MediatorResult.Success(endOfPaginationReached = true)
-                    timelineRepository.getHashtagTimeline(
-                        hashTag = hashTag,
-                        olderThanId = lastItem.status.statusId,
-                        immediatelyNewerThanId = null,
-                        loadSize = pageSize,
-                    )
+                    LoadType.APPEND -> {
+                        val lastItem =
+                            state.lastItemOrNull()
+                                ?: return MediatorResult.Success(endOfPaginationReached = true)
+                        timelineRepository.getHashtagTimeline(
+                            hashTag = hashTag,
+                            olderThanId = lastItem.status.statusId,
+                            immediatelyNewerThanId = null,
+                            loadSize = pageSize,
+                        )
+                    }
                 }
-            }
 
             val result = response.statuses.getInReplyToAccountNames(accountRepository)
 
@@ -73,17 +75,19 @@ class HashTagTimelineRemoteMediator internal constructor(
 
                 saveStatusToDatabase(result)
 
-                socialDatabase.hashTagTimelineDao().insertAll(result.map {
-                    HashTagTimelineStatus(
-                        statusId = it.statusId,
-                        hashTag = hashTag,
-                        accountId = it.account.accountId,
-                        pollId = it.poll?.pollId,
-                        boostedStatusId = it.boostedStatus?.statusId,
-                        boostedStatusAccountId = it.boostedStatus?.account?.accountId,
-                        boostedPollId = it.boostedStatus?.poll?.pollId,
-                    )
-                })
+                socialDatabase.hashTagTimelineDao().insertAll(
+                    result.map {
+                        HashTagTimelineStatus(
+                            statusId = it.statusId,
+                            hashTag = hashTag,
+                            accountId = it.account.accountId,
+                            pollId = it.poll?.pollId,
+                            boostedStatusId = it.boostedStatus?.statusId,
+                            boostedStatusAccountId = it.boostedStatus?.account?.accountId,
+                            boostedPollId = it.boostedStatus?.poll?.pollId,
+                        )
+                    },
+                )
             }
 
             // There seems to be some race condition for refreshes.  Subsequent pages do
@@ -98,11 +102,13 @@ class HashTagTimelineRemoteMediator internal constructor(
             }
 
             MediatorResult.Success(
-                endOfPaginationReached = when (loadType) {
-                    LoadType.PREPEND -> response.pagingLinks?.find { it.rel == Rel.PREV } == null
-                    LoadType.REFRESH,
-                    LoadType.APPEND -> response.pagingLinks?.find { it.rel == Rel.NEXT } == null
-                }
+                endOfPaginationReached =
+                    when (loadType) {
+                        LoadType.PREPEND -> response.pagingLinks?.find { it.rel == Rel.PREV } == null
+                        LoadType.REFRESH,
+                        LoadType.APPEND,
+                        -> response.pagingLinks?.find { it.rel == Rel.NEXT } == null
+                    },
             )
         } catch (e: Exception) {
             MediatorResult.Error(e)

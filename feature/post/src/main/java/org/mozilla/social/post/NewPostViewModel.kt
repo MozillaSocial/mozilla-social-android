@@ -19,18 +19,18 @@ import org.mozilla.social.common.utils.FileType
 import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.core.analytics.Analytics
 import org.mozilla.social.core.analytics.AnalyticsIdentifiers
+import org.mozilla.social.core.model.ImageState
+import org.mozilla.social.core.model.StatusVisibility
+import org.mozilla.social.core.model.request.PollCreate
+import org.mozilla.social.core.navigation.usecases.PopNavBackstack
+import org.mozilla.social.core.navigation.usecases.ShowSnackbar
 import org.mozilla.social.core.repository.mastodon.AccountRepository
 import org.mozilla.social.core.repository.mastodon.MediaRepository
 import org.mozilla.social.core.repository.mastodon.SearchRepository
 import org.mozilla.social.core.repository.mastodon.StatusRepository
 import org.mozilla.social.core.usecase.mastodon.account.GetLoggedInUserAccountId
-import org.mozilla.social.core.navigation.usecases.PopNavBackstack
-import org.mozilla.social.core.navigation.usecases.ShowSnackbar
 import org.mozilla.social.core.usecase.mastodon.status.PostStatus
 import org.mozilla.social.feature.post.R
-import org.mozilla.social.core.model.ImageState
-import org.mozilla.social.core.model.StatusVisibility
-import org.mozilla.social.core.model.request.PollCreate
 import org.mozilla.social.post.bottombar.BottomBarState
 import org.mozilla.social.post.media.MediaDelegate
 import org.mozilla.social.post.media.MediaInteractions
@@ -54,13 +54,13 @@ class NewPostViewModel(
     private val popNavBackstack: PopNavBackstack,
     private val showSnackbar: ShowSnackbar,
 ) : ViewModel(), NewPostInteractions {
-
-    private val statusDelegate: StatusDelegate = StatusDelegate(
-        viewModelScope,
-        searchRepository,
-        statusRepository,
-        replyStatusId,
-    )
+    private val statusDelegate: StatusDelegate =
+        StatusDelegate(
+            viewModelScope,
+            searchRepository,
+            statusRepository,
+            replyStatusId,
+        )
     val statusInteractions: StatusInteractions = statusDelegate
     val contentWarningInteractions: ContentWarningInteractions = statusDelegate
     val statusText = statusDelegate.statusText
@@ -73,41 +73,42 @@ class NewPostViewModel(
     val pollInteractions: PollInteractions = pollDelegate
     val poll = pollDelegate.poll
 
-    private val mediaDelegate: MediaDelegate = MediaDelegate(
-        viewModelScope,
-        mediaRepository,
-    )
+    private val mediaDelegate: MediaDelegate =
+        MediaDelegate(
+            viewModelScope,
+            mediaRepository,
+        )
     val mediaInteractions: MediaInteractions = mediaDelegate
     val mediaStates: StateFlow<List<ImageState>> = mediaDelegate.imageStates
 
     private val images = mediaStates.mapLatest { it.filter { it.fileType == FileType.IMAGE } }
     private val videos = mediaStates.mapLatest { it.filter { it.fileType == FileType.VIDEO } }
 
-    val bottomBarState: StateFlow<BottomBarState> = combine(
-        images,
-        videos,
-        poll,
-        contentWarningText,
-        statusText
-    ) { images, videos, poll, contentWarningText, statusText ->
-        BottomBarState(
-            imageButtonEnabled = videos.isEmpty() && images.size < MAX_IMAGES && poll == null,
-            videoButtonEnabled = images.isEmpty() && poll == null,
-            pollButtonEnabled = images.isEmpty() && videos.isEmpty() && poll == null,
-            contentWarningText = contentWarningText,
-            characterCountText = "${MAX_POST_LENGTH - statusText.text.length - (contentWarningText?.length ?: 0)}",
-            maxImages = MAX_IMAGES - images.size,
-        )
-    }.stateIn(viewModelScope, SharingStarted.Eagerly, BottomBarState())
-
+    val bottomBarState: StateFlow<BottomBarState> =
+        combine(
+            images,
+            videos,
+            poll,
+            contentWarningText,
+            statusText,
+        ) { images, videos, poll, contentWarningText, statusText ->
+            BottomBarState(
+                imageButtonEnabled = videos.isEmpty() && images.size < MAX_IMAGES && poll == null,
+                videoButtonEnabled = images.isEmpty() && poll == null,
+                pollButtonEnabled = images.isEmpty() && videos.isEmpty() && poll == null,
+                contentWarningText = contentWarningText,
+                characterCountText = "${MAX_POST_LENGTH - statusText.text.length - (contentWarningText?.length ?: 0)}",
+                maxImages = MAX_IMAGES - images.size,
+            )
+        }.stateIn(viewModelScope, SharingStarted.Eagerly, BottomBarState())
 
     val sendButtonEnabled: StateFlow<Boolean> =
         combine(statusText, mediaStates, poll) { statusText, imageStates, poll ->
-            (statusText.text.isNotBlank() || imageStates.isNotEmpty())
-                    // all images are loaded
-                    && imageStates.find { it.loadState != LoadState.LOADED } == null
-                    // poll options have text if they exist
-                    && poll?.options?.find { it.isBlank() } == null
+            (statusText.text.isNotBlank() || imageStates.isNotEmpty()) &&
+                // all images are loaded
+                imageStates.find { it.loadState != LoadState.LOADED } == null &&
+                // poll options have text if they exist
+                poll?.options?.find { it.isBlank() } == null
         }.stateIn(
             scope = viewModelScope,
             started = SharingStarted.Lazily,
@@ -120,13 +121,14 @@ class NewPostViewModel(
     private val _visibility = MutableStateFlow(StatusVisibility.Public)
     val visibility = _visibility.asStateFlow()
 
-    val userHeaderState: Flow<UserHeaderState> = loadResource {
-        accountRepository.getAccount(getLoggedInUserAccountId())
-    }.mapNotNull { resource ->
-        resource.data?.let { account ->
-            UserHeaderState(avatarUrl = account.avatarUrl, displayName = account.displayName)
+    val userHeaderState: Flow<UserHeaderState> =
+        loadResource {
+            accountRepository.getAccount(getLoggedInUserAccountId())
+        }.mapNotNull { resource ->
+            resource.data?.let { account ->
+                UserHeaderState(avatarUrl = account.avatarUrl, displayName = account.displayName)
+            }
         }
-    }
 
     fun onVisibilitySelected(statusVisibility: StatusVisibility) {
         _visibility.update { statusVisibility }
@@ -140,14 +142,15 @@ class NewPostViewModel(
                     statusText = statusText.value.text,
                     imageStates = mediaStates.value.toList(),
                     visibility = visibility.value,
-                    pollCreate = poll.value?.let { poll ->
-                        PollCreate(
-                            options = poll.options,
-                            expiresInSec = poll.pollDuration.inSeconds,
-                            allowMultipleChoices = poll.style == PollStyle.MULTIPLE_CHOICE,
-                            hideTotals = poll.hideTotals
-                        )
-                    },
+                    pollCreate =
+                        poll.value?.let { poll ->
+                            PollCreate(
+                                options = poll.options,
+                                expiresInSec = poll.pollDuration.inSeconds,
+                                allowMultipleChoices = poll.style == PollStyle.MULTIPLE_CHOICE,
+                                hideTotals = poll.hideTotals,
+                            )
+                        },
                     contentWarningText = contentWarningText.value,
                     inReplyToId = replyStatusId,
                 )
@@ -163,7 +166,7 @@ class NewPostViewModel(
     private fun onStatusPosted() {
         showSnackbar(
             text = StringFactory.resource(R.string.your_post_was_published),
-            isError = false
+            isError = false,
         )
         popNavBackstack()
     }

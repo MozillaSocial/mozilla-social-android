@@ -54,7 +54,7 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.rotate
-import androidx.compose.ui.semantics.isContainer
+import androidx.compose.ui.semantics.isTraversalGroup
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -76,9 +76,9 @@ import kotlin.math.pow
  * @param contentColor The color of the indicator's arc and arrow.
  * @param scale A boolean controlling whether the indicator's size scales with pull progress or not.
  */
-@Composable
 // TODO(b/244423199): Consider whether the state parameter should be replaced with lambdas to
 //  enable people to use this indicator with custom pull-to-refresh components.
+@Composable
 fun PullRefreshIndicator(
     refreshing: Boolean,
     state: PullRefreshState,
@@ -92,9 +92,10 @@ fun PullRefreshIndicator(
     }
 
     PullRefreshSurface(
-        modifier = modifier
-            .size(IndicatorSize)
-            .pullRefreshIndicatorTransform(state, scale),
+        modifier =
+            modifier
+                .size(IndicatorSize)
+                .pullRefreshIndicatorTransform(state, scale),
         shape = SpinnerShape,
         color = backgroundColor,
         contentColor = contentColor,
@@ -102,11 +103,11 @@ fun PullRefreshIndicator(
     ) {
         Crossfade(
             targetState = refreshing,
-            animationSpec = tween(durationMillis = CrossfadeDurationMs)
+            animationSpec = tween(durationMillis = CrossfadeDurationMs),
         ) { refreshing ->
             Box(
                 modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
+                contentAlignment = Alignment.Center,
             ) {
                 val spinnerSize = (ArcRadius + StrokeWidth).times(2)
 
@@ -138,25 +139,26 @@ private fun PullRefreshSurface(
     tonalElevation: Dp = 0.dp,
     shadowElevation: Dp = 0.dp,
     border: BorderStroke? = null,
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
     val absoluteElevation = LocalAbsoluteTonalElevation.current + tonalElevation
     CompositionLocalProvider(
         LocalContentColor provides contentColor,
-        LocalAbsoluteTonalElevation provides absoluteElevation
+        LocalAbsoluteTonalElevation provides absoluteElevation,
     ) {
         Box(
-            modifier = modifier
-                .surface(
-                    shape = shape,
-                    backgroundColor = color,
-                    border = border,
-                    shadowElevation = shadowElevation
-                )
-                .semantics(mergeDescendants = false) {
-                    isContainer = true
-                },
-            propagateMinConstraints = true
+            modifier =
+                modifier
+                    .surface(
+                        shape = shape,
+                        backgroundColor = color,
+                        border = border,
+                        shadowElevation = shadowElevation,
+                    )
+                    .semantics(mergeDescendants = false) {
+                        isTraversalGroup = true
+                    },
+            propagateMinConstraints = true,
         ) {
             content()
         }
@@ -167,7 +169,7 @@ private fun Modifier.surface(
     shape: Shape,
     backgroundColor: Color,
     border: BorderStroke?,
-    shadowElevation: Dp
+    shadowElevation: Dp,
 ) = this.shadow(shadowElevation, shape, clip = false)
     .then(if (border != null) Modifier.border(border, shape) else Modifier)
     .background(color = backgroundColor, shape = shape)
@@ -199,12 +201,13 @@ private fun CircularArrowIndicator(
 
         rotate(degrees = values.rotation) {
             val arcRadius = ArcRadius.toPx() + StrokeWidth.toPx() / 2f
-            val arcBounds = Rect(
-                size.center.x - arcRadius,
-                size.center.y - arcRadius,
-                size.center.x + arcRadius,
-                size.center.y + arcRadius
-            )
+            val arcBounds =
+                Rect(
+                    size.center.x - arcRadius,
+                    size.center.y - arcRadius,
+                    size.center.x + arcRadius,
+                    size.center.y + arcRadius,
+                )
             drawArc(
                 color = color,
                 alpha = alpha,
@@ -213,10 +216,11 @@ private fun CircularArrowIndicator(
                 useCenter = false,
                 topLeft = arcBounds.topLeft,
                 size = arcBounds.size,
-                style = Stroke(
-                    width = StrokeWidth.toPx(),
-                    cap = StrokeCap.Square
-                )
+                style =
+                    Stroke(
+                        width = StrokeWidth.toPx(),
+                        cap = StrokeCap.Square,
+                    ),
             )
             drawArrow(path, arcBounds, color, alpha, values)
         }
@@ -265,7 +269,7 @@ private fun DrawScope.drawArrow(
     // Line to tip of arrow
     arrow.lineTo(
         x = ArrowWidth.toPx() * values.scale / 2,
-        y = ArrowHeight.toPx() * values.scale
+        y = ArrowHeight.toPx() * values.scale,
     )
 
     val radius = min(bounds.width, bounds.height) / 2f
@@ -273,8 +277,8 @@ private fun DrawScope.drawArrow(
     arrow.translate(
         Offset(
             x = radius + bounds.center.x - inset,
-            y = bounds.center.y + StrokeWidth.toPx() / 2f
-        )
+            y = bounds.center.y + StrokeWidth.toPx() / 2f,
+        ),
     )
     arrow.close()
     rotate(degrees = values.endAngle) {

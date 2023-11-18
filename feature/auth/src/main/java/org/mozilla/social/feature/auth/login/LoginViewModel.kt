@@ -23,14 +23,15 @@ class LoginViewModel(
     private val navigateTo: NavigateTo,
     private val showSnackbar: ShowSnackbar,
 ) : ViewModel(), LoginInteractions {
-
     private val _uiState = MutableStateFlow(LoginUiState())
     val uiState = _uiState.asStateFlow()
 
     override fun onSignInClicked() {
-        _uiState.edit { copy(
-            isLoading = true,
-        ) }
+        _uiState.edit {
+            copy(
+                isLoading = true,
+            )
+        }
         viewModelScope.launch {
             try {
                 login(if (BuildConfig.DEBUG) BuildConfig.stagingUrl else PROD)
@@ -41,9 +42,11 @@ class LoginViewModel(
                 )
                 Timber.e(e)
             } finally {
-                _uiState.edit { copy(
-                    isLoading = false,
-                ) }
+                _uiState.edit {
+                    copy(
+                        isLoading = false,
+                    )
+                }
             }
         }
     }

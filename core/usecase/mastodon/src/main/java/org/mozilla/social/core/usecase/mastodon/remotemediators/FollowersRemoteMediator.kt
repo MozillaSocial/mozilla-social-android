@@ -23,41 +23,42 @@ class FollowersRemoteMediator internal constructor(
     private val relationshipRepository: RelationshipRepository,
     private val accountId: String,
 ) : RemoteMediator<Int, FollowerWrapper>() {
-
     private var nextKey: String? = null
     private var nextPositionIndex = 0
 
     @Suppress("ReturnCount")
     override suspend fun load(
         loadType: LoadType,
-        state: PagingState<Int, FollowerWrapper>
+        state: PagingState<Int, FollowerWrapper>,
     ): MediatorResult {
         return try {
             var pageSize: Int = state.config.pageSize
-            val response = when (loadType) {
-                LoadType.REFRESH -> {
-                    pageSize = state.config.initialLoadSize
-                    accountRepository.getAccountFollowers(
-                        accountId = accountId,
-                        olderThanId = null,
-                        loadSize = pageSize,
-                    )
-                }
+            val response =
+                when (loadType) {
+                    LoadType.REFRESH -> {
+                        pageSize = state.config.initialLoadSize
+                        accountRepository.getAccountFollowers(
+                            accountId = accountId,
+                            olderThanId = null,
+                            loadSize = pageSize,
+                        )
+                    }
 
-                LoadType.PREPEND -> {
-                    return MediatorResult.Success(endOfPaginationReached = true)
-                }
-
-                LoadType.APPEND -> {
-                    if (nextKey == null)
+                    LoadType.PREPEND -> {
                         return MediatorResult.Success(endOfPaginationReached = true)
-                    accountRepository.getAccountFollowers(
-                        accountId = accountId,
-                        olderThanId = nextKey,
-                        loadSize = pageSize,
-                    )
+                    }
+
+                    LoadType.APPEND -> {
+                        if (nextKey == null) {
+                            return MediatorResult.Success(endOfPaginationReached = true)
+                        }
+                        accountRepository.getAccountFollowers(
+                            accountId = accountId,
+                            olderThanId = nextKey,
+                            loadSize = pageSize,
+                        )
+                    }
                 }
-            }
 
             val relationships = response.accounts.getRelationships(accountRepository)
 
@@ -74,9 +75,9 @@ class FollowersRemoteMediator internal constructor(
                         Follower(
                             accountId = accountId,
                             followerAccountId = account.accountId,
-                            position = nextPositionIndex + index
+                            position = nextPositionIndex + index,
                         )
-                    }
+                    },
                 )
             }
 
@@ -96,11 +97,13 @@ class FollowersRemoteMediator internal constructor(
 
             @Suppress("KotlinConstantConditions")
             MediatorResult.Success(
-                endOfPaginationReached = when (loadType) {
-                    LoadType.PREPEND -> response.pagingLinks?.find { it.rel == Rel.PREV } == null
-                    LoadType.REFRESH,
-                    LoadType.APPEND -> response.pagingLinks?.find { it.rel == Rel.NEXT } == null
-                }
+                endOfPaginationReached =
+                    when (loadType) {
+                        LoadType.PREPEND -> response.pagingLinks?.find { it.rel == Rel.PREV } == null
+                        LoadType.REFRESH,
+                        LoadType.APPEND,
+                        -> response.pagingLinks?.find { it.rel == Rel.NEXT } == null
+                    },
             )
         } catch (e: Exception) {
             Timber.e(e)

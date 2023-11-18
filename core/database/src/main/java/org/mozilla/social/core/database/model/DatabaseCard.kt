@@ -8,7 +8,6 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 sealed class DatabaseCard {
-
     /**
      * URL of linked resource.
      */
@@ -91,8 +90,7 @@ sealed class DatabaseCard {
         override val height: Long? = null,
         override val image: String? = null,
         override val embedUrl: String? = null,
-        override val blurHash: String? = null
-
+        override val blurHash: String? = null,
     ) : DatabaseCard()
 
     @Serializable
@@ -109,7 +107,7 @@ sealed class DatabaseCard {
         override val height: Long? = null,
         override val image: String? = null,
         override val embedUrl: String? = null,
-        override val blurHash: String? = null
+        override val blurHash: String? = null,
     ) : DatabaseCard()
 
     @Serializable
@@ -126,7 +124,7 @@ sealed class DatabaseCard {
         override val height: Long? = null,
         override val image: String? = null,
         override val embedUrl: String? = null,
-        override val blurHash: String? = null
+        override val blurHash: String? = null,
     ) : DatabaseCard()
 
     @Serializable
@@ -143,7 +141,6 @@ sealed class DatabaseCard {
         override val height: Long? = null,
         override val image: String? = null,
         override val embedUrl: String? = null,
-        override val blurHash: String? = null
-
+        override val blurHash: String? = null,
     ) : DatabaseCard()
 }

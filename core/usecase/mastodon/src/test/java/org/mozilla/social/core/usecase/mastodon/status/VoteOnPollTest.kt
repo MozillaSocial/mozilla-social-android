@@ -1,37 +1,38 @@
 package org.mozilla.social.core.usecase.mastodon.status
 
 import kotlinx.coroutines.test.TestScope
-import org.mozilla.social.core.usecase.mastodon.BaseUseCaseTest
 import org.mozilla.social.core.model.Poll
+import org.mozilla.social.core.usecase.mastodon.BaseUseCaseTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 
 class VoteOnPollTest : BaseUseCaseTest() {
-
     private lateinit var subject: VoteOnPoll
 
-    private val networkPoll = Poll(
-        pollId = "nostrum",
-        isExpired = false,
-        allowsMultipleChoices = false,
-        votesCount = 8013,
-        options = listOf(),
-        emojis = listOf(),
-        expiresAt = null,
-        votersCount = null,
-        hasVoted = null,
-        ownVotes = listOf()
-    )
+    private val networkPoll =
+        Poll(
+            pollId = "nostrum",
+            isExpired = false,
+            allowsMultipleChoices = false,
+            votesCount = 8013,
+            options = listOf(),
+            emojis = listOf(),
+            expiresAt = null,
+            votersCount = null,
+            hasVoted = null,
+            ownVotes = listOf(),
+        )
 
     @BeforeTest
     fun setup() {
-        subject = VoteOnPoll(
-            externalScope = TestScope(testDispatcher),
-            showSnackbar = showSnackbar,
-            statusRepository = statusRepository,
-            pollRepository = pollRepository,
-            dispatcherIo = testDispatcher,
-        )
+        subject =
+            VoteOnPoll(
+                externalScope = TestScope(testDispatcher),
+                showSnackbar = showSnackbar,
+                statusRepository = statusRepository,
+                pollRepository = pollRepository,
+                dispatcherIo = testDispatcher,
+            )
     }
 
     @Test

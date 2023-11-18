@@ -5,10 +5,10 @@ import kotlin.test.assertEquals
 
 @Suppress("MaxLineLength")
 class ReduceHtmlLinksTest {
-
     @Test
     fun reduceHtmlTest() {
-        val htmlContent = "<p>\n" +
+        val htmlContent =
+            "<p>\n" +
                 "This is a test\n" +
                 "<a href=\"https://mozilla.social/test/stuff\" rel=\"nofollow noopener noreferrer\" translate=\"no\" target=\"_blank\">\n" +
                 "<span class=\"invisible\">https://</span>\n" +
@@ -20,16 +20,13 @@ class ReduceHtmlLinksTest {
         assertEquals(
             htmlContent.reduceHtmlLinks(),
             "<p>\n" +
-                    "This is a test\n" +
-                    "<a href=\"https://mozilla.social/test/stuff\" rel=\"nofollow noopener noreferrer\" translate=\"no\" target=\"_blank\">\n" +
-                    "\n" +
-                    "<span class=\"ellipsis\">mozilla.social/test…</span>\n" +
-                    "\n" +
-                    "</a>\n" +
-                    "</p>"
+                "This is a test\n" +
+                "<a href=\"https://mozilla.social/test/stuff\" rel=\"nofollow noopener noreferrer\" translate=\"no\" target=\"_blank\">\n" +
+                "\n" +
+                "<span class=\"ellipsis\">mozilla.social/test…</span>\n" +
+                "\n" +
+                "</a>\n" +
+                "</p>",
         )
     }
-
-
-
 }

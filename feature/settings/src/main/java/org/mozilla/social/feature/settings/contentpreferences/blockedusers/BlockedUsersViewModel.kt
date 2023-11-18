@@ -17,10 +17,10 @@ class BlockedUsersViewModel(
     private val accountRepository: AccountRepository,
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : ViewModel() {
-
-    val blocks: Flow<List<Block>> = flow {
-        emit(repository.getBlocks().map { it.toBlock() })
-    }
+    val blocks: Flow<List<Block>> =
+        flow {
+            emit(repository.getBlocks().map { it.toBlock() })
+        }
 
     // TODO@DA error handling and unblock
     fun onBlockButtonClicked(accountId: String) {

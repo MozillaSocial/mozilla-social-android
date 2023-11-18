@@ -49,13 +49,14 @@ import org.mozilla.social.core.ui.common.utils.PreviewTheme
 internal fun FollowersScreen(
     accountId: String,
     startingTab: FollowType,
-    viewModel: FollowersViewModel = koinViewModel(
-        parameters = {
-            parametersOf(
-                accountId,
-            )
-        }
-    )
+    viewModel: FollowersViewModel =
+        koinViewModel(
+            parameters = {
+                parametersOf(
+                    accountId,
+                )
+            },
+        ),
 ) {
     FollowersScreen(
         startingTab = startingTab,
@@ -78,11 +79,12 @@ private fun FollowersScreen(
 ) {
     MoSoSurface {
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .systemBarsPadding()
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .systemBarsPadding(),
         ) {
-            //TODO set title to user's name
+            // TODO set title to user's name
             MoSoCloseableTopAppBar(
                 title = "",
             )
@@ -96,20 +98,22 @@ private fun FollowersScreen(
             ) {
                 FollowType.entries.forEach { tabType ->
                     MoSoTab(
-                        modifier = Modifier
-                            .height(40.dp),
+                        modifier =
+                            Modifier
+                                .height(40.dp),
                         selected = selectedTab == tabType,
                         onClick = { selectedTab = tabType },
                         content = {
                             Text(
-                                text = when (tabType) {
-                                    FollowType.FOLLOWERS ->
-                                        stringResource(id = R.string.followers)
+                                text =
+                                    when (tabType) {
+                                        FollowType.FOLLOWERS ->
+                                            stringResource(id = R.string.followers)
 
-                                    FollowType.FOLLOWING ->
-                                        stringResource(id = R.string.following)
-                                },
-                                style = MoSoTheme.typography.labelMedium
+                                        FollowType.FOLLOWING ->
+                                            stringResource(id = R.string.following)
+                                    },
+                                style = MoSoTheme.typography.labelMedium,
                             )
                         },
                     )
@@ -117,11 +121,12 @@ private fun FollowersScreen(
             }
 
             FollowersList(
-                list = when (selectedTab) {
-                    FollowType.FOLLOWERS -> followers
-                    FollowType.FOLLOWING -> following
-                },
-                followersInteractions = followersInteractions
+                list =
+                    when (selectedTab) {
+                        FollowType.FOLLOWERS -> followers
+                        FollowType.FOLLOWING -> following
+                    },
+                followersInteractions = followersInteractions,
             )
         }
     }
@@ -134,46 +139,50 @@ private fun FollowersList(
 ) {
     val lazyPagingItems = list.collectAsLazyPagingItems()
 
-    val pullRefreshState = rememberPullRefreshState(
-        refreshing = lazyPagingItems.loadState.refresh == LoadState.Loading,
-        onRefresh = { lazyPagingItems.refresh() }
-    )
+    val pullRefreshState =
+        rememberPullRefreshState(
+            refreshing = lazyPagingItems.loadState.refresh == LoadState.Loading,
+            onRefresh = { lazyPagingItems.refresh() },
+        )
 
     Box(
-        modifier = Modifier
-            .pullRefresh(pullRefreshState)
-            .fillMaxSize()
+        modifier =
+            Modifier
+                .pullRefresh(pullRefreshState)
+                .fillMaxSize(),
     ) {
-
         LazyColumn(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize(),
         ) {
             when (lazyPagingItems.loadState.refresh) {
                 is LoadState.Error -> {} // handle the error outside the lazy column
-                else -> items(
-                    count = lazyPagingItems.itemCount,
-                    key = lazyPagingItems.itemKey { it.accountId }
-                ) { index ->
-                    lazyPagingItems[index]?.let { uiState ->
-                        AccountQuickView(
-                            uiState = uiState,
-                            modifier = Modifier.clickable {
-                                followersInteractions
-                                    .onAccountClicked(accountId = uiState.accountId)
-                            }
-                        )
+                else ->
+                    items(
+                        count = lazyPagingItems.itemCount,
+                        key = lazyPagingItems.itemKey { it.accountId },
+                    ) { index ->
+                        lazyPagingItems[index]?.let { uiState ->
+                            AccountQuickView(
+                                uiState = uiState,
+                                modifier =
+                                    Modifier.clickable {
+                                        followersInteractions
+                                            .onAccountClicked(accountId = uiState.accountId)
+                                    },
+                            )
+                        }
                     }
-                }
             }
 
             when (lazyPagingItems.loadState.append) {
                 is LoadState.Loading -> {
                     item {
                         CircularProgressIndicator(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .wrapContentWidth(Alignment.CenterHorizontally)
-                                .padding(16.dp)
+                            modifier =
+                                Modifier
+                                    .fillMaxWidth()
+                                    .wrapContentWidth(Alignment.CenterHorizontally)
+                                    .padding(16.dp),
                         )
                     }
                 }
@@ -181,7 +190,7 @@ private fun FollowersList(
                 is LoadState.Error -> {
                     item {
                         GenericError(
-                            onRetryClicked = { lazyPagingItems.retry() }
+                            onRetryClicked = { lazyPagingItems.retry() },
                         )
                     }
                 }
@@ -189,11 +198,12 @@ private fun FollowersList(
                 is LoadState.NotLoading -> {
                     item {
                         Text(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .wrapContentWidth(Alignment.CenterHorizontally)
-                                .padding(16.dp),
-                            text = stringResource(id = R.string.end_of_the_list)
+                            modifier =
+                                Modifier
+                                    .fillMaxWidth()
+                                    .wrapContentWidth(Alignment.CenterHorizontally)
+                                    .padding(16.dp),
+                            text = stringResource(id = R.string.end_of_the_list),
                         )
                     }
                 }
@@ -202,10 +212,11 @@ private fun FollowersList(
 
         if (lazyPagingItems.loadState.refresh is LoadState.Error) {
             GenericError(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(MoSoTheme.colors.layer1),
-                onRetryClicked = { lazyPagingItems.refresh() }
+                modifier =
+                    Modifier
+                        .fillMaxSize()
+                        .background(MoSoTheme.colors.layer1),
+                onRetryClicked = { lazyPagingItems.refresh() },
             )
         }
 
@@ -223,19 +234,20 @@ private fun FollowersScreenPreview() {
     PreviewTheme {
         FollowersScreen(
             startingTab = FollowType.FOLLOWERS,
-            followers = flowOf(
-                PagingData.from(
-                    listOf(
-                        AccountQuickViewUiState(
-                            accountId = "",
-                            displayName = "Person",
-                            webFinger = "person",
-                            avatarUrl = "",
-                            isFollowing = false,
-                        )
-                    )
-                )
-            ),
+            followers =
+                flowOf(
+                    PagingData.from(
+                        listOf(
+                            AccountQuickViewUiState(
+                                accountId = "",
+                                displayName = "Person",
+                                webFinger = "person",
+                                avatarUrl = "",
+                                isFollowing = false,
+                            ),
+                        ),
+                    ),
+                ),
             following = flowOf(),
             followersInteractions = object : FollowersInteractions {},
         )

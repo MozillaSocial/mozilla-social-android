@@ -5,14 +5,12 @@ package org.mozilla.social.core.model
  * to synchronize and restore it across devices.
  */
 data class Marker(
-
     /**
      * Home timeline marker.
      */
     val home: MarkerProperties,
-
     /**
      * Notifications timeline marker.
      */
-    val notifications: MarkerProperties
+    val notifications: MarkerProperties,
 )

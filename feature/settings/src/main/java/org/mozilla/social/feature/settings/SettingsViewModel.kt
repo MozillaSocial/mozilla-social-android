@@ -17,7 +17,6 @@ class SettingsViewModel(
     private val appPreferencesDatastore: AppPreferencesDatastore,
     private val navigateTo: NavigateTo,
 ) : ViewModel(), SettingsInteractions {
-
     private val _isAnalyticsToggledOn: MutableStateFlow<Boolean> = MutableStateFlow(false)
     var isAnalyticsToggledOn = _isAnalyticsToggledOn.asStateFlow()
 
@@ -47,7 +46,7 @@ class SettingsViewModel(
 
     override fun onScreenViewed() {
         analytics.uiImpression(
-            uiIdentifier = AnalyticsIdentifiers.SETTINGS_SCREEN_IMPRESSION
+            uiIdentifier = AnalyticsIdentifiers.SETTINGS_SCREEN_IMPRESSION,
         )
     }
 }

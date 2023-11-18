@@ -2,7 +2,6 @@ package org.mozilla.social.core.usecase.mastodon.status
 
 import androidx.room.withTransaction
 import org.mozilla.social.core.database.SocialDatabase
-import org.mozilla.social.core.database.model.DatabaseStatus
 import org.mozilla.social.core.model.Status
 import org.mozilla.social.core.repository.mastodon.PollRepository
 import org.mozilla.social.core.repository.mastodon.StatusRepository
@@ -16,20 +15,28 @@ internal class SaveStatusToDatabase internal constructor(
     suspend operator fun invoke(vararg statuses: Status) {
         socialDatabase.withTransaction {
             val boostedStatuses = statuses.mapNotNull { it.boostedStatus }
-            pollRepository.insertAll(boostedStatuses.mapNotNull {
-                it.poll
-            })
-            socialDatabase.accountsDao().insertAll(boostedStatuses.map {
-                it.account.toDatabaseModel()
-            })
+            pollRepository.insertAll(
+                boostedStatuses.mapNotNull {
+                    it.poll
+                },
+            )
+            socialDatabase.accountsDao().insertAll(
+                boostedStatuses.map {
+                    it.account.toDatabaseModel()
+                },
+            )
             statusRepository.insertAll(boostedStatuses)
 
-            pollRepository.insertAll(statuses.mapNotNull {
-                it.poll
-            })
-            socialDatabase.accountsDao().insertAll(statuses.map {
-                it.account.toDatabaseModel()
-            })
+            pollRepository.insertAll(
+                statuses.mapNotNull {
+                    it.poll
+                },
+            )
+            socialDatabase.accountsDao().insertAll(
+                statuses.map {
+                    it.account.toDatabaseModel()
+                },
+            )
             statusRepository.insertAll(statuses.asList())
         }
     }
@@ -38,4 +45,3 @@ internal class SaveStatusToDatabase internal constructor(
         invoke(*statuses.toTypedArray())
     }
 }
-

@@ -25,7 +25,6 @@ class StatusDelegate(
     private val statusRepository: StatusRepository,
     private val inReplyToId: String?,
 ) : StatusInteractions, ContentWarningInteractions {
-
     private val _statusText = MutableStateFlow(TextFieldValue(""))
     val statusText = _statusText.asStateFlow()
 
@@ -50,7 +49,7 @@ class StatusDelegate(
                     _statusText.update {
                         TextFieldValue(
                             text = "@${account.acct} ",
-                            selection = TextRange(account.acct.length + 2)
+                            selection = TextRange(account.acct.length + 2),
                         )
                     }
                     _inReplyToAccountName.edit { account.username }
@@ -84,35 +83,36 @@ class StatusDelegate(
             _hashtagList.update { null }
         }
 
-        searchJob = coroutineScope.launch {
-            // let the user stop typing before trying to search
-            delay(SEARCH_DELAY)
+        searchJob =
+            coroutineScope.launch {
+                // let the user stop typing before trying to search
+                delay(SEARCH_DELAY)
 
-            if (!accountText.isNullOrBlank()) {
-                try {
-                    _accountList.update {
-                        searchRepository.searchForAccounts(accountText).map {
-                            Account(
-                                accountId = it.acct,
-                                profilePicUrl = it.avatarStaticUrl
-                            )
+                if (!accountText.isNullOrBlank()) {
+                    try {
+                        _accountList.update {
+                            searchRepository.searchForAccounts(accountText).map {
+                                Account(
+                                    accountId = it.acct,
+                                    profilePicUrl = it.avatarStaticUrl,
+                                )
+                            }
                         }
+                    } catch (e: Exception) {
+                        Timber.e(e)
                     }
-                } catch (e: Exception) {
-                    Timber.e(e)
                 }
-            }
 
-            if (!hashtagText.isNullOrBlank()) {
-                try {
-                    _hashtagList.update {
-                        searchRepository.searchForHashtags(hashtagText).map { it.name }
+                if (!hashtagText.isNullOrBlank()) {
+                    try {
+                        _hashtagList.update {
+                            searchRepository.searchForHashtags(hashtagText).map { it.name }
+                        }
+                    } catch (e: Exception) {
+                        Timber.e(e)
                     }
-                } catch (e: Exception) {
-                    Timber.e(e)
                 }
             }
-        }
     }
 
     override fun onAccountClicked(accountName: String) {

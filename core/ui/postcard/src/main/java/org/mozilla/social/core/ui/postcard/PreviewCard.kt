@@ -27,33 +27,35 @@ fun PreviewCard(
 ) {
     val borderShape = RoundedCornerShape(MoSoRadius.media)
     Column(
-        modifier = Modifier
-            .clip(borderShape)
-            .border(
-                width = 1.dp,
-                color = MoSoTheme.colors.borderPrimary,
-                shape = borderShape,
-            )
-            .clickable {
-                postCardInteractions.onLinkClicked(previewCard.url)
-            },
+        modifier =
+            Modifier
+                .clip(borderShape)
+                .border(
+                    width = 1.dp,
+                    color = MoSoTheme.colors.borderPrimary,
+                    shape = borderShape,
+                )
+                .clickable {
+                    postCardInteractions.onLinkClicked(previewCard.url)
+                },
     ) {
         AsyncImage(
-            modifier = Modifier
-                .aspectRatio(2f)
-                .background(MoSoTheme.colors.layer2),
+            modifier =
+                Modifier
+                    .aspectRatio(2f)
+                    .background(MoSoTheme.colors.layer2),
             model = previewCard.imageUrl,
             contentDescription = "",
-            contentScale = ContentScale.Crop
+            contentScale = ContentScale.Crop,
         )
 
         Column(
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(16.dp),
         ) {
             previewCard.providerName?.let {
                 Text(
                     text = it,
-                    style = MoSoTheme.typography.bodySmall
+                    style = MoSoTheme.typography.bodySmall,
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
@@ -61,7 +63,7 @@ fun PreviewCard(
 
             Text(
                 text = previewCard.title,
-                style = MoSoTheme.typography.titleSmall
+                style = MoSoTheme.typography.titleSmall,
             )
         }
     }

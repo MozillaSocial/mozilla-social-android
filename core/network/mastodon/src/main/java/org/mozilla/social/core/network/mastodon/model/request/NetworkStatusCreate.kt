@@ -10,7 +10,6 @@ import org.mozilla.social.core.network.mastodon.model.NetworkStatusVisibility
  */
 @Serializable
 data class NetworkStatusCreate(
-
     /**
      * Text content of the status.
      *
@@ -19,7 +18,6 @@ data class NetworkStatusCreate(
      */
     @SerialName("status")
     val status: String? = null,
-
     /**
      * Array of attachment ids to be attached as media.
      *
@@ -27,22 +25,18 @@ data class NetworkStatusCreate(
      */
     @SerialName("media_ids")
     val mediaIds: List<String>? = null,
-
     @SerialName("poll")
     val poll: NetworkPollCreate? = null,
-
     /**
      * ID of the status being replied to, if status is a reply.
      */
     @SerialName("in_reply_to_id")
     val inReplyToId: String? = null,
-
     /**
      * Mark status and attached media as sensitive?
      */
     @SerialName("sensitive")
     val isSensitive: Boolean? = null,
-
     /**
      * Text to be shown as a warning or subject before the actual content.
      *
@@ -50,16 +44,14 @@ data class NetworkStatusCreate(
      */
     @SerialName("spoiler_text")
     val contentWarningText: String? = null,
-
     /**
      * Visibility of the posted status.
      */
     @SerialName("visibility")
     val visibility: NetworkStatusVisibility? = null,
-
     /**
      * ISO 639-1 language code for this status.
      */
     @SerialName("language")
-    val language: String? = null
+    val language: String? = null,
 )

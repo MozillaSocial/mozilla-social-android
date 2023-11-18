@@ -5,14 +5,12 @@ package org.mozilla.social.core.network.mastodon.model
  * to synchronize and restore it across devices.
  */
 data class NetworkMarker(
-
     /**
      * Home timeline marker.
      */
     val home: NetworkMarkerProperties,
-
     /**
      * Notifications timeline marker.
      */
-    val notifications: NetworkMarkerProperties
+    val notifications: NetworkMarkerProperties,
 )

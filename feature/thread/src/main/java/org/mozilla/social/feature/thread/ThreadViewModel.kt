@@ -9,10 +9,10 @@ import org.koin.core.parameter.parametersOf
 import org.koin.java.KoinJavaComponent
 import org.mozilla.social.core.analytics.Analytics
 import org.mozilla.social.core.analytics.AnalyticsIdentifiers
-import org.mozilla.social.core.usecase.mastodon.account.GetLoggedInUserAccountId
 import org.mozilla.social.core.ui.postcard.PostCardDelegate
 import org.mozilla.social.core.ui.postcard.PostCardUiState
 import org.mozilla.social.core.ui.postcard.toPostCardUiState
+import org.mozilla.social.core.usecase.mastodon.account.GetLoggedInUserAccountId
 import org.mozilla.social.core.usecase.mastodon.thread.GetThread
 import timber.log.Timber
 
@@ -22,7 +22,6 @@ class ThreadViewModel(
     mainStatusId: String,
     getLoggedInUserAccountId: GetLoggedInUserAccountId,
 ) : ViewModel(), ThreadInteractions {
-
     var statuses: Flow<List<PostCardUiState>> =
         getThread.invoke(mainStatusId).map { statuses ->
             statuses.map { it.toPostCardUiState(getLoggedInUserAccountId()) }
@@ -37,6 +36,6 @@ class ThreadViewModel(
     }
 
     val postCardDelegate: PostCardDelegate by KoinJavaComponent.inject(
-        PostCardDelegate::class.java
+        PostCardDelegate::class.java,
     ) { parametersOf(viewModelScope) }
 }

@@ -18,7 +18,7 @@ fun MoSoCard(
     colors: CardColors = MoSoCardDefaults.colors(),
     elevation: CardElevation = CardDefaults.cardElevation(), // TODO@design-system
     border: BorderStroke? = null,
-    content: @Composable ColumnScope.() -> Unit
+    content: @Composable ColumnScope.() -> Unit,
 ) {
     Card(
         modifier = modifier,
@@ -26,7 +26,7 @@ fun MoSoCard(
         colors = colors,
         elevation = elevation,
         border = border,
-        content = content
+        content = content,
     )
 }
 
@@ -37,7 +37,7 @@ object MoSoCardDefaults {
             containerColor = MoSoTheme.colors.layer2,
             contentColor = MoSoTheme.colors.textPrimary,
             disabledContainerColor = MoSoTheme.colors.layer2,
-            disabledContentColor = MoSoTheme.colors.textPrimary
+            disabledContentColor = MoSoTheme.colors.textPrimary,
         )
     }
 }
