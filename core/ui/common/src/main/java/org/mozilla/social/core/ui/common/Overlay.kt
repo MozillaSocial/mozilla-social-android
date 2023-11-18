@@ -15,9 +15,11 @@ fun TransparentOverlay(modifier: Modifier = Modifier) {
         modifier =
             modifier
                 .fillMaxSize()
-                .background(Color(0xAA000000)),
+                .background(Color(OVERLAY_COLOR)),
     )
 }
+
+private const val OVERLAY_COLOR = 0xAA000000
 
 @Composable
 fun TransparentNoTouchOverlay(modifier: Modifier = Modifier) {
@@ -26,7 +28,7 @@ fun TransparentNoTouchOverlay(modifier: Modifier = Modifier) {
             modifier =
                 modifier
                     .fillMaxSize()
-                    .background(Color(0xAA000000))
+                    .background(Color(OVERLAY_COLOR))
                     .clickable { },
         )
     }

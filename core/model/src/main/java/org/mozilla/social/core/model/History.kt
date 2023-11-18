@@ -8,7 +8,7 @@ data class History(
     /**
      * Day the historical data was recorded on.
      */
-    val day: String, // changing this to string for now.  Can't get deserializer to work right and I'm not actually using this property
+    val day: String,
     /**
      * The counted usage of the tag within that day.
      */

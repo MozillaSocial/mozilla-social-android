@@ -33,7 +33,7 @@ import androidx.compose.ui.platform.inspectable
  * @param state The [PullRefreshState] which determines the position of the indicator.
  * @param scale A boolean controlling whether the indicator's size scales with pull progress or not.
  */
-// TODO: Consider whether the state parameter should be replaced with lambdas.
+// TODO@pullrefresh Consider whether the state parameter should be replaced with lambdas.
 fun Modifier.pullRefreshIndicatorTransform(
     state: PullRefreshState,
     scale: Boolean = false,

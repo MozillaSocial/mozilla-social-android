@@ -76,7 +76,7 @@ import kotlin.math.pow
  * @param contentColor The color of the indicator's arc and arrow.
  * @param scale A boolean controlling whether the indicator's size scales with pull progress or not.
  */
-// TODO(b/244423199): Consider whether the state parameter should be replaced with lambdas to
+// TODO@(b/244423199): Consider whether the state parameter should be replaced with lambdas to
 //  enable people to use this indicator with custom pull-to-refresh components.
 @Composable
 fun PullRefreshIndicator(

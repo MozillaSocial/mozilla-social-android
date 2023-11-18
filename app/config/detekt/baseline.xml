@@ -1,9 +1,0 @@
-<?xml version="1.0" ?>
-<SmellBaseline>
-  <ManuallySuppressedIssues></ManuallySuppressedIssues>
-  <CurrentIssues>
-    <ID>EmptyFunctionBlock:SplashScreen.kt${ }</ID>
-    <ID>MatchingDeclarationName:KoinTest.kt$CheckModulesTest : KoinTest</ID>
-    <ID>MaxLineLength:AppState.kt$AppState$NavigationDestination::class.sealedSubclasses.firstOrNull { it.objectInstance?.route == backStackEntry.destination.route }?.objectInstance</ID>
-  </CurrentIssues>
-</SmellBaseline>

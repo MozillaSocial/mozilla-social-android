@@ -59,10 +59,9 @@ class StatusDelegate(
     }
 
     override fun onStatusTextUpdated(textFieldValue: TextFieldValue) {
-        if (textFieldValue.text.length + (contentWarningText.value?.length ?: 0) >
-            NewPostViewModel.MAX_POST_LENGTH
+        if (textFieldValue.text.length + (contentWarningText.value?.length
+                ?: 0) > NewPostViewModel.MAX_POST_LENGTH
         ) return
-        Timber.tag(TAG).d("updating onStatusTextUpdated ${textFieldValue.text}")
         _statusText.update {
             textFieldValue
         }
@@ -140,7 +139,5 @@ class StatusDelegate(
 
     companion object {
         const val SEARCH_DELAY = 500L
-        val TAG
-            get() = StatusDelegate::class.simpleName ?: ""
     }
 }
