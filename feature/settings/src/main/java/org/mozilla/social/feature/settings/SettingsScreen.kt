@@ -5,6 +5,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import org.koin.androidx.compose.koinViewModel
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
+import org.mozilla.social.core.navigation.navigationModule
 import org.mozilla.social.core.ui.common.MoSoSurface
 import org.mozilla.social.core.ui.common.utils.PreviewTheme
 import org.mozilla.social.feature.settings.ui.SettingsColumn
@@ -56,7 +57,9 @@ fun SettingsScreen(
 @Preview
 @Composable
 private fun SettingsScreenPreview() {
-    PreviewTheme {
+    PreviewTheme(
+        modules = listOf(navigationModule)
+    ) {
         SettingsScreen()
     }
 }
