@@ -13,8 +13,8 @@ class BlocksListPagingSource(
 ) : PagingSource<HeaderLink, Account>() {
     override fun getRefreshKey(state: PagingState<HeaderLink, Account>): HeaderLink {
         // TODO@DA not sure how to set this up
-        val anchor = state.anchorPosition?.let { state.closestPageToPosition(it) }
-        return HeaderLink(null, null, null, null)
+//        val anchor = state.anchorPosition?.let { state.closestPageToPosition(it) }
+        return HeaderLink(maxId = null, sinceId = null, minId = null, limit = null)
     }
 
     override suspend fun load(params: LoadParams<HeaderLink>): LoadResult<HeaderLink, Account> {
@@ -29,12 +29,10 @@ class BlocksListPagingSource(
             )
             LoadResult.Page(
                 data = response.accounts,
-                prevKey = null, // Only paging forward.
+                prevKey = null,
                 nextKey = response.pagingLinks?.getNext()?.toHeaderLink(),
             )
         } catch (e: Exception) {
-            // Handle errors in this block and return LoadResult.Error for
-            // expected errors (such as a network failure).
             LoadResult.Error(e)
         }
     }

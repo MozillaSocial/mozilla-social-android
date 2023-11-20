@@ -25,11 +25,9 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import kotlinx.coroutines.flow.Flow
 import org.koin.androidx.compose.koinViewModel
-import org.mozilla.social.core.model.Account
 import org.mozilla.social.core.ui.common.MoSoSurface
 import org.mozilla.social.core.ui.common.account.quickview.AccountQuickView
 import org.mozilla.social.core.ui.common.account.quickview.AccountQuickViewUiState
-import org.mozilla.social.core.ui.common.account.quickview.toQuickViewUiState
 import org.mozilla.social.core.ui.common.button.MoSoButton
 import org.mozilla.social.core.ui.common.button.MoSoButtonSecondary
 import org.mozilla.social.core.ui.common.error.GenericError
@@ -44,31 +42,27 @@ fun BlockedUsersSettingsScreen(viewModel: BlockedUsersViewModel = koinViewModel(
 
 @Composable
 fun BlockedUsersSettingsScreen(
-    blocksPagingData: Flow<PagingData<Account>>,
+    blocksPagingData: Flow<PagingData<AccountQuickViewUiState>>,
     onUnblockClicked: (accountId: String) -> Unit,
 ) {
-    val blocks: LazyPagingItems<Account> = blocksPagingData.collectAsLazyPagingItems()
+    val blocks: LazyPagingItems<AccountQuickViewUiState> =
+        blocksPagingData.collectAsLazyPagingItems()
 
     MoSoSurface {
         SettingsColumn(title = stringResource(id = R.string.blocked_users_title)) {
             BlockedUserList(lazyPagingItems = blocks, onUnblockClicked = onUnblockClicked)
         }
-//            for (block in blocks) {
-//                BlockedUserRow(block = block, onClick = onClick)
-//            }
-//        }
     }
 }
 
-
 @Composable
 fun BlockedUserList(
-    lazyPagingItems: LazyPagingItems<Account>,
+    lazyPagingItems: LazyPagingItems<AccountQuickViewUiState>,
     onUnblockClicked: (accountId: String) -> Unit
 ) {
     LazyColumn {
         when (lazyPagingItems.loadState.refresh) {
-            is LoadState.Error -> {} // handle the error outside the lazy column
+            is LoadState.Error -> {}
             else ->
                 items(
                     count = lazyPagingItems.itemCount,
@@ -101,30 +95,19 @@ fun BlockedUserList(
                 }
             }
 
-            is LoadState.NotLoading -> {
-//                item {
-//                    Text(
-//                        modifier =
-//                        Modifier
-//                            .fillMaxWidth()
-//                            .wrapContentWidth(Alignment.CenterHorizontally)
-//                            .padding(16.dp),
-//                        text = stringResource(id = R.string.end_of_the_list),
-//                    )
-//                }
-            }
+            is LoadState.NotLoading -> {}
         }
     }
 }
 
 @Composable
 fun BlockedUserRow(
-    block: Account,
+    block: AccountQuickViewUiState,
     onUnblockClicked: (accountId: String) -> Unit,
 ) {
     var openAlertDialog by remember { mutableStateOf(false) }
     if (openAlertDialog) {
-        ConfirmationDialog(acct = block.acct,
+        ConfirmationDialog(acct = block.webFinger,
             onDismissRequest = {
                 openAlertDialog = false
             },
@@ -139,7 +122,7 @@ fun BlockedUserRow(
             .wrapContentHeight(),
     ) {
         AccountQuickView(
-            uiState = block.toQuickViewUiState(),
+            uiState = block,
             modifier = Modifier.fillMaxWidth(),
             buttonSlot = {
                 MoSoButtonSecondary(
@@ -156,26 +139,16 @@ fun BlockedUserRow(
 
 @Composable
 fun ConfirmationDialog(acct: String, onDismissRequest: () -> Unit, onConfirmed: () -> Unit) {
-    // ...
-
-    // ...
     AlertDialog(
-//                icon = {
-//                    Icon(icon, contentDescription = "Example Icon")
-//                },
         title = {
             Text(
                 text = stringResource(
                     id = R.string.are_you_sure_you_want_to_unblock,
-                    acct
+                    acct,
                 )
             )
         },
-//                text = {
-//                    Text(text = )
-//                },
-        onDismissRequest = {
-        },
+        onDismissRequest = onDismissRequest,
         confirmButton = {
             MoSoButton(
                 onClick = onConfirmed,
@@ -192,8 +165,3 @@ fun ConfirmationDialog(acct: String, onDismissRequest: () -> Unit, onConfirmed: 
         }
     )
 }
-
-
-data class Block(
-    val quickViewUiState: AccountQuickViewUiState,
-)

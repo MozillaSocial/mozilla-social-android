@@ -12,10 +12,10 @@ fun String.parseMastodonLinkHeader(): List<MastodonPagingLink> {
         MastodonPagingLink(
             link = link.substringAfter("<").substringBefore(">"),
             rel =
-                when (link.substringAfter("; rel=\"").substringBefore("\"")) {
-                    "prev" -> Rel.PREV
-                    else -> Rel.NEXT
-                },
+            when (link.substringAfter("; rel=\"").substringBefore("\"")) {
+                "prev" -> Rel.PREV
+                else -> Rel.NEXT
+            },
         )
     }
 }
@@ -43,7 +43,8 @@ enum class Rel {
     NEXT,
 }
 
-fun List<MastodonPagingLink>.getSinceIdValue(): String? = find { it.rel == Rel.PREV }?.getSinceIdValue()
+fun List<MastodonPagingLink>.getSinceIdValue(): String? =
+    find { it.rel == Rel.PREV }?.getSinceIdValue()
 
 fun List<MastodonPagingLink>.getMaxIdValue(): String? = find { it.rel == Rel.NEXT }?.getMaxIdValue()
 
@@ -67,9 +68,20 @@ private fun MastodonPagingLink.getLimitValue(): String {
     val uri = Uri.parse(link)
     return uri.getQueryParameter("limit")!!
 }
-data class HeaderLink(val maxId: String?, val sinceId: String?, val minId: String?, val limit: String?)
 
-fun MastodonPagingLink.toHeaderLink() = HeaderLink(maxId = getMaxIdValue(), sinceId = getSinceIdValue(), minId = getMaxIdValue(), limit = getLimitValue())
+data class HeaderLink(
+    val maxId: String?,
+    val sinceId: String?,
+    val minId: String?,
+    val limit: String?
+)
+
+fun MastodonPagingLink.toHeaderLink() = HeaderLink(
+    maxId = getMaxIdValue(),
+    sinceId = getSinceIdValue(),
+    minId = getMaxIdValue(),
+    limit = getLimitValue()
+)
 
 fun List<MastodonPagingLink>.getNext() = firstOrNull { it.rel == Rel.NEXT }
 fun List<MastodonPagingLink>.getPrev() = firstOrNull { it.rel == Rel.PREV }
