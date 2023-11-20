@@ -12,6 +12,12 @@ object AnalyticsIdentifiers {
     const val NEW_POST_SCREEN_IMPRESSION = "new.post.screen.impression"
 
     const val FEED_SCREEN_IMPRESSION = "feed.screen.impression"
+    const val FEED_POST_VOTE = "feed.post.vote"
+    const val FEED_POST_REPLY = "feed.post.open-reply"
+    const val FEED_POST_BOOST = "feed.post.reblog"
+    const val FEED_POST_UNBOOST = "feed.post.unreblog"
+    const val FEED_POST_FAVORITE = "feed.post.favourite"
+    const val FEED_POST_UNFAVORITE = "feed.post.unfavourite"
 
     const val REPORT_SCREEN_IMPRESSION = "report.screen.impression"
 
