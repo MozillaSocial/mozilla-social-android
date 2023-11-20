@@ -13,12 +13,24 @@ fun NavGraphBuilder.followersScreen() {
                 navArgument(NavigationDestination.Followers.NAV_PARAM_ACCOUNT_ID) {
                     nullable = false
                 },
+                navArgument(NavigationDestination.Followers.NAV_PARAM_DISPLAY_NAME) {
+                    nullable = false
+                },
+                navArgument(NavigationDestination.Followers.NAV_PARAM_STARTING_TAB) {
+                    nullable = false
+                },
             ),
     ) {
         val accountId: String = it.arguments?.getString(NavigationDestination.Followers.NAV_PARAM_ACCOUNT_ID)!!
+        val displayName: String = it.arguments?.getString(NavigationDestination.Followers.NAV_PARAM_DISPLAY_NAME)!!
+        val startingTab: String = it.arguments?.getString(NavigationDestination.Followers.NAV_PARAM_STARTING_TAB)!!
         FollowersScreen(
             accountId = accountId,
-            startingTab = FollowType.FOLLOWERS,
+            displayName = displayName,
+            startingTab = when (startingTab) {
+                NavigationDestination.Followers.StartingTab.FOLLOWERS.value -> FollowType.FOLLOWERS
+                else -> FollowType.FOLLOWING
+            }
         )
     }
 }

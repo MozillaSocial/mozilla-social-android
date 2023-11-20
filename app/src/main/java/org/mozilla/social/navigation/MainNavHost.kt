@@ -11,7 +11,6 @@ import org.mozilla.social.feature.account.accountScreen
 import org.mozilla.social.feature.account.edit.editAccountScreen
 import org.mozilla.social.feature.auth.authFlow
 import org.mozilla.social.feature.followers.followersScreen
-import org.mozilla.social.feature.followers.followingScreen
 import org.mozilla.social.feature.hashtag.hashTagScreen
 import org.mozilla.social.feature.report.reportFlow
 import org.mozilla.social.feature.settings.settingsFlow
@@ -39,7 +38,6 @@ fun MainNavHost(
         authFlow()
         accountScreen()
         followersScreen()
-        followingScreen()
         newPostScreen()
         threadScreen()
         reportFlow(navController = appState.mainNavController)

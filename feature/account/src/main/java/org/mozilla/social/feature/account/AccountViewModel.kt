@@ -194,11 +194,23 @@ class AccountViewModel(
     }
 
     override fun onFollowersClicked() {
-        navigateTo(NavigationDestination.Followers(accountId))
+        uiState.value.data?.displayName?.let { displayName ->
+            navigateTo(NavigationDestination.Followers(
+                accountId = accountId,
+                displayName = displayName,
+                startingTab = NavigationDestination.Followers.StartingTab.FOLLOWERS,
+            ))
+        }
     }
 
     override fun onFollowingClicked() {
-        navigateTo(NavigationDestination.Following(accountId))
+        uiState.value.data?.displayName?.let { displayName ->
+            navigateTo(NavigationDestination.Followers(
+                accountId = accountId,
+                displayName = displayName,
+                startingTab = NavigationDestination.Followers.StartingTab.FOLLOWING,
+            ))
+        }
     }
 
     override fun onFollowClicked() {

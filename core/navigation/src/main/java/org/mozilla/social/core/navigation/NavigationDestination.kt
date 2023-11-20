@@ -47,35 +47,44 @@ sealed class NavigationDestination(
         }
     }
 
-    data class Followers(val accountId: String) : NavigationDestination(
+    data class Followers(
+        val accountId: String,
+        val displayName: String,
+        val startingTab: StartingTab,
+    ) : NavigationDestination(
         route = ROUTE,
     ) {
-        fun NavController.navigateToFollowers(navOptions: NavOptions? = null) {
-            navigate(route(accountId), navOptions)
+        fun NavController.navigateToFollowing(navOptions: NavOptions? = null) {
+            navigate(route(accountId, displayName, startingTab.value), navOptions)
+        }
+
+        enum class StartingTab(
+            val value: String,
+        ) {
+            FOLLOWERS("followers"),
+            FOLLOWING("following"),
         }
 
         companion object {
             private const val ROUTE = "followers"
             const val NAV_PARAM_ACCOUNT_ID = "accountId"
-            val fullRoute = route("{$NAV_PARAM_ACCOUNT_ID}")
+            const val NAV_PARAM_DISPLAY_NAME = "displayName"
+            const val NAV_PARAM_STARTING_TAB = "startingTab"
 
-            private fun route(paramValue: String) = "$ROUTE?$NAV_PARAM_ACCOUNT_ID=$paramValue"
-        }
-    }
+            val fullRoute = route(
+                accountId = "{$NAV_PARAM_ACCOUNT_ID}",
+                displayName = "{$NAV_PARAM_DISPLAY_NAME}",
+                startingTab = "{$NAV_PARAM_STARTING_TAB}"
+            )
 
-    data class Following(val accountId: String) : NavigationDestination(
-        route = ROUTE,
-    ) {
-        fun NavController.navigateToFollowing(navOptions: NavOptions? = null) {
-            navigate(route(accountId), navOptions)
-        }
-
-        companion object {
-            private const val ROUTE = "following"
-            const val NAV_PARAM_ACCOUNT_ID = "accountId"
-            val fullRoute = route("{$NAV_PARAM_ACCOUNT_ID}")
-
-            fun route(accountId: String): String = "$ROUTE?${NAV_PARAM_ACCOUNT_ID}=$accountId"
+            fun route(
+                accountId: String,
+                displayName: String,
+                startingTab: String,
+            ): String = "$ROUTE?" +
+                    "$NAV_PARAM_ACCOUNT_ID=$accountId" +
+                    "&$NAV_PARAM_DISPLAY_NAME=$displayName" +
+                    "&$NAV_PARAM_STARTING_TAB=$startingTab"
         }
     }
 

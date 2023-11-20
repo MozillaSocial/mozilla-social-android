@@ -51,6 +51,7 @@ import org.mozilla.social.core.ui.common.utils.PreviewTheme
 @Composable
 internal fun FollowersScreen(
     accountId: String,
+    displayName: String,
     startingTab: FollowType,
     viewModel: FollowersViewModel =
         koinViewModel(
@@ -62,6 +63,7 @@ internal fun FollowersScreen(
         ),
 ) {
     FollowersScreen(
+        displayName = displayName,
         startingTab = startingTab,
         followers = viewModel.followers,
         following = viewModel.following,
@@ -75,6 +77,7 @@ internal fun FollowersScreen(
 
 @Composable
 private fun FollowersScreen(
+    displayName: String,
     startingTab: FollowType,
     followers: Flow<PagingData<AccountFollowerUiState>>,
     following: Flow<PagingData<AccountFollowerUiState>>,
@@ -87,9 +90,8 @@ private fun FollowersScreen(
                     .fillMaxSize()
                     .systemBarsPadding(),
         ) {
-            // TODO set title to user's name
             MoSoCloseableTopAppBar(
-                title = "",
+                title = displayName,
             )
 
             var selectedTab: FollowType by remember {
@@ -246,6 +248,7 @@ private fun FollowersScreenPreview() {
         modules = listOf(navigationModule),
     ) {
         FollowersScreen(
+            displayName = "Person",
             startingTab = FollowType.FOLLOWERS,
             followers =
                 flowOf(

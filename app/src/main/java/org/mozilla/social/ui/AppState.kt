@@ -203,10 +203,6 @@ class AppState(
                 }
 
                 is NavigationDestination.Followers -> {
-                    mainNavController.navigateToFollowers()
-                }
-
-                is NavigationDestination.Following -> {
                     mainNavController.navigateToFollowing()
                 }
 
