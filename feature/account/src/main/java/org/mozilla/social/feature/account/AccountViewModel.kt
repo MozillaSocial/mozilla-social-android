@@ -54,7 +54,7 @@ class AccountViewModel(
 ) : ViewModel(), AccountInteractions {
     val postCardDelegate: PostCardDelegate by inject(
         PostCardDelegate::class.java,
-    ) { parametersOf(viewModelScope) }
+    ) { parametersOf(viewModelScope, "profile") }
 
     /**
      * The account ID of the logged in user
