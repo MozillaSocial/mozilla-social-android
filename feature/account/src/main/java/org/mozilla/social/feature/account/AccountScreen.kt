@@ -314,6 +314,7 @@ private fun OverflowMenu(
                 text = stringResource(R.string.share_option),
                 expanded = overflowMenuExpanded,
                 onClick = {
+                    overflowInteractions.onOverflowShareClicked()
                     val sendIntent: Intent =
                         Intent().apply {
                             action = Intent.ACTION_SEND
