@@ -110,22 +110,28 @@ class AccountRepository internal constructor(
     suspend fun getAccountFavourites(): List<Status> = api.getAccountFavourites().map { it.toExternalModel() }
 
     @PreferUseCase
-    suspend fun followAccount(accountId: String) = api.followAccount(accountId = accountId)
+    suspend fun followAccount(accountId: String): Relationship =
+        api.followAccount(accountId = accountId).toExternal()
 
     @PreferUseCase
-    suspend fun unfollowAccount(accountId: String) = api.unfollowAccount(accountId = accountId)
+    suspend fun unfollowAccount(accountId: String): Relationship =
+        api.unfollowAccount(accountId = accountId).toExternal()
 
     @PreferUseCase
-    suspend fun blockAccount(accountId: String) = api.blockAccount(accountId = accountId)
+    suspend fun blockAccount(accountId: String): Relationship =
+        api.blockAccount(accountId = accountId).toExternal()
 
     @PreferUseCase
-    suspend fun unblockAccount(accountId: String) = api.unblockAccount(accountId = accountId)
+    suspend fun unblockAccount(accountId: String): Relationship =
+        api.unblockAccount(accountId = accountId).toExternal()
 
     @PreferUseCase
-    suspend fun muteAccount(accountId: String) = api.muteAccount(accountId = accountId)
+    suspend fun muteAccount(accountId: String): Relationship =
+        api.muteAccount(accountId = accountId).toExternal()
 
     @PreferUseCase
-    suspend fun unmuteAccount(accountId: String) = api.unmuteAccount(accountId = accountId)
+    suspend fun unmuteAccount(accountId: String): Relationship =
+        api.unmuteAccount(accountId = accountId).toExternal()
 
     suspend fun getAccountRelationships(accountIds: List<String>): List<Relationship> =
         api.getRelationships(accountIds.toTypedArray()).map { it.toExternal() }
