@@ -18,6 +18,7 @@ object AnalyticsIdentifiers {
     const val FEED_POST_UNBOOST = "feed.post.unreblog"
     const val FEED_POST_FAVORITE = "feed.post.favourite"
     const val FEED_POST_UNFAVORITE = "feed.post.unfavourite"
+    const val FEED_POST_LINK_TAPPED = "post.link.tap"
 
     const val REPORT_SCREEN_IMPRESSION = "report.screen.impression"
 

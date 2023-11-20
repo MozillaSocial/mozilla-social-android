@@ -39,12 +39,12 @@ class PostCardDelegate(
     ) {
         coroutineScope.launch {
             try {
-                voteOnPoll(pollId, choices)
                 analytics.uiEngagement(
                     engagementType = EngagementType.GENERAL,
                     uiIdentifier = "$baseAnalyticsIdentifier.${AnalyticsIdentifiers.FEED_POST_VOTE}",
                     uiAdditionalDetail = pollId
                 )
+                voteOnPoll(pollId, choices)
             } catch (e: VoteOnPoll.VoteOnPollFailedException) {
                 Timber.e(e)
             }
@@ -67,23 +67,23 @@ class PostCardDelegate(
         coroutineScope.launch {
             if (isBoosting) {
                 try {
-                    boostStatus(statusId)
                     analytics.uiEngagement(
                         engagementType = EngagementType.GENERAL,
                         uiIdentifier = "$baseAnalyticsIdentifier.${AnalyticsIdentifiers.FEED_POST_BOOST}",
                         mastodonStatusId = statusId
                     )
+                    boostStatus(statusId)
                 } catch (e: BoostStatus.BoostStatusFailedException) {
                     Timber.e(e)
                 }
             } else {
                 try {
-                    undoBoostStatus(statusId)
                     analytics.uiEngagement(
                         engagementType = EngagementType.GENERAL,
                         uiIdentifier = "$baseAnalyticsIdentifier.${AnalyticsIdentifiers.FEED_POST_UNBOOST}",
                         mastodonStatusId = statusId
                     )
+                    undoBoostStatus(statusId)
                 } catch (e: UndoBoostStatus.UndoBoostStatusFailedException) {
                     Timber.e(e)
                 }
@@ -98,23 +98,23 @@ class PostCardDelegate(
         coroutineScope.launch {
             if (isFavoriting) {
                 try {
-                    favoriteStatus(statusId)
                     analytics.uiEngagement(
                         engagementType = EngagementType.GENERAL,
                         uiIdentifier = "$baseAnalyticsIdentifier.${AnalyticsIdentifiers.FEED_POST_FAVORITE}",
                         mastodonStatusId = statusId
                     )
+                    favoriteStatus(statusId)
                 } catch (e: FavoriteStatus.FavoriteStatusFailedException) {
                     Timber.e(e)
                 }
             } else {
                 try {
-                    undoFavoriteStatus(statusId)
                     analytics.uiEngagement(
                         engagementType = EngagementType.GENERAL,
                         uiIdentifier = "$baseAnalyticsIdentifier.${AnalyticsIdentifiers.FEED_POST_UNFAVORITE}",
                         mastodonStatusId = statusId
                     )
+                    undoFavoriteStatus(statusId)
                 } catch (e: UndoFavoriteStatus.UndoFavoriteStatusFailedException) {
                     Timber.e(e)
                 }
@@ -175,6 +175,11 @@ class PostCardDelegate(
     }
 
     override fun onLinkClicked(url: String) {
+        analytics.uiEngagement(
+            engagementType = EngagementType.GENERAL,
+            uiIdentifier = AnalyticsIdentifiers.FEED_POST_LINK_TAPPED,
+            uiAdditionalDetail = url
+        )
         openLink(url)
     }
 
