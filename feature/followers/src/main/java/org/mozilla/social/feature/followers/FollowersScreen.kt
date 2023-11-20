@@ -32,11 +32,14 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
+import org.mozilla.social.core.designsystem.theme.MoSoSpacing
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
+import org.mozilla.social.core.navigation.navigationModule
+import org.mozilla.social.core.ui.accountfollower.AccountFollower
+import org.mozilla.social.core.ui.accountfollower.AccountFollowerUiState
 import org.mozilla.social.core.ui.common.MoSoSurface
 import org.mozilla.social.core.ui.common.MoSoTab
 import org.mozilla.social.core.ui.common.MoSoTabRow
-import org.mozilla.social.core.ui.common.account.quickview.AccountQuickView
 import org.mozilla.social.core.ui.common.account.quickview.AccountQuickViewUiState
 import org.mozilla.social.core.ui.common.appbar.MoSoCloseableTopAppBar
 import org.mozilla.social.core.ui.common.error.GenericError
@@ -48,6 +51,7 @@ import org.mozilla.social.core.ui.common.utils.PreviewTheme
 @Composable
 internal fun FollowersScreen(
     accountId: String,
+    displayName: String,
     startingTab: FollowType,
     viewModel: FollowersViewModel =
         koinViewModel(
@@ -59,6 +63,7 @@ internal fun FollowersScreen(
         ),
 ) {
     FollowersScreen(
+        displayName = displayName,
         startingTab = startingTab,
         followers = viewModel.followers,
         following = viewModel.following,
@@ -72,9 +77,10 @@ internal fun FollowersScreen(
 
 @Composable
 private fun FollowersScreen(
+    displayName: String,
     startingTab: FollowType,
-    followers: Flow<PagingData<AccountQuickViewUiState>>,
-    following: Flow<PagingData<AccountQuickViewUiState>>,
+    followers: Flow<PagingData<AccountFollowerUiState>>,
+    following: Flow<PagingData<AccountFollowerUiState>>,
     followersInteractions: FollowersInteractions,
 ) {
     MoSoSurface {
@@ -84,9 +90,8 @@ private fun FollowersScreen(
                     .fillMaxSize()
                     .systemBarsPadding(),
         ) {
-            // TODO set title to user's name
             MoSoCloseableTopAppBar(
-                title = "",
+                title = displayName,
             )
 
             var selectedTab: FollowType by remember {
@@ -134,7 +139,7 @@ private fun FollowersScreen(
 
 @Composable
 private fun FollowersList(
-    list: Flow<PagingData<AccountQuickViewUiState>>,
+    list: Flow<PagingData<AccountFollowerUiState>>,
     followersInteractions: FollowersInteractions,
 ) {
     val lazyPagingItems = list.collectAsLazyPagingItems()
@@ -159,15 +164,23 @@ private fun FollowersList(
                 else ->
                     items(
                         count = lazyPagingItems.itemCount,
-                        key = lazyPagingItems.itemKey { it.accountId },
+                        key = lazyPagingItems.itemKey { it.accountQuickViewUiState.accountId },
                     ) { index ->
                         lazyPagingItems[index]?.let { uiState ->
-                            AccountQuickView(
+                            AccountFollower(
                                 uiState = uiState,
-                                modifier =
-                                    Modifier.clickable {
-                                        followersInteractions
-                                            .onAccountClicked(accountId = uiState.accountId)
+                                onButtonClicked = {
+                                    followersInteractions.onFollowClicked(
+                                        uiState.accountQuickViewUiState.accountId,
+                                        isFollowing = uiState.isFollowing,
+                                    )
+                                },
+                                modifier = Modifier
+                                    .padding(MoSoSpacing.md)
+                                    .clickable { followersInteractions
+                                        .onAccountClicked(
+                                            accountId = uiState.accountQuickViewUiState.accountId
+                                        )
                                     },
                             )
                         }
@@ -231,20 +244,26 @@ private fun FollowersList(
 @Preview
 @Composable
 private fun FollowersScreenPreview() {
-    PreviewTheme {
+    PreviewTheme(
+        modules = listOf(navigationModule),
+    ) {
         FollowersScreen(
+            displayName = "Person",
             startingTab = FollowType.FOLLOWERS,
             followers =
                 flowOf(
                     PagingData.from(
                         listOf(
-                            AccountQuickViewUiState(
-                                accountId = "",
-                                displayName = "Person",
-                                webFinger = "person",
-                                avatarUrl = "",
+                            AccountFollowerUiState(
+                                accountQuickViewUiState = AccountQuickViewUiState(
+                                    accountId = "",
+                                    displayName = "Person",
+                                    webFinger = "person",
+                                    avatarUrl = "",
+                                ),
                                 isFollowing = false,
-                            ),
+                                bioHtml = ""
+                            )
                         ),
                     ),
                 ),

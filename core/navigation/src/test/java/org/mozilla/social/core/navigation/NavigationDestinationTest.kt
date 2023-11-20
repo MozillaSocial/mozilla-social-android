@@ -56,37 +56,31 @@ class NavigationDestinationTest {
     @Test
     fun navigateToFollowers() {
         val accountId = testUtils.randomIdString()
+        val displayName = "person"
+        val startingTab = NavigationDestination.Followers.StartingTab.FOLLOWERS
 
-        with(NavigationDestination.Followers(accountId)) {
-            navController.navigateToFollowers()
+        with(NavigationDestination.Followers(accountId, displayName, startingTab)) {
+            navController.navigateToFollowing()
         }
 
         verify {
-            navController.navigate("followers?accountId=$accountId")
+            navController.navigate(
+                "followers?" +
+                        "accountId=$accountId" +
+                        "&displayName=$displayName" +
+                        "&startingTab=${startingTab.value}"
+            )
         }
     }
 
     @Test
     fun followersFullRoute() {
-        assertThat(NavigationDestination.Followers.fullRoute).isEqualTo("followers?accountId={accountId}")
-    }
-
-    @Test
-    fun navigateToFollowing() {
-        val accountId = testUtils.randomIdString()
-
-        with(NavigationDestination.Following(accountId)) {
-            navController.navigateToFollowing()
-        }
-
-        verify {
-            navController.navigate("following?accountId=$accountId")
-        }
-    }
-
-    @Test
-    fun followingFullRoute() {
-        assertThat(NavigationDestination.Following.fullRoute).isEqualTo("following?accountId={accountId}")
+        assertThat(NavigationDestination.Followers.fullRoute).isEqualTo(
+            "followers?" +
+                    "accountId={accountId}" +
+                    "&displayName={displayName}" +
+                    "&startingTab={startingTab}"
+        )
     }
 
     @Test

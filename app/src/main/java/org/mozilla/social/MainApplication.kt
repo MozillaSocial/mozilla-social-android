@@ -26,6 +26,7 @@ import org.mozilla.social.feature.thread.threadModule
 import org.mozilla.social.feed.feedModule
 import org.mozilla.social.post.newPostModule
 import org.mozilla.social.search.searchModule
+import timber.log.Timber
 
 class MainApplication : Application(), ImageLoaderFactory {
     private lateinit var authCredentialObserver: AuthCredentialObserver
@@ -34,6 +35,9 @@ class MainApplication : Application(), ImageLoaderFactory {
 
     override fun onCreate() {
         super.onCreate()
+        if (BuildConfig.DEBUG) {
+            Timber.plant(Timber.DebugTree())
+        }
 
         startKoin {
             androidLogger()

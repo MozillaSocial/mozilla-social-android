@@ -6,6 +6,8 @@ package org.mozilla.social.core.designsystem.theme
 
 import android.app.Activity
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.text.selection.LocalTextSelectionColors
+import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
@@ -43,10 +45,19 @@ fun MoSoTheme(
         }
     }
 
-    ProvideMoSoColors(colors) {
-        ProvideMoSoTextStyle {
-            MaterialTheme(
-                colorScheme = if (darkTheme) MaterialDarkColorScheme else MaterialLightColorScheme,
+    MaterialTheme(
+        colorScheme = if (darkTheme) MaterialDarkColorScheme else MaterialLightColorScheme,
+    ) {
+        ProvideMoSoColors(colors = colors) {
+            val textSelectionColors = TextSelectionColors(
+                handleColor = MoSoTheme.colors.iconAccent,
+                backgroundColor = MoSoTheme.colors.layer2,
+            )
+
+            CompositionLocalProvider(
+                LocalContentColor provides MoSoTheme.colors.textPrimary,
+                LocalTextStyle provides MoSoTheme.typography.bodyMedium,
+                LocalTextSelectionColors provides textSelectionColors,
                 content = content,
             )
         }
@@ -197,12 +208,3 @@ private val localMoSoColors =
     staticCompositionLocalOf<MoSoColors> {
         error("No MoSo provided")
     }
-
-@Composable
-fun ProvideMoSoTextStyle(content: @Composable () -> Unit) {
-    CompositionLocalProvider(
-        LocalContentColor provides MoSoTheme.colors.textPrimary,
-        LocalTextStyle provides MoSoTheme.typography.bodyMedium,
-        content = content,
-    )
-}
