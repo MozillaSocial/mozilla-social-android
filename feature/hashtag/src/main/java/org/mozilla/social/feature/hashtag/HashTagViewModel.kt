@@ -55,5 +55,5 @@ class HashTagViewModel(
 
     val postCardDelegate: PostCardDelegate by inject(
         PostCardDelegate::class.java,
-    ) { parametersOf(viewModelScope) }
+    ) { parametersOf(viewModelScope, AnalyticsIdentifiers.FEED_PREFIX_HASHTAG) }
 }
