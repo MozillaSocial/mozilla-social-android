@@ -10,6 +10,7 @@ import org.mozilla.social.core.database.SocialDatabase
 import org.mozilla.social.core.navigation.usecases.ShowSnackbar
 import org.mozilla.social.core.repository.mastodon.AccountRepository
 import org.mozilla.social.core.repository.mastodon.RelationshipRepository
+import org.mozilla.social.core.repository.mastodon.TimelineRepository
 import org.mozilla.social.core.usecase.mastodon.R
 
 class BlockAccount(
@@ -17,6 +18,7 @@ class BlockAccount(
     private val showSnackbar: ShowSnackbar,
     private val accountRepository: AccountRepository,
     private val relationshipRepository: RelationshipRepository,
+    private val timelineRepository: TimelineRepository,
     private val socialDatabase: SocialDatabase,
     private val dispatcherIo: CoroutineDispatcher = Dispatchers.IO,
 ) {
@@ -29,7 +31,7 @@ class BlockAccount(
             try {
                 socialDatabase.homeTimelineDao().removePostsFromAccount(accountId)
                 socialDatabase.localTimelineDao().removePostsFromAccount(accountId)
-                socialDatabase.federatedTimelineDao().removePostsFromAccount(accountId)
+                timelineRepository.removePostsFromFederatedTimelineForAccount(accountId)
                 socialDatabase.relationshipsDao().updateBlocked(accountId, true)
                 val relationship = accountRepository.blockAccount(accountId)
                 relationshipRepository.insert(relationship)

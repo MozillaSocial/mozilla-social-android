@@ -10,12 +10,14 @@ import org.mozilla.social.core.database.SocialDatabase
 import org.mozilla.social.core.navigation.usecases.ShowSnackbar
 import org.mozilla.social.core.repository.mastodon.AccountRepository
 import org.mozilla.social.core.repository.mastodon.RelationshipRepository
+import org.mozilla.social.core.repository.mastodon.TimelineRepository
 import org.mozilla.social.core.usecase.mastodon.R
 
 class MuteAccount(
     private val externalScope: CoroutineScope,
     private val showSnackbar: ShowSnackbar,
     private val accountRepository: AccountRepository,
+    private val timelineRepository: TimelineRepository,
     private val relationshipRepository: RelationshipRepository,
     private val socialDatabase: SocialDatabase,
     private val dispatcherIo: CoroutineDispatcher = Dispatchers.IO,
@@ -29,7 +31,7 @@ class MuteAccount(
             try {
                 socialDatabase.homeTimelineDao().removePostsFromAccount(accountId)
                 socialDatabase.localTimelineDao().removePostsFromAccount(accountId)
-                socialDatabase.federatedTimelineDao().removePostsFromAccount(accountId)
+                timelineRepository.removePostsFromFederatedTimelineForAccount(accountId)
                 socialDatabase.relationshipsDao().updateMuted(accountId, true)
                 val relationship = accountRepository.muteAccount(accountId)
                 relationshipRepository.insert(relationship)

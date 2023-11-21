@@ -8,7 +8,6 @@ import androidx.room.withTransaction
 import kotlinx.coroutines.delay
 import org.mozilla.social.common.Rel
 import org.mozilla.social.core.database.SocialDatabase
-import org.mozilla.social.core.database.model.statusCollections.FederatedTimelineStatus
 import org.mozilla.social.core.database.model.statusCollections.FederatedTimelineStatusWrapper
 import org.mozilla.social.core.repository.mastodon.AccountRepository
 import org.mozilla.social.core.repository.mastodon.TimelineRepository
@@ -70,7 +69,7 @@ class RefreshFederatedTimeline internal constructor(
 
             socialDatabase.withTransaction {
                 if (loadType == LoadType.REFRESH) {
-                    socialDatabase.federatedTimelineDao().deleteFederatedTimeline()
+                    timelineRepository.deleteFederatedTimeline()
                 }
 
                 saveStatusToDatabase(result)

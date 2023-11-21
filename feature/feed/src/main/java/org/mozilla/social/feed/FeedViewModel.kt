@@ -17,6 +17,7 @@ import org.mozilla.social.core.analytics.Analytics
 import org.mozilla.social.core.analytics.AnalyticsIdentifiers
 import org.mozilla.social.core.database.SocialDatabase
 import org.mozilla.social.core.database.model.statusCollections.toStatusWrapper
+import org.mozilla.social.core.repository.mastodon.TimelineRepository
 import org.mozilla.social.core.repository.mastodon.model.status.toExternalModel
 import org.mozilla.social.core.ui.postcard.PostCardDelegate
 import org.mozilla.social.core.ui.postcard.toPostCardUiState
@@ -33,6 +34,7 @@ class FeedViewModel(
     homeTimelineRemoteMediator: HomeTimelineRemoteMediator,
     localTimelineRemoteMediator: LocalTimelineRemoteMediator,
     federatedTimelineRemoteMediator: FederatedTimelineRemoteMediator,
+    private val timelineRepository: TimelineRepository,
     private val socialDatabase: SocialDatabase,
     getLoggedInUserAccountId: GetLoggedInUserAccountId,
 ) : ViewModel(), FeedInteractions {
@@ -76,21 +78,13 @@ class FeedViewModel(
         }.cachedIn(viewModelScope)
 
     @OptIn(ExperimentalPagingApi::class)
-    val federatedFeed =
-        Pager(
-            config =
-                PagingConfig(
-                    pageSize = 20,
-                    initialLoadSize = 40,
-                ),
-            remoteMediator = federatedTimelineRemoteMediator,
-        ) {
-            socialDatabase.federatedTimelineDao().federatedTimelinePagingSource()
-        }.flow.map { pagingData ->
-            pagingData.map {
-                it.toStatusWrapper().toExternalModel().toPostCardUiState(userAccountId)
-            }
-        }.cachedIn(viewModelScope)
+    val federatedFeed = timelineRepository.getFederatedTimelinePager(
+        remoteMediator = federatedTimelineRemoteMediator,
+    ).map { pagingData ->
+        pagingData.map {
+            it.toPostCardUiState(userAccountId)
+        }
+    }.cachedIn(viewModelScope)
 
     val postCardDelegate: PostCardDelegate by KoinJavaComponent.inject(
         PostCardDelegate::class.java,

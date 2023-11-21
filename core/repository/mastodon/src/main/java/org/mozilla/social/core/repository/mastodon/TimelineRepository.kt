@@ -18,6 +18,7 @@ import org.mozilla.social.core.database.dao.HomeTimelineStatusDao
 import org.mozilla.social.core.database.dao.LocalTimelineStatusDao
 import org.mozilla.social.core.database.model.accountCollections.FolloweeWrapper
 import org.mozilla.social.core.database.model.statusCollections.AccountTimelineStatusWrapper
+import org.mozilla.social.core.database.model.statusCollections.FederatedTimelineStatusWrapper
 import org.mozilla.social.core.database.model.statusCollections.toStatusWrapper
 import org.mozilla.social.core.model.Status
 import org.mozilla.social.core.model.StatusVisibility
@@ -40,27 +41,6 @@ class TimelineRepository internal constructor(
     private val accountTimelineStatusDao: AccountTimelineStatusDao,
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) {
-    suspend fun getHomeTimeline(
-        olderThanId: String? = null,
-        immediatelyNewerThanId: String? = null,
-        loadSize: Int? = null,
-    ): StatusPagingWrapper {
-        val response =
-            timelineApi.getHomeTimeline(
-                olderThanId = olderThanId,
-                immediatelyNewerThanId = immediatelyNewerThanId,
-                limit = loadSize,
-            )
-
-        if (!response.isSuccessful) {
-            throw HttpException(response)
-        }
-
-        return StatusPagingWrapper(
-            statuses = response.body()?.map { it.toExternalModel() } ?: emptyList(),
-            pagingLinks = response.headers().get("link")?.parseMastodonLinkHeader(),
-        )
-    }
 
     suspend fun getPublicTimeline(
         localOnly: Boolean? = null,
@@ -90,6 +70,86 @@ class TimelineRepository internal constructor(
         )
     }
 
+    suspend fun insertStatusIntoTimelines(status: Status) =
+        withContext(ioDispatcher) {
+            homeTimelineStatusDao.insert(status.toHomeTimelineStatus())
+            if (status.visibility == StatusVisibility.Public) {
+                localTimelineStatusDao.insert(status.toLocalTimelineStatus())
+                federatedTimelineStatusDao.insert(status.toFederatedTimelineStatus())
+            }
+        }
+
+    //region Local timeline
+    fun insertAllIntoLocalTimeline(statuses: List<Status>) =
+        localTimelineStatusDao.insertAll(statuses.map { it.toLocalTimelineStatus() })
+    //endregion
+
+    //region Federated timeline
+    @ExperimentalPagingApi
+    fun getFederatedTimelinePager(
+        remoteMediator: RemoteMediator<Int, FederatedTimelineStatusWrapper>,
+        pageSize: Int = 20,
+        initialLoadSize: Int = 40,
+    ): Flow<PagingData<Status>> =
+        Pager(
+            config =
+            PagingConfig(
+                pageSize = pageSize,
+                initialLoadSize = initialLoadSize,
+            ),
+            remoteMediator = remoteMediator,
+        ) {
+            federatedTimelineStatusDao.federatedTimelinePagingSource()
+        }.flow.map { pagingData ->
+            pagingData.map {
+                it.toStatusWrapper().toExternalModel()
+            }
+        }
+
+    fun insertAllIntoFederatedTimeline(statuses: List<Status>) =
+        federatedTimelineStatusDao.insertAll(statuses.map { it.toFederatedTimelineStatus() })
+
+    fun deleteFederatedTimeline() = federatedTimelineStatusDao.deleteFederatedTimeline()
+
+    suspend fun removePostsFromFederatedTimelineForAccount(accountId: String) =
+        federatedTimelineStatusDao.removePostsFromAccount(accountId)
+
+    suspend fun deleteStatusFromFederatedTimeline(statusId: String) =
+        federatedTimelineStatusDao.deletePost(statusId)
+    //endregion
+
+    //region Home timeline
+    suspend fun getHomeTimeline(
+        olderThanId: String? = null,
+        immediatelyNewerThanId: String? = null,
+        loadSize: Int? = null,
+    ): StatusPagingWrapper {
+        val response =
+            timelineApi.getHomeTimeline(
+                olderThanId = olderThanId,
+                immediatelyNewerThanId = immediatelyNewerThanId,
+                limit = loadSize,
+            )
+
+        if (!response.isSuccessful) {
+            throw HttpException(response)
+        }
+
+        return StatusPagingWrapper(
+            statuses = response.body()?.map { it.toExternalModel() } ?: emptyList(),
+            pagingLinks = response.headers().get("link")?.parseMastodonLinkHeader(),
+        )
+    }
+
+    fun insertAllIntoHomeTimeline(statuses: List<Status>) {
+        homeTimelineStatusDao.insertAll(statuses.map { it.toHomeTimelineStatus() })
+    }
+
+    suspend fun getPostsFromHomeTimelineForAccount(accountId: String): List<Status> =
+        homeTimelineStatusDao.getPostsFromAccount(accountId).map { it.toStatusWrapper().toExternalModel() }
+    //endregion
+
+    //region Hashtag timeline
     suspend fun getHashtagTimeline(
         hashTag: String,
         olderThanId: String? = null,
@@ -113,29 +173,9 @@ class TimelineRepository internal constructor(
             pagingLinks = response.headers().get("link")?.parseMastodonLinkHeader(),
         )
     }
+    //endregion
 
-    fun insertAllIntoHomeTimeline(statuses: List<Status>) {
-        homeTimelineStatusDao.insertAll(statuses.map { it.toHomeTimelineStatus() })
-    }
-
-    suspend fun getPostsFromHomeTimelineForAccount(accountId: String): List<Status> =
-        homeTimelineStatusDao.getPostsFromAccount(accountId).map { it.toStatusWrapper().toExternalModel() }
-
-    fun insertAllIntoLocalTimeline(statuses: List<Status>) =
-        localTimelineStatusDao.insertAll(statuses.map { it.toLocalTimelineStatus() })
-
-    fun insertAllIntoFederatedTimeline(statuses: List<Status>) =
-        federatedTimelineStatusDao.insertAll(statuses.map { it.toFederatedTimelineStatus() })
-
-    suspend fun insertStatusIntoTimelines(status: Status) =
-        withContext(ioDispatcher) {
-            homeTimelineStatusDao.insert(status.toHomeTimelineStatus())
-            if (status.visibility == StatusVisibility.Public) {
-                localTimelineStatusDao.insert(status.toLocalTimelineStatus())
-                federatedTimelineStatusDao.insert(status.toFederatedTimelineStatus())
-            }
-        }
-
+    //region Account timeline
     fun insertAllIntoAccountTimeline(statuses: List<Status>) =
         accountTimelineStatusDao.insertAll(statuses.map { it.toAccountTimelineStatus() })
 
@@ -143,7 +183,7 @@ class TimelineRepository internal constructor(
     fun getAccountTimelinePager(
         accountId: String,
         remoteMediator: RemoteMediator<Int, AccountTimelineStatusWrapper>,
-        pageSize: Int = 40,
+        pageSize: Int = 20,
         initialLoadSize: Int = 40,
     ): Flow<PagingData<Status>> =
         Pager(
@@ -166,4 +206,5 @@ class TimelineRepository internal constructor(
 
     suspend fun deleteStatusFromAccountTimeline(statusId: String) =
         accountTimelineStatusDao.deletePost(statusId)
+    //endregion
 }
