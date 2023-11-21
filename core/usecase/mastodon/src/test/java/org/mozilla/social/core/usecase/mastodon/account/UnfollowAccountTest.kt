@@ -41,7 +41,7 @@ class UnfollowAccountTest : BaseUseCaseTest() {
 
             coVerify(exactly = 1) {
                 timelineRepository.getPostsFromHomeTimelineForAccount(accountId)
-                timelineRepository.remotePostInHomeTimelineForAccount(accountId)
+                timelineRepository.removePostInHomeTimelineForAccount(accountId)
                 accountRepository.updateFollowingCountInDatabase(loggedInId, -1)
                 relationshipsDao.updateFollowing(accountId, false)
                 accountRepository.unfollowAccount(accountId)
@@ -74,7 +74,7 @@ class UnfollowAccountTest : BaseUseCaseTest() {
 
             coVerify(exactly = 1) {
                 timelineRepository.getPostsFromHomeTimelineForAccount(accountId)
-                timelineRepository.remotePostInHomeTimelineForAccount(accountId)
+                timelineRepository.removePostInHomeTimelineForAccount(accountId)
                 accountRepository.updateFollowingCountInDatabase(loggedInId, -1)
                 relationshipsDao.updateFollowing(accountId, false)
 

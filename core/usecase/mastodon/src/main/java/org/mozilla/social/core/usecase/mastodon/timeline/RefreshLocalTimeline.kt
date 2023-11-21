@@ -8,7 +8,6 @@ import androidx.room.withTransaction
 import kotlinx.coroutines.delay
 import org.mozilla.social.common.Rel
 import org.mozilla.social.core.database.SocialDatabase
-import org.mozilla.social.core.database.model.statusCollections.LocalTimelineStatus
 import org.mozilla.social.core.database.model.statusCollections.LocalTimelineStatusWrapper
 import org.mozilla.social.core.repository.mastodon.AccountRepository
 import org.mozilla.social.core.repository.mastodon.TimelineRepository
@@ -71,7 +70,7 @@ class RefreshLocalTimeline internal constructor(
 
             socialDatabase.withTransaction {
                 if (loadType == LoadType.REFRESH) {
-                    socialDatabase.localTimelineDao().deleteLocalTimeline()
+                    timelineRepository.deleteLocalTimeline()
                 }
 
                 saveStatusToDatabase(result)

@@ -29,8 +29,8 @@ class BlockAccount(
     suspend operator fun invoke(accountId: String) =
         externalScope.async(dispatcherIo) {
             try {
-                timelineRepository.remotePostInHomeTimelineForAccount(accountId)
-                socialDatabase.localTimelineDao().removePostsFromAccount(accountId)
+                timelineRepository.removePostInHomeTimelineForAccount(accountId)
+                timelineRepository.removePostInLocalTimelineForAccount(accountId)
                 timelineRepository.removePostsFromFederatedTimelineForAccount(accountId)
                 socialDatabase.relationshipsDao().updateBlocked(accountId, true)
                 val relationship = accountRepository.blockAccount(accountId)

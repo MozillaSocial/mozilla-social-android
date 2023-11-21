@@ -17,7 +17,6 @@ import org.mozilla.social.core.database.dao.FederatedTimelineStatusDao
 import org.mozilla.social.core.database.dao.HashTagTimelineStatusDao
 import org.mozilla.social.core.database.dao.HomeTimelineStatusDao
 import org.mozilla.social.core.database.dao.LocalTimelineStatusDao
-import org.mozilla.social.core.database.model.accountCollections.FolloweeWrapper
 import org.mozilla.social.core.database.model.statusCollections.AccountTimelineStatusWrapper
 import org.mozilla.social.core.database.model.statusCollections.FederatedTimelineStatusWrapper
 import org.mozilla.social.core.database.model.statusCollections.HashTagTimelineStatusWrapper
@@ -27,9 +26,7 @@ import org.mozilla.social.core.database.model.statusCollections.toStatusWrapper
 import org.mozilla.social.core.model.Status
 import org.mozilla.social.core.model.StatusVisibility
 import org.mozilla.social.core.model.paging.StatusPagingWrapper
-import org.mozilla.social.core.model.wrappers.DetailedAccountWrapper
 import org.mozilla.social.core.network.mastodon.TimelineApi
-import org.mozilla.social.core.repository.mastodon.model.account.toDetailedAccount
 import org.mozilla.social.core.repository.mastodon.model.status.toAccountTimelineStatus
 import org.mozilla.social.core.repository.mastodon.model.status.toExternalModel
 import org.mozilla.social.core.repository.mastodon.model.status.toFederatedTimelineStatus
@@ -108,6 +105,14 @@ class TimelineRepository internal constructor(
 
     fun insertAllIntoLocalTimeline(statuses: List<Status>) =
         localTimelineStatusDao.insertAll(statuses.map { it.toLocalTimelineStatus() })
+
+    suspend fun deleteLocalTimeline() = localTimelineStatusDao.deleteLocalTimeline()
+
+    suspend fun removePostInLocalTimelineForAccount(accountId: String) =
+        localTimelineStatusDao.removePostsFromAccount(accountId)
+
+    suspend fun deleteStatusFromLocalTimeline(statusId: String) =
+        localTimelineStatusDao.deletePost(statusId)
     //endregion
 
     //region Federated timeline
@@ -197,7 +202,7 @@ class TimelineRepository internal constructor(
 
     fun deleteHomeTimeline() = homeTimelineStatusDao.deleteHomeTimeline()
 
-    suspend fun remotePostInHomeTimelineForAccount(accountId: String) =
+    suspend fun removePostInHomeTimelineForAccount(accountId: String) =
         homeTimelineStatusDao.removePostsFromAccount(accountId)
 
     suspend fun deleteStatusFromHomeTimeline(statusId: String) =

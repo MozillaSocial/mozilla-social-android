@@ -8,7 +8,6 @@ import kotlinx.coroutines.async
 import org.mozilla.social.common.annotations.PreferUseCase
 import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.core.database.SocialDatabase
-import org.mozilla.social.core.database.model.statusCollections.HomeTimelineStatus
 import org.mozilla.social.core.model.Status
 import org.mozilla.social.core.navigation.usecases.ShowSnackbar
 import org.mozilla.social.core.repository.mastodon.AccountRepository
@@ -37,7 +36,7 @@ class UnfollowAccount(
         try {
             socialDatabase.withTransaction {
                 timelinePosts = timelineRepository.getPostsFromHomeTimelineForAccount(accountId)
-                timelineRepository.remotePostInHomeTimelineForAccount(accountId)
+                timelineRepository.removePostInHomeTimelineForAccount(accountId)
                 accountRepository.updateFollowingCountInDatabase(loggedInUserAccountId, -1)
                 socialDatabase.relationshipsDao().updateFollowing(accountId, false)
             }

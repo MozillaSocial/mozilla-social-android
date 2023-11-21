@@ -37,7 +37,7 @@ class DeleteStatusTest : BaseUseCaseTest() {
                 statusRepository.updateIsBeingDeleted("id", true)
                 statusRepository.deleteStatus("id")
                 timelineRepository.deleteStatusFromHomeTimeline("id")
-                localTimelineDao.deletePost("id")
+                timelineRepository.deleteStatusFromLocalTimeline("id")
                 timelineRepository.deleteStatusFromFederatedTimeline("id")
                 timelineRepository.deleteStatusFromAllHashTagTimelines("id")
                 timelineRepository.deleteStatusFromAccountTimeline("id")
@@ -66,7 +66,7 @@ class DeleteStatusTest : BaseUseCaseTest() {
 
             coVerify(exactly = 0) {
                 timelineRepository.deleteStatusFromHomeTimeline("id")
-                localTimelineDao.deletePost("id")
+                timelineRepository.deleteStatusFromLocalTimeline("id")
                 timelineRepository.deleteStatusFromFederatedTimeline("id")
                 timelineRepository.deleteStatusFromAllHashTagTimelines("id")
                 timelineRepository.deleteStatusFromAccountTimeline("id")
