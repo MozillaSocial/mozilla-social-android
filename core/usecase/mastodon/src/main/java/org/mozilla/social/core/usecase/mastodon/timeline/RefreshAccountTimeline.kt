@@ -9,7 +9,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.StateFlow
 import org.mozilla.social.common.Rel
 import org.mozilla.social.core.database.SocialDatabase
-import org.mozilla.social.core.database.model.statusCollections.AccountTimelineStatus
 import org.mozilla.social.core.database.model.statusCollections.AccountTimelineStatusWrapper
 import org.mozilla.social.core.repository.mastodon.AccountRepository
 import org.mozilla.social.core.repository.mastodon.TimelineRepository
@@ -79,7 +78,7 @@ class RefreshAccountTimeline internal constructor(
 
             socialDatabase.withTransaction {
                 if (loadType == LoadType.REFRESH) {
-                    socialDatabase.accountTimelineDao().deleteAccountTimeline(accountId)
+                    timelineRepository.deleteAccountTimeline(accountId)
                 }
 
                 saveStatusToDatabase(result)

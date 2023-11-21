@@ -24,6 +24,7 @@ class DeleteStatusTest : BaseUseCaseTest() {
                 statusRepository = statusRepository,
                 socialDatabase = socialDatabase,
                 dispatcherIo = testDispatcher,
+                timelineRepository = timelineRepository,
             )
     }
 
@@ -39,7 +40,7 @@ class DeleteStatusTest : BaseUseCaseTest() {
                 localTimelineDao.deletePost("id")
                 federatedTimelineDao.deletePost("id")
                 hashTagTimelineDao.deletePost("id")
-                accountTimelineDao.deletePost("id")
+                timelineRepository.deleteStatusFromAccountTimeline("id")
                 statusRepository.deleteStatusLocal("id")
             }
         }
@@ -68,7 +69,7 @@ class DeleteStatusTest : BaseUseCaseTest() {
                 localTimelineDao.deletePost("id")
                 federatedTimelineDao.deletePost("id")
                 hashTagTimelineDao.deletePost("id")
-                accountTimelineDao.deletePost("id")
+                timelineRepository.deleteStatusFromAccountTimeline("id")
                 statusRepository.deleteStatusLocal("id")
             }
         }

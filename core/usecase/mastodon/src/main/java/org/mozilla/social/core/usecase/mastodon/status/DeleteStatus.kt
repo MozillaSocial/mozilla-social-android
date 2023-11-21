@@ -10,11 +10,13 @@ import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.core.database.SocialDatabase
 import org.mozilla.social.core.navigation.usecases.ShowSnackbar
 import org.mozilla.social.core.repository.mastodon.StatusRepository
+import org.mozilla.social.core.repository.mastodon.TimelineRepository
 import org.mozilla.social.core.usecase.mastodon.R
 
 class DeleteStatus(
     private val externalScope: CoroutineScope,
     private val statusRepository: StatusRepository,
+    private val timelineRepository: TimelineRepository,
     private val socialDatabase: SocialDatabase,
     private val showSnackbar: ShowSnackbar,
     private val dispatcherIo: CoroutineDispatcher = Dispatchers.IO,
@@ -30,7 +32,7 @@ class DeleteStatus(
                     socialDatabase.localTimelineDao().deletePost(statusId)
                     socialDatabase.federatedTimelineDao().deletePost(statusId)
                     socialDatabase.hashTagTimelineDao().deletePost(statusId)
-                    socialDatabase.accountTimelineDao().deletePost(statusId)
+                    timelineRepository.deleteStatusFromAccountTimeline(statusId)
                     statusRepository.deleteStatusLocal(statusId)
                 }
             } catch (e: Exception) {

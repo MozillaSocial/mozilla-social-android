@@ -3,8 +3,6 @@ package org.mozilla.social.feature.account
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.ExperimentalPagingApi
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
 import androidx.paging.map
 import kotlinx.coroutines.Job
@@ -21,11 +19,9 @@ import org.mozilla.social.common.Resource
 import org.mozilla.social.common.utils.edit
 import org.mozilla.social.core.analytics.Analytics
 import org.mozilla.social.core.analytics.AnalyticsIdentifiers
-import org.mozilla.social.core.database.SocialDatabase
-import org.mozilla.social.core.database.model.statusCollections.toStatusWrapper
 import org.mozilla.social.core.navigation.NavigationDestination
 import org.mozilla.social.core.navigation.usecases.NavigateTo
-import org.mozilla.social.core.repository.mastodon.model.status.toExternalModel
+import org.mozilla.social.core.repository.mastodon.TimelineRepository
 import org.mozilla.social.core.ui.postcard.PostCardDelegate
 import org.mozilla.social.core.ui.postcard.toPostCardUiState
 import org.mozilla.social.core.usecase.mastodon.account.BlockAccount
@@ -41,7 +37,7 @@ import timber.log.Timber
 class AccountViewModel(
     private val analytics: Analytics,
     getLoggedInUserAccountId: GetLoggedInUserAccountId,
-    private val socialDatabase: SocialDatabase,
+    timelineRepository: TimelineRepository,
     private val getDetailedAccount: GetDetailedAccount,
     private val navigateTo: NavigateTo,
     private val followAccount: FollowAccount,
@@ -99,21 +95,14 @@ class AccountViewModel(
     }
 
     @OptIn(ExperimentalPagingApi::class)
-    val feed =
-        Pager(
-            config =
-                PagingConfig(
-                    pageSize = 20,
-                    initialLoadSize = 40,
-                ),
-            remoteMediator = accountTimelineRemoteMediator,
-        ) {
-            socialDatabase.accountTimelineDao().accountTimelinePagingSource(accountId)
-        }.flow.map { pagingData ->
-            pagingData.map {
-                it.toStatusWrapper().toExternalModel().toPostCardUiState(usersAccountId)
-            }
-        }.cachedIn(viewModelScope)
+    val feed = timelineRepository.getAccountTimelinePager(
+        accountId = accountId,
+        remoteMediator = accountTimelineRemoteMediator
+    ).map { pagingData ->
+        pagingData.map {
+            it.toPostCardUiState(usersAccountId)
+        }
+    }.cachedIn(viewModelScope)
 
     init {
         loadAccount()
