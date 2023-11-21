@@ -6,15 +6,15 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.mozilla.social.common.appscope.AppScope
 import org.mozilla.social.core.analytics.Analytics
-import org.mozilla.social.core.database.SocialDatabase
 import org.mozilla.social.core.datastore.UserPreferencesDatastore
+import org.mozilla.social.core.repository.mastodon.DatabaseDelegate
 
 /**
  * Handles data related cleanup.
  */
 class Logout(
     private val userPreferencesDatastore: UserPreferencesDatastore,
-    private val socialDatabase: SocialDatabase,
+    private val databaseDelegate: DatabaseDelegate,
     private val analytics: Analytics,
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
     private val appScope: AppScope,
@@ -23,7 +23,7 @@ class Logout(
         GlobalScope.launch(ioDispatcher) {
             appScope.reset()
             userPreferencesDatastore.clearData()
-            socialDatabase.clearAllTables()
+            databaseDelegate.clearAllTables()
 
             /** Possible use of analytics...destroy() **/
             analytics.clearLoggedInIdentifiers()

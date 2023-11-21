@@ -60,13 +60,13 @@ val mastodonUsecaseModule =
         single {
             Logout(
                 userPreferencesDatastore = get(),
-                socialDatabase = get(),
                 analytics = get(),
                 appScope = get(),
+                databaseDelegate = get(),
             )
         }
         single { IsSignedInFlow(get()) }
-        single { GetDetailedAccount(get(), get()) }
+        singleOf(::GetDetailedAccount)
         single { GetLoggedInUserAccountId(get()) }
 
         single {
@@ -75,7 +75,7 @@ val mastodonUsecaseModule =
                 showSnackbar = get(),
                 accountRepository = get(),
                 relationshipRepository = get(),
-                socialDatabase = get(),
+                timelineRepository = get(),
             )
         }
         single {
@@ -84,7 +84,7 @@ val mastodonUsecaseModule =
                 showSnackbar = get(),
                 accountRepository = get(),
                 relationshipRepository = get(),
-                socialDatabase = get(),
+                databaseDelegate = get(),
             )
         }
         single {
@@ -93,7 +93,7 @@ val mastodonUsecaseModule =
                 showSnackbar = get(),
                 accountRepository = get(),
                 relationshipRepository = get(),
-                socialDatabase = get(),
+                timelineRepository = get(),
             )
         }
         single {
@@ -102,7 +102,6 @@ val mastodonUsecaseModule =
                 showSnackbar = get(),
                 accountRepository = get(),
                 relationshipRepository = get(),
-                socialDatabase = get(),
             )
         }
         single {
@@ -111,7 +110,8 @@ val mastodonUsecaseModule =
                 showSnackbar = get(),
                 accountRepository = get(),
                 relationshipRepository = get(),
-                socialDatabase = get(),
+                timelineRepository = get(),
+                databaseDelegate = get(),
             )
         }
         single {
@@ -120,7 +120,6 @@ val mastodonUsecaseModule =
                 showSnackbar = get(),
                 accountRepository = get(),
                 relationshipRepository = get(),
-                socialDatabase = get(),
             )
         }
         single {
@@ -128,7 +127,6 @@ val mastodonUsecaseModule =
                 externalScope = get<AppScope>(),
                 showSnackbar = get(),
                 accountRepository = get(),
-                socialDatabase = get(),
             )
         }
         single {
@@ -162,17 +160,17 @@ val mastodonUsecaseModule =
                 externalScope = get<AppScope>(),
                 statusRepository = get(),
                 showSnackbar = get(),
-                socialDatabase = get(),
                 saveStatusToDatabase = get(),
+                databaseDelegate = get(),
             )
         }
         single {
             UndoBoostStatus(
                 externalScope = get<AppScope>(),
-                socialDatabase = get(),
                 statusRepository = get(),
                 showSnackbar = get(),
                 saveStatusToDatabase = get(),
+                databaseDelegate = get(),
             )
         }
         single {
@@ -180,8 +178,8 @@ val mastodonUsecaseModule =
                 externalScope = get<AppScope>(),
                 statusRepository = get(),
                 showSnackbar = get(),
-                socialDatabase = get(),
                 saveStatusToDatabase = get(),
+                databaseDelegate = get(),
             )
         }
         single {
@@ -197,7 +195,8 @@ val mastodonUsecaseModule =
                 externalScope = get<AppScope>(),
                 statusRepository = get(),
                 showSnackbar = get(),
-                socialDatabase = get(),
+                timelineRepository = get(),
+                databaseDelegate = get(),
             )
         }
 
@@ -209,8 +208,9 @@ val mastodonUsecaseModule =
         factory {
             RefreshAccountTimeline(
                 accountRepository = get(),
-                socialDatabase = get(),
                 saveStatusToDatabase = get(),
+                databaseDelegate = get(),
+                timelineRepository = get(),
                 accountId = it[0],
                 timelineType = it[1],
             )

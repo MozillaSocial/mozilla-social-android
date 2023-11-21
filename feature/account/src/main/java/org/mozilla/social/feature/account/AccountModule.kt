@@ -29,7 +29,6 @@ val accountModule =
             AccountViewModel(
                 analytics = get(),
                 getLoggedInUserAccountId = get(),
-                socialDatabase = get(),
                 getDetailedAccount = get(),
                 navigateTo = get(),
                 initialAccountId = parametersHolder[0],
@@ -39,6 +38,7 @@ val accountModule =
                 unblockAccount = get(),
                 muteAccount = get(),
                 unmuteAccount = get(),
+                timelineRepository = get(),
             )
         }
         factory { parametersHolder ->

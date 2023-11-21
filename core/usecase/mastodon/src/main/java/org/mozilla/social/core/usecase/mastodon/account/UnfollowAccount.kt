@@ -1,16 +1,15 @@
 package org.mozilla.social.core.usecase.mastodon.account
 
-import androidx.room.withTransaction
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import org.mozilla.social.common.annotations.PreferUseCase
 import org.mozilla.social.common.utils.StringFactory
-import org.mozilla.social.core.database.SocialDatabase
 import org.mozilla.social.core.model.Status
 import org.mozilla.social.core.navigation.usecases.ShowSnackbar
 import org.mozilla.social.core.repository.mastodon.AccountRepository
+import org.mozilla.social.core.repository.mastodon.DatabaseDelegate
 import org.mozilla.social.core.repository.mastodon.RelationshipRepository
 import org.mozilla.social.core.repository.mastodon.TimelineRepository
 import org.mozilla.social.core.usecase.mastodon.R
@@ -21,7 +20,7 @@ class UnfollowAccount(
     private val accountRepository: AccountRepository,
     private val relationshipRepository: RelationshipRepository,
     private val timelineRepository: TimelineRepository,
-    private val socialDatabase: SocialDatabase,
+    private val databaseDelegate: DatabaseDelegate,
     private val dispatcherIo: CoroutineDispatcher = Dispatchers.IO,
 ) {
     /**
@@ -34,7 +33,7 @@ class UnfollowAccount(
     ) = externalScope.async(dispatcherIo) {
         var timelinePosts: List<Status>? = null
         try {
-            socialDatabase.withTransaction {
+            databaseDelegate.withTransaction {
                 timelinePosts = timelineRepository.getPostsFromHomeTimelineForAccount(accountId)
                 timelineRepository.removePostInHomeTimelineForAccount(accountId)
                 accountRepository.updateFollowingCountInDatabase(loggedInUserAccountId, -1)
@@ -43,7 +42,7 @@ class UnfollowAccount(
             val relationship = accountRepository.unfollowAccount(accountId)
             relationshipRepository.insert(relationship)
         } catch (e: Exception) {
-            socialDatabase.withTransaction {
+            databaseDelegate.withTransaction {
                 timelinePosts?.let { timelineRepository.insertAllIntoHomeTimeline(it) }
                 accountRepository.updateFollowingCountInDatabase(loggedInUserAccountId, 1)
                 relationshipRepository.updateFollowing(accountId, true)

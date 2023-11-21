@@ -4,12 +4,11 @@ import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
-import androidx.room.withTransaction
 import kotlinx.coroutines.delay
 import org.mozilla.social.common.Rel
-import org.mozilla.social.core.database.SocialDatabase
 import org.mozilla.social.core.database.model.statusCollections.FederatedTimelineStatusWrapper
 import org.mozilla.social.core.repository.mastodon.AccountRepository
+import org.mozilla.social.core.repository.mastodon.DatabaseDelegate
 import org.mozilla.social.core.repository.mastodon.TimelineRepository
 import org.mozilla.social.core.usecase.mastodon.remotemediators.getInReplyToAccountNames
 import org.mozilla.social.core.usecase.mastodon.status.SaveStatusToDatabase
@@ -18,7 +17,7 @@ import timber.log.Timber
 class RefreshFederatedTimeline internal constructor(
     private val timelineRepository: TimelineRepository,
     private val accountRepository: AccountRepository,
-    private val socialDatabase: SocialDatabase,
+    private val databaseDelegate: DatabaseDelegate,
     private val saveStatusToDatabase: SaveStatusToDatabase,
 ) {
     @OptIn(ExperimentalPagingApi::class)
@@ -67,13 +66,12 @@ class RefreshFederatedTimeline internal constructor(
 
             val result = response.statuses.getInReplyToAccountNames(accountRepository)
 
-            socialDatabase.withTransaction {
+            databaseDelegate.withTransaction {
                 if (loadType == LoadType.REFRESH) {
                     timelineRepository.deleteFederatedTimeline()
                 }
 
                 saveStatusToDatabase(result)
-
                 timelineRepository.insertAllIntoFederatedTimeline(result)
             }
 

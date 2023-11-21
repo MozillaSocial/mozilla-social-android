@@ -4,7 +4,6 @@ import io.mockk.MockKMatcherScope
 import io.mockk.MockKVerificationScope
 import io.mockk.coEvery
 import io.mockk.coVerify
-import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CompletableDeferred
@@ -13,15 +12,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.TestDispatcher
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
-import org.mozilla.social.core.database.SocialDatabase
-import org.mozilla.social.core.database.dao.AccountTimelineStatusDao
-import org.mozilla.social.core.database.dao.AccountsDao
-import org.mozilla.social.core.database.dao.FederatedTimelineStatusDao
-import org.mozilla.social.core.database.dao.HashTagTimelineStatusDao
-import org.mozilla.social.core.database.dao.HashtagDao
-import org.mozilla.social.core.database.dao.HomeTimelineStatusDao
-import org.mozilla.social.core.database.dao.LocalTimelineStatusDao
-import org.mozilla.social.core.database.dao.RelationshipsDao
 import org.mozilla.social.core.navigation.usecases.ShowSnackbar
 import org.mozilla.social.core.repository.mastodon.AccountRepository
 import org.mozilla.social.core.repository.mastodon.AppRepository
@@ -53,36 +43,17 @@ open class BaseUseCaseTest {
     protected val pollRepository = mockk<PollRepository>(relaxed = true)
     protected val timelineRepository = mockk<TimelineRepository>(relaxed = true)
 
-    protected val socialDatabase = mockk<SocialDatabase>(relaxed = true)
-
-    protected val accountsDao = mockk<AccountsDao>(relaxed = true)
-    protected val accountTimelineDao = mockk<AccountTimelineStatusDao>(relaxed = true)
-    protected val federatedTimelineDao = mockk<FederatedTimelineStatusDao>(relaxed = true)
-    protected val hashtagDao = mockk<HashtagDao>(relaxed = true)
-    protected val hashTagTimelineDao = mockk<HashTagTimelineStatusDao>(relaxed = true)
-    protected val homeTimelineDao = mockk<HomeTimelineStatusDao>(relaxed = true)
-    protected val localTimelineDao = mockk<LocalTimelineStatusDao>(relaxed = true)
-    protected val relationshipsDao = mockk<RelationshipsDao>(relaxed = true)
+    protected val databaseDelegate = mockk<DatabaseDelegate>(relaxed = true)
 
     @OptIn(ExperimentalCoroutinesApi::class)
     protected val testDispatcher: TestDispatcher = UnconfinedTestDispatcher()
-    protected val databaseDelegate = mockk<DatabaseDelegate>(relaxed = true)
     internal val saveStatusToDatabase = mockk<SaveStatusToDatabase>(relaxed = true)
 
     protected val showSnackbar = mockk<ShowSnackbar>(relaxed = true)
 
     @BeforeTest
     fun setupBaseTest() {
-        every { socialDatabase.accountsDao() } returns accountsDao
-        every { socialDatabase.accountTimelineDao() } returns accountTimelineDao
-        every { socialDatabase.federatedTimelineDao() } returns federatedTimelineDao
-        every { socialDatabase.hashtagDao() } returns hashtagDao
-        every { socialDatabase.hashTagTimelineDao() } returns hashTagTimelineDao
-        every { socialDatabase.homeTimelineDao() } returns homeTimelineDao
-        every { socialDatabase.localTimelineDao() } returns localTimelineDao
-        every { socialDatabase.relationshipsDao() } returns relationshipsDao
-
-        TransactionUtils.setupTransactionMock(socialDatabase)
+        TransactionUtils.setupTransactionMock(databaseDelegate)
     }
 
     /**

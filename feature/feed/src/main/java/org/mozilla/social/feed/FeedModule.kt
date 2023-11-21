@@ -49,7 +49,7 @@ val feedModule =
                 localTimelineRemoteMediator = get(),
                 federatedTimelineRemoteMediator = get(),
                 getLoggedInUserAccountId = get(),
-                socialDatabase = get(),
+                timelineRepository = get(),
             )
         }
     }

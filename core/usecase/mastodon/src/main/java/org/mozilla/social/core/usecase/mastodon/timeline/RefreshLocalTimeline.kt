@@ -4,12 +4,11 @@ import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
-import androidx.room.withTransaction
 import kotlinx.coroutines.delay
 import org.mozilla.social.common.Rel
-import org.mozilla.social.core.database.SocialDatabase
 import org.mozilla.social.core.database.model.statusCollections.LocalTimelineStatusWrapper
 import org.mozilla.social.core.repository.mastodon.AccountRepository
+import org.mozilla.social.core.repository.mastodon.DatabaseDelegate
 import org.mozilla.social.core.repository.mastodon.TimelineRepository
 import org.mozilla.social.core.usecase.mastodon.remotemediators.getInReplyToAccountNames
 import org.mozilla.social.core.usecase.mastodon.status.SaveStatusToDatabase
@@ -19,7 +18,7 @@ class RefreshLocalTimeline internal constructor(
     private val timelineRepository: TimelineRepository,
     private val accountRepository: AccountRepository,
     private val saveStatusToDatabase: SaveStatusToDatabase,
-    private val socialDatabase: SocialDatabase,
+    private val databaseDelegate: DatabaseDelegate,
 ) {
     @OptIn(ExperimentalPagingApi::class)
     @Suppress("ReturnCount", "MagicNumber")
@@ -68,13 +67,12 @@ class RefreshLocalTimeline internal constructor(
 
             val result = response.statuses.getInReplyToAccountNames(accountRepository)
 
-            socialDatabase.withTransaction {
+            databaseDelegate.withTransaction {
                 if (loadType == LoadType.REFRESH) {
                     timelineRepository.deleteLocalTimeline()
                 }
 
                 saveStatusToDatabase(result)
-
                 timelineRepository.insertAllIntoLocalTimeline(result)
             }
 

@@ -17,7 +17,7 @@ val mastodonRepositoryModule =
         single { AuthCredentialObserver(get(), get()) }
         singleOf(::StatusRepository)
         singleOf(::AccountRepository)
-        single { TimelineRepository(get(), get()) }
+        single { TimelineRepository(get(), get(), get(), get(), get(), get()) }
         single { OauthRepository(get()) }
         single { MediaRepository(get()) }
         single { SearchRepository(get()) }

@@ -22,7 +22,7 @@ class UnfollowAccountTest : BaseUseCaseTest() {
                 showSnackbar = showSnackbar,
                 accountRepository = accountRepository,
                 relationshipRepository = relationshipRepository,
-                socialDatabase = socialDatabase,
+                socialDatabase = databaseDelegate,
                 dispatcherIo = testDispatcher,
                 timelineRepository = timelineRepository,
             )

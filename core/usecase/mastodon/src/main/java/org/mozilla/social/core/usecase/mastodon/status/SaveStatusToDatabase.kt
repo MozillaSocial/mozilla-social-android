@@ -1,21 +1,19 @@
 package org.mozilla.social.core.usecase.mastodon.status
 
-import androidx.room.withTransaction
-import org.mozilla.social.core.database.SocialDatabase
 import org.mozilla.social.core.model.Status
 import org.mozilla.social.core.repository.mastodon.AccountRepository
+import org.mozilla.social.core.repository.mastodon.DatabaseDelegate
 import org.mozilla.social.core.repository.mastodon.PollRepository
 import org.mozilla.social.core.repository.mastodon.StatusRepository
-import org.mozilla.social.core.repository.mastodon.model.status.toDatabaseModel
 
 internal class SaveStatusToDatabase internal constructor(
-    private val socialDatabase: SocialDatabase,
+    private val databaseDelegate: DatabaseDelegate,
     private val statusRepository: StatusRepository,
     private val accountRepository: AccountRepository,
     private val pollRepository: PollRepository,
 ) {
     suspend operator fun invoke(vararg statuses: Status) {
-        socialDatabase.withTransaction {
+        databaseDelegate.withTransaction {
             val boostedStatuses = statuses.mapNotNull { it.boostedStatus }
 
             pollRepository.insertAll(boostedStatuses.mapNotNull { it.poll })

@@ -22,7 +22,7 @@ class DeleteStatusTest : BaseUseCaseTest() {
                 externalScope = TestScope(testDispatcher),
                 showSnackbar = showSnackbar,
                 statusRepository = statusRepository,
-                socialDatabase = socialDatabase,
+                socialDatabase = databaseDelegate,
                 dispatcherIo = testDispatcher,
                 timelineRepository = timelineRepository,
             )
