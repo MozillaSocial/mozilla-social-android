@@ -64,12 +64,12 @@ class GetDetailedAccount(
                 emit(Resource.Error(it))
             } ?: try {
                 emitAll(
-                    socialDatabase.accountsDao().getAccountFlow(accountId).filterNotNull().combine(
+                    accountRepository.getAccountFlow(accountId).filterNotNull().combine(
                         socialDatabase.relationshipsDao().getRelationshipFlow(accountId).filterNotNull(),
                     ) { databaseAccount, databaseRelationship ->
                         Resource.Loaded(
                             transform(
-                                databaseAccount.toExternalModel(),
+                                databaseAccount,
                                 databaseRelationship.toExternal(),
                             ),
                         )

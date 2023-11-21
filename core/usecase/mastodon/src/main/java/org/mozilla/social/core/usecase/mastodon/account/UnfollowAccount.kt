@@ -35,7 +35,7 @@ class UnfollowAccount(
             socialDatabase.withTransaction {
                 timelinePosts = socialDatabase.homeTimelineDao().getPostsFromAccount(accountId)
                 socialDatabase.homeTimelineDao().removePostsFromAccount(accountId)
-                socialDatabase.accountsDao().updateFollowingCount(loggedInUserAccountId, -1)
+                accountRepository.updateFollowingCountInDatabase(loggedInUserAccountId, -1)
                 socialDatabase.relationshipsDao().updateFollowing(accountId, false)
             }
             val relationship = accountRepository.unfollowAccount(accountId)
@@ -43,7 +43,7 @@ class UnfollowAccount(
         } catch (e: Exception) {
             socialDatabase.withTransaction {
                 timelinePosts?.let { socialDatabase.homeTimelineDao().insertAll(it) }
-                socialDatabase.accountsDao().updateFollowingCount(loggedInUserAccountId, 1)
+                accountRepository.updateFollowingCountInDatabase(loggedInUserAccountId, 1)
                 socialDatabase.relationshipsDao().updateFollowing(accountId, true)
             }
             showSnackbar(

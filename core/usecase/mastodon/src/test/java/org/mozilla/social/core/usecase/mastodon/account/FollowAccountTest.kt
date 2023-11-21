@@ -36,7 +36,7 @@ class FollowAccountTest : BaseUseCaseTest() {
             )
 
             coVerify(exactly = 1) {
-                accountsDao.updateFollowingCount(loggedInId, 1)
+                accountRepository.updateFollowingCountInDatabase(loggedInId, 1)
                 relationshipsDao.updateFollowing(accountId, true)
                 accountRepository.followAccount(accountId)
             }
@@ -64,9 +64,9 @@ class FollowAccountTest : BaseUseCaseTest() {
             assertNotNull(exception)
 
             coVerify(exactly = 1) {
-                accountsDao.updateFollowingCount(loggedInId, 1)
+                accountRepository.updateFollowingCountInDatabase(loggedInId, 1)
                 relationshipsDao.updateFollowing(accountId, true)
-                accountsDao.updateFollowingCount(loggedInId, -1)
+                accountRepository.updateFollowingCountInDatabase(loggedInId, -1)
                 relationshipsDao.updateFollowing(accountId, false)
             }
         }

@@ -1,5 +1,7 @@
 package org.mozilla.social.core.repository.mastodon
 
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
@@ -26,6 +28,9 @@ class AccountRepository internal constructor(
     suspend fun getAccount(accountId: String): Account {
         return api.getAccount(accountId).toExternalModel()
     }
+
+    fun getAccountFlow(accountId: String): Flow<Account> =
+        dao.getAccountFlow(accountId).map { it.toExternalModel() }
 
     suspend fun verifyUserCredentials(): Account {
         return api.verifyCredentials().toExternalModel()
@@ -136,8 +141,8 @@ class AccountRepository internal constructor(
     suspend fun getAccountRelationships(accountIds: List<String>): List<Relationship> =
         api.getRelationships(accountIds.toTypedArray()).map { it.toExternal() }
 
-    // TODO@DA move to use case
-    suspend fun getAccountFromDatabase(accountId: String): Account? = dao.getAccount(accountId)?.toExternalModel()
+    suspend fun getAccountFromDatabase(accountId: String): Account? =
+        dao.getAccount(accountId)?.toExternalModel()
 
     @PreferUseCase
     @Suppress("MagicNumber")
@@ -149,7 +154,7 @@ class AccountRepository internal constructor(
         avatar: File? = null,
         header: File? = null,
         fields: List<Pair<String, String>>? = null,
-    ) = api.updateAccount(
+    ): Account = api.updateAccount(
         displayName = displayName?.toRequestBody(MultipartBody.FORM),
         bio = bio?.toRequestBody(MultipartBody.FORM),
         locked = locked?.toString()?.toRequestBody(MultipartBody.FORM),
@@ -181,4 +186,12 @@ class AccountRepository internal constructor(
     ).toExternalModel()
 
     fun insertAll(accounts: List<Account>) = dao.insertAll(accounts.map { it.toDatabaseModel() })
+
+    suspend fun updateFollowingCountInDatabase(
+        accountId: String,
+        valueChange: Long,
+    ) = dao.updateFollowingCount(
+        accountId = accountId,
+        valueChange = valueChange,
+    )
 }

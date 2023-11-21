@@ -34,7 +34,6 @@ class UpdateMyAccount(
         fields: List<Pair<String, String>>? = null,
     ) = externalScope.async(dispatcherIo) {
         try {
-            println("johnny 1")
             val updatedAccount =
                 accountRepository.updateAccount(
                     displayName = displayName,
@@ -45,10 +44,8 @@ class UpdateMyAccount(
                     header = header,
                     fields = fields,
                 )
-            println("johnny 2")
             socialDatabase.accountsDao().insert(updatedAccount.toDatabaseModel())
         } catch (e: Exception) {
-            println("johnny 3 $e")
             showSnackbar(
                 text = StringFactory.resource(R.string.edit_account_save_failed),
                 isError = true,

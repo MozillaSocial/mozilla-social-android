@@ -31,14 +31,14 @@ class FollowAccount(
     ) = externalScope.async(dispatcherIo) {
         try {
             socialDatabase.withTransaction {
-                socialDatabase.accountsDao().updateFollowingCount(loggedInUserAccountId, 1)
+                accountRepository.updateFollowingCountInDatabase(loggedInUserAccountId, 1)
                 socialDatabase.relationshipsDao().updateFollowing(accountId, true)
             }
             val relationship = accountRepository.followAccount(accountId)
             relationshipRepository.insert(relationship)
         } catch (e: Exception) {
             socialDatabase.withTransaction {
-                socialDatabase.accountsDao().updateFollowingCount(loggedInUserAccountId, -1)
+                accountRepository.updateFollowingCountInDatabase(loggedInUserAccountId, -1)
                 socialDatabase.relationshipsDao().updateFollowing(accountId, false)
             }
             showSnackbar(

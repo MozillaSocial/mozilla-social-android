@@ -40,7 +40,7 @@ class UnfollowAccountTest : BaseUseCaseTest() {
             coVerify(exactly = 1) {
                 homeTimelineDao.getPostsFromAccount(accountId)
                 homeTimelineDao.removePostsFromAccount(accountId)
-                accountsDao.updateFollowingCount(loggedInId, -1)
+                accountRepository.updateFollowingCountInDatabase(loggedInId, -1)
                 relationshipsDao.updateFollowing(accountId, false)
                 accountRepository.unfollowAccount(accountId)
             }
@@ -84,11 +84,11 @@ class UnfollowAccountTest : BaseUseCaseTest() {
             coVerify(exactly = 1) {
                 homeTimelineDao.getPostsFromAccount(accountId)
                 homeTimelineDao.removePostsFromAccount(accountId)
-                accountsDao.updateFollowingCount(loggedInId, -1)
+                accountRepository.updateFollowingCountInDatabase(loggedInId, -1)
                 relationshipsDao.updateFollowing(accountId, false)
 
                 homeTimelineDao.insertAll(homeTimelinePosts)
-                accountsDao.updateFollowingCount(loggedInId, 1)
+                accountRepository.updateFollowingCountInDatabase(loggedInId, 1)
                 relationshipsDao.updateFollowing(accountId, true)
             }
         }
