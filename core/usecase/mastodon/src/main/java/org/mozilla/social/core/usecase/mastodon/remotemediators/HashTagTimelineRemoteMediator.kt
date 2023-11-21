@@ -69,7 +69,7 @@ class HashTagTimelineRemoteMediator internal constructor(
 
             socialDatabase.withTransaction {
                 if (loadType == LoadType.REFRESH) {
-                    socialDatabase.hashTagTimelineDao().deleteHashTagTimeline(hashTag)
+                    timelineRepository.deleteHashTagTimeline(hashTag)
                 }
 
                 saveStatusToDatabase(result)

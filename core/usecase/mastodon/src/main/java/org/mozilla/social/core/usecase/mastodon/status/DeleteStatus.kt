@@ -31,7 +31,7 @@ class DeleteStatus(
                     socialDatabase.homeTimelineDao().deletePost(statusId)
                     socialDatabase.localTimelineDao().deletePost(statusId)
                     timelineRepository.deleteStatusFromFederatedTimeline(statusId)
-                    socialDatabase.hashTagTimelineDao().deletePost(statusId)
+                    timelineRepository.deleteStatusFromAllHashTagTimelines(statusId)
                     timelineRepository.deleteStatusFromAccountTimeline(statusId)
                     statusRepository.deleteStatusLocal(statusId)
                 }

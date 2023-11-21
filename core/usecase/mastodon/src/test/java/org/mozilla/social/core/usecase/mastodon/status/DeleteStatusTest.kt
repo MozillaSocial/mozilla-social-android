@@ -39,7 +39,7 @@ class DeleteStatusTest : BaseUseCaseTest() {
                 homeTimelineDao.deletePost("id")
                 localTimelineDao.deletePost("id")
                 timelineRepository.deleteStatusFromFederatedTimeline("id")
-                hashTagTimelineDao.deletePost("id")
+                timelineRepository.deleteStatusFromAllHashTagTimelines("id")
                 timelineRepository.deleteStatusFromAccountTimeline("id")
                 statusRepository.deleteStatusLocal("id")
             }
@@ -68,7 +68,7 @@ class DeleteStatusTest : BaseUseCaseTest() {
                 homeTimelineDao.deletePost("id")
                 localTimelineDao.deletePost("id")
                 timelineRepository.deleteStatusFromFederatedTimeline("id")
-                hashTagTimelineDao.deletePost("id")
+                timelineRepository.deleteStatusFromAllHashTagTimelines("id")
                 timelineRepository.deleteStatusFromAccountTimeline("id")
                 statusRepository.deleteStatusLocal("id")
             }
