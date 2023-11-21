@@ -30,6 +30,7 @@ import org.mozilla.social.core.network.mastodon.TimelineApi
 import org.mozilla.social.core.repository.mastodon.model.status.toAccountTimelineStatus
 import org.mozilla.social.core.repository.mastodon.model.status.toExternalModel
 import org.mozilla.social.core.repository.mastodon.model.status.toFederatedTimelineStatus
+import org.mozilla.social.core.repository.mastodon.model.status.toHashTagTimelineStatus
 import org.mozilla.social.core.repository.mastodon.model.status.toHomeTimelineStatus
 import org.mozilla.social.core.repository.mastodon.model.status.toLocalTimelineStatus
 import retrofit2.HttpException
@@ -193,9 +194,8 @@ class TimelineRepository internal constructor(
             }
         }
 
-    fun insertAllIntoHomeTimeline(statuses: List<Status>) {
+    fun insertAllIntoHomeTimeline(statuses: List<Status>) =
         homeTimelineStatusDao.insertAll(statuses.map { it.toHomeTimelineStatus() })
-    }
 
     suspend fun getPostsFromHomeTimelineForAccount(accountId: String): List<Status> =
         homeTimelineStatusDao.getPostsFromAccount(accountId).map { it.toStatusWrapper().toExternalModel() }
@@ -261,6 +261,11 @@ class TimelineRepository internal constructor(
 
     suspend fun deleteStatusFromAllHashTagTimelines(statusId: String) =
         hashTagTimelineStatusDao.deletePost(statusId)
+
+    fun insertAllIntoHashTagTimeline(
+        hashTag: String,
+        statuses: List<Status>
+    ) = hashTagTimelineStatusDao.insertAll(statuses.map { it.toHashTagTimelineStatus(hashTag) })
     //endregion
 
     //region Account timeline

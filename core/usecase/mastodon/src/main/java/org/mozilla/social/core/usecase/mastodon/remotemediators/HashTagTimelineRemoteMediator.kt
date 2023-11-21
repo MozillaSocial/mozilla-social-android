@@ -73,7 +73,7 @@ class HashTagTimelineRemoteMediator internal constructor(
 
                 saveStatusToDatabase(result)
 
-                timelineRepository.insertAllIntoHomeTimeline(result)
+                timelineRepository.insertAllIntoHashTagTimeline(hashTag, result)
             }
 
             // There seems to be some race condition for refreshes.  Subsequent pages do
