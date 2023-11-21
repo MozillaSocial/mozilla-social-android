@@ -37,5 +37,5 @@ class ThreadViewModel(
 
     val postCardDelegate: PostCardDelegate by KoinJavaComponent.inject(
         PostCardDelegate::class.java,
-    ) { parametersOf(viewModelScope, "thread") }
+    ) { parametersOf(viewModelScope, AnalyticsIdentifiers.FEED_PREFIX_THREAD) }
 }

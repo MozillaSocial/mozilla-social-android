@@ -20,6 +20,13 @@ object AnalyticsIdentifiers {
     const val FEED_POST_UNFAVORITE = "feed.post.unfavourite"
     const val FEED_POST_LINK_TAPPED = "post.link.tap"
 
+    const val FEED_PREFIX_PROFILE = "profile"
+    const val FEED_PREFIX_HOME = "home"
+    const val FEED_PREFIX_LOCAL = "local"
+    const val FEED_PREFIX_FEDERATED = "federated"
+    const val FEED_PREFIX_HASHTAG = "hashtag"
+    const val FEED_PREFIX_THREAD = "thread"
+
     const val REPORT_SCREEN_IMPRESSION = "report.screen.impression"
 
     const val THREAD_SCREEN_IMPRESSION = "thread.screen.impression"

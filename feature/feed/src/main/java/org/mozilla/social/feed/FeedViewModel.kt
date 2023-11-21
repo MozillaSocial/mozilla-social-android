@@ -94,13 +94,13 @@ class FeedViewModel(
 
     val homePostCardDelegate: PostCardDelegate by KoinJavaComponent.inject(
         PostCardDelegate::class.java,
-    ) { parametersOf(viewModelScope, "home") }
+    ) { parametersOf(viewModelScope, AnalyticsIdentifiers.FEED_PREFIX_HOME) }
     val localPostCardDelegate: PostCardDelegate by KoinJavaComponent.inject(
         PostCardDelegate::class.java,
-    ) { parametersOf(viewModelScope, "local") }
+    ) { parametersOf(viewModelScope, AnalyticsIdentifiers.FEED_PREFIX_LOCAL) }
     val federatedPostCardDelegate: PostCardDelegate by KoinJavaComponent.inject(
         PostCardDelegate::class.java,
-    ) { parametersOf(viewModelScope, "federated") }
+    ) { parametersOf(viewModelScope, AnalyticsIdentifiers.FEED_PREFIX_FEDERATED) }
 
     override fun onTabClicked(timelineType: TimelineType) {
         _timelineType.update { timelineType }
