@@ -142,6 +142,14 @@ class AccountViewModel(
         )
     }
 
+    override fun onOverflowShareClicked() {
+        analytics.uiEngagement(
+            uiIdentifier = AnalyticsIdentifiers.PROFILE_MORE_SHARE_ACCOUNT,
+            mastodonAccountId = accountId,
+            mastodonAccountHandle = usersAccountId
+        )
+    }
+
     override fun onOverflowMuteClicked() {
         viewModelScope.launch {
             try {
@@ -216,6 +224,11 @@ class AccountViewModel(
     override fun onFollowClicked() {
         viewModelScope.launch {
             try {
+                analytics.uiEngagement(
+                    uiIdentifier = AnalyticsIdentifiers.ACCOUNTS_SCREEN_FOLLOW,
+                    mastodonAccountId = accountId,
+                    mastodonAccountHandle = usersAccountId
+                )
                 followAccount(
                     accountId = accountId,
                     loggedInUserAccountId = usersAccountId,
@@ -229,6 +242,11 @@ class AccountViewModel(
     override fun onUnfollowClicked() {
         viewModelScope.launch {
             try {
+                analytics.uiEngagement(
+                    uiIdentifier = AnalyticsIdentifiers.ACCOUNTS_SCREEN_UNFOLLOW,
+                    mastodonAccountId = accountId,
+                    mastodonAccountHandle = usersAccountId
+                )
                 unfollowAccount(
                     accountId = accountId,
                     loggedInUserAccountId = usersAccountId,

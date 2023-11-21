@@ -6,6 +6,9 @@ object AnalyticsIdentifiers {
     const val DISCOVER_SCREEN_IMPRESSION = "discover.screen.impression"
 
     const val ACCOUNTS_SCREEN_IMPRESSION = "account.screen.impression"
+    const val ACCOUNTS_SCREEN_FOLLOW = "profile.follow_btn.follow"
+    const val ACCOUNTS_SCREEN_UNFOLLOW = "profile.follow_btn.unfollow"
+    const val PROFILE_MORE_SHARE_ACCOUNT = "profile.more.share-account"
 
     const val SETTINGS_SCREEN_IMPRESSION = "settings.screen.impression"
 
