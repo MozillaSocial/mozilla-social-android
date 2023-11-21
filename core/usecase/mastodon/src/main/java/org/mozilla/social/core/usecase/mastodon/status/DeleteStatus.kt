@@ -28,7 +28,7 @@ class DeleteStatus(
                 statusRepository.updateIsBeingDeleted(statusId, true)
                 statusRepository.deleteStatus(statusId)
                 socialDatabase.withTransaction {
-                    socialDatabase.homeTimelineDao().deletePost(statusId)
+                    timelineRepository.deleteStatusFromHomeTimeline(statusId)
                     socialDatabase.localTimelineDao().deletePost(statusId)
                     timelineRepository.deleteStatusFromFederatedTimeline(statusId)
                     timelineRepository.deleteStatusFromAllHashTagTimelines(statusId)

@@ -21,6 +21,8 @@ import org.mozilla.social.core.database.model.accountCollections.FolloweeWrapper
 import org.mozilla.social.core.database.model.statusCollections.AccountTimelineStatusWrapper
 import org.mozilla.social.core.database.model.statusCollections.FederatedTimelineStatusWrapper
 import org.mozilla.social.core.database.model.statusCollections.HashTagTimelineStatusWrapper
+import org.mozilla.social.core.database.model.statusCollections.HomeTimelineStatusWrapper
+import org.mozilla.social.core.database.model.statusCollections.LocalTimelineStatusWrapper
 import org.mozilla.social.core.database.model.statusCollections.toStatusWrapper
 import org.mozilla.social.core.model.Status
 import org.mozilla.social.core.model.StatusVisibility
@@ -83,6 +85,27 @@ class TimelineRepository internal constructor(
         }
 
     //region Local timeline
+    @ExperimentalPagingApi
+    fun getLocalTimelinePager(
+        remoteMediator: RemoteMediator<Int, LocalTimelineStatusWrapper>,
+        pageSize: Int = 20,
+        initialLoadSize: Int = 40,
+    ): Flow<PagingData<Status>> =
+        Pager(
+            config =
+            PagingConfig(
+                pageSize = pageSize,
+                initialLoadSize = initialLoadSize,
+            ),
+            remoteMediator = remoteMediator,
+        ) {
+            localTimelineStatusDao.localTimelinePagingSource()
+        }.flow.map { pagingData ->
+            pagingData.map {
+                it.toStatusWrapper().toExternalModel()
+            }
+        }
+
     fun insertAllIntoLocalTimeline(statuses: List<Status>) =
         localTimelineStatusDao.insertAll(statuses.map { it.toLocalTimelineStatus() })
     //endregion
@@ -144,12 +167,41 @@ class TimelineRepository internal constructor(
         )
     }
 
+    @ExperimentalPagingApi
+    fun getHomeTimelinePager(
+        remoteMediator: RemoteMediator<Int, HomeTimelineStatusWrapper>,
+        pageSize: Int = 20,
+        initialLoadSize: Int = 40,
+    ): Flow<PagingData<Status>> =
+        Pager(
+            config =
+            PagingConfig(
+                pageSize = pageSize,
+                initialLoadSize = initialLoadSize,
+            ),
+            remoteMediator = remoteMediator,
+        ) {
+            homeTimelineStatusDao.homeTimelinePagingSource()
+        }.flow.map { pagingData ->
+            pagingData.map {
+                it.toStatusWrapper().toExternalModel()
+            }
+        }
+
     fun insertAllIntoHomeTimeline(statuses: List<Status>) {
         homeTimelineStatusDao.insertAll(statuses.map { it.toHomeTimelineStatus() })
     }
 
     suspend fun getPostsFromHomeTimelineForAccount(accountId: String): List<Status> =
         homeTimelineStatusDao.getPostsFromAccount(accountId).map { it.toStatusWrapper().toExternalModel() }
+
+    fun deleteHomeTimeline() = homeTimelineStatusDao.deleteHomeTimeline()
+
+    suspend fun remotePostInHomeTimelineForAccount(accountId: String) =
+        homeTimelineStatusDao.removePostsFromAccount(accountId)
+
+    suspend fun deleteStatusFromHomeTimeline(statusId: String) =
+        homeTimelineStatusDao.deletePost(statusId)
     //endregion
 
     //region Hashtag timeline

@@ -37,7 +37,7 @@ class UnfollowAccount(
         try {
             socialDatabase.withTransaction {
                 timelinePosts = timelineRepository.getPostsFromHomeTimelineForAccount(accountId)
-                socialDatabase.homeTimelineDao().removePostsFromAccount(accountId)
+                timelineRepository.remotePostInHomeTimelineForAccount(accountId)
                 accountRepository.updateFollowingCountInDatabase(loggedInUserAccountId, -1)
                 socialDatabase.relationshipsDao().updateFollowing(accountId, false)
             }
