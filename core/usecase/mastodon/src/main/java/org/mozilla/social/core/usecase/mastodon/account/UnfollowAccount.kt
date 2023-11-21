@@ -9,9 +9,11 @@ import org.mozilla.social.common.annotations.PreferUseCase
 import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.core.database.SocialDatabase
 import org.mozilla.social.core.database.model.statusCollections.HomeTimelineStatus
+import org.mozilla.social.core.model.Status
 import org.mozilla.social.core.navigation.usecases.ShowSnackbar
 import org.mozilla.social.core.repository.mastodon.AccountRepository
 import org.mozilla.social.core.repository.mastodon.RelationshipRepository
+import org.mozilla.social.core.repository.mastodon.TimelineRepository
 import org.mozilla.social.core.usecase.mastodon.R
 
 class UnfollowAccount(
@@ -19,6 +21,7 @@ class UnfollowAccount(
     private val showSnackbar: ShowSnackbar,
     private val accountRepository: AccountRepository,
     private val relationshipRepository: RelationshipRepository,
+    private val timelineRepository: TimelineRepository,
     private val socialDatabase: SocialDatabase,
     private val dispatcherIo: CoroutineDispatcher = Dispatchers.IO,
 ) {
@@ -30,10 +33,10 @@ class UnfollowAccount(
         accountId: String,
         loggedInUserAccountId: String,
     ) = externalScope.async(dispatcherIo) {
-        var timelinePosts: List<HomeTimelineStatus>? = null
+        var timelinePosts: List<Status>? = null
         try {
             socialDatabase.withTransaction {
-                timelinePosts = socialDatabase.homeTimelineDao().getPostsFromAccount(accountId)
+                timelinePosts = timelineRepository.getPostsFromHomeTimelineForAccount(accountId)
                 socialDatabase.homeTimelineDao().removePostsFromAccount(accountId)
                 accountRepository.updateFollowingCountInDatabase(loggedInUserAccountId, -1)
                 socialDatabase.relationshipsDao().updateFollowing(accountId, false)
@@ -42,7 +45,7 @@ class UnfollowAccount(
             relationshipRepository.insert(relationship)
         } catch (e: Exception) {
             socialDatabase.withTransaction {
-                timelinePosts?.let { socialDatabase.homeTimelineDao().insertAll(it) }
+                timelinePosts?.let { timelineRepository.insertAllIntoHomeTimeline(it) }
                 accountRepository.updateFollowingCountInDatabase(loggedInUserAccountId, 1)
                 socialDatabase.relationshipsDao().updateFollowing(accountId, true)
             }

@@ -75,18 +75,7 @@ class RefreshFederatedTimeline internal constructor(
 
                 saveStatusToDatabase(result)
 
-                socialDatabase.federatedTimelineDao().insertAll(
-                    result.map {
-                        FederatedTimelineStatus(
-                            statusId = it.statusId,
-                            accountId = it.account.accountId,
-                            pollId = it.poll?.pollId,
-                            boostedStatusId = it.boostedStatus?.statusId,
-                            boostedStatusAccountId = it.boostedStatus?.account?.accountId,
-                            boostedPollId = it.boostedStatus?.poll?.pollId,
-                        )
-                    },
-                )
+                timelineRepository.insertAllIntoFederatedTimeline(result)
             }
 
             // There seems to be some race condition for refreshes.  Subsequent pages do

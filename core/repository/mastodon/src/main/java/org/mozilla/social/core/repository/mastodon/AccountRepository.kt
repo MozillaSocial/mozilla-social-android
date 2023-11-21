@@ -187,6 +187,8 @@ class AccountRepository internal constructor(
 
     fun insertAll(accounts: List<Account>) = dao.insertAll(accounts.map { it.toDatabaseModel() })
 
+    fun insert(account: Account) = dao.insert(account.toDatabaseModel())
+
     suspend fun updateFollowingCountInDatabase(
         accountId: String,
         valueChange: Long,

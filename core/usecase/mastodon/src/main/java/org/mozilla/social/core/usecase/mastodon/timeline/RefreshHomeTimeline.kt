@@ -73,18 +73,7 @@ class RefreshHomeTimeline internal constructor(
 
                 saveStatusToDatabase(result)
 
-                socialDatabase.homeTimelineDao().insertAll(
-                    result.map {
-                        HomeTimelineStatus(
-                            statusId = it.statusId,
-                            accountId = it.account.accountId,
-                            pollId = it.poll?.pollId,
-                            boostedStatusId = it.boostedStatus?.statusId,
-                            boostedStatusAccountId = it.boostedStatus?.account?.accountId,
-                            boostedPollId = it.boostedStatus?.poll?.pollId,
-                        )
-                    },
-                )
+                timelineRepository.insertAllIntoHomeTimeline(result)
             }
 
             // There seems to be some race condition for refreshes.  Subsequent pages do

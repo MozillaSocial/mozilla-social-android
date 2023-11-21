@@ -15,6 +15,7 @@ import org.mozilla.social.core.database.SocialDatabase
 import org.mozilla.social.core.model.Account
 import org.mozilla.social.core.model.Relationship
 import org.mozilla.social.core.repository.mastodon.AccountRepository
+import org.mozilla.social.core.repository.mastodon.RelationshipRepository
 import org.mozilla.social.core.repository.mastodon.model.account.toDatabaseModel
 import org.mozilla.social.core.repository.mastodon.model.account.toExternal
 import org.mozilla.social.core.repository.mastodon.model.status.toDatabaseModel
@@ -24,6 +25,7 @@ import timber.log.Timber
 class GetDetailedAccount(
     private val accountRepository: AccountRepository,
     private val socialDatabase: SocialDatabase,
+    private val relationshipRepository: RelationshipRepository,
 ) {
     /**
      * @param transform used to transform an account and relationship into a single model, likely
@@ -46,8 +48,8 @@ class GetDetailedAccount(
                     val account = accountJob.await()
                     val relationship = relationshipJob.await()
                     socialDatabase.withTransaction {
-                        socialDatabase.accountsDao().insert(account.toDatabaseModel())
-                        socialDatabase.relationshipsDao().insert(relationship.first().toDatabaseModel())
+                        accountRepository.insert(account)
+                        relationshipRepository.insert(relationship.first())
                     }
                 } catch (e: Exception) {
                     Timber.e(e)

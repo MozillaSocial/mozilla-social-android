@@ -4,20 +4,28 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.mozilla.social.common.parseMastodonLinkHeader
-import org.mozilla.social.core.database.SocialDatabase
-import org.mozilla.social.core.database.model.statusCollections.FederatedTimelineStatus
-import org.mozilla.social.core.database.model.statusCollections.HomeTimelineStatus
-import org.mozilla.social.core.database.model.statusCollections.LocalTimelineStatus
+import org.mozilla.social.core.database.dao.AccountTimelineStatusDao
+import org.mozilla.social.core.database.dao.FederatedTimelineStatusDao
+import org.mozilla.social.core.database.dao.HomeTimelineStatusDao
+import org.mozilla.social.core.database.dao.LocalTimelineStatusDao
+import org.mozilla.social.core.database.model.statusCollections.toStatusWrapper
 import org.mozilla.social.core.model.Status
 import org.mozilla.social.core.model.StatusVisibility
 import org.mozilla.social.core.model.paging.StatusPagingWrapper
 import org.mozilla.social.core.network.mastodon.TimelineApi
+import org.mozilla.social.core.repository.mastodon.model.status.toAccountTimelineStatus
 import org.mozilla.social.core.repository.mastodon.model.status.toExternalModel
+import org.mozilla.social.core.repository.mastodon.model.status.toFederatedTimelineStatus
+import org.mozilla.social.core.repository.mastodon.model.status.toHomeTimelineStatus
+import org.mozilla.social.core.repository.mastodon.model.status.toLocalTimelineStatus
 import retrofit2.HttpException
 
 class TimelineRepository internal constructor(
     private val timelineApi: TimelineApi,
-    private val socialDatabase: SocialDatabase,
+    private val homeTimelineStatusDao: HomeTimelineStatusDao,
+    private val federatedTimelineStatusDao: FederatedTimelineStatusDao,
+    private val localTimelineStatusDao: LocalTimelineStatusDao,
+    private val accountTimelineStatusDao: AccountTimelineStatusDao,
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) {
     suspend fun getHomeTimeline(
@@ -94,40 +102,28 @@ class TimelineRepository internal constructor(
         )
     }
 
+    fun insertAllIntoHomeTimeline(statuses: List<Status>) {
+        homeTimelineStatusDao.insertAll(statuses.map { it.toHomeTimelineStatus() })
+    }
+
+    suspend fun getPostsFromHomeTimelineForAccount(accountId: String): List<Status> =
+        homeTimelineStatusDao.getPostsFromAccount(accountId).map { it.toStatusWrapper().toExternalModel() }
+
+    fun insertAllIntoLocalTimeline(statuses: List<Status>) =
+        localTimelineStatusDao.insertAll(statuses.map { it.toLocalTimelineStatus() })
+
+    fun insertAllIntoFederatedTimeline(statuses: List<Status>) =
+        federatedTimelineStatusDao.insertAll(statuses.map { it.toFederatedTimelineStatus() })
+
     suspend fun insertStatusIntoTimelines(status: Status) =
         withContext(ioDispatcher) {
-            socialDatabase.homeTimelineDao().insert(
-                HomeTimelineStatus(
-                    statusId = status.statusId,
-                    accountId = status.account.accountId,
-                    pollId = status.poll?.pollId,
-                    boostedStatusId = status.boostedStatus?.statusId,
-                    boostedPollId = status.boostedStatus?.poll?.pollId,
-                    boostedStatusAccountId = status.boostedStatus?.account?.accountId,
-                ),
-            )
-
+            homeTimelineStatusDao.insert(status.toHomeTimelineStatus())
             if (status.visibility == StatusVisibility.Public) {
-                socialDatabase.localTimelineDao().insert(
-                    LocalTimelineStatus(
-                        statusId = status.statusId,
-                        accountId = status.account.accountId,
-                        pollId = status.poll?.pollId,
-                        boostedStatusId = status.boostedStatus?.statusId,
-                        boostedPollId = status.boostedStatus?.poll?.pollId,
-                        boostedStatusAccountId = status.boostedStatus?.account?.accountId,
-                    ),
-                )
-                socialDatabase.federatedTimelineDao().insert(
-                    FederatedTimelineStatus(
-                        statusId = status.statusId,
-                        accountId = status.account.accountId,
-                        pollId = status.poll?.pollId,
-                        boostedStatusId = status.boostedStatus?.statusId,
-                        boostedPollId = status.boostedStatus?.poll?.pollId,
-                        boostedStatusAccountId = status.boostedStatus?.account?.accountId,
-                    ),
-                )
+                localTimelineStatusDao.insert(status.toLocalTimelineStatus())
+                federatedTimelineStatusDao.insert(status.toFederatedTimelineStatus())
             }
         }
+
+    fun insertAllIntoAccountTimeline(statuses: List<Status>) =
+        accountTimelineStatusDao.insertAll(statuses.map { it.toAccountTimelineStatus() })
 }

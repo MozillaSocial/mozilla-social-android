@@ -8,7 +8,6 @@ import androidx.room.withTransaction
 import kotlinx.coroutines.delay
 import org.mozilla.social.common.Rel
 import org.mozilla.social.core.database.SocialDatabase
-import org.mozilla.social.core.database.model.statusCollections.HashTagTimelineStatus
 import org.mozilla.social.core.database.model.statusCollections.HashTagTimelineStatusWrapper
 import org.mozilla.social.core.repository.mastodon.AccountRepository
 import org.mozilla.social.core.repository.mastodon.TimelineRepository
@@ -75,19 +74,7 @@ class HashTagTimelineRemoteMediator internal constructor(
 
                 saveStatusToDatabase(result)
 
-                socialDatabase.hashTagTimelineDao().insertAll(
-                    result.map {
-                        HashTagTimelineStatus(
-                            statusId = it.statusId,
-                            hashTag = hashTag,
-                            accountId = it.account.accountId,
-                            pollId = it.poll?.pollId,
-                            boostedStatusId = it.boostedStatus?.statusId,
-                            boostedStatusAccountId = it.boostedStatus?.account?.accountId,
-                            boostedPollId = it.boostedStatus?.poll?.pollId,
-                        )
-                    },
-                )
+                timelineRepository.insertAllIntoHomeTimeline(result)
             }
 
             // There seems to be some race condition for refreshes.  Subsequent pages do

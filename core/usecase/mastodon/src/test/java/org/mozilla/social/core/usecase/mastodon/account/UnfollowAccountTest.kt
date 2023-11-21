@@ -2,9 +2,10 @@ package org.mozilla.social.core.usecase.mastodon.account
 
 import io.mockk.coEvery
 import io.mockk.coVerify
+import io.mockk.mockk
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
-import org.mozilla.social.core.database.model.statusCollections.HomeTimelineStatus
+import org.mozilla.social.core.model.Status
 import org.mozilla.social.core.usecase.mastodon.BaseUseCaseTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -23,6 +24,7 @@ class UnfollowAccountTest : BaseUseCaseTest() {
                 relationshipRepository = relationshipRepository,
                 socialDatabase = socialDatabase,
                 dispatcherIo = testDispatcher,
+                timelineRepository = timelineRepository,
             )
     }
 
@@ -49,22 +51,11 @@ class UnfollowAccountTest : BaseUseCaseTest() {
     @Test
     fun networkFailureTest() =
         runTest {
+            val homeTimelinePosts = mockk<List<Status>>()
             val accountId = "id1"
             val loggedInId = "id2"
 
-            val homeTimelinePosts =
-                listOf(
-                    HomeTimelineStatus(
-                        statusId = "",
-                        accountId = accountId,
-                        pollId = null,
-                        boostedStatusId = null,
-                        boostedStatusAccountId = null,
-                        boostedPollId = null,
-                    ),
-                )
-
-            coEvery { homeTimelineDao.getPostsFromAccount(accountId) } returns homeTimelinePosts
+            coEvery { timelineRepository.getPostsFromHomeTimelineForAccount(accountId) } returns homeTimelinePosts
 
             coEvery { accountRepository.unfollowAccount(accountId) } throws Exception()
 
@@ -87,7 +78,7 @@ class UnfollowAccountTest : BaseUseCaseTest() {
                 accountRepository.updateFollowingCountInDatabase(loggedInId, -1)
                 relationshipsDao.updateFollowing(accountId, false)
 
-                homeTimelineDao.insertAll(homeTimelinePosts)
+                timelineRepository.insertAllIntoHomeTimeline(homeTimelinePosts)
                 accountRepository.updateFollowingCountInDatabase(loggedInId, 1)
                 relationshipsDao.updateFollowing(accountId, true)
             }
