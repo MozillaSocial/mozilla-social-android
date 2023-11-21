@@ -37,7 +37,7 @@ class FollowAccountTest : BaseUseCaseTest() {
 
             coVerify(exactly = 1) {
                 accountRepository.updateFollowingCountInDatabase(loggedInId, 1)
-                relationshipsDao.updateFollowing(accountId, true)
+                relationshipRepository.updateFollowing(accountId, true)
                 accountRepository.followAccount(accountId)
             }
         }
@@ -65,9 +65,9 @@ class FollowAccountTest : BaseUseCaseTest() {
 
             coVerify(exactly = 1) {
                 accountRepository.updateFollowingCountInDatabase(loggedInId, 1)
-                relationshipsDao.updateFollowing(accountId, true)
+                relationshipRepository.updateFollowing(accountId, true)
                 accountRepository.updateFollowingCountInDatabase(loggedInId, -1)
-                relationshipsDao.updateFollowing(accountId, false)
+                relationshipRepository.updateFollowing(accountId, false)
             }
         }
 
@@ -78,7 +78,7 @@ class FollowAccountTest : BaseUseCaseTest() {
 
         testOuterScopeCancelled(
             delayedCallBlock = {
-                relationshipsDao.updateFollowing(any(), true)
+                relationshipRepository.updateFollowing(any(), true)
             },
             subjectCallBlock = {
                 subject(
@@ -96,7 +96,7 @@ class FollowAccountTest : BaseUseCaseTest() {
     fun testCancelledScopeWithError() {
         testOuterScopeCancelledAndInnerException(
             delayedCallBlock = {
-                relationshipsDao.updateFollowing(any(), true)
+                relationshipRepository.updateFollowing(any(), true)
             },
             subjectCallBlock = {
                 subject(

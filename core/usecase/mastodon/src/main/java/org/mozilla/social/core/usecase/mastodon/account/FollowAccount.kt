@@ -32,14 +32,14 @@ class FollowAccount(
         try {
             socialDatabase.withTransaction {
                 accountRepository.updateFollowingCountInDatabase(loggedInUserAccountId, 1)
-                socialDatabase.relationshipsDao().updateFollowing(accountId, true)
+                relationshipRepository.updateFollowing(accountId, true)
             }
             val relationship = accountRepository.followAccount(accountId)
             relationshipRepository.insert(relationship)
         } catch (e: Exception) {
             socialDatabase.withTransaction {
                 accountRepository.updateFollowingCountInDatabase(loggedInUserAccountId, -1)
-                socialDatabase.relationshipsDao().updateFollowing(accountId, false)
+                relationshipRepository.updateFollowing(accountId, false)
             }
             showSnackbar(
                 text = StringFactory.resource(R.string.error_following_account),

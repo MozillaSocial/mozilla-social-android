@@ -43,7 +43,7 @@ class UnfollowAccountTest : BaseUseCaseTest() {
                 timelineRepository.getPostsFromHomeTimelineForAccount(accountId)
                 timelineRepository.removePostInHomeTimelineForAccount(accountId)
                 accountRepository.updateFollowingCountInDatabase(loggedInId, -1)
-                relationshipsDao.updateFollowing(accountId, false)
+                relationshipRepository.updateFollowing(accountId, false)
                 accountRepository.unfollowAccount(accountId)
             }
         }
@@ -76,11 +76,11 @@ class UnfollowAccountTest : BaseUseCaseTest() {
                 timelineRepository.getPostsFromHomeTimelineForAccount(accountId)
                 timelineRepository.removePostInHomeTimelineForAccount(accountId)
                 accountRepository.updateFollowingCountInDatabase(loggedInId, -1)
-                relationshipsDao.updateFollowing(accountId, false)
+                relationshipRepository.updateFollowing(accountId, false)
 
                 timelineRepository.insertAllIntoHomeTimeline(homeTimelinePosts)
                 accountRepository.updateFollowingCountInDatabase(loggedInId, 1)
-                relationshipsDao.updateFollowing(accountId, true)
+                relationshipRepository.updateFollowing(accountId, true)
             }
         }
 
@@ -91,7 +91,7 @@ class UnfollowAccountTest : BaseUseCaseTest() {
 
         testOuterScopeCancelled(
             delayedCallBlock = {
-                relationshipsDao.updateFollowing(any(), false)
+                relationshipRepository.updateFollowing(any(), false)
             },
             subjectCallBlock = {
                 subject(
@@ -109,7 +109,7 @@ class UnfollowAccountTest : BaseUseCaseTest() {
     fun testCancelledScopeWithError() {
         testOuterScopeCancelledAndInnerException(
             delayedCallBlock = {
-                relationshipsDao.updateFollowing(any(), false)
+                relationshipRepository.updateFollowing(any(), false)
             },
             subjectCallBlock = {
                 subject(

@@ -16,7 +16,6 @@ class UnblockAccountTest : BaseUseCaseTest() {
                 showSnackbar = showSnackbar,
                 accountRepository = accountRepository,
                 relationshipRepository = relationshipRepository,
-                socialDatabase = socialDatabase,
                 dispatcherIo = testDispatcher,
             )
     }
@@ -26,7 +25,7 @@ class UnblockAccountTest : BaseUseCaseTest() {
         val accountId = "id1"
         testOuterScopeCancelled(
             delayedCallBlock = {
-                relationshipsDao.updateBlocked(any(), false)
+                relationshipRepository.updateBlocked(any(), false)
             },
             subjectCallBlock = {
                 subject(accountId)
@@ -41,7 +40,7 @@ class UnblockAccountTest : BaseUseCaseTest() {
     fun testCancelledScopeWithError() {
         testOuterScopeCancelledAndInnerException(
             delayedCallBlock = {
-                relationshipsDao.updateBlocked(any(), false)
+                relationshipRepository.updateBlocked(any(), false)
             },
             subjectCallBlock = {
                 subject("id1")
