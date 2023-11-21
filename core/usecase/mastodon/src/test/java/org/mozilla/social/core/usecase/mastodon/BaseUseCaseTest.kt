@@ -30,6 +30,7 @@ import org.mozilla.social.core.repository.mastodon.InstanceRepository
 import org.mozilla.social.core.repository.mastodon.MediaRepository
 import org.mozilla.social.core.repository.mastodon.OauthRepository
 import org.mozilla.social.core.repository.mastodon.PollRepository
+import org.mozilla.social.core.repository.mastodon.RelationshipRepository
 import org.mozilla.social.core.repository.mastodon.ReportRepository
 import org.mozilla.social.core.repository.mastodon.SearchRepository
 import org.mozilla.social.core.repository.mastodon.StatusRepository
@@ -45,6 +46,7 @@ open class BaseUseCaseTest {
     protected val instanceRepository = mockk<InstanceRepository>(relaxed = true)
     protected val mediaRepository = mockk<MediaRepository>(relaxed = true)
     protected val oauthRepository = mockk<OauthRepository>(relaxed = true)
+    protected val relationshipRepository = mockk<RelationshipRepository>(relaxed = true)
     protected val reportRepository = mockk<ReportRepository>(relaxed = true)
     protected val searchRepository = mockk<SearchRepository>(relaxed = true)
     protected val statusRepository = mockk<StatusRepository>(relaxed = true)

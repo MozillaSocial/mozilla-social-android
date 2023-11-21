@@ -7,5 +7,9 @@ import org.mozilla.social.core.repository.mastodon.model.account.toDatabaseModel
 class RelationshipRepository(
     private val dao: RelationshipsDao,
 ) {
-    fun insertAll(relationships: List<Relationship>) = dao.insertAll(relationships.map { it.toDatabaseModel() })
+    fun insertAll(relationships: List<Relationship>) =
+        dao.insertAll(relationships.map { it.toDatabaseModel() })
+
+    fun insert(relationship: Relationship) =
+        dao.insert(relationship.toDatabaseModel())
 }

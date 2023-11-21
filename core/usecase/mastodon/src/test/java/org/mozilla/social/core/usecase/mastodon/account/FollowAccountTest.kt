@@ -19,6 +19,7 @@ class FollowAccountTest : BaseUseCaseTest() {
                 externalScope = TestScope(testDispatcher),
                 showSnackbar = showSnackbar,
                 accountRepository = accountRepository,
+                relationshipRepository = relationshipRepository,
                 socialDatabase = socialDatabase,
                 dispatcherIo = testDispatcher,
             )

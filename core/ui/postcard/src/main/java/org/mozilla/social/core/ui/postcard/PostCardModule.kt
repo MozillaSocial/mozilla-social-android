@@ -18,6 +18,7 @@ val postCardModule =
         factory { parametersHolder ->
             PostCardDelegate(
                 coroutineScope = parametersHolder[0],
+                baseAnalyticsIdentifier = parametersHolder[1],
                 navigateTo = get(),
                 openLink = get(),
                 blockAccount = get(),
@@ -28,6 +29,7 @@ val postCardModule =
                 favoriteStatus = get(),
                 undoFavoriteStatus = get(),
                 deleteStatus = get(),
+                analytics = get(),
             )
         }
     }

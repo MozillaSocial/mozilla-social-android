@@ -9,12 +9,14 @@ import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.core.database.SocialDatabase
 import org.mozilla.social.core.navigation.usecases.ShowSnackbar
 import org.mozilla.social.core.repository.mastodon.AccountRepository
+import org.mozilla.social.core.repository.mastodon.RelationshipRepository
 import org.mozilla.social.core.usecase.mastodon.R
 
 class MuteAccount(
     private val externalScope: CoroutineScope,
     private val showSnackbar: ShowSnackbar,
     private val accountRepository: AccountRepository,
+    private val relationshipRepository: RelationshipRepository,
     private val socialDatabase: SocialDatabase,
     private val dispatcherIo: CoroutineDispatcher = Dispatchers.IO,
 ) {
@@ -29,7 +31,8 @@ class MuteAccount(
                 socialDatabase.localTimelineDao().removePostsFromAccount(accountId)
                 socialDatabase.federatedTimelineDao().removePostsFromAccount(accountId)
                 socialDatabase.relationshipsDao().updateMuted(accountId, true)
-                accountRepository.muteAccount(accountId)
+                val relationship = accountRepository.muteAccount(accountId)
+                relationshipRepository.insert(relationship)
             } catch (e: Exception) {
                 socialDatabase.relationshipsDao().updateMuted(accountId, false)
                 showSnackbar(

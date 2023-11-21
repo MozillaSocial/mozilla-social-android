@@ -44,7 +44,9 @@ internal fun FeedScreen(viewModel: FeedViewModel = koinViewModel()) {
         localFeed = viewModel.localFeed,
         federatedFeed = viewModel.federatedFeed,
         timelineTypeFlow = viewModel.timelineType,
-        postCardInteractions = viewModel.postCardDelegate,
+        homePostCardInteractions = viewModel.homePostCardDelegate,
+        localPostCardInteractions = viewModel.localPostCardDelegate,
+        federatedPostCardInteractions = viewModel.federatedPostCardDelegate,
         feedInteractions = viewModel,
     )
 
@@ -60,7 +62,9 @@ private fun FeedScreen(
     localFeed: Flow<PagingData<PostCardUiState>>,
     federatedFeed: Flow<PagingData<PostCardUiState>>,
     timelineTypeFlow: StateFlow<TimelineType>,
-    postCardInteractions: PostCardInteractions,
+    homePostCardInteractions: PostCardInteractions,
+    localPostCardInteractions: PostCardInteractions,
+    federatedPostCardInteractions: PostCardInteractions,
     feedInteractions: FeedInteractions,
     topAppBarScrollBehavior: TopAppBarScrollBehavior =
         TopAppBarDefaults.enterAlwaysScrollBehavior(
@@ -119,7 +123,11 @@ private fun FeedScreen(
                         TimelineType.LOCAL -> localFeed
                         TimelineType.FEDERATED -> federatedFeed
                     },
-                postCardInteractions = postCardInteractions,
+                postCardInteractions = when (selectedTimelineType) {
+                    TimelineType.FOR_YOU -> homePostCardInteractions
+                    TimelineType.LOCAL -> localPostCardInteractions
+                    TimelineType.FEDERATED -> federatedPostCardInteractions
+                },
                 pullToRefreshEnabled = true,
                 isFullScreenLoading = true,
                 refreshSignalFlow = timelineTypeFlow,
@@ -140,7 +148,9 @@ private fun FeedScreenPreviewLight() {
     MoSoTheme(darkTheme = false) {
         FeedScreen(
             homeFeed = flowOf(),
-            postCardInteractions = object : PostCardInteractions {},
+            homePostCardInteractions = object : PostCardInteractions {},
+            localPostCardInteractions = object : PostCardInteractions {},
+            federatedPostCardInteractions = object : PostCardInteractions {},
             timelineTypeFlow = MutableStateFlow(TimelineType.FOR_YOU),
             feedInteractions = object : FeedInteractions {},
             localFeed = flowOf(),
@@ -155,7 +165,9 @@ private fun FeedScreenPreviewDark() {
     MoSoTheme(darkTheme = true) {
         FeedScreen(
             homeFeed = flowOf(),
-            postCardInteractions = object : PostCardInteractions {},
+            homePostCardInteractions = object : PostCardInteractions {},
+            localPostCardInteractions = object : PostCardInteractions {},
+            federatedPostCardInteractions = object : PostCardInteractions {},
             timelineTypeFlow = MutableStateFlow(TimelineType.FOR_YOU),
             feedInteractions = object : FeedInteractions {},
             localFeed = flowOf(),

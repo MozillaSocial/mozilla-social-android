@@ -15,6 +15,20 @@ object AnalyticsIdentifiers {
     const val NEW_POST_SCREEN_IMPRESSION = "new.post.screen.impression"
 
     const val FEED_SCREEN_IMPRESSION = "feed.screen.impression"
+    const val FEED_POST_VOTE = "feed.post.vote"
+    const val FEED_POST_REPLY = "feed.post.open-reply"
+    const val FEED_POST_BOOST = "feed.post.reblog"
+    const val FEED_POST_UNBOOST = "feed.post.unreblog"
+    const val FEED_POST_FAVORITE = "feed.post.favourite"
+    const val FEED_POST_UNFAVORITE = "feed.post.unfavourite"
+    const val FEED_POST_LINK_TAPPED = "post.link.tap"
+
+    const val FEED_PREFIX_PROFILE = "profile"
+    const val FEED_PREFIX_HOME = "home"
+    const val FEED_PREFIX_LOCAL = "local"
+    const val FEED_PREFIX_FEDERATED = "federated"
+    const val FEED_PREFIX_HASHTAG = "hashtag"
+    const val FEED_PREFIX_THREAD = "thread"
 
     const val REPORT_SCREEN_IMPRESSION = "report.screen.impression"
 

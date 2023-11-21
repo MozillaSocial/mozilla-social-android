@@ -74,6 +74,7 @@ val mastodonUsecaseModule =
                 externalScope = get<AppScope>(),
                 showSnackbar = get(),
                 accountRepository = get(),
+                relationshipRepository = get(),
                 socialDatabase = get(),
             )
         }
@@ -82,6 +83,7 @@ val mastodonUsecaseModule =
                 externalScope = get<AppScope>(),
                 showSnackbar = get(),
                 accountRepository = get(),
+                relationshipRepository = get(),
                 socialDatabase = get(),
             )
         }
@@ -90,6 +92,7 @@ val mastodonUsecaseModule =
                 externalScope = get<AppScope>(),
                 showSnackbar = get(),
                 accountRepository = get(),
+                relationshipRepository = get(),
                 socialDatabase = get(),
             )
         }
@@ -98,6 +101,7 @@ val mastodonUsecaseModule =
                 externalScope = get<AppScope>(),
                 showSnackbar = get(),
                 accountRepository = get(),
+                relationshipRepository = get(),
                 socialDatabase = get(),
             )
         }
@@ -106,6 +110,7 @@ val mastodonUsecaseModule =
                 externalScope = get<AppScope>(),
                 showSnackbar = get(),
                 accountRepository = get(),
+                relationshipRepository = get(),
                 socialDatabase = get(),
             )
         }
@@ -114,6 +119,7 @@ val mastodonUsecaseModule =
                 externalScope = get<AppScope>(),
                 showSnackbar = get(),
                 accountRepository = get(),
+                relationshipRepository = get(),
                 socialDatabase = get(),
             )
         }
