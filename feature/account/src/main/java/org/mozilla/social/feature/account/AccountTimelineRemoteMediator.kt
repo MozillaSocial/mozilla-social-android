@@ -8,12 +8,13 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.koin.core.parameter.parametersOf
 import org.mozilla.social.core.database.model.statusCollections.AccountTimelineStatusWrapper
+import org.mozilla.social.core.model.TimelineType
 import org.mozilla.social.core.usecase.mastodon.timeline.RefreshAccountTimeline
 
 @OptIn(ExperimentalPagingApi::class)
 class AccountTimelineRemoteMediator(
     private val accountId: String,
-    private val timelineType: org.mozilla.social.core.model.TimelineType,
+    private val timelineType: TimelineType,
 ) : RemoteMediator<Int, AccountTimelineStatusWrapper>(), KoinComponent {
 
     private val refreshAccountTimeline: RefreshAccountTimeline by inject {
