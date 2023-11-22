@@ -246,7 +246,11 @@ private fun CompactNewPostScreenContent(
             )
         }
 
-        PostButton(onPostClicked = onPostClicked, sendButtonEnabled = sendButtonEnabled)
+        PostButton(
+            modifier = Modifier.padding(end = 16.dp),
+            onPostClicked = onPostClicked,
+            sendButtonEnabled = sendButtonEnabled,
+        )
     }
 }
 
@@ -363,8 +367,13 @@ private fun TopBar(
 private fun PostButton(
     onPostClicked: () -> Unit,
     sendButtonEnabled: Boolean,
+    modifier: Modifier = Modifier,
 ) {
-    MoSoButton(onClick = onPostClicked, enabled = sendButtonEnabled) {
+    MoSoButton(
+        modifier = modifier,
+        onClick = onPostClicked,
+        enabled = sendButtonEnabled
+    ) {
         Text(
             text = stringResource(id = R.string.post),
             style = MoSoTheme.typography.labelSmall,
