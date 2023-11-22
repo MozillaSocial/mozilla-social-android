@@ -1,5 +1,6 @@
 package org.mozilla.social.core.database.model.statusCollections
 
+import androidx.room.ColumnInfo
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.Relation
@@ -7,17 +8,21 @@ import org.mozilla.social.core.database.model.DatabaseAccount
 import org.mozilla.social.core.database.model.DatabasePoll
 import org.mozilla.social.core.database.model.DatabaseStatus
 import org.mozilla.social.core.database.model.wrappers.StatusWrapper
+import org.mozilla.social.core.model.TimelineType
 
 @Entity(
     tableName = "accountTimeline",
     primaryKeys = [
         "statusId",
         "accountId",
+        "timelineType",
     ],
 )
 data class AccountTimelineStatus(
     val statusId: String,
     val accountId: String,
+    @ColumnInfo(defaultValue = "POSTS")
+    val timelineType: TimelineType,
     val pollId: String?,
     val boostedStatusId: String?,
     val boostedStatusAccountId: String?,

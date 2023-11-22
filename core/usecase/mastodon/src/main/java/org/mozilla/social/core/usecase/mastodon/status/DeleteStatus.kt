@@ -31,7 +31,7 @@ class DeleteStatus(
                     timelineRepository.deleteStatusFromLocalTimeline(statusId)
                     timelineRepository.deleteStatusFromFederatedTimeline(statusId)
                     timelineRepository.deleteStatusFromAllHashTagTimelines(statusId)
-                    timelineRepository.deleteStatusFromAccountTimeline(statusId)
+                    timelineRepository.deleteStatusFromAccountTimelines(statusId)
                     statusRepository.deleteStatusLocal(statusId)
                 }
             } catch (e: Exception) {

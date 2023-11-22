@@ -7,14 +7,12 @@ import androidx.paging.cachedIn
 import androidx.paging.map
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import org.koin.core.parameter.parametersOf
-import org.koin.java.KoinJavaComponent.inject
 import org.mozilla.social.common.Resource
 import org.mozilla.social.common.utils.edit
 import org.mozilla.social.core.analytics.Analytics
@@ -47,10 +45,14 @@ class AccountViewModel(
     private val muteAccount: MuteAccount,
     private val unmuteAccount: UnmuteAccount,
     initialAccountId: String?,
-) : ViewModel(), AccountInteractions {
-    val postCardDelegate: PostCardDelegate by inject(
-        PostCardDelegate::class.java,
-    ) { parametersOf(viewModelScope, AnalyticsIdentifiers.FEED_PREFIX_PROFILE) }
+) : ViewModel(), AccountInteractions, KoinComponent {
+
+    val postCardDelegate: PostCardDelegate by inject {
+        parametersOf(
+            viewModelScope,
+            AnalyticsIdentifiers.FEED_PREFIX_PROFILE
+        )
+    }
 
     /**
      * The account ID of the logged in user
@@ -78,26 +80,54 @@ class AccountViewModel(
     private val _timelineType = MutableStateFlow(TimelineType.POSTS)
     val timelineType = _timelineType.asStateFlow()
 
-    private val externalTimelineType: StateFlow<org.mozilla.social.core.usecase.mastodon.timeline.TimelineType> =
-        timelineType.map { it.toExternalModel() }.stateIn(
-            viewModelScope,
-            SharingStarted.WhileSubscribed(),
-            org.mozilla.social.core.usecase.mastodon.timeline.TimelineType.POSTS,
-        )
-
-    private val accountTimelineRemoteMediator: AccountTimelineRemoteMediator by inject(
-        AccountTimelineRemoteMediator::class.java,
-    ) {
+    private val postsRemoteMediator: AccountTimelineRemoteMediator by inject {
         parametersOf(
             accountId,
-            externalTimelineType,
+            org.mozilla.social.core.model.TimelineType.POSTS,
+        )
+    }
+
+    private val postsAndRepliesRemoteMediator: AccountTimelineRemoteMediator by inject {
+        parametersOf(
+            accountId,
+            org.mozilla.social.core.model.TimelineType.POSTS_AND_REPLIES,
+        )
+    }
+
+    private val mediaRemoteMediator: AccountTimelineRemoteMediator by inject {
+        parametersOf(
+            accountId,
+            org.mozilla.social.core.model.TimelineType.MEDIA,
         )
     }
 
     @OptIn(ExperimentalPagingApi::class)
-    val feed = timelineRepository.getAccountTimelinePager(
+    val postsFeed = timelineRepository.getAccountTimelinePager(
         accountId = accountId,
-        remoteMediator = accountTimelineRemoteMediator
+        timelineType = org.mozilla.social.core.model.TimelineType.POSTS,
+        remoteMediator = postsRemoteMediator,
+    ).map { pagingData ->
+        pagingData.map {
+            it.toPostCardUiState(usersAccountId)
+        }
+    }.cachedIn(viewModelScope)
+
+    @OptIn(ExperimentalPagingApi::class)
+    val postsAndRepliesFeed = timelineRepository.getAccountTimelinePager(
+        accountId = accountId,
+        timelineType = org.mozilla.social.core.model.TimelineType.POSTS_AND_REPLIES,
+        remoteMediator = postsAndRepliesRemoteMediator,
+    ).map { pagingData ->
+        pagingData.map {
+            it.toPostCardUiState(usersAccountId)
+        }
+    }.cachedIn(viewModelScope)
+
+    @OptIn(ExperimentalPagingApi::class)
+    val mediaFeed = timelineRepository.getAccountTimelinePager(
+        accountId = accountId,
+        timelineType = org.mozilla.social.core.model.TimelineType.MEDIA,
+        remoteMediator = mediaRemoteMediator,
     ).map { pagingData ->
         pagingData.map {
             it.toPostCardUiState(usersAccountId)
@@ -262,16 +292,3 @@ class AccountViewModel(
         navigateTo(NavigationDestination.EditAccount)
     }
 }
-
-private fun TimelineType.toExternalModel() =
-    when (this) {
-        TimelineType.POSTS -> {
-            org.mozilla.social.core.usecase.mastodon.timeline.TimelineType.POSTS
-        }
-        TimelineType.POSTS_AND_REPLIES -> {
-            org.mozilla.social.core.usecase.mastodon.timeline.TimelineType.POSTS_AND_REPLIES
-        }
-        TimelineType.MEDIA -> {
-            org.mozilla.social.core.usecase.mastodon.timeline.TimelineType.MEDIA
-        }
-    }

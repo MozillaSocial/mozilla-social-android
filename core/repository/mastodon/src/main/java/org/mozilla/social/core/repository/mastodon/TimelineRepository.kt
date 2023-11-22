@@ -25,6 +25,7 @@ import org.mozilla.social.core.database.model.statusCollections.LocalTimelineSta
 import org.mozilla.social.core.database.model.statusCollections.toStatusWrapper
 import org.mozilla.social.core.model.Status
 import org.mozilla.social.core.model.StatusVisibility
+import org.mozilla.social.core.model.TimelineType
 import org.mozilla.social.core.model.paging.StatusPagingWrapper
 import org.mozilla.social.core.network.mastodon.TimelineApi
 import org.mozilla.social.core.repository.mastodon.model.status.toAccountTimelineStatus
@@ -269,35 +270,38 @@ class TimelineRepository internal constructor(
     //endregion
 
     //region Account timeline
-    fun insertAllIntoAccountTimeline(statuses: List<Status>) =
-        accountTimelineStatusDao.insertAll(statuses.map { it.toAccountTimelineStatus() })
+    fun insertAllIntoAccountTimeline(
+        statuses: List<Status>,
+        timelineType: TimelineType,
+    ) = accountTimelineStatusDao.insertAll(statuses.map { it.toAccountTimelineStatus(timelineType) })
 
     @ExperimentalPagingApi
     fun getAccountTimelinePager(
         accountId: String,
+        timelineType: TimelineType,
         remoteMediator: RemoteMediator<Int, AccountTimelineStatusWrapper>,
         pageSize: Int = 20,
         initialLoadSize: Int = 40,
-    ): Flow<PagingData<Status>> =
-        Pager(
-            config =
-            PagingConfig(
-                pageSize = pageSize,
-                initialLoadSize = initialLoadSize,
-            ),
-            remoteMediator = remoteMediator,
-        ) {
-            accountTimelineStatusDao.accountTimelinePagingSource(accountId)
-        }.flow.map { pagingData ->
-            pagingData.map {
-                it.toStatusWrapper().toExternalModel()
-            }
+    ): Flow<PagingData<Status>> = Pager(
+        config = PagingConfig(
+            pageSize = pageSize,
+            initialLoadSize = initialLoadSize,
+        ),
+        remoteMediator = remoteMediator,
+    ) {
+        accountTimelineStatusDao.accountTimelinePagingSource(accountId, timelineType)
+    }.flow.map { pagingData ->
+        pagingData.map {
+            it.toStatusWrapper().toExternalModel()
         }
+    }
 
-    suspend fun deleteAccountTimeline(accountId: String) =
-        accountTimelineStatusDao.deleteAccountTimeline(accountId)
+    suspend fun deleteAccountTimeline(
+        accountId: String,
+        timelineType: TimelineType,
+    ) = accountTimelineStatusDao.deleteAccountTimeline(accountId, timelineType)
 
-    suspend fun deleteStatusFromAccountTimeline(statusId: String) =
+    suspend fun deleteStatusFromAccountTimelines(statusId: String) =
         accountTimelineStatusDao.deletePost(statusId)
     //endregion
 }

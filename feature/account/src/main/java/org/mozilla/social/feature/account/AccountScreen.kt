@@ -76,6 +76,7 @@ import org.mozilla.social.core.ui.common.dropdown.DropDownItem
 import org.mozilla.social.core.ui.common.dropdown.MoSoDropdownMenu
 import org.mozilla.social.core.ui.common.error.GenericError
 import org.mozilla.social.core.ui.common.loading.MoSoCircularProgressIndicator
+import org.mozilla.social.core.ui.htmlcontent.HtmlContentInteractions
 import org.mozilla.social.core.ui.postcard.PostCardInteractions
 import org.mozilla.social.core.ui.postcard.PostCardList
 import org.mozilla.social.core.ui.postcard.PostCardUiState
@@ -91,7 +92,9 @@ internal fun AccountScreen(
         uiState = uiState,
         closeButtonVisible = viewModel.shouldShowCloseButton,
         isUsersProfile = viewModel.isOwnProfile,
-        feed = viewModel.feed,
+        postsFeed = viewModel.postsFeed,
+        postsAndRepliesFeed = viewModel.postsAndRepliesFeed,
+        mediaFeed = viewModel.mediaFeed,
         timelineTypeFlow = viewModel.timelineType,
         htmlContentInteractions = viewModel.postCardDelegate,
         postCardInteractions = viewModel.postCardDelegate,
@@ -111,9 +114,11 @@ private fun AccountScreen(
     uiState: Resource<AccountUiState>,
     closeButtonVisible: Boolean,
     isUsersProfile: Boolean,
-    feed: Flow<PagingData<PostCardUiState>>,
+    postsFeed: Flow<PagingData<PostCardUiState>>,
+    postsAndRepliesFeed: Flow<PagingData<PostCardUiState>>,
+    mediaFeed: Flow<PagingData<PostCardUiState>>,
     timelineTypeFlow: StateFlow<TimelineType>,
-    htmlContentInteractions: org.mozilla.social.core.ui.htmlcontent.HtmlContentInteractions,
+    htmlContentInteractions: HtmlContentInteractions,
     postCardInteractions: PostCardInteractions,
     accountInteractions: AccountInteractions,
     windowInsets: WindowInsets,
@@ -157,7 +162,9 @@ private fun AccountScreen(
                     MainContent(
                         account = uiState.data,
                         isUsersProfile = isUsersProfile,
-                        feed = feed,
+                        postsFeed = postsFeed,
+                        postsAndRepliesFeed = postsAndRepliesFeed,
+                        mediaFeed = mediaFeed,
                         htmlContentInteractions = htmlContentInteractions,
                         postCardInteractions = postCardInteractions,
                         accountInteractions = accountInteractions,
@@ -191,9 +198,11 @@ private fun AccountScreen(
 private fun MainContent(
     account: AccountUiState,
     isUsersProfile: Boolean,
-    feed: Flow<PagingData<PostCardUiState>>,
+    postsFeed: Flow<PagingData<PostCardUiState>>,
+    postsAndRepliesFeed: Flow<PagingData<PostCardUiState>>,
+    mediaFeed: Flow<PagingData<PostCardUiState>>,
     timelineTypeFlow: StateFlow<TimelineType>,
-    htmlContentInteractions: org.mozilla.social.core.ui.htmlcontent.HtmlContentInteractions,
+    htmlContentInteractions: HtmlContentInteractions,
     postCardInteractions: PostCardInteractions,
     accountInteractions: AccountInteractions,
 ) {
@@ -206,8 +215,11 @@ private fun MainContent(
                 .fillMaxSize(),
     ) {
         PostCardList(
-            feed = feed,
-            refreshSignalFlow = timelineTypeFlow,
+            feed = when (selectedTimelineType) {
+                TimelineType.POSTS -> postsFeed
+                TimelineType.POSTS_AND_REPLIES -> postsAndRepliesFeed
+                TimelineType.MEDIA -> mediaFeed
+            },
             postCardInteractions = postCardInteractions,
         ) {
             Header(
@@ -622,11 +634,11 @@ fun AccountScreenPreview() {
                     ),
                 closeButtonVisible = true,
                 isUsersProfile = false,
-                feed = flowOf(),
+                postsFeed = flowOf(),
+                postsAndRepliesFeed = flowOf(),
+                mediaFeed = flowOf(),
                 timelineTypeFlow = MutableStateFlow(TimelineType.POSTS),
-                htmlContentInteractions =
-                    object :
-                        org.mozilla.social.core.ui.htmlcontent.HtmlContentInteractions {},
+                htmlContentInteractions = object : HtmlContentInteractions {},
                 postCardInteractions = object : PostCardInteractions {},
                 accountInteractions = object : AccountInteractions {},
                 windowInsets = WindowInsets.systemBars,
