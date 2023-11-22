@@ -129,11 +129,11 @@ private fun AccountScreen(
                     MoSoCloseableTopAppBar(showCloseButton = closeButtonVisible)
                     Box(
                         modifier =
-                            Modifier
-                                .fillMaxSize()
-                                .wrapContentSize(
-                                    align = Alignment.Center,
-                                ),
+                        Modifier
+                            .fillMaxSize()
+                            .wrapContentSize(
+                                align = Alignment.Center,
+                            ),
                     ) {
                         MoSoCircularProgressIndicator()
                     }
@@ -144,11 +144,16 @@ private fun AccountScreen(
                         title = uiState.data.displayName,
                         showCloseButton = closeButtonVisible,
                         actions = {
-                            IconButton(
-                                modifier = Modifier.width(IntrinsicSize.Max),
-                                onClick = navigateToSettings,
-                            ) {
-                                Icon(painter = MoSoIcons.gear(), contentDescription = "Settings")
+                            if (isUsersProfile) {
+                                IconButton(
+                                    modifier = Modifier.width(IntrinsicSize.Max),
+                                    onClick = navigateToSettings,
+                                ) {
+                                    Icon(
+                                        painter = MoSoIcons.gear(),
+                                        contentDescription = "Settings"
+                                    )
+                                }
                             }
                         },
                         showDivider = false,
@@ -169,11 +174,11 @@ private fun AccountScreen(
                     MoSoCloseableTopAppBar(showCloseButton = closeButtonVisible)
                     Box(
                         modifier =
-                            Modifier
-                                .fillMaxSize()
-                                .wrapContentSize(
-                                    align = Alignment.Center,
-                                ),
+                        Modifier
+                            .fillMaxSize()
+                            .wrapContentSize(
+                                align = Alignment.Center,
+                            ),
                     ) {
                         GenericError(
                             onRetryClicked = {
@@ -310,6 +315,14 @@ private fun OverflowMenu(
                 overflowMenuExpanded.value = false
             },
         ) {
+            if (isUsersProfile) {
+                DropDownItem(
+                    text = stringResource(id = R.string.favorites_option),
+                    expanded = overflowMenuExpanded,
+                    onClick = { overflowInteractions.onOverflowFavoritesClicked() }
+                )
+            }
+
             DropDownItem(
                 text = stringResource(R.string.share_option),
                 expanded = overflowMenuExpanded,
@@ -454,10 +467,10 @@ private fun UserBio(
     NoRipple {
         Box(
             modifier =
-                modifier
-                    .fillMaxWidth()
-                    .padding(start = 8.dp, end = 8.dp)
-                    .clickable { expanded = !expanded },
+            modifier
+                .fillMaxWidth()
+                .padding(start = 8.dp, end = 8.dp)
+                .clickable { expanded = !expanded },
         ) {
             val animationDuration = 150
 
@@ -526,9 +539,9 @@ private fun UserBio(
             )
             Icon(
                 modifier =
-                    Modifier
-                        .rotate(rotation)
-                        .align(Alignment.TopEnd),
+                Modifier
+                    .rotate(rotation)
+                    .align(Alignment.TopEnd),
                 painter = MoSoIcons.caret(),
                 contentDescription = null,
             )
