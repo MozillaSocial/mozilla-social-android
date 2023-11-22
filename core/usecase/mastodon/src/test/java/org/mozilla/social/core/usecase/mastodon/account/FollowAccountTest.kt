@@ -20,7 +20,7 @@ class FollowAccountTest : BaseUseCaseTest() {
                 showSnackbar = showSnackbar,
                 accountRepository = accountRepository,
                 relationshipRepository = relationshipRepository,
-                socialDatabase = databaseDelegate,
+                databaseDelegate = databaseDelegate,
                 dispatcherIo = testDispatcher,
             )
     }

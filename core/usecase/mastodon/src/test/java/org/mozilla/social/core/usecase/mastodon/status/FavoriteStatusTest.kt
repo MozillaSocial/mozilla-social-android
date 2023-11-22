@@ -19,7 +19,7 @@ class FavoriteStatusTest : BaseUseCaseTest() {
                 externalScope = TestScope(testDispatcher),
                 showSnackbar = showSnackbar,
                 statusRepository = statusRepository,
-                socialDatabase = databaseDelegate,
+                databaseDelegate = databaseDelegate,
                 dispatcherIo = testDispatcher,
                 saveStatusToDatabase = saveStatusToDatabase,
             )
