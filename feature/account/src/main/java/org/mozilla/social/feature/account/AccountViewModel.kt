@@ -17,6 +17,7 @@ import org.mozilla.social.common.Resource
 import org.mozilla.social.common.utils.edit
 import org.mozilla.social.core.analytics.Analytics
 import org.mozilla.social.core.analytics.AnalyticsIdentifiers
+import org.mozilla.social.core.model.TimelineType
 import org.mozilla.social.core.navigation.NavigationDestination
 import org.mozilla.social.core.navigation.usecases.NavigateTo
 import org.mozilla.social.core.repository.mastodon.TimelineRepository
@@ -83,28 +84,28 @@ class AccountViewModel(
     private val postsRemoteMediator: AccountTimelineRemoteMediator by inject {
         parametersOf(
             accountId,
-            org.mozilla.social.core.model.TimelineType.POSTS,
+            TimelineType.POSTS,
         )
     }
 
     private val postsAndRepliesRemoteMediator: AccountTimelineRemoteMediator by inject {
         parametersOf(
             accountId,
-            org.mozilla.social.core.model.TimelineType.POSTS_AND_REPLIES,
+            TimelineType.POSTS_AND_REPLIES,
         )
     }
 
     private val mediaRemoteMediator: AccountTimelineRemoteMediator by inject {
         parametersOf(
             accountId,
-            org.mozilla.social.core.model.TimelineType.MEDIA,
+            TimelineType.MEDIA,
         )
     }
 
     @OptIn(ExperimentalPagingApi::class)
     val postsFeed = timelineRepository.getAccountTimelinePager(
         accountId = accountId,
-        timelineType = org.mozilla.social.core.model.TimelineType.POSTS,
+        timelineType = TimelineType.POSTS,
         remoteMediator = postsRemoteMediator,
     ).map { pagingData ->
         pagingData.map {
@@ -115,7 +116,7 @@ class AccountViewModel(
     @OptIn(ExperimentalPagingApi::class)
     val postsAndRepliesFeed = timelineRepository.getAccountTimelinePager(
         accountId = accountId,
-        timelineType = org.mozilla.social.core.model.TimelineType.POSTS_AND_REPLIES,
+        timelineType = TimelineType.POSTS_AND_REPLIES,
         remoteMediator = postsAndRepliesRemoteMediator,
     ).map { pagingData ->
         pagingData.map {
@@ -126,7 +127,7 @@ class AccountViewModel(
     @OptIn(ExperimentalPagingApi::class)
     val mediaFeed = timelineRepository.getAccountTimelinePager(
         accountId = accountId,
-        timelineType = org.mozilla.social.core.model.TimelineType.MEDIA,
+        timelineType = TimelineType.MEDIA,
         remoteMediator = mediaRemoteMediator,
     ).map { pagingData ->
         pagingData.map {

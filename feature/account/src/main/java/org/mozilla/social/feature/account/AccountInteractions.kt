@@ -1,5 +1,7 @@
 package org.mozilla.social.feature.account
 
+import org.mozilla.social.core.model.TimelineType
+
 interface AccountInteractions : OverflowInteractions {
     fun onFollowersClicked() = Unit
 

@@ -65,6 +65,7 @@ import org.mozilla.social.common.utils.DateTimeFormatters
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.designsystem.utils.NoRipple
+import org.mozilla.social.core.model.TimelineType
 import org.mozilla.social.core.navigation.navigationModule
 import org.mozilla.social.core.ui.common.MoSoSurface
 import org.mozilla.social.core.ui.common.MoSoTab
@@ -134,11 +135,11 @@ private fun AccountScreen(
                     MoSoCloseableTopAppBar(showCloseButton = closeButtonVisible)
                     Box(
                         modifier =
-                            Modifier
-                                .fillMaxSize()
-                                .wrapContentSize(
-                                    align = Alignment.Center,
-                                ),
+                        Modifier
+                            .fillMaxSize()
+                            .wrapContentSize(
+                                align = Alignment.Center,
+                            ),
                     ) {
                         MoSoCircularProgressIndicator()
                     }
@@ -176,11 +177,11 @@ private fun AccountScreen(
                     MoSoCloseableTopAppBar(showCloseButton = closeButtonVisible)
                     Box(
                         modifier =
-                            Modifier
-                                .fillMaxSize()
-                                .wrapContentSize(
-                                    align = Alignment.Center,
-                                ),
+                        Modifier
+                            .fillMaxSize()
+                            .wrapContentSize(
+                                align = Alignment.Center,
+                            ),
                     ) {
                         GenericError(
                             onRetryClicked = {
@@ -207,7 +208,6 @@ private fun MainContent(
     accountInteractions: AccountInteractions,
 ) {
     val selectedTimelineType by timelineTypeFlow.collectAsStateWithLifecycle()
-    val context = LocalContext.current
 
     Column(
         modifier =
@@ -291,7 +291,12 @@ private fun MainContent(
                         onClick = { accountInteractions.onTabClicked(timelineType) },
                         content = {
                             Text(
-                                text = timelineType.tabTitle.build(context),
+                                text = when (timelineType) {
+                                    TimelineType.POSTS -> stringResource(id = R.string.tab_posts)
+                                    TimelineType.POSTS_AND_REPLIES ->
+                                        stringResource(id = R.string.tab_posts_and_replies)
+                                    TimelineType.MEDIA -> stringResource(id = R.string.tab_media)
+                                },
                                 style = MoSoTheme.typography.labelMedium,
                             )
                         },
@@ -466,10 +471,10 @@ private fun UserBio(
     NoRipple {
         Box(
             modifier =
-                modifier
-                    .fillMaxWidth()
-                    .padding(start = 8.dp, end = 8.dp)
-                    .clickable { expanded = !expanded },
+            modifier
+                .fillMaxWidth()
+                .padding(start = 8.dp, end = 8.dp)
+                .clickable { expanded = !expanded },
         ) {
             val animationDuration = 150
 
@@ -538,9 +543,9 @@ private fun UserBio(
             )
             Icon(
                 modifier =
-                    Modifier
-                        .rotate(rotation)
-                        .align(Alignment.TopEnd),
+                Modifier
+                    .rotate(rotation)
+                    .align(Alignment.TopEnd),
                 painter = MoSoIcons.caret(),
                 contentDescription = null,
             )
