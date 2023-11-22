@@ -32,6 +32,7 @@ import org.mozilla.social.core.navigation.Event
 import org.mozilla.social.core.navigation.NavigationDestination
 import org.mozilla.social.core.navigation.NavigationDestination.Auth.navigateToAuthFlow
 import org.mozilla.social.core.navigation.NavigationDestination.EditAccount.navigateToEditAccount
+import org.mozilla.social.core.navigation.NavigationDestination.Favorites.navigateToFavorites
 import org.mozilla.social.core.navigation.NavigationDestination.Settings.navigateToSettings
 import org.mozilla.social.core.navigation.NavigationDestination.Tabs.navigateToTabs
 import org.mozilla.social.core.navigation.NavigationEventFlow
@@ -200,6 +201,10 @@ class AppState(
 
                 NavigationDestination.EditAccount -> {
                     mainNavController.navigateToEditAccount()
+                }
+
+                NavigationDestination.Favorites -> {
+                    mainNavController.navigateToFavorites()
                 }
 
                 is NavigationDestination.Followers -> {
