@@ -17,7 +17,7 @@ class UndoBoostStatusTest : BaseUseCaseTest() {
         subject =
             UndoBoostStatus(
                 externalScope = TestScope(testDispatcher),
-                socialDatabase = socialDatabase,
+                databaseDelegate = databaseDelegate,
                 statusRepository = statusRepository,
                 showSnackbar = showSnackbar,
                 dispatcherIo = testDispatcher,

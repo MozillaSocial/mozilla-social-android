@@ -16,8 +16,8 @@ class MuteAccountTest : BaseUseCaseTest() {
                 showSnackbar = showSnackbar,
                 accountRepository = accountRepository,
                 relationshipRepository = relationshipRepository,
-                socialDatabase = socialDatabase,
                 dispatcherIo = testDispatcher,
+                timelineRepository = timelineRepository,
             )
     }
 
@@ -26,7 +26,7 @@ class MuteAccountTest : BaseUseCaseTest() {
         val accountId = "id1"
         testOuterScopeCancelled(
             delayedCallBlock = {
-                relationshipsDao.updateMuted(any(), true)
+                relationshipRepository.updateMuted(any(), true)
             },
             subjectCallBlock = {
                 subject(accountId)
@@ -41,7 +41,7 @@ class MuteAccountTest : BaseUseCaseTest() {
     fun testCancelledScopeWithError() {
         testOuterScopeCancelledAndInnerException(
             delayedCallBlock = {
-                relationshipsDao.updateMuted(any(), true)
+                relationshipRepository.updateMuted(any(), true)
             },
             subjectCallBlock = {
                 subject("id1")

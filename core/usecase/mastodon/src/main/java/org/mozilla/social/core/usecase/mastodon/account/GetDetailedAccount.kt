@@ -1,6 +1,5 @@
 package org.mozilla.social.core.usecase.mastodon.account
 
-import androidx.room.withTransaction
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
@@ -11,19 +10,17 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.sync.Mutex
 import org.mozilla.social.common.Resource
 import org.mozilla.social.common.utils.launchSupervisor
-import org.mozilla.social.core.database.SocialDatabase
 import org.mozilla.social.core.model.Account
 import org.mozilla.social.core.model.Relationship
 import org.mozilla.social.core.repository.mastodon.AccountRepository
-import org.mozilla.social.core.repository.mastodon.model.account.toDatabaseModel
-import org.mozilla.social.core.repository.mastodon.model.account.toExternal
-import org.mozilla.social.core.repository.mastodon.model.status.toDatabaseModel
-import org.mozilla.social.core.repository.mastodon.model.status.toExternalModel
+import org.mozilla.social.core.repository.mastodon.DatabaseDelegate
+import org.mozilla.social.core.repository.mastodon.RelationshipRepository
 import timber.log.Timber
 
 class GetDetailedAccount(
     private val accountRepository: AccountRepository,
-    private val socialDatabase: SocialDatabase,
+    private val databaseDelegate: DatabaseDelegate,
+    private val relationshipRepository: RelationshipRepository,
 ) {
     /**
      * @param transform used to transform an account and relationship into a single model, likely
@@ -45,9 +42,9 @@ class GetDetailedAccount(
                         async { accountRepository.getAccountRelationships(listOf(accountId)) }
                     val account = accountJob.await()
                     val relationship = relationshipJob.await()
-                    socialDatabase.withTransaction {
-                        socialDatabase.accountsDao().insert(account.toDatabaseModel())
-                        socialDatabase.relationshipsDao().insert(relationship.first().toDatabaseModel())
+                    databaseDelegate.withTransaction {
+                        accountRepository.insert(account)
+                        relationshipRepository.insert(relationship.first())
                     }
                 } catch (e: Exception) {
                     Timber.e(e)
@@ -64,13 +61,13 @@ class GetDetailedAccount(
                 emit(Resource.Error(it))
             } ?: try {
                 emitAll(
-                    socialDatabase.accountsDao().getAccountFlow(accountId).filterNotNull().combine(
-                        socialDatabase.relationshipsDao().getRelationshipFlow(accountId).filterNotNull(),
+                    accountRepository.getAccountFlow(accountId).filterNotNull().combine(
+                        relationshipRepository.getRelationshipFlow(accountId).filterNotNull(),
                     ) { databaseAccount, databaseRelationship ->
                         Resource.Loaded(
                             transform(
-                                databaseAccount.toExternalModel(),
-                                databaseRelationship.toExternal(),
+                                databaseAccount,
+                                databaseRelationship,
                             ),
                         )
                     },

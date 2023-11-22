@@ -2,9 +2,10 @@ package org.mozilla.social.core.usecase.mastodon.account
 
 import io.mockk.coEvery
 import io.mockk.coVerify
+import io.mockk.mockk
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
-import org.mozilla.social.core.database.model.statusCollections.HomeTimelineStatus
+import org.mozilla.social.core.model.Status
 import org.mozilla.social.core.usecase.mastodon.BaseUseCaseTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -21,8 +22,9 @@ class UnfollowAccountTest : BaseUseCaseTest() {
                 showSnackbar = showSnackbar,
                 accountRepository = accountRepository,
                 relationshipRepository = relationshipRepository,
-                socialDatabase = socialDatabase,
+                databaseDelegate = databaseDelegate,
                 dispatcherIo = testDispatcher,
+                timelineRepository = timelineRepository,
             )
     }
 
@@ -38,10 +40,10 @@ class UnfollowAccountTest : BaseUseCaseTest() {
             )
 
             coVerify(exactly = 1) {
-                homeTimelineDao.getPostsFromAccount(accountId)
-                homeTimelineDao.removePostsFromAccount(accountId)
-                accountsDao.updateFollowingCount(loggedInId, -1)
-                relationshipsDao.updateFollowing(accountId, false)
+                timelineRepository.getPostsFromHomeTimelineForAccount(accountId)
+                timelineRepository.removePostInHomeTimelineForAccount(accountId)
+                accountRepository.updateFollowingCountInDatabase(loggedInId, -1)
+                relationshipRepository.updateFollowing(accountId, false)
                 accountRepository.unfollowAccount(accountId)
             }
         }
@@ -49,22 +51,11 @@ class UnfollowAccountTest : BaseUseCaseTest() {
     @Test
     fun networkFailureTest() =
         runTest {
+            val homeTimelinePosts = mockk<List<Status>>()
             val accountId = "id1"
             val loggedInId = "id2"
 
-            val homeTimelinePosts =
-                listOf(
-                    HomeTimelineStatus(
-                        statusId = "",
-                        accountId = accountId,
-                        pollId = null,
-                        boostedStatusId = null,
-                        boostedStatusAccountId = null,
-                        boostedPollId = null,
-                    ),
-                )
-
-            coEvery { homeTimelineDao.getPostsFromAccount(accountId) } returns homeTimelinePosts
+            coEvery { timelineRepository.getPostsFromHomeTimelineForAccount(accountId) } returns homeTimelinePosts
 
             coEvery { accountRepository.unfollowAccount(accountId) } throws Exception()
 
@@ -82,14 +73,14 @@ class UnfollowAccountTest : BaseUseCaseTest() {
             assertNotNull(exception)
 
             coVerify(exactly = 1) {
-                homeTimelineDao.getPostsFromAccount(accountId)
-                homeTimelineDao.removePostsFromAccount(accountId)
-                accountsDao.updateFollowingCount(loggedInId, -1)
-                relationshipsDao.updateFollowing(accountId, false)
+                timelineRepository.getPostsFromHomeTimelineForAccount(accountId)
+                timelineRepository.removePostInHomeTimelineForAccount(accountId)
+                accountRepository.updateFollowingCountInDatabase(loggedInId, -1)
+                relationshipRepository.updateFollowing(accountId, false)
 
-                homeTimelineDao.insertAll(homeTimelinePosts)
-                accountsDao.updateFollowingCount(loggedInId, 1)
-                relationshipsDao.updateFollowing(accountId, true)
+                timelineRepository.insertAllIntoHomeTimeline(homeTimelinePosts)
+                accountRepository.updateFollowingCountInDatabase(loggedInId, 1)
+                relationshipRepository.updateFollowing(accountId, true)
             }
         }
 
@@ -100,7 +91,7 @@ class UnfollowAccountTest : BaseUseCaseTest() {
 
         testOuterScopeCancelled(
             delayedCallBlock = {
-                relationshipsDao.updateFollowing(any(), false)
+                relationshipRepository.updateFollowing(any(), false)
             },
             subjectCallBlock = {
                 subject(
@@ -118,7 +109,7 @@ class UnfollowAccountTest : BaseUseCaseTest() {
     fun testCancelledScopeWithError() {
         testOuterScopeCancelledAndInnerException(
             delayedCallBlock = {
-                relationshipsDao.updateFollowing(any(), false)
+                relationshipRepository.updateFollowing(any(), false)
             },
             subjectCallBlock = {
                 subject(

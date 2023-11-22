@@ -18,7 +18,6 @@ class UpdateMyAccountTest : BaseUseCaseTest() {
                 externalScope = TestScope(testDispatcher),
                 showSnackbar = showSnackbar,
                 accountRepository = accountRepository,
-                socialDatabase = socialDatabase,
                 dispatcherIo = testDispatcher,
             )
     }
@@ -42,7 +41,7 @@ class UpdateMyAccountTest : BaseUseCaseTest() {
                 subject()
             },
             verifyBlock = {
-                accountsDao.insert(any())
+                accountRepository.insert(any())
             },
         )
     }

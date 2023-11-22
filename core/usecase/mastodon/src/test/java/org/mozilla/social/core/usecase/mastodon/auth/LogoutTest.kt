@@ -5,8 +5,8 @@ import io.mockk.mockk
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import org.mozilla.social.common.appscope.AppScope
 import org.mozilla.social.core.analytics.Analytics
-import org.mozilla.social.core.database.SocialDatabase
 import org.mozilla.social.core.datastore.UserPreferencesDatastore
+import org.mozilla.social.core.repository.mastodon.DatabaseDelegate
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 
@@ -14,20 +14,20 @@ class LogoutTest {
     lateinit var objUnderTest: Logout
 
     private val userPreferencesDatastore: UserPreferencesDatastore = mockk(relaxed = true)
-    private val socialDatabase: SocialDatabase = mockk(relaxed = true)
     private val analytics: Analytics = mockk(relaxed = true)
     private val ioDispatcher = UnconfinedTestDispatcher()
     private val appScope: AppScope = mockk(relaxed = true)
+    private val databaseDelegate = mockk<DatabaseDelegate>(relaxed = true)
 
     @BeforeTest
     fun setup() {
         objUnderTest =
             Logout(
                 userPreferencesDatastore = userPreferencesDatastore,
-                socialDatabase = socialDatabase,
                 analytics = analytics,
                 ioDispatcher = ioDispatcher,
                 appScope = appScope,
+                databaseDelegate = databaseDelegate,
             )
     }
 
@@ -38,7 +38,7 @@ class LogoutTest {
         coVerify {
             appScope.reset()
             userPreferencesDatastore.clearData()
-            socialDatabase.clearAllTables()
+            databaseDelegate.clearAllTables()
             analytics.clearLoggedInIdentifiers()
         }
     }

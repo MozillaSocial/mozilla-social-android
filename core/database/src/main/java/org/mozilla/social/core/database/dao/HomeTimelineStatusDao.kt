@@ -38,5 +38,5 @@ interface HomeTimelineStatusDao : BaseDao<HomeTimelineStatus> {
             "WHERE accountId = :accountId " +
             "OR boostedStatusAccountId = :accountId",
     )
-    suspend fun getPostsFromAccount(accountId: String): List<HomeTimelineStatus>
+    suspend fun getPostsFromAccount(accountId: String): List<HomeTimelineStatusWrapper>
 }

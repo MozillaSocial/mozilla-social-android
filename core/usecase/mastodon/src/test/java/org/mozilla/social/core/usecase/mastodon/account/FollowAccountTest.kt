@@ -20,7 +20,7 @@ class FollowAccountTest : BaseUseCaseTest() {
                 showSnackbar = showSnackbar,
                 accountRepository = accountRepository,
                 relationshipRepository = relationshipRepository,
-                socialDatabase = socialDatabase,
+                databaseDelegate = databaseDelegate,
                 dispatcherIo = testDispatcher,
             )
     }
@@ -36,8 +36,8 @@ class FollowAccountTest : BaseUseCaseTest() {
             )
 
             coVerify(exactly = 1) {
-                accountsDao.updateFollowingCount(loggedInId, 1)
-                relationshipsDao.updateFollowing(accountId, true)
+                accountRepository.updateFollowingCountInDatabase(loggedInId, 1)
+                relationshipRepository.updateFollowing(accountId, true)
                 accountRepository.followAccount(accountId)
             }
         }
@@ -64,10 +64,10 @@ class FollowAccountTest : BaseUseCaseTest() {
             assertNotNull(exception)
 
             coVerify(exactly = 1) {
-                accountsDao.updateFollowingCount(loggedInId, 1)
-                relationshipsDao.updateFollowing(accountId, true)
-                accountsDao.updateFollowingCount(loggedInId, -1)
-                relationshipsDao.updateFollowing(accountId, false)
+                accountRepository.updateFollowingCountInDatabase(loggedInId, 1)
+                relationshipRepository.updateFollowing(accountId, true)
+                accountRepository.updateFollowingCountInDatabase(loggedInId, -1)
+                relationshipRepository.updateFollowing(accountId, false)
             }
         }
 
@@ -78,7 +78,7 @@ class FollowAccountTest : BaseUseCaseTest() {
 
         testOuterScopeCancelled(
             delayedCallBlock = {
-                relationshipsDao.updateFollowing(any(), true)
+                relationshipRepository.updateFollowing(any(), true)
             },
             subjectCallBlock = {
                 subject(
@@ -96,7 +96,7 @@ class FollowAccountTest : BaseUseCaseTest() {
     fun testCancelledScopeWithError() {
         testOuterScopeCancelledAndInnerException(
             delayedCallBlock = {
-                relationshipsDao.updateFollowing(any(), true)
+                relationshipRepository.updateFollowing(any(), true)
             },
             subjectCallBlock = {
                 subject(
