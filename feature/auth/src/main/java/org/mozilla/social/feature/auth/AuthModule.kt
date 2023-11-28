@@ -23,5 +23,5 @@ val authModule =
         )
 
         viewModel { LoginViewModel(get(), get(), get(), get()) }
-        viewModel { ChooseServerViewModel(get()) }
+        viewModel { ChooseServerViewModel(get(), get()) }
     }
