@@ -10,6 +10,8 @@ object AnalyticsIdentifiers {
     const val ACCOUNTS_SCREEN_UNFOLLOW = "profile.follow_btn.unfollow"
     const val PROFILE_MORE_SHARE_ACCOUNT = "profile.more.share-account"
     const val PROFILE_EDIT_PROFILE = "profile.edit.profile"
+    const val PROFILE_EDIT_PROFILE_SCREEN_IMPRESSION = "profile.edit.profile.screen.impression"
+    const val PROFILE_EDIT_PROFILE_SAVE = "profile.edit.profile.save"
 
     const val SETTINGS_SCREEN_IMPRESSION = "settings.screen.impression"
     const val SETTINGS_ACCOUNT_IMPRESSION = "settings.account.impression"

@@ -23,6 +23,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -61,6 +62,10 @@ internal fun EditAccountScreen(viewModel: EditAccountViewModel = koinViewModel()
         uiState = uiState,
         isUploading = isUploading,
     )
+
+    LaunchedEffect(Unit) {
+        viewModel.onScreenViewed()
+    }
 }
 
 @Composable

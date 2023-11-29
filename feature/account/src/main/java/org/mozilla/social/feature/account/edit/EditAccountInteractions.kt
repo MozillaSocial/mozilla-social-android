@@ -39,4 +39,6 @@ interface EditAccountInteractions {
     fun onFieldDeleteClicked(index: Int) = Unit
 
     fun onAddFieldClicked() = Unit
+
+    fun onScreenViewed() = Unit
 }
