@@ -51,6 +51,7 @@ val accountModule =
                 get(),
                 get(),
                 get(),
+                get(),
             )
         }
     }
