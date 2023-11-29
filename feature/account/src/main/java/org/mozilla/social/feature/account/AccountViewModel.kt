@@ -78,9 +78,6 @@ class AccountViewModel(
 
     private var getAccountJob: Job? = null
 
-    private val _timelineType = MutableStateFlow(AccountTimelineType.POSTS)
-    val timelineType = _timelineType.asStateFlow()
-
     private val postsRemoteMediator: AccountTimelineRemoteMediator by inject {
         parametersOf(
             accountId,
@@ -134,6 +131,9 @@ class AccountViewModel(
             it.toPostCardUiState(usersAccountId)
         }
     }.cachedIn(viewModelScope)
+
+    private val _timeline = MutableStateFlow(Timeline(AccountTimelineType.POSTS, postsFeed))
+    val timeline = _timeline.asStateFlow()
 
     init {
         loadAccount()
@@ -282,7 +282,16 @@ class AccountViewModel(
     }
 
     override fun onTabClicked(timelineType: AccountTimelineType) {
-        _timelineType.edit { timelineType }
+        _timeline.edit {
+            copy(
+                type = timelineType,
+                feed = when (timelineType) {
+                    AccountTimelineType.POSTS -> postsFeed
+                    AccountTimelineType.POSTS_AND_REPLIES -> postsAndRepliesFeed
+                    AccountTimelineType.MEDIA -> mediaFeed
+                }
+            )
+        }
     }
 
     override fun onSettingsClicked() {
