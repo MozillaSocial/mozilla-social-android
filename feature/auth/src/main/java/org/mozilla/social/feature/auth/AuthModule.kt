@@ -1,6 +1,7 @@
 package org.mozilla.social.feature.auth
 
 import org.koin.androidx.viewmodel.dsl.viewModel
+import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.dsl.module
 import org.mozilla.social.common.commonModule
 import org.mozilla.social.core.analytics.analyticsModule
@@ -23,5 +24,5 @@ val authModule =
         )
 
         viewModel { LoginViewModel(get(), get(), get(), get()) }
-        viewModel { ChooseServerViewModel(get()) }
+        viewModelOf(::ChooseServerViewModel)
     }

@@ -5,9 +5,9 @@ import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.StateFlow
 import org.mozilla.social.common.Rel
 import org.mozilla.social.core.database.model.statusCollections.AccountTimelineStatusWrapper
+import org.mozilla.social.core.model.AccountTimelineType
 import org.mozilla.social.core.repository.mastodon.AccountRepository
 import org.mozilla.social.core.repository.mastodon.DatabaseDelegate
 import org.mozilla.social.core.repository.mastodon.TimelineRepository
@@ -21,7 +21,7 @@ class RefreshAccountTimeline internal constructor(
     private val timelineRepository: TimelineRepository,
     private val saveStatusToDatabase: SaveStatusToDatabase,
     private val accountId: String,
-    private val timelineType: StateFlow<TimelineType>,
+    private val timelineType: AccountTimelineType,
 ) {
     @OptIn(ExperimentalPagingApi::class)
     suspend operator fun invoke(
@@ -39,8 +39,8 @@ class RefreshAccountTimeline internal constructor(
                             olderThanId = null,
                             immediatelyNewerThanId = null,
                             loadSize = pageSize,
-                            onlyMedia = timelineType.value == TimelineType.MEDIA,
-                            excludeReplies = timelineType.value == TimelineType.POSTS,
+                            onlyMedia = timelineType == AccountTimelineType.MEDIA,
+                            excludeReplies = timelineType == AccountTimelineType.POSTS,
                         )
                     }
 
@@ -53,8 +53,8 @@ class RefreshAccountTimeline internal constructor(
                             olderThanId = null,
                             immediatelyNewerThanId = firstItem.status.statusId,
                             loadSize = pageSize,
-                            onlyMedia = timelineType.value == TimelineType.MEDIA,
-                            excludeReplies = timelineType.value == TimelineType.POSTS,
+                            onlyMedia = timelineType == AccountTimelineType.MEDIA,
+                            excludeReplies = timelineType == AccountTimelineType.POSTS,
                         )
                     }
 
@@ -67,8 +67,8 @@ class RefreshAccountTimeline internal constructor(
                             olderThanId = lastItem.status.statusId,
                             immediatelyNewerThanId = null,
                             loadSize = pageSize,
-                            onlyMedia = timelineType.value == TimelineType.MEDIA,
-                            excludeReplies = timelineType.value == TimelineType.POSTS,
+                            onlyMedia = timelineType == AccountTimelineType.MEDIA,
+                            excludeReplies = timelineType == AccountTimelineType.POSTS,
                         )
                     }
                 }
@@ -77,11 +77,11 @@ class RefreshAccountTimeline internal constructor(
 
             databaseDelegate.withTransaction {
                 if (loadType == LoadType.REFRESH) {
-                    timelineRepository.deleteAccountTimeline(accountId)
+                    timelineRepository.deleteAccountTimeline(accountId, timelineType)
                 }
 
                 saveStatusToDatabase(result)
-                timelineRepository.insertAllIntoAccountTimeline(result)
+                timelineRepository.insertAllIntoAccountTimeline(result, timelineType)
             }
 
             // There seems to be some race condition for refreshes.  Subsequent pages do
@@ -113,10 +113,4 @@ class RefreshAccountTimeline internal constructor(
     companion object {
         private const val REFRESH_DELAY = 200L
     }
-}
-
-enum class TimelineType {
-    POSTS,
-    POSTS_AND_REPLIES,
-    MEDIA,
 }

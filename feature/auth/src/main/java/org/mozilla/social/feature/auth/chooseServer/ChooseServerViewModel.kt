@@ -6,11 +6,15 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import org.mozilla.social.common.utils.edit
+import org.mozilla.social.core.analytics.Analytics
+import org.mozilla.social.core.analytics.AnalyticsIdentifiers
+import org.mozilla.social.core.analytics.EngagementType
 import org.mozilla.social.core.usecase.mastodon.auth.Login
 import timber.log.Timber
 
 class ChooseServerViewModel(
     private val login: Login,
+    private val analytics: Analytics,
 ) : ViewModel(), ChooseServerInteractions {
     private val _uiState = MutableStateFlow(ChooseServerUiState())
     val uiState = _uiState.asStateFlow()
@@ -32,6 +36,11 @@ class ChooseServerViewModel(
                 loginFailed = false,
             )
         }
+        analytics.uiEngagement(
+            engagementType = EngagementType.GENERAL,
+            uiIdentifier = AnalyticsIdentifiers.CHOOSE_A_SERVER_SCREEN_SUBMIT_SERVER,
+            engagementValue = uiState.value.serverText
+        )
         viewModelScope.launch {
             try {
                 login(uiState.value.serverText)
@@ -50,6 +59,12 @@ class ChooseServerViewModel(
                 }
             }
         }
+    }
+
+    override fun onScreenViewed() {
+        analytics.uiImpression(
+            uiIdentifier = AnalyticsIdentifiers.CHOOSE_A_SERVER_SCREEN_IMPRESSION
+        )
     }
 
     companion object {

@@ -48,10 +48,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.paging.PagingData
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
@@ -65,6 +61,7 @@ import org.mozilla.social.common.utils.DateTimeFormatters
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.designsystem.utils.NoRipple
+import org.mozilla.social.core.model.AccountTimelineType
 import org.mozilla.social.core.navigation.navigationModule
 import org.mozilla.social.core.ui.common.MoSoSurface
 import org.mozilla.social.core.ui.common.MoSoTab
@@ -76,9 +73,9 @@ import org.mozilla.social.core.ui.common.dropdown.DropDownItem
 import org.mozilla.social.core.ui.common.dropdown.MoSoDropdownMenu
 import org.mozilla.social.core.ui.common.error.GenericError
 import org.mozilla.social.core.ui.common.loading.MoSoCircularProgressIndicator
+import org.mozilla.social.core.ui.htmlcontent.HtmlContentInteractions
 import org.mozilla.social.core.ui.postcard.PostCardInteractions
 import org.mozilla.social.core.ui.postcard.PostCardList
-import org.mozilla.social.core.ui.postcard.PostCardUiState
 
 @Composable
 internal fun AccountScreen(
@@ -87,12 +84,12 @@ internal fun AccountScreen(
     viewModel: AccountViewModel = koinViewModel(parameters = { parametersOf(accountId) }),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val timeline by viewModel.timeline.collectAsStateWithLifecycle()
     AccountScreen(
         uiState = uiState,
         closeButtonVisible = viewModel.shouldShowCloseButton,
         isUsersProfile = viewModel.isOwnProfile,
-        feed = viewModel.feed,
-        timelineTypeFlow = viewModel.timelineType,
+        timeline = timeline,
         htmlContentInteractions = viewModel.postCardDelegate,
         postCardInteractions = viewModel.postCardDelegate,
         accountInteractions = viewModel,
@@ -111,9 +108,8 @@ private fun AccountScreen(
     uiState: Resource<AccountUiState>,
     closeButtonVisible: Boolean,
     isUsersProfile: Boolean,
-    feed: Flow<PagingData<PostCardUiState>>,
-    timelineTypeFlow: StateFlow<TimelineType>,
-    htmlContentInteractions: org.mozilla.social.core.ui.htmlcontent.HtmlContentInteractions,
+    timeline: Timeline,
+    htmlContentInteractions: HtmlContentInteractions,
     postCardInteractions: PostCardInteractions,
     accountInteractions: AccountInteractions,
     windowInsets: WindowInsets,
@@ -162,11 +158,10 @@ private fun AccountScreen(
                     MainContent(
                         account = uiState.data,
                         isUsersProfile = isUsersProfile,
-                        feed = feed,
                         htmlContentInteractions = htmlContentInteractions,
                         postCardInteractions = postCardInteractions,
                         accountInteractions = accountInteractions,
-                        timelineTypeFlow = timelineTypeFlow,
+                        timeline = timeline,
                     )
                 }
 
@@ -196,23 +191,18 @@ private fun AccountScreen(
 private fun MainContent(
     account: AccountUiState,
     isUsersProfile: Boolean,
-    feed: Flow<PagingData<PostCardUiState>>,
-    timelineTypeFlow: StateFlow<TimelineType>,
-    htmlContentInteractions: org.mozilla.social.core.ui.htmlcontent.HtmlContentInteractions,
+    timeline: Timeline,
+    htmlContentInteractions: HtmlContentInteractions,
     postCardInteractions: PostCardInteractions,
     accountInteractions: AccountInteractions,
 ) {
-    val selectedTimelineType by timelineTypeFlow.collectAsStateWithLifecycle()
-    val context = LocalContext.current
-
     Column(
         modifier =
             Modifier
                 .fillMaxSize(),
     ) {
         PostCardList(
-            feed = feed,
-            refreshSignalFlow = timelineTypeFlow,
+            feed = timeline.feed,
             postCardInteractions = postCardInteractions,
         ) {
             Header(
@@ -273,18 +263,23 @@ private fun MainContent(
             )
             MoSoTabRow(
                 modifier = Modifier.padding(top = 20.dp),
-                selectedTabIndex = selectedTimelineType.ordinal,
+                selectedTabIndex = timeline.type.ordinal,
             ) {
-                TimelineType.entries.forEach { timelineType ->
+                AccountTimelineType.entries.forEach { timelineType ->
                     MoSoTab(
                         modifier =
                             Modifier
                                 .height(40.dp),
-                        selected = selectedTimelineType == timelineType,
+                        selected = timeline.type == timelineType,
                         onClick = { accountInteractions.onTabClicked(timelineType) },
                         content = {
                             Text(
-                                text = timelineType.tabTitle.build(context),
+                                text = when (timelineType) {
+                                    AccountTimelineType.POSTS -> stringResource(id = R.string.tab_posts)
+                                    AccountTimelineType.POSTS_AND_REPLIES ->
+                                        stringResource(id = R.string.tab_posts_and_replies)
+                                    AccountTimelineType.MEDIA -> stringResource(id = R.string.tab_media)
+                                },
                                 style = MoSoTheme.typography.labelMedium,
                             )
                         },
@@ -635,11 +630,11 @@ fun AccountScreenPreview() {
                     ),
                 closeButtonVisible = true,
                 isUsersProfile = false,
-                feed = flowOf(),
-                timelineTypeFlow = MutableStateFlow(TimelineType.POSTS),
-                htmlContentInteractions =
-                    object :
-                        org.mozilla.social.core.ui.htmlcontent.HtmlContentInteractions {},
+                timeline = Timeline(
+                    type = AccountTimelineType.POSTS,
+                    feed = flowOf()
+                ),
+                htmlContentInteractions = object : HtmlContentInteractions {},
                 postCardInteractions = object : PostCardInteractions {},
                 accountInteractions = object : AccountInteractions {},
                 windowInsets = WindowInsets.systemBars,
