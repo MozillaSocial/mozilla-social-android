@@ -1,6 +1,10 @@
 package org.mozilla.social.feature.account
 
+import androidx.paging.PagingData
+import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.LocalDateTime
+import org.mozilla.social.core.model.AccountTimelineType
+import org.mozilla.social.core.ui.postcard.PostCardUiState
 
 data class AccountUiState(
     val accountId: String,
@@ -25,4 +29,9 @@ data class AccountUiState(
 data class AccountFieldUiState(
     val name: String,
     val value: String,
+)
+
+data class Timeline(
+    val type: AccountTimelineType,
+    val feed: Flow<PagingData<PostCardUiState>>,
 )

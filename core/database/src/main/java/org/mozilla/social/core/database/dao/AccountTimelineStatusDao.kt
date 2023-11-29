@@ -6,30 +6,39 @@ import androidx.room.Query
 import androidx.room.Transaction
 import org.mozilla.social.core.database.model.statusCollections.AccountTimelineStatus
 import org.mozilla.social.core.database.model.statusCollections.AccountTimelineStatusWrapper
+import org.mozilla.social.core.model.AccountTimelineType
 
 @Dao
 interface AccountTimelineStatusDao : BaseDao<AccountTimelineStatus> {
     @Transaction
     @Query(
         "SELECT * FROM accountTimeline " +
-            "WHERE  accountId = :accountId " +
-            "ORDER BY statusId DESC",
+        "WHERE  accountId = :accountId " +
+        "AND timelineType = :timelineType " +
+        "ORDER BY statusId DESC",
     )
-    fun accountTimelinePagingSource(accountId: String): PagingSource<Int, AccountTimelineStatusWrapper>
+    fun accountTimelinePagingSource(
+        accountId: String,
+        timelineType: AccountTimelineType
+    ): PagingSource<Int, AccountTimelineStatusWrapper>
 
     @Query(
         "DELETE FROM accountTimeline " +
-            "WHERE accountId = :accountId ",
+        "WHERE accountId = :accountId " +
+        "AND timelineType = :timelineType ",
     )
-    suspend fun deleteAccountTimeline(accountId: String)
+    suspend fun deleteAccountTimeline(
+        accountId: String,
+        timelineType: AccountTimelineType,
+    )
 
     @Query("DELETE FROM accountTimeline")
     fun deleteAllAccountTimelines()
 
     @Query(
         "DELETE FROM accountTimeline " +
-            "WHERE statusId = :statusId " +
-            "OR boostedStatusId = :statusId",
+        "WHERE statusId = :statusId " +
+        "OR boostedStatusId = :statusId",
     )
     suspend fun deletePost(statusId: String)
 }

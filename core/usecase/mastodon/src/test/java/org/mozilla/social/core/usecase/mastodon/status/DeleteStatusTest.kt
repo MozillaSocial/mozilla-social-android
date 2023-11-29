@@ -40,7 +40,7 @@ class DeleteStatusTest : BaseUseCaseTest() {
                 timelineRepository.deleteStatusFromLocalTimeline("id")
                 timelineRepository.deleteStatusFromFederatedTimeline("id")
                 timelineRepository.deleteStatusFromAllHashTagTimelines("id")
-                timelineRepository.deleteStatusFromAccountTimeline("id")
+                timelineRepository.deleteStatusFromAccountTimelines("id")
                 statusRepository.deleteStatusLocal("id")
             }
         }
@@ -69,7 +69,7 @@ class DeleteStatusTest : BaseUseCaseTest() {
                 timelineRepository.deleteStatusFromLocalTimeline("id")
                 timelineRepository.deleteStatusFromFederatedTimeline("id")
                 timelineRepository.deleteStatusFromAllHashTagTimelines("id")
-                timelineRepository.deleteStatusFromAccountTimeline("id")
+                timelineRepository.deleteStatusFromAccountTimelines("id")
                 statusRepository.deleteStatusLocal("id")
             }
         }

@@ -56,7 +56,7 @@ import org.mozilla.social.core.database.model.statusCollections.LocalTimelineSta
         Follower::class,
         Followee::class,
     ],
-    version = 12,
+    version = 13,
     autoMigrations = [
         AutoMigration(1, 2, DatabaseMigrations.Schema1to2::class),
         AutoMigration(2, 3),
@@ -69,6 +69,7 @@ import org.mozilla.social.core.database.model.statusCollections.LocalTimelineSta
         AutoMigration(9, 10),
         AutoMigration(10, 11, DatabaseMigrations.Schema10to11::class),
         AutoMigration(11, 12),
+        AutoMigration(12, 13),
     ],
     exportSchema = true,
 )
