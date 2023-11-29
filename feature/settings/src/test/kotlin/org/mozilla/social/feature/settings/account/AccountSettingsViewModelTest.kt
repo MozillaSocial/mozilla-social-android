@@ -15,6 +15,7 @@ import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.Test
 import org.mozilla.social.common.Resource
+import org.mozilla.social.core.analytics.DummyAnalytics
 import org.mozilla.social.core.model.Account
 import org.mozilla.social.core.repository.mastodon.AccountRepository
 import org.mozilla.social.core.usecase.mastodon.account.GetLoggedInUserAccountId
@@ -29,6 +30,7 @@ class AccountSettingsViewModelTest {
 
     private val getLoggedInUserAccountId: GetLoggedInUserAccountId = mockk(relaxed = true)
     private val accountRepository: AccountRepository = mockk(relaxed = true)
+    private val analytics: DummyAnalytics = mockk()
 
     private val account = mockk<Account>()
 
@@ -47,6 +49,7 @@ class AccountSettingsViewModelTest {
                 logout = logout,
                 getLoggedInUserAccountId = getLoggedInUserAccountId,
                 accountRepository = accountRepository,
+                analytics = analytics,
             )
     }
 
