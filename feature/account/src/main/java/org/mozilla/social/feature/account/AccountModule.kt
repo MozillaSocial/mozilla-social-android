@@ -1,6 +1,7 @@
 package org.mozilla.social.feature.account
 
 import org.koin.androidx.viewmodel.dsl.viewModel
+import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.dsl.module
 import org.mozilla.social.common.commonModule
 import org.mozilla.social.core.analytics.analyticsModule
@@ -45,13 +46,5 @@ val accountModule =
                 timelineType = parametersHolder[1],
             )
         }
-        viewModel {
-            EditAccountViewModel(
-                get(),
-                get(),
-                get(),
-                get(),
-                get(),
-            )
-        }
+        viewModelOf(::EditAccountViewModel)
     }
