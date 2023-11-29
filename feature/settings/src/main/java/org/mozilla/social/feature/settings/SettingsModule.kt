@@ -32,7 +32,7 @@ val settingsModule =
         viewModel { AccountSettingsViewModel(get(), get(), get()) }
         viewModel { PrivacySettingsViewModel(get()) }
         viewModelOf(::AboutSettingsViewModel)
-        viewModel { ContentPreferencesSettingsViewModel(get()) }
+        viewModelOf(::ContentPreferencesSettingsViewModel)
         viewModelOf(::BlockedUsersViewModel)
         viewModelOf(::MutedUsersSettingsViewModel)
     }
