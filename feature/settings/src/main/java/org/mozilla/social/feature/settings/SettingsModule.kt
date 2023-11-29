@@ -29,7 +29,7 @@ val settingsModule =
         )
 
         viewModel { _ -> SettingsViewModel(get(), get(), get()) }
-        viewModel { AccountSettingsViewModel(get(), get(), get()) }
+        viewModelOf(::AccountSettingsViewModel)
         viewModelOf(::PrivacySettingsViewModel)
         viewModelOf(::AboutSettingsViewModel)
         viewModelOf(::ContentPreferencesSettingsViewModel)

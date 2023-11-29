@@ -19,6 +19,7 @@ object AnalyticsIdentifiers {
     const val SETTINGS_PRIVACY_IMPRESSION = "settings.privacy.impression"
     const val SETTINGS_ABOUT_IMPRESSION = "settings.about.impression"
     const val PRIVACY_COLLECT_DATA_TOGGLE = "privacy.collect-data.toggle"
+    const val SETTINGS_ACCOUNT_SIGNOUT = "account.signout"
 
     const val NEW_POST_SCREEN_IMPRESSION = "new.post.screen.impression"
 
