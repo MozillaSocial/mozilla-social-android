@@ -66,6 +66,7 @@ dependencies {
     implementation(project(":feature:followers"))
     implementation(project(":core:navigation"))
     implementation(project(":feature:discover"))
+    implementation(project(":feature:favorites"))
 
     implementation(kotlin("reflect"))
 

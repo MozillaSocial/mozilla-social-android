@@ -140,11 +140,16 @@ private fun AccountScreen(
                         title = uiState.data.displayName,
                         showCloseButton = closeButtonVisible,
                         actions = {
-                            IconButton(
-                                modifier = Modifier.width(IntrinsicSize.Max),
-                                onClick = navigateToSettings,
-                            ) {
-                                Icon(painter = MoSoIcons.gear(), contentDescription = "Settings")
+                            if (isUsersProfile) {
+                                IconButton(
+                                    modifier = Modifier.width(IntrinsicSize.Max),
+                                    onClick = navigateToSettings,
+                                ) {
+                                    Icon(
+                                        painter = MoSoIcons.gear(),
+                                        contentDescription = "Settings"
+                                    )
+                                }
                             }
                         },
                         showDivider = false,
@@ -305,6 +310,14 @@ private fun OverflowMenu(
                 overflowMenuExpanded.value = false
             },
         ) {
+            if (isUsersProfile) {
+                DropDownItem(
+                    text = stringResource(id = R.string.favorites_option),
+                    expanded = overflowMenuExpanded,
+                    onClick = { overflowInteractions.onOverflowFavoritesClicked() }
+                )
+            }
+
             DropDownItem(
                 text = stringResource(R.string.share_option),
                 expanded = overflowMenuExpanded,

@@ -162,6 +162,12 @@ class AccountViewModel(
         )
     }
 
+    override fun onOverflowFavoritesClicked() {
+        navigateTo(
+            navDestination = NavigationDestination.Favorites
+        )
+    }
+
     override fun onOverflowShareClicked() {
         analytics.uiEngagement(
             uiIdentifier = AnalyticsIdentifiers.PROFILE_MORE_SHARE_ACCOUNT,
