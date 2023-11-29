@@ -89,6 +89,7 @@ dependencies {
     implementation(libs.coil.video)
 
     implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.junit.ktx)
 
     testImplementation(libs.koin.test)
 
@@ -99,6 +100,12 @@ dependencies {
     androidTestImplementation(libs.androidx.navigation.testing)
     androidTestImplementation(libs.androidx.espresso.intents)
     androidTestImplementation(libs.androidx.test.ext.junit)
+
+    // Test rules and transitive dependencies:
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.5.4")
+    // Needed for createAndroidComposeRule, but not createComposeRule:
+    debugImplementation("androidx.compose.ui:ui-test-manifest:1.5.4")
+
 
     debugImplementation(libs.androidx.compose.ui.test.manifest)
     debugImplementation(libs.androidx.compose.ui.tooling)
