@@ -259,6 +259,11 @@ class AccountViewModel(
     }
 
     override fun onEditAccountClicked() {
+        analytics.uiEngagement(
+            uiIdentifier = AnalyticsIdentifiers.PROFILE_EDIT_PROFILE,
+            mastodonAccountId = accountId,
+            mastodonAccountHandle = usersAccountId,
+        )
         navigateTo(NavigationDestination.EditAccount)
     }
 }

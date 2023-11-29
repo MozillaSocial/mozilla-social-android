@@ -9,8 +9,13 @@ object AnalyticsIdentifiers {
     const val ACCOUNTS_SCREEN_FOLLOW = "profile.follow_btn.follow"
     const val ACCOUNTS_SCREEN_UNFOLLOW = "profile.follow_btn.unfollow"
     const val PROFILE_MORE_SHARE_ACCOUNT = "profile.more.share-account"
+    const val PROFILE_EDIT_PROFILE = "profile.edit.profile"
 
     const val SETTINGS_SCREEN_IMPRESSION = "settings.screen.impression"
+    const val SETTINGS_ACCOUNT_IMPRESSION = "settings.account.impression"
+    const val SETTINGS_CONTENT_PREFERENCES_IMPRESSION = "settings.content-preferences.impression"
+    const val SETTINGS_PRIVACY_IMPRESSION = "settings.privacy.impression"
+    const val SETTINGS_ABOUT_IMPRESSION = "settings.about.impression"
 
     const val NEW_POST_SCREEN_IMPRESSION = "new.post.screen.impression"
 
