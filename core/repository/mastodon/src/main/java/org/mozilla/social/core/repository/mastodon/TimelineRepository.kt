@@ -25,7 +25,7 @@ import org.mozilla.social.core.database.model.statusCollections.LocalTimelineSta
 import org.mozilla.social.core.database.model.statusCollections.toStatusWrapper
 import org.mozilla.social.core.model.Status
 import org.mozilla.social.core.model.StatusVisibility
-import org.mozilla.social.core.model.TimelineType
+import org.mozilla.social.core.model.AccountTimelineType
 import org.mozilla.social.core.model.paging.StatusPagingWrapper
 import org.mozilla.social.core.network.mastodon.TimelineApi
 import org.mozilla.social.core.repository.mastodon.model.status.toAccountTimelineStatus
@@ -272,13 +272,13 @@ class TimelineRepository internal constructor(
     //region Account timeline
     fun insertAllIntoAccountTimeline(
         statuses: List<Status>,
-        timelineType: TimelineType,
+        timelineType: AccountTimelineType,
     ) = accountTimelineStatusDao.insertAll(statuses.map { it.toAccountTimelineStatus(timelineType) })
 
     @ExperimentalPagingApi
     fun getAccountTimelinePager(
         accountId: String,
-        timelineType: TimelineType,
+        timelineType: AccountTimelineType,
         remoteMediator: RemoteMediator<Int, AccountTimelineStatusWrapper>,
         pageSize: Int = 20,
         initialLoadSize: Int = 40,
@@ -298,7 +298,7 @@ class TimelineRepository internal constructor(
 
     suspend fun deleteAccountTimeline(
         accountId: String,
-        timelineType: TimelineType,
+        timelineType: AccountTimelineType,
     ) = accountTimelineStatusDao.deleteAccountTimeline(accountId, timelineType)
 
     suspend fun deleteStatusFromAccountTimelines(statusId: String) =

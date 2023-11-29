@@ -6,7 +6,7 @@ import org.mozilla.social.core.database.model.statusCollections.HashTagTimelineS
 import org.mozilla.social.core.database.model.statusCollections.HomeTimelineStatus
 import org.mozilla.social.core.database.model.statusCollections.LocalTimelineStatus
 import org.mozilla.social.core.model.Status
-import org.mozilla.social.core.model.TimelineType
+import org.mozilla.social.core.model.AccountTimelineType
 
 fun Status.toHomeTimelineStatus(): HomeTimelineStatus =
     HomeTimelineStatus(
@@ -39,7 +39,7 @@ fun Status.toFederatedTimelineStatus(): FederatedTimelineStatus =
     )
 
 fun Status.toAccountTimelineStatus(
-    timelineType: TimelineType,
+    timelineType: AccountTimelineType,
 ): AccountTimelineStatus =
     AccountTimelineStatus(
         statusId = statusId,

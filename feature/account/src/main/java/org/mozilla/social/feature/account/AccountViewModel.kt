@@ -17,7 +17,7 @@ import org.mozilla.social.common.Resource
 import org.mozilla.social.common.utils.edit
 import org.mozilla.social.core.analytics.Analytics
 import org.mozilla.social.core.analytics.AnalyticsIdentifiers
-import org.mozilla.social.core.model.TimelineType
+import org.mozilla.social.core.model.AccountTimelineType
 import org.mozilla.social.core.navigation.NavigationDestination
 import org.mozilla.social.core.navigation.usecases.NavigateTo
 import org.mozilla.social.core.repository.mastodon.TimelineRepository
@@ -78,34 +78,34 @@ class AccountViewModel(
 
     private var getAccountJob: Job? = null
 
-    private val _timelineType = MutableStateFlow(TimelineType.POSTS)
+    private val _timelineType = MutableStateFlow(AccountTimelineType.POSTS)
     val timelineType = _timelineType.asStateFlow()
 
     private val postsRemoteMediator: AccountTimelineRemoteMediator by inject {
         parametersOf(
             accountId,
-            TimelineType.POSTS,
+            AccountTimelineType.POSTS,
         )
     }
 
     private val postsAndRepliesRemoteMediator: AccountTimelineRemoteMediator by inject {
         parametersOf(
             accountId,
-            TimelineType.POSTS_AND_REPLIES,
+            AccountTimelineType.POSTS_AND_REPLIES,
         )
     }
 
     private val mediaRemoteMediator: AccountTimelineRemoteMediator by inject {
         parametersOf(
             accountId,
-            TimelineType.MEDIA,
+            AccountTimelineType.MEDIA,
         )
     }
 
     @OptIn(ExperimentalPagingApi::class)
     val postsFeed = timelineRepository.getAccountTimelinePager(
         accountId = accountId,
-        timelineType = TimelineType.POSTS,
+        timelineType = AccountTimelineType.POSTS,
         remoteMediator = postsRemoteMediator,
     ).map { pagingData ->
         pagingData.map {
@@ -116,7 +116,7 @@ class AccountViewModel(
     @OptIn(ExperimentalPagingApi::class)
     val postsAndRepliesFeed = timelineRepository.getAccountTimelinePager(
         accountId = accountId,
-        timelineType = TimelineType.POSTS_AND_REPLIES,
+        timelineType = AccountTimelineType.POSTS_AND_REPLIES,
         remoteMediator = postsAndRepliesRemoteMediator,
     ).map { pagingData ->
         pagingData.map {
@@ -127,7 +127,7 @@ class AccountViewModel(
     @OptIn(ExperimentalPagingApi::class)
     val mediaFeed = timelineRepository.getAccountTimelinePager(
         accountId = accountId,
-        timelineType = TimelineType.MEDIA,
+        timelineType = AccountTimelineType.MEDIA,
         remoteMediator = mediaRemoteMediator,
     ).map { pagingData ->
         pagingData.map {
@@ -281,7 +281,7 @@ class AccountViewModel(
         loadAccount()
     }
 
-    override fun onTabClicked(timelineType: TimelineType) {
+    override fun onTabClicked(timelineType: AccountTimelineType) {
         _timelineType.edit { timelineType }
     }
 

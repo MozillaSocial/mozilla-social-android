@@ -65,7 +65,7 @@ import org.mozilla.social.common.utils.DateTimeFormatters
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.designsystem.utils.NoRipple
-import org.mozilla.social.core.model.TimelineType
+import org.mozilla.social.core.model.AccountTimelineType
 import org.mozilla.social.core.navigation.navigationModule
 import org.mozilla.social.core.ui.common.MoSoSurface
 import org.mozilla.social.core.ui.common.MoSoTab
@@ -118,7 +118,7 @@ private fun AccountScreen(
     postsFeed: Flow<PagingData<PostCardUiState>>,
     postsAndRepliesFeed: Flow<PagingData<PostCardUiState>>,
     mediaFeed: Flow<PagingData<PostCardUiState>>,
-    timelineTypeFlow: StateFlow<TimelineType>,
+    timelineTypeFlow: StateFlow<AccountTimelineType>,
     htmlContentInteractions: HtmlContentInteractions,
     postCardInteractions: PostCardInteractions,
     accountInteractions: AccountInteractions,
@@ -202,7 +202,7 @@ private fun MainContent(
     postsFeed: Flow<PagingData<PostCardUiState>>,
     postsAndRepliesFeed: Flow<PagingData<PostCardUiState>>,
     mediaFeed: Flow<PagingData<PostCardUiState>>,
-    timelineTypeFlow: StateFlow<TimelineType>,
+    timelineTypeFlow: StateFlow<AccountTimelineType>,
     htmlContentInteractions: HtmlContentInteractions,
     postCardInteractions: PostCardInteractions,
     accountInteractions: AccountInteractions,
@@ -216,9 +216,9 @@ private fun MainContent(
     ) {
         PostCardList(
             feed = when (selectedTimelineType) {
-                TimelineType.POSTS -> postsFeed
-                TimelineType.POSTS_AND_REPLIES -> postsAndRepliesFeed
-                TimelineType.MEDIA -> mediaFeed
+                AccountTimelineType.POSTS -> postsFeed
+                AccountTimelineType.POSTS_AND_REPLIES -> postsAndRepliesFeed
+                AccountTimelineType.MEDIA -> mediaFeed
             },
             postCardInteractions = postCardInteractions,
         ) {
@@ -282,7 +282,7 @@ private fun MainContent(
                 modifier = Modifier.padding(top = 20.dp),
                 selectedTabIndex = selectedTimelineType.ordinal,
             ) {
-                TimelineType.entries.forEach { timelineType ->
+                AccountTimelineType.entries.forEach { timelineType ->
                     MoSoTab(
                         modifier =
                             Modifier
@@ -292,10 +292,10 @@ private fun MainContent(
                         content = {
                             Text(
                                 text = when (timelineType) {
-                                    TimelineType.POSTS -> stringResource(id = R.string.tab_posts)
-                                    TimelineType.POSTS_AND_REPLIES ->
+                                    AccountTimelineType.POSTS -> stringResource(id = R.string.tab_posts)
+                                    AccountTimelineType.POSTS_AND_REPLIES ->
                                         stringResource(id = R.string.tab_posts_and_replies)
-                                    TimelineType.MEDIA -> stringResource(id = R.string.tab_media)
+                                    AccountTimelineType.MEDIA -> stringResource(id = R.string.tab_media)
                                 },
                                 style = MoSoTheme.typography.labelMedium,
                             )
@@ -642,7 +642,7 @@ fun AccountScreenPreview() {
                 postsFeed = flowOf(),
                 postsAndRepliesFeed = flowOf(),
                 mediaFeed = flowOf(),
-                timelineTypeFlow = MutableStateFlow(TimelineType.POSTS),
+                timelineTypeFlow = MutableStateFlow(AccountTimelineType.POSTS),
                 htmlContentInteractions = object : HtmlContentInteractions {},
                 postCardInteractions = object : PostCardInteractions {},
                 accountInteractions = object : AccountInteractions {},

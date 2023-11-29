@@ -1,6 +1,6 @@
 package org.mozilla.social.feature.account
 
-import org.mozilla.social.core.model.TimelineType
+import org.mozilla.social.core.model.AccountTimelineType
 
 interface AccountInteractions : OverflowInteractions {
     fun onFollowersClicked() = Unit
@@ -13,7 +13,7 @@ interface AccountInteractions : OverflowInteractions {
 
     fun onRetryClicked() = Unit
 
-    fun onTabClicked(timelineType: TimelineType) = Unit
+    fun onTabClicked(timelineType: AccountTimelineType) = Unit
 
     fun onSettingsClicked() = Unit
 

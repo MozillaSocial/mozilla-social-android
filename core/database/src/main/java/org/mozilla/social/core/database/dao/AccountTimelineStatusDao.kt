@@ -6,7 +6,7 @@ import androidx.room.Query
 import androidx.room.Transaction
 import org.mozilla.social.core.database.model.statusCollections.AccountTimelineStatus
 import org.mozilla.social.core.database.model.statusCollections.AccountTimelineStatusWrapper
-import org.mozilla.social.core.model.TimelineType
+import org.mozilla.social.core.model.AccountTimelineType
 
 @Dao
 interface AccountTimelineStatusDao : BaseDao<AccountTimelineStatus> {
@@ -19,7 +19,7 @@ interface AccountTimelineStatusDao : BaseDao<AccountTimelineStatus> {
     )
     fun accountTimelinePagingSource(
         accountId: String,
-        timelineType: TimelineType
+        timelineType: AccountTimelineType
     ): PagingSource<Int, AccountTimelineStatusWrapper>
 
     @Query(
@@ -29,7 +29,7 @@ interface AccountTimelineStatusDao : BaseDao<AccountTimelineStatus> {
     )
     suspend fun deleteAccountTimeline(
         accountId: String,
-        timelineType: TimelineType,
+        timelineType: AccountTimelineType,
     )
 
     @Query("DELETE FROM accountTimeline")
