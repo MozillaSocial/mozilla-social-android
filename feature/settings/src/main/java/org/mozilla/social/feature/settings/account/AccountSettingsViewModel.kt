@@ -27,13 +27,17 @@ class AccountSettingsViewModel(
         }
 
     fun onLogoutClicked() {
+        logoutClickedAnalytics()
+        viewModelScope.launch {
+            logout()
+        }
+    }
+
+    fun logoutClickedAnalytics() {
         analytics.uiEngagement(
             uiIdentifier = AnalyticsIdentifiers.SETTINGS_ACCOUNT_SIGNOUT,
             mastodonAccountId = userAccountId
         )
-        viewModelScope.launch {
-            logout()
-        }
     }
 
     override fun onScreenViewed() {

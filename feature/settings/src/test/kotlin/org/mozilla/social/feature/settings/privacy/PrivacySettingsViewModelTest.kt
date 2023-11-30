@@ -11,7 +11,7 @@ import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.setMain
 import org.junit.Before
 import org.junit.Test
-import org.mozilla.social.core.analytics.DummyAnalytics
+import org.mozilla.social.core.analytics.Analytics
 import org.mozilla.social.core.datastore.AppPreferencesDatastore
 import org.mozilla.social.core.usecase.mastodon.account.GetLoggedInUserAccountId
 
@@ -20,7 +20,7 @@ class PrivacySettingsViewModelTest {
 
     private val appPreferencesDataStore: AppPreferencesDatastore = mockk(relaxed = true)
     private val allowAnalytics = MutableSharedFlow<Boolean>(replay = 1)
-    private val analytics: DummyAnalytics = mockk()
+    private val analytics: Analytics = mockk(relaxed = true)
     private val getLoggedInUserAccountId: GetLoggedInUserAccountId = mockk(relaxed = true)
 
     @OptIn(ExperimentalCoroutinesApi::class)
