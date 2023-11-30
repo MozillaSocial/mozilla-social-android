@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -21,6 +22,10 @@ import org.mozilla.social.feature.settings.ui.SettingsColumn
 fun BlockedUsersSettingsScreen(viewModel: BlockedUsersViewModel = koinViewModel()) {
     val blocks by viewModel.blocks.collectAsStateWithLifecycle(initialValue = listOf())
     BlockedUsersSettingsScreen(blocks, viewModel::onBlockButtonClicked)
+
+    LaunchedEffect(Unit) {
+        viewModel.onScreenViewed()
+    }
 }
 
 @Composable

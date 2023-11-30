@@ -2,6 +2,7 @@ package org.mozilla.social.feature.settings.privacy
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -22,6 +23,10 @@ fun PrivacySettingsScreen(viewModel: PrivacySettingsViewModel = koinViewModel())
         isAnalyticsToggledOn = isAnalyticsToggled,
         toggleAnalyticsSwitch = viewModel::toggleAllowAnalytics,
     )
+
+    LaunchedEffect(Unit) {
+        viewModel.onScreenViewed()
+    }
 }
 
 @Composable

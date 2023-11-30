@@ -9,6 +9,7 @@ import org.mozilla.social.core.datastore.dataStoreModule
 import org.mozilla.social.core.navigation.navigationModule
 import org.mozilla.social.core.repository.mastodon.mastodonRepositoryModule
 import org.mozilla.social.core.usecase.mastodon.mastodonUsecaseModule
+import org.mozilla.social.feature.settings.about.AboutSettingsScreen
 import org.mozilla.social.feature.settings.about.AboutSettingsViewModel
 import org.mozilla.social.feature.settings.account.AccountSettingsViewModel
 import org.mozilla.social.feature.settings.contentpreferences.ContentPreferencesSettingsViewModel
@@ -28,10 +29,10 @@ val settingsModule =
         )
 
         viewModel { _ -> SettingsViewModel(get(), get(), get()) }
-        viewModel { AccountSettingsViewModel(get(), get(), get()) }
-        viewModel { PrivacySettingsViewModel(get()) }
-        viewModel { AboutSettingsViewModel(get()) }
-        viewModel { ContentPreferencesSettingsViewModel(get()) }
+        viewModelOf(::AccountSettingsViewModel)
+        viewModelOf(::PrivacySettingsViewModel)
+        viewModelOf(::AboutSettingsViewModel)
+        viewModelOf(::ContentPreferencesSettingsViewModel)
         viewModelOf(::BlockedUsersViewModel)
         viewModelOf(::MutedUsersSettingsViewModel)
     }
