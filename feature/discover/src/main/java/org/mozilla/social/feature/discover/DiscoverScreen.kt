@@ -192,13 +192,13 @@ private fun Recommendation(
             }
             Row {
                 Spacer(modifier = Modifier.weight(1f))
-                IconButton(onClick = { discoverInteractions.onRepostClicked() }) {
+                IconButton(onClick = { discoverInteractions.onRepostClicked(recommendation.id) }) {
                     Icon(
                         painter = MoSoIcons.boost(),
                         contentDescription = stringResource(id = R.string.repost_content_description),
                     )
                 }
-                IconButton(onClick = { discoverInteractions.onBookmarkClicked() }) {
+                IconButton(onClick = { discoverInteractions.onBookmarkClicked(recommendation.id) }) {
                     Icon(
                         painter = MoSoIcons.bookmarkBorder(),
                         contentDescription = stringResource(id = R.string.bookmark_content_description),
@@ -206,7 +206,7 @@ private fun Recommendation(
                 }
                 IconButton(onClick = {
                     shareUrl(recommendation.url, context)
-                    discoverInteractions.onShareClicked()
+                    discoverInteractions.onShareClicked(recommendation.id)
                 }) {
                     Icon(
                         painter = MoSoIcons.share(),

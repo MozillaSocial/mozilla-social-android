@@ -10,4 +10,5 @@ enum class EngagementType(
     BOOST("boost"),
     BOOKMARK("bookmark"),
     GENERAL("general"),
+    SHARE("share"),
 }
