@@ -22,7 +22,7 @@ identifiers:
     send_in_pings:
       - events
     no_lint:
-        - baseline
+      - baseline
 
   mastodon_account_id:
     type: string
