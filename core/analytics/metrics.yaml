@@ -5,7 +5,7 @@ identifiers:
     type: string
     description: >
       The user's FxA account ID, if available.
-
+      
       data_taxonomy:
         data_categories: [user.unique_id]
         data_uses: [analytics.reporting, personalize.content]
@@ -21,15 +21,12 @@ identifiers:
     expires: never
     send_in_pings:
       - events
-      - baseline
-    no_lint:
-      - BASELINE_PING
 
   mastodon_account_id:
     type: string
     description: >
       The user's numeric account ID from Mastodon.
-
+      
       data_taxonomy:
         data_categories: [user.unique_id]
         data_uses: [analytics.reporting, personalize.content]
@@ -45,16 +42,13 @@ identifiers:
     expires: never
     send_in_pings:
       - events
-      - baseline
-    no_lint:
-      - BASELINE_PING
 
   mastodon_account_handle:
     type: string
     description: >
       The user's full account handle, with domain.
       For example, `account_name@mozilla.social`.
-
+      
       data_taxonomy:
         data_categories: [user.account.username]
         data_uses: [analytics.reporting, personalize.content]
@@ -69,15 +63,12 @@ identifiers:
     expires: never
     send_in_pings:
       - events
-      - baseline
-    no_lint:
-      - BASELINE_PING
 
   adjust_device_id:
     type: string
     description: >
       The Adjust device ID for this user, if available.
-
+      
       data_taxonomy:
         data_categories: [user.device.device_id]
         data_uses: [analytics.reporting]
@@ -93,15 +84,12 @@ identifiers:
     expires: never
     send_in_pings:
       - events
-      - baseline
-    no_lint:
-      - BASELINE_PING
 
   user_agent:
     type: string
     description: >
       The device user agent string.
-
+      
       data_taxonomy:
         data_categories: [user.device]
         data_uses: [analytics.reporting]
@@ -117,19 +105,16 @@ identifiers:
     expires: never
     send_in_pings:
       - events
-      - baseline
-    no_lint:
-      - BASELINE_PING
 
 ui:
   impression:
     type: event
     description: >
       Event triggered when a user views a notable UI element.
-      Triggered once per page load, as soon as any pixel of that UI
+      Triggered once per page load, as soon as any pixel of that UI 
       element is visible in the foreground for any length of time.
       UI elements may include: content, pages, CTAs, etc.
-
+      
       data_taxonomy:
         data_categories: [user.behavior]
         data_uses: [analytics.reporting, personalize.content]
@@ -151,7 +136,7 @@ ui:
           increasing order of specificity (e.g. `[SCREEN].[BUTTON]`).
           All existing identifier values are being tracked here:
           https://docs.google.com/spreadsheets/d/1KX6TiyXXg2fE0a1IDKsy5O97ZrHYvjKohmIX_m8ECXY/edit?usp=sharing
-
+          
           data_taxonomy:
             data_categories: [system.operations]
             data_uses: [analytics.reporting, personalize.content]
@@ -162,7 +147,7 @@ ui:
         description: >
           An optional string to record further information about the UI
           element, such as its starting value if it is a toggle or setting.
-
+          
           data_taxonomy:
             data_categories: [system.operations, personalize.content]
             data_uses: [analytics.reporting]
@@ -174,7 +159,7 @@ ui:
           The Mastodon status ID of the post that was seen/interacted
           with by the user, if any.
           The Mastodon API calls statuses "posts", but they are one and the same.
-
+          
           data_taxonomy:
             data_categories: [user.behavior.browsing_history]
             data_uses: [analytics.reporting, personalize.content]
@@ -187,7 +172,7 @@ ui:
           with by the user, if any.
           For example, the account ID of the user who created a post that was
           seen/interacted with. Or, the account ID of the user that was followed.
-
+          
           data_taxonomy:
             data_categories: [user.behavior.browsing_history]
             data_uses: [analytics.reporting, personalize.content]
@@ -200,7 +185,7 @@ ui:
           with by the user, if any.
           For example, the account handle of the user who created a post that was
           seen/interacted with. Or, the account handle of the user that was followed.
-
+          
           data_taxonomy:
             data_categories: [user.behavior.browsing_history]
             data_uses: [analytics.reporting, personalize.content]
@@ -211,7 +196,7 @@ ui:
         description: >
           TBD recommendation identifier of the content
           that was seen/interacted with by the user, if any.
-
+          
           data_taxonomy:
             data_categories: [user.behavior.browsing_history]
             data_uses: [analytics.reporting, personalize.content]
@@ -221,7 +206,7 @@ ui:
       url: &url
         description: >
           URL of the content that was seen/interacted with by the user, if any.
-
+          
           data_taxonomy:
             data_categories: [user.behavior.browsing_history]
             data_uses: [analytics.reporting, personalize.content]
@@ -230,9 +215,9 @@ ui:
         type: string
       index: &index
         description: >
-          The zero-based index value of a UI element,
+          The zero-based index value of a UI element, 
           if found in a list of similar UI elements (e.g. item in a feed).
-
+          
           data_taxonomy:
             data_categories: [system.operations]
             data_uses: [analytics.reporting, personalize.content]
@@ -243,9 +228,9 @@ ui:
   engagement:
     type: event
     description: >
-      Event triggered when a user taps/clicks on a UI element,
+      Event triggered when a user taps/clicks on a UI element, 
       triggering a change in app state.
-
+      
       data_taxonomy:
         data_categories: [user.behavior]
         data_uses: [analytics.reporting, personalize.content]
@@ -279,7 +264,7 @@ ui:
             * `bookmark`
             * `share`
             * `general`
-
+          
           data_taxonomy:
             data_categories: [user.behavior]
             data_uses: [analytics.reporting, personalize.content]
@@ -290,7 +275,7 @@ ui:
         description: >
           If the UI element is a toggle or setting, the value of the
           toggle/setting after user interaction has taken place.
-
+          
           data_taxonomy:
             data_categories: [system.operations]
             data_uses: [analytics.reporting, personalize.content]
@@ -305,7 +290,7 @@ web:
       The full URL of the page that was visited,
       along with URL query parameters.
       For example, `https://mozilla.social/home?utm_source=test`.
-
+      
       data_taxonomy:
         data_categories: [user.behavior.browsing_history]
         data_uses: [analytics.reporting]
@@ -330,7 +315,7 @@ web:
       Comes from the `referrer` field of the HTTP header.
       May not always be available.
       For example, `https://www.google.com`.
-
+      
       data_taxonomy:
         data_categories: []
         data_uses: [analytics.reporting]
@@ -351,7 +336,7 @@ web:
     type: event
     description: >
       Event triggered when a user requests to load a web page.
-
+      
       data_taxonomy:
         data_categories: [user.behavior]
         data_uses: [analytics.reporting]
@@ -369,7 +354,7 @@ web:
     type: event
     description: >
       Event triggered when a user clicks a link on a web page.
-
+      
       data_taxonomy:
         data_categories: [user.behavior]
         data_uses: [analytics.reporting]
@@ -386,7 +371,7 @@ web:
       target_url:
         description: >
           The destination URL of the link that the user clicked.
-
+          
           data_taxonomy:
             data_categories: [user.behavior.browsing_history]
             data_uses: [analytics.reporting]
@@ -396,13 +381,56 @@ web:
       element_id:
         description: >
           The HTML element ID of the link that the user clicked.
-
+          
           data_taxonomy:
             data_categories: []
             data_uses: [analytics.reporting]
             data_subjects: [customer, visitor]
             data_qualifier: [n/a]
         type: string
+
+mobile:
+  app_open:
+    type: event
+    description: >
+      Event triggered when a user moves the mobile app to foreground
+      by starting the app or returning from the home screen/another app.
+      
+      data_taxonomy:
+        data_categories: [user.behavior]
+        data_uses: [analytics.reporting]
+        data_subjects: [customer, visitor]
+        data_qualifier: [n/a]
+    bugs:
+      - https://mozilla-hub.atlassian.net/browse/MSDO-49
+    data_reviews:
+      - https://docs.google.com/document/d/17vK3r7Sihb_S4-_8oKNoAraWeb_QiomC3UL-2W7PHgY/edit?usp=sharing
+    notification_emails:
+      - kdemtchouk@mozilla.com
+    expires: never
+    no_lint:
+      - COMMON_PREFIX
+
+  app_background:
+    type: event
+    description: >
+      Event triggered when a user moves the mobile app to background
+      by opening another app, returning to the home screen, or quitting the app.
+      
+      data_taxonomy:
+        data_categories: [user.behavior]
+        data_uses: [analytics.reporting]
+        data_subjects: [customer, visitor]
+        data_qualifier: [n/a]
+    bugs:
+      - https://mozilla-hub.atlassian.net/browse/MSDO-49
+    data_reviews:
+      - https://docs.google.com/document/d/17vK3r7Sihb_S4-_8oKNoAraWeb_QiomC3UL-2W7PHgY/edit?usp=sharing
+    notification_emails:
+      - kdemtchouk@mozilla.com
+    expires: never
+    no_lint:
+      - COMMON_PREFIX
 
 backend:
   object_update:
@@ -414,7 +442,7 @@ backend:
       In the future, we could potentially use this event to track
       changes in state to core Mastodon objects (e.g. accounts and
       posts).
-
+      
       data_taxonomy:
         data_categories: [system.operations]
         data_uses: [analytics.reporting, personalize.content, functional.service]
@@ -432,7 +460,7 @@ backend:
         description: >
           A simple name to describe the object whose state changed.
           For example, `api_request`.
-
+          
           data_taxonomy:
             data_categories: [system.operations]
             data_uses: [analytics.reporting, personalize.content, functional.service]
@@ -442,7 +470,7 @@ backend:
       object_state:
         description: >
           A JSON representation of the latest state of the object.
-
+          
           data_taxonomy:
             data_categories: [system.operations]
             data_uses: [analytics.reporting, personalize.content, functional.service]
