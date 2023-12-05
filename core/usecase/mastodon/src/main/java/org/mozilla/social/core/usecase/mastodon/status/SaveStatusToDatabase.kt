@@ -6,7 +6,7 @@ import org.mozilla.social.core.repository.mastodon.DatabaseDelegate
 import org.mozilla.social.core.repository.mastodon.PollRepository
 import org.mozilla.social.core.repository.mastodon.StatusRepository
 
-internal class SaveStatusToDatabase internal constructor(
+class SaveStatusToDatabase internal constructor(
     private val databaseDelegate: DatabaseDelegate,
     private val statusRepository: StatusRepository,
     private val accountRepository: AccountRepository,
