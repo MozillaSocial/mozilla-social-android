@@ -17,6 +17,7 @@ import org.mozilla.social.core.database.converters.MentionConverter
 import org.mozilla.social.core.database.converters.PollOptionConverter
 import org.mozilla.social.core.database.dao.AccountTimelineStatusDao
 import org.mozilla.social.core.database.dao.AccountsDao
+import org.mozilla.social.core.database.dao.FavoritesTimelineStatusDao
 import org.mozilla.social.core.database.dao.FederatedTimelineStatusDao
 import org.mozilla.social.core.database.dao.FollowersDao
 import org.mozilla.social.core.database.dao.FollowingsDao
@@ -35,6 +36,7 @@ import org.mozilla.social.core.database.model.DatabaseStatus
 import org.mozilla.social.core.database.model.accountCollections.Followee
 import org.mozilla.social.core.database.model.accountCollections.Follower
 import org.mozilla.social.core.database.model.statusCollections.AccountTimelineStatus
+import org.mozilla.social.core.database.model.statusCollections.FavoritesTimelineStatus
 import org.mozilla.social.core.database.model.statusCollections.FederatedTimelineStatus
 import org.mozilla.social.core.database.model.statusCollections.HashTagTimelineStatus
 import org.mozilla.social.core.database.model.statusCollections.HomeTimelineStatus
@@ -55,8 +57,9 @@ import org.mozilla.social.core.database.model.statusCollections.LocalTimelineSta
         FederatedTimelineStatus::class,
         Follower::class,
         Followee::class,
+        FavoritesTimelineStatus::class,
     ],
-    version = 13,
+    version = 14,
     autoMigrations = [
         AutoMigration(1, 2, DatabaseMigrations.Schema1to2::class),
         AutoMigration(2, 3),
@@ -70,6 +73,7 @@ import org.mozilla.social.core.database.model.statusCollections.LocalTimelineSta
         AutoMigration(10, 11, DatabaseMigrations.Schema10to11::class),
         AutoMigration(11, 12),
         AutoMigration(12, 13),
+        AutoMigration(13, 14),
     ],
     exportSchema = true,
 )
@@ -110,4 +114,6 @@ abstract class SocialDatabase : RoomDatabase() {
     abstract fun followersDao(): FollowersDao
 
     abstract fun followingsDao(): FollowingsDao
+
+    abstract fun favoritesDao(): FavoritesTimelineStatusDao
 }
