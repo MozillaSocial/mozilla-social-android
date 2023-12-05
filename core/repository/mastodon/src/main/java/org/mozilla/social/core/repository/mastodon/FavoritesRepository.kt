@@ -10,12 +10,14 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import org.mozilla.social.common.parseMastodonLinkHeader
 import org.mozilla.social.core.database.dao.FavoritesTimelineStatusDao
+import org.mozilla.social.core.database.model.statusCollections.FavoritesTimelineStatus
 import org.mozilla.social.core.database.model.statusCollections.FavoritesTimelineStatusWrapper
 import org.mozilla.social.core.database.model.statusCollections.toStatusWrapper
 import org.mozilla.social.core.model.Status
 import org.mozilla.social.core.model.paging.StatusPagingWrapper
 import org.mozilla.social.core.network.mastodon.FavoritesApi
 import org.mozilla.social.core.repository.mastodon.model.status.toExternalModel
+import org.mozilla.social.core.repository.mastodon.model.status.toHashTagTimelineStatus
 import retrofit2.HttpException
 
 class FavoritesRepository(
@@ -64,4 +66,12 @@ class FavoritesRepository(
                 it.toStatusWrapper().toExternalModel()
             }
         }
+
+    fun deleteFavoritesTimeline() {
+        dao.deleteFavoritesTimelines()
+    }
+
+    fun insertAll(
+        statuses: List<FavoritesTimelineStatus>
+    ) = dao.insertAll(statuses)
 }

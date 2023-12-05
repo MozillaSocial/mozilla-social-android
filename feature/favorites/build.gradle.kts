@@ -16,10 +16,13 @@ dependencies {
     implementation(project(":core:navigation"))
     implementation(project(":core:model"))
     implementation(project(":core:analytics"))
+    implementation(project(":core:database"))
+    implementation(project(":core:repository:mastodon"))
 
     implementation(libs.androidx.browser)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.jakewharton.timber)
     implementation(libs.koin.androidx.compose)
     implementation(libs.koin.core)
+    implementation(libs.androidx.paging.runtime)
 }
