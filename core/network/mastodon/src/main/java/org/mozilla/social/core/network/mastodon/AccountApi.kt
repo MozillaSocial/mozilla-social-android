@@ -76,22 +76,22 @@ interface AccountApi {
     @POST("/api/v1/accounts/{accountId}/follow")
     suspend fun followAccount(
         @Path("accountId") accountId: String,
-    )
+    ): NetworkRelationship
 
     @POST("/api/v1/accounts/{accountId}/unfollow")
     suspend fun unfollowAccount(
         @Path("accountId") accountId: String,
-    )
+    ): NetworkRelationship
 
     @POST("/api/v1/accounts/{accountId}/block")
     suspend fun blockAccount(
         @Path("accountId") accountId: String,
-    )
+    ): NetworkRelationship
 
     @POST("/api/v1/accounts/{accountId}/unblock")
     suspend fun unblockAccount(
         @Path("accountId") accountId: String,
-    )
+    ): NetworkRelationship
 
     /**
      * @param duration how long to mute for in seconds.  0 is indefinite
@@ -101,12 +101,12 @@ interface AccountApi {
     suspend fun muteAccount(
         @Path("accountId") accountId: String,
         @Field("duration") duration: Int = 0,
-    )
+    ): NetworkRelationship
 
     @POST("/api/v1/accounts/{accountId}/unmute")
     suspend fun unmuteAccount(
         @Path("accountId") accountId: String,
-    )
+    ): NetworkRelationship
 
     @GET("/api/v1/accounts/relationships")
     suspend fun getRelationships(

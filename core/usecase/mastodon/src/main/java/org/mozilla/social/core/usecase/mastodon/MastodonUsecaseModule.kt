@@ -5,7 +5,6 @@ import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 import org.mozilla.social.common.appscope.AppScope
 import org.mozilla.social.core.analytics.analyticsModule
-import org.mozilla.social.core.database.databaseModule
 import org.mozilla.social.core.navigation.navigationModule
 import org.mozilla.social.core.repository.mastodon.mastodonRepositoryModule
 import org.mozilla.social.core.usecase.mastodon.account.BlockAccount
@@ -43,7 +42,6 @@ val mastodonUsecaseModule =
     module {
         includes(
             mastodonRepositoryModule,
-            databaseModule,
             analyticsModule,
             navigationModule,
         )
@@ -62,13 +60,13 @@ val mastodonUsecaseModule =
         single {
             Logout(
                 userPreferencesDatastore = get(),
-                socialDatabase = get(),
                 analytics = get(),
                 appScope = get(),
+                databaseDelegate = get(),
             )
         }
         single { IsSignedInFlow(get()) }
-        single { GetDetailedAccount(get(), get()) }
+        singleOf(::GetDetailedAccount)
         single { GetLoggedInUserAccountId(get()) }
 
         single {
@@ -76,7 +74,8 @@ val mastodonUsecaseModule =
                 externalScope = get<AppScope>(),
                 showSnackbar = get(),
                 accountRepository = get(),
-                socialDatabase = get(),
+                relationshipRepository = get(),
+                timelineRepository = get(),
             )
         }
         single {
@@ -84,7 +83,8 @@ val mastodonUsecaseModule =
                 externalScope = get<AppScope>(),
                 showSnackbar = get(),
                 accountRepository = get(),
-                socialDatabase = get(),
+                relationshipRepository = get(),
+                databaseDelegate = get(),
             )
         }
         single {
@@ -92,7 +92,8 @@ val mastodonUsecaseModule =
                 externalScope = get<AppScope>(),
                 showSnackbar = get(),
                 accountRepository = get(),
-                socialDatabase = get(),
+                relationshipRepository = get(),
+                timelineRepository = get(),
             )
         }
         single {
@@ -100,7 +101,7 @@ val mastodonUsecaseModule =
                 externalScope = get<AppScope>(),
                 showSnackbar = get(),
                 accountRepository = get(),
-                socialDatabase = get(),
+                relationshipRepository = get(),
             )
         }
         single {
@@ -108,7 +109,9 @@ val mastodonUsecaseModule =
                 externalScope = get<AppScope>(),
                 showSnackbar = get(),
                 accountRepository = get(),
-                socialDatabase = get(),
+                relationshipRepository = get(),
+                timelineRepository = get(),
+                databaseDelegate = get(),
             )
         }
         single {
@@ -116,7 +119,7 @@ val mastodonUsecaseModule =
                 externalScope = get<AppScope>(),
                 showSnackbar = get(),
                 accountRepository = get(),
-                socialDatabase = get(),
+                relationshipRepository = get(),
             )
         }
         single {
@@ -124,7 +127,6 @@ val mastodonUsecaseModule =
                 externalScope = get<AppScope>(),
                 showSnackbar = get(),
                 accountRepository = get(),
-                socialDatabase = get(),
             )
         }
         single {
@@ -158,17 +160,17 @@ val mastodonUsecaseModule =
                 externalScope = get<AppScope>(),
                 statusRepository = get(),
                 showSnackbar = get(),
-                socialDatabase = get(),
                 saveStatusToDatabase = get(),
+                databaseDelegate = get(),
             )
         }
         single {
             UndoBoostStatus(
                 externalScope = get<AppScope>(),
-                socialDatabase = get(),
                 statusRepository = get(),
                 showSnackbar = get(),
                 saveStatusToDatabase = get(),
+                databaseDelegate = get(),
             )
         }
         single {
@@ -176,8 +178,8 @@ val mastodonUsecaseModule =
                 externalScope = get<AppScope>(),
                 statusRepository = get(),
                 showSnackbar = get(),
-                socialDatabase = get(),
                 saveStatusToDatabase = get(),
+                databaseDelegate = get(),
             )
         }
         single {
@@ -193,7 +195,8 @@ val mastodonUsecaseModule =
                 externalScope = get<AppScope>(),
                 statusRepository = get(),
                 showSnackbar = get(),
-                socialDatabase = get(),
+                timelineRepository = get(),
+                databaseDelegate = get(),
             )
         }
 
@@ -205,8 +208,9 @@ val mastodonUsecaseModule =
         factory {
             RefreshAccountTimeline(
                 accountRepository = get(),
-                socialDatabase = get(),
                 saveStatusToDatabase = get(),
+                databaseDelegate = get(),
+                timelineRepository = get(),
                 accountId = it[0],
                 timelineType = it[1],
             )

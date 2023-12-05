@@ -3,8 +3,6 @@ package org.mozilla.social.feed
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.ExperimentalPagingApi
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
 import androidx.paging.map
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,9 +13,7 @@ import org.koin.core.parameter.parametersOf
 import org.koin.java.KoinJavaComponent
 import org.mozilla.social.core.analytics.Analytics
 import org.mozilla.social.core.analytics.AnalyticsIdentifiers
-import org.mozilla.social.core.database.SocialDatabase
-import org.mozilla.social.core.database.model.statusCollections.toStatusWrapper
-import org.mozilla.social.core.repository.mastodon.model.status.toExternalModel
+import org.mozilla.social.core.repository.mastodon.TimelineRepository
 import org.mozilla.social.core.ui.postcard.PostCardDelegate
 import org.mozilla.social.core.ui.postcard.toPostCardUiState
 import org.mozilla.social.core.usecase.mastodon.account.GetLoggedInUserAccountId
@@ -33,7 +29,7 @@ class FeedViewModel(
     homeTimelineRemoteMediator: HomeTimelineRemoteMediator,
     localTimelineRemoteMediator: LocalTimelineRemoteMediator,
     federatedTimelineRemoteMediator: FederatedTimelineRemoteMediator,
-    private val socialDatabase: SocialDatabase,
+    timelineRepository: TimelineRepository,
     getLoggedInUserAccountId: GetLoggedInUserAccountId,
 ) : ViewModel(), FeedInteractions {
     private val userAccountId: String = getLoggedInUserAccountId()
@@ -42,59 +38,41 @@ class FeedViewModel(
     val timelineType = _timelineType.asStateFlow()
 
     @OptIn(ExperimentalPagingApi::class)
-    val homeFeed =
-        Pager(
-            config =
-                PagingConfig(
-                    pageSize = 20,
-                    initialLoadSize = 40,
-                ),
-            remoteMediator = homeTimelineRemoteMediator,
-        ) {
-            socialDatabase.homeTimelineDao().homeTimelinePagingSource()
-        }.flow.map { pagingData ->
-            pagingData.map {
-                it.toStatusWrapper().toExternalModel().toPostCardUiState(userAccountId)
-            }
-        }.cachedIn(viewModelScope)
+    val homeFeed = timelineRepository.getHomeTimelinePager(
+        remoteMediator = homeTimelineRemoteMediator,
+    ).map { pagingData ->
+        pagingData.map {
+            it.toPostCardUiState(userAccountId)
+        }
+    }.cachedIn(viewModelScope)
 
     @OptIn(ExperimentalPagingApi::class)
-    val localFeed =
-        Pager(
-            config =
-                PagingConfig(
-                    pageSize = 20,
-                    initialLoadSize = 40,
-                ),
-            remoteMediator = localTimelineRemoteMediator,
-        ) {
-            socialDatabase.localTimelineDao().localTimelinePagingSource()
-        }.flow.map { pagingData ->
-            pagingData.map {
-                it.toStatusWrapper().toExternalModel().toPostCardUiState(userAccountId)
-            }
-        }.cachedIn(viewModelScope)
+    val localFeed = timelineRepository.getLocalTimelinePager(
+        remoteMediator = localTimelineRemoteMediator,
+    ).map { pagingData ->
+        pagingData.map {
+            it.toPostCardUiState(userAccountId)
+        }
+    }.cachedIn(viewModelScope)
 
     @OptIn(ExperimentalPagingApi::class)
-    val federatedFeed =
-        Pager(
-            config =
-                PagingConfig(
-                    pageSize = 20,
-                    initialLoadSize = 40,
-                ),
-            remoteMediator = federatedTimelineRemoteMediator,
-        ) {
-            socialDatabase.federatedTimelineDao().federatedTimelinePagingSource()
-        }.flow.map { pagingData ->
-            pagingData.map {
-                it.toStatusWrapper().toExternalModel().toPostCardUiState(userAccountId)
-            }
-        }.cachedIn(viewModelScope)
+    val federatedFeed = timelineRepository.getFederatedTimelinePager(
+        remoteMediator = federatedTimelineRemoteMediator,
+    ).map { pagingData ->
+        pagingData.map {
+            it.toPostCardUiState(userAccountId)
+        }
+    }.cachedIn(viewModelScope)
 
-    val postCardDelegate: PostCardDelegate by KoinJavaComponent.inject(
+    val homePostCardDelegate: PostCardDelegate by KoinJavaComponent.inject(
         PostCardDelegate::class.java,
-    ) { parametersOf(viewModelScope) }
+    ) { parametersOf(viewModelScope, AnalyticsIdentifiers.FEED_PREFIX_HOME) }
+    val localPostCardDelegate: PostCardDelegate by KoinJavaComponent.inject(
+        PostCardDelegate::class.java,
+    ) { parametersOf(viewModelScope, AnalyticsIdentifiers.FEED_PREFIX_LOCAL) }
+    val federatedPostCardDelegate: PostCardDelegate by KoinJavaComponent.inject(
+        PostCardDelegate::class.java,
+    ) { parametersOf(viewModelScope, AnalyticsIdentifiers.FEED_PREFIX_FEDERATED) }
 
     override fun onTabClicked(timelineType: TimelineType) {
         _timelineType.update { timelineType }

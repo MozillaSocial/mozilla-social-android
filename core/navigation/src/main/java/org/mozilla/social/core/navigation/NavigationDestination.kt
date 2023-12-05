@@ -35,7 +35,7 @@ sealed class NavigationDestination(
         route = "auth",
     ) {
         fun NavController.navigateToAuthFlow(navOptions: NavOptions? = null) {
-            this.navigate(route, navOptions)
+            navigate(route, navOptions)
         }
     }
 
@@ -43,7 +43,15 @@ sealed class NavigationDestination(
         route = "tabs",
     ) {
         fun NavController.navigateToTabs(navOptions: NavOptions? = null) {
-            this.navigate(route, navOptions)
+            navigate(route, navOptions)
+        }
+    }
+
+    data object Favorites : NavigationDestination(
+        route = "favorites"
+    ) {
+        fun NavController.navigateToFavorites(navOptions: NavOptions? = null) {
+            navigate(route, navOptions)
         }
     }
 

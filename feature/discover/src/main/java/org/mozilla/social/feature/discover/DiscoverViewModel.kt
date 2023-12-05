@@ -61,6 +61,30 @@ class DiscoverViewModel(
         )
     }
 
+    override fun onBookmarkClicked(recommendationId: String) {
+        analytics.uiEngagement(
+            engagementType = EngagementType.BOOKMARK,
+            uiIdentifier = AnalyticsIdentifiers.DISCOVER_RECOMMENDATION_BOOKMARK,
+            recommendationId = recommendationId,
+        )
+    }
+
+    override fun onShareClicked(recommendationId: String) {
+        analytics.uiEngagement(
+            engagementType = EngagementType.SHARE,
+            uiIdentifier = AnalyticsIdentifiers.DISCOVER_RECOMMENDATION_SHARE,
+            recommendationId = recommendationId,
+        )
+    }
+
+    override fun onRepostClicked(recommendationId: String) {
+        analytics.uiEngagement(
+            engagementType = EngagementType.BOOST,
+            uiIdentifier = AnalyticsIdentifiers.DISCOVER_RECOMMENDATION_REPOST,
+            recommendationId = recommendationId
+        )
+    }
+
     override fun onScreenViewed() {
         analytics.uiImpression(
             uiIdentifier = AnalyticsIdentifiers.DISCOVER_SCREEN_IMPRESSION,

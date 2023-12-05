@@ -1,22 +1,23 @@
 package org.mozilla.social.core.usecase.mastodon.account
 
-import androidx.room.withTransaction
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import org.mozilla.social.common.annotations.PreferUseCase
 import org.mozilla.social.common.utils.StringFactory
-import org.mozilla.social.core.database.SocialDatabase
 import org.mozilla.social.core.navigation.usecases.ShowSnackbar
 import org.mozilla.social.core.repository.mastodon.AccountRepository
+import org.mozilla.social.core.repository.mastodon.DatabaseDelegate
+import org.mozilla.social.core.repository.mastodon.RelationshipRepository
 import org.mozilla.social.core.usecase.mastodon.R
 
 class FollowAccount(
     private val externalScope: CoroutineScope,
     private val showSnackbar: ShowSnackbar,
     private val accountRepository: AccountRepository,
-    private val socialDatabase: SocialDatabase,
+    private val relationshipRepository: RelationshipRepository,
+    private val databaseDelegate: DatabaseDelegate,
     private val dispatcherIo: CoroutineDispatcher = Dispatchers.IO,
 ) {
     /**
@@ -28,15 +29,16 @@ class FollowAccount(
         loggedInUserAccountId: String,
     ) = externalScope.async(dispatcherIo) {
         try {
-            socialDatabase.withTransaction {
-                socialDatabase.accountsDao().updateFollowingCount(loggedInUserAccountId, 1)
-                socialDatabase.relationshipsDao().updateFollowing(accountId, true)
+            databaseDelegate.withTransaction {
+                accountRepository.updateFollowingCountInDatabase(loggedInUserAccountId, 1)
+                relationshipRepository.updateFollowing(accountId, true)
             }
-            accountRepository.followAccount(accountId)
+            val relationship = accountRepository.followAccount(accountId)
+            relationshipRepository.insert(relationship)
         } catch (e: Exception) {
-            socialDatabase.withTransaction {
-                socialDatabase.accountsDao().updateFollowingCount(loggedInUserAccountId, -1)
-                socialDatabase.relationshipsDao().updateFollowing(accountId, false)
+            databaseDelegate.withTransaction {
+                accountRepository.updateFollowingCountInDatabase(loggedInUserAccountId, -1)
+                relationshipRepository.updateFollowing(accountId, false)
             }
             showSnackbar(
                 text = StringFactory.resource(R.string.error_following_account),

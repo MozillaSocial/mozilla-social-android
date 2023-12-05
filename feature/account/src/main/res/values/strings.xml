@@ -11,6 +11,7 @@
     <string name="following">Following</string>
     <string name="followers">Followers</string>
 
+    <string name="favorites_option">Favorites</string>
     <string name="share_option">Share</string>
     <string name="settings">Settings</string>
     <string name="follow_button">Follow</string>

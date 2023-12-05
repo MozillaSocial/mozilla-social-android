@@ -44,6 +44,7 @@ val mastodonNetworkModule =
         single { get<Retrofit>().create(AccountApi::class.java) }
         single { get<Retrofit>().create(AppApi::class.java) }
         single { get<Retrofit>().create(BlocksApi::class.java) }
+        single { get<Retrofit>().create(FavoritesApi::class.java) }
         single { get<Retrofit>().create(InstanceApi::class.java) }
         single { get<Retrofit>().create(MediaApi::class.java) }
         single { get<Retrofit>().create(MutesApi::class.java) }

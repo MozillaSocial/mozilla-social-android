@@ -4,13 +4,11 @@ import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
-import androidx.room.withTransaction
 import kotlinx.coroutines.delay
 import org.mozilla.social.common.Rel
-import org.mozilla.social.core.database.SocialDatabase
-import org.mozilla.social.core.database.model.statusCollections.HomeTimelineStatus
 import org.mozilla.social.core.database.model.statusCollections.HomeTimelineStatusWrapper
 import org.mozilla.social.core.repository.mastodon.AccountRepository
+import org.mozilla.social.core.repository.mastodon.DatabaseDelegate
 import org.mozilla.social.core.repository.mastodon.TimelineRepository
 import org.mozilla.social.core.usecase.mastodon.remotemediators.getInReplyToAccountNames
 import org.mozilla.social.core.usecase.mastodon.status.SaveStatusToDatabase
@@ -20,7 +18,7 @@ class RefreshHomeTimeline internal constructor(
     private val timelineRepository: TimelineRepository,
     private val accountRepository: AccountRepository,
     private val saveStatusToDatabase: SaveStatusToDatabase,
-    private val socialDatabase: SocialDatabase,
+    private val databaseDelegate: DatabaseDelegate,
 ) {
     @OptIn(ExperimentalPagingApi::class)
     @Suppress("ReturnCount", "MagicNumber")
@@ -66,25 +64,13 @@ class RefreshHomeTimeline internal constructor(
 
             val result = response.statuses.getInReplyToAccountNames(accountRepository)
 
-            socialDatabase.withTransaction {
+            databaseDelegate.withTransaction {
                 if (loadType == LoadType.REFRESH) {
-                    socialDatabase.homeTimelineDao().deleteHomeTimeline()
+                    timelineRepository.deleteHomeTimeline()
                 }
 
                 saveStatusToDatabase(result)
-
-                socialDatabase.homeTimelineDao().insertAll(
-                    result.map {
-                        HomeTimelineStatus(
-                            statusId = it.statusId,
-                            accountId = it.account.accountId,
-                            pollId = it.poll?.pollId,
-                            boostedStatusId = it.boostedStatus?.statusId,
-                            boostedStatusAccountId = it.boostedStatus?.account?.accountId,
-                            boostedPollId = it.boostedStatus?.poll?.pollId,
-                        )
-                    },
-                )
+                timelineRepository.insertAllIntoHomeTimeline(result)
             }
 
             // There seems to be some race condition for refreshes.  Subsequent pages do

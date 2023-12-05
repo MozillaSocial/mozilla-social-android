@@ -1,5 +1,7 @@
 package org.mozilla.social.core.repository.mastodon
 
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
@@ -26,6 +28,9 @@ class AccountRepository internal constructor(
     suspend fun getAccount(accountId: String): Account {
         return api.getAccount(accountId).toExternalModel()
     }
+
+    fun getAccountFlow(accountId: String): Flow<Account> =
+        dao.getAccountFlow(accountId).map { it.toExternalModel() }
 
     suspend fun verifyUserCredentials(): Account {
         return api.verifyCredentials().toExternalModel()
@@ -110,28 +115,34 @@ class AccountRepository internal constructor(
     suspend fun getAccountFavourites(): List<Status> = api.getAccountFavourites().map { it.toExternalModel() }
 
     @PreferUseCase
-    suspend fun followAccount(accountId: String) = api.followAccount(accountId = accountId)
+    suspend fun followAccount(accountId: String): Relationship =
+        api.followAccount(accountId = accountId).toExternal()
 
     @PreferUseCase
-    suspend fun unfollowAccount(accountId: String) = api.unfollowAccount(accountId = accountId)
+    suspend fun unfollowAccount(accountId: String): Relationship =
+        api.unfollowAccount(accountId = accountId).toExternal()
 
     @PreferUseCase
-    suspend fun blockAccount(accountId: String) = api.blockAccount(accountId = accountId)
+    suspend fun blockAccount(accountId: String): Relationship =
+        api.blockAccount(accountId = accountId).toExternal()
 
     @PreferUseCase
-    suspend fun unblockAccount(accountId: String) = api.unblockAccount(accountId = accountId)
+    suspend fun unblockAccount(accountId: String): Relationship =
+        api.unblockAccount(accountId = accountId).toExternal()
 
     @PreferUseCase
-    suspend fun muteAccount(accountId: String) = api.muteAccount(accountId = accountId)
+    suspend fun muteAccount(accountId: String): Relationship =
+        api.muteAccount(accountId = accountId).toExternal()
 
     @PreferUseCase
-    suspend fun unmuteAccount(accountId: String) = api.unmuteAccount(accountId = accountId)
+    suspend fun unmuteAccount(accountId: String): Relationship =
+        api.unmuteAccount(accountId = accountId).toExternal()
 
     suspend fun getAccountRelationships(accountIds: List<String>): List<Relationship> =
         api.getRelationships(accountIds.toTypedArray()).map { it.toExternal() }
 
-    // TODO@DA move to use case
-    suspend fun getAccountFromDatabase(accountId: String): Account? = dao.getAccount(accountId)?.toExternalModel()
+    suspend fun getAccountFromDatabase(accountId: String): Account? =
+        dao.getAccount(accountId)?.toExternalModel()
 
     @PreferUseCase
     @Suppress("MagicNumber")
@@ -143,7 +154,7 @@ class AccountRepository internal constructor(
         avatar: File? = null,
         header: File? = null,
         fields: List<Pair<String, String>>? = null,
-    ) = api.updateAccount(
+    ): Account = api.updateAccount(
         displayName = displayName?.toRequestBody(MultipartBody.FORM),
         bio = bio?.toRequestBody(MultipartBody.FORM),
         locked = locked?.toString()?.toRequestBody(MultipartBody.FORM),
@@ -175,4 +186,14 @@ class AccountRepository internal constructor(
     ).toExternalModel()
 
     fun insertAll(accounts: List<Account>) = dao.insertAll(accounts.map { it.toDatabaseModel() })
+
+    fun insert(account: Account) = dao.insert(account.toDatabaseModel())
+
+    suspend fun updateFollowingCountInDatabase(
+        accountId: String,
+        valueChange: Long,
+    ) = dao.updateFollowingCount(
+        accountId = accountId,
+        valueChange = valueChange,
+    )
 }

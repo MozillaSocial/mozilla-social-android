@@ -1,6 +1,7 @@
 package org.mozilla.social.feature.settings.contentpreferences
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.res.stringResource
 import org.koin.androidx.compose.koinViewModel
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
@@ -15,6 +16,10 @@ fun ContentPreferencesSettingsScreen(viewModel: ContentPreferencesSettingsViewMo
         onBlockedUsersClicked = viewModel::onBlockedUsersClicked,
         onMutedUsersClicked = viewModel::onMutedUsersClicked,
     )
+
+    LaunchedEffect(Unit) {
+        viewModel.onScreenViewed()
+    }
 }
 
 @Composable

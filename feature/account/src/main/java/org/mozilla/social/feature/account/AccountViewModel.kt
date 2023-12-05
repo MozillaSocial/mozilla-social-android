@@ -3,29 +3,24 @@ package org.mozilla.social.feature.account
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.ExperimentalPagingApi
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
 import androidx.paging.map
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import org.koin.core.parameter.parametersOf
-import org.koin.java.KoinJavaComponent.inject
 import org.mozilla.social.common.Resource
 import org.mozilla.social.common.utils.edit
 import org.mozilla.social.core.analytics.Analytics
 import org.mozilla.social.core.analytics.AnalyticsIdentifiers
-import org.mozilla.social.core.database.SocialDatabase
-import org.mozilla.social.core.database.model.statusCollections.toStatusWrapper
+import org.mozilla.social.core.model.AccountTimelineType
 import org.mozilla.social.core.navigation.NavigationDestination
 import org.mozilla.social.core.navigation.usecases.NavigateTo
-import org.mozilla.social.core.repository.mastodon.model.status.toExternalModel
+import org.mozilla.social.core.repository.mastodon.TimelineRepository
 import org.mozilla.social.core.ui.postcard.PostCardDelegate
 import org.mozilla.social.core.ui.postcard.toPostCardUiState
 import org.mozilla.social.core.usecase.mastodon.account.BlockAccount
@@ -41,7 +36,7 @@ import timber.log.Timber
 class AccountViewModel(
     private val analytics: Analytics,
     getLoggedInUserAccountId: GetLoggedInUserAccountId,
-    private val socialDatabase: SocialDatabase,
+    timelineRepository: TimelineRepository,
     private val getDetailedAccount: GetDetailedAccount,
     private val navigateTo: NavigateTo,
     private val followAccount: FollowAccount,
@@ -51,10 +46,14 @@ class AccountViewModel(
     private val muteAccount: MuteAccount,
     private val unmuteAccount: UnmuteAccount,
     initialAccountId: String?,
-) : ViewModel(), AccountInteractions {
-    val postCardDelegate: PostCardDelegate by inject(
-        PostCardDelegate::class.java,
-    ) { parametersOf(viewModelScope) }
+) : ViewModel(), AccountInteractions, KoinComponent {
+
+    val postCardDelegate: PostCardDelegate by inject {
+        parametersOf(
+            viewModelScope,
+            AnalyticsIdentifiers.FEED_PREFIX_PROFILE
+        )
+    }
 
     /**
      * The account ID of the logged in user
@@ -79,41 +78,62 @@ class AccountViewModel(
 
     private var getAccountJob: Job? = null
 
-    private val _timelineType = MutableStateFlow(TimelineType.POSTS)
-    val timelineType = _timelineType.asStateFlow()
-
-    private val externalTimelineType: StateFlow<org.mozilla.social.core.usecase.mastodon.timeline.TimelineType> =
-        timelineType.map { it.toExternalModel() }.stateIn(
-            viewModelScope,
-            SharingStarted.WhileSubscribed(),
-            org.mozilla.social.core.usecase.mastodon.timeline.TimelineType.POSTS,
-        )
-
-    private val accountTimelineRemoteMediator: AccountTimelineRemoteMediator by inject(
-        AccountTimelineRemoteMediator::class.java,
-    ) {
+    private val postsRemoteMediator: AccountTimelineRemoteMediator by inject {
         parametersOf(
             accountId,
-            externalTimelineType,
+            AccountTimelineType.POSTS,
+        )
+    }
+
+    private val postsAndRepliesRemoteMediator: AccountTimelineRemoteMediator by inject {
+        parametersOf(
+            accountId,
+            AccountTimelineType.POSTS_AND_REPLIES,
+        )
+    }
+
+    private val mediaRemoteMediator: AccountTimelineRemoteMediator by inject {
+        parametersOf(
+            accountId,
+            AccountTimelineType.MEDIA,
         )
     }
 
     @OptIn(ExperimentalPagingApi::class)
-    val feed =
-        Pager(
-            config =
-                PagingConfig(
-                    pageSize = 20,
-                    initialLoadSize = 40,
-                ),
-            remoteMediator = accountTimelineRemoteMediator,
-        ) {
-            socialDatabase.accountTimelineDao().accountTimelinePagingSource(accountId)
-        }.flow.map { pagingData ->
-            pagingData.map {
-                it.toStatusWrapper().toExternalModel().toPostCardUiState(usersAccountId)
-            }
-        }.cachedIn(viewModelScope)
+    val postsFeed = timelineRepository.getAccountTimelinePager(
+        accountId = accountId,
+        timelineType = AccountTimelineType.POSTS,
+        remoteMediator = postsRemoteMediator,
+    ).map { pagingData ->
+        pagingData.map {
+            it.toPostCardUiState(usersAccountId)
+        }
+    }.cachedIn(viewModelScope)
+
+    @OptIn(ExperimentalPagingApi::class)
+    val postsAndRepliesFeed = timelineRepository.getAccountTimelinePager(
+        accountId = accountId,
+        timelineType = AccountTimelineType.POSTS_AND_REPLIES,
+        remoteMediator = postsAndRepliesRemoteMediator,
+    ).map { pagingData ->
+        pagingData.map {
+            it.toPostCardUiState(usersAccountId)
+        }
+    }.cachedIn(viewModelScope)
+
+    @OptIn(ExperimentalPagingApi::class)
+    val mediaFeed = timelineRepository.getAccountTimelinePager(
+        accountId = accountId,
+        timelineType = AccountTimelineType.MEDIA,
+        remoteMediator = mediaRemoteMediator,
+    ).map { pagingData ->
+        pagingData.map {
+            it.toPostCardUiState(usersAccountId)
+        }
+    }.cachedIn(viewModelScope)
+
+    private val _timeline = MutableStateFlow(Timeline(AccountTimelineType.POSTS, postsFeed))
+    val timeline = _timeline.asStateFlow()
 
     init {
         loadAccount()
@@ -139,6 +159,20 @@ class AccountViewModel(
         analytics.uiImpression(
             mastodonAccountId = accountId,
             uiIdentifier = AnalyticsIdentifiers.ACCOUNTS_SCREEN_IMPRESSION,
+        )
+    }
+
+    override fun onOverflowFavoritesClicked() {
+        navigateTo(
+            navDestination = NavigationDestination.Favorites
+        )
+    }
+
+    override fun onOverflowShareClicked() {
+        analytics.uiEngagement(
+            uiIdentifier = AnalyticsIdentifiers.PROFILE_MORE_SHARE_ACCOUNT,
+            mastodonAccountId = accountId,
+            mastodonAccountHandle = usersAccountId
         )
     }
 
@@ -216,6 +250,11 @@ class AccountViewModel(
     override fun onFollowClicked() {
         viewModelScope.launch {
             try {
+                analytics.uiEngagement(
+                    uiIdentifier = AnalyticsIdentifiers.ACCOUNTS_SCREEN_FOLLOW,
+                    mastodonAccountId = accountId,
+                    mastodonAccountHandle = usersAccountId
+                )
                 followAccount(
                     accountId = accountId,
                     loggedInUserAccountId = usersAccountId,
@@ -229,6 +268,11 @@ class AccountViewModel(
     override fun onUnfollowClicked() {
         viewModelScope.launch {
             try {
+                analytics.uiEngagement(
+                    uiIdentifier = AnalyticsIdentifiers.ACCOUNTS_SCREEN_UNFOLLOW,
+                    mastodonAccountId = accountId,
+                    mastodonAccountHandle = usersAccountId
+                )
                 unfollowAccount(
                     accountId = accountId,
                     loggedInUserAccountId = usersAccountId,
@@ -243,8 +287,17 @@ class AccountViewModel(
         loadAccount()
     }
 
-    override fun onTabClicked(timelineType: TimelineType) {
-        _timelineType.edit { timelineType }
+    override fun onTabClicked(timelineType: AccountTimelineType) {
+        _timeline.edit {
+            copy(
+                type = timelineType,
+                feed = when (timelineType) {
+                    AccountTimelineType.POSTS -> postsFeed
+                    AccountTimelineType.POSTS_AND_REPLIES -> postsAndRepliesFeed
+                    AccountTimelineType.MEDIA -> mediaFeed
+                }
+            )
+        }
     }
 
     override fun onSettingsClicked() {
@@ -252,19 +305,11 @@ class AccountViewModel(
     }
 
     override fun onEditAccountClicked() {
+        analytics.uiEngagement(
+            uiIdentifier = AnalyticsIdentifiers.PROFILE_EDIT_PROFILE,
+            mastodonAccountId = accountId,
+            mastodonAccountHandle = usersAccountId,
+        )
         navigateTo(NavigationDestination.EditAccount)
     }
 }
-
-private fun TimelineType.toExternalModel() =
-    when (this) {
-        TimelineType.POSTS -> {
-            org.mozilla.social.core.usecase.mastodon.timeline.TimelineType.POSTS
-        }
-        TimelineType.POSTS_AND_REPLIES -> {
-            org.mozilla.social.core.usecase.mastodon.timeline.TimelineType.POSTS_AND_REPLIES
-        }
-        TimelineType.MEDIA -> {
-            org.mozilla.social.core.usecase.mastodon.timeline.TimelineType.MEDIA
-        }
-    }

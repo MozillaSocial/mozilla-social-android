@@ -6,16 +6,16 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import org.mozilla.social.common.annotations.PreferUseCase
 import org.mozilla.social.common.utils.StringFactory
-import org.mozilla.social.core.database.SocialDatabase
 import org.mozilla.social.core.navigation.usecases.ShowSnackbar
 import org.mozilla.social.core.repository.mastodon.AccountRepository
+import org.mozilla.social.core.repository.mastodon.RelationshipRepository
 import org.mozilla.social.core.usecase.mastodon.R
 
 class UnmuteAccount(
     private val externalScope: CoroutineScope,
     private val showSnackbar: ShowSnackbar,
     private val accountRepository: AccountRepository,
-    private val socialDatabase: SocialDatabase,
+    private val relationshipRepository: RelationshipRepository,
     private val dispatcherIo: CoroutineDispatcher = Dispatchers.IO,
 ) {
     /**
@@ -25,10 +25,11 @@ class UnmuteAccount(
     suspend operator fun invoke(accountId: String) =
         externalScope.async(dispatcherIo) {
             try {
-                socialDatabase.relationshipsDao().updateMuted(accountId, false)
-                accountRepository.unmuteAccount(accountId)
+                relationshipRepository.updateMuted(accountId, false)
+                val relationship = accountRepository.unmuteAccount(accountId)
+                relationshipRepository.insert(relationship)
             } catch (e: Exception) {
-                socialDatabase.relationshipsDao().updateMuted(accountId, true)
+                relationshipRepository.updateMuted(accountId, true)
                 showSnackbar(
                     text = StringFactory.resource(R.string.error_unmuting_account),
                     isError = true,

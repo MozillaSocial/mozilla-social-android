@@ -18,6 +18,7 @@ import org.mozilla.social.core.repository.mastodon.AuthCredentialObserver
 import org.mozilla.social.feature.account.accountModule
 import org.mozilla.social.feature.auth.authModule
 import org.mozilla.social.feature.discover.discoverModule
+import org.mozilla.social.feature.favorites.favoritesModule
 import org.mozilla.social.feature.followers.followersModule
 import org.mozilla.social.feature.hashtag.hashTagModule
 import org.mozilla.social.feature.report.reportModule
@@ -73,6 +74,7 @@ val featureModules =
             accountModule,
             authModule,
             discoverModule,
+            favoritesModule,
             feedModule,
             followersModule,
             hashTagModule,

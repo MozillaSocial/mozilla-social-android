@@ -19,7 +19,7 @@ class UndoFavoriteStatusTest : BaseUseCaseTest() {
                 externalScope = TestScope(testDispatcher),
                 showSnackbar = showSnackbar,
                 statusRepository = statusRepository,
-                socialDatabase = socialDatabase,
+                databaseDelegate = databaseDelegate,
                 dispatcherIo = testDispatcher,
                 saveStatusToDatabase = saveStatusToDatabase,
             )

@@ -10,6 +10,7 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -38,6 +39,10 @@ import org.mozilla.social.feature.settings.ui.SettingsColumn
 @Composable
 fun BlockedUsersSettingsScreen(viewModel: BlockedUsersViewModel = koinViewModel()) {
     BlockedUsersSettingsScreen(viewModel.pager, viewModel::onBlockButtonClicked)
+
+    LaunchedEffect(Unit) {
+        viewModel.onScreenViewed()
+    }
 }
 
 @Composable

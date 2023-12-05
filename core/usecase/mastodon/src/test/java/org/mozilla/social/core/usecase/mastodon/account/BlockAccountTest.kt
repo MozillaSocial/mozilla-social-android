@@ -15,8 +15,9 @@ class BlockAccountTest : BaseUseCaseTest() {
                 externalScope = TestScope(testDispatcher),
                 showSnackbar = showSnackbar,
                 accountRepository = accountRepository,
-                socialDatabase = socialDatabase,
+                relationshipRepository = relationshipRepository,
                 dispatcherIo = testDispatcher,
+                timelineRepository = timelineRepository,
             )
     }
 
@@ -25,7 +26,7 @@ class BlockAccountTest : BaseUseCaseTest() {
         val accountId = "id1"
         testOuterScopeCancelled(
             delayedCallBlock = {
-                relationshipsDao.updateBlocked(any(), any())
+                relationshipRepository.updateBlocked(any(), any())
             },
             subjectCallBlock = {
                 subject(accountId)
@@ -40,7 +41,7 @@ class BlockAccountTest : BaseUseCaseTest() {
     fun testCancelledScopeWithError() {
         testOuterScopeCancelledAndInnerException(
             delayedCallBlock = {
-                relationshipsDao.updateBlocked(any(), true)
+                relationshipRepository.updateBlocked(any(), true)
             },
             subjectCallBlock = {
                 subject("id")

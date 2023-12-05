@@ -10,6 +10,7 @@ import org.mozilla.social.common.utils.mosoFadeOut
 import org.mozilla.social.feature.account.accountScreen
 import org.mozilla.social.feature.account.edit.editAccountScreen
 import org.mozilla.social.feature.auth.authFlow
+import org.mozilla.social.feature.favorites.favoritesScreen
 import org.mozilla.social.feature.followers.followersScreen
 import org.mozilla.social.feature.hashtag.hashTagScreen
 import org.mozilla.social.feature.report.reportFlow
@@ -45,6 +46,7 @@ fun MainNavHost(
         bottomTabScreen(appState)
         editAccountScreen()
         settingsFlow()
+        favoritesScreen()
     }
 }
 

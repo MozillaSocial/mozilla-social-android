@@ -6,7 +6,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.setMain
 import org.junit.Test
-import org.mozilla.social.core.analytics.DummyAnalytics
+import org.mozilla.social.core.analytics.Analytics
 import org.mozilla.social.core.datastore.AppPreferencesDatastore
 import org.mozilla.social.core.navigation.SettingsNavigationDestination
 import org.mozilla.social.core.navigation.usecases.NavigateTo
@@ -16,7 +16,7 @@ class SettingsViewModelTest {
     private lateinit var objUnderTest: SettingsViewModel
 
     private val navigateTo: NavigateTo = mockk(relaxed = true)
-    private val analytics: DummyAnalytics = mockk()
+    private val analytics: Analytics = mockk(relaxed = true)
     private val appPreferencesDatastore: AppPreferencesDatastore = mockk()
 
     @BeforeTest

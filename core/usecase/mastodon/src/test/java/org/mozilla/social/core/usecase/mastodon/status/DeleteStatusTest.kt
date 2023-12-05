@@ -22,8 +22,9 @@ class DeleteStatusTest : BaseUseCaseTest() {
                 externalScope = TestScope(testDispatcher),
                 showSnackbar = showSnackbar,
                 statusRepository = statusRepository,
-                socialDatabase = socialDatabase,
+                databaseDelegate = databaseDelegate,
                 dispatcherIo = testDispatcher,
+                timelineRepository = timelineRepository,
             )
     }
 
@@ -35,11 +36,11 @@ class DeleteStatusTest : BaseUseCaseTest() {
             coVerify(exactly = 1) {
                 statusRepository.updateIsBeingDeleted("id", true)
                 statusRepository.deleteStatus("id")
-                homeTimelineDao.deletePost("id")
-                localTimelineDao.deletePost("id")
-                federatedTimelineDao.deletePost("id")
-                hashTagTimelineDao.deletePost("id")
-                accountTimelineDao.deletePost("id")
+                timelineRepository.deleteStatusFromHomeTimeline("id")
+                timelineRepository.deleteStatusFromLocalTimeline("id")
+                timelineRepository.deleteStatusFromFederatedTimeline("id")
+                timelineRepository.deleteStatusFromAllHashTagTimelines("id")
+                timelineRepository.deleteStatusFromAccountTimelines("id")
                 statusRepository.deleteStatusLocal("id")
             }
         }
@@ -64,11 +65,11 @@ class DeleteStatusTest : BaseUseCaseTest() {
             }
 
             coVerify(exactly = 0) {
-                homeTimelineDao.deletePost("id")
-                localTimelineDao.deletePost("id")
-                federatedTimelineDao.deletePost("id")
-                hashTagTimelineDao.deletePost("id")
-                accountTimelineDao.deletePost("id")
+                timelineRepository.deleteStatusFromHomeTimeline("id")
+                timelineRepository.deleteStatusFromLocalTimeline("id")
+                timelineRepository.deleteStatusFromFederatedTimeline("id")
+                timelineRepository.deleteStatusFromAllHashTagTimelines("id")
+                timelineRepository.deleteStatusFromAccountTimelines("id")
                 statusRepository.deleteStatusLocal("id")
             }
         }

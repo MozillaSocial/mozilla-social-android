@@ -10,6 +10,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -17,6 +18,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import org.koin.androidx.compose.koinViewModel
 import org.mozilla.social.core.designsystem.theme.MoSoRadius
@@ -37,6 +39,10 @@ import org.mozilla.social.feature.settings.ui.SettingsColumn
 fun AboutSettingsScreen(aboutSettingsViewModel: AboutSettingsViewModel = koinViewModel()) {
     val aboutSettings: AboutSettings? by aboutSettingsViewModel.aboutSettings.collectAsStateWithLifecycle()
     aboutSettings?.let { AboutSettingsScreen(it) }
+
+    LaunchedEffect(Unit) {
+        aboutSettingsViewModel.onScreenViewed()
+    }
 }
 
 @Composable
@@ -45,16 +51,16 @@ fun AboutSettingsScreen(aboutSettings: AboutSettings) {
         SettingsColumn(
             title = stringResource(id = R.string.about_settings_title),
             modifier =
-                Modifier
-                    .verticalScroll(rememberScrollState())
-                    .padding(MoSoSpacing.lg),
+            Modifier
+                .verticalScroll(rememberScrollState())
+                .padding(MoSoSpacing.lg),
         ) {
             AsyncImage(
                 modifier =
-                    Modifier
-                        .clip(RoundedCornerShape(MoSoRadius.lg_16_dp))
-                        .fillMaxWidth()
-                        .wrapContentHeight(),
+                Modifier
+                    .clip(RoundedCornerShape(MoSoRadius.lg_16_dp))
+                    .fillMaxWidth()
+                    .wrapContentHeight(),
                 model = aboutSettings.thumbnailUrl,
                 contentDescription = null,
                 contentScale = ContentScale.FillWidth,

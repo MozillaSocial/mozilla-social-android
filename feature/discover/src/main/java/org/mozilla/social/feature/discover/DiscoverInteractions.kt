@@ -3,11 +3,11 @@ package org.mozilla.social.feature.discover
 interface DiscoverInteractions {
     fun onRetryClicked() = Unit
 
-    fun onRepostClicked() = Unit
+    fun onRepostClicked(recommendationId: String) = Unit
 
-    fun onBookmarkClicked() = Unit
+    fun onBookmarkClicked(recommendationId: String) = Unit
 
-    fun onShareClicked() = Unit
+    fun onShareClicked(recommendationId: String) = Unit
 
     fun onRecommendationClicked(recommendationId: String) = Unit
 
