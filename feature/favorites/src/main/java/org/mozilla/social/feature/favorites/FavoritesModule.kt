@@ -1,9 +1,7 @@
 package org.mozilla.social.feature.favorites
 
-import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.core.module.dsl.factoryOf
-import org.koin.dsl.factory
 import org.koin.dsl.module
 import org.mozilla.social.common.commonModule
 import org.mozilla.social.core.analytics.analyticsModule
