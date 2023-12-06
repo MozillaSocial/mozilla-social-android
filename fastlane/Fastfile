@@ -13,19 +13,19 @@
 default_platform(:android)
 
 platform :android do
-  desc "Submit a new daily build to internal distribution (currently App Center)"
-  lane :daily do
+  desc "Submit a new nightly build to Play Store."
+  lane :nightly do
     # Switch to the root directory to run the release script.
     # https://docs.fastlane.tools/advanced/fastlane/#directory-behavior
     Dir.chdir("..") do
-      sh "ci/daily-build.sh"
+      sh "ci/nightly-build.sh"
     end
 
-    appcenter_upload(
-      file: "secrets/mozilla-social.apk",
-      upload_build_only: true,
-      destinations: "MozillaSocial",
-      notify_testers: true
+    upload_to_play_store(
+      package_name: "org.mozilla.social.nightly",
+      aab: "secrets/mozilla-social-nightly.aab",
+      track: "alpha",
+      skip_upload_metadata: true,
     )
   end
 end
