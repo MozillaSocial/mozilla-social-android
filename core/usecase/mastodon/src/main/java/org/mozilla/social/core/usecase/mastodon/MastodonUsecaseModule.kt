@@ -178,6 +178,7 @@ val mastodonUsecaseModule =
                 showSnackbar = get(),
                 saveStatusToDatabase = get(),
                 databaseDelegate = get(),
+                favoritesRepository = get(),
             )
         }
         single {
