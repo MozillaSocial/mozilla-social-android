@@ -3,6 +3,7 @@ package org.mozilla.social.core.database.model.statusCollections
 import androidx.room.ColumnInfo
 import androidx.room.Embedded
 import androidx.room.Entity
+import androidx.room.ForeignKey
 import androidx.room.Relation
 import org.mozilla.social.core.database.model.DatabaseAccount
 import org.mozilla.social.core.database.model.DatabasePoll
@@ -16,6 +17,38 @@ import org.mozilla.social.core.model.AccountTimelineType
         "statusId",
         "accountId",
         "timelineType",
+    ],
+    foreignKeys = [
+        ForeignKey(
+            entity = DatabaseStatus::class,
+            parentColumns = ["statusId"],
+            childColumns = ["statusId"],
+        ),
+        ForeignKey(
+            entity = DatabaseStatus::class,
+            parentColumns = ["statusId"],
+            childColumns = ["boostedStatusId"],
+        ),
+        ForeignKey(
+            entity = DatabaseAccount::class,
+            parentColumns = ["accountId"],
+            childColumns = ["accountId"],
+        ),
+        ForeignKey(
+            entity = DatabaseAccount::class,
+            parentColumns = ["accountId"],
+            childColumns = ["boostedStatusAccountId"],
+        ),
+        ForeignKey(
+            entity = DatabasePoll::class,
+            parentColumns = ["pollId"],
+            childColumns = ["pollId"],
+        ),
+        ForeignKey(
+            entity = DatabasePoll::class,
+            parentColumns = ["pollId"],
+            childColumns = ["boostedPollId"],
+        ),
     ],
 )
 data class AccountTimelineStatus(
