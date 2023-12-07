@@ -22,6 +22,7 @@ class UndoFavoriteStatusTest : BaseUseCaseTest() {
                 databaseDelegate = databaseDelegate,
                 dispatcherIo = testDispatcher,
                 saveStatusToDatabase = saveStatusToDatabase,
+                favoritesRepository = favoritesRepository,
             )
     }
 

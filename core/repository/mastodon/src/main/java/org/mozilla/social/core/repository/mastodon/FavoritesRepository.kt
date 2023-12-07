@@ -17,7 +17,6 @@ import org.mozilla.social.core.model.Status
 import org.mozilla.social.core.model.paging.StatusPagingWrapper
 import org.mozilla.social.core.network.mastodon.FavoritesApi
 import org.mozilla.social.core.repository.mastodon.model.status.toExternalModel
-import org.mozilla.social.core.repository.mastodon.model.status.toHashTagTimelineStatus
 import retrofit2.HttpException
 
 class FavoritesRepository(
@@ -74,4 +73,16 @@ class FavoritesRepository(
     fun insertAll(
         statuses: List<FavoritesTimelineStatus>
     ) = dao.insertAll(statuses)
+
+    fun insert(
+        status: FavoritesTimelineStatus
+    ) = dao.insert(status)
+
+    suspend fun deleteStatusFromTimeline(
+        statusId: String,
+    ) = dao.deletePost(statusId)
+
+    suspend fun getStatusFromTimeline(
+        statusId: String,
+    ): FavoritesTimelineStatus = dao.getStatus(statusId)
 }

@@ -43,6 +43,7 @@ object AnalyticsIdentifiers {
     const val FEED_PREFIX_FEDERATED = "federated"
     const val FEED_PREFIX_HASHTAG = "hashtag"
     const val FEED_PREFIX_THREAD = "thread"
+    const val FEED_PREFIX_FAVORITES = "favorites"
 
     const val REPORT_SCREEN_IMPRESSION = "report.screen.impression"
 

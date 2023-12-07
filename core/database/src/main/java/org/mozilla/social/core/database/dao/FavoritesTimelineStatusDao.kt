@@ -25,4 +25,10 @@ interface FavoritesTimelineStatusDao: BaseDao<FavoritesTimelineStatus> {
         "OR boostedStatusId = :statusId",
     )
     suspend fun deletePost(statusId: String)
+
+    @Query(
+        "SELECT * FROM favoritesTimeline " +
+        "WHERE statusId = :statusId"
+    )
+    suspend fun getStatus(statusId: String): FavoritesTimelineStatus
 }
