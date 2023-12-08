@@ -1,4 +1,4 @@
-package org.mozilla.social.core.database.model
+package org.mozilla.social.core.database.model.entities
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

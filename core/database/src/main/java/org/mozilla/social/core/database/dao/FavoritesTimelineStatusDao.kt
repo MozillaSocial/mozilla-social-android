@@ -4,8 +4,8 @@ import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
-import org.mozilla.social.core.database.model.statusCollections.FavoritesTimelineStatus
-import org.mozilla.social.core.database.model.statusCollections.FavoritesTimelineStatusWrapper
+import org.mozilla.social.core.database.model.entities.statusCollections.FavoritesTimelineStatus
+import org.mozilla.social.core.database.model.entities.statusCollections.FavoritesTimelineStatusWrapper
 
 @Dao
 interface FavoritesTimelineStatusDao: BaseDao<FavoritesTimelineStatus> {

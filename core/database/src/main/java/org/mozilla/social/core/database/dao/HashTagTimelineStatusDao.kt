@@ -4,8 +4,8 @@ import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
-import org.mozilla.social.core.database.model.statusCollections.HashTagTimelineStatus
-import org.mozilla.social.core.database.model.statusCollections.HashTagTimelineStatusWrapper
+import org.mozilla.social.core.database.model.entities.statusCollections.HashTagTimelineStatus
+import org.mozilla.social.core.database.model.entities.statusCollections.HashTagTimelineStatusWrapper
 
 @Dao
 interface HashTagTimelineStatusDao : BaseDao<HashTagTimelineStatus> {

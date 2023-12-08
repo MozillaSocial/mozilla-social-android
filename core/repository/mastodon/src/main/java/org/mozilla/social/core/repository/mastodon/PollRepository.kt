@@ -2,7 +2,7 @@ package org.mozilla.social.core.repository.mastodon
 
 import org.mozilla.social.core.database.dao.PollsDao
 import org.mozilla.social.core.database.model.DatabaseEmoji
-import org.mozilla.social.core.database.model.DatabasePoll
+import org.mozilla.social.core.database.model.entities.DatabasePoll
 import org.mozilla.social.core.database.model.DatabasePollOption
 import org.mozilla.social.core.model.Emoji
 import org.mozilla.social.core.model.Poll

@@ -4,7 +4,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import org.mozilla.social.common.annotations.PreferUseCase
 import org.mozilla.social.core.database.dao.StatusDao
-import org.mozilla.social.core.database.model.DatabaseStatus
+import org.mozilla.social.core.database.model.entities.DatabaseStatus
 import org.mozilla.social.core.model.Context
 import org.mozilla.social.core.model.Poll
 import org.mozilla.social.core.model.PollVote

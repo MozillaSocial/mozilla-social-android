@@ -1,13 +1,13 @@
-package org.mozilla.social.core.database.model.statusCollections
+package org.mozilla.social.core.database.model.entities.statusCollections
 
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import androidx.room.Relation
-import org.mozilla.social.core.database.model.DatabaseAccount
-import org.mozilla.social.core.database.model.DatabasePoll
-import org.mozilla.social.core.database.model.DatabaseStatus
+import org.mozilla.social.core.database.model.entities.DatabaseAccount
+import org.mozilla.social.core.database.model.entities.DatabasePoll
+import org.mozilla.social.core.database.model.entities.DatabaseStatus
 import org.mozilla.social.core.database.model.wrappers.StatusWrapper
 
 @Entity(

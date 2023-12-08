@@ -7,8 +7,8 @@ import androidx.paging.RemoteMediator
 import kotlinx.coroutines.delay
 import org.mozilla.social.common.Rel
 import org.mozilla.social.common.getMaxIdValue
-import org.mozilla.social.core.database.model.statusCollections.FavoritesTimelineStatus
-import org.mozilla.social.core.database.model.statusCollections.FavoritesTimelineStatusWrapper
+import org.mozilla.social.core.database.model.entities.statusCollections.FavoritesTimelineStatus
+import org.mozilla.social.core.database.model.entities.statusCollections.FavoritesTimelineStatusWrapper
 import org.mozilla.social.core.repository.mastodon.AccountRepository
 import org.mozilla.social.core.repository.mastodon.DatabaseDelegate
 import org.mozilla.social.core.repository.mastodon.FavoritesRepository

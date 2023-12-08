@@ -1,4 +1,4 @@
-package org.mozilla.social.core.database.model
+package org.mozilla.social.core.database.model.entities
 
 import androidx.room.Embedded
 import androidx.room.Entity
@@ -6,6 +6,9 @@ import androidx.room.PrimaryKey
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.serialization.Serializable
+import org.mozilla.social.core.database.model.DatabaseEmoji
+import org.mozilla.social.core.database.model.DatabaseField
+import org.mozilla.social.core.database.model.DatabaseSource
 
 /**
  * Represents a user of Mastodon and their associated profile.

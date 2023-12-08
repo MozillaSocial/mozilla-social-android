@@ -27,18 +27,18 @@ import org.mozilla.social.core.database.dao.LocalTimelineStatusDao
 import org.mozilla.social.core.database.dao.PollsDao
 import org.mozilla.social.core.database.dao.RelationshipsDao
 import org.mozilla.social.core.database.dao.StatusDao
-import org.mozilla.social.core.database.model.DatabaseAccount
-import org.mozilla.social.core.database.model.DatabasePoll
-import org.mozilla.social.core.database.model.DatabaseRelationship
-import org.mozilla.social.core.database.model.DatabaseStatus
-import org.mozilla.social.core.database.model.accountCollections.Followee
-import org.mozilla.social.core.database.model.accountCollections.Follower
-import org.mozilla.social.core.database.model.statusCollections.AccountTimelineStatus
-import org.mozilla.social.core.database.model.statusCollections.FavoritesTimelineStatus
-import org.mozilla.social.core.database.model.statusCollections.FederatedTimelineStatus
-import org.mozilla.social.core.database.model.statusCollections.HashTagTimelineStatus
-import org.mozilla.social.core.database.model.statusCollections.HomeTimelineStatus
-import org.mozilla.social.core.database.model.statusCollections.LocalTimelineStatus
+import org.mozilla.social.core.database.model.entities.DatabaseAccount
+import org.mozilla.social.core.database.model.entities.DatabasePoll
+import org.mozilla.social.core.database.model.entities.DatabaseRelationship
+import org.mozilla.social.core.database.model.entities.DatabaseStatus
+import org.mozilla.social.core.database.model.entities.accountCollections.Followee
+import org.mozilla.social.core.database.model.entities.accountCollections.Follower
+import org.mozilla.social.core.database.model.entities.statusCollections.AccountTimelineStatus
+import org.mozilla.social.core.database.model.entities.statusCollections.FavoritesTimelineStatus
+import org.mozilla.social.core.database.model.entities.statusCollections.FederatedTimelineStatus
+import org.mozilla.social.core.database.model.entities.statusCollections.HashTagTimelineStatus
+import org.mozilla.social.core.database.model.entities.statusCollections.HomeTimelineStatus
+import org.mozilla.social.core.database.model.entities.statusCollections.LocalTimelineStatus
 
 @Suppress("MagicNumber")
 @Database(

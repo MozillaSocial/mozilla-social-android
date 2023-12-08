@@ -9,8 +9,8 @@ import androidx.paging.map
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import org.mozilla.social.core.database.dao.FollowingsDao
-import org.mozilla.social.core.database.model.accountCollections.Followee
-import org.mozilla.social.core.database.model.accountCollections.FolloweeWrapper
+import org.mozilla.social.core.database.model.entities.accountCollections.Followee
+import org.mozilla.social.core.database.model.entities.accountCollections.FolloweeWrapper
 import org.mozilla.social.core.model.wrappers.DetailedAccountWrapper
 import org.mozilla.social.core.repository.mastodon.model.account.toDetailedAccount
 

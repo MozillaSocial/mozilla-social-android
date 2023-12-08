@@ -1,17 +1,17 @@
-package org.mozilla.social.core.database.model.statusCollections
+package org.mozilla.social.core.database.model.entities.statusCollections
 
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import androidx.room.Relation
-import org.mozilla.social.core.database.model.DatabaseAccount
-import org.mozilla.social.core.database.model.DatabasePoll
-import org.mozilla.social.core.database.model.DatabaseStatus
+import org.mozilla.social.core.database.model.entities.DatabaseAccount
+import org.mozilla.social.core.database.model.entities.DatabasePoll
+import org.mozilla.social.core.database.model.entities.DatabaseStatus
 import org.mozilla.social.core.database.model.wrappers.StatusWrapper
 
 @Entity(
-    tableName = "localTimeline",
+    tableName = "favoritesTimeline",
     foreignKeys = [
         ForeignKey(
             entity = DatabaseStatus::class,
@@ -57,9 +57,10 @@ import org.mozilla.social.core.database.model.wrappers.StatusWrapper
         ),
     ]
 )
-data class LocalTimelineStatus(
+data class FavoritesTimelineStatus(
     @PrimaryKey
     val statusId: String,
+    val position: Int,
     val accountId: String,
     val pollId: String?,
     val boostedStatusId: String?,
@@ -67,9 +68,9 @@ data class LocalTimelineStatus(
     val boostedPollId: String?,
 )
 
-data class LocalTimelineStatusWrapper(
+data class FavoritesTimelineStatusWrapper(
     @Embedded
-    val localTimelineStatus: LocalTimelineStatus,
+    val favoritesTimelineStatus: FavoritesTimelineStatus,
     @Relation(
         parentColumn = "statusId",
         entityColumn = "statusId",
@@ -102,7 +103,7 @@ data class LocalTimelineStatusWrapper(
     val boostedPoll: DatabasePoll?,
 )
 
-fun LocalTimelineStatusWrapper.toStatusWrapper(): StatusWrapper =
+fun FavoritesTimelineStatusWrapper.toStatusWrapper(): StatusWrapper =
     StatusWrapper(
         status = status,
         account = account,

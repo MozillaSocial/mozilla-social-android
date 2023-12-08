@@ -10,9 +10,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import org.mozilla.social.common.parseMastodonLinkHeader
 import org.mozilla.social.core.database.dao.FavoritesTimelineStatusDao
-import org.mozilla.social.core.database.model.statusCollections.FavoritesTimelineStatus
-import org.mozilla.social.core.database.model.statusCollections.FavoritesTimelineStatusWrapper
-import org.mozilla.social.core.database.model.statusCollections.toStatusWrapper
+import org.mozilla.social.core.database.model.entities.statusCollections.FavoritesTimelineStatus
+import org.mozilla.social.core.database.model.entities.statusCollections.FavoritesTimelineStatusWrapper
+import org.mozilla.social.core.database.model.entities.statusCollections.toStatusWrapper
 import org.mozilla.social.core.model.Status
 import org.mozilla.social.core.model.paging.StatusPagingWrapper
 import org.mozilla.social.core.network.mastodon.FavoritesApi

@@ -1,6 +1,6 @@
 package org.mozilla.social.core.repository.mastodon.model.status
 
-import org.mozilla.social.core.database.model.DatabaseAccount
+import org.mozilla.social.core.database.model.entities.DatabaseAccount
 import org.mozilla.social.core.database.model.DatabaseApplication
 import org.mozilla.social.core.database.model.DatabaseAttachment
 import org.mozilla.social.core.database.model.DatabaseCard
@@ -10,10 +10,10 @@ import org.mozilla.social.core.database.model.DatabaseFocalPoint
 import org.mozilla.social.core.database.model.DatabaseHashTag
 import org.mozilla.social.core.database.model.DatabaseHistory
 import org.mozilla.social.core.database.model.DatabaseMention
-import org.mozilla.social.core.database.model.DatabasePoll
+import org.mozilla.social.core.database.model.entities.DatabasePoll
 import org.mozilla.social.core.database.model.DatabasePollOption
 import org.mozilla.social.core.database.model.DatabaseSource
-import org.mozilla.social.core.database.model.DatabaseStatus
+import org.mozilla.social.core.database.model.entities.DatabaseStatus
 import org.mozilla.social.core.database.model.DatabaseStatusVisibility
 import org.mozilla.social.core.database.model.wrappers.StatusWrapper
 import org.mozilla.social.core.model.Account

@@ -4,8 +4,8 @@ import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
-import org.mozilla.social.core.database.model.statusCollections.HomeTimelineStatus
-import org.mozilla.social.core.database.model.statusCollections.HomeTimelineStatusWrapper
+import org.mozilla.social.core.database.model.entities.statusCollections.HomeTimelineStatus
+import org.mozilla.social.core.database.model.entities.statusCollections.HomeTimelineStatusWrapper
 
 @Dao
 interface HomeTimelineStatusDao : BaseDao<HomeTimelineStatus> {

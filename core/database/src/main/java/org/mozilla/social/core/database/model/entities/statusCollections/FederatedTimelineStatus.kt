@@ -1,20 +1,17 @@
-package org.mozilla.social.core.database.model.statusCollections
+package org.mozilla.social.core.database.model.entities.statusCollections
 
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.PrimaryKey
 import androidx.room.Relation
-import org.mozilla.social.core.database.model.DatabaseAccount
-import org.mozilla.social.core.database.model.DatabasePoll
-import org.mozilla.social.core.database.model.DatabaseStatus
+import org.mozilla.social.core.database.model.entities.DatabaseAccount
+import org.mozilla.social.core.database.model.entities.DatabasePoll
+import org.mozilla.social.core.database.model.entities.DatabaseStatus
 import org.mozilla.social.core.database.model.wrappers.StatusWrapper
 
 @Entity(
-    tableName = "hashTagTimeline",
-    primaryKeys = [
-        "statusId",
-        "hashTag",
-    ],
+    tableName = "federatedTimeline",
     foreignKeys = [
         ForeignKey(
             entity = DatabaseStatus::class,
@@ -60,9 +57,9 @@ import org.mozilla.social.core.database.model.wrappers.StatusWrapper
         ),
     ]
 )
-data class HashTagTimelineStatus(
+data class FederatedTimelineStatus(
+    @PrimaryKey
     val statusId: String,
-    val hashTag: String,
     val accountId: String,
     val pollId: String?,
     val boostedStatusId: String?,
@@ -70,9 +67,9 @@ data class HashTagTimelineStatus(
     val boostedPollId: String?,
 )
 
-data class HashTagTimelineStatusWrapper(
+data class FederatedTimelineStatusWrapper(
     @Embedded
-    val hashTagTimelineStatus: HashTagTimelineStatus,
+    val federatedTimelineStatus: FederatedTimelineStatus,
     @Relation(
         parentColumn = "statusId",
         entityColumn = "statusId",
@@ -105,7 +102,7 @@ data class HashTagTimelineStatusWrapper(
     val boostedPoll: DatabasePoll?,
 )
 
-fun HashTagTimelineStatusWrapper.toStatusWrapper(): StatusWrapper =
+fun FederatedTimelineStatusWrapper.toStatusWrapper(): StatusWrapper =
     StatusWrapper(
         status = status,
         account = account,

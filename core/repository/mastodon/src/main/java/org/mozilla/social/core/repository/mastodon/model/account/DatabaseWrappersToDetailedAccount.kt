@@ -1,7 +1,7 @@
 package org.mozilla.social.core.repository.mastodon.model.account
 
-import org.mozilla.social.core.database.model.accountCollections.FolloweeWrapper
-import org.mozilla.social.core.database.model.accountCollections.FollowerWrapper
+import org.mozilla.social.core.database.model.entities.accountCollections.FolloweeWrapper
+import org.mozilla.social.core.database.model.entities.accountCollections.FollowerWrapper
 import org.mozilla.social.core.model.wrappers.DetailedAccountWrapper
 import org.mozilla.social.core.repository.mastodon.model.status.toExternalModel
 
