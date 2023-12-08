@@ -3,6 +3,7 @@ package org.mozilla.social.core.database.model.accountCollections
 import androidx.room.ColumnInfo
 import androidx.room.Embedded
 import androidx.room.Entity
+import androidx.room.ForeignKey
 import androidx.room.Relation
 import org.mozilla.social.core.database.model.DatabaseAccount
 import org.mozilla.social.core.database.model.DatabaseRelationship
@@ -18,6 +19,22 @@ import org.mozilla.social.core.database.model.DatabaseRelationship
         "accountId",
         "followerAccountId",
     ],
+    foreignKeys = [
+        ForeignKey(
+            entity = DatabaseAccount::class,
+            parentColumns = ["accountId"],
+            childColumns = ["followerAccountId"],
+            onDelete = ForeignKey.CASCADE,
+            onUpdate = ForeignKey.CASCADE,
+        ),
+        ForeignKey(
+            entity = DatabaseRelationship::class,
+            parentColumns = ["accountId"],
+            childColumns = ["followerAccountId"],
+            onDelete = ForeignKey.CASCADE,
+            onUpdate = ForeignKey.CASCADE,
+        ),
+    ]
 )
 data class Follower(
     val accountId: String,

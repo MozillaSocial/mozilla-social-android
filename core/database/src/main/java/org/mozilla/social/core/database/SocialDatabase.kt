@@ -22,14 +22,12 @@ import org.mozilla.social.core.database.dao.FederatedTimelineStatusDao
 import org.mozilla.social.core.database.dao.FollowersDao
 import org.mozilla.social.core.database.dao.FollowingsDao
 import org.mozilla.social.core.database.dao.HashTagTimelineStatusDao
-import org.mozilla.social.core.database.dao.HashtagDao
 import org.mozilla.social.core.database.dao.HomeTimelineStatusDao
 import org.mozilla.social.core.database.dao.LocalTimelineStatusDao
 import org.mozilla.social.core.database.dao.PollsDao
 import org.mozilla.social.core.database.dao.RelationshipsDao
 import org.mozilla.social.core.database.dao.StatusDao
 import org.mozilla.social.core.database.model.DatabaseAccount
-import org.mozilla.social.core.database.model.DatabaseHashTag
 import org.mozilla.social.core.database.model.DatabasePoll
 import org.mozilla.social.core.database.model.DatabaseRelationship
 import org.mozilla.social.core.database.model.DatabaseStatus
@@ -47,7 +45,6 @@ import org.mozilla.social.core.database.model.statusCollections.LocalTimelineSta
     entities = [
         DatabaseStatus::class,
         DatabaseAccount::class,
-        DatabaseHashTag::class,
         HomeTimelineStatus::class,
         DatabasePoll::class,
         HashTagTimelineStatus::class,
@@ -74,7 +71,7 @@ import org.mozilla.social.core.database.model.statusCollections.LocalTimelineSta
         AutoMigration(11, 12),
         AutoMigration(12, 13),
         AutoMigration(13, 14),
-        AutoMigration(14, 15),
+        AutoMigration(14, 15, DatabaseMigrations.Schema14to15::class),
     ],
     exportSchema = true,
 )
@@ -95,8 +92,6 @@ abstract class SocialDatabase : RoomDatabase() {
     abstract fun statusDao(): StatusDao
 
     abstract fun accountsDao(): AccountsDao
-
-    abstract fun hashtagDao(): HashtagDao
 
     abstract fun homeTimelineDao(): HomeTimelineStatusDao
 

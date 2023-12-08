@@ -3,9 +3,12 @@ package org.mozilla.social.core.database.model.accountCollections
 import androidx.room.ColumnInfo
 import androidx.room.Embedded
 import androidx.room.Entity
+import androidx.room.ForeignKey
 import androidx.room.Relation
 import org.mozilla.social.core.database.model.DatabaseAccount
+import org.mozilla.social.core.database.model.DatabasePoll
 import org.mozilla.social.core.database.model.DatabaseRelationship
+import org.mozilla.social.core.database.model.DatabaseStatus
 
 /**
  * @param accountId the account ID of the user we are examining
@@ -18,6 +21,22 @@ import org.mozilla.social.core.database.model.DatabaseRelationship
         "accountId",
         "followeeAccountId",
     ],
+    foreignKeys = [
+        ForeignKey(
+            entity = DatabaseAccount::class,
+            parentColumns = ["accountId"],
+            childColumns = ["followeeAccountId"],
+            onDelete = ForeignKey.CASCADE,
+            onUpdate = ForeignKey.CASCADE,
+        ),
+        ForeignKey(
+            entity = DatabaseRelationship::class,
+            parentColumns = ["accountId"],
+            childColumns = ["followeeAccountId"],
+            onDelete = ForeignKey.CASCADE,
+            onUpdate = ForeignKey.CASCADE,
+        ),
+    ]
 )
 data class Followee(
     val accountId: String,

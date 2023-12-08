@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 15,
-    "identityHash": "74a4148fd7b87d38b8760f7c0f1f71ba",
+    "identityHash": "ec52f4cf3929e65743525e62d2f44a5b",
     "entities": [
       {
         "tableName": "statuses",
@@ -430,40 +430,8 @@
         "foreignKeys": []
       },
       {
-        "tableName": "hashTags",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`name` TEXT NOT NULL, `url` TEXT NOT NULL, `history` TEXT, PRIMARY KEY(`name`))",
-        "fields": [
-          {
-            "fieldPath": "name",
-            "columnName": "name",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "url",
-            "columnName": "url",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "history",
-            "columnName": "history",
-            "affinity": "TEXT",
-            "notNull": false
-          }
-        ],
-        "primaryKey": {
-          "autoGenerate": false,
-          "columnNames": [
-            "name"
-          ]
-        },
-        "indices": [],
-        "foreignKeys": []
-      },
-      {
         "tableName": "homeTimeline",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`statusId` TEXT NOT NULL, `accountId` TEXT NOT NULL, `pollId` TEXT, `boostedStatusId` TEXT, `boostedStatusAccountId` TEXT, `boostedPollId` TEXT, PRIMARY KEY(`statusId`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`statusId` TEXT NOT NULL, `accountId` TEXT NOT NULL, `pollId` TEXT, `boostedStatusId` TEXT, `boostedStatusAccountId` TEXT, `boostedPollId` TEXT, PRIMARY KEY(`statusId`), FOREIGN KEY(`statusId`) REFERENCES `statuses`(`statusId`) ON UPDATE CASCADE ON DELETE CASCADE , FOREIGN KEY(`boostedStatusId`) REFERENCES `statuses`(`statusId`) ON UPDATE CASCADE ON DELETE CASCADE , FOREIGN KEY(`accountId`) REFERENCES `accounts`(`accountId`) ON UPDATE CASCADE ON DELETE CASCADE , FOREIGN KEY(`boostedStatusAccountId`) REFERENCES `accounts`(`accountId`) ON UPDATE CASCADE ON DELETE CASCADE , FOREIGN KEY(`pollId`) REFERENCES `polls`(`pollId`) ON UPDATE CASCADE ON DELETE CASCADE , FOREIGN KEY(`boostedPollId`) REFERENCES `polls`(`pollId`) ON UPDATE CASCADE ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "statusId",
@@ -509,7 +477,74 @@
           ]
         },
         "indices": [],
-        "foreignKeys": []
+        "foreignKeys": [
+          {
+            "table": "statuses",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "statusId"
+            ],
+            "referencedColumns": [
+              "statusId"
+            ]
+          },
+          {
+            "table": "statuses",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "boostedStatusId"
+            ],
+            "referencedColumns": [
+              "statusId"
+            ]
+          },
+          {
+            "table": "accounts",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "accountId"
+            ],
+            "referencedColumns": [
+              "accountId"
+            ]
+          },
+          {
+            "table": "accounts",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "boostedStatusAccountId"
+            ],
+            "referencedColumns": [
+              "accountId"
+            ]
+          },
+          {
+            "table": "polls",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "pollId"
+            ],
+            "referencedColumns": [
+              "pollId"
+            ]
+          },
+          {
+            "table": "polls",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "boostedPollId"
+            ],
+            "referencedColumns": [
+              "pollId"
+            ]
+          }
+        ]
       },
       {
         "tableName": "polls",
@@ -587,7 +622,7 @@
       },
       {
         "tableName": "hashTagTimeline",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`statusId` TEXT NOT NULL, `hashTag` TEXT NOT NULL, `accountId` TEXT NOT NULL, `pollId` TEXT, `boostedStatusId` TEXT, `boostedStatusAccountId` TEXT, `boostedPollId` TEXT, PRIMARY KEY(`statusId`, `hashTag`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`statusId` TEXT NOT NULL, `hashTag` TEXT NOT NULL, `accountId` TEXT NOT NULL, `pollId` TEXT, `boostedStatusId` TEXT, `boostedStatusAccountId` TEXT, `boostedPollId` TEXT, PRIMARY KEY(`statusId`, `hashTag`), FOREIGN KEY(`statusId`) REFERENCES `statuses`(`statusId`) ON UPDATE CASCADE ON DELETE CASCADE , FOREIGN KEY(`boostedStatusId`) REFERENCES `statuses`(`statusId`) ON UPDATE CASCADE ON DELETE CASCADE , FOREIGN KEY(`accountId`) REFERENCES `accounts`(`accountId`) ON UPDATE CASCADE ON DELETE CASCADE , FOREIGN KEY(`boostedStatusAccountId`) REFERENCES `accounts`(`accountId`) ON UPDATE CASCADE ON DELETE CASCADE , FOREIGN KEY(`pollId`) REFERENCES `polls`(`pollId`) ON UPDATE CASCADE ON DELETE CASCADE , FOREIGN KEY(`boostedPollId`) REFERENCES `polls`(`pollId`) ON UPDATE CASCADE ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "statusId",
@@ -640,11 +675,78 @@
           ]
         },
         "indices": [],
-        "foreignKeys": []
+        "foreignKeys": [
+          {
+            "table": "statuses",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "statusId"
+            ],
+            "referencedColumns": [
+              "statusId"
+            ]
+          },
+          {
+            "table": "statuses",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "boostedStatusId"
+            ],
+            "referencedColumns": [
+              "statusId"
+            ]
+          },
+          {
+            "table": "accounts",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "accountId"
+            ],
+            "referencedColumns": [
+              "accountId"
+            ]
+          },
+          {
+            "table": "accounts",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "boostedStatusAccountId"
+            ],
+            "referencedColumns": [
+              "accountId"
+            ]
+          },
+          {
+            "table": "polls",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "pollId"
+            ],
+            "referencedColumns": [
+              "pollId"
+            ]
+          },
+          {
+            "table": "polls",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "boostedPollId"
+            ],
+            "referencedColumns": [
+              "pollId"
+            ]
+          }
+        ]
       },
       {
         "tableName": "accountTimeline",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`statusId` TEXT NOT NULL, `accountId` TEXT NOT NULL, `timelineType` TEXT NOT NULL DEFAULT 'POSTS', `pollId` TEXT, `boostedStatusId` TEXT, `boostedStatusAccountId` TEXT, `boostedPollId` TEXT, PRIMARY KEY(`statusId`, `accountId`, `timelineType`), FOREIGN KEY(`statusId`) REFERENCES `statuses`(`statusId`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`boostedStatusId`) REFERENCES `statuses`(`statusId`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`accountId`) REFERENCES `accounts`(`accountId`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`boostedStatusAccountId`) REFERENCES `accounts`(`accountId`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`pollId`) REFERENCES `polls`(`pollId`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`boostedPollId`) REFERENCES `polls`(`pollId`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`statusId` TEXT NOT NULL, `accountId` TEXT NOT NULL, `timelineType` TEXT NOT NULL DEFAULT 'POSTS', `pollId` TEXT, `boostedStatusId` TEXT, `boostedStatusAccountId` TEXT, `boostedPollId` TEXT, PRIMARY KEY(`statusId`, `accountId`, `timelineType`), FOREIGN KEY(`statusId`) REFERENCES `statuses`(`statusId`) ON UPDATE CASCADE ON DELETE CASCADE , FOREIGN KEY(`boostedStatusId`) REFERENCES `statuses`(`statusId`) ON UPDATE CASCADE ON DELETE CASCADE , FOREIGN KEY(`accountId`) REFERENCES `accounts`(`accountId`) ON UPDATE CASCADE ON DELETE CASCADE , FOREIGN KEY(`boostedStatusAccountId`) REFERENCES `accounts`(`accountId`) ON UPDATE CASCADE ON DELETE CASCADE , FOREIGN KEY(`pollId`) REFERENCES `polls`(`pollId`) ON UPDATE CASCADE ON DELETE CASCADE , FOREIGN KEY(`boostedPollId`) REFERENCES `polls`(`pollId`) ON UPDATE CASCADE ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "statusId",
@@ -702,8 +804,8 @@
         "foreignKeys": [
           {
             "table": "statuses",
-            "onDelete": "NO ACTION",
-            "onUpdate": "NO ACTION",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
             "columns": [
               "statusId"
             ],
@@ -713,8 +815,8 @@
           },
           {
             "table": "statuses",
-            "onDelete": "NO ACTION",
-            "onUpdate": "NO ACTION",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
             "columns": [
               "boostedStatusId"
             ],
@@ -724,8 +826,8 @@
           },
           {
             "table": "accounts",
-            "onDelete": "NO ACTION",
-            "onUpdate": "NO ACTION",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
             "columns": [
               "accountId"
             ],
@@ -735,8 +837,8 @@
           },
           {
             "table": "accounts",
-            "onDelete": "NO ACTION",
-            "onUpdate": "NO ACTION",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
             "columns": [
               "boostedStatusAccountId"
             ],
@@ -746,8 +848,8 @@
           },
           {
             "table": "polls",
-            "onDelete": "NO ACTION",
-            "onUpdate": "NO ACTION",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
             "columns": [
               "pollId"
             ],
@@ -757,8 +859,8 @@
           },
           {
             "table": "polls",
-            "onDelete": "NO ACTION",
-            "onUpdate": "NO ACTION",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
             "columns": [
               "boostedPollId"
             ],
@@ -856,7 +958,7 @@
       },
       {
         "tableName": "localTimeline",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`statusId` TEXT NOT NULL, `accountId` TEXT NOT NULL, `pollId` TEXT, `boostedStatusId` TEXT, `boostedStatusAccountId` TEXT, `boostedPollId` TEXT, PRIMARY KEY(`statusId`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`statusId` TEXT NOT NULL, `accountId` TEXT NOT NULL, `pollId` TEXT, `boostedStatusId` TEXT, `boostedStatusAccountId` TEXT, `boostedPollId` TEXT, PRIMARY KEY(`statusId`), FOREIGN KEY(`statusId`) REFERENCES `statuses`(`statusId`) ON UPDATE CASCADE ON DELETE CASCADE , FOREIGN KEY(`boostedStatusId`) REFERENCES `statuses`(`statusId`) ON UPDATE CASCADE ON DELETE CASCADE , FOREIGN KEY(`accountId`) REFERENCES `accounts`(`accountId`) ON UPDATE CASCADE ON DELETE CASCADE , FOREIGN KEY(`boostedStatusAccountId`) REFERENCES `accounts`(`accountId`) ON UPDATE CASCADE ON DELETE CASCADE , FOREIGN KEY(`pollId`) REFERENCES `polls`(`pollId`) ON UPDATE CASCADE ON DELETE CASCADE , FOREIGN KEY(`boostedPollId`) REFERENCES `polls`(`pollId`) ON UPDATE CASCADE ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "statusId",
@@ -902,11 +1004,78 @@
           ]
         },
         "indices": [],
-        "foreignKeys": []
+        "foreignKeys": [
+          {
+            "table": "statuses",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "statusId"
+            ],
+            "referencedColumns": [
+              "statusId"
+            ]
+          },
+          {
+            "table": "statuses",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "boostedStatusId"
+            ],
+            "referencedColumns": [
+              "statusId"
+            ]
+          },
+          {
+            "table": "accounts",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "accountId"
+            ],
+            "referencedColumns": [
+              "accountId"
+            ]
+          },
+          {
+            "table": "accounts",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "boostedStatusAccountId"
+            ],
+            "referencedColumns": [
+              "accountId"
+            ]
+          },
+          {
+            "table": "polls",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "pollId"
+            ],
+            "referencedColumns": [
+              "pollId"
+            ]
+          },
+          {
+            "table": "polls",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "boostedPollId"
+            ],
+            "referencedColumns": [
+              "pollId"
+            ]
+          }
+        ]
       },
       {
         "tableName": "federatedTimeline",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`statusId` TEXT NOT NULL, `accountId` TEXT NOT NULL, `pollId` TEXT, `boostedStatusId` TEXT, `boostedStatusAccountId` TEXT, `boostedPollId` TEXT, PRIMARY KEY(`statusId`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`statusId` TEXT NOT NULL, `accountId` TEXT NOT NULL, `pollId` TEXT, `boostedStatusId` TEXT, `boostedStatusAccountId` TEXT, `boostedPollId` TEXT, PRIMARY KEY(`statusId`), FOREIGN KEY(`statusId`) REFERENCES `statuses`(`statusId`) ON UPDATE CASCADE ON DELETE CASCADE , FOREIGN KEY(`boostedStatusId`) REFERENCES `statuses`(`statusId`) ON UPDATE CASCADE ON DELETE CASCADE , FOREIGN KEY(`accountId`) REFERENCES `accounts`(`accountId`) ON UPDATE CASCADE ON DELETE CASCADE , FOREIGN KEY(`boostedStatusAccountId`) REFERENCES `accounts`(`accountId`) ON UPDATE CASCADE ON DELETE CASCADE , FOREIGN KEY(`pollId`) REFERENCES `polls`(`pollId`) ON UPDATE CASCADE ON DELETE CASCADE , FOREIGN KEY(`boostedPollId`) REFERENCES `polls`(`pollId`) ON UPDATE CASCADE ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "statusId",
@@ -952,11 +1121,78 @@
           ]
         },
         "indices": [],
-        "foreignKeys": []
+        "foreignKeys": [
+          {
+            "table": "statuses",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "statusId"
+            ],
+            "referencedColumns": [
+              "statusId"
+            ]
+          },
+          {
+            "table": "statuses",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "boostedStatusId"
+            ],
+            "referencedColumns": [
+              "statusId"
+            ]
+          },
+          {
+            "table": "accounts",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "accountId"
+            ],
+            "referencedColumns": [
+              "accountId"
+            ]
+          },
+          {
+            "table": "accounts",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "boostedStatusAccountId"
+            ],
+            "referencedColumns": [
+              "accountId"
+            ]
+          },
+          {
+            "table": "polls",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "pollId"
+            ],
+            "referencedColumns": [
+              "pollId"
+            ]
+          },
+          {
+            "table": "polls",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "boostedPollId"
+            ],
+            "referencedColumns": [
+              "pollId"
+            ]
+          }
+        ]
       },
       {
         "tableName": "followers",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`accountId` TEXT NOT NULL, `followerAccountId` TEXT NOT NULL, `position` INTEGER NOT NULL DEFAULT 0, PRIMARY KEY(`accountId`, `followerAccountId`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`accountId` TEXT NOT NULL, `followerAccountId` TEXT NOT NULL, `position` INTEGER NOT NULL DEFAULT 0, PRIMARY KEY(`accountId`, `followerAccountId`), FOREIGN KEY(`followerAccountId`) REFERENCES `accounts`(`accountId`) ON UPDATE CASCADE ON DELETE CASCADE , FOREIGN KEY(`followerAccountId`) REFERENCES `relationships`(`accountId`) ON UPDATE CASCADE ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "accountId",
@@ -986,11 +1222,34 @@
           ]
         },
         "indices": [],
-        "foreignKeys": []
+        "foreignKeys": [
+          {
+            "table": "accounts",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "followerAccountId"
+            ],
+            "referencedColumns": [
+              "accountId"
+            ]
+          },
+          {
+            "table": "relationships",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "followerAccountId"
+            ],
+            "referencedColumns": [
+              "accountId"
+            ]
+          }
+        ]
       },
       {
         "tableName": "followings",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`accountId` TEXT NOT NULL, `followeeAccountId` TEXT NOT NULL, `position` INTEGER NOT NULL DEFAULT 0, PRIMARY KEY(`accountId`, `followeeAccountId`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`accountId` TEXT NOT NULL, `followeeAccountId` TEXT NOT NULL, `position` INTEGER NOT NULL DEFAULT 0, PRIMARY KEY(`accountId`, `followeeAccountId`), FOREIGN KEY(`followeeAccountId`) REFERENCES `accounts`(`accountId`) ON UPDATE CASCADE ON DELETE CASCADE , FOREIGN KEY(`followeeAccountId`) REFERENCES `relationships`(`accountId`) ON UPDATE CASCADE ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "accountId",
@@ -1020,11 +1279,34 @@
           ]
         },
         "indices": [],
-        "foreignKeys": []
+        "foreignKeys": [
+          {
+            "table": "accounts",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "followeeAccountId"
+            ],
+            "referencedColumns": [
+              "accountId"
+            ]
+          },
+          {
+            "table": "relationships",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "followeeAccountId"
+            ],
+            "referencedColumns": [
+              "accountId"
+            ]
+          }
+        ]
       },
       {
         "tableName": "favoritesTimeline",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`statusId` TEXT NOT NULL, `position` INTEGER NOT NULL, `accountId` TEXT NOT NULL, `pollId` TEXT, `boostedStatusId` TEXT, `boostedStatusAccountId` TEXT, `boostedPollId` TEXT, PRIMARY KEY(`statusId`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`statusId` TEXT NOT NULL, `position` INTEGER NOT NULL, `accountId` TEXT NOT NULL, `pollId` TEXT, `boostedStatusId` TEXT, `boostedStatusAccountId` TEXT, `boostedPollId` TEXT, PRIMARY KEY(`statusId`), FOREIGN KEY(`statusId`) REFERENCES `statuses`(`statusId`) ON UPDATE CASCADE ON DELETE CASCADE , FOREIGN KEY(`boostedStatusId`) REFERENCES `statuses`(`statusId`) ON UPDATE CASCADE ON DELETE CASCADE , FOREIGN KEY(`accountId`) REFERENCES `accounts`(`accountId`) ON UPDATE CASCADE ON DELETE CASCADE , FOREIGN KEY(`boostedStatusAccountId`) REFERENCES `accounts`(`accountId`) ON UPDATE CASCADE ON DELETE CASCADE , FOREIGN KEY(`pollId`) REFERENCES `polls`(`pollId`) ON UPDATE CASCADE ON DELETE CASCADE , FOREIGN KEY(`boostedPollId`) REFERENCES `polls`(`pollId`) ON UPDATE CASCADE ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "statusId",
@@ -1076,13 +1358,80 @@
           ]
         },
         "indices": [],
-        "foreignKeys": []
+        "foreignKeys": [
+          {
+            "table": "statuses",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "statusId"
+            ],
+            "referencedColumns": [
+              "statusId"
+            ]
+          },
+          {
+            "table": "statuses",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "boostedStatusId"
+            ],
+            "referencedColumns": [
+              "statusId"
+            ]
+          },
+          {
+            "table": "accounts",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "accountId"
+            ],
+            "referencedColumns": [
+              "accountId"
+            ]
+          },
+          {
+            "table": "accounts",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "boostedStatusAccountId"
+            ],
+            "referencedColumns": [
+              "accountId"
+            ]
+          },
+          {
+            "table": "polls",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "pollId"
+            ],
+            "referencedColumns": [
+              "pollId"
+            ]
+          },
+          {
+            "table": "polls",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "boostedPollId"
+            ],
+            "referencedColumns": [
+              "pollId"
+            ]
+          }
+        ]
       }
     ],
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '74a4148fd7b87d38b8760f7c0f1f71ba')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'ec52f4cf3929e65743525e62d2f44a5b')"
     ]
   }
 }
