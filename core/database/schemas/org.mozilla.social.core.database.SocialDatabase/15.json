@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 15,
-    "identityHash": "ec52f4cf3929e65743525e62d2f44a5b",
+    "identityHash": "d2a6b8a78800c8b4a064ba505edc18da",
     "entities": [
       {
         "tableName": "statuses",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`statusId` TEXT NOT NULL, `uri` TEXT NOT NULL, `createdAt` INTEGER NOT NULL, `accountId` TEXT NOT NULL, `content` TEXT NOT NULL, `visibility` TEXT NOT NULL, `isSensitive` INTEGER NOT NULL, `contentWarningText` TEXT NOT NULL, `mediaAttachments` TEXT NOT NULL, `mentions` TEXT NOT NULL, `hashTags` TEXT NOT NULL, `emojis` TEXT NOT NULL, `boostsCount` INTEGER NOT NULL, `favouritesCount` INTEGER NOT NULL, `repliesCount` INTEGER NOT NULL, `url` TEXT, `inReplyToId` TEXT, `inReplyToAccountId` TEXT, `inReplyToAccountName` TEXT, `boostedStatusId` TEXT, `boostedStatusAccountId` TEXT, `boostedPollId` TEXT, `pollId` TEXT, `card` TEXT, `language` TEXT, `plainText` TEXT, `isFavorited` INTEGER, `isBoosted` INTEGER, `isMuted` INTEGER, `isBookmarked` INTEGER, `isPinned` INTEGER, `isBeingDeleted` INTEGER NOT NULL DEFAULT false, `application_name` TEXT, `application_website` TEXT, `application_vapidKey` TEXT, `application_clientId` TEXT, `application_clientSecret` TEXT, PRIMARY KEY(`statusId`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`statusId` TEXT NOT NULL, `uri` TEXT NOT NULL, `createdAt` INTEGER NOT NULL, `accountId` TEXT NOT NULL, `content` TEXT NOT NULL, `visibility` TEXT NOT NULL, `isSensitive` INTEGER NOT NULL, `contentWarningText` TEXT NOT NULL, `mediaAttachments` TEXT NOT NULL, `mentions` TEXT NOT NULL, `hashTags` TEXT NOT NULL, `emojis` TEXT NOT NULL, `boostsCount` INTEGER NOT NULL, `favouritesCount` INTEGER NOT NULL, `repliesCount` INTEGER NOT NULL, `url` TEXT, `inReplyToId` TEXT, `inReplyToAccountId` TEXT, `inReplyToAccountName` TEXT, `boostedStatusId` TEXT, `boostedStatusAccountId` TEXT, `boostedPollId` TEXT, `pollId` TEXT, `card` TEXT, `language` TEXT, `plainText` TEXT, `isFavorited` INTEGER, `isBoosted` INTEGER, `isMuted` INTEGER, `isBookmarked` INTEGER, `isPinned` INTEGER, `isBeingDeleted` INTEGER NOT NULL DEFAULT false, `application_name` TEXT, `application_website` TEXT, `application_vapidKey` TEXT, `application_clientId` TEXT, `application_clientSecret` TEXT, PRIMARY KEY(`statusId`), FOREIGN KEY(`accountId`) REFERENCES `accounts`(`accountId`) ON UPDATE CASCADE ON DELETE CASCADE , FOREIGN KEY(`pollId`) REFERENCES `polls`(`pollId`) ON UPDATE CASCADE ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "statusId",
@@ -239,7 +239,30 @@
           ]
         },
         "indices": [],
-        "foreignKeys": []
+        "foreignKeys": [
+          {
+            "table": "accounts",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "accountId"
+            ],
+            "referencedColumns": [
+              "accountId"
+            ]
+          },
+          {
+            "table": "polls",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "pollId"
+            ],
+            "referencedColumns": [
+              "pollId"
+            ]
+          }
+        ]
       },
       {
         "tableName": "accounts",
@@ -1431,7 +1454,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'ec52f4cf3929e65743525e62d2f44a5b')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'd2a6b8a78800c8b4a064ba505edc18da')"
     ]
   }
 }

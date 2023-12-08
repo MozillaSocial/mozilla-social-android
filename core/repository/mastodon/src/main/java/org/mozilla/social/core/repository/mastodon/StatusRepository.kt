@@ -109,12 +109,14 @@ class StatusRepository(
         dao.updateFavorited(statusId, isFavorited)
     }
 
+    /**
+     * Using this method outside of the use case is dangerous because polls and accounts
+     * must be inserted into the database before the status is due to the foreign keys
+     * in the statuses table
+     */
+    @PreferUseCase
     fun insertAll(statuses: List<Status>) {
         dao.insertAll(statuses.map { it.toDatabaseModel() })
-    }
-
-    fun insertAll(vararg statuses: Status) {
-        insertAll(statuses.asList())
     }
 }
 
