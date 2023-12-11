@@ -1,10 +1,10 @@
 package org.mozilla.social.core.repository.mastodon.model.status
 
-import org.mozilla.social.core.database.model.statusCollections.AccountTimelineStatus
-import org.mozilla.social.core.database.model.statusCollections.FederatedTimelineStatus
-import org.mozilla.social.core.database.model.statusCollections.HashTagTimelineStatus
-import org.mozilla.social.core.database.model.statusCollections.HomeTimelineStatus
-import org.mozilla.social.core.database.model.statusCollections.LocalTimelineStatus
+import org.mozilla.social.core.database.model.entities.statusCollections.AccountTimelineStatus
+import org.mozilla.social.core.database.model.entities.statusCollections.FederatedTimelineStatus
+import org.mozilla.social.core.database.model.entities.statusCollections.HashTagTimelineStatus
+import org.mozilla.social.core.database.model.entities.statusCollections.HomeTimelineStatus
+import org.mozilla.social.core.database.model.entities.statusCollections.LocalTimelineStatus
 import org.mozilla.social.core.model.Status
 import org.mozilla.social.core.model.AccountTimelineType
 

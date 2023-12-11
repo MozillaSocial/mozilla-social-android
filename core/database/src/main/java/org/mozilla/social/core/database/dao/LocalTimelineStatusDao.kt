@@ -4,8 +4,8 @@ import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
-import org.mozilla.social.core.database.model.statusCollections.LocalTimelineStatus
-import org.mozilla.social.core.database.model.statusCollections.LocalTimelineStatusWrapper
+import org.mozilla.social.core.database.model.entities.statusCollections.LocalTimelineStatus
+import org.mozilla.social.core.database.model.entities.statusCollections.LocalTimelineStatusWrapper
 
 @Dao
 interface LocalTimelineStatusDao : BaseDao<LocalTimelineStatus> {

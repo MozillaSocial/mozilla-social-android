@@ -1,12 +1,13 @@
-package org.mozilla.social.core.database.model.statusCollections
+package org.mozilla.social.core.database.model.entities.statusCollections
 
 import androidx.room.ColumnInfo
 import androidx.room.Embedded
 import androidx.room.Entity
+import androidx.room.ForeignKey
 import androidx.room.Relation
-import org.mozilla.social.core.database.model.DatabaseAccount
-import org.mozilla.social.core.database.model.DatabasePoll
-import org.mozilla.social.core.database.model.DatabaseStatus
+import org.mozilla.social.core.database.model.entities.DatabaseAccount
+import org.mozilla.social.core.database.model.entities.DatabasePoll
+import org.mozilla.social.core.database.model.entities.DatabaseStatus
 import org.mozilla.social.core.database.model.wrappers.StatusWrapper
 import org.mozilla.social.core.model.AccountTimelineType
 
@@ -16,6 +17,50 @@ import org.mozilla.social.core.model.AccountTimelineType
         "statusId",
         "accountId",
         "timelineType",
+    ],
+    foreignKeys = [
+        ForeignKey(
+            entity = DatabaseStatus::class,
+            parentColumns = ["statusId"],
+            childColumns = ["statusId"],
+            onDelete = ForeignKey.CASCADE,
+            onUpdate = ForeignKey.CASCADE,
+        ),
+        ForeignKey(
+            entity = DatabaseStatus::class,
+            parentColumns = ["statusId"],
+            childColumns = ["boostedStatusId"],
+            onDelete = ForeignKey.CASCADE,
+            onUpdate = ForeignKey.CASCADE,
+        ),
+        ForeignKey(
+            entity = DatabaseAccount::class,
+            parentColumns = ["accountId"],
+            childColumns = ["accountId"],
+            onDelete = ForeignKey.CASCADE,
+            onUpdate = ForeignKey.CASCADE,
+        ),
+        ForeignKey(
+            entity = DatabaseAccount::class,
+            parentColumns = ["accountId"],
+            childColumns = ["boostedStatusAccountId"],
+            onDelete = ForeignKey.CASCADE,
+            onUpdate = ForeignKey.CASCADE,
+        ),
+        ForeignKey(
+            entity = DatabasePoll::class,
+            parentColumns = ["pollId"],
+            childColumns = ["pollId"],
+            onDelete = ForeignKey.CASCADE,
+            onUpdate = ForeignKey.CASCADE,
+        ),
+        ForeignKey(
+            entity = DatabasePoll::class,
+            parentColumns = ["pollId"],
+            childColumns = ["boostedPollId"],
+            onDelete = ForeignKey.CASCADE,
+            onUpdate = ForeignKey.CASCADE,
+        ),
     ],
 )
 data class AccountTimelineStatus(

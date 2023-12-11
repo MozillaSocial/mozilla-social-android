@@ -3,7 +3,7 @@ package org.mozilla.social.core.database.dao
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
-import org.mozilla.social.core.database.model.DatabasePoll
+import org.mozilla.social.core.database.model.entities.DatabasePoll
 
 @Dao
 interface PollsDao : BaseDao<DatabasePoll> {

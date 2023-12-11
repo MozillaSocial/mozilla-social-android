@@ -7,8 +7,8 @@ import androidx.paging.RemoteMediator
 import kotlinx.coroutines.delay
 import org.mozilla.social.common.Rel
 import org.mozilla.social.common.getMaxIdValue
-import org.mozilla.social.core.database.model.accountCollections.Followee
-import org.mozilla.social.core.database.model.accountCollections.FolloweeWrapper
+import org.mozilla.social.core.database.model.entities.accountCollections.Followee
+import org.mozilla.social.core.database.model.entities.accountCollections.FolloweeWrapper
 import org.mozilla.social.core.repository.mastodon.AccountRepository
 import org.mozilla.social.core.repository.mastodon.DatabaseDelegate
 import org.mozilla.social.core.repository.mastodon.FollowingsRepository

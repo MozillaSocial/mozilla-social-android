@@ -4,8 +4,8 @@ import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
-import org.mozilla.social.core.database.model.statusCollections.AccountTimelineStatus
-import org.mozilla.social.core.database.model.statusCollections.AccountTimelineStatusWrapper
+import org.mozilla.social.core.database.model.entities.statusCollections.AccountTimelineStatus
+import org.mozilla.social.core.database.model.entities.statusCollections.AccountTimelineStatusWrapper
 import org.mozilla.social.core.model.AccountTimelineType
 
 @Dao
