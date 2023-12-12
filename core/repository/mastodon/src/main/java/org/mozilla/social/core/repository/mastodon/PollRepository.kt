@@ -20,10 +20,10 @@ class PollRepository internal constructor(private val dao: PollsDao) {
     suspend fun deletePoll(pollId: String) = dao.deletePoll(pollId = pollId)
 
     fun insertAll(polls: List<Poll>) {
-        dao.insertAll(polls.map { it.toDatabaseModel() })
+        dao.upsertAll(polls.map { it.toDatabaseModel() })
     }
 
-    fun update(poll: Poll) = dao.update(poll.toDatabaseModel())
+    fun insert(poll: Poll) = dao.upsert(poll.toDatabaseModel())
 }
 
 private fun Poll.toDatabaseModel(): DatabasePoll =
