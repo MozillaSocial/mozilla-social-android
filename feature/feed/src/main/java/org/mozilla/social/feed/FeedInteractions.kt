@@ -4,4 +4,6 @@ interface FeedInteractions {
     fun onTabClicked(timelineType: TimelineType) = Unit
 
     fun onScreenViewed() = Unit
+
+    fun onSearchClicked() = Unit
 }
