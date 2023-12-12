@@ -14,6 +14,7 @@ dependencies {
     implementation(project(":core:designsystem"))
     implementation(project(":core:ui:common"))
     implementation(project(":core:navigation"))
+    implementation(project(":core:common"))
 
     implementation(libs.androidx.navigation.compose)
     implementation(libs.koin.core)
