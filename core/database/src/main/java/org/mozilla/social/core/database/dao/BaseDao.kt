@@ -2,23 +2,19 @@ package org.mozilla.social.core.database.dao
 
 import androidx.room.Dao
 import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
 import androidx.room.Update
+import androidx.room.Upsert
 
 @Dao
 interface BaseDao<T> {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Update
+    fun update(t: T): Int
+
+    @Upsert
     fun insert(t: T)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(vararg t: T)
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Upsert
     fun insertAll(t: List<T>)
-
-    @Update
-    fun update(t: T)
 
     @Delete
     fun delete(t: T)
