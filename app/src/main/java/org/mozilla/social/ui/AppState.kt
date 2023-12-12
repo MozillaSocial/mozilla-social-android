@@ -95,7 +95,7 @@ class AppState(
     init {
         coroutineScope.launch(Dispatchers.Main) {
             navigationEventFlow().collectLatest {
-                Timber.d("consuming event $it")
+                Timber.d("NAVIGATION consuming event $it")
                 when (it) {
                     is Event.NavigateToDestination -> {
                         navigate(it.destination)
