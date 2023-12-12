@@ -76,10 +76,10 @@ class TimelineRepository internal constructor(
 
     suspend fun insertStatusIntoTimelines(status: Status) =
         withContext(ioDispatcher) {
-            homeTimelineStatusDao.insert(status.toHomeTimelineStatus())
+            homeTimelineStatusDao.upsert(status.toHomeTimelineStatus())
             if (status.visibility == StatusVisibility.Public) {
-                localTimelineStatusDao.insert(status.toLocalTimelineStatus())
-                federatedTimelineStatusDao.insert(status.toFederatedTimelineStatus())
+                localTimelineStatusDao.upsert(status.toLocalTimelineStatus())
+                federatedTimelineStatusDao.upsert(status.toFederatedTimelineStatus())
             }
         }
 
@@ -106,7 +106,7 @@ class TimelineRepository internal constructor(
         }
 
     fun insertAllIntoLocalTimeline(statuses: List<Status>) =
-        localTimelineStatusDao.insertAll(statuses.map { it.toLocalTimelineStatus() })
+        localTimelineStatusDao.upsertAll(statuses.map { it.toLocalTimelineStatus() })
 
     suspend fun deleteLocalTimeline() = localTimelineStatusDao.deleteLocalTimeline()
 
@@ -140,7 +140,7 @@ class TimelineRepository internal constructor(
         }
 
     fun insertAllIntoFederatedTimeline(statuses: List<Status>) =
-        federatedTimelineStatusDao.insertAll(statuses.map { it.toFederatedTimelineStatus() })
+        federatedTimelineStatusDao.upsertAll(statuses.map { it.toFederatedTimelineStatus() })
 
     fun deleteFederatedTimeline() = federatedTimelineStatusDao.deleteFederatedTimeline()
 
@@ -196,7 +196,7 @@ class TimelineRepository internal constructor(
         }
 
     fun insertAllIntoHomeTimeline(statuses: List<Status>) =
-        homeTimelineStatusDao.insertAll(statuses.map { it.toHomeTimelineStatus() })
+        homeTimelineStatusDao.upsertAll(statuses.map { it.toHomeTimelineStatus() })
 
     suspend fun getPostsFromHomeTimelineForAccount(accountId: String): List<Status> =
         homeTimelineStatusDao.getPostsFromAccount(accountId).map { it.toStatusWrapper().toExternalModel() }
@@ -266,14 +266,14 @@ class TimelineRepository internal constructor(
     fun insertAllIntoHashTagTimeline(
         hashTag: String,
         statuses: List<Status>
-    ) = hashTagTimelineStatusDao.insertAll(statuses.map { it.toHashTagTimelineStatus(hashTag) })
+    ) = hashTagTimelineStatusDao.upsertAll(statuses.map { it.toHashTagTimelineStatus(hashTag) })
     //endregion
 
     //region Account timeline
     fun insertAllIntoAccountTimeline(
         statuses: List<Status>,
         timelineType: AccountTimelineType,
-    ) = accountTimelineStatusDao.insertAll(statuses.map { it.toAccountTimelineStatus(timelineType) })
+    ) = accountTimelineStatusDao.upsertAll(statuses.map { it.toAccountTimelineStatus(timelineType) })
 
     @ExperimentalPagingApi
     fun getAccountTimelinePager(

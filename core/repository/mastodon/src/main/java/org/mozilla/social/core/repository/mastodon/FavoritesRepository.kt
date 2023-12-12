@@ -72,11 +72,11 @@ class FavoritesRepository(
 
     fun insertAll(
         statuses: List<FavoritesTimelineStatus>
-    ) = dao.insertAll(statuses)
+    ) = dao.upsertAll(statuses)
 
     fun insert(
         status: FavoritesTimelineStatus
-    ) = dao.insert(status)
+    ) = dao.upsert(status)
 
     suspend fun deleteStatusFromTimeline(
         statusId: String,

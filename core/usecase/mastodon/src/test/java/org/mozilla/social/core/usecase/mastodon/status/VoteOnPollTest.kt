@@ -49,7 +49,7 @@ class VoteOnPollTest : BaseUseCaseTest() {
                 )
             },
             verifyBlock = {
-                pollRepository.update(any())
+                pollRepository.insert(any())
             },
         )
     }
