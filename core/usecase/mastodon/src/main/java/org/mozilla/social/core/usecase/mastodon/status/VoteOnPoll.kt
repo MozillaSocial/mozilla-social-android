@@ -31,7 +31,7 @@ class VoteOnPoll(
                     pollId,
                     PollVote(pollChoices),
                 )
-            pollRepository.update(poll)
+            pollRepository.insert(poll)
         } catch (e: Exception) {
             pollRepository.updateOwnVotes(pollId, null)
             showSnackbar(
