@@ -11,10 +11,10 @@ class RelationshipRepository(
     private val dao: RelationshipsDao,
 ) {
     fun insertAll(relationships: List<Relationship>) =
-        dao.insertAll(relationships.map { it.toDatabaseModel() })
+        dao.upsertAll(relationships.map { it.toDatabaseModel() })
 
     fun insert(relationship: Relationship) =
-        dao.insert(relationship.toDatabaseModel())
+        dao.upsert(relationship.toDatabaseModel())
 
     fun getRelationshipFlow(accountId: String): Flow<Relationship> =
         dao.getRelationshipFlow(accountId).map { it.toExternal() }

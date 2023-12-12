@@ -116,7 +116,7 @@ class StatusRepository(
      */
     @PreferUseCase
     fun insertAll(statuses: List<Status>) {
-        dao.insertAll(statuses.map { it.toDatabaseModel() })
+        dao.upsertAll(statuses.map { it.toDatabaseModel() })
     }
 }
 
