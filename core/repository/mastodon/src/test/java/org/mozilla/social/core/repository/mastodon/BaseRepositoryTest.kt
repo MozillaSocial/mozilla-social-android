@@ -7,7 +7,6 @@ import org.mozilla.social.core.database.dao.AccountTimelineStatusDao
 import org.mozilla.social.core.database.dao.AccountsDao
 import org.mozilla.social.core.database.dao.FederatedTimelineStatusDao
 import org.mozilla.social.core.database.dao.HashTagTimelineStatusDao
-import org.mozilla.social.core.database.dao.HashtagDao
 import org.mozilla.social.core.database.dao.HomeTimelineStatusDao
 import org.mozilla.social.core.database.dao.LocalTimelineStatusDao
 import org.mozilla.social.core.database.dao.PollsDao
@@ -41,7 +40,6 @@ open class BaseRepositoryTest {
     protected val accountsDao = mockk<AccountsDao>(relaxed = true)
     protected val accountTimelineDao = mockk<AccountTimelineStatusDao>(relaxed = true)
     protected val federatedTimelineDao = mockk<FederatedTimelineStatusDao>(relaxed = true)
-    protected val hashtagDao = mockk<HashtagDao>(relaxed = true)
     protected val hashTagTimelineDao = mockk<HashTagTimelineStatusDao>(relaxed = true)
     protected val homeTimelineDao = mockk<HomeTimelineStatusDao>(relaxed = true)
     protected val localTimelineDao = mockk<LocalTimelineStatusDao>(relaxed = true)
@@ -53,7 +51,6 @@ open class BaseRepositoryTest {
         every { socialDatabase.accountsDao() } returns accountsDao
         every { socialDatabase.accountTimelineDao() } returns accountTimelineDao
         every { socialDatabase.federatedTimelineDao() } returns federatedTimelineDao
-        every { socialDatabase.hashtagDao() } returns hashtagDao
         every { socialDatabase.hashTagTimelineDao() } returns hashTagTimelineDao
         every { socialDatabase.homeTimelineDao() } returns homeTimelineDao
         every { socialDatabase.localTimelineDao() } returns localTimelineDao

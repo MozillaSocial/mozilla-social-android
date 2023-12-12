@@ -1,15 +1,41 @@
-package org.mozilla.social.core.database.model
+package org.mozilla.social.core.database.model.entities
 
 import androidx.room.ColumnInfo
 import androidx.room.Embedded
 import androidx.room.Entity
+import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import kotlinx.datetime.Instant
+import org.mozilla.social.core.database.model.DatabaseApplication
+import org.mozilla.social.core.database.model.DatabaseAttachment
+import org.mozilla.social.core.database.model.DatabaseCard
+import org.mozilla.social.core.database.model.DatabaseEmoji
+import org.mozilla.social.core.database.model.DatabaseHashTag
+import org.mozilla.social.core.database.model.DatabaseMention
+import org.mozilla.social.core.database.model.DatabaseStatusVisibility
 
 /**
  * Represents a status posted by an account.
  */
-@Entity(tableName = "statuses")
+@Entity(
+    tableName = "statuses",
+    foreignKeys = [
+        ForeignKey(
+            entity = DatabaseAccount::class,
+            parentColumns = ["accountId"],
+            childColumns = ["accountId"],
+            onDelete = ForeignKey.CASCADE,
+            onUpdate = ForeignKey.CASCADE,
+        ),
+        ForeignKey(
+            entity = DatabasePoll::class,
+            parentColumns = ["pollId"],
+            childColumns = ["pollId"],
+            onDelete = ForeignKey.CASCADE,
+            onUpdate = ForeignKey.CASCADE,
+        ),
+    ]
+)
 data class DatabaseStatus(
     @PrimaryKey
     val statusId: String,

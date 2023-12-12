@@ -4,8 +4,8 @@ import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
-import org.mozilla.social.core.database.model.statusCollections.FederatedTimelineStatus
-import org.mozilla.social.core.database.model.statusCollections.FederatedTimelineStatusWrapper
+import org.mozilla.social.core.database.model.entities.statusCollections.FederatedTimelineStatus
+import org.mozilla.social.core.database.model.entities.statusCollections.FederatedTimelineStatusWrapper
 
 @Dao
 interface FederatedTimelineStatusDao : BaseDao<FederatedTimelineStatus> {

@@ -1,8 +1,10 @@
-package org.mozilla.social.core.database.model
+package org.mozilla.social.core.database.model.entities
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import kotlinx.datetime.Instant
+import org.mozilla.social.core.database.model.DatabaseEmoji
+import org.mozilla.social.core.database.model.DatabasePollOption
 
 /**
  * Represents a poll attached to a status.

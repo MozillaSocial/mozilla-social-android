@@ -1,6 +1,7 @@
 package org.mozilla.social.core.database
 
 import androidx.room.DeleteColumn
+import androidx.room.DeleteTable
 import androidx.room.RenameColumn
 import androidx.room.migration.AutoMigrationSpec
 
@@ -48,4 +49,9 @@ object DatabaseMigrations {
         columnName = "relationshipAccountId",
     )
     class Schema10to11 : AutoMigrationSpec
+
+    @DeleteTable(
+        tableName = "hashTags"
+    )
+    class Schema14to15 : AutoMigrationSpec
 }

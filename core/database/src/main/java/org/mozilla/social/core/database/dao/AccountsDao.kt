@@ -3,7 +3,7 @@ package org.mozilla.social.core.database.dao
 import androidx.room.Dao
 import androidx.room.Query
 import kotlinx.coroutines.flow.Flow
-import org.mozilla.social.core.database.model.DatabaseAccount
+import org.mozilla.social.core.database.model.entities.DatabaseAccount
 
 @Dao
 interface AccountsDao : BaseDao<DatabaseAccount> {

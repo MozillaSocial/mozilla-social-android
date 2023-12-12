@@ -4,8 +4,8 @@ import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
-import org.mozilla.social.core.database.model.statusCollections.FavoritesTimelineStatus
-import org.mozilla.social.core.database.model.statusCollections.FavoritesTimelineStatusWrapper
+import org.mozilla.social.core.database.model.entities.statusCollections.FavoritesTimelineStatus
+import org.mozilla.social.core.database.model.entities.statusCollections.FavoritesTimelineStatusWrapper
 
 @Dao
 interface FavoritesTimelineStatusDao: BaseDao<FavoritesTimelineStatus> {
@@ -25,4 +25,10 @@ interface FavoritesTimelineStatusDao: BaseDao<FavoritesTimelineStatus> {
         "OR boostedStatusId = :statusId",
     )
     suspend fun deletePost(statusId: String)
+
+    @Query(
+        "SELECT * FROM favoritesTimeline " +
+        "WHERE statusId = :statusId"
+    )
+    suspend fun getStatus(statusId: String): FavoritesTimelineStatus
 }

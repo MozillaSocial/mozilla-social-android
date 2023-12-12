@@ -7,7 +7,7 @@ import androidx.paging.RemoteMediator
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.koin.core.parameter.parametersOf
-import org.mozilla.social.core.database.model.statusCollections.AccountTimelineStatusWrapper
+import org.mozilla.social.core.database.model.entities.statusCollections.AccountTimelineStatusWrapper
 import org.mozilla.social.core.model.AccountTimelineType
 import org.mozilla.social.core.usecase.mastodon.timeline.RefreshAccountTimeline
 

@@ -4,8 +4,8 @@ import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
-import org.mozilla.social.core.database.model.accountCollections.Follower
-import org.mozilla.social.core.database.model.accountCollections.FollowerWrapper
+import org.mozilla.social.core.database.model.entities.accountCollections.Follower
+import org.mozilla.social.core.database.model.entities.accountCollections.FollowerWrapper
 
 @Dao
 interface FollowersDao : BaseDao<Follower> {

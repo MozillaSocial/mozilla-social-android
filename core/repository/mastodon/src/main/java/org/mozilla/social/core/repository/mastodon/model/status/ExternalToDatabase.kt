@@ -1,6 +1,6 @@
 package org.mozilla.social.core.repository.mastodon.model.status
 
-import org.mozilla.social.core.database.model.DatabaseAccount
+import org.mozilla.social.core.database.model.entities.DatabaseAccount
 import org.mozilla.social.core.database.model.DatabaseApplication
 import org.mozilla.social.core.database.model.DatabaseAttachment
 import org.mozilla.social.core.database.model.DatabaseCard

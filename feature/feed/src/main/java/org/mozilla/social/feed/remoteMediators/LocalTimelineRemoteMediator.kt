@@ -4,7 +4,7 @@ import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
-import org.mozilla.social.core.database.model.statusCollections.LocalTimelineStatusWrapper
+import org.mozilla.social.core.database.model.entities.statusCollections.LocalTimelineStatusWrapper
 import org.mozilla.social.core.usecase.mastodon.timeline.RefreshLocalTimeline
 
 @OptIn(ExperimentalPagingApi::class)

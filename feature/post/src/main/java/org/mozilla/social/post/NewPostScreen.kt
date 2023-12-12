@@ -44,6 +44,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
@@ -407,7 +408,6 @@ private fun MainBox(
                 Modifier
                     .fillMaxSize()
                     .clickable {
-                        textFieldFocusRequester.requestFocus()
                         keyboard?.show()
                     },
         ) {
@@ -552,7 +552,7 @@ private fun ImageUploadBox(
             modifier = Modifier.fillMaxWidth(),
         ) {
             if (imageState.loadState == LoadState.LOADED) {
-                TextField(
+                MoSoTextField(
                     modifier = Modifier.weight(1f),
                     value = imageState.description,
                     onValueChange = {
@@ -567,6 +567,7 @@ private fun ImageUploadBox(
                         )
                     },
                     colors = transparentTextFieldColors(),
+                    borderColor = Color.Transparent,
                 )
             } else {
                 Spacer(modifier = Modifier.weight(1f))
