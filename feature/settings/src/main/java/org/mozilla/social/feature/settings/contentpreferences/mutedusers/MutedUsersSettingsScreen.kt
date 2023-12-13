@@ -40,13 +40,12 @@ sealed class MutedButtonState(
     override val confirmationText: StringFactory? = null,
     override val theme: MoSoButtonTheme,
 ) : ToggleableButtonState {
-    class Muted(confirmationText: StringFactory?) : MutedButtonState(
+    data class Muted(override val confirmationText: StringFactory?) : MutedButtonState(
         text = R.string.unmute,
-        confirmationText = confirmationText,
         theme = MoSoButtonSecondaryDefaults,
     )
 
-    data object Unmuted : MutedButtonState(
+    data class Unmuted(override val confirmationText: StringFactory?) : MutedButtonState(
         text = R.string.mute,
         theme = MoSoButtonPrimaryDefaults,
     )

@@ -37,13 +37,13 @@ class BlockedUsersViewModel(
     @OptIn(ExperimentalPagingApi::class)
     val blocks: Flow<PagingData<ToggleableAccountListItemState<BlockedButtonState>>> =
         repository.getBlocksPager(remoteMediator = remoteMediator)
-            .map { pagingData -> pagingData.map { blockedUser -> blockedUser.toBlockedUserState() } }
+            .map { pagingData -> pagingData.map { blockedUser -> blockedUser.toToggleableState() } }
 
     fun onButtonClicked(accountId: String, buttonState: BlockedButtonState) {
         viewModelScope.launch(Dispatchers.IO) {
             when (buttonState) {
                 is BlockedButtonState.Blocked -> unblockAccount(accountId)
-                BlockedButtonState.Unblocked -> blockAccount(accountId)
+                is BlockedButtonState.Unblocked -> blockAccount(accountId)
             }
         }
     }
@@ -56,12 +56,17 @@ class BlockedUsersViewModel(
     }
 }
 
-fun BlockedUser.toBlockedUserState() =
+fun BlockedUser.toToggleableState() =
     ToggleableAccountListItemState(
         buttonState = if (isBlocked) BlockedButtonState.Blocked(
             confirmationText = StringFactory.resource(
                 R.string.are_you_sure_you_want_to_unblock, account.acct
             )
-        ) else BlockedButtonState.Unblocked,
+        ) else BlockedButtonState.Unblocked(
+            confirmationText = StringFactory.resource(
+                R.string.are_you_sure_you_want_to_block, account.acct
+            )
+
+        ),
         account = account.toQuickViewUiState(),
     )

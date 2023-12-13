@@ -37,13 +37,13 @@ class MutedUsersSettingsViewModel(
     @OptIn(ExperimentalPagingApi::class)
     val mutes: Flow<PagingData<ToggleableAccountListItemState<MutedButtonState>>> =
         repository.getMutesPager(remoteMediator)
-            .map { pagingData -> pagingData.map { mutedUser -> mutedUser.toMutedUserState() } }
+            .map { pagingData -> pagingData.map { mutedUser -> mutedUser.toToggleableState() } }
 
     fun onButtonClicked(accountId: String, mutedButtonState: MutedButtonState) {
         viewModelScope.launch(Dispatchers.IO) {
             when (mutedButtonState) {
                 is MutedButtonState.Muted -> unmuteAccount(accountId)
-                MutedButtonState.Unmuted -> muteAccount(accountId)
+                is MutedButtonState.Unmuted -> muteAccount(accountId)
             }
         }
     }
@@ -56,12 +56,16 @@ class MutedUsersSettingsViewModel(
     }
 }
 
-fun MutedUser.toMutedUserState() =
+fun MutedUser.toToggleableState() =
     ToggleableAccountListItemState(
         buttonState = if (isMuted) MutedButtonState.Muted(
             confirmationText = StringFactory.resource(
                 R.string.are_you_sure_you_want_to_unmute, account.acct
             )
-        ) else MutedButtonState.Unmuted,
+        ) else MutedButtonState.Unmuted(
+            confirmationText = StringFactory.resource(
+                R.string.are_you_sure_you_want_to_mute, account.acct
+            )
+        ),
         account = account.toQuickViewUiState()
     )
