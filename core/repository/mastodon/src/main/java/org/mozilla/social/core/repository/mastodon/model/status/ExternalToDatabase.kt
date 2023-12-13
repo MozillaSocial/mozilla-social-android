@@ -12,6 +12,8 @@ import org.mozilla.social.core.database.model.DatabaseHistory
 import org.mozilla.social.core.database.model.DatabaseMention
 import org.mozilla.social.core.database.model.DatabaseSource
 import org.mozilla.social.core.database.model.DatabaseStatusVisibility
+import org.mozilla.social.core.database.model.entities.accountCollections.DatabaseBlock
+import org.mozilla.social.core.database.model.entities.accountCollections.DatabaseMute
 import org.mozilla.social.core.model.Account
 import org.mozilla.social.core.model.Application
 import org.mozilla.social.core.model.Attachment
@@ -54,6 +56,13 @@ fun Account.toDatabaseModel(): DatabaseAccount =
         isSuspended = isSuspended,
         muteExpiresAt = muteExpiresAt,
     )
+
+fun Account.toDatabaseBlock(isBlocked: Boolean, position: Int): DatabaseBlock =
+    DatabaseBlock(accountId = id, isBlocked = isBlocked, position = position)
+
+
+fun Account.toDatabaseMute(isMuted: Boolean, position: Int): DatabaseMute =
+    DatabaseMute(accountId = id, isMuted = isMuted, position = position)
 
 fun StatusVisibility.toDatabaseModel(): DatabaseStatusVisibility =
     when (this) {

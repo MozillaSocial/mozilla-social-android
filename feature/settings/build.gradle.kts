@@ -21,10 +21,12 @@ dependencies {
     implementation(project(":core:usecase:mastodon"))
 
     implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.datastore)
+    implementation(libs.androidx.paging.compose)
+    implementation(libs.androidx.paging.runtime)
     implementation(libs.coil)
     implementation(libs.koin.core)
     implementation(libs.koin.androidx.compose)
-
-    implementation(libs.androidx.datastore)
     implementation(libs.protobuf.kotlin.lite)
+
 }
