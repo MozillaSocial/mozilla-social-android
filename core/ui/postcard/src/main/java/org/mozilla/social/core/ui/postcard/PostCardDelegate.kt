@@ -99,7 +99,7 @@ class PostCardDelegate(
             if (isFavoriting) {
                 try {
                     analytics.uiEngagement(
-                        engagementType = EngagementType.GENERAL,
+                        engagementType = EngagementType.FAVORITE,
                         uiIdentifier = "$baseAnalyticsIdentifier.${AnalyticsIdentifiers.FEED_POST_FAVORITE}",
                         mastodonStatusId = statusId
                     )
@@ -110,7 +110,7 @@ class PostCardDelegate(
             } else {
                 try {
                     analytics.uiEngagement(
-                        engagementType = EngagementType.GENERAL,
+                        engagementType = EngagementType.FAVORITE,
                         uiIdentifier = "$baseAnalyticsIdentifier.${AnalyticsIdentifiers.FEED_POST_UNFAVORITE}",
                         mastodonStatusId = statusId
                     )
@@ -126,7 +126,15 @@ class PostCardDelegate(
         navigateTo(NavigationDestination.Thread(threadStatusId = statusId))
     }
 
-    override fun onOverflowMuteClicked(accountId: String) {
+    override fun onOverflowMuteClicked(
+        accountId: String,
+        statusId: String,
+    ) {
+        analytics.uiEngagement(
+            engagementType = EngagementType.GENERAL,
+            uiIdentifier = "$baseAnalyticsIdentifier.${AnalyticsIdentifiers.FEED_POST_MUTE}",
+            mastodonStatusId = statusId
+        )
         coroutineScope.launch {
             try {
                 muteAccount(accountId)
@@ -136,7 +144,15 @@ class PostCardDelegate(
         }
     }
 
-    override fun onOverflowBlockClicked(accountId: String) {
+    override fun onOverflowBlockClicked(
+        accountId: String,
+        statusId: String,
+    ) {
+        analytics.uiEngagement(
+            engagementType = EngagementType.GENERAL,
+            uiIdentifier = "$baseAnalyticsIdentifier.${AnalyticsIdentifiers.FEED_POST_BLOCK}",
+            mastodonStatusId = statusId
+        )
         coroutineScope.launch {
             try {
                 blockAccount(accountId)
@@ -151,6 +167,12 @@ class PostCardDelegate(
         accountHandle: String,
         statusId: String,
     ) {
+
+        analytics.uiEngagement(
+            engagementType = EngagementType.GENERAL,
+            uiIdentifier = "$baseAnalyticsIdentifier.${AnalyticsIdentifiers.FEED_POST_REPORT}",
+            mastodonStatusId = statusId
+        )
         navigateTo(
             NavigationDestination.Report(
                 reportAccountId = accountId,
@@ -171,6 +193,11 @@ class PostCardDelegate(
     }
 
     override fun onAccountImageClicked(accountId: String) {
+        analytics.uiEngagement(
+            engagementType = EngagementType.GENERAL,
+            uiIdentifier = AnalyticsIdentifiers.FEED_POST_ACCOUNT_IMAGE_TAPPED,
+            mastodonAccountId = accountId
+        )
         navigateTo(NavigationDestination.Account(accountId))
     }
 
@@ -184,10 +211,20 @@ class PostCardDelegate(
     }
 
     override fun onAccountClicked(accountId: String) {
+        analytics.uiEngagement(
+            engagementType = EngagementType.GENERAL,
+            uiIdentifier = AnalyticsIdentifiers.FEED_POST_ACCOUNT_TAPPED,
+            mastodonAccountId = accountId
+        )
         navigateTo(NavigationDestination.Account(accountId))
     }
 
     override fun onHashTagClicked(hashTag: String) {
+        analytics.uiEngagement(
+            engagementType = EngagementType.GENERAL,
+            uiIdentifier = AnalyticsIdentifiers.FEED_POST_HASHTAG_TAPPED,
+            engagementValue = "hashtag: $hashTag"
+        )
         navigateTo(NavigationDestination.HashTag(hashTag))
     }
 }

@@ -13,6 +13,7 @@ import org.koin.core.parameter.parametersOf
 import org.koin.java.KoinJavaComponent
 import org.mozilla.social.core.analytics.Analytics
 import org.mozilla.social.core.analytics.AnalyticsIdentifiers
+import org.mozilla.social.core.analytics.EngagementType
 import org.mozilla.social.core.repository.mastodon.TimelineRepository
 import org.mozilla.social.core.ui.postcard.PostCardDelegate
 import org.mozilla.social.core.ui.postcard.toPostCardUiState
@@ -75,6 +76,15 @@ class FeedViewModel(
     ) { parametersOf(viewModelScope, AnalyticsIdentifiers.FEED_PREFIX_FEDERATED) }
 
     override fun onTabClicked(timelineType: TimelineType) {
+        analytics.uiEngagement(
+            engagementType = EngagementType.GENERAL,
+            uiIdentifier =
+                when (timelineType) {
+                    TimelineType.FOR_YOU -> AnalyticsIdentifiers.FEED_HOME_SCREEN_HOME
+                    TimelineType.LOCAL -> AnalyticsIdentifiers.FEED_LOCAL_SCREEN_HOME
+                    TimelineType.FEDERATED -> AnalyticsIdentifiers.FEED_FEDERATED_SCREEN_HOME
+                },
+        )
         _timelineType.update { timelineType }
     }
 

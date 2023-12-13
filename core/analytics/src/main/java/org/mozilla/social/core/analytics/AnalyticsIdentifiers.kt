@@ -36,6 +36,12 @@ object AnalyticsIdentifiers {
     const val FEED_POST_FAVORITE = "feed.post.favourite"
     const val FEED_POST_UNFAVORITE = "feed.post.unfavourite"
     const val FEED_POST_LINK_TAPPED = "post.link.tap"
+    const val FEED_POST_ACCOUNT_TAPPED = "post.account.tap"
+    const val FEED_POST_ACCOUNT_IMAGE_TAPPED = "post.account.image.tap"
+    const val FEED_POST_HASHTAG_TAPPED = "post.hashtag.tap"
+    const val FEED_POST_MUTE = "feed.post.mute"
+    const val FEED_POST_BLOCK = "feed.post.block"
+    const val FEED_POST_REPORT = "feed.post.block"
 
     const val FEED_PREFIX_PROFILE = "profile"
     const val FEED_PREFIX_HOME = "home"
@@ -44,6 +50,10 @@ object AnalyticsIdentifiers {
     const val FEED_PREFIX_HASHTAG = "hashtag"
     const val FEED_PREFIX_THREAD = "thread"
     const val FEED_PREFIX_FAVORITES = "favorites"
+
+    const val FEED_HOME_SCREEN_HOME = "feed.screen.home"
+    const val FEED_LOCAL_SCREEN_HOME = "feed.screen.local"
+    const val FEED_FEDERATED_SCREEN_HOME = "feed.screen.federated"
 
     const val REPORT_SCREEN_IMPRESSION = "report.screen.impression"
 
