@@ -64,16 +64,16 @@ private fun MastodonPagingLink.getMaxIdValue(): String =
         .split("&")
         .first()
 
-private fun MastodonPagingLink.getLimitValue(): String {
+private fun MastodonPagingLink.getLimitValue(): Int {
     val uri = Uri.parse(link)
-    return uri.getQueryParameter("limit")!!
+    return uri.getQueryParameter("limit")?.toInt()!!
 }
 
 data class HeaderLink(
     val maxId: String?,
     val sinceId: String?,
     val minId: String?,
-    val limit: String?
+    val limit: Int?
 )
 
 fun MastodonPagingLink.toHeaderLink() = HeaderLink(

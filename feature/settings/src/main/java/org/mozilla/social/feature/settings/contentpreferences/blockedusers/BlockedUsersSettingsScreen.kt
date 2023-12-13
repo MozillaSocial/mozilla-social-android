@@ -30,7 +30,9 @@ import org.mozilla.social.core.ui.common.MoSoSurface
 import org.mozilla.social.core.ui.common.account.quickview.AccountQuickView
 import org.mozilla.social.core.ui.common.account.quickview.AccountQuickViewUiState
 import org.mozilla.social.core.ui.common.button.MoSoButton
+import org.mozilla.social.core.ui.common.button.MoSoButtonPrimaryDefaults
 import org.mozilla.social.core.ui.common.button.MoSoButtonSecondary
+import org.mozilla.social.core.ui.common.button.MoSoButtonSecondaryDefaults
 import org.mozilla.social.core.ui.common.error.GenericError
 import org.mozilla.social.core.ui.common.text.SmallTextLabel
 import org.mozilla.social.feature.settings.R
@@ -38,7 +40,7 @@ import org.mozilla.social.feature.settings.ui.SettingsColumn
 
 @Composable
 fun BlockedUsersSettingsScreen(viewModel: BlockedUsersViewModel = koinViewModel()) {
-    BlockedUsersSettingsScreen(viewModel.pager, viewModel::onBlockButtonClicked)
+    BlockedUsersSettingsScreen(viewModel.blocks, viewModel::onBlockButtonClicked)
 
     LaunchedEffect(Unit) {
         viewModel.onScreenViewed()
@@ -47,34 +49,41 @@ fun BlockedUsersSettingsScreen(viewModel: BlockedUsersViewModel = koinViewModel(
 
 @Composable
 fun BlockedUsersSettingsScreen(
-    blocksPagingData: Flow<PagingData<AccountQuickViewUiState>>,
+    blocksPagingData: Flow<PagingData<BlockedUserState>>,
     onUnblockClicked: (accountId: String) -> Unit,
 ) {
-    val blocks: LazyPagingItems<AccountQuickViewUiState> =
-        blocksPagingData.collectAsLazyPagingItems()
-
     MoSoSurface {
         SettingsColumn(title = stringResource(id = R.string.blocked_users_title)) {
-            BlockedUserList(lazyPagingItems = blocks, onUnblockClicked = onUnblockClicked)
+            BlockedUserList(
+                blocksPagingData = blocksPagingData,
+                onUnblockClicked = onUnblockClicked
+            )
         }
     }
 }
 
 @Composable
 fun BlockedUserList(
-    lazyPagingItems: LazyPagingItems<AccountQuickViewUiState>,
+    blocksPagingData: Flow<PagingData<BlockedUserState>>,
     onUnblockClicked: (accountId: String) -> Unit
 ) {
+    val lazyPagingItems: LazyPagingItems<BlockedUserState> =
+        blocksPagingData.collectAsLazyPagingItems()
+
     LazyColumn {
         when (lazyPagingItems.loadState.refresh) {
             is LoadState.Error -> {}
             else ->
                 items(
                     count = lazyPagingItems.itemCount,
-                    key = lazyPagingItems.itemKey { it.accountId },
+                    key = lazyPagingItems.itemKey { it.account.accountId },
                 ) { index ->
                     lazyPagingItems[index]?.let { block ->
-                        BlockedUserRow(block = block, onUnblockClicked = onUnblockClicked)
+                        BlockedUserRow(
+                            block = block.account,
+                            isBlocked = block.isBlocked,
+                            onUnblockClicked = onUnblockClicked
+                        )
                     }
                 }
         }
@@ -108,6 +117,7 @@ fun BlockedUserList(
 @Composable
 fun BlockedUserRow(
     block: AccountQuickViewUiState,
+    isBlocked: Boolean,
     onUnblockClicked: (accountId: String) -> Unit,
 ) {
     var openAlertDialog by remember { mutableStateOf(false) }
@@ -130,10 +140,11 @@ fun BlockedUserRow(
             uiState = block,
             modifier = Modifier.fillMaxWidth(),
             buttonSlot = {
-                MoSoButtonSecondary(
+                MoSoButton(
                     onClick = {
                         openAlertDialog = true
                     },
+                    colors = if (isBlocked) MoSoButtonPrimaryDefaults.colors() else MoSoButtonSecondaryDefaults.colors()
                 ) {
                     SmallTextLabel(text = stringResource(id = R.string.unblock))
                 }
@@ -170,3 +181,5 @@ fun ConfirmationDialog(acct: String, onDismissRequest: () -> Unit, onConfirmed: 
         }
     )
 }
+
+data class BlockedUserState(val isBlocked: Boolean, val account: AccountQuickViewUiState)

@@ -19,7 +19,6 @@ import org.mozilla.social.core.usecase.mastodon.account.UpdateMyAccount
 import org.mozilla.social.core.usecase.mastodon.auth.IsSignedInFlow
 import org.mozilla.social.core.usecase.mastodon.auth.Login
 import org.mozilla.social.core.usecase.mastodon.auth.Logout
-import org.mozilla.social.core.usecase.mastodon.remotemediators.BlocksListPagingSource
 import org.mozilla.social.core.usecase.mastodon.remotemediators.FollowersRemoteMediator
 import org.mozilla.social.core.usecase.mastodon.remotemediators.FollowingsRemoteMediator
 import org.mozilla.social.core.usecase.mastodon.remotemediators.HashTagTimelineRemoteMediator
@@ -234,6 +233,4 @@ val mastodonUsecaseModule =
                 accountId = it[0],
             )
         }
-
-        factoryOf(::BlocksListPagingSource)
     }

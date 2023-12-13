@@ -12,6 +12,6 @@ interface BlocksApi {
         @Query("max_id") maxId: String? = null,
         @Query("since_id") sinceId: String? = null,
         @Query("min_id") minId: String? = null,
-        @Query("limit") limit: String? = null,
+        @Query("limit") limit: Int? = null,
     ): Response<List<NetworkAccount>>
 }

@@ -17,6 +17,7 @@ import org.mozilla.social.core.database.converters.MentionConverter
 import org.mozilla.social.core.database.converters.PollOptionConverter
 import org.mozilla.social.core.database.dao.AccountTimelineStatusDao
 import org.mozilla.social.core.database.dao.AccountsDao
+import org.mozilla.social.core.database.dao.BlocksDao
 import org.mozilla.social.core.database.dao.FavoritesTimelineStatusDao
 import org.mozilla.social.core.database.dao.FederatedTimelineStatusDao
 import org.mozilla.social.core.database.dao.FollowersDao
@@ -24,6 +25,7 @@ import org.mozilla.social.core.database.dao.FollowingsDao
 import org.mozilla.social.core.database.dao.HashTagTimelineStatusDao
 import org.mozilla.social.core.database.dao.HomeTimelineStatusDao
 import org.mozilla.social.core.database.dao.LocalTimelineStatusDao
+import org.mozilla.social.core.database.dao.MutesDao
 import org.mozilla.social.core.database.dao.PollsDao
 import org.mozilla.social.core.database.dao.RelationshipsDao
 import org.mozilla.social.core.database.dao.StatusDao
@@ -39,11 +41,15 @@ import org.mozilla.social.core.database.model.entities.statusCollections.Federat
 import org.mozilla.social.core.database.model.entities.statusCollections.HashTagTimelineStatus
 import org.mozilla.social.core.database.model.entities.statusCollections.HomeTimelineStatus
 import org.mozilla.social.core.database.model.entities.statusCollections.LocalTimelineStatus
+import org.mozilla.social.core.database.model.entities.accountCollections.DatabaseBlock
+import org.mozilla.social.core.database.model.entities.accountCollections.DatabaseMute
 
 @Suppress("MagicNumber")
 @Database(
     entities = [
         DatabaseStatus::class,
+        DatabaseBlock::class,
+        DatabaseMute::class,
         DatabaseAccount::class,
         HomeTimelineStatus::class,
         DatabasePoll::class,
@@ -56,7 +62,7 @@ import org.mozilla.social.core.database.model.entities.statusCollections.LocalTi
         Followee::class,
         FavoritesTimelineStatus::class,
     ],
-    version = 15,
+    version = 16,
     autoMigrations = [
         AutoMigration(1, 2, DatabaseMigrations.Schema1to2::class),
         AutoMigration(2, 3),
@@ -72,6 +78,7 @@ import org.mozilla.social.core.database.model.entities.statusCollections.LocalTi
         AutoMigration(12, 13),
         AutoMigration(13, 14),
         AutoMigration(14, 15, DatabaseMigrations.Schema14to15::class),
+        AutoMigration(15, 16),
     ],
     exportSchema = true,
 )
@@ -92,6 +99,10 @@ abstract class SocialDatabase : RoomDatabase() {
     abstract fun statusDao(): StatusDao
 
     abstract fun accountsDao(): AccountsDao
+
+    abstract fun blocksDao(): BlocksDao
+
+    abstract fun mutesDao(): MutesDao
 
     abstract fun homeTimelineDao(): HomeTimelineStatusDao
 
