@@ -2,38 +2,41 @@ package org.mozilla.social.feature.settings.contentpreferences.blockedusers
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.CoroutineDispatcher
+import androidx.paging.ExperimentalPagingApi
+import androidx.paging.PagingData
+import androidx.paging.map
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import org.mozilla.social.core.analytics.Analytics
 import org.mozilla.social.core.analytics.AnalyticsIdentifiers
-import org.mozilla.social.core.model.Account
-import org.mozilla.social.core.repository.mastodon.AccountRepository
+import org.mozilla.social.core.model.BlockedUser
 import org.mozilla.social.core.repository.mastodon.BlocksRepository
 import org.mozilla.social.core.ui.common.account.quickview.toQuickViewUiState
+import org.mozilla.social.core.usecase.mastodon.account.BlockAccount
 import org.mozilla.social.core.usecase.mastodon.account.GetLoggedInUserAccountId
+import org.mozilla.social.core.usecase.mastodon.account.UnblockAccount
+import org.mozilla.social.core.usecase.mastodon.remotemediators.BlocksListRemoteMediator
 import org.mozilla.social.feature.settings.SettingsInteractions
 
 class BlockedUsersViewModel(
-    private val repository: BlocksRepository,
-    private val accountRepository: AccountRepository,
-    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
+    repository: BlocksRepository,
+    remoteMediator: BlocksListRemoteMediator,
     private val analytics: Analytics,
     getLoggedInUserAccountId: GetLoggedInUserAccountId,
 ) : ViewModel(), SettingsInteractions {
 
     private val userAccountId: String = getLoggedInUserAccountId()
 
-    val blocks: Flow<List<Block>> =
-        flow {
-            emit(repository.getBlocks().map { it.toBlock() })
-        }
+    @OptIn(ExperimentalPagingApi::class)
+    val blocks: Flow<PagingData<BlockedUserState>> =
+        repository.getBlocksPager(remoteMediator = remoteMediator)
+            .map { pagingData -> pagingData.map { blockedUser -> blockedUser.toBlockedUserState() } }
 
-    // TODO@DA error handling and unblock
+    @Suppress("UnusedParameter")
     fun onBlockButtonClicked(accountId: String) {
-        viewModelScope.launch(ioDispatcher) { accountRepository.muteAccount(accountId) }
+        // TODO@DA
     }
 
     override fun onScreenViewed() {
@@ -44,6 +47,5 @@ class BlockedUsersViewModel(
     }
 }
 
-private fun Account.toBlock(): Block {
-    return Block(toQuickViewUiState())
-}
+fun BlockedUser.toBlockedUserState() =
+    BlockedUserState(isBlocked = isBlocked, account = account.toQuickViewUiState())

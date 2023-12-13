@@ -21,4 +21,5 @@
 
     <string name="sign_out">Sign Out</string>
     <string name="unblock">Unblock</string>
+    <string name="are_you_sure_you_want_to_unblock">Are you sure you want to unblock %s?</string>
 </resources>
