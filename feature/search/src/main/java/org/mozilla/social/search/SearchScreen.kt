@@ -3,6 +3,7 @@ package org.mozilla.social.search
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
@@ -21,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.koin.androidx.compose.koinViewModel
@@ -29,6 +31,8 @@ import org.mozilla.social.core.designsystem.theme.MoSoSpacing
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.ui.common.MoSoSearchBar
 import org.mozilla.social.core.ui.common.MoSoSurface
+import org.mozilla.social.core.ui.common.MoSoTab
+import org.mozilla.social.core.ui.common.MoSoTabRow
 import org.mozilla.social.core.ui.common.appbar.MoSoCloseableTopAppBar
 import org.mozilla.social.core.ui.common.button.MoSoButton
 
@@ -86,6 +90,28 @@ private fun SearchScreen(
                 Text(text = "Search suggestions go here")
                 LaunchedEffect(Unit) {
                     searchFocusRequester.requestFocus()
+                }
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            val context = LocalContext.current
+
+            MoSoTabRow(selectedTabIndex = uiState.selectedTab.ordinal) {
+                SearchTab.entries.forEach { tabType ->
+                    MoSoTab(
+                        modifier =
+                        Modifier
+                            .height(40.dp),
+                        selected = uiState.selectedTab == tabType,
+                        onClick = { searchInteractions.onTabClicked(tabType) },
+                        content = {
+                            Text(
+                                text = tabType.tabTitle.build(context),
+                                style = MoSoTheme.typography.labelMedium,
+                            )
+                        },
+                    )
                 }
             }
         }

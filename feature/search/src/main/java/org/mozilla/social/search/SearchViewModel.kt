@@ -21,4 +21,10 @@ class SearchViewModel(
     override fun onSearchClicked() {
         TODO("Not yet implemented")
     }
+
+    override fun onTabClicked(tab: SearchTab) {
+        _uiState.edit { copy(
+            selectedTab = tab
+        ) }
+    }
 }

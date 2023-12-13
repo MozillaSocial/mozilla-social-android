@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="local_feed">Local Feed</string>
+    <string name="top_tab">Top</string>
+    <string name="accounts_tab">Accounts</string>
+    <string name="posts_tab">Posts</string>
+    <string name="hashtags_tab">Hashtags</string>
 </resources>
