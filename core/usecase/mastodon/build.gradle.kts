@@ -15,6 +15,7 @@ dependencies {
     implementation(project(":core:model"))
     implementation(project(":core:analytics"))
     implementation(project(":core:navigation"))
+    implementation(project(":core:ui:htmlcontent"))
 
     implementation(libs.androidx.browser)
     implementation(libs.androidx.navigation.compose)
