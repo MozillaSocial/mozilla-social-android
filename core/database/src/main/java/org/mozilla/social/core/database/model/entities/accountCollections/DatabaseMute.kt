@@ -1,6 +1,5 @@
 package org.mozilla.social.core.database.model.entities.accountCollections
 
-import androidx.room.ColumnInfo
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.ForeignKey
@@ -17,13 +16,12 @@ import org.mozilla.social.core.database.model.entities.DatabaseRelationship
         parentColumns = arrayOf("accountId"),
         childColumns = arrayOf("accountId"),
         onDelete = ForeignKey.CASCADE,
-         onUpdate = ForeignKey.CASCADE,
+        onUpdate = ForeignKey.CASCADE,
     )]
 )
 data class DatabaseMute(
     @PrimaryKey val accountId: String,
     val isMuted: Boolean,
-    @ColumnInfo(defaultValue = "0")
     val position: Int,
 )
 
