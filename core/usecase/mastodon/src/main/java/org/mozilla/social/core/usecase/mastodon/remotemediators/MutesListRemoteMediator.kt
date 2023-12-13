@@ -5,19 +5,17 @@ import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import kotlinx.coroutines.delay
-import org.mozilla.social.common.Rel
-import org.mozilla.social.common.getMaxIdValue
 import org.mozilla.social.core.database.model.entities.accountCollections.MuteWrapper
 import org.mozilla.social.core.repository.mastodon.AccountRepository
-import org.mozilla.social.core.repository.mastodon.MutesRepository
 import org.mozilla.social.core.repository.mastodon.DatabaseDelegate
+import org.mozilla.social.core.repository.mastodon.MutesRepository
 import org.mozilla.social.core.repository.mastodon.RelationshipRepository
 import org.mozilla.social.core.repository.mastodon.model.status.toDatabaseMute
 import timber.log.Timber
 
 @OptIn(ExperimentalPagingApi::class)
 class MutesListRemoteMediator(
-    private val accntRepository: AccountRepository,
+    private val accountRepository: AccountRepository,
     private val databaseDelegate: DatabaseDelegate,
     private val relationshipRepository: RelationshipRepository,
     private val mutesRepository: MutesRepository,
@@ -57,24 +55,25 @@ class MutesListRemoteMediator(
                     }
                 }
 
-            val relationships = accntRepository.getAccountRelationships(response.accounts.map { it.accountId })
+            val relationships =
+                accountRepository.getAccountRelationships(response.accounts.map { it.accountId })
 
             databaseDelegate.withTransaction {
                 if (loadType == LoadType.REFRESH) {
-//                    mutesRepository.deleteFollowers(accountId)
+                    mutesRepository.deleteAll()
                     nextPositionIndex = 0
                 }
 
-                accntRepository.insertAll(response.accounts)
+                accountRepository.insertAll(response.accounts)
                 relationshipRepository.insertAll(relationships)
                 mutesRepository.insertAll(
                     response.accounts.mapIndexed { index, account ->
-                        account.toDatabaseMute(isBlocked = true, position = index)
+                        account.toDatabaseMute(isMuted = true, position = index)
                     },
                 )
             }
 
-            nextKey = response.pagingLinks?.getMaxIdValue()
+            nextKey = response.nextPage?.maxId
             nextPositionIndex += response.accounts.size
 
             // There seems to be some race condition for refreshes.  Subsequent pages do
@@ -90,12 +89,10 @@ class MutesListRemoteMediator(
 
             @Suppress("KotlinConstantConditions")
             (MediatorResult.Success(
-                endOfPaginationReached =
-                when (loadType) {
-                    LoadType.PREPEND -> response.pagingLinks?.find { it.rel == Rel.PREV } == null
+                endOfPaginationReached = when (loadType) {
+                    LoadType.PREPEND -> response.prevPage == null
                     LoadType.REFRESH,
-                    LoadType.APPEND,
-                    -> response.pagingLinks?.find { it.rel == Rel.NEXT } == null
+                    LoadType.APPEND -> response.nextPage == null
                 },
             ))
         } catch (e: Exception) {

@@ -8,7 +8,12 @@ import androidx.paging.RemoteMediator
 import androidx.paging.map
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.mapLatest
+import org.mozilla.social.common.HeaderLink
+import org.mozilla.social.common.MastodonPagingLink
+import org.mozilla.social.common.getNext
+import org.mozilla.social.common.getPrev
 import org.mozilla.social.common.parseMastodonLinkHeader
+import org.mozilla.social.common.toHeaderLink
 import org.mozilla.social.core.database.dao.BlocksDao
 import org.mozilla.social.core.database.model.entities.accountCollections.BlockWrapper
 import org.mozilla.social.core.database.model.entities.accountCollections.DatabaseBlock
@@ -58,13 +63,18 @@ class BlocksRepository(private val api: BlocksApi, private val dao: BlocksDao) {
             throw HttpException(response)
         }
 
+        val pagingLinks = response.toPagingLinks()
+
         return AccountPagingWrapper(
             accounts = response.toAccountsList(),
-            pagingLinks = response.toPagingLinks(),
+            nextPage = pagingLinks?.getNext()?.toHeaderLink(),
+            prevPage = pagingLinks?.getPrev()?.toHeaderLink(),
         )
     }
 
     fun insertAll(databaseAccounts: List<DatabaseBlock>) = dao.upsertAll(databaseAccounts)
+
+    suspend fun deleteAll() = dao.deleteAll()
 }
 
 private fun BlockWrapper.toBlockedUser() = BlockedUser(
@@ -77,4 +87,3 @@ fun Response<List<NetworkAccount>>.toAccountsList() =
 
 fun Response<List<NetworkAccount>>.toPagingLinks() =
     headers().get("link")?.parseMastodonLinkHeader()
-

@@ -17,8 +17,7 @@ interface BlocksDao: BaseDao<DatabaseBlock> {
     fun pagingSource(): PagingSource<Int, BlockWrapper>
 
     @Query(
-        "DELETE FROM blocks " +
-                "WHERE accountId = :accountId",
+        "DELETE FROM blocks"
     )
-    suspend fun delete(accountId: String)
+    suspend fun deleteAll()
 }

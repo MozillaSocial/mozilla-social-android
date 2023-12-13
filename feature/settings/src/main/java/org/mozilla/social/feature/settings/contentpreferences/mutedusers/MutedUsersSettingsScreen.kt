@@ -14,13 +14,12 @@ fun MutedUsersSettingsScreen(
     viewModel: MutedUsersSettingsViewModel = koinViewModel(),
 ) {
 
-    BlockedUsersSettingsScreen(blocksPagingData = viewModel.mutes, onUnblockClicked = {})
-//    MoSoSurface {
-//        SettingsColumn(title = stringResource(id = R.string.muted_users_title)) {
-//        }
-//    }
-//
-//    LaunchedEffect(Unit) {
-//        viewModel.onScreenViewed()
-//    }
+    MoSoSurface {
+        SettingsColumn(title = stringResource(id = R.string.muted_users_title)) {
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.onScreenViewed()
+    }
 }

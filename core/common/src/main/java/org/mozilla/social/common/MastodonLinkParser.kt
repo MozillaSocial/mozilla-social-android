@@ -35,8 +35,6 @@ data class MastodonPagingLink(
 /**
  * Represents a link relation. Following the next link should show you older results. Following the
  * prev link should show you newer results.
- *
- * @constructor Create empty Rel
  */
 enum class Rel {
     PREV,
@@ -75,7 +73,6 @@ data class HeaderLink(
     val minId: String?,
     val limit: Int?
 )
-
 fun MastodonPagingLink.toHeaderLink() = HeaderLink(
     maxId = getMaxIdValue(),
     sinceId = getSinceIdValue(),
@@ -85,3 +82,4 @@ fun MastodonPagingLink.toHeaderLink() = HeaderLink(
 
 fun List<MastodonPagingLink>.getNext() = firstOrNull { it.rel == Rel.NEXT }
 fun List<MastodonPagingLink>.getPrev() = firstOrNull { it.rel == Rel.PREV }
+

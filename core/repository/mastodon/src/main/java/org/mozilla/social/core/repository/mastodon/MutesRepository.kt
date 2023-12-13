@@ -7,7 +7,10 @@ import androidx.paging.PagingData
 import androidx.paging.RemoteMediator
 import androidx.paging.map
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.mapLatest
+import kotlinx.coroutines.flow.map
+import org.mozilla.social.common.getNext
+import org.mozilla.social.common.getPrev
+import org.mozilla.social.common.toHeaderLink
 import org.mozilla.social.core.database.dao.MutesDao
 import org.mozilla.social.core.database.model.entities.accountCollections.DatabaseMute
 import org.mozilla.social.core.database.model.entities.accountCollections.MuteWrapper
@@ -35,9 +38,12 @@ class MutesRepository(private val api: MutesApi, private val dao: MutesDao) {
             throw HttpException(response)
         }
 
+        val pagingLinks = response.toPagingLinks()
+
         return AccountPagingWrapper(
             accounts = response.toAccountsList(),
-            pagingLinks = response.toPagingLinks(),
+            nextPage = pagingLinks?.getNext()?.toHeaderLink(),
+            prevPage = pagingLinks?.getPrev()?.toHeaderLink(),
         )
     }
     @OptIn(ExperimentalPagingApi::class)
@@ -55,13 +61,15 @@ class MutesRepository(private val api: MutesApi, private val dao: MutesDao) {
             remoteMediator = remoteMediator,
         ) {
             dao.pagingSource()
-        }.flow.mapLatest { it.map { it.toMuteedUser() } }
+        }.flow.map { it.map { it.toMutedUser() } }
     }
 
     fun insertAll(databaseAccounts: List<DatabaseMute>) = dao.upsertAll(databaseAccounts)
+
+    suspend fun deleteAll() = dao.deleteAll()
 }
 
-private fun MuteWrapper.toMuteedUser() = MutedUser(
+private fun MuteWrapper.toMutedUser() = MutedUser(
     isMuted = databaseRelationship.isMuting,
     account = account.toExternalModel(),
 )

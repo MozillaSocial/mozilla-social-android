@@ -9,12 +9,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import org.koin.java.KoinJavaComponent
 import org.mozilla.social.core.analytics.Analytics
 import org.mozilla.social.core.analytics.AnalyticsIdentifiers
 import org.mozilla.social.core.model.BlockedUser
 import org.mozilla.social.core.repository.mastodon.BlocksRepository
 import org.mozilla.social.core.ui.common.account.quickview.toQuickViewUiState
+import org.mozilla.social.core.usecase.mastodon.account.BlockAccount
 import org.mozilla.social.core.usecase.mastodon.account.GetLoggedInUserAccountId
 import org.mozilla.social.core.usecase.mastodon.account.UnblockAccount
 import org.mozilla.social.core.usecase.mastodon.remotemediators.BlocksListRemoteMediator
@@ -22,25 +22,21 @@ import org.mozilla.social.feature.settings.SettingsInteractions
 
 class BlockedUsersViewModel(
     repository: BlocksRepository,
-    private val unblockAccount: UnblockAccount,
+    remoteMediator: BlocksListRemoteMediator,
     private val analytics: Analytics,
     getLoggedInUserAccountId: GetLoggedInUserAccountId,
 ) : ViewModel(), SettingsInteractions {
 
     private val userAccountId: String = getLoggedInUserAccountId()
-    private val remoteMediator: BlocksListRemoteMediator by KoinJavaComponent.inject(
-        BlocksListRemoteMediator::class.java,
-    )
 
     @OptIn(ExperimentalPagingApi::class)
     val blocks: Flow<PagingData<BlockedUserState>> =
         repository.getBlocksPager(remoteMediator = remoteMediator)
             .map { pagingData -> pagingData.map { blockedUser -> blockedUser.toBlockedUserState() } }
 
+    @Suppress("UnusedParameter")
     fun onBlockButtonClicked(accountId: String) {
-        viewModelScope.launch(Dispatchers.IO) {
-            unblockAccount(accountId)
-        }
+        // TODO@DA
     }
 
     override fun onScreenViewed() {

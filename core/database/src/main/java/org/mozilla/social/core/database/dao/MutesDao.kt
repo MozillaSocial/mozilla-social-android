@@ -18,8 +18,7 @@ interface MutesDao: BaseDao<DatabaseMute> {
     fun pagingSource(): PagingSource<Int, MuteWrapper>
 
     @Query(
-        "DELETE FROM followers " +
-                "WHERE accountId = :accountId",
+        "DELETE FROM mutes"
     )
-    suspend fun delete(accountId: String)
+    suspend fun deleteAll()
 }
