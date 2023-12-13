@@ -25,9 +25,34 @@ fun MoSoButton(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     shape: Shape = ButtonDefaults.shape,
+    theme: MoSoButtonTheme = MoSoButtonPrimaryDefaults,
+    contentPadding: PaddingValues = ButtonDefaults.ContentPadding,
+    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
+    content: @Composable RowScope.() -> Unit,
+) {
+    MoSoButton(
+        onClick = onClick,
+        modifier = modifier,
+        enabled = enabled,
+        shape = shape,
+        colors = theme.colors(),
+        elevation = theme.elevation(),
+        border = theme.border(),
+        contentPadding = contentPadding,
+        interactionSource = interactionSource,
+        content = content
+    )
+}
+
+@Composable
+fun MoSoButton(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+    shape: Shape = ButtonDefaults.shape,
     colors: ButtonColors = MoSoButtonPrimaryDefaults.colors(),
     elevation: ButtonElevation? = ButtonDefaults.buttonElevation(),
-    border: BorderStroke? = null,
+    border: BorderStroke? = MoSoButtonPrimaryDefaults.border(),
     contentPadding: PaddingValues = ButtonDefaults.ContentPadding,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     content: @Composable RowScope.() -> Unit,
@@ -54,11 +79,7 @@ fun MoSoButtonSecondary(
     shape: Shape = ButtonDefaults.shape,
     colors: ButtonColors = MoSoButtonSecondaryDefaults.colors(),
     elevation: ButtonElevation? = ButtonDefaults.buttonElevation(),
-    border: BorderStroke? =
-        BorderStroke(
-            width = 1.dp,
-            brush = SolidColor(MoSoTheme.colors.borderPrimary),
-        ),
+    border: BorderStroke? = MoSoButtonSecondaryDefaults.border(),
     contentPadding: PaddingValues = ButtonDefaults.ContentPadding,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     content: @Composable RowScope.() -> Unit,
@@ -75,28 +96,6 @@ fun MoSoButtonSecondary(
         interactionSource = interactionSource,
         content = content,
     )
-}
-
-object MoSoButtonPrimaryDefaults {
-    @Composable
-    fun colors(): ButtonColors =
-        ButtonDefaults.buttonColors(
-            containerColor = MoSoTheme.colors.layerActionPrimaryEnabled,
-            contentColor = MoSoTheme.colors.textActionPrimary,
-            disabledContainerColor = MoSoTheme.colors.layerActionDisabled,
-            disabledContentColor = MoSoTheme.colors.textActionPrimary,
-        )
-}
-
-object MoSoButtonSecondaryDefaults {
-    @Composable
-    fun colors(): ButtonColors =
-        ButtonDefaults.buttonColors(
-            containerColor = MoSoTheme.colors.layer1,
-            contentColor = MoSoTheme.colors.textActionSecondary,
-            disabledContainerColor = MoSoTheme.colors.layer2,
-            disabledContentColor = MoSoTheme.colors.textActionDisabled,
-        )
 }
 
 @Preview
@@ -147,4 +146,42 @@ private fun ButtonPreview() {
             }
         }
     }
+}
+
+object MoSoButtonPrimaryDefaults: MoSoButtonTheme {
+    @Composable
+    override fun colors(): ButtonColors =
+        ButtonDefaults.buttonColors(
+            containerColor = MoSoTheme.colors.layerActionPrimaryEnabled,
+            contentColor = MoSoTheme.colors.textActionPrimary,
+            disabledContainerColor = MoSoTheme.colors.layerActionDisabled,
+            disabledContentColor = MoSoTheme.colors.textActionPrimary,
+        )
+
+    @Composable
+    override fun border(): BorderStroke? = null
+}
+
+object MoSoButtonSecondaryDefaults: MoSoButtonTheme {
+    @Composable
+    override fun colors(): ButtonColors =
+        ButtonDefaults.buttonColors(
+            containerColor = MoSoTheme.colors.layer1,
+            contentColor = MoSoTheme.colors.textActionSecondary,
+            disabledContainerColor = MoSoTheme.colors.layer2,
+            disabledContentColor = MoSoTheme.colors.textActionDisabled,
+        )
+
+    @Composable
+    override fun border(): BorderStroke = BorderStroke(
+        width = 1.dp,
+        brush = SolidColor(MoSoTheme.colors.borderPrimary),
+    )
+}
+
+interface MoSoButtonTheme {
+    @Composable fun colors(): ButtonColors
+    @Composable fun border(): BorderStroke?
+
+    @Composable fun elevation(): ButtonElevation? = ButtonDefaults.buttonElevation()
 }

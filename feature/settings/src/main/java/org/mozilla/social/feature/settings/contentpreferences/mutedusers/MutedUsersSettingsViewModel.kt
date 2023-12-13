@@ -1,26 +1,33 @@
 package org.mozilla.social.feature.settings.contentpreferences.mutedusers
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.PagingData
 import androidx.paging.map
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
+import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.core.analytics.Analytics
 import org.mozilla.social.core.analytics.AnalyticsIdentifiers
 import org.mozilla.social.core.model.MutedUser
 import org.mozilla.social.core.repository.mastodon.MutesRepository
-import org.mozilla.social.core.ui.common.account.quickview.AccountQuickViewUiState
 import org.mozilla.social.core.ui.common.account.quickview.toQuickViewUiState
+import org.mozilla.social.core.ui.common.account.toggleablelist.ToggleableAccountListItemState
 import org.mozilla.social.core.usecase.mastodon.account.GetLoggedInUserAccountId
 import org.mozilla.social.core.usecase.mastodon.account.MuteAccount
+import org.mozilla.social.core.usecase.mastodon.account.UnmuteAccount
 import org.mozilla.social.core.usecase.mastodon.remotemediators.MutesListRemoteMediator
+import org.mozilla.social.feature.settings.R
 import org.mozilla.social.feature.settings.SettingsInteractions
 
 class MutedUsersSettingsViewModel(
     repository: MutesRepository,
     private val analytics: Analytics,
     private val muteAccount: MuteAccount,
+    private val unmuteAccount: UnmuteAccount,
     private val remoteMediator: MutesListRemoteMediator,
     getLoggedInUserAccountId: GetLoggedInUserAccountId,
 ) : ViewModel(), SettingsInteractions {
@@ -28,11 +35,17 @@ class MutedUsersSettingsViewModel(
     private val userAccountId: String = getLoggedInUserAccountId()
 
     @OptIn(ExperimentalPagingApi::class)
-    val mutes: Flow<PagingData<MutedUserState>> = repository.getMutesPager(remoteMediator)
-        .map { pagingData -> pagingData.map { mutedUser -> mutedUser.toMutedUserState() } }
+    val mutes: Flow<PagingData<ToggleableAccountListItemState<MutedButtonState>>> =
+        repository.getMutesPager(remoteMediator)
+            .map { pagingData -> pagingData.map { mutedUser -> mutedUser.toMutedUserState() } }
 
-    suspend fun onMuteButtonClicked(accountId: String) {
-        muteAccount(accountId)
+    fun onButtonClicked(accountId: String, mutedButtonState: MutedButtonState) {
+        viewModelScope.launch(Dispatchers.IO) {
+            when (mutedButtonState) {
+                is MutedButtonState.Muted -> unmuteAccount(accountId)
+                MutedButtonState.Unmuted -> muteAccount(accountId)
+            }
+        }
     }
 
     override fun onScreenViewed() {
@@ -43,7 +56,12 @@ class MutedUsersSettingsViewModel(
     }
 }
 
-data class MutedUserState(val isMuted: Boolean, val account: AccountQuickViewUiState)
-
 fun MutedUser.toMutedUserState() =
-    MutedUserState(isMuted = isMuted, account = account.toQuickViewUiState())
+    ToggleableAccountListItemState(
+        buttonState = if (isMuted) MutedButtonState.Muted(
+            confirmationText = StringFactory.resource(
+                R.string.are_you_sure_you_want_to_unmute, account.acct
+            )
+        ) else MutedButtonState.Unmuted,
+        account = account.toQuickViewUiState()
+    )
