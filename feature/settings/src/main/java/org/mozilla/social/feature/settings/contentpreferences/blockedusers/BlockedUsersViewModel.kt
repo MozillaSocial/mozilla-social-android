@@ -26,10 +26,10 @@ import org.mozilla.social.feature.settings.SettingsInteractions
 class BlockedUsersViewModel(
     repository: BlocksRepository,
     remoteMediator: BlocksListRemoteMediator,
+    getLoggedInUserAccountId: GetLoggedInUserAccountId,
     private val analytics: Analytics,
     private val blockAccount: BlockAccount,
     private val unblockAccount: UnblockAccount,
-    getLoggedInUserAccountId: GetLoggedInUserAccountId,
 ) : ViewModel(), SettingsInteractions {
 
     private val userAccountId: String = getLoggedInUserAccountId()

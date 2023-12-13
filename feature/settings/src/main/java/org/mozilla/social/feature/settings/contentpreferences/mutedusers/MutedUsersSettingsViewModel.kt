@@ -25,11 +25,11 @@ import org.mozilla.social.feature.settings.SettingsInteractions
 
 class MutedUsersSettingsViewModel(
     repository: MutesRepository,
+    getLoggedInUserAccountId: GetLoggedInUserAccountId,
+    remoteMediator: MutesListRemoteMediator,
     private val analytics: Analytics,
     private val muteAccount: MuteAccount,
     private val unmuteAccount: UnmuteAccount,
-    private val remoteMediator: MutesListRemoteMediator,
-    getLoggedInUserAccountId: GetLoggedInUserAccountId,
 ) : ViewModel(), SettingsInteractions {
 
     private val userAccountId: String = getLoggedInUserAccountId()
