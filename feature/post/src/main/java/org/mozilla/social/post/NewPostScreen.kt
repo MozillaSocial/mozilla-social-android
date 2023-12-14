@@ -31,7 +31,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.material3.windowsizeclass.WindowHeightSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -60,6 +59,7 @@ import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 import org.mozilla.social.common.LoadState
 import org.mozilla.social.common.utils.buildAnnotatedStringForAccountsAndHashtags
+import org.mozilla.social.core.analytics.Analytics
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.designsystem.theme.MoSoSpacing
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
@@ -130,6 +130,8 @@ internal fun NewPostScreen(
         inReplyToAccountName = inReplyToAccountName,
         userHeaderState = userHeaderState,
         bottomBarState = bottomBarState,
+        onUploadImageClicked = viewModel::onUploadImageClicked,
+        onUploadMediaClicked = viewModel::onUploadMediaClicked
     )
 
     LaunchedEffect(Unit) {
@@ -159,6 +161,8 @@ private fun NewPostScreen(
     hashTags: List<String>?,
     inReplyToAccountName: String?,
     userHeaderState: UserHeaderState?,
+    onUploadImageClicked: () -> Unit,
+    onUploadMediaClicked: () -> Unit
 ) {
     Box(
         modifier =
@@ -202,6 +206,8 @@ private fun NewPostScreen(
                 hashTags = hashTags,
                 inReplyToAccountName = inReplyToAccountName,
                 userHeaderState = userHeaderState,
+                onUploadImageClicked = onUploadImageClicked,
+                onUploadMediaClicked = onUploadMediaClicked
             )
         }
 
@@ -274,6 +280,8 @@ private fun NewPostScreenContent(
     hashTags: List<String>?,
     inReplyToAccountName: String?,
     userHeaderState: UserHeaderState?,
+    onUploadImageClicked: () -> Unit,
+    onUploadMediaClicked: () -> Unit,
 ) {
     Column {
         TopBar(
@@ -315,6 +323,8 @@ private fun NewPostScreenContent(
             onMediaInserted = mediaInteractions::onMediaInserted,
             pollInteractions = pollInteractions,
             contentWarningInteractions = contentWarningInteractions,
+            onUploadImageClicked = onUploadImageClicked,
+            onUploadMediaClicked = onUploadMediaClicked
         )
     }
 }
@@ -723,6 +733,8 @@ private fun NewPostScreenPreview() {
             inReplyToAccountName = null,
             userHeaderState = UserHeaderState("", "Barack Obama"),
             bottomBarState = BottomBarState(),
+            onUploadImageClicked = {},
+            onUploadMediaClicked = {},
         )
     }
 }
@@ -758,6 +770,8 @@ private fun NewPostScreenWithPollPreview() {
             inReplyToAccountName = null,
             userHeaderState = UserHeaderState("", "Barack Obama"),
             bottomBarState = BottomBarState(),
+            onUploadImageClicked = {},
+            onUploadMediaClicked = {},
         )
     }
 }
@@ -787,6 +801,8 @@ private fun NewPostScreenWithContentWarningPreview() {
             inReplyToAccountName = null,
             userHeaderState = UserHeaderState("", "Barack Obama"),
             bottomBarState = BottomBarState(),
+            onUploadImageClicked = {},
+            onUploadMediaClicked = {},
         )
     }
 }

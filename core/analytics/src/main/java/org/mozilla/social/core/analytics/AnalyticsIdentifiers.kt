@@ -78,4 +78,10 @@ object AnalyticsIdentifiers {
     const val PROFILE_FEED_POSTS = "profile.tabs.posts"
     const val PROFILE_FEED_POSTS_AND_REPLIES = "profile.tabs.posts-and-replies"
     const val PROFILE_FEED_MEDIA = "profile.tabs.media"
+
+    const val NEW_POST_POST = "new.post.post"
+    const val NEW_POST_IMAGE = "new.post.image"
+    const val NEW_POST_MEDIA = "new.post.media"
+    const val NEW_POST_POLL = "new.post.poll"
+    const val NEW_POST_CONTENT_WARNING = "new.post.content.warning"
 }
