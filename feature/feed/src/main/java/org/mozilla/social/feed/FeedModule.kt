@@ -1,6 +1,6 @@
 package org.mozilla.social.feed
 
-import org.koin.androidx.viewmodel.dsl.viewModel
+import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.dsl.module
 import org.mozilla.social.common.commonModule
 import org.mozilla.social.core.analytics.analyticsModule
@@ -40,14 +40,5 @@ val feedModule =
                 get(),
             )
         }
-        viewModel { _ ->
-            FeedViewModel(
-                analytics = get(),
-                homeTimelineRemoteMediator = get(),
-                localTimelineRemoteMediator = get(),
-                federatedTimelineRemoteMediator = get(),
-                getLoggedInUserAccountId = get(),
-                timelineRepository = get(),
-            )
-        }
+        viewModelOf(::FeedViewModel)
     }

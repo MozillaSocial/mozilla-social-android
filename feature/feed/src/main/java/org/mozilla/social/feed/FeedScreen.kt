@@ -5,9 +5,14 @@ package org.mozilla.social.feed
 import android.content.res.Configuration
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
@@ -27,6 +32,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flowOf
 import org.koin.androidx.compose.koinViewModel
+import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.designsystem.icon.mozillaLogo
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.ui.common.MoSoSurface
@@ -88,7 +94,21 @@ private fun FeedScreen(
                         contentDescription = "mozilla logo",
                     )
                 },
-                actions = {},
+                actions = {
+                    IconButton(
+                        modifier = Modifier
+                            .size(24.dp),
+                        onClick = { feedInteractions.onSearchClicked() }
+                    ) {
+                        Icon(
+                            modifier = Modifier.size(24.dp),
+                            painter = MoSoIcons.magnifyingGlass(),
+                            contentDescription = "",
+                            tint = MoSoTheme.colors.iconPrimary
+                        )
+                    }
+                    Spacer(modifier = Modifier.width(8.dp))
+                },
             )
 
             MoSoTabRow(
