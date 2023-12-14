@@ -56,4 +56,12 @@ sealed class SettingsNavigationDestination(val route: String) {
             navigate(route = route)
         }
     }
+
+    data object OpenSourceLicensesSettings : SettingsNavigationDestination(
+        route = "openSourceLicensesSettings",
+    ) {
+        fun NavController.navigateToOpenSourceSettings() {
+            navigate(route = route)
+        }
+    }
 }

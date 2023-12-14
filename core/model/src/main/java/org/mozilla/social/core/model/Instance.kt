@@ -35,4 +35,5 @@ data class Instance(
      */
     val contactAccount: Account? = null,
     val contactEmail: String? = null,
+    val rules: List<InstanceRule>,
 )

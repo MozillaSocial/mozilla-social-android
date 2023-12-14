@@ -1,6 +1,7 @@
 package org.mozilla.social.ui
 
 import android.content.Context
+import android.util.Log
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -44,6 +45,7 @@ import org.mozilla.social.core.navigation.SettingsNavigationDestination.BlockedU
 import org.mozilla.social.core.navigation.SettingsNavigationDestination.ContentPreferencesSettings.navigateToContentPreferencesSettings
 import org.mozilla.social.core.navigation.SettingsNavigationDestination.MainSettings.navigateToMainSettings
 import org.mozilla.social.core.navigation.SettingsNavigationDestination.MutedUsersSettings.navigateToMutedUsers
+import org.mozilla.social.core.navigation.SettingsNavigationDestination.OpenSourceLicensesSettings.navigateToOpenSourceSettings
 import org.mozilla.social.core.navigation.SettingsNavigationDestination.PrivacySettings.navigateToPrivacySettings
 import org.mozilla.social.core.ui.common.snackbar.MoSoSnackbarHostState
 import org.mozilla.social.core.ui.common.snackbar.SnackbarType
@@ -143,12 +145,22 @@ class AppState(
     }
 
     private fun openLink(url: String) {
-        CustomTabsIntent.Builder()
-            .build()
-            .launchUrl(
-                context,
-                url.toUri(),
-            )
+        var uri = url.toUri()
+
+        try {
+            if (uri.scheme.isNullOrBlank()) {
+                uri = uri.buildUpon().scheme(HTTPS_SCHEME).build()
+            }
+
+            CustomTabsIntent.Builder()
+                .build()
+                .launchUrl(
+                    context,
+                    uri,
+                )
+        } catch (exception: Exception) {
+            Timber.e(exception)
+        }
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -265,11 +277,17 @@ class AppState(
             SettingsNavigationDestination.BlockedUsersSettings -> {
                 mainNavController.navigateToBlockedUsers()
             }
+
             SettingsNavigationDestination.ContentPreferencesSettings -> {
                 mainNavController.navigateToContentPreferencesSettings()
             }
+
             SettingsNavigationDestination.MutedUsersSettings -> {
                 mainNavController.navigateToMutedUsers()
+            }
+
+            SettingsNavigationDestination.OpenSourceLicensesSettings -> {
+                mainNavController.navigateToOpenSourceSettings()
             }
         }
     }
@@ -307,5 +325,9 @@ class AppState(
             }
 
         tabbedNavController?.navigate(destination.route, navOptions)
+    }
+
+    companion object {
+        private const val HTTPS_SCHEME = "https"
     }
 }

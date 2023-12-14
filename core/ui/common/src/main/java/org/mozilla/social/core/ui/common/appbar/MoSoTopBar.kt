@@ -33,7 +33,6 @@ import org.mozilla.social.core.ui.common.divider.MoSoDivider
  * @param title
  * @param showCloseButton
  * @param popBackstack
- * @param leftSideContent
  * @param actions
  * @param showDivider
  */

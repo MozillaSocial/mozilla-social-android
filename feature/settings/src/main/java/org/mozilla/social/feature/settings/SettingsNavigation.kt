@@ -10,6 +10,7 @@ import org.mozilla.social.feature.settings.account.AccountSettingsScreen
 import org.mozilla.social.feature.settings.contentpreferences.ContentPreferencesSettingsScreen
 import org.mozilla.social.feature.settings.contentpreferences.blockedusers.BlockedUsersSettingsScreen
 import org.mozilla.social.feature.settings.contentpreferences.mutedusers.MutedUsersSettingsScreen
+import org.mozilla.social.feature.settings.licenses.OpenSourceLicensesScreen
 import org.mozilla.social.feature.settings.privacy.PrivacySettingsScreen
 
 fun NavGraphBuilder.settingsFlow() {
@@ -24,6 +25,7 @@ fun NavGraphBuilder.settingsFlow() {
         blockedUsersSettingsScreen()
         privacySettingsScreen()
         aboutSettingsScreen()
+        openSourceLicensesScreen()
     }
 }
 
@@ -66,5 +68,11 @@ fun NavGraphBuilder.privacySettingsScreen() {
 fun NavGraphBuilder.aboutSettingsScreen() {
     composable(route = SettingsNavigationDestination.AboutSettings.route) {
         AboutSettingsScreen()
+    }
+}
+
+fun NavGraphBuilder.openSourceLicensesScreen() {
+    composable(route = SettingsNavigationDestination.OpenSourceLicensesSettings.route) {
+        OpenSourceLicensesScreen()
     }
 }

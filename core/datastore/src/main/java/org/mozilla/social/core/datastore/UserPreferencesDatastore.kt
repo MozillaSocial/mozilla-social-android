@@ -18,7 +18,7 @@ class UserPreferencesDatastore(context: Context) {
             it.accessToken
         }
 
-    val domain: Flow<String?> =
+    val domain: Flow<String> =
         dataStore.data.mapLatest {
             it.domain
         }

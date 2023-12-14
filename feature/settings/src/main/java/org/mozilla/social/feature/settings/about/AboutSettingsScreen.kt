@@ -1,5 +1,6 @@
 package org.mozilla.social.feature.settings.about
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -16,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
@@ -23,11 +25,14 @@ import org.koin.androidx.compose.koinViewModel
 import org.mozilla.social.core.designsystem.theme.MoSoRadius
 import org.mozilla.social.core.designsystem.theme.MoSoSpacing
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
+import org.mozilla.social.core.model.InstanceRule
 import org.mozilla.social.core.navigation.navigationModule
 import org.mozilla.social.core.ui.common.MoSoSurface
 import org.mozilla.social.core.ui.common.account.quickview.AccountQuickView
 import org.mozilla.social.core.ui.common.account.quickview.AccountQuickViewUiState
 import org.mozilla.social.core.ui.common.divider.MoSoDivider
+import org.mozilla.social.core.ui.common.text.MediumTextBody
+import org.mozilla.social.core.ui.common.text.MediumTextTitle
 import org.mozilla.social.core.ui.common.utils.PreviewTheme
 import org.mozilla.social.core.ui.htmlcontent.HtmlContent
 import org.mozilla.social.core.ui.htmlcontent.HtmlContentInteractions
@@ -40,7 +45,8 @@ fun AboutSettingsScreen(aboutSettingsViewModel: AboutSettingsViewModel = koinVie
     aboutSettings?.let {
         AboutSettingsScreen(
             aboutSettings = it,
-            htmlContentInteractions = aboutSettingsViewModel
+            htmlContentInteractions = aboutSettingsViewModel,
+            onOpenSourceLicensesClicked = aboutSettingsViewModel::onOpenSourceLicensesClicked,
         )
     }
 
@@ -52,7 +58,8 @@ fun AboutSettingsScreen(aboutSettingsViewModel: AboutSettingsViewModel = koinVie
 @Composable
 fun AboutSettingsScreen(
     aboutSettings: AboutSettings,
-    htmlContentInteractions: HtmlContentInteractions
+    htmlContentInteractions: HtmlContentInteractions,
+    onOpenSourceLicensesClicked: () -> Unit,
 ) {
     MoSoSurface {
         SettingsColumn(
@@ -112,10 +119,37 @@ fun AboutSettingsScreen(
                     maximumLineCount = Int.MAX_VALUE,
                 )
 
-                Spacer(modifier = Modifier.height(MoSoSpacing.xxl))
             }
+
+            Divider()
+
+            ServerRules(aboutSettings.rules)
+
+            Divider()
+
+            OpenSourceLicenses(onClick = onOpenSourceLicensesClicked)
+
+            Spacer(modifier = Modifier.height(MoSoSpacing.xxl))
         }
     }
+}
+
+@Composable
+private fun ServerRules(rules: List<InstanceRule>) {
+    MediumTextTitle(text = stringResource(id = R.string.server_community_rules))
+
+    for (rule in rules) {
+        MediumTextBody(text = rule.text)
+    }
+}
+
+@Composable
+private fun OpenSourceLicenses(onClick: () -> Unit) {
+    MediumTextBody(
+        modifier = Modifier.clickable(onClick = onClick),
+        text = stringResource(id = R.string.open_source_licenses),
+        textDecoration = TextDecoration.Underline,
+    )
 }
 
 @Composable
@@ -132,6 +166,7 @@ fun AboutSettingsScreenPreview() {
         modules = listOf(navigationModule)
     ) {
         AboutSettingsScreen(
+            onOpenSourceLicensesClicked = {},
             htmlContentInteractions = object : HtmlContentInteractions {},
             aboutSettings =
             AboutSettings(
@@ -151,6 +186,7 @@ fun AboutSettingsScreenPreview() {
                         "and improve the experience. Eventually we hope to build a safe, " +
                         "well-organized space within Mastodon that is open to all audiences.",
                 thumbnailUrl = "",
+                rules = listOf(),
             ),
         )
     }
@@ -162,4 +198,5 @@ data class AboutSettings(
     val contactEmail: String?,
     val extendedDescription: String?,
     val thumbnailUrl: String?,
+    val rules: List<InstanceRule>,
 )

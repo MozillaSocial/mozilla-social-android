@@ -12,6 +12,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -31,6 +32,7 @@ import org.mozilla.social.core.ui.common.button.MoSoButtonSecondary
 import org.mozilla.social.core.ui.common.utils.PreviewTheme
 import org.mozilla.social.feature.settings.R
 import org.mozilla.social.feature.settings.ui.SettingsColumn
+import org.mozilla.social.feature.settings.ui.SettingsSection
 
 @Composable
 fun AccountSettingsScreen(viewModel: AccountSettingsViewModel = koinViewModel()) {
@@ -44,6 +46,9 @@ fun AccountSettingsScreen(viewModel: AccountSettingsViewModel = koinViewModel())
                 is Resource.Loading -> {}
                 is Resource.Loaded -> {
                     userHeader.data?.let { UserHeader(userHeader = it) }
+                    val domain by viewModel.domain.collectAsStateWithLifecycle(initialValue = "")
+
+                    ManageAccount(domain = domain, onClick = viewModel::onManageAccountClicked)
 
                     SignoutButton(onLogoutClicked = viewModel::onLogoutClicked)
                 }
@@ -72,12 +77,21 @@ private fun UserHeader(userHeader: UserHeader) {
 private fun Avatar(avatarUrl: String) {
     AsyncImage(
         modifier =
-            Modifier
-                .size(40.dp)
-                .clip(CircleShape)
-                .background(MoSoTheme.colors.layer2),
+        Modifier
+            .size(40.dp)
+            .clip(CircleShape)
+            .background(MoSoTheme.colors.layer2),
         model = avatarUrl,
         contentDescription = "",
+    )
+}
+
+@Composable
+fun ManageAccount(domain: String, onClick: () -> Unit) {
+    SettingsSection(
+        title = stringResource(id = R.string.manage_account),
+        subtitle = stringResource(id = R.string.manage_your_account, domain),
+        onClick = onClick,
     )
 }
 
@@ -85,10 +99,10 @@ private fun Avatar(avatarUrl: String) {
 private fun SignoutButton(onLogoutClicked: () -> Unit) {
     MoSoButtonSecondary(
         modifier =
-            Modifier
-                .wrapContentHeight()
-                .fillMaxWidth()
-                .padding(8.dp),
+        Modifier
+            .wrapContentHeight()
+            .fillMaxWidth()
+            .padding(8.dp),
         onClick = onLogoutClicked,
     ) { Text(text = stringResource(id = R.string.sign_out)) }
 }

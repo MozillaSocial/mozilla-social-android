@@ -9,6 +9,7 @@ import org.mozilla.social.core.repository.mastodon.mastodonRepositoryModule
 import org.mozilla.social.core.usecase.mastodon.account.BlockAccount
 import org.mozilla.social.core.usecase.mastodon.account.FollowAccount
 import org.mozilla.social.core.usecase.mastodon.account.GetDetailedAccount
+import org.mozilla.social.core.usecase.mastodon.account.GetDomain
 import org.mozilla.social.core.usecase.mastodon.account.GetLoggedInUserAccountId
 import org.mozilla.social.core.usecase.mastodon.account.MuteAccount
 import org.mozilla.social.core.usecase.mastodon.account.UnblockAccount
@@ -204,6 +205,7 @@ val mastodonUsecaseModule =
         single { RefreshLocalTimeline(get(), get(), get(), get()) }
         single { RefreshFederatedTimeline(get(), get(), get(), get()) }
         singleOf(::RefreshHomeTimeline)
+        singleOf(::GetDomain)
         factory {
             RefreshAccountTimeline(
                 accountRepository = get(),

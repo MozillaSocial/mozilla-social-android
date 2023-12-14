@@ -28,6 +28,7 @@ fun NetworkInstance.toExternalModel(): Instance =
         thumbnail = thumbnail.url,
         contactAccount = contact?.account?.toExternalModel(),
         contactEmail = contact?.email,
+        rules = rules.toExternalModel(),
     )
 
 fun NetworkInstanceUrls.toExternalModel(): InstanceUrls = InstanceUrls(streamingApiUrl = streamingApiUrl)
