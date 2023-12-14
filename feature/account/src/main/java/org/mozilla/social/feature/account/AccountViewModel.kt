@@ -279,13 +279,13 @@ class AccountViewModel(
     }
 
     override fun onFollowClicked() {
+        analytics.uiEngagement(
+            uiIdentifier = AnalyticsIdentifiers.ACCOUNTS_SCREEN_FOLLOW,
+            mastodonAccountId = accountId,
+            mastodonAccountHandle = usersAccountId
+        )
         viewModelScope.launch {
             try {
-                analytics.uiEngagement(
-                    uiIdentifier = AnalyticsIdentifiers.ACCOUNTS_SCREEN_FOLLOW,
-                    mastodonAccountId = accountId,
-                    mastodonAccountHandle = usersAccountId
-                )
                 followAccount(
                     accountId = accountId,
                     loggedInUserAccountId = usersAccountId,
@@ -297,13 +297,13 @@ class AccountViewModel(
     }
 
     override fun onUnfollowClicked() {
+        analytics.uiEngagement(
+            uiIdentifier = AnalyticsIdentifiers.ACCOUNTS_SCREEN_UNFOLLOW,
+            mastodonAccountId = accountId,
+            mastodonAccountHandle = usersAccountId
+        )
         viewModelScope.launch {
             try {
-                analytics.uiEngagement(
-                    uiIdentifier = AnalyticsIdentifiers.ACCOUNTS_SCREEN_UNFOLLOW,
-                    mastodonAccountId = accountId,
-                    mastodonAccountHandle = usersAccountId
-                )
                 unfollowAccount(
                     accountId = accountId,
                     loggedInUserAccountId = usersAccountId,

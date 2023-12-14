@@ -137,6 +137,10 @@ class NewPostViewModel(
     }
 
     fun onPostClicked() {
+        analytics.uiEngagement(
+            engagementType = EngagementType.POST,
+            uiIdentifier = AnalyticsIdentifiers.NEW_POST_POST,
+        )
         viewModelScope.launch {
             _isSendingPost.update { true }
             try {

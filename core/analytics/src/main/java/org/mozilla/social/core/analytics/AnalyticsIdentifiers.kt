@@ -84,4 +84,7 @@ object AnalyticsIdentifiers {
     const val NEW_POST_MEDIA = "new.post.media"
     const val NEW_POST_POLL = "new.post.poll"
     const val NEW_POST_CONTENT_WARNING = "new.post.content.warning"
+
+    const val FOLLOWS_SCREEN_FOLLOW = "follows.screen.follow"
+    const val FOLLOWS_SCREEN_UNFOLLOW = "follows.screen.unfollow"
 }
