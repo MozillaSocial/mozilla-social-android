@@ -13,15 +13,16 @@ import org.mozilla.social.core.model.Instance
 import org.mozilla.social.core.repository.mastodon.InstanceRepository
 import org.mozilla.social.core.ui.common.account.quickview.toQuickViewUiState
 import org.mozilla.social.core.ui.htmlcontent.HtmlContentInteractions
-import org.mozilla.social.core.usecase.mastodon.account.GetDetailedAccount
 import org.mozilla.social.core.usecase.mastodon.account.GetLoggedInUserAccountId
+import org.mozilla.social.core.usecase.mastodon.htmlcontent.DefaultHtmlInteractions
 import org.mozilla.social.feature.settings.SettingsInteractions
 
 class AboutSettingsViewModel(
     private val instanceRepository: InstanceRepository,
     private val analytics: Analytics,
+    private val defaultHtmlInteractions: DefaultHtmlInteractions,
     getLoggedInUserAccountId: GetLoggedInUserAccountId,
-) : ViewModel(), HtmlContentInteractions, SettingsInteractions {
+) : ViewModel(), SettingsInteractions, HtmlContentInteractions by defaultHtmlInteractions {
 
     private val userAccountId: String = getLoggedInUserAccountId()
     val aboutSettings: StateFlow<AboutSettings?> =

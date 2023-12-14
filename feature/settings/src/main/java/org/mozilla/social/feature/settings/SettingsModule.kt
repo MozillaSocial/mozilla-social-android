@@ -9,6 +9,7 @@ import org.mozilla.social.core.analytics.analyticsModule
 import org.mozilla.social.core.datastore.dataStoreModule
 import org.mozilla.social.core.navigation.navigationModule
 import org.mozilla.social.core.repository.mastodon.mastodonRepositoryModule
+import org.mozilla.social.core.usecase.mastodon.htmlcontent.DefaultHtmlInteractions
 import org.mozilla.social.core.usecase.mastodon.mastodonUsecaseModule
 import org.mozilla.social.core.usecase.mastodon.remotemediators.BlocksListRemoteMediator
 import org.mozilla.social.core.usecase.mastodon.remotemediators.MutesListRemoteMediator
@@ -37,6 +38,7 @@ val settingsModule =
         viewModelOf(::ContentPreferencesSettingsViewModel)
         viewModelOf(::BlockedUsersViewModel)
         viewModelOf(::MutedUsersSettingsViewModel)
+        singleOf(::DefaultHtmlInteractions)
         singleOf(::BlocksListRemoteMediator)
         singleOf(::MutesListRemoteMediator)
     }
