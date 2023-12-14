@@ -5,9 +5,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import org.mozilla.social.common.utils.edit
 
-class SearchViewModel(
-
-) : ViewModel(), SearchInteractions {
+class SearchViewModel : ViewModel(), SearchInteractions {
 
     private val _uiState = MutableStateFlow(SearchUiState())
     val uiState = _uiState.asStateFlow()
