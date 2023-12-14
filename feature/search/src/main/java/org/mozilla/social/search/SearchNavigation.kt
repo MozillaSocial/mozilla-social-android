@@ -1,11 +1,12 @@
 package org.mozilla.social.search
 
-// fun NavController.navigateToSearch(navOptions: NavOptions? = null) {
-//    this.navigate(NavigationDestination.Search.route, navOptions)
-// }
-//
-// fun NavGraphBuilder.searchScreen() {
-//    composable(route = NavigationDestination.Search.route) {
-//        SearchScreen()
-//    }
-// }
+import androidx.navigation.NavGraphBuilder
+import androidx.navigation.compose.composable
+import org.mozilla.social.core.navigation.NavigationDestination
+
+
+fun NavGraphBuilder.searchScreen() {
+    composable(route = NavigationDestination.Search.route) {
+        SearchScreen()
+    }
+}

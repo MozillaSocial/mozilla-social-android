@@ -17,6 +17,7 @@ import org.mozilla.social.feature.report.reportFlow
 import org.mozilla.social.feature.settings.settingsFlow
 import org.mozilla.social.feature.thread.threadScreen
 import org.mozilla.social.post.newPostScreen
+import org.mozilla.social.search.searchScreen
 import org.mozilla.social.ui.AppState
 import org.mozilla.social.ui.bottombar.Routes
 import org.mozilla.social.ui.bottombar.bottomTabScreen
@@ -47,6 +48,7 @@ fun MainNavHost(
         editAccountScreen()
         settingsFlow()
         favoritesScreen()
+        searchScreen()
     }
 }
 

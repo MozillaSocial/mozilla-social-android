@@ -182,6 +182,14 @@ sealed class NavigationDestination(
         }
     }
 
+    data object Search : NavigationDestination(
+        route = "search",
+    ) {
+        fun NavController.navigateToSearch(navOptions: NavOptions? = null) {
+            navigate(route, navOptions)
+        }
+    }
+
     data object Settings : NavigationDestination(
         route = "settings",
     ) {

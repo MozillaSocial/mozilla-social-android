@@ -107,6 +107,9 @@ object MoSoIcons {
     fun lockKey() = painterResource(id = R.drawable.lock_key)
 
     @Composable
+    fun magnifyingGlass() = painterResource(id = R.drawable.magnifying_glass)
+
+    @Composable
     fun monitorPlay() = painterResource(id = R.drawable.monitor_play)
 
     @Composable
