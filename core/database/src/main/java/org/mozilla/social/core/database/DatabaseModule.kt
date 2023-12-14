@@ -16,6 +16,8 @@ val databaseModule =
 
         single { get<SocialDatabase>().accountsDao() }
         single { get<SocialDatabase>().accountTimelineDao() }
+        single { get<SocialDatabase>().blocksDao() }
+        single { get<SocialDatabase>().mutesDao() }
         single { get<SocialDatabase>().federatedTimelineDao() }
         single { get<SocialDatabase>().followersDao() }
         single { get<SocialDatabase>().followingsDao() }

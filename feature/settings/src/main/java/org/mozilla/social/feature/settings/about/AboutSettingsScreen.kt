@@ -18,7 +18,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import org.koin.androidx.compose.koinViewModel
 import org.mozilla.social.core.designsystem.theme.MoSoRadius
@@ -38,7 +37,12 @@ import org.mozilla.social.feature.settings.ui.SettingsColumn
 @Composable
 fun AboutSettingsScreen(aboutSettingsViewModel: AboutSettingsViewModel = koinViewModel()) {
     val aboutSettings: AboutSettings? by aboutSettingsViewModel.aboutSettings.collectAsStateWithLifecycle()
-    aboutSettings?.let { AboutSettingsScreen(it) }
+    aboutSettings?.let {
+        AboutSettingsScreen(
+            aboutSettings = it,
+            htmlContentInteractions = aboutSettingsViewModel
+        )
+    }
 
     LaunchedEffect(Unit) {
         aboutSettingsViewModel.onScreenViewed()
@@ -46,7 +50,10 @@ fun AboutSettingsScreen(aboutSettingsViewModel: AboutSettingsViewModel = koinVie
 }
 
 @Composable
-fun AboutSettingsScreen(aboutSettings: AboutSettings) {
+fun AboutSettingsScreen(
+    aboutSettings: AboutSettings,
+    htmlContentInteractions: HtmlContentInteractions
+) {
     MoSoSurface {
         SettingsColumn(
             title = stringResource(id = R.string.about_settings_title),
@@ -101,7 +108,7 @@ fun AboutSettingsScreen(aboutSettings: AboutSettings) {
             aboutSettings.extendedDescription?.let { description ->
                 HtmlContent(
                     htmlText = description,
-                    htmlContentInteractions = object : HtmlContentInteractions {},
+                    htmlContentInteractions = htmlContentInteractions,
                     maximumLineCount = Int.MAX_VALUE,
                 )
 
@@ -125,25 +132,26 @@ fun AboutSettingsScreenPreview() {
         modules = listOf(navigationModule)
     ) {
         AboutSettingsScreen(
+            htmlContentInteractions = object : HtmlContentInteractions {},
             aboutSettings =
-                AboutSettings(
-                    title = "mozilla.social",
-                    administeredBy =
-                        AccountQuickViewUiState(
-                            accountId = "",
-                            displayName = "Mozilla Social",
-                            webFinger = "@social",
-                            avatarUrl = "",
-                        ),
-                    contactEmail = "support@mozilla-social.zendesk.com",
-                    extendedDescription =
-                        "We’re here to build a social platform that puts " +
-                            "people first. Mozilla.social is currently available to a closed " +
-                            "beta group as we experiment, gain input from participants, learn, " +
-                            "and improve the experience. Eventually we hope to build a safe, " +
-                            "well-organized space within Mastodon that is open to all audiences.",
-                    thumbnailUrl = "",
+            AboutSettings(
+                title = "mozilla.social",
+                administeredBy =
+                AccountQuickViewUiState(
+                    accountId = "",
+                    displayName = "Mozilla Social",
+                    webFinger = "@social",
+                    avatarUrl = "",
                 ),
+                contactEmail = "support@mozilla-social.zendesk.com",
+                extendedDescription =
+                "We’re here to build a social platform that puts " +
+                        "people first. Mozilla.social is currently available to a closed " +
+                        "beta group as we experiment, gain input from participants, learn, " +
+                        "and improve the experience. Eventually we hope to build a safe, " +
+                        "well-organized space within Mastodon that is open to all audiences.",
+                thumbnailUrl = "",
+            ),
         )
     }
 }
