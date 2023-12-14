@@ -17,6 +17,7 @@ import org.mozilla.social.common.Resource
 import org.mozilla.social.common.utils.edit
 import org.mozilla.social.core.analytics.Analytics
 import org.mozilla.social.core.analytics.AnalyticsIdentifiers
+import org.mozilla.social.core.analytics.EngagementType
 import org.mozilla.social.core.model.AccountTimelineType
 import org.mozilla.social.core.navigation.NavigationDestination
 import org.mozilla.social.core.navigation.usecases.NavigateTo
@@ -170,13 +171,19 @@ class AccountViewModel(
 
     override fun onOverflowShareClicked() {
         analytics.uiEngagement(
-            uiIdentifier = AnalyticsIdentifiers.PROFILE_MORE_SHARE_ACCOUNT,
+            uiIdentifier = AnalyticsIdentifiers.PROFILE_OVERFLOW_SHARE,
             mastodonAccountId = accountId,
             mastodonAccountHandle = usersAccountId
         )
     }
 
     override fun onOverflowMuteClicked() {
+        analytics.uiEngagement(
+            engagementType = EngagementType.GENERAL,
+            uiIdentifier = AnalyticsIdentifiers.PROFILE_OVERFLOW_MUTE,
+            mastodonAccountId = accountId,
+            mastodonAccountHandle = usersAccountId,
+        )
         viewModelScope.launch {
             try {
                 muteAccount(accountId)
@@ -187,6 +194,12 @@ class AccountViewModel(
     }
 
     override fun onOverflowUnmuteClicked() {
+        analytics.uiEngagement(
+            engagementType = EngagementType.GENERAL,
+            uiIdentifier = AnalyticsIdentifiers.PROFILE_OVERFLOW_UNMUTE,
+            mastodonAccountId = accountId,
+            mastodonAccountHandle = usersAccountId,
+        )
         viewModelScope.launch {
             try {
                 unmuteAccount(accountId)
@@ -197,6 +210,12 @@ class AccountViewModel(
     }
 
     override fun onOverflowBlockClicked() {
+        analytics.uiEngagement(
+            engagementType = EngagementType.GENERAL,
+            uiIdentifier = AnalyticsIdentifiers.PROFILE_OVERFLOW_BLOCK,
+            mastodonAccountId = accountId,
+            mastodonAccountHandle = usersAccountId,
+        )
         viewModelScope.launch {
             try {
                 blockAccount(accountId)
@@ -207,6 +226,12 @@ class AccountViewModel(
     }
 
     override fun onOverflowUnblockClicked() {
+        analytics.uiEngagement(
+            engagementType = EngagementType.GENERAL,
+            uiIdentifier = AnalyticsIdentifiers.PROFILE_OVERFLOW_UNBLOCK,
+            mastodonAccountId = accountId,
+            mastodonAccountHandle = usersAccountId,
+        )
         viewModelScope.launch {
             try {
                 unblockAccount(accountId)
@@ -217,6 +242,12 @@ class AccountViewModel(
     }
 
     override fun onOverflowReportClicked() {
+        analytics.uiEngagement(
+            engagementType = EngagementType.GENERAL,
+            uiIdentifier = AnalyticsIdentifiers.PROFILE_OVERFLOW_REPORT,
+            mastodonAccountId = accountId,
+            mastodonAccountHandle = usersAccountId,
+        )
         (uiState.value as? Resource.Loaded)?.data?.webFinger?.let { webFinger ->
             navigateTo(
                 NavigationDestination.Report(
@@ -292,9 +323,24 @@ class AccountViewModel(
             copy(
                 type = timelineType,
                 feed = when (timelineType) {
-                    AccountTimelineType.POSTS -> postsFeed
-                    AccountTimelineType.POSTS_AND_REPLIES -> postsAndRepliesFeed
-                    AccountTimelineType.MEDIA -> mediaFeed
+                    AccountTimelineType.POSTS -> {
+                        analytics.uiEngagement(
+                            uiIdentifier = AnalyticsIdentifiers.PROFILE_FEED_POSTS,
+                        )
+                        postsFeed
+                    }
+                    AccountTimelineType.POSTS_AND_REPLIES -> {
+                        analytics.uiEngagement(
+                            uiIdentifier = AnalyticsIdentifiers.PROFILE_FEED_POSTS_AND_REPLIES,
+                        )
+                        postsAndRepliesFeed
+                    }
+                    AccountTimelineType.MEDIA -> {
+                        analytics.uiEngagement(
+                            uiIdentifier = AnalyticsIdentifiers.PROFILE_FEED_MEDIA,
+                        )
+                        mediaFeed
+                    }
                 }
             )
         }
