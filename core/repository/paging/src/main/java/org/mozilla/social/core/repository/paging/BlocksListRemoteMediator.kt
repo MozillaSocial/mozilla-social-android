@@ -1,40 +1,41 @@
-package org.mozilla.social.core.usecase.mastodon.remotemediators
+package org.mozilla.social.core.repository.paging
 
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import kotlinx.coroutines.delay
-import org.mozilla.social.core.database.model.entities.accountCollections.MuteWrapper
+import org.mozilla.social.core.database.model.entities.accountCollections.BlockWrapper
+import org.mozilla.social.core.model.paging.AccountPagingWrapper
 import org.mozilla.social.core.repository.mastodon.AccountRepository
+import org.mozilla.social.core.repository.mastodon.BlocksRepository
 import org.mozilla.social.core.repository.mastodon.DatabaseDelegate
-import org.mozilla.social.core.repository.mastodon.MutesRepository
 import org.mozilla.social.core.repository.mastodon.RelationshipRepository
-import org.mozilla.social.core.repository.mastodon.model.status.toDatabaseMute
+import org.mozilla.social.core.repository.mastodon.model.status.toDatabaseBlock
 import timber.log.Timber
 
 @OptIn(ExperimentalPagingApi::class)
-class MutesListRemoteMediator(
+class BlocksListRemoteMediator(
     private val accountRepository: AccountRepository,
     private val databaseDelegate: DatabaseDelegate,
     private val relationshipRepository: RelationshipRepository,
-    private val mutesRepository: MutesRepository,
-) : RemoteMediator<Int, MuteWrapper>() {
+    private val blocksRepository: BlocksRepository,
+) : RemoteMediator<Int, BlockWrapper>() {
     private var nextKey: String? = null
     private var nextPositionIndex = 0
 
     @Suppress("ReturnCount")
     override suspend fun load(
         loadType: LoadType,
-        state: PagingState<Int, MuteWrapper>,
+        state: PagingState<Int, BlockWrapper>,
     ): MediatorResult {
         return try {
             var pageSize: Int = state.config.pageSize
-            val response =
+            val response: AccountPagingWrapper =
                 when (loadType) {
                     LoadType.REFRESH -> {
                         pageSize = state.config.initialLoadSize
-                        mutesRepository.getMutes(
+                        blocksRepository.getBlocks(
                             maxId = null,
                             limit = pageSize,
                         )
@@ -48,7 +49,7 @@ class MutesListRemoteMediator(
                         if (nextKey == null) {
                             return MediatorResult.Success(endOfPaginationReached = true)
                         }
-                        mutesRepository.getMutes(
+                        blocksRepository.getBlocks(
                             maxId = nextKey,
                             limit = pageSize,
                         )
@@ -60,15 +61,15 @@ class MutesListRemoteMediator(
 
             databaseDelegate.withTransaction {
                 if (loadType == LoadType.REFRESH) {
-                    mutesRepository.deleteAll()
+                    blocksRepository.deleteAll()
                     nextPositionIndex = 0
                 }
 
                 accountRepository.insertAll(response.accounts)
                 relationshipRepository.insertAll(relationships)
-                mutesRepository.insertAll(
+                blocksRepository.insertAll(
                     response.accounts.mapIndexed { index, account ->
-                        account.toDatabaseMute(isMuted = true, position = index)
+                        account.toDatabaseBlock(isBlocked = true, position = index)
                     },
                 )
             }
@@ -100,6 +101,8 @@ class MutesListRemoteMediator(
             MediatorResult.Error(e)
         }
     }
-}
 
-private const val REFRESH_DELAY = 200L
+    companion object {
+        private const val REFRESH_DELAY = 200L
+    }
+}

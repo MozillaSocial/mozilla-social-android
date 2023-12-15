@@ -19,6 +19,5 @@ val favoritesModule = module {
         navigationModule,
     )
 
-    factoryOf(::FavoritesRemoteMediator)
     viewModelOf(::FavoritesViewModel)
 }

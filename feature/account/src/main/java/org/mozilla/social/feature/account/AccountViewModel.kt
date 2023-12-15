@@ -22,6 +22,7 @@ import org.mozilla.social.core.model.AccountTimelineType
 import org.mozilla.social.core.navigation.NavigationDestination
 import org.mozilla.social.core.navigation.usecases.NavigateTo
 import org.mozilla.social.core.repository.mastodon.TimelineRepository
+import org.mozilla.social.core.repository.paging.AccountTimelineRemoteMediator
 import org.mozilla.social.core.ui.postcard.PostCardDelegate
 import org.mozilla.social.core.ui.postcard.toPostCardUiState
 import org.mozilla.social.core.usecase.mastodon.account.BlockAccount
@@ -260,21 +261,25 @@ class AccountViewModel(
 
     override fun onFollowersClicked() {
         uiState.value.data?.displayName?.let { displayName ->
-            navigateTo(NavigationDestination.Followers(
-                accountId = accountId,
-                displayName = displayName,
-                startingTab = NavigationDestination.Followers.StartingTab.FOLLOWERS,
-            ))
+            navigateTo(
+                NavigationDestination.Followers(
+                    accountId = accountId,
+                    displayName = displayName,
+                    startingTab = NavigationDestination.Followers.StartingTab.FOLLOWERS,
+                )
+            )
         }
     }
 
     override fun onFollowingClicked() {
         uiState.value.data?.displayName?.let { displayName ->
-            navigateTo(NavigationDestination.Followers(
-                accountId = accountId,
-                displayName = displayName,
-                startingTab = NavigationDestination.Followers.StartingTab.FOLLOWING,
-            ))
+            navigateTo(
+                NavigationDestination.Followers(
+                    accountId = accountId,
+                    displayName = displayName,
+                    startingTab = NavigationDestination.Followers.StartingTab.FOLLOWING,
+                )
+            )
         }
     }
 
@@ -329,12 +334,14 @@ class AccountViewModel(
                         )
                         postsFeed
                     }
+
                     AccountTimelineType.POSTS_AND_REPLIES -> {
                         analytics.uiEngagement(
                             uiIdentifier = AnalyticsIdentifiers.PROFILE_FEED_POSTS_AND_REPLIES,
                         )
                         postsAndRepliesFeed
                     }
+
                     AccountTimelineType.MEDIA -> {
                         analytics.uiEngagement(
                             uiIdentifier = AnalyticsIdentifiers.PROFILE_FEED_MEDIA,

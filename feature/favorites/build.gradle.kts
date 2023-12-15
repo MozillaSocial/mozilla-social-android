@@ -18,6 +18,7 @@ dependencies {
     implementation(project(":core:analytics"))
     implementation(project(":core:database"))
     implementation(project(":core:repository:mastodon"))
+    implementation(project(":core:repository:paging"))
 
     implementation(libs.androidx.browser)
     implementation(libs.androidx.navigation.compose)

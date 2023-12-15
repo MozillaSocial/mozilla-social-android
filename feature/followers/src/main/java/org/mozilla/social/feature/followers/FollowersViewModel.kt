@@ -16,12 +16,12 @@ import org.mozilla.social.core.navigation.NavigationDestination
 import org.mozilla.social.core.navigation.usecases.NavigateTo
 import org.mozilla.social.core.repository.mastodon.FollowersRepository
 import org.mozilla.social.core.repository.mastodon.FollowingsRepository
+import org.mozilla.social.core.repository.paging.FollowersRemoteMediator
+import org.mozilla.social.core.repository.paging.FollowingsRemoteMediator
 import org.mozilla.social.core.ui.accountfollower.toAccountFollowerUiState
 import org.mozilla.social.core.usecase.mastodon.account.FollowAccount
 import org.mozilla.social.core.usecase.mastodon.account.GetLoggedInUserAccountId
 import org.mozilla.social.core.usecase.mastodon.account.UnfollowAccount
-import org.mozilla.social.core.usecase.mastodon.remotemediators.FollowersRemoteMediator
-import org.mozilla.social.core.usecase.mastodon.remotemediators.FollowingsRemoteMediator
 import timber.log.Timber
 
 @OptIn(ExperimentalPagingApi::class)

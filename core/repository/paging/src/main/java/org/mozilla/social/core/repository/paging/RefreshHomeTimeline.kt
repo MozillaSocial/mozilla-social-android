@@ -1,4 +1,4 @@
-package org.mozilla.social.core.usecase.mastodon.remotemediators
+package org.mozilla.social.core.repository.paging
 
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
@@ -6,33 +6,32 @@ import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import kotlinx.coroutines.delay
 import org.mozilla.social.common.Rel
-import org.mozilla.social.core.database.model.entities.statusCollections.HashTagTimelineStatusWrapper
+import org.mozilla.social.core.database.model.entities.statusCollections.HomeTimelineStatusWrapper
 import org.mozilla.social.core.repository.mastodon.AccountRepository
 import org.mozilla.social.core.repository.mastodon.DatabaseDelegate
 import org.mozilla.social.core.repository.mastodon.TimelineRepository
 import org.mozilla.social.core.usecase.mastodon.status.SaveStatusToDatabase
+import timber.log.Timber
 
-@OptIn(ExperimentalPagingApi::class)
-class HashTagTimelineRemoteMediator internal constructor(
+class RefreshHomeTimeline internal constructor(
     private val timelineRepository: TimelineRepository,
     private val accountRepository: AccountRepository,
     private val saveStatusToDatabase: SaveStatusToDatabase,
     private val databaseDelegate: DatabaseDelegate,
-    private val hashTag: String,
-) : RemoteMediator<Int, HashTagTimelineStatusWrapper>() {
-    @Suppress("ReturnCount")
-    override suspend fun load(
+) {
+    @OptIn(ExperimentalPagingApi::class)
+    @Suppress("ReturnCount", "MagicNumber")
+    suspend operator fun invoke(
         loadType: LoadType,
-        state: PagingState<Int, HashTagTimelineStatusWrapper>,
-    ): MediatorResult {
+        state: PagingState<Int, HomeTimelineStatusWrapper>,
+    ): RemoteMediator.MediatorResult {
         return try {
             var pageSize: Int = state.config.pageSize
             val response =
                 when (loadType) {
                     LoadType.REFRESH -> {
                         pageSize = state.config.initialLoadSize
-                        timelineRepository.getHashtagTimeline(
-                            hashTag = hashTag,
+                        timelineRepository.getHomeTimeline(
                             olderThanId = null,
                             immediatelyNewerThanId = null,
                             loadSize = pageSize,
@@ -42,9 +41,8 @@ class HashTagTimelineRemoteMediator internal constructor(
                     LoadType.PREPEND -> {
                         val firstItem =
                             state.firstItemOrNull()
-                                ?: return MediatorResult.Success(endOfPaginationReached = true)
-                        timelineRepository.getHashtagTimeline(
-                            hashTag = hashTag,
+                                ?: return RemoteMediator.MediatorResult.Success(endOfPaginationReached = true)
+                        timelineRepository.getHomeTimeline(
                             olderThanId = null,
                             immediatelyNewerThanId = firstItem.status.statusId,
                             loadSize = pageSize,
@@ -54,9 +52,8 @@ class HashTagTimelineRemoteMediator internal constructor(
                     LoadType.APPEND -> {
                         val lastItem =
                             state.lastItemOrNull()
-                                ?: return MediatorResult.Success(endOfPaginationReached = true)
-                        timelineRepository.getHashtagTimeline(
-                            hashTag = hashTag,
+                                ?: return RemoteMediator.MediatorResult.Success(endOfPaginationReached = true)
+                        timelineRepository.getHomeTimeline(
                             olderThanId = lastItem.status.statusId,
                             immediatelyNewerThanId = null,
                             loadSize = pageSize,
@@ -68,12 +65,11 @@ class HashTagTimelineRemoteMediator internal constructor(
 
             databaseDelegate.withTransaction {
                 if (loadType == LoadType.REFRESH) {
-                    timelineRepository.deleteHashTagTimeline(hashTag)
+                    timelineRepository.deleteHomeTimeline()
                 }
 
                 saveStatusToDatabase(result)
-
-                timelineRepository.insertAllIntoHashTagTimeline(hashTag, result)
+                timelineRepository.insertAllIntoHomeTimeline(result)
             }
 
             // There seems to be some race condition for refreshes.  Subsequent pages do
@@ -84,10 +80,10 @@ class HashTagTimelineRemoteMediator internal constructor(
             // it's assumed we've reached the end of pagination, and nothing gets loaded
             // ever again.
             if (loadType == LoadType.REFRESH) {
-                delay(REFRESH_DELAY)
+                delay(200)
             }
 
-            MediatorResult.Success(
+            RemoteMediator.MediatorResult.Success(
                 endOfPaginationReached =
                     when (loadType) {
                         LoadType.PREPEND -> response.pagingLinks?.find { it.rel == Rel.PREV } == null
@@ -97,9 +93,8 @@ class HashTagTimelineRemoteMediator internal constructor(
                     },
             )
         } catch (e: Exception) {
-            MediatorResult.Error(e)
+            Timber.e(e)
+            RemoteMediator.MediatorResult.Error(e)
         }
     }
 }
-
-private const val REFRESH_DELAY = 200L

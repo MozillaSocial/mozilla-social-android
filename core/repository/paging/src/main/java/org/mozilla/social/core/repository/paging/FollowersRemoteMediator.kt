@@ -1,4 +1,4 @@
-package org.mozilla.social.core.usecase.mastodon.remotemediators
+package org.mozilla.social.core.repository.paging
 
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
@@ -7,29 +7,29 @@ import androidx.paging.RemoteMediator
 import kotlinx.coroutines.delay
 import org.mozilla.social.common.Rel
 import org.mozilla.social.common.getMaxIdValue
-import org.mozilla.social.core.database.model.entities.accountCollections.Followee
-import org.mozilla.social.core.database.model.entities.accountCollections.FolloweeWrapper
+import org.mozilla.social.core.database.model.entities.accountCollections.Follower
+import org.mozilla.social.core.database.model.entities.accountCollections.FollowerWrapper
 import org.mozilla.social.core.repository.mastodon.AccountRepository
 import org.mozilla.social.core.repository.mastodon.DatabaseDelegate
-import org.mozilla.social.core.repository.mastodon.FollowingsRepository
+import org.mozilla.social.core.repository.mastodon.FollowersRepository
 import org.mozilla.social.core.repository.mastodon.RelationshipRepository
 import timber.log.Timber
 
 @OptIn(ExperimentalPagingApi::class)
-class FollowingsRemoteMediator internal constructor(
+class FollowersRemoteMediator(
     private val accountRepository: AccountRepository,
     private val databaseDelegate: DatabaseDelegate,
-    private val followingsRepository: FollowingsRepository,
+    private val followersRepository: FollowersRepository,
     private val relationshipRepository: RelationshipRepository,
     private val accountId: String,
-) : RemoteMediator<Int, FolloweeWrapper>() {
+) : RemoteMediator<Int, FollowerWrapper>() {
     private var nextKey: String? = null
     private var nextPositionIndex = 0
 
     @Suppress("ReturnCount")
     override suspend fun load(
         loadType: LoadType,
-        state: PagingState<Int, FolloweeWrapper>,
+        state: PagingState<Int, FollowerWrapper>,
     ): MediatorResult {
         return try {
             var pageSize: Int = state.config.pageSize
@@ -37,7 +37,7 @@ class FollowingsRemoteMediator internal constructor(
                 when (loadType) {
                     LoadType.REFRESH -> {
                         pageSize = state.config.initialLoadSize
-                        accountRepository.getAccountFollowing(
+                        accountRepository.getAccountFollowers(
                             accountId = accountId,
                             olderThanId = null,
                             loadSize = pageSize,
@@ -52,7 +52,7 @@ class FollowingsRemoteMediator internal constructor(
                         if (nextKey == null) {
                             return MediatorResult.Success(endOfPaginationReached = true)
                         }
-                        accountRepository.getAccountFollowing(
+                        accountRepository.getAccountFollowers(
                             accountId = accountId,
                             olderThanId = nextKey,
                             loadSize = pageSize,
@@ -64,17 +64,17 @@ class FollowingsRemoteMediator internal constructor(
 
             databaseDelegate.withTransaction {
                 if (loadType == LoadType.REFRESH) {
-                    followingsRepository.deleteFollowings(accountId)
+                    followersRepository.deleteFollowers(accountId)
                     nextPositionIndex = 0
                 }
 
                 accountRepository.insertAll(response.accounts)
                 relationshipRepository.insertAll(relationships)
-                followingsRepository.insertAll(
+                followersRepository.insertAll(
                     response.accounts.mapIndexed { index, account ->
-                        Followee(
+                        Follower(
                             accountId = accountId,
-                            followeeAccountId = account.accountId,
+                            followerAccountId = account.accountId,
                             position = nextPositionIndex + index,
                         )
                     },
@@ -110,6 +110,9 @@ class FollowingsRemoteMediator internal constructor(
             MediatorResult.Error(e)
         }
     }
+
+    companion object {
+        private const val REFRESH_DELAY = 200L
+    }
 }
 
-private const val REFRESH_DELAY = 200L

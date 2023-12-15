@@ -1,0 +1,55 @@
+package org.mozilla.social.core.repository.paging
+
+import org.koin.core.module.dsl.factoryOf
+import org.koin.core.module.dsl.singleOf
+import org.koin.dsl.module
+
+val pagingModule = module {
+    singleOf(::RefreshHomeTimeline)
+    singleOf(::RefreshFederatedTimeline)
+    singleOf(::RefreshLocalTimeline)
+    factoryOf(::FavoritesRemoteMediator)
+    factoryOf(::BlocksListRemoteMediator)
+    factoryOf(::MutesListRemoteMediator)
+
+    factory {
+        RefreshAccountTimeline(
+            accountRepository = get(),
+            saveStatusToDatabase = get(),
+            databaseDelegate = get(),
+            timelineRepository = get(),
+            accountId = it[0],
+            timelineType = it[1],
+        )
+    }
+
+    factory {
+        FollowersRemoteMediator(
+            accountRepository = get(),
+            databaseDelegate = get(),
+            followersRepository = get(),
+            relationshipRepository = get(),
+            accountId = it[0],
+        )
+    }
+
+    factory {
+        FollowingsRemoteMediator(
+            accountRepository = get(),
+            databaseDelegate = get(),
+            followingsRepository = get(),
+            relationshipRepository = get(),
+            accountId = it[0],
+        )
+    }
+
+    factory { parametersHolder ->
+        HashTagTimelineRemoteMediator(
+            get(),
+            get(),
+            get(),
+            get(),
+            parametersHolder[0],
+        )
+    }
+}

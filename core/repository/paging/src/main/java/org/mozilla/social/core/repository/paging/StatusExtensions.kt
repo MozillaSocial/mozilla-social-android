@@ -1,4 +1,4 @@
-package org.mozilla.social.core.usecase.mastodon.remotemediators
+package org.mozilla.social.core.repository.paging
 
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
