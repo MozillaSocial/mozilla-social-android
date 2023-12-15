@@ -43,6 +43,8 @@ data class NetworkInstance(
      * A staff user that can be contacted, as an alternative to [email].
      */
     val contact: NetworkInstanceContact? = null,
+
+    val rules: List<NetworkInstanceRule>
 )
 
 @Serializable

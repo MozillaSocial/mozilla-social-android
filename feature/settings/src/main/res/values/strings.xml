@@ -8,11 +8,14 @@
     <string name="blocked_users_title">Blocked Users</string>
     <string name="privacy_settings_title">Privacy</string>
     <string name="about_settings_title">About</string>
+    <string name="licenses_settings_title">Licenses</string>
+    <string name="server_community_rules">Server/Community Rules</string>
     <string name="administered_by">Administered by</string>
     <string name="decentralized_social_media_powered_by_mastodon">Decentralized social media powered by Mastodon</string>
     <string name="contact_email">Contact: %s</string>
 
     <string name="profile_settings_title">Profile settings</string>
+    <string name="manage_account">Manage Account</string>
     <string name="manage_your_account">Manage your account on %1$s</string>
 
     <string name="data_collection_and_use">Data collection and use</string>
@@ -28,4 +31,5 @@
     <string name="are_you_sure_you_want_to_block">Are you sure you want to block %s?</string>
     <string name="are_you_sure_you_want_to_unmute">Are you sure you want to unmute %s?</string>
     <string name="are_you_sure_you_want_to_mute">Are you sure you want to mute %s?</string>
+    <string name="open_source_licenses">Open Source Licenses</string>
 </resources>

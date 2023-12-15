@@ -10,6 +10,8 @@ import kotlinx.coroutines.flow.stateIn
 import org.mozilla.social.core.analytics.Analytics
 import org.mozilla.social.core.analytics.AnalyticsIdentifiers
 import org.mozilla.social.core.model.Instance
+import org.mozilla.social.core.navigation.SettingsNavigationDestination
+import org.mozilla.social.core.navigation.usecases.NavigateTo
 import org.mozilla.social.core.repository.mastodon.InstanceRepository
 import org.mozilla.social.core.ui.common.account.quickview.toQuickViewUiState
 import org.mozilla.social.core.ui.htmlcontent.HtmlContentInteractions
@@ -18,10 +20,11 @@ import org.mozilla.social.core.usecase.mastodon.htmlcontent.DefaultHtmlInteracti
 import org.mozilla.social.feature.settings.SettingsInteractions
 
 class AboutSettingsViewModel(
-    private val instanceRepository: InstanceRepository,
-    private val analytics: Analytics,
-    private val defaultHtmlInteractions: DefaultHtmlInteractions,
     getLoggedInUserAccountId: GetLoggedInUserAccountId,
+    private val analytics: Analytics,
+    private val navigateTo: NavigateTo,
+    private val instanceRepository: InstanceRepository,
+    private val defaultHtmlInteractions: DefaultHtmlInteractions,
 ) : ViewModel(), SettingsInteractions, HtmlContentInteractions by defaultHtmlInteractions {
 
     private val userAccountId: String = getLoggedInUserAccountId()
@@ -43,6 +46,10 @@ class AboutSettingsViewModel(
             mastodonAccountId = userAccountId
         )
     }
+
+    fun onOpenSourceLicensesClicked() {
+        navigateTo(SettingsNavigationDestination.OpenSourceLicensesSettings)
+    }
 }
 
 fun Instance.toAboutSettings(extendedDescription: String) =
@@ -52,4 +59,5 @@ fun Instance.toAboutSettings(extendedDescription: String) =
         contactEmail = contactEmail,
         extendedDescription = extendedDescription,
         thumbnailUrl = thumbnail,
+        rules = rules,
     )

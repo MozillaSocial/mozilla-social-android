@@ -17,7 +17,9 @@ import org.junit.Test
 import org.mozilla.social.common.Resource
 import org.mozilla.social.core.analytics.Analytics
 import org.mozilla.social.core.model.Account
+import org.mozilla.social.core.navigation.usecases.OpenLink
 import org.mozilla.social.core.repository.mastodon.AccountRepository
+import org.mozilla.social.core.usecase.mastodon.account.GetDomain
 import org.mozilla.social.core.usecase.mastodon.account.GetLoggedInUserAccountId
 import org.mozilla.social.core.usecase.mastodon.auth.Logout
 import kotlin.test.BeforeTest
@@ -31,6 +33,8 @@ class AccountSettingsViewModelTest {
     private val getLoggedInUserAccountId: GetLoggedInUserAccountId = mockk(relaxed = true)
     private val accountRepository: AccountRepository = mockk(relaxed = true)
     private val analytics: Analytics = mockk(relaxed = true)
+    private val getDomain: GetDomain = mockk(relaxed = true)
+    private val openLink: OpenLink = mockk(relaxed = true)
 
     private val account = mockk<Account>()
 
@@ -50,6 +54,8 @@ class AccountSettingsViewModelTest {
                 getLoggedInUserAccountId = getLoggedInUserAccountId,
                 accountRepository = accountRepository,
                 analytics = analytics,
+                openLink = openLink,
+                getDomain = getDomain,
             )
     }
 
