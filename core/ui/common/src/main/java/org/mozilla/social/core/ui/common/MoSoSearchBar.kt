@@ -1,18 +1,19 @@
 package org.mozilla.social.core.ui.common
 
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.ColumnScope
-import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.SearchBar
 import androidx.compose.material3.SearchBarColors
 import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.unit.dp
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
+import org.mozilla.social.core.ui.common.text.MoSoTextField
 import org.mozilla.social.core.ui.common.text.MoSoTextFieldDefaults
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -21,37 +22,36 @@ fun MoSoSearchBar(
     query: String,
     onQueryChange: (String) -> Unit,
     onSearch: (String) -> Unit,
-    active: Boolean,
-    onActiveChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     placeholder: @Composable (() -> Unit)? = null,
     leadingIcon: @Composable (() -> Unit)? = null,
     trailingIcon: @Composable (() -> Unit)? = null,
-    shape: Shape = SearchBarDefaults.inputFieldShape,
+    label: @Composable (() -> Unit)? = null,
     colors: SearchBarColors = MoSoSearchBarDefaults.colors(),
-    tonalElevation: Dp = SearchBarDefaults.Elevation,
-    windowInsets: WindowInsets = SearchBarDefaults.windowInsets,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
-    content: @Composable ColumnScope.() -> Unit,
 ) {
-    SearchBar(
-        query = query,
-        onQueryChange = onQueryChange,
-        onSearch = onSearch,
-        active = active,
-        onActiveChange = onActiveChange,
-        modifier = modifier,
-        enabled = enabled,
+    MoSoTextField(
+        value = query,
+        onValueChange = onQueryChange,
         placeholder = placeholder,
         leadingIcon = leadingIcon,
         trailingIcon = trailingIcon,
-        shape = shape,
-        colors = colors,
-        tonalElevation = tonalElevation,
-        windowInsets = windowInsets,
+        modifier = modifier,
+        enabled = enabled,
+        colors = colors.inputFieldColors,
+        borderShape = RoundedCornerShape(90.dp),
         interactionSource = interactionSource,
-        content = content
+        label = label,
+        keyboardActions = KeyboardActions(
+            onSearch = {
+                onSearch(query)
+            },
+        ),
+        keyboardOptions = KeyboardOptions(
+            imeAction = ImeAction.Search,
+        ),
+        singleLine = true,
     )
 }
 
