@@ -52,6 +52,7 @@ fun MoSoTextField(
     shape: Shape = TextFieldDefaults.shape,
     colors: TextFieldColors = MoSoTextFieldDefaults.colors(),
     borderColor: Color = MoSoTheme.colors.borderInputEnabled,
+    borderShape: Shape = RoundedCornerShape(MoSoRadius.md_8_dp)
 ) {
     TextField(
         value = value,
@@ -66,7 +67,7 @@ fun MoSoTextField(
                         } else {
                             borderColor
                         },
-                    shape = RoundedCornerShape(MoSoRadius.md_8_dp),
+                    shape = borderShape,
                 ),
         enabled = enabled,
         readOnly = readOnly,

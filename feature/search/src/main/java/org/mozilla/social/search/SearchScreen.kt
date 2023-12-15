@@ -18,11 +18,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.koin.androidx.compose.koinViewModel
@@ -47,7 +50,7 @@ internal fun SearchScreen(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
 private fun SearchScreen(
     uiState: SearchUiState,
@@ -55,29 +58,21 @@ private fun SearchScreen(
 ) {
     MoSoSurface {
         Column(Modifier.systemBarsPadding()) {
-            var active by remember {
-                mutableStateOf(true)
-            }
-
             val searchFocusRequester = remember { FocusRequester() }
+            val keyboardController = LocalSoftwareKeyboardController.current
+            val focusManager = LocalFocusManager.current
 
             MoSoSearchBar(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .onFocusChanged {
-                        if (it.hasFocus) active = true
-                    }
                     .focusRequester(searchFocusRequester)
                     .padding(horizontal = MoSoSpacing.md),
                 query = uiState.query,
                 onQueryChange = { searchInteractions.onQueryTextChanged(it) },
                 onSearch = {
-                    if (uiState.query.isNotBlank()) {
-                        active = !active
-                    }
+                    keyboardController?.hide()
+                    focusManager.clearFocus()
                 },
-                active = active,
-                onActiveChange = { },
                 leadingIcon = {
                     Icon(
                         modifier = Modifier.size(16.dp),
@@ -86,11 +81,10 @@ private fun SearchScreen(
                         tint = MoSoTheme.colors.iconPrimary,
                     )
                 }
-            ) {
-                Text(text = "Search suggestions go here")
-                LaunchedEffect(Unit) {
-                    searchFocusRequester.requestFocus()
-                }
+            )
+
+            LaunchedEffect(Unit) {
+                searchFocusRequester.requestFocus()
             }
 
             Spacer(modifier = Modifier.height(8.dp))
