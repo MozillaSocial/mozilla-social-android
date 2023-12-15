@@ -1,16 +1,16 @@
 package org.mozilla.social.search
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -26,6 +26,7 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.koin.androidx.compose.koinViewModel
@@ -37,7 +38,7 @@ import org.mozilla.social.core.ui.common.MoSoSurface
 import org.mozilla.social.core.ui.common.MoSoTab
 import org.mozilla.social.core.ui.common.MoSoTabRow
 import org.mozilla.social.core.ui.common.appbar.MoSoCloseableTopAppBar
-import org.mozilla.social.core.ui.common.button.MoSoButton
+import org.mozilla.social.feature.search.R
 
 @Composable
 internal fun SearchScreen(
@@ -61,24 +62,37 @@ private fun SearchScreen(
             val searchFocusRequester = remember { FocusRequester() }
             val keyboardController = LocalSoftwareKeyboardController.current
             val focusManager = LocalFocusManager.current
+            var searchHasFocus by remember {
+                mutableStateOf(true)
+            }
 
-            MoSoSearchBar(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .focusRequester(searchFocusRequester)
-                    .padding(horizontal = MoSoSpacing.md),
-                query = uiState.query,
-                onQueryChange = { searchInteractions.onQueryTextChanged(it) },
-                onSearch = {
-                    keyboardController?.hide()
-                    focusManager.clearFocus()
-                },
-                leadingIcon = {
-                    Icon(
-                        modifier = Modifier.size(16.dp),
-                        painter = MoSoIcons.magnifyingGlass(),
-                        contentDescription = "",
-                        tint = MoSoTheme.colors.iconPrimary,
+            MoSoCloseableTopAppBar(
+                actions = {
+                    MoSoSearchBar(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .onFocusChanged {
+                                searchHasFocus = it.hasFocus
+                            }
+                            .focusRequester(searchFocusRequester)
+                            .padding(
+                                end = MoSoSpacing.md,
+                                start = 60.dp,
+                            ),
+                        query = uiState.query,
+                        onQueryChange = { searchInteractions.onQueryTextChanged(it) },
+                        onSearch = {
+                            keyboardController?.hide()
+                            focusManager.clearFocus()
+                        },
+                        leadingIcon = {
+                            Icon(
+                                modifier = Modifier.size(16.dp),
+                                painter = MoSoIcons.magnifyingGlass(),
+                                contentDescription = stringResource(id = R.string.search),
+                                tint = MoSoTheme.colors.iconSecondary,
+                            )
+                        },
                     )
                 }
             )
@@ -89,25 +103,57 @@ private fun SearchScreen(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            val context = LocalContext.current
-
-            MoSoTabRow(selectedTabIndex = uiState.selectedTab.ordinal) {
-                SearchTab.entries.forEach { tabType ->
-                    MoSoTab(
-                        modifier =
-                        Modifier
-                            .height(40.dp),
-                        selected = uiState.selectedTab == tabType,
-                        onClick = { searchInteractions.onTabClicked(tabType) },
-                        content = {
-                            Text(
-                                text = tabType.tabTitle.build(context),
-                                style = MoSoTheme.typography.labelMedium,
-                            )
-                        },
-                    )
-                }
+            AnimatedVisibility(visible = searchHasFocus) {
+                Suggestions(
+                    uiState = uiState,
+                    searchInteractions = searchInteractions,
+                )
+            }
+            AnimatedVisibility(visible = !searchHasFocus) {
+                Tabs(
+                    uiState = uiState,
+                    searchInteractions = searchInteractions,
+                )
             }
         }
     }
+}
+
+@Composable
+private fun Tabs(
+    uiState: SearchUiState,
+    searchInteractions: SearchInteractions,
+) {
+    val context = LocalContext.current
+
+    MoSoTabRow(selectedTabIndex = uiState.selectedTab.ordinal) {
+        SearchTab.entries.forEach { tabType ->
+            MoSoTab(
+                modifier =
+                Modifier
+                    .height(40.dp),
+                selected = uiState.selectedTab == tabType,
+                onClick = { searchInteractions.onTabClicked(tabType) },
+                content = {
+                    Text(
+                        text = tabType.tabTitle.build(context),
+                        style = MoSoTheme.typography.labelMedium,
+                    )
+                },
+            )
+        }
+    }
+}
+
+@Composable
+private fun Suggestions(
+    uiState: SearchUiState,
+    searchInteractions: SearchInteractions,
+) {
+    Column(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        Text(text = "search suggestions")
+    }
+
 }

@@ -4,4 +4,6 @@
     <string name="accounts_tab">Accounts</string>
     <string name="posts_tab">Posts</string>
     <string name="hashtags_tab">Hashtags</string>
+
+    <string name="search">Search</string>
 </resources>
