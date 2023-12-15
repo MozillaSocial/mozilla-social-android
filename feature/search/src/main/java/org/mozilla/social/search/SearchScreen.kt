@@ -145,6 +145,7 @@ private fun Tabs(
     }
 }
 
+@Suppress("UnusedParameter")
 @Composable
 private fun Suggestions(
     uiState: SearchUiState,
