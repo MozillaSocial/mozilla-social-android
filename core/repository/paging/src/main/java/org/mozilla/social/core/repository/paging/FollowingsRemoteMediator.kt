@@ -1,4 +1,4 @@
-package org.mozilla.social.core.usecase.mastodon.timeline
+package org.mozilla.social.core.repository.paging
 
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
@@ -6,74 +6,83 @@ import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import kotlinx.coroutines.delay
 import org.mozilla.social.common.Rel
-import org.mozilla.social.core.database.model.entities.statusCollections.FederatedTimelineStatusWrapper
+import org.mozilla.social.common.getMaxIdValue
+import org.mozilla.social.core.database.model.entities.accountCollections.Followee
+import org.mozilla.social.core.database.model.entities.accountCollections.FolloweeWrapper
 import org.mozilla.social.core.repository.mastodon.AccountRepository
 import org.mozilla.social.core.repository.mastodon.DatabaseDelegate
-import org.mozilla.social.core.repository.mastodon.TimelineRepository
-import org.mozilla.social.core.usecase.mastodon.remotemediators.getInReplyToAccountNames
-import org.mozilla.social.core.usecase.mastodon.status.SaveStatusToDatabase
+import org.mozilla.social.core.repository.mastodon.FollowingsRepository
+import org.mozilla.social.core.repository.mastodon.RelationshipRepository
 import timber.log.Timber
 
-class RefreshFederatedTimeline internal constructor(
-    private val timelineRepository: TimelineRepository,
+@OptIn(ExperimentalPagingApi::class)
+class FollowingsRemoteMediator(
     private val accountRepository: AccountRepository,
     private val databaseDelegate: DatabaseDelegate,
-    private val saveStatusToDatabase: SaveStatusToDatabase,
-) {
-    @OptIn(ExperimentalPagingApi::class)
-    suspend operator fun invoke(
+    private val followingsRepository: FollowingsRepository,
+    private val relationshipRepository: RelationshipRepository,
+    private val accountId: String,
+) : RemoteMediator<Int, FolloweeWrapper>() {
+    private var nextKey: String? = null
+    private var nextPositionIndex = 0
+
+    @Suppress("ReturnCount")
+    override suspend fun load(
         loadType: LoadType,
-        state: PagingState<Int, FederatedTimelineStatusWrapper>,
-    ): RemoteMediator.MediatorResult {
+        state: PagingState<Int, FolloweeWrapper>,
+    ): MediatorResult {
         return try {
             var pageSize: Int = state.config.pageSize
             val response =
                 when (loadType) {
                     LoadType.REFRESH -> {
                         pageSize = state.config.initialLoadSize
-                        timelineRepository.getPublicTimeline(
-                            federatedOnly = true,
+                        accountRepository.getAccountFollowing(
+                            accountId = accountId,
                             olderThanId = null,
-                            immediatelyNewerThanId = null,
                             loadSize = pageSize,
                         )
                     }
 
                     LoadType.PREPEND -> {
-                        val firstItem =
-                            state.firstItemOrNull()
-                                ?: return RemoteMediator.MediatorResult.Success(endOfPaginationReached = true)
-                        timelineRepository.getPublicTimeline(
-                            federatedOnly = true,
-                            olderThanId = null,
-                            immediatelyNewerThanId = firstItem.status.statusId,
-                            loadSize = pageSize,
-                        )
+                        return MediatorResult.Success(endOfPaginationReached = true)
                     }
 
                     LoadType.APPEND -> {
-                        val lastItem =
-                            state.lastItemOrNull()
-                                ?: return RemoteMediator.MediatorResult.Success(endOfPaginationReached = true)
-                        timelineRepository.getPublicTimeline(
-                            federatedOnly = true,
-                            olderThanId = lastItem.status.statusId,
-                            immediatelyNewerThanId = null,
+                        if (nextKey == null) {
+                            return MediatorResult.Success(endOfPaginationReached = true)
+                        }
+                        accountRepository.getAccountFollowing(
+                            accountId = accountId,
+                            olderThanId = nextKey,
                             loadSize = pageSize,
                         )
                     }
                 }
 
-            val result = response.statuses.getInReplyToAccountNames(accountRepository)
+            val relationships = response.accounts.getRelationships(accountRepository)
 
             databaseDelegate.withTransaction {
                 if (loadType == LoadType.REFRESH) {
-                    timelineRepository.deleteFederatedTimeline()
+                    followingsRepository.deleteFollowings(accountId)
+                    nextPositionIndex = 0
                 }
 
-                saveStatusToDatabase(result)
-                timelineRepository.insertAllIntoFederatedTimeline(result)
+                accountRepository.insertAll(response.accounts)
+                relationshipRepository.insertAll(relationships)
+                followingsRepository.insertAll(
+                    response.accounts.mapIndexed { index, account ->
+                        Followee(
+                            accountId = accountId,
+                            followeeAccountId = account.accountId,
+                            position = nextPositionIndex + index,
+                        )
+                    },
+                )
             }
+
+            nextKey = response.pagingLinks?.getMaxIdValue()
+            nextPositionIndex += response.accounts.size
 
             // There seems to be some race condition for refreshes.  Subsequent pages do
             // not get loaded because once we return a mediator result, the next append
@@ -86,7 +95,8 @@ class RefreshFederatedTimeline internal constructor(
                 delay(REFRESH_DELAY)
             }
 
-            RemoteMediator.MediatorResult.Success(
+            @Suppress("KotlinConstantConditions")
+            MediatorResult.Success(
                 endOfPaginationReached =
                     when (loadType) {
                         LoadType.PREPEND -> response.pagingLinks?.find { it.rel == Rel.PREV } == null
@@ -97,7 +107,7 @@ class RefreshFederatedTimeline internal constructor(
             )
         } catch (e: Exception) {
             Timber.e(e)
-            RemoteMediator.MediatorResult.Error(e)
+            MediatorResult.Error(e)
         }
     }
 

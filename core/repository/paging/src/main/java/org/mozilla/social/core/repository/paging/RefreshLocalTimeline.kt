@@ -1,4 +1,4 @@
-package org.mozilla.social.feature.favorites
+package org.mozilla.social.core.repository.paging
 
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
@@ -6,37 +6,33 @@ import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import kotlinx.coroutines.delay
 import org.mozilla.social.common.Rel
-import org.mozilla.social.common.getMaxIdValue
-import org.mozilla.social.core.database.model.entities.statusCollections.FavoritesTimelineStatus
-import org.mozilla.social.core.database.model.entities.statusCollections.FavoritesTimelineStatusWrapper
+import org.mozilla.social.core.database.model.entities.statusCollections.LocalTimelineStatusWrapper
 import org.mozilla.social.core.repository.mastodon.AccountRepository
 import org.mozilla.social.core.repository.mastodon.DatabaseDelegate
-import org.mozilla.social.core.repository.mastodon.FavoritesRepository
-import org.mozilla.social.core.usecase.mastodon.remotemediators.getInReplyToAccountNames
+import org.mozilla.social.core.repository.mastodon.TimelineRepository
 import org.mozilla.social.core.usecase.mastodon.status.SaveStatusToDatabase
 import timber.log.Timber
 
-@OptIn(ExperimentalPagingApi::class)
-class FavoritesRemoteMediator(
-    private val favoritesRepository: FavoritesRepository,
+class RefreshLocalTimeline internal constructor(
+    private val timelineRepository: TimelineRepository,
     private val accountRepository: AccountRepository,
     private val saveStatusToDatabase: SaveStatusToDatabase,
     private val databaseDelegate: DatabaseDelegate,
-)  : RemoteMediator<Int, FavoritesTimelineStatusWrapper>() {
-    private var nextKey: String? = null
-    private var nextPositionIndex = 0
-
-    override suspend fun load(
+) {
+    @OptIn(ExperimentalPagingApi::class)
+    @Suppress("ReturnCount", "MagicNumber")
+    suspend operator fun invoke(
         loadType: LoadType,
-        state: PagingState<Int, FavoritesTimelineStatusWrapper>
-    ): MediatorResult {
+        state: PagingState<Int, LocalTimelineStatusWrapper>,
+    ): RemoteMediator.MediatorResult {
         return try {
             var pageSize: Int = state.config.pageSize
             val response =
                 when (loadType) {
                     LoadType.REFRESH -> {
                         pageSize = state.config.initialLoadSize
-                        favoritesRepository.getFavorites(
+                        timelineRepository.getPublicTimeline(
+                            localOnly = true,
                             olderThanId = null,
                             immediatelyNewerThanId = null,
                             loadSize = pageSize,
@@ -46,8 +42,9 @@ class FavoritesRemoteMediator(
                     LoadType.PREPEND -> {
                         val firstItem =
                             state.firstItemOrNull()
-                                ?: return MediatorResult.Success(endOfPaginationReached = true)
-                        favoritesRepository.getFavorites(
+                                ?: return RemoteMediator.MediatorResult.Success(endOfPaginationReached = true)
+                        timelineRepository.getPublicTimeline(
+                            localOnly = true,
                             olderThanId = null,
                             immediatelyNewerThanId = firstItem.status.statusId,
                             loadSize = pageSize,
@@ -57,8 +54,9 @@ class FavoritesRemoteMediator(
                     LoadType.APPEND -> {
                         val lastItem =
                             state.lastItemOrNull()
-                                ?: return MediatorResult.Success(endOfPaginationReached = true)
-                        favoritesRepository.getFavorites(
+                                ?: return RemoteMediator.MediatorResult.Success(endOfPaginationReached = true)
+                        timelineRepository.getPublicTimeline(
+                            localOnly = true,
                             olderThanId = lastItem.status.statusId,
                             immediatelyNewerThanId = null,
                             loadSize = pageSize,
@@ -70,27 +68,12 @@ class FavoritesRemoteMediator(
 
             databaseDelegate.withTransaction {
                 if (loadType == LoadType.REFRESH) {
-                    favoritesRepository.deleteFavoritesTimeline()
-                    nextPositionIndex = 0
+                    timelineRepository.deleteLocalTimeline()
                 }
 
                 saveStatusToDatabase(result)
-
-                favoritesRepository.insertAll(result.mapIndexed { index, status ->
-                    FavoritesTimelineStatus(
-                        statusId = status.statusId,
-                        position = nextPositionIndex + index,
-                        accountId = status.account.accountId,
-                        pollId = status.poll?.pollId,
-                        boostedStatusId = status.boostedStatus?.statusId,
-                        boostedStatusAccountId = status.boostedStatus?.account?.accountId,
-                        boostedPollId = status.boostedStatus?.poll?.pollId,
-                    )
-                })
+                timelineRepository.insertAllIntoLocalTimeline(result)
             }
-
-            nextKey = response.pagingLinks?.getMaxIdValue()
-            nextPositionIndex += response.statuses.size
 
             // There seems to be some race condition for refreshes.  Subsequent pages do
             // not get loaded because once we return a mediator result, the next append
@@ -100,25 +83,21 @@ class FavoritesRemoteMediator(
             // it's assumed we've reached the end of pagination, and nothing gets loaded
             // ever again.
             if (loadType == LoadType.REFRESH) {
-                delay(REFRESH_DELAY)
+                delay(200)
             }
 
-            MediatorResult.Success(
+            RemoteMediator.MediatorResult.Success(
                 endOfPaginationReached =
-                when (loadType) {
-                    LoadType.PREPEND -> response.pagingLinks?.find { it.rel == Rel.PREV } == null
-                    LoadType.REFRESH,
-                    LoadType.APPEND,
-                    -> response.pagingLinks?.find { it.rel == Rel.NEXT } == null
-                },
+                    when (loadType) {
+                        LoadType.PREPEND -> response.pagingLinks?.find { it.rel == Rel.PREV } == null
+                        LoadType.REFRESH,
+                        LoadType.APPEND,
+                        -> response.pagingLinks?.find { it.rel == Rel.NEXT } == null
+                    },
             )
         } catch (e: Exception) {
             Timber.e(e)
-            MediatorResult.Error(e)
+            RemoteMediator.MediatorResult.Error(e)
         }
-    }
-
-    companion object {
-        private const val REFRESH_DELAY = 200L
     }
 }

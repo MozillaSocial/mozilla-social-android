@@ -11,10 +11,10 @@ import org.koin.java.KoinJavaComponent.inject
 import org.mozilla.social.core.analytics.Analytics
 import org.mozilla.social.core.analytics.AnalyticsIdentifiers
 import org.mozilla.social.core.repository.mastodon.TimelineRepository
+import org.mozilla.social.core.repository.paging.HashTagTimelineRemoteMediator
 import org.mozilla.social.core.ui.postcard.PostCardDelegate
 import org.mozilla.social.core.ui.postcard.toPostCardUiState
 import org.mozilla.social.core.usecase.mastodon.account.GetLoggedInUserAccountId
-import org.mozilla.social.core.usecase.mastodon.remotemediators.HashTagTimelineRemoteMediator
 
 class HashTagViewModel(
     private val analytics: Analytics,

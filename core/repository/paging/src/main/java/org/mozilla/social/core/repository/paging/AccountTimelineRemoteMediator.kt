@@ -1,4 +1,4 @@
-package org.mozilla.social.feature.account
+package org.mozilla.social.core.repository.paging
 
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
@@ -9,7 +9,6 @@ import org.koin.core.component.inject
 import org.koin.core.parameter.parametersOf
 import org.mozilla.social.core.database.model.entities.statusCollections.AccountTimelineStatusWrapper
 import org.mozilla.social.core.model.AccountTimelineType
-import org.mozilla.social.core.usecase.mastodon.timeline.RefreshAccountTimeline
 
 @OptIn(ExperimentalPagingApi::class)
 class AccountTimelineRemoteMediator(

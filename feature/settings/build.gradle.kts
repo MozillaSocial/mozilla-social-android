@@ -15,6 +15,7 @@ dependencies {
     implementation(project(":core:model"))
     implementation(project(":core:navigation"))
     implementation(project(":core:repository:mastodon"))
+    implementation(project(":core:repository:paging"))
     implementation(project(":core:usecase:mastodon"))
     implementation(project(":core:ui:common"))
     implementation(project(":core:ui:htmlcontent"))

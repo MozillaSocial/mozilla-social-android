@@ -19,9 +19,6 @@ import org.mozilla.social.core.usecase.mastodon.account.UpdateMyAccount
 import org.mozilla.social.core.usecase.mastodon.auth.IsSignedInFlow
 import org.mozilla.social.core.usecase.mastodon.auth.Login
 import org.mozilla.social.core.usecase.mastodon.auth.Logout
-import org.mozilla.social.core.usecase.mastodon.remotemediators.FollowersRemoteMediator
-import org.mozilla.social.core.usecase.mastodon.remotemediators.FollowingsRemoteMediator
-import org.mozilla.social.core.usecase.mastodon.remotemediators.HashTagTimelineRemoteMediator
 import org.mozilla.social.core.usecase.mastodon.report.Report
 import org.mozilla.social.core.usecase.mastodon.status.BoostStatus
 import org.mozilla.social.core.usecase.mastodon.status.DeleteStatus
@@ -32,10 +29,6 @@ import org.mozilla.social.core.usecase.mastodon.status.UndoBoostStatus
 import org.mozilla.social.core.usecase.mastodon.status.UndoFavoriteStatus
 import org.mozilla.social.core.usecase.mastodon.status.VoteOnPoll
 import org.mozilla.social.core.usecase.mastodon.thread.GetThread
-import org.mozilla.social.core.usecase.mastodon.timeline.RefreshAccountTimeline
-import org.mozilla.social.core.usecase.mastodon.timeline.RefreshFederatedTimeline
-import org.mozilla.social.core.usecase.mastodon.timeline.RefreshHomeTimeline
-import org.mozilla.social.core.usecase.mastodon.timeline.RefreshLocalTimeline
 
 val mastodonUsecaseModule =
     module {
@@ -45,15 +38,6 @@ val mastodonUsecaseModule =
             navigationModule,
         )
 
-        factory { parametersHolder ->
-            HashTagTimelineRemoteMediator(
-                get(),
-                get(),
-                get(),
-                get(),
-                parametersHolder[0],
-            )
-        }
         single { GetThread(get(), get()) }
         single { Login(get(), get(), get(), get(), get(), get(), get()) }
         single {
@@ -202,36 +186,6 @@ val mastodonUsecaseModule =
 
         singleOf(::SaveStatusToDatabase)
 
-        single { RefreshLocalTimeline(get(), get(), get(), get()) }
-        single { RefreshFederatedTimeline(get(), get(), get(), get()) }
-        singleOf(::RefreshHomeTimeline)
         singleOf(::GetDomain)
-        factory {
-            RefreshAccountTimeline(
-                accountRepository = get(),
-                saveStatusToDatabase = get(),
-                databaseDelegate = get(),
-                timelineRepository = get(),
-                accountId = it[0],
-                timelineType = it[1],
-            )
-        }
-        factory {
-            FollowersRemoteMediator(
-                accountRepository = get(),
-                databaseDelegate = get(),
-                followersRepository = get(),
-                relationshipRepository = get(),
-                accountId = it[0],
-            )
-        }
-        factory {
-            FollowingsRemoteMediator(
-                accountRepository = get(),
-                databaseDelegate = get(),
-                followingsRepository = get(),
-                relationshipRepository = get(),
-                accountId = it[0],
-            )
-        }
+
     }

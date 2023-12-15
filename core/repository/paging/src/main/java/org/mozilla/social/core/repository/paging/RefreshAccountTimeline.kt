@@ -1,4 +1,4 @@
-package org.mozilla.social.core.usecase.mastodon.timeline
+package org.mozilla.social.core.repository.paging
 
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
@@ -11,7 +11,6 @@ import org.mozilla.social.core.model.AccountTimelineType
 import org.mozilla.social.core.repository.mastodon.AccountRepository
 import org.mozilla.social.core.repository.mastodon.DatabaseDelegate
 import org.mozilla.social.core.repository.mastodon.TimelineRepository
-import org.mozilla.social.core.usecase.mastodon.remotemediators.getInReplyToAccountNames
 import org.mozilla.social.core.usecase.mastodon.status.SaveStatusToDatabase
 import timber.log.Timber
 

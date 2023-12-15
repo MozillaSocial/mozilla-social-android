@@ -11,6 +11,7 @@ android {
 dependencies {
     implementation(project(":core:model"))
     implementation(project(":core:usecase:mastodon"))
+    implementation(project(":core:repository:paging"))
     implementation(project(":core:repository:mastodon"))
     implementation(project(":core:datastore"))
     implementation(project(":core:designsystem"))
@@ -21,7 +22,6 @@ dependencies {
     implementation(project(":core:analytics"))
 
     implementation(libs.androidx.paging.runtime)
-
     implementation(libs.androidx.navigation.compose)
     implementation(libs.koin.core)
     implementation(libs.koin.androidx.compose)

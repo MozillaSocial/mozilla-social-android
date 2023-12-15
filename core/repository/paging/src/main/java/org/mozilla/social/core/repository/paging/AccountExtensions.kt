@@ -1,4 +1,4 @@
-package org.mozilla.social.core.usecase.mastodon.remotemediators
+package org.mozilla.social.core.repository.paging
 
 import org.mozilla.social.core.model.Account
 import org.mozilla.social.core.model.Relationship

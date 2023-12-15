@@ -1,4 +1,4 @@
-package org.mozilla.social.core.usecase.mastodon.timeline
+package org.mozilla.social.core.repository.paging
 
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
@@ -6,25 +6,23 @@ import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import kotlinx.coroutines.delay
 import org.mozilla.social.common.Rel
-import org.mozilla.social.core.database.model.entities.statusCollections.LocalTimelineStatusWrapper
+import org.mozilla.social.core.database.model.entities.statusCollections.FederatedTimelineStatusWrapper
 import org.mozilla.social.core.repository.mastodon.AccountRepository
 import org.mozilla.social.core.repository.mastodon.DatabaseDelegate
 import org.mozilla.social.core.repository.mastodon.TimelineRepository
-import org.mozilla.social.core.usecase.mastodon.remotemediators.getInReplyToAccountNames
 import org.mozilla.social.core.usecase.mastodon.status.SaveStatusToDatabase
 import timber.log.Timber
 
-class RefreshLocalTimeline internal constructor(
+class RefreshFederatedTimeline internal constructor(
     private val timelineRepository: TimelineRepository,
     private val accountRepository: AccountRepository,
-    private val saveStatusToDatabase: SaveStatusToDatabase,
     private val databaseDelegate: DatabaseDelegate,
+    private val saveStatusToDatabase: SaveStatusToDatabase,
 ) {
     @OptIn(ExperimentalPagingApi::class)
-    @Suppress("ReturnCount", "MagicNumber")
     suspend operator fun invoke(
         loadType: LoadType,
-        state: PagingState<Int, LocalTimelineStatusWrapper>,
+        state: PagingState<Int, FederatedTimelineStatusWrapper>,
     ): RemoteMediator.MediatorResult {
         return try {
             var pageSize: Int = state.config.pageSize
@@ -33,7 +31,7 @@ class RefreshLocalTimeline internal constructor(
                     LoadType.REFRESH -> {
                         pageSize = state.config.initialLoadSize
                         timelineRepository.getPublicTimeline(
-                            localOnly = true,
+                            federatedOnly = true,
                             olderThanId = null,
                             immediatelyNewerThanId = null,
                             loadSize = pageSize,
@@ -45,7 +43,7 @@ class RefreshLocalTimeline internal constructor(
                             state.firstItemOrNull()
                                 ?: return RemoteMediator.MediatorResult.Success(endOfPaginationReached = true)
                         timelineRepository.getPublicTimeline(
-                            localOnly = true,
+                            federatedOnly = true,
                             olderThanId = null,
                             immediatelyNewerThanId = firstItem.status.statusId,
                             loadSize = pageSize,
@@ -57,7 +55,7 @@ class RefreshLocalTimeline internal constructor(
                             state.lastItemOrNull()
                                 ?: return RemoteMediator.MediatorResult.Success(endOfPaginationReached = true)
                         timelineRepository.getPublicTimeline(
-                            localOnly = true,
+                            federatedOnly = true,
                             olderThanId = lastItem.status.statusId,
                             immediatelyNewerThanId = null,
                             loadSize = pageSize,
@@ -69,11 +67,11 @@ class RefreshLocalTimeline internal constructor(
 
             databaseDelegate.withTransaction {
                 if (loadType == LoadType.REFRESH) {
-                    timelineRepository.deleteLocalTimeline()
+                    timelineRepository.deleteFederatedTimeline()
                 }
 
                 saveStatusToDatabase(result)
-                timelineRepository.insertAllIntoLocalTimeline(result)
+                timelineRepository.insertAllIntoFederatedTimeline(result)
             }
 
             // There seems to be some race condition for refreshes.  Subsequent pages do
@@ -84,7 +82,7 @@ class RefreshLocalTimeline internal constructor(
             // it's assumed we've reached the end of pagination, and nothing gets loaded
             // ever again.
             if (loadType == LoadType.REFRESH) {
-                delay(200)
+                delay(REFRESH_DELAY)
             }
 
             RemoteMediator.MediatorResult.Success(
@@ -100,5 +98,9 @@ class RefreshLocalTimeline internal constructor(
             Timber.e(e)
             RemoteMediator.MediatorResult.Error(e)
         }
+    }
+
+    companion object {
+        private const val REFRESH_DELAY = 200L
     }
 }

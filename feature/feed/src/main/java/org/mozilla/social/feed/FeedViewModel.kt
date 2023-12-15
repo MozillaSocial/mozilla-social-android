@@ -20,9 +20,9 @@ import org.mozilla.social.core.repository.mastodon.TimelineRepository
 import org.mozilla.social.core.ui.postcard.PostCardDelegate
 import org.mozilla.social.core.ui.postcard.toPostCardUiState
 import org.mozilla.social.core.usecase.mastodon.account.GetLoggedInUserAccountId
-import org.mozilla.social.feed.remoteMediators.FederatedTimelineRemoteMediator
-import org.mozilla.social.feed.remoteMediators.HomeTimelineRemoteMediator
-import org.mozilla.social.feed.remoteMediators.LocalTimelineRemoteMediator
+import org.mozilla.social.core.repository.paging.FederatedTimelineRemoteMediator
+import org.mozilla.social.core.repository.paging.HomeTimelineRemoteMediator
+import org.mozilla.social.core.repository.paging.LocalTimelineRemoteMediator
 
 /**
  * Produces a flow of pages of statuses for a feed
