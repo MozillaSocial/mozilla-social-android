@@ -14,6 +14,9 @@ import org.mozilla.social.common.utils.edit
 import org.mozilla.social.common.utils.hashtagText
 import org.mozilla.social.common.utils.replaceAccount
 import org.mozilla.social.common.utils.replaceHashtag
+import org.mozilla.social.core.analytics.Analytics
+import org.mozilla.social.core.analytics.AnalyticsIdentifiers
+import org.mozilla.social.core.analytics.EngagementType
 import org.mozilla.social.core.repository.mastodon.SearchRepository
 import org.mozilla.social.core.repository.mastodon.StatusRepository
 import org.mozilla.social.post.NewPostViewModel
@@ -24,6 +27,7 @@ class StatusDelegate(
     private val searchRepository: SearchRepository,
     private val statusRepository: StatusRepository,
     private val inReplyToId: String?,
+    private val analytics: Analytics,
 ) : StatusInteractions, ContentWarningInteractions {
     private val _statusText = MutableStateFlow(TextFieldValue(""))
     val statusText = _statusText.asStateFlow()
@@ -125,6 +129,10 @@ class StatusDelegate(
     }
 
     override fun onContentWarningClicked() {
+        analytics.uiEngagement(
+            engagementType = EngagementType.POST,
+            uiIdentifier = AnalyticsIdentifiers.NEW_POST_CONTENT_WARNING
+        )
         if (contentWarningText.value == null) {
             _contentWarningText.update { "" }
         } else {

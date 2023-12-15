@@ -3,12 +3,21 @@ package org.mozilla.social.post.poll
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import org.mozilla.social.common.utils.edit
+import org.mozilla.social.core.analytics.Analytics
+import org.mozilla.social.core.analytics.AnalyticsIdentifiers
+import org.mozilla.social.core.analytics.EngagementType
 
-class PollDelegate : PollInteractions {
+class PollDelegate(
+    private val analytics: Analytics,
+) : PollInteractions {
     private val _poll = MutableStateFlow<Poll?>(null)
     val poll = _poll.asStateFlow()
 
     override fun onNewPollClicked() {
+        analytics.uiEngagement(
+            engagementType = EngagementType.POST,
+            uiIdentifier = AnalyticsIdentifiers.NEW_POST_POLL
+        )
         if (poll.value == null) {
             _poll.value = newPoll()
         } else {

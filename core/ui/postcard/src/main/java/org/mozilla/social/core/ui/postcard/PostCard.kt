@@ -369,12 +369,18 @@ private fun OverflowMenu(
                 DropDownItem(
                     text = stringResource(id = R.string.mute_user, post.username),
                     expanded = overflowMenuExpanded,
-                    onClick = { postCardInteractions.onOverflowMuteClicked(post.accountId) },
+                    onClick = { postCardInteractions.onOverflowMuteClicked(
+                        accountId = post.accountId,
+                        statusId = post.statusId,
+                    ) },
                 )
                 DropDownItem(
                     text = stringResource(id = R.string.block_user, post.username),
                     expanded = overflowMenuExpanded,
-                    onClick = { postCardInteractions.onOverflowBlockClicked(post.accountId) },
+                    onClick = { postCardInteractions.onOverflowBlockClicked(
+                        accountId = post.accountId,
+                        statusId =  post.statusId,
+                    ) },
                 )
                 DropDownItem(
                     text = stringResource(id = R.string.report_user, post.username),

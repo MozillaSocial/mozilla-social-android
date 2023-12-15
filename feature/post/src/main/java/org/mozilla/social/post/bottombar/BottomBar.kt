@@ -42,6 +42,8 @@ internal fun BottomBar(
     pollInteractions: PollInteractions,
     contentWarningInteractions: ContentWarningInteractions,
     onMediaInserted: (Uri, File, FileType) -> Unit,
+    onUploadImageClicked: () -> Unit,
+    onUploadMediaClicked: () -> Unit
 ) {
     val context = LocalContext.current
 
@@ -65,6 +67,7 @@ internal fun BottomBar(
     BottomBar(
         bottomBarState = bottomBarState,
         onUploadImageClicked = {
+            onUploadImageClicked()
             when (bottomBarState.maxImages) {
                 1 -> {
                     singleMediaLauncher.launch(
@@ -80,6 +83,7 @@ internal fun BottomBar(
             }
         },
         onUploadVideoClicked = {
+            onUploadMediaClicked()
             singleMediaLauncher.launch(
                 PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.VideoOnly),
             )
@@ -178,7 +182,9 @@ private fun AddPollButton(
     pollButtonEnabled: Boolean,
 ) {
     IconButton(
-        onClick = { pollInteractions.onNewPollClicked() },
+        onClick = {
+            pollInteractions.onNewPollClicked()
+        },
         enabled = pollButtonEnabled,
     ) {
         Icon(

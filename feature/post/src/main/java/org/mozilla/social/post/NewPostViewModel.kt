@@ -19,6 +19,7 @@ import org.mozilla.social.common.utils.FileType
 import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.core.analytics.Analytics
 import org.mozilla.social.core.analytics.AnalyticsIdentifiers
+import org.mozilla.social.core.analytics.EngagementType
 import org.mozilla.social.core.model.ImageState
 import org.mozilla.social.core.model.StatusVisibility
 import org.mozilla.social.core.model.request.PollCreate
@@ -60,6 +61,7 @@ class NewPostViewModel(
             searchRepository,
             statusRepository,
             replyStatusId,
+            analytics,
         )
     val statusInteractions: StatusInteractions = statusDelegate
     val contentWarningInteractions: ContentWarningInteractions = statusDelegate
@@ -69,7 +71,7 @@ class NewPostViewModel(
     val inReplyToAccountName = statusDelegate.inReplyToAccountName
     val contentWarningText = statusDelegate.contentWarningText
 
-    private val pollDelegate: PollDelegate = PollDelegate()
+    private val pollDelegate: PollDelegate = PollDelegate(analytics)
     val pollInteractions: PollInteractions = pollDelegate
     val poll = pollDelegate.poll
 
@@ -135,6 +137,10 @@ class NewPostViewModel(
     }
 
     fun onPostClicked() {
+        analytics.uiEngagement(
+            engagementType = EngagementType.POST,
+            uiIdentifier = AnalyticsIdentifiers.NEW_POST_POST,
+        )
         viewModelScope.launch {
             _isSendingPost.update { true }
             try {
@@ -174,6 +180,20 @@ class NewPostViewModel(
     override fun onScreenViewed() {
         analytics.uiImpression(
             uiIdentifier = AnalyticsIdentifiers.NEW_POST_SCREEN_IMPRESSION,
+        )
+    }
+
+    override fun onUploadImageClicked() {
+        analytics.uiEngagement(
+            engagementType = EngagementType.POST,
+            uiIdentifier = AnalyticsIdentifiers.NEW_POST_IMAGE
+        )
+    }
+
+    override fun onUploadMediaClicked() {
+        analytics.uiEngagement(
+            engagementType = EngagementType.POST,
+            uiIdentifier = AnalyticsIdentifiers.NEW_POST_MEDIA
         )
     }
 
