@@ -17,6 +17,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -24,6 +25,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import org.koin.androidx.compose.koinViewModel
 import org.mozilla.social.common.Resource
+import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.core.designsystem.theme.MoSoSpacing
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.navigation.navigationModule
@@ -46,9 +48,9 @@ fun AccountSettingsScreen(viewModel: AccountSettingsViewModel = koinViewModel())
                 is Resource.Loading -> {}
                 is Resource.Loaded -> {
                     userHeader.data?.let { UserHeader(userHeader = it) }
-                    val domain by viewModel.domain.collectAsStateWithLifecycle(initialValue = "")
+                    val subtitle: StringFactory? by viewModel.subtitle.collectAsStateWithLifecycle(initialValue = null)
 
-                    ManageAccount(domain = domain, onClick = viewModel::onManageAccountClicked)
+                    ManageAccount(subtitle = subtitle, onClick = viewModel::onManageAccountClicked)
 
                     SignoutButton(onLogoutClicked = viewModel::onLogoutClicked)
                 }
@@ -87,10 +89,10 @@ private fun Avatar(avatarUrl: String) {
 }
 
 @Composable
-fun ManageAccount(domain: String, onClick: () -> Unit) {
+private fun ManageAccount(subtitle: StringFactory?, onClick: () -> Unit) {
     SettingsSection(
         title = stringResource(id = R.string.manage_account),
-        subtitle = stringResource(id = R.string.manage_your_account, domain),
+        subtitle = subtitle?.build(LocalContext.current),
         onClick = onClick,
     )
 }

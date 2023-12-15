@@ -2,8 +2,13 @@ package org.mozilla.social.feature.settings.account
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import org.mozilla.social.common.loadResource
+import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.core.analytics.Analytics
 import org.mozilla.social.core.analytics.AnalyticsIdentifiers
 import org.mozilla.social.core.model.Account
@@ -12,6 +17,7 @@ import org.mozilla.social.core.repository.mastodon.AccountRepository
 import org.mozilla.social.core.usecase.mastodon.account.GetDomain
 import org.mozilla.social.core.usecase.mastodon.account.GetLoggedInUserAccountId
 import org.mozilla.social.core.usecase.mastodon.auth.Logout
+import org.mozilla.social.feature.settings.R
 import org.mozilla.social.feature.settings.SettingsInteractions
 
 class AccountSettingsViewModel(
@@ -24,13 +30,16 @@ class AccountSettingsViewModel(
 ) : ViewModel(), SettingsInteractions {
 
     private val userAccountId: String = getLoggedInUserAccountId()
+    private val domain = getDomain().stateIn(viewModelScope, SharingStarted.Eagerly, null)
+    val subtitle: StateFlow<StringFactory?> = domain.map { domain ->
+        domain?.let { StringFactory.resource(R.string.manage_your_account, it) }
+    }.stateIn(viewModelScope, SharingStarted.Eagerly, null)
 
     val userHeader =
         loadResource {
             accountRepository.getAccount(userAccountId).toUserHeader()
         }
 
-    val domain = getDomain()
 
     fun onLogoutClicked() {
         logoutClickedAnalytics()
@@ -47,12 +56,7 @@ class AccountSettingsViewModel(
     }
 
     fun onManageAccountClicked() {
-        logoutClickedAnalytics()
-        viewModelScope.launch {
-            getDomain().collect {
-                openLink("$it/settings/profile")
-            }
-        }
+        domain.value?.let { openLink("$it/settings/profile") }
     }
 
 
