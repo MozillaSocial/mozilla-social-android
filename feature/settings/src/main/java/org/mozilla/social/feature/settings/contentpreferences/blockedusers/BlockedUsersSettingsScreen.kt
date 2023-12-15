@@ -51,10 +51,12 @@ sealed class BlockedButtonState(
     override val confirmationText: StringFactory? = null,
     override val theme: MoSoButtonTheme,
 ) : ToggleableButtonState {
-    class Blocked(override val confirmationText: StringFactory?) : BlockedButtonState(
+    data object Blocked : BlockedButtonState(
         text = R.string.unblock,
         theme = MoSoButtonSecondaryDefaults,
-    )
+    ) {
+        override val confirmationText: StringFactory? = null
+    }
 
     data class Unblocked(override val confirmationText: StringFactory?) : BlockedButtonState(
         text = R.string.block,

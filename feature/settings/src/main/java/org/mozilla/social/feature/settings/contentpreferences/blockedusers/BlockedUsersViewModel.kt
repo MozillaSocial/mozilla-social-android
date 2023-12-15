@@ -58,11 +58,7 @@ class BlockedUsersViewModel(
 
 fun BlockedUser.toToggleableState() =
     ToggleableAccountListItemState(
-        buttonState = if (isBlocked) BlockedButtonState.Blocked(
-            confirmationText = StringFactory.resource(
-                R.string.are_you_sure_you_want_to_unblock, account.acct
-            )
-        ) else BlockedButtonState.Unblocked(
+        buttonState = if (isBlocked) BlockedButtonState.Blocked else BlockedButtonState.Unblocked(
             confirmationText = StringFactory.resource(
                 R.string.are_you_sure_you_want_to_block, account.acct
             )

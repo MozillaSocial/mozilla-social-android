@@ -58,11 +58,7 @@ class MutedUsersSettingsViewModel(
 
 fun MutedUser.toToggleableState() =
     ToggleableAccountListItemState(
-        buttonState = if (isMuted) MutedButtonState.Muted(
-            confirmationText = StringFactory.resource(
-                R.string.are_you_sure_you_want_to_unmute, account.acct
-            )
-        ) else MutedButtonState.Unmuted(
+        buttonState = if (isMuted) MutedButtonState.Muted else MutedButtonState.Unmuted(
             confirmationText = StringFactory.resource(
                 R.string.are_you_sure_you_want_to_mute, account.acct
             )
