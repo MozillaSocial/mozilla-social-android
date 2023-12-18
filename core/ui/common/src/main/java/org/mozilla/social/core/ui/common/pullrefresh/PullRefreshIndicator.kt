@@ -67,8 +67,6 @@ import kotlin.math.pow
 /**
  * The default indicator for Compose pull-to-refresh, based on Android's SwipeRefreshLayout.
  *
- * @sample androidx.compose.material.samples.PullRefreshSample
- *
  * @param refreshing A boolean representing whether a refresh is occurring.
  * @param state The [PullRefreshState] which controls where and how the indicator will be drawn.
  * @param modifier Modifiers for the indicator.
@@ -76,8 +74,6 @@ import kotlin.math.pow
  * @param contentColor The color of the indicator's arc and arrow.
  * @param scale A boolean controlling whether the indicator's size scales with pull progress or not.
  */
-// TODO@(b/244423199): Consider whether the state parameter should be replaced with lambdas to
-//  enable people to use this indicator with custom pull-to-refresh components.
 @Composable
 fun PullRefreshIndicator(
     refreshing: Boolean,

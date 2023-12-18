@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
@@ -33,17 +32,17 @@ import org.mozilla.social.core.ui.common.button.MoSoButton
 import org.mozilla.social.core.ui.common.button.MoSoButtonSecondary
 import org.mozilla.social.core.ui.common.button.MoSoButtonTheme
 import org.mozilla.social.core.ui.common.error.GenericError
+import org.mozilla.social.core.ui.common.pullrefresh.PullRefreshLazyColumn
 import org.mozilla.social.core.ui.common.text.SmallTextLabel
 
 @Composable
-fun <B: ToggleableButtonState, A: ToggleableAccountListItemState<B>> ToggleableAccountList(
+fun <B : ToggleableButtonState, A : ToggleableAccountListItemState<B>> ToggleableAccountList(
     pagingData: Flow<PagingData<A>>,
-    onButtonClicked: (accountId: String, buttonState: B) -> Unit
+    onButtonClicked: (accountId: String, buttonState: B) -> Unit,
 ) {
-    val lazyPagingItems: LazyPagingItems<A> =
-        pagingData.collectAsLazyPagingItems()
+    val lazyPagingItems: LazyPagingItems<A> = pagingData.collectAsLazyPagingItems()
 
-    LazyColumn {
+    PullRefreshLazyColumn(lazyPagingItems = lazyPagingItems) {
         when (lazyPagingItems.loadState.refresh) {
             is LoadState.Error -> {}
             else ->
@@ -88,7 +87,7 @@ fun <B: ToggleableButtonState, A: ToggleableAccountListItemState<B>> ToggleableA
 }
 
 @Composable
-private fun <B: ToggleableButtonState> UserRow(
+private fun <B : ToggleableButtonState> UserRow(
     account: AccountQuickViewUiState,
     buttonState: B,
     onButtonClicked: (accountId: String, buttonState: B) -> Unit
@@ -164,7 +163,7 @@ private fun ConfirmationDialog(
     )
 }
 
-data class ToggleableAccountListItemState<T: ToggleableButtonState>(
+data class ToggleableAccountListItemState<T : ToggleableButtonState>(
     val buttonState: T,
     val account: AccountQuickViewUiState
 )
