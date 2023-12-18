@@ -3,8 +3,10 @@ package org.mozilla.social.core.ui.common.pullrefresh
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
@@ -77,19 +79,20 @@ fun <A : Any> PullRefreshLazyColumn(
 
                 is LoadState.NotLoading -> {
                     item {
-                        Text(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .wrapContentWidth(Alignment.CenterHorizontally)
-                                .padding(16.dp),
-                            text = stringResource(
-                                id = if (lazyPagingItems.itemSnapshotList.isEmpty()) {
+                        if (lazyPagingItems.itemSnapshotList.isEmpty()) { // Show empty state
+                            Text(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .wrapContentWidth(Alignment.CenterHorizontally)
+                                    .padding(16.dp),
+                                text = stringResource(
+                                    id =
                                     R.string.theres_nothing_here
-                                } else {
-                                    R.string.end_of_the_list
-                                }
-                            ),
-                        )
+                                ),
+                            )
+                        } else { // It's the end of the list so add some space
+                            Spacer(modifier = Modifier.height(50.dp))
+                        }
                     }
                 }
             }

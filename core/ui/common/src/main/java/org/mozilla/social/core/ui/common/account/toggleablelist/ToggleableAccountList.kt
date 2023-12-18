@@ -26,6 +26,7 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import kotlinx.coroutines.flow.Flow
 import org.mozilla.social.common.utils.StringFactory
+import org.mozilla.social.core.designsystem.theme.MoSoSpacing
 import org.mozilla.social.core.ui.common.account.quickview.AccountQuickView
 import org.mozilla.social.core.ui.common.account.quickview.AccountQuickViewUiState
 import org.mozilla.social.core.ui.common.button.MoSoButton
@@ -114,7 +115,7 @@ private fun <B : ToggleableButtonState> UserRow(
         val context = LocalContext.current
         AccountQuickView(
             uiState = account,
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().padding(vertical = MoSoSpacing.md),
             buttonSlot = {
                 MoSoButton(
                     onClick = {

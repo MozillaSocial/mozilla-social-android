@@ -2,5 +2,4 @@
 <resources>
     <string name="followers">Followers</string>
     <string name="following">Following</string>
-    <string name="end_of_the_list">End of the list</string>
 </resources>
