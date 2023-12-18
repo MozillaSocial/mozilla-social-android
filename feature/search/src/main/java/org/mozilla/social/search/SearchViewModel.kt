@@ -28,7 +28,7 @@ class SearchViewModel(
             try {
                 searchRepository.search(
                     query = uiState.value.query,
-                    type = SearchType.Accounts,
+                    type = SearchType.Hashtags,
                 )
             } catch (e: Exception) {
                 Timber.e(e)
