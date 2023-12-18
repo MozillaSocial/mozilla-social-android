@@ -1,17 +1,11 @@
 package org.mozilla.social.feature.followers
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
-import androidx.compose.foundation.layout.wrapContentWidth
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -19,7 +13,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -42,9 +35,7 @@ import org.mozilla.social.core.ui.common.MoSoTab
 import org.mozilla.social.core.ui.common.MoSoTabRow
 import org.mozilla.social.core.ui.common.account.quickview.AccountQuickViewUiState
 import org.mozilla.social.core.ui.common.appbar.MoSoCloseableTopAppBar
-import org.mozilla.social.core.ui.common.error.GenericError
-import org.mozilla.social.core.ui.common.pullrefresh.PullRefreshIndicator
-import org.mozilla.social.core.ui.common.pullrefresh.pullRefresh
+import org.mozilla.social.core.ui.common.pullrefresh.PullRefreshLazyColumn
 import org.mozilla.social.core.ui.common.pullrefresh.rememberPullRefreshState
 import org.mozilla.social.core.ui.common.utils.PreviewTheme
 
@@ -86,9 +77,9 @@ private fun FollowersScreen(
     MoSoSurface {
         Column(
             modifier =
-                Modifier
-                    .fillMaxSize()
-                    .systemBarsPadding(),
+            Modifier
+                .fillMaxSize()
+                .systemBarsPadding(),
         ) {
             MoSoCloseableTopAppBar(
                 title = displayName,
@@ -104,20 +95,20 @@ private fun FollowersScreen(
                 FollowType.entries.forEach { tabType ->
                     MoSoTab(
                         modifier =
-                            Modifier
-                                .height(40.dp),
+                        Modifier
+                            .height(40.dp),
                         selected = selectedTab == tabType,
                         onClick = { selectedTab = tabType },
                         content = {
                             Text(
                                 text =
-                                    when (tabType) {
-                                        FollowType.FOLLOWERS ->
-                                            stringResource(id = R.string.followers)
+                                when (tabType) {
+                                    FollowType.FOLLOWERS ->
+                                        stringResource(id = R.string.followers)
 
-                                        FollowType.FOLLOWING ->
-                                            stringResource(id = R.string.following)
-                                    },
+                                    FollowType.FOLLOWING ->
+                                        stringResource(id = R.string.following)
+                                },
                                 style = MoSoTheme.typography.labelMedium,
                             )
                         },
@@ -127,10 +118,10 @@ private fun FollowersScreen(
 
             FollowersList(
                 list =
-                    when (selectedTab) {
-                        FollowType.FOLLOWERS -> followers
-                        FollowType.FOLLOWING -> following
-                    },
+                when (selectedTab) {
+                    FollowType.FOLLOWERS -> followers
+                    FollowType.FOLLOWING -> following
+                },
                 followersInteractions = followersInteractions,
             )
         }
@@ -150,94 +141,38 @@ private fun FollowersList(
             onRefresh = { lazyPagingItems.refresh() },
         )
 
-    Box(
-        modifier =
-            Modifier
-                .pullRefresh(pullRefreshState)
-                .fillMaxSize(),
+    PullRefreshLazyColumn(
+        lazyPagingItems,
+        pullRefreshState = pullRefreshState,
+        modifier = Modifier.fillMaxSize(),
     ) {
-        LazyColumn(
-            modifier = Modifier.fillMaxSize(),
-        ) {
-            when (lazyPagingItems.loadState.refresh) {
-                is LoadState.Error -> {} // handle the error outside the lazy column
-                else ->
-                    items(
-                        count = lazyPagingItems.itemCount,
-                        key = lazyPagingItems.itemKey { it.accountQuickViewUiState.accountId },
-                    ) { index ->
-                        lazyPagingItems[index]?.let { uiState ->
-                            AccountFollower(
-                                uiState = uiState,
-                                onButtonClicked = {
-                                    followersInteractions.onFollowClicked(
-                                        uiState.accountQuickViewUiState.accountId,
-                                        isFollowing = uiState.isFollowing,
+        when (lazyPagingItems.loadState.refresh) {
+            is LoadState.Error -> {} // handle the error outside the lazy column
+            else ->
+                items(
+                    count = lazyPagingItems.itemCount,
+                    key = lazyPagingItems.itemKey { it.accountQuickViewUiState.accountId },
+                ) { index ->
+                    lazyPagingItems[index]?.let { uiState ->
+                        AccountFollower(
+                            uiState = uiState,
+                            onButtonClicked = {
+                                followersInteractions.onFollowClicked(
+                                    uiState.accountQuickViewUiState.accountId,
+                                    isFollowing = uiState.isFollowing,
+                                )
+                            },
+                            modifier = Modifier
+                                .padding(MoSoSpacing.md)
+                                .clickable { followersInteractions
+                                    .onAccountClicked(
+                                        accountId = uiState.accountQuickViewUiState.accountId
                                     )
                                 },
-                                modifier = Modifier
-                                    .padding(MoSoSpacing.md)
-                                    .clickable { followersInteractions
-                                        .onAccountClicked(
-                                            accountId = uiState.accountQuickViewUiState.accountId
-                                        )
-                                    },
-                            )
-                        }
-                    }
-            }
-
-            when (lazyPagingItems.loadState.append) {
-                is LoadState.Loading -> {
-                    item {
-                        CircularProgressIndicator(
-                            modifier =
-                                Modifier
-                                    .fillMaxWidth()
-                                    .wrapContentWidth(Alignment.CenterHorizontally)
-                                    .padding(16.dp),
                         )
                     }
                 }
-
-                is LoadState.Error -> {
-                    item {
-                        GenericError(
-                            onRetryClicked = { lazyPagingItems.retry() },
-                        )
-                    }
-                }
-
-                is LoadState.NotLoading -> {
-                    item {
-                        Text(
-                            modifier =
-                                Modifier
-                                    .fillMaxWidth()
-                                    .wrapContentWidth(Alignment.CenterHorizontally)
-                                    .padding(16.dp),
-                            text = stringResource(id = R.string.end_of_the_list),
-                        )
-                    }
-                }
-            }
         }
-
-        if (lazyPagingItems.loadState.refresh is LoadState.Error) {
-            GenericError(
-                modifier =
-                    Modifier
-                        .fillMaxSize()
-                        .background(MoSoTheme.colors.layer1),
-                onRetryClicked = { lazyPagingItems.refresh() },
-            )
-        }
-
-        PullRefreshIndicator(
-            modifier = Modifier.align(Alignment.TopCenter),
-            refreshing = lazyPagingItems.loadState.refresh == LoadState.Loading,
-            state = pullRefreshState,
-        )
     }
 }
 
@@ -251,22 +186,22 @@ private fun FollowersScreenPreview() {
             displayName = "Person",
             startingTab = FollowType.FOLLOWERS,
             followers =
-                flowOf(
-                    PagingData.from(
-                        listOf(
-                            AccountFollowerUiState(
-                                accountQuickViewUiState = AccountQuickViewUiState(
-                                    accountId = "",
-                                    displayName = "Person",
-                                    webFinger = "person",
-                                    avatarUrl = "",
-                                ),
-                                isFollowing = false,
-                                bioHtml = ""
-                            )
-                        ),
+            flowOf(
+                PagingData.from(
+                    listOf(
+                        AccountFollowerUiState(
+                            accountQuickViewUiState = AccountQuickViewUiState(
+                                accountId = "",
+                                displayName = "Person",
+                                webFinger = "person",
+                                avatarUrl = "",
+                            ),
+                            isFollowing = false,
+                            bioHtml = ""
+                        )
                     ),
                 ),
+            ),
             following = flowOf(),
             followersInteractions = object : FollowersInteractions {},
         )
