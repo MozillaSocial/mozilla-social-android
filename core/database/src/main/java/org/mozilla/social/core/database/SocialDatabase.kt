@@ -23,6 +23,7 @@ import org.mozilla.social.core.database.dao.FederatedTimelineStatusDao
 import org.mozilla.social.core.database.dao.FollowersDao
 import org.mozilla.social.core.database.dao.FollowingsDao
 import org.mozilla.social.core.database.dao.HashTagTimelineStatusDao
+import org.mozilla.social.core.database.dao.HashTagsDao
 import org.mozilla.social.core.database.dao.HomeTimelineStatusDao
 import org.mozilla.social.core.database.dao.LocalTimelineStatusDao
 import org.mozilla.social.core.database.dao.MutesDao
@@ -30,6 +31,7 @@ import org.mozilla.social.core.database.dao.PollsDao
 import org.mozilla.social.core.database.dao.RelationshipsDao
 import org.mozilla.social.core.database.dao.StatusDao
 import org.mozilla.social.core.database.model.entities.DatabaseAccount
+import org.mozilla.social.core.database.model.entities.DatabaseHashTagEntity
 import org.mozilla.social.core.database.model.entities.DatabasePoll
 import org.mozilla.social.core.database.model.entities.DatabaseRelationship
 import org.mozilla.social.core.database.model.entities.DatabaseStatus
@@ -61,8 +63,9 @@ import org.mozilla.social.core.database.model.entities.accountCollections.Databa
         Follower::class,
         Followee::class,
         FavoritesTimelineStatus::class,
+        DatabaseHashTagEntity::class,
     ],
-    version = 16,
+    version = 17,
     autoMigrations = [
         AutoMigration(1, 2, DatabaseMigrations.Schema1to2::class),
         AutoMigration(2, 3),
@@ -79,6 +82,7 @@ import org.mozilla.social.core.database.model.entities.accountCollections.Databa
         AutoMigration(13, 14),
         AutoMigration(14, 15, DatabaseMigrations.Schema14to15::class),
         AutoMigration(15, 16),
+        AutoMigration(16, 17),
     ],
     exportSchema = true,
 )
@@ -123,4 +127,6 @@ abstract class SocialDatabase : RoomDatabase() {
     abstract fun followingsDao(): FollowingsDao
 
     abstract fun favoritesDao(): FavoritesTimelineStatusDao
+
+    abstract fun hashTagsDao(): HashTagsDao
 }
