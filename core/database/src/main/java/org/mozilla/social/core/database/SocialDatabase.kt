@@ -29,6 +29,7 @@ import org.mozilla.social.core.database.dao.LocalTimelineStatusDao
 import org.mozilla.social.core.database.dao.MutesDao
 import org.mozilla.social.core.database.dao.PollsDao
 import org.mozilla.social.core.database.dao.RelationshipsDao
+import org.mozilla.social.core.database.dao.SearchDao
 import org.mozilla.social.core.database.dao.StatusDao
 import org.mozilla.social.core.database.model.entities.DatabaseAccount
 import org.mozilla.social.core.database.model.entities.DatabaseHashTagEntity
@@ -45,6 +46,9 @@ import org.mozilla.social.core.database.model.entities.statusCollections.HomeTim
 import org.mozilla.social.core.database.model.entities.statusCollections.LocalTimelineStatus
 import org.mozilla.social.core.database.model.entities.accountCollections.DatabaseBlock
 import org.mozilla.social.core.database.model.entities.accountCollections.DatabaseMute
+import org.mozilla.social.core.database.model.entities.accountCollections.SearchedAccount
+import org.mozilla.social.core.database.model.entities.hashtagCollections.SearchedHashTag
+import org.mozilla.social.core.database.model.entities.statusCollections.SearchedStatus
 
 @Suppress("MagicNumber")
 @Database(
@@ -64,6 +68,9 @@ import org.mozilla.social.core.database.model.entities.accountCollections.Databa
         Followee::class,
         FavoritesTimelineStatus::class,
         DatabaseHashTagEntity::class,
+        SearchedAccount::class,
+        SearchedStatus::class,
+        SearchedHashTag::class,
     ],
     version = 17,
     autoMigrations = [
@@ -129,4 +136,6 @@ abstract class SocialDatabase : RoomDatabase() {
     abstract fun favoritesDao(): FavoritesTimelineStatusDao
 
     abstract fun hashTagsDao(): HashTagsDao
+
+    abstract fun searchDao(): SearchDao
 }
