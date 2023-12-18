@@ -4,5 +4,4 @@ import androidx.room.Dao
 import org.mozilla.social.core.database.model.entities.DatabaseHashTagEntity
 
 @Dao
-interface HashTagsDao : BaseDao<DatabaseHashTagEntity> {
-}
+interface HashTagsDao : BaseDao<DatabaseHashTagEntity>
