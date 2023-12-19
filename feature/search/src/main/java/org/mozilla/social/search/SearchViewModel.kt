@@ -12,7 +12,6 @@ import org.mozilla.social.core.usecase.mastodon.search.SearchAll
 import timber.log.Timber
 
 class SearchViewModel(
-    private val searchRepository: SearchRepository,
     private val searchAll: SearchAll,
 ) : ViewModel(), SearchInteractions {
 
@@ -31,16 +30,8 @@ class SearchViewModel(
                 uiState.value.query,
                 viewModelScope,
             ).collect {
-                println("johnny status count ${it.data?.statuses?.count()}")
+                println("status count test ${it.data?.statuses?.count()}")
             }
-//            try {
-//                searchRepository.search(
-//                    query = uiState.value.query,
-//                    type = SearchType.Hashtags,
-//                )
-//            } catch (e: Exception) {
-//                Timber.e(e)
-//            }
         }
     }
 
