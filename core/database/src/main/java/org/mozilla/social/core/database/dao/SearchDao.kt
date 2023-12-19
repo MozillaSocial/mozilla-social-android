@@ -5,12 +5,14 @@ import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Upsert
+import kotlinx.coroutines.flow.Flow
 import org.mozilla.social.core.database.model.entities.accountCollections.SearchedAccount
 import org.mozilla.social.core.database.model.entities.accountCollections.SearchedAccountWrapper
 import org.mozilla.social.core.database.model.entities.hashtagCollections.SearchedHashTag
 import org.mozilla.social.core.database.model.entities.hashtagCollections.SearchedHashTagWrapper
 import org.mozilla.social.core.database.model.entities.statusCollections.SearchedStatus
 import org.mozilla.social.core.database.model.entities.statusCollections.SearchedStatusWrapper
+import org.mozilla.social.core.database.model.wrappers.SearchResultWrapper
 
 @Dao
 interface SearchDao {
@@ -48,4 +50,14 @@ interface SearchDao {
 
     @Upsert
     fun upsertHashTags(hashTags: List<SearchedHashTag>)
+
+    @Query(
+        "SELECT * FROM searchedAccounts " +
+        "UNION " +
+        "SELECT * FROM searchedStatuses " +
+        "UNION " +
+        "SELECT * FROM searchedHashTags " +
+        "LIMIT :count"
+    )
+    fun getTopResultsFlow(count: Int): Flow<SearchResultWrapper>
 }

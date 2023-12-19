@@ -5,6 +5,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import org.mozilla.social.common.Resource
 import org.mozilla.social.core.model.SearchResult
@@ -59,11 +60,20 @@ class SearchAll(
             }
         }
 
-        val deferredResult = deferred.await()
-
-        when (deferredResult) {
+        when (val deferredResult = deferred.await()) {
             is Resource.Error -> emit(deferredResult)
-            else -> //TODO emit flow of top 5 of each
+            else -> {
+                try {
+                    emitAll(
+                        searchRepository.getTopSearchResultsFlow(5).map {
+                            Resource.Loaded(it)
+                        }
+                    )
+                } catch (e: Exception) {
+                    Timber.e(e)
+                    emit(Resource.Error(e))
+                }
+            }
         }
     }
 }

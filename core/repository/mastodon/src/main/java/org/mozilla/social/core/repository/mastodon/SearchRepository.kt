@@ -1,9 +1,12 @@
 package org.mozilla.social.core.repository.mastodon
 
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import org.mozilla.social.core.database.dao.SearchDao
 import org.mozilla.social.core.database.model.entities.accountCollections.SearchedAccount
 import org.mozilla.social.core.database.model.entities.hashtagCollections.SearchedHashTag
 import org.mozilla.social.core.database.model.entities.statusCollections.SearchedStatus
+import org.mozilla.social.core.database.model.entities.statusCollections.toStatusWrapper
 import org.mozilla.social.core.model.Account
 import org.mozilla.social.core.model.HashTag
 import org.mozilla.social.core.model.SearchResult
@@ -60,4 +63,18 @@ class SearchRepository internal constructor(
     fun insertAllHashTags(
         searchedHashTags: List<SearchedHashTag>
     ) = searchDao.upsertHashTags(searchedHashTags)
+
+    fun getTopSearchResultsFlow(
+        count: Int,
+    ): Flow<SearchResult> = searchDao.getTopResultsFlow(count).map {resultWrapper ->
+        SearchResult(
+            accounts = resultWrapper.searchedAccount.map { it.account.toExternalModel() },
+            statuses = resultWrapper.searchedStatus.map {
+                it.toStatusWrapper().toExternalModel()
+            },
+            hashtags = resultWrapper.searchedHashTag.map {
+                it.hashTag.toExternalModel()
+            },
+        )
+    }
 }
