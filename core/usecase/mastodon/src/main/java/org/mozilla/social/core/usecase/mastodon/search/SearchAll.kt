@@ -12,6 +12,7 @@ import org.mozilla.social.core.model.SearchResult
 import org.mozilla.social.core.repository.mastodon.AccountRepository
 import org.mozilla.social.core.repository.mastodon.DatabaseDelegate
 import org.mozilla.social.core.repository.mastodon.HashtagRepository
+import org.mozilla.social.core.repository.mastodon.RelationshipRepository
 import org.mozilla.social.core.repository.mastodon.SearchRepository
 import org.mozilla.social.core.repository.mastodon.model.search.toSearchedAccount
 import org.mozilla.social.core.repository.mastodon.model.search.toSearchedHashTags
@@ -25,6 +26,7 @@ class SearchAll(
     private val saveStatusToDatabase: SaveStatusToDatabase,
     private val hashtagRepository: HashtagRepository,
     private val databaseDelegate: DatabaseDelegate,
+    private val relationshipRepository: RelationshipRepository,
 ) {
 
     operator fun invoke(
@@ -39,8 +41,13 @@ class SearchAll(
                     query = query,
                 )
 
+                val relationships = accountRepository.getAccountRelationships(
+                    searchResult.accounts.map { it.accountId }
+                )
+
                 databaseDelegate.withTransaction {
                     accountRepository.insertAll(searchResult.accounts)
+                    relationshipRepository.insertAll(relationships)
                     saveStatusToDatabase.invoke(searchResult.statuses)
                     hashtagRepository.insertAll(searchResult.hashtags)
 
