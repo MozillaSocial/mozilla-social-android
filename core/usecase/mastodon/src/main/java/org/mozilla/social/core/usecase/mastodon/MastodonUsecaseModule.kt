@@ -20,6 +20,7 @@ import org.mozilla.social.core.usecase.mastodon.auth.IsSignedInFlow
 import org.mozilla.social.core.usecase.mastodon.auth.Login
 import org.mozilla.social.core.usecase.mastodon.auth.Logout
 import org.mozilla.social.core.usecase.mastodon.report.Report
+import org.mozilla.social.core.usecase.mastodon.search.SearchAll
 import org.mozilla.social.core.usecase.mastodon.status.BoostStatus
 import org.mozilla.social.core.usecase.mastodon.status.DeleteStatus
 import org.mozilla.social.core.usecase.mastodon.status.FavoriteStatus
@@ -187,5 +188,5 @@ val mastodonUsecaseModule =
         singleOf(::SaveStatusToDatabase)
 
         singleOf(::GetDomain)
-
+        singleOf(::SearchAll)
     }

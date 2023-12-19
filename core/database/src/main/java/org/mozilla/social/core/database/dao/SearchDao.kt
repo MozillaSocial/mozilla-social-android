@@ -12,7 +12,6 @@ import org.mozilla.social.core.database.model.entities.hashtagCollections.Search
 import org.mozilla.social.core.database.model.entities.hashtagCollections.SearchedHashTagWrapper
 import org.mozilla.social.core.database.model.entities.statusCollections.SearchedStatus
 import org.mozilla.social.core.database.model.entities.statusCollections.SearchedStatusWrapper
-import org.mozilla.social.core.database.model.wrappers.SearchResultWrapper
 
 @Dao
 interface SearchDao {
@@ -53,11 +52,19 @@ interface SearchDao {
 
     @Query(
         "SELECT * FROM searchedAccounts " +
-        "UNION " +
+        "LIMIT :count"
+    )
+    fun getTopAccountsFlow(count: Int): Flow<List<SearchedAccountWrapper>>
+
+    @Query(
         "SELECT * FROM searchedStatuses " +
-        "UNION " +
+        "LIMIT :count"
+    )
+    fun getTopStatusesFlow(count: Int): Flow<List<SearchedStatusWrapper>>
+
+    @Query(
         "SELECT * FROM searchedHashTags " +
         "LIMIT :count"
     )
-    fun getTopResultsFlow(count: Int): Flow<SearchResultWrapper>
+    fun getTopHashTagsFlow(count: Int): Flow<List<SearchedHashTagWrapper>>
 }

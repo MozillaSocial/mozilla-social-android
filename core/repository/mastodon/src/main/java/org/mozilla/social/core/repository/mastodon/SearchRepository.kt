@@ -1,11 +1,14 @@
 package org.mozilla.social.core.repository.mastodon
 
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import org.mozilla.social.core.database.dao.SearchDao
 import org.mozilla.social.core.database.model.entities.accountCollections.SearchedAccount
+import org.mozilla.social.core.database.model.entities.accountCollections.SearchedAccountWrapper
 import org.mozilla.social.core.database.model.entities.hashtagCollections.SearchedHashTag
 import org.mozilla.social.core.database.model.entities.statusCollections.SearchedStatus
+import org.mozilla.social.core.database.model.entities.statusCollections.SearchedStatusWrapper
 import org.mozilla.social.core.database.model.entities.statusCollections.toStatusWrapper
 import org.mozilla.social.core.model.Account
 import org.mozilla.social.core.model.HashTag
@@ -66,13 +69,17 @@ class SearchRepository internal constructor(
 
     fun getTopSearchResultsFlow(
         count: Int,
-    ): Flow<SearchResult> = searchDao.getTopResultsFlow(count).map {resultWrapper ->
+    ): Flow<SearchResult> = combine(
+        searchDao.getTopAccountsFlow(count),
+        searchDao.getTopStatusesFlow(count),
+        searchDao.getTopHashTagsFlow(count),
+    ) { accounts, statuses, hashtags ->
         SearchResult(
-            accounts = resultWrapper.searchedAccount.map { it.account.toExternalModel() },
-            statuses = resultWrapper.searchedStatus.map {
+            accounts = accounts.map { it.account.toExternalModel() },
+            statuses = statuses.map {
                 it.toStatusWrapper().toExternalModel()
             },
-            hashtags = resultWrapper.searchedHashTag.map {
+            hashtags = hashtags.map {
                 it.hashTag.toExternalModel()
             },
         )

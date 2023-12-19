@@ -20,7 +20,7 @@ val mastodonRepositoryModule =
         single { TimelineRepository(get(), get(), get(), get(), get(), get()) }
         single { OauthRepository(get()) }
         single { MediaRepository(get()) }
-        single { SearchRepository(get()) }
+        singleOf(::SearchRepository)
         single { AppRepository(get()) }
         single { InstanceRepository(get()) }
         single { ReportRepository(get()) }
@@ -32,4 +32,5 @@ val mastodonRepositoryModule =
         singleOf(::MutesRepository)
         singleOf(::BlocksRepository)
         singleOf(::FavoritesRepository)
+        singleOf(::HashtagRepository)
     }
