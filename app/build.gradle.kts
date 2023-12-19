@@ -22,10 +22,15 @@ android {
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFile("proguard-rules.pro")
+            matchingFallbacks += "release"
         }
         debug {
             isDefault = true
             applicationIdSuffix = ".debug"
+        }
+        create("nightly") {
+            initWith(getByName("release"))
+            applicationIdSuffix = ".nightly"
         }
     }
 

@@ -13,4 +13,4 @@ fi
 
 encrypt "secret.properties"
 encrypt "secret-environment-variables.sh"
-encrypt "daily.jks"
+encrypt "boxwood-axon-825-ed7aa5764ee6.json"

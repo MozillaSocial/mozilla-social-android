@@ -15,13 +15,13 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 
 ## Android
 
-### android daily
+### android nightly
 
 ```sh
-[bundle exec] fastlane android daily
+[bundle exec] fastlane android nightly
 ```
 
-Submit a new daily build to internal distribution (currently App Center)
+Submit a new nightly build to Play Store.
 
 ----
 

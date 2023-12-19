@@ -13,4 +13,4 @@ fi
 
 decrypt "secret.properties"
 decrypt "secret-environment-variables.sh" && chmod +x secret-environment-variables.sh
-decrypt "daily.jks"
+decrypt "boxwood-axon-825-ed7aa5764ee6.json"
