@@ -51,6 +51,7 @@ class SearchAll(
                     saveStatusToDatabase.invoke(searchResult.statuses)
                     hashtagRepository.insertAll(searchResult.hashtags)
 
+                    searchRepository.deleteSearchResults()
                     searchRepository.insertAllAccounts(searchResult.accounts.toSearchedAccount())
                     searchRepository.insertAllStatuses(searchResult.statuses.toSearchedStatus())
                     searchRepository.insertAllHashTags(searchResult.hashtags.toSearchedHashTags())

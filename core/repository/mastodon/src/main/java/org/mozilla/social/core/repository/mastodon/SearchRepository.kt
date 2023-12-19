@@ -84,4 +84,6 @@ class SearchRepository internal constructor(
             },
         )
     }
+
+    suspend fun deleteSearchResults() = searchDao.deleteAllSearches()
 }
