@@ -1,10 +1,5 @@
 package org.mozilla.social.core.model
 
-import org.mozilla.social.core.model.paging.Pageable
-
-/**
- * Represents a hashtag used within the content of a status.
- */
 data class HashTag(
     /**
      * The value of the hashtag after the # sign.
@@ -15,10 +10,11 @@ data class HashTag(
      */
     val url: String,
     /**
+     * If the user is following the hashtag
+     */
+    val following: Boolean,
+    /**
      * Hashtag usage statistics for given days.
      */
     val history: List<History>? = null,
-) : Pageable {
-    override val id: String
-        get() = name
-}
+)

@@ -3,8 +3,11 @@ package org.mozilla.social.core.network.mastodon.model
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
+/**
+ * Represents a hashtag used within the content of a status.
+ */
 @Serializable
-data class NetworkHashTag(
+data class NetworkBasicHashTag(
     /**
      * The value of the hashtag after the # sign.
      */
@@ -15,14 +18,4 @@ data class NetworkHashTag(
      */
     @SerialName("url")
     val url: String,
-    /**
-     * If the user is following the hashtag
-     */
-    @SerialName("following")
-    val following: Boolean,
-    /**
-     * Hashtag usage statistics for given days.
-     */
-    @SerialName("history")
-    val history: List<NetworkHistory>? = null,
 )

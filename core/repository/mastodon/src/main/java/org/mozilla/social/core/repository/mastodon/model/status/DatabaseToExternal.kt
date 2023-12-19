@@ -23,7 +23,7 @@ import org.mozilla.social.core.model.Card
 import org.mozilla.social.core.model.Emoji
 import org.mozilla.social.core.model.Field
 import org.mozilla.social.core.model.FocalPoint
-import org.mozilla.social.core.model.HashTag
+import org.mozilla.social.core.model.BasicHashTag
 import org.mozilla.social.core.model.History
 import org.mozilla.social.core.model.Mention
 import org.mozilla.social.core.model.Poll
@@ -282,11 +282,10 @@ fun DatabaseMention.toExternalModel(): Mention =
         url = url,
     )
 
-fun DatabaseHashTag.toExternalModel(): HashTag =
-    HashTag(
+fun DatabaseHashTag.toExternalModel(): BasicHashTag =
+    BasicHashTag(
         name = name,
         url = url,
-        history = history?.map { it.toExternalModel() },
     )
 
 fun DatabaseHistory.toExternalModel(): History =

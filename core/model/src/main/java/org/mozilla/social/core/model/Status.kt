@@ -46,7 +46,7 @@ data class Status(
     /**
      * Hashtags used within the status content.
      */
-    val hashTags: List<HashTag>,
+    val hashTags: List<BasicHashTag>,
     /**
      * Custom emoji to be used when rendering status content.
      */

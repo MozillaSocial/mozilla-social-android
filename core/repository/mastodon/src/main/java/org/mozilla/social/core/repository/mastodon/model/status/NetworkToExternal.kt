@@ -7,7 +7,7 @@ import org.mozilla.social.core.model.Card
 import org.mozilla.social.core.model.Emoji
 import org.mozilla.social.core.model.Field
 import org.mozilla.social.core.model.FocalPoint
-import org.mozilla.social.core.model.HashTag
+import org.mozilla.social.core.model.BasicHashTag
 import org.mozilla.social.core.model.History
 import org.mozilla.social.core.model.Mention
 import org.mozilla.social.core.model.Poll
@@ -22,7 +22,7 @@ import org.mozilla.social.core.network.mastodon.model.NetworkCard
 import org.mozilla.social.core.network.mastodon.model.NetworkEmoji
 import org.mozilla.social.core.network.mastodon.model.NetworkField
 import org.mozilla.social.core.network.mastodon.model.NetworkFocalPoint
-import org.mozilla.social.core.network.mastodon.model.NetworkHashTag
+import org.mozilla.social.core.network.mastodon.model.NetworkBasicHashTag
 import org.mozilla.social.core.network.mastodon.model.NetworkHistory
 import org.mozilla.social.core.network.mastodon.model.NetworkMention
 import org.mozilla.social.core.network.mastodon.model.NetworkPoll
@@ -242,11 +242,10 @@ fun NetworkMention.toExternalModel(): Mention =
         url = url,
     )
 
-fun NetworkHashTag.toExternalModel(): HashTag =
-    HashTag(
+fun NetworkBasicHashTag.toExternalModel(): BasicHashTag =
+    BasicHashTag(
         name = name,
         url = url,
-        history = history?.map { it.toExternalModel() },
     )
 
 fun NetworkHistory.toExternalModel(): History =

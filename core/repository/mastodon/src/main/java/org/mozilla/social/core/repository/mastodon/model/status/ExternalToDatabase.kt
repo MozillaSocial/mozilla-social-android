@@ -21,7 +21,7 @@ import org.mozilla.social.core.model.Card
 import org.mozilla.social.core.model.Emoji
 import org.mozilla.social.core.model.Field
 import org.mozilla.social.core.model.FocalPoint
-import org.mozilla.social.core.model.HashTag
+import org.mozilla.social.core.model.BasicHashTag
 import org.mozilla.social.core.model.History
 import org.mozilla.social.core.model.Mention
 import org.mozilla.social.core.model.Source
@@ -217,11 +217,10 @@ fun Mention.toDatabaseModel(): DatabaseMention =
         url = url,
     )
 
-fun HashTag.toDatabaseModel(): DatabaseHashTag =
+fun BasicHashTag.toDatabaseModel(): DatabaseHashTag =
     DatabaseHashTag(
         name = name,
         url = url,
-        history = history?.map { it.toDatabaseModel() },
     )
 
 fun History.toDatabaseModel(): DatabaseHistory =

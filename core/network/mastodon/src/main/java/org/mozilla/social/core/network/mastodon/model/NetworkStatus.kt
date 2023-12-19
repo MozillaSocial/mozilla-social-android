@@ -61,7 +61,7 @@ data class NetworkStatus(
      * Hashtags used within the status content.
      */
     @SerialName("tags")
-    val hashTags: List<NetworkHashTag>,
+    val hashTags: List<NetworkBasicHashTag>,
     /**
      * Custom emoji to be used when rendering status content.
      */
