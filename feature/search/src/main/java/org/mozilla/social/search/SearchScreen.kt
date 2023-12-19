@@ -84,6 +84,7 @@ private fun SearchScreen(
                         onSearch = {
                             keyboardController?.hide()
                             focusManager.clearFocus()
+                            searchInteractions.onSearchClicked()
                         },
                         leadingIcon = {
                             Icon(

@@ -1,0 +1,39 @@
+package org.mozilla.social.core.database.dao
+
+import androidx.paging.PagingSource
+import androidx.room.Dao
+import androidx.room.Query
+import androidx.room.Transaction
+import org.mozilla.social.core.database.model.entities.accountCollections.SearchedAccount
+import org.mozilla.social.core.database.model.entities.accountCollections.SearchedAccountWrapper
+import org.mozilla.social.core.database.model.entities.hashtagCollections.SearchedHashTagWrapper
+import org.mozilla.social.core.database.model.entities.statusCollections.SearchedStatusWrapper
+
+@Dao
+interface SearchDao : BaseDao<SearchedAccount> {
+    @Transaction
+    @Query(
+        "SELECT * FROM searchedAccounts " +
+        "ORDER BY position ASC",
+    )
+    fun accountsPagingSource(): PagingSource<Int, SearchedAccountWrapper>
+
+    @Transaction
+    @Query(
+        "SELECT * FROM searchedStatuses " +
+        "ORDER BY position ASC",
+    )
+    fun statusesPagingSource(): PagingSource<Int, SearchedStatusWrapper>
+
+    @Transaction
+    @Query(
+        "SELECT * FROM searchedHashTags " +
+        "ORDER BY position ASC",
+    )
+    fun hashTagsPagingSource(): PagingSource<Int, SearchedHashTagWrapper>
+
+    @Query(
+        "DELETE FROM searchedAccounts ",
+    )
+    suspend fun deleteAllSearches()
+}
