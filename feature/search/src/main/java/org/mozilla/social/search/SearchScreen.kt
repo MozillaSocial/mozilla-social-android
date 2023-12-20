@@ -1,8 +1,11 @@
 package org.mozilla.social.search
 
-import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -42,6 +45,7 @@ import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.designsystem.theme.MoSoRadius
 import org.mozilla.social.core.designsystem.theme.MoSoSpacing
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
+import org.mozilla.social.core.designsystem.utils.NoRipple
 import org.mozilla.social.core.ui.accountfollower.AccountFollowingButton
 import org.mozilla.social.core.ui.common.MoSoSearchBar
 import org.mozilla.social.core.ui.common.MoSoSurface
@@ -54,7 +58,6 @@ import org.mozilla.social.core.ui.common.error.GenericError
 import org.mozilla.social.core.ui.common.loading.MaxSizeLoading
 import org.mozilla.social.core.ui.postcard.PostCard
 import org.mozilla.social.core.ui.postcard.PostCardInteractions
-import org.mozilla.social.core.ui.postcard.PostCardList
 import org.mozilla.social.feature.search.R
 
 @Composable
@@ -82,7 +85,13 @@ private fun SearchScreen(
             val keyboardController = LocalSoftwareKeyboardController.current
             val focusManager = LocalFocusManager.current
             var searchHasFocus by remember {
-                mutableStateOf(true)
+                mutableStateOf(uiState.query.isBlank())
+            }
+
+            LaunchedEffect(Unit) {
+                if (uiState.query.isBlank()) {
+                    searchFocusRequester.requestFocus()
+                }
             }
 
             MoSoCloseableTopAppBar(
@@ -117,19 +126,9 @@ private fun SearchScreen(
                 }
             )
 
-            LaunchedEffect(Unit) {
-                searchFocusRequester.requestFocus()
-            }
-
             Spacer(modifier = Modifier.height(8.dp))
 
-            AnimatedVisibility(visible = searchHasFocus) {
-                Suggestions(
-                    uiState = uiState,
-                    searchInteractions = searchInteractions,
-                )
-            }
-            AnimatedVisibility(visible = !searchHasFocus) {
+            Box {
                 Column {
                     Tabs(
                         uiState = uiState,
@@ -139,6 +138,17 @@ private fun SearchScreen(
                         uiState = uiState,
                         searchInteractions = searchInteractions,
                         postCardInteractions = postCardInteractions,
+                    )
+                }
+                androidx.compose.animation.AnimatedVisibility(
+                    modifier = Modifier.background(MoSoTheme.colors.layer1),
+                    visible = searchHasFocus,
+                    enter = fadeIn(),
+                    exit = fadeOut()
+                ) {
+                    Suggestions(
+                        uiState = uiState,
+                        searchInteractions = searchInteractions,
                     )
                 }
             }
@@ -236,29 +246,34 @@ private fun TopList(
                         key = { searchResultUiState.accountUiStates[it].quickViewUiState.accountId },
                     ) { index ->
                         val item = searchResultUiState.accountUiStates[index]
-                        AccountQuickViewBox(
-                            modifier = Modifier
-                                .padding(MoSoSpacing.md)
-                                .border(
-                                    width = 1.dp,
-                                    color = MoSoTheme.colors.borderPrimary,
-                                    shape = RoundedCornerShape(MoSoRadius.lg_16_dp)
-                                )
-                                .width(256.dp)
-                                .padding(MoSoSpacing.md),
-                            uiState = item.quickViewUiState,
-                            buttonSlot = {
-                                AccountFollowingButton(
-                                    onButtonClicked = {
-                                        searchInteractions.onFollowClicked(
-                                            item.quickViewUiState.accountId,
-                                            item.isFollowing
-                                        )
-                                    },
-                                    isFollowing = item.isFollowing
-                                )
-                            },
-                        )
+                        NoRipple {
+                            AccountQuickViewBox(
+                                modifier = Modifier
+                                    .padding(MoSoSpacing.md)
+                                    .border(
+                                        width = 1.dp,
+                                        color = MoSoTheme.colors.borderPrimary,
+                                        shape = RoundedCornerShape(MoSoRadius.lg_16_dp)
+                                    )
+                                    .clickable {
+                                        searchInteractions.onAccountClicked(item.quickViewUiState.accountId)
+                                    }
+                                    .width(256.dp)
+                                    .padding(MoSoSpacing.md),
+                                uiState = item.quickViewUiState,
+                                buttonSlot = {
+                                    AccountFollowingButton(
+                                        onButtonClicked = {
+                                            searchInteractions.onFollowClicked(
+                                                item.quickViewUiState.accountId,
+                                                item.isFollowing
+                                            )
+                                        },
+                                        isFollowing = item.isFollowing
+                                    )
+                                },
+                            )
+                        }
                     }
                 }
 

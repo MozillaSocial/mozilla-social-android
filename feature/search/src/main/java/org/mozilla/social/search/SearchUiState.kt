@@ -9,7 +9,7 @@ import org.mozilla.social.core.ui.postcard.PostCardUiState
 data class SearchUiState(
     val query: String = "",
     val selectedTab: SearchTab = SearchTab.TOP,
-    val topResource: Resource<SearchResultUiState> = Resource.Loading()
+    val topResource: Resource<SearchResultUiState> = Resource.Loading(),
 )
 
 data class SearchResultUiState(

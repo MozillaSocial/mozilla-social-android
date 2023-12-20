@@ -12,18 +12,26 @@ import org.koin.core.parameter.parametersOf
 import org.koin.java.KoinJavaComponent
 import org.mozilla.social.common.utils.edit
 import org.mozilla.social.core.analytics.AnalyticsIdentifiers
+import org.mozilla.social.core.analytics.EngagementType
 import org.mozilla.social.core.model.SearchType
+import org.mozilla.social.core.navigation.NavigationDestination
+import org.mozilla.social.core.navigation.usecases.NavigateTo
 import org.mozilla.social.core.repository.mastodon.SearchRepository
 import org.mozilla.social.core.ui.common.account.quickview.toQuickViewUiState
 import org.mozilla.social.core.ui.postcard.PostCardDelegate
 import org.mozilla.social.core.ui.postcard.toPostCardUiState
+import org.mozilla.social.core.usecase.mastodon.account.FollowAccount
 import org.mozilla.social.core.usecase.mastodon.account.GetLoggedInUserAccountId
+import org.mozilla.social.core.usecase.mastodon.account.UnfollowAccount
 import org.mozilla.social.core.usecase.mastodon.search.SearchAll
 import timber.log.Timber
 
 class SearchViewModel(
     private val searchAll: SearchAll,
     getLoggedInUserAccountId: GetLoggedInUserAccountId,
+    private val followAccount: FollowAccount,
+    private val unfollowAccount: UnfollowAccount,
+    private val navigateTo: NavigateTo,
 ) : ViewModel(), SearchInteractions, KoinComponent {
 
     private val usersAccountId: String = getLoggedInUserAccountId()
@@ -73,5 +81,27 @@ class SearchViewModel(
         _uiState.edit { copy(
             selectedTab = tab
         ) }
+    }
+
+    override fun onFollowClicked(accountId: String, isFollowing: Boolean) {
+        viewModelScope.launch {
+            if (isFollowing) {
+                try {
+                    unfollowAccount(accountId, usersAccountId)
+                } catch (e: UnfollowAccount.UnfollowFailedException) {
+                    Timber.e(e)
+                }
+            } else {
+                try {
+                    followAccount(accountId, usersAccountId)
+                } catch (e: FollowAccount.FollowFailedException) {
+                    Timber.e(e)
+                }
+            }
+        }
+    }
+
+    override fun onAccountClicked(accountId: String) {
+        navigateTo(NavigationDestination.Account(accountId = accountId))
     }
 }
