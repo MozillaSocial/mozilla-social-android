@@ -32,6 +32,7 @@ class SearchAll(
     operator fun invoke(
         query: String,
         coroutineScope: CoroutineScope,
+        limit: Int = 5,
     ): Flow<Resource<SearchResult>> = flow {
         emit(Resource.Loading())
         val deferred = CompletableDeferred<Resource<SearchResult>>()
@@ -73,7 +74,7 @@ class SearchAll(
             else -> {
                 try {
                     emitAll(
-                        searchRepository.getTopSearchResultsFlow(5).map {
+                        searchRepository.getTopSearchResultsFlow(limit).map {
                             Resource.Loaded(it)
                         }
                     )
