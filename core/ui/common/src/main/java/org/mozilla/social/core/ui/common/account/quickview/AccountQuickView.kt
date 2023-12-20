@@ -66,6 +66,45 @@ fun AccountQuickView(
     }
 }
 
+@Composable
+fun AccountQuickViewBox(
+    uiState: AccountQuickViewUiState,
+    modifier: Modifier = Modifier,
+    buttonSlot: @Composable () -> Unit = {},
+    extraInfoSlot: @Composable () -> Unit = {},
+) {
+    Column(modifier = modifier) {
+        Row {
+            CircleAvatar(
+                modifier = Modifier.align(Alignment.CenterVertically),
+                avatarUrl = uiState.avatarUrl,
+            )
+            Spacer(modifier = Modifier.weight(1f))
+            Box(
+                modifier = Modifier.align(Alignment.CenterVertically)
+            ) {
+                buttonSlot()
+            }
+        }
+
+        Spacer(modifier = Modifier.width(MoSoSpacing.sm))
+
+        Column {
+            LargeTextBody(
+                text = uiState.displayName,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
+            MediumTextBody(
+                text = "@${uiState.webFinger}",
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
+            extraInfoSlot()
+        }
+    }
+}
+
 val CIRCLE_AVATAR_SIZE = 48.dp
 
 @Composable
@@ -131,6 +170,31 @@ private fun AccountQuickViewPreview3() {
                 accountId = "",
                 displayName = "really long name really long name really long name",
                 webFinger = "webfinger",
+                avatarUrl = "url",
+            ),
+            buttonSlot = {
+                MoSoButton(onClick = { /*TODO*/ }) {
+                    Text(text = "button")
+                }
+            },
+            extraInfoSlot = {
+                Text(text = "this is more info")
+            }
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun AccountQuickViewBoxPreview() {
+    PreviewTheme {
+        AccountQuickViewBox(
+            modifier = Modifier
+                .width(240.dp),
+            uiState = AccountQuickViewUiState(
+                accountId = "",
+                displayName = "name",
+                webFinger = "webfingerThatIsReallyLong@lalalalala",
                 avatarUrl = "url",
             ),
             buttonSlot = {
