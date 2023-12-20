@@ -30,6 +30,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.koin.androidx.compose.koinViewModel
+import org.mozilla.social.common.Resource
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.designsystem.theme.MoSoSpacing
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
@@ -38,6 +39,10 @@ import org.mozilla.social.core.ui.common.MoSoSurface
 import org.mozilla.social.core.ui.common.MoSoTab
 import org.mozilla.social.core.ui.common.MoSoTabRow
 import org.mozilla.social.core.ui.common.appbar.MoSoCloseableTopAppBar
+import org.mozilla.social.core.ui.common.error.GenericError
+import org.mozilla.social.core.ui.common.loading.MaxSizeLoading
+import org.mozilla.social.core.ui.postcard.PostCardInteractions
+import org.mozilla.social.core.ui.postcard.PostCardList
 import org.mozilla.social.feature.search.R
 
 @Composable
@@ -48,6 +53,7 @@ internal fun SearchScreen(
     SearchScreen(
         uiState = uiState,
         searchInteractions = viewModel,
+        postCardInteractions = viewModel.postCardDelegate,
     )
 }
 
@@ -56,6 +62,7 @@ internal fun SearchScreen(
 private fun SearchScreen(
     uiState: SearchUiState,
     searchInteractions: SearchInteractions,
+    postCardInteractions: PostCardInteractions,
 ) {
     MoSoSurface {
         Column(Modifier.systemBarsPadding()) {
@@ -111,10 +118,17 @@ private fun SearchScreen(
                 )
             }
             AnimatedVisibility(visible = !searchHasFocus) {
-                Tabs(
-                    uiState = uiState,
-                    searchInteractions = searchInteractions,
-                )
+                Column {
+                    Tabs(
+                        uiState = uiState,
+                        searchInteractions = searchInteractions,
+                    )
+                    ListContent(
+                        uiState = uiState,
+                        searchInteractions = searchInteractions,
+                        postCardInteractions = postCardInteractions,
+                    )
+                }
             }
         }
     }
@@ -144,6 +158,48 @@ private fun Tabs(
             )
         }
     }
+}
+
+@Composable
+private fun ListContent(
+    uiState: SearchUiState,
+    searchInteractions: SearchInteractions,
+    postCardInteractions: PostCardInteractions,
+) {
+    when (uiState.topResource) {
+        is Resource.Loading -> {
+            MaxSizeLoading()
+        }
+        is Resource.Error -> {
+            GenericError(
+                onRetryClicked = { searchInteractions.onRetryClicked() }
+            )
+        }
+        is Resource.Loaded -> {
+            when (uiState.selectedTab) {
+                SearchTab.TOP -> {
+                    TopList(
+                        searchResultUiState = uiState.topResource.data,
+                        postCardInteractions = postCardInteractions,
+                    )
+                }
+                SearchTab.ACCOUNTS -> {}
+                SearchTab.HASHTAGS -> {}
+                SearchTab.POSTS -> {}
+            }
+        }
+    }
+}
+
+@Composable
+private fun TopList(
+    searchResultUiState: SearchResultUiState,
+    postCardInteractions: PostCardInteractions,
+) {
+    PostCardList(
+        items = searchResultUiState.postCardUiStates,
+        postCardInteractions = postCardInteractions,
+    )
 }
 
 @Suppress("UnusedParameter")

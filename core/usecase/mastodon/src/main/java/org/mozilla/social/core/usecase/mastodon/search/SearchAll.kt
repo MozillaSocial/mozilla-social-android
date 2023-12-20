@@ -29,13 +29,17 @@ class SearchAll(
     private val relationshipRepository: RelationshipRepository,
 ) {
 
-    operator fun invoke(
+    /**
+     * @param transform used to transform the search result into a UI state model of some kind
+     */
+    operator fun <T> invoke(
         query: String,
         coroutineScope: CoroutineScope,
         limit: Int = 5,
-    ): Flow<Resource<SearchResult>> = flow {
+        transform: (searchResult: SearchResult) -> T,
+    ): Flow<Resource<T>> = flow {
         emit(Resource.Loading())
-        val deferred = CompletableDeferred<Resource<SearchResult>>()
+        val deferred = CompletableDeferred<Resource<T>>()
         coroutineScope.launch {
             try {
                 val searchResult = searchRepository.search(
@@ -60,7 +64,7 @@ class SearchAll(
 
                 deferred.complete(
                     Resource.Loaded(
-                        searchResult
+                        transform(searchResult)
                     )
                 )
             } catch (e: Exception) {
@@ -75,7 +79,7 @@ class SearchAll(
                 try {
                     emitAll(
                         searchRepository.getTopSearchResultsFlow(limit).map {
-                            Resource.Loaded(it)
+                            Resource.Loaded(transform(it))
                         }
                     )
                 } catch (e: Exception) {
