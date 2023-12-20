@@ -17,6 +17,7 @@ dependencies {
     implementation(project(":core:common"))
     implementation(project(":core:usecase:mastodon"))
     implementation(project(":core:ui:postcard"))
+    implementation(project(":core:ui:accountfollower"))
     implementation(project(":core:analytics"))
 
     implementation(libs.androidx.navigation.compose)

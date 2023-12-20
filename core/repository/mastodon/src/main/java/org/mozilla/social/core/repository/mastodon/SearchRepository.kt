@@ -10,8 +10,10 @@ import org.mozilla.social.core.database.model.entities.statusCollections.toStatu
 import org.mozilla.social.core.model.Account
 import org.mozilla.social.core.model.HashTag
 import org.mozilla.social.core.model.SearchResult
+import org.mozilla.social.core.model.SearchResultDetailed
 import org.mozilla.social.core.model.SearchType
 import org.mozilla.social.core.network.mastodon.SearchApi
+import org.mozilla.social.core.repository.mastodon.model.account.toDetailedAccount
 import org.mozilla.social.core.repository.mastodon.model.hashtag.toExternalModel
 import org.mozilla.social.core.repository.mastodon.model.search.toExternal
 import org.mozilla.social.core.repository.mastodon.model.status.toExternalModel
@@ -67,13 +69,13 @@ class SearchRepository internal constructor(
 
     fun getTopSearchResultsFlow(
         count: Int,
-    ): Flow<SearchResult> = combine(
+    ): Flow<SearchResultDetailed> = combine(
         searchDao.getTopAccountsFlow(count),
         searchDao.getTopStatusesFlow(count),
         searchDao.getTopHashTagsFlow(count),
     ) { accounts, statuses, hashtags ->
-        SearchResult(
-            accounts = accounts.map { it.account.toExternalModel() },
+        SearchResultDetailed(
+            accounts = accounts.map { it.toDetailedAccount() },
             statuses = statuses.map {
                 it.toStatusWrapper().toExternalModel()
             },

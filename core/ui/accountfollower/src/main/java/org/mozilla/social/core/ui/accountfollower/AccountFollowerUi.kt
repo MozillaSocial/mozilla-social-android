@@ -28,23 +28,10 @@ fun AccountFollower(
             modifier = modifier,
             uiState = uiState.accountQuickViewUiState,
             buttonSlot = {
-                MoSoToggleButton(
-                    modifier = Modifier.height(32.dp),
-                    onClick = { onButtonClicked() },
-                    toggleState = if (uiState.isFollowing) {
-                        ToggleButtonState.Secondary
-                    } else {
-                        ToggleButtonState.Primary
-                    }
-                ) {
-                    SmallTextLabel(
-                        text = if (uiState.isFollowing) {
-                            stringResource(id = R.string.following_button)
-                        } else {
-                            stringResource(id = R.string.follow_button)
-                        }
-                    )
-                }
+                AccountFollowingButton(
+                    onButtonClicked = onButtonClicked,
+                    isFollowing = uiState.isFollowing
+                )
             },
             extraInfoSlot = {
                 if (uiState.bioHtml.isNotBlank()) {
@@ -60,6 +47,29 @@ fun AccountFollower(
     }
 }
 
+@Composable
+fun AccountFollowingButton(
+    onButtonClicked: () -> Unit,
+    isFollowing: Boolean,
+) {
+    MoSoToggleButton(
+        modifier = Modifier.height(32.dp),
+        onClick = { onButtonClicked() },
+        toggleState = if (isFollowing) {
+            ToggleButtonState.Secondary
+        } else {
+            ToggleButtonState.Primary
+        }
+    ) {
+        SmallTextLabel(
+            text = if (isFollowing) {
+                stringResource(id = R.string.following_button)
+            } else {
+                stringResource(id = R.string.follow_button)
+            }
+        )
+    }
+}
 
 @Preview
 @Composable

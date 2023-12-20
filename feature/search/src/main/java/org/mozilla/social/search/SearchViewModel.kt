@@ -55,7 +55,7 @@ class SearchViewModel(
             ) { searchResult ->
                 SearchResultUiState(
                     postCardUiStates = searchResult.statuses.map { it.toPostCardUiState(usersAccountId) },
-                    accountUiStates = searchResult.accounts.map { it.toQuickViewUiState() },
+                    accountUiStates = searchResult.accounts.map { it.toSearchedAccountUiState() },
                 )
             }.collect {
                 _uiState.edit { copy(

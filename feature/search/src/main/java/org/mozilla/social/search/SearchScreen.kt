@@ -40,6 +40,7 @@ import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.designsystem.theme.MoSoRadius
 import org.mozilla.social.core.designsystem.theme.MoSoSpacing
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
+import org.mozilla.social.core.ui.accountfollower.AccountFollowingButton
 import org.mozilla.social.core.ui.common.MoSoSearchBar
 import org.mozilla.social.core.ui.common.MoSoSurface
 import org.mozilla.social.core.ui.common.MoSoTab
@@ -189,6 +190,7 @@ private fun ListContent(
                 SearchTab.TOP -> {
                     TopList(
                         searchResultUiState = uiState.topResource.data,
+                        searchInteractions = searchInteractions,
                         postCardInteractions = postCardInteractions,
                     )
                 }
@@ -203,6 +205,7 @@ private fun ListContent(
 @Composable
 private fun TopList(
     searchResultUiState: SearchResultUiState,
+    searchInteractions: SearchInteractions,
     postCardInteractions: PostCardInteractions,
 ) {
     LazyColumn(
@@ -211,11 +214,11 @@ private fun TopList(
             .padding(horizontal = 4.dp),
     ) {
         item {
-            
+
             LazyRow {
                 items(
                     count = searchResultUiState.accountUiStates.count(),
-                    key = { searchResultUiState.accountUiStates[it].accountId },
+                    key = { searchResultUiState.accountUiStates[it].quickViewUiState.accountId },
                 ) { index ->
                     val item = searchResultUiState.accountUiStates[index]
                     AccountQuickViewBox(
@@ -228,7 +231,18 @@ private fun TopList(
                             )
                             .width(256.dp)
                             .padding(MoSoSpacing.md),
-                        uiState = item
+                        uiState = item.quickViewUiState,
+                        buttonSlot = {
+                            AccountFollowingButton(
+                                onButtonClicked = {
+                                    searchInteractions.onFollowClicked(
+                                        item.quickViewUiState.accountId,
+                                        item.isFollowing
+                                    )
+                                },
+                                isFollowing = item.isFollowing
+                            )
+                        },
                     )
                 }
             }

@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import org.mozilla.social.common.Resource
 import org.mozilla.social.core.model.SearchResult
+import org.mozilla.social.core.model.SearchResultDetailed
 import org.mozilla.social.core.repository.mastodon.AccountRepository
 import org.mozilla.social.core.repository.mastodon.DatabaseDelegate
 import org.mozilla.social.core.repository.mastodon.HashtagRepository
@@ -36,7 +37,7 @@ class SearchAll(
         query: String,
         coroutineScope: CoroutineScope,
         limit: Int = 5,
-        transform: (searchResult: SearchResult) -> T,
+        transform: (searchResult: SearchResultDetailed) -> T,
     ): Flow<Resource<T>> = flow {
         emit(Resource.Loading())
         val deferred = CompletableDeferred<Resource<Unit>>()

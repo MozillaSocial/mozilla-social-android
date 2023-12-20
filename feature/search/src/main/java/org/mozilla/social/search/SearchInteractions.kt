@@ -5,4 +5,5 @@ interface SearchInteractions {
     fun onSearchClicked() = Unit
     fun onTabClicked(tab: SearchTab)
     fun onRetryClicked() = Unit
+    fun onFollowClicked(accountId: String, isFollowing: Boolean) = Unit
 }
