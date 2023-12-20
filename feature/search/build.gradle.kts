@@ -15,6 +15,7 @@ dependencies {
     implementation(project(":core:ui:common"))
     implementation(project(":core:navigation"))
     implementation(project(":core:common"))
+    implementation(project(":core:usecase:mastodon"))
 
     implementation(libs.androidx.navigation.compose)
     implementation(libs.koin.core)

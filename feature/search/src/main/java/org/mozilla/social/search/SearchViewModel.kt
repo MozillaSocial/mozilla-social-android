@@ -8,10 +8,11 @@ import kotlinx.coroutines.launch
 import org.mozilla.social.common.utils.edit
 import org.mozilla.social.core.model.SearchType
 import org.mozilla.social.core.repository.mastodon.SearchRepository
+import org.mozilla.social.core.usecase.mastodon.search.SearchAll
 import timber.log.Timber
 
 class SearchViewModel(
-    private val searchRepository: SearchRepository,
+    private val searchAll: SearchAll,
 ) : ViewModel(), SearchInteractions {
 
     private val _uiState = MutableStateFlow(SearchUiState())
@@ -25,13 +26,11 @@ class SearchViewModel(
 
     override fun onSearchClicked() {
         viewModelScope.launch {
-            try {
-                searchRepository.search(
-                    query = uiState.value.query,
-                    type = SearchType.Hashtags,
-                )
-            } catch (e: Exception) {
-                Timber.e(e)
+            searchAll(
+                uiState.value.query,
+                viewModelScope,
+            ).collect {
+                println("status count test ${it.data?.statuses?.count()}")
             }
         }
     }

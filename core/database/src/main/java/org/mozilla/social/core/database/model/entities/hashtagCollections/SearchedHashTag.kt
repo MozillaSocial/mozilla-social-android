@@ -33,5 +33,5 @@ data class SearchedHashTagWrapper(
         parentColumn = "hashTagName",
         entityColumn = "name",
     )
-    val status: DatabaseHashTagEntity,
+    val hashTag: DatabaseHashTagEntity,
 )

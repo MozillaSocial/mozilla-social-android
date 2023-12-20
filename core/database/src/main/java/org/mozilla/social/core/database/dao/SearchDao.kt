@@ -4,13 +4,17 @@ import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
+import androidx.room.Upsert
+import kotlinx.coroutines.flow.Flow
 import org.mozilla.social.core.database.model.entities.accountCollections.SearchedAccount
 import org.mozilla.social.core.database.model.entities.accountCollections.SearchedAccountWrapper
+import org.mozilla.social.core.database.model.entities.hashtagCollections.SearchedHashTag
 import org.mozilla.social.core.database.model.entities.hashtagCollections.SearchedHashTagWrapper
+import org.mozilla.social.core.database.model.entities.statusCollections.SearchedStatus
 import org.mozilla.social.core.database.model.entities.statusCollections.SearchedStatusWrapper
 
 @Dao
-interface SearchDao : BaseDao<SearchedAccount> {
+interface SearchDao {
     @Transaction
     @Query(
         "SELECT * FROM searchedAccounts " +
@@ -36,4 +40,31 @@ interface SearchDao : BaseDao<SearchedAccount> {
         "DELETE FROM searchedAccounts ",
     )
     suspend fun deleteAllSearches()
+
+    @Upsert
+    fun upsertAccounts(accounts: List<SearchedAccount>)
+
+    @Upsert
+    fun upsertStatuses(statuses: List<SearchedStatus>)
+
+    @Upsert
+    fun upsertHashTags(hashTags: List<SearchedHashTag>)
+
+    @Query(
+        "SELECT * FROM searchedAccounts " +
+        "LIMIT :count"
+    )
+    fun getTopAccountsFlow(count: Int): Flow<List<SearchedAccountWrapper>>
+
+    @Query(
+        "SELECT * FROM searchedStatuses " +
+        "LIMIT :count"
+    )
+    fun getTopStatusesFlow(count: Int): Flow<List<SearchedStatusWrapper>>
+
+    @Query(
+        "SELECT * FROM searchedHashTags " +
+        "LIMIT :count"
+    )
+    fun getTopHashTagsFlow(count: Int): Flow<List<SearchedHashTagWrapper>>
 }

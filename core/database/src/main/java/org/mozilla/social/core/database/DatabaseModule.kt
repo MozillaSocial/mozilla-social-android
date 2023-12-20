@@ -28,4 +28,6 @@ val databaseModule =
         single { get<SocialDatabase>().relationshipsDao() }
         single { get<SocialDatabase>().statusDao() }
         single { get<SocialDatabase>().favoritesDao() }
+        single { get<SocialDatabase>().searchDao() }
+        single { get<SocialDatabase>().hashTagsDao() }
     }
