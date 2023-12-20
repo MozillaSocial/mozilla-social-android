@@ -52,7 +52,6 @@ class SearchViewModel(
                 uiState.value.query,
                 viewModelScope,
             ) { searchResult ->
-                println("johnny ${searchResult.statuses.first().content}")
                 SearchResultUiState(
                     searchResult.statuses.map { it.toPostCardUiState(usersAccountId) }
                 )
