@@ -39,7 +39,7 @@ class SearchAll(
         transform: (searchResult: SearchResult) -> T,
     ): Flow<Resource<T>> = flow {
         emit(Resource.Loading())
-        val deferred = CompletableDeferred<Resource<T>>()
+        val deferred = CompletableDeferred<Resource<Unit>>()
         coroutineScope.launch {
             try {
                 val searchResult = searchRepository.search(
@@ -64,7 +64,7 @@ class SearchAll(
 
                 deferred.complete(
                     Resource.Loaded(
-                        transform(searchResult)
+                        Unit
                     )
                 )
             } catch (e: Exception) {
@@ -74,7 +74,7 @@ class SearchAll(
         }
 
         when (val deferredResult = deferred.await()) {
-            is Resource.Error -> emit(deferredResult)
+            is Resource.Error -> emit(Resource.Error(deferredResult.exception))
             else -> {
                 try {
                     emitAll(
