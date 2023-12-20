@@ -21,6 +21,7 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -122,6 +123,16 @@ private fun SearchScreen(
                                 tint = MoSoTheme.colors.iconSecondary,
                             )
                         },
+                        trailingIcon = {
+                            IconButton(onClick = { searchInteractions.onQueryTextChanged("") }) {
+                                Icon(
+                                    modifier = Modifier.size(16.dp),
+                                    painter = MoSoIcons.x(),
+                                    contentDescription = stringResource(id = R.string.clear_search),
+                                    tint = MoSoTheme.colors.iconSecondary,
+                                )
+                            }
+                        }
                     )
                 }
             )
@@ -146,10 +157,7 @@ private fun SearchScreen(
                     enter = fadeIn(),
                     exit = fadeOut()
                 ) {
-                    Suggestions(
-                        uiState = uiState,
-                        searchInteractions = searchInteractions,
-                    )
+                    Suggestions()
                 }
             }
         }
@@ -315,16 +323,10 @@ private fun TopList(
     }
 }
 
-@Suppress("UnusedParameter")
+//TODO add search suggestions or recent searches
 @Composable
-private fun Suggestions(
-    uiState: SearchUiState,
-    searchInteractions: SearchInteractions,
-) {
-    Column(
+private fun Suggestions() {
+    Box(
         modifier = Modifier.fillMaxSize()
-    ) {
-        Text(text = "search suggestions")
-    }
-
+    )
 }

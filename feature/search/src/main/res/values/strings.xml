@@ -6,4 +6,5 @@
     <string name="hashtags_tab">Hashtags</string>
 
     <string name="search">Search</string>
+    <string name="clear_search">clear</string>
 </resources>
