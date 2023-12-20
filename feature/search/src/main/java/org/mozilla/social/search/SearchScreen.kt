@@ -1,6 +1,7 @@
 package org.mozilla.social.search
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -9,6 +10,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -32,15 +37,19 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.koin.androidx.compose.koinViewModel
 import org.mozilla.social.common.Resource
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
+import org.mozilla.social.core.designsystem.theme.MoSoRadius
 import org.mozilla.social.core.designsystem.theme.MoSoSpacing
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.ui.common.MoSoSearchBar
 import org.mozilla.social.core.ui.common.MoSoSurface
 import org.mozilla.social.core.ui.common.MoSoTab
 import org.mozilla.social.core.ui.common.MoSoTabRow
+import org.mozilla.social.core.ui.common.account.quickview.AccountQuickViewBox
 import org.mozilla.social.core.ui.common.appbar.MoSoCloseableTopAppBar
+import org.mozilla.social.core.ui.common.divider.MoSoDivider
 import org.mozilla.social.core.ui.common.error.GenericError
 import org.mozilla.social.core.ui.common.loading.MaxSizeLoading
+import org.mozilla.social.core.ui.postcard.PostCard
 import org.mozilla.social.core.ui.postcard.PostCardInteractions
 import org.mozilla.social.core.ui.postcard.PostCardList
 import org.mozilla.social.feature.search.R
@@ -196,10 +205,51 @@ private fun TopList(
     searchResultUiState: SearchResultUiState,
     postCardInteractions: PostCardInteractions,
 ) {
-    PostCardList(
-        items = searchResultUiState.postCardUiStates,
-        postCardInteractions = postCardInteractions,
-    )
+    LazyColumn(
+        Modifier
+            .fillMaxSize()
+            .padding(horizontal = 4.dp),
+    ) {
+        item {
+            
+            LazyRow {
+                items(
+                    count = searchResultUiState.accountUiStates.count(),
+                    key = { searchResultUiState.accountUiStates[it].accountId },
+                ) { index ->
+                    val item = searchResultUiState.accountUiStates[index]
+                    AccountQuickViewBox(
+                        modifier = Modifier
+                            .padding(MoSoSpacing.md)
+                            .border(
+                                width = 1.dp,
+                                color = MoSoTheme.colors.borderPrimary,
+                                shape = RoundedCornerShape(MoSoRadius.lg_16_dp)
+                            )
+                            .width(256.dp)
+                            .padding(MoSoSpacing.md),
+                        uiState = item
+                    )
+                }
+            }
+
+            MoSoDivider()
+        }
+
+        items(
+            count = searchResultUiState.postCardUiStates.count(),
+            key = { searchResultUiState.postCardUiStates[it].statusId },
+        ) { index ->
+            val item = searchResultUiState.postCardUiStates[index]
+            PostCard(
+                post = item,
+                postCardInteractions = postCardInteractions,
+            )
+            if (index < searchResultUiState.postCardUiStates.count()) {
+                MoSoDivider()
+            }
+        }
+    }
 }
 
 @Suppress("UnusedParameter")

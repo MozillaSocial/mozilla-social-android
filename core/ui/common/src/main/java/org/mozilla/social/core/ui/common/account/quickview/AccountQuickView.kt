@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
@@ -190,7 +191,8 @@ private fun AccountQuickViewBoxPreview() {
     PreviewTheme {
         AccountQuickViewBox(
             modifier = Modifier
-                .width(240.dp),
+                .width(240.dp)
+                .padding(20.dp),
             uiState = AccountQuickViewUiState(
                 accountId = "",
                 displayName = "name",

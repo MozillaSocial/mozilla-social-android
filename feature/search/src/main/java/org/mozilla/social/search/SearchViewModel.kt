@@ -14,6 +14,7 @@ import org.mozilla.social.common.utils.edit
 import org.mozilla.social.core.analytics.AnalyticsIdentifiers
 import org.mozilla.social.core.model.SearchType
 import org.mozilla.social.core.repository.mastodon.SearchRepository
+import org.mozilla.social.core.ui.common.account.quickview.toQuickViewUiState
 import org.mozilla.social.core.ui.postcard.PostCardDelegate
 import org.mozilla.social.core.ui.postcard.toPostCardUiState
 import org.mozilla.social.core.usecase.mastodon.account.GetLoggedInUserAccountId
@@ -53,7 +54,8 @@ class SearchViewModel(
                 viewModelScope,
             ) { searchResult ->
                 SearchResultUiState(
-                    searchResult.statuses.map { it.toPostCardUiState(usersAccountId) }
+                    postCardUiStates = searchResult.statuses.map { it.toPostCardUiState(usersAccountId) },
+                    accountUiStates = searchResult.accounts.map { it.toQuickViewUiState() },
                 )
             }.collect {
                 _uiState.edit { copy(
