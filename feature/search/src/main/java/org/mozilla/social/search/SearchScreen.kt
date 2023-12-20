@@ -2,7 +2,9 @@ package org.mozilla.social.search
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -213,54 +215,86 @@ private fun TopList(
             .fillMaxSize()
             .padding(horizontal = 4.dp),
     ) {
-        item {
-
-            LazyRow {
-                items(
-                    count = searchResultUiState.accountUiStates.count(),
-                    key = { searchResultUiState.accountUiStates[it].quickViewUiState.accountId },
-                ) { index ->
-                    val item = searchResultUiState.accountUiStates[index]
-                    AccountQuickViewBox(
+        if (searchResultUiState.accountUiStates.isNotEmpty()) {
+            item {
+                Row(
+                    modifier = Modifier
+                        .padding(start = MoSoSpacing.md, end = MoSoSpacing.md, top = MoSoSpacing.md)
+                        .clickable { searchInteractions.onTabClicked(SearchTab.ACCOUNTS) }
+                ) {
+                    Text(
                         modifier = Modifier
-                            .padding(MoSoSpacing.md)
-                            .border(
-                                width = 1.dp,
-                                color = MoSoTheme.colors.borderPrimary,
-                                shape = RoundedCornerShape(MoSoRadius.lg_16_dp)
-                            )
-                            .width(256.dp)
-                            .padding(MoSoSpacing.md),
-                        uiState = item.quickViewUiState,
-                        buttonSlot = {
-                            AccountFollowingButton(
-                                onButtonClicked = {
-                                    searchInteractions.onFollowClicked(
-                                        item.quickViewUiState.accountId,
-                                        item.isFollowing
-                                    )
-                                },
-                                isFollowing = item.isFollowing
-                            )
-                        },
+                            .weight(1f),
+                        text = stringResource(id = R.string.accounts_tab),
+                        style = MoSoTheme.typography.titleMedium,
                     )
+                    Icon(painter = MoSoIcons.caretRight(), contentDescription = "")
+                }
+                LazyRow {
+                    items(
+                        count = searchResultUiState.accountUiStates.count(),
+                        key = { searchResultUiState.accountUiStates[it].quickViewUiState.accountId },
+                    ) { index ->
+                        val item = searchResultUiState.accountUiStates[index]
+                        AccountQuickViewBox(
+                            modifier = Modifier
+                                .padding(MoSoSpacing.md)
+                                .border(
+                                    width = 1.dp,
+                                    color = MoSoTheme.colors.borderPrimary,
+                                    shape = RoundedCornerShape(MoSoRadius.lg_16_dp)
+                                )
+                                .width(256.dp)
+                                .padding(MoSoSpacing.md),
+                            uiState = item.quickViewUiState,
+                            buttonSlot = {
+                                AccountFollowingButton(
+                                    onButtonClicked = {
+                                        searchInteractions.onFollowClicked(
+                                            item.quickViewUiState.accountId,
+                                            item.isFollowing
+                                        )
+                                    },
+                                    isFollowing = item.isFollowing
+                                )
+                            },
+                        )
+                    }
+                }
+
+                MoSoDivider()
+            }
+        }
+
+        if (searchResultUiState.postCardUiStates.isNotEmpty()) {
+            item {
+                Row(
+                    modifier = Modifier
+                        .padding(MoSoSpacing.md)
+                        .clickable { searchInteractions.onTabClicked(SearchTab.POSTS) }
+                ) {
+                    Text(
+                        modifier = Modifier
+                            .weight(1f),
+                        text = stringResource(id = R.string.posts_tab),
+                        style = MoSoTheme.typography.titleMedium,
+                    )
+                    Icon(painter = MoSoIcons.caretRight(), contentDescription = "")
                 }
             }
 
-            MoSoDivider()
-        }
-
-        items(
-            count = searchResultUiState.postCardUiStates.count(),
-            key = { searchResultUiState.postCardUiStates[it].statusId },
-        ) { index ->
-            val item = searchResultUiState.postCardUiStates[index]
-            PostCard(
-                post = item,
-                postCardInteractions = postCardInteractions,
-            )
-            if (index < searchResultUiState.postCardUiStates.count()) {
-                MoSoDivider()
+            items(
+                count = searchResultUiState.postCardUiStates.count(),
+                key = { searchResultUiState.postCardUiStates[it].statusId },
+            ) { index ->
+                val item = searchResultUiState.postCardUiStates[index]
+                PostCard(
+                    post = item,
+                    postCardInteractions = postCardInteractions,
+                )
+                if (index < searchResultUiState.postCardUiStates.count()) {
+                    MoSoDivider()
+                }
             }
         }
     }
