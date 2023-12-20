@@ -230,8 +230,7 @@ private fun TopList(
 ) {
     LazyColumn(
         Modifier
-            .fillMaxSize()
-            .padding(horizontal = 4.dp),
+            .fillMaxSize(),
     ) {
         if (searchResultUiState.accountUiStates.isNotEmpty()) {
             item {
