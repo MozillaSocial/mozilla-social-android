@@ -39,6 +39,7 @@ import org.koin.compose.KoinApplication
 import org.mozilla.social.common.Resource
 import org.mozilla.social.common.utils.toFile
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
+import org.mozilla.social.core.designsystem.theme.FirefoxColor
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.navigation.navigationModule
 import org.mozilla.social.core.ui.common.MoSoCheckBox
@@ -248,6 +249,7 @@ private fun EditImageOverlay(onClick: () -> Unit) {
                     .align(Alignment.Center),
             painter = MoSoIcons.image(),
             contentDescription = "",
+            tint = MoSoTheme.colors.actionSecondary,
         )
     }
 }
