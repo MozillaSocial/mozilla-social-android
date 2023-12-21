@@ -1,7 +1,6 @@
 package org.mozilla.social.core.model
 
 import kotlinx.datetime.Instant
-import org.mozilla.social.core.model.paging.Pageable
 
 /**
  * Represents a status that will be published at a future scheduled date.
@@ -20,7 +19,4 @@ data class ScheduledStatus(
      * Media attached to this status.
      */
     val mediaAttachments: List<Attachment>,
-) : Pageable {
-    override val id: String
-        get() = statusId
-}
+)

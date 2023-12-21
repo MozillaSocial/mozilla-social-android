@@ -3,7 +3,6 @@ package org.mozilla.social.core.network.mastodon.model
 import kotlinx.datetime.Instant
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import org.mozilla.social.core.network.mastodon.model.paging.NetworkPageable
 
 /**
  * Represents a status posted by an account.
@@ -161,7 +160,4 @@ data class NetworkStatus(
      */
     @SerialName("pinned")
     val isPinned: Boolean? = null,
-) : NetworkPageable {
-    override val id: String
-        get() = statusId
-}
+)

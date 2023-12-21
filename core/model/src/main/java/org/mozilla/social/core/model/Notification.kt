@@ -1,7 +1,6 @@
 package org.mozilla.social.core.model
 
 import kotlinx.datetime.Instant
-import org.mozilla.social.core.model.paging.Pageable
 
 /**
  * Represents a notification of an event relevant to the user.
@@ -24,7 +23,4 @@ data class Notification(
      * Status that was the object of the notification, if relevant.
      */
     val status: Status? = null,
-) : Pageable {
-    override val id: String
-        get() = notificationId
-}
+)

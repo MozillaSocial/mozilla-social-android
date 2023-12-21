@@ -1,7 +1,6 @@
 package org.mozilla.social.core.network.mastodon.model
 
 import kotlinx.datetime.Instant
-import org.mozilla.social.core.network.mastodon.model.paging.NetworkPageable
 
 /**
  * Represents a status that will be published at a future scheduled date.
@@ -20,7 +19,4 @@ data class NetworkScheduledStatus(
      * Media attached to this status.
      */
     val mediaAttachments: List<NetworkAttachment>,
-) : NetworkPageable {
-    override val id: String
-        get() = statusId
-}
+)

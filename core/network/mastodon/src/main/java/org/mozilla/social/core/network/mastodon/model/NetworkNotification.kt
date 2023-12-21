@@ -1,7 +1,6 @@
 package org.mozilla.social.core.network.mastodon.model
 
 import kotlinx.datetime.Instant
-import org.mozilla.social.core.network.mastodon.model.paging.NetworkPageable
 
 /**
  * Represents a notification of an event relevant to the user.
@@ -24,7 +23,4 @@ data class NetworkNotification(
      * Status that was the object of the notification, if relevant.
      */
     val status: NetworkStatus? = null,
-) : NetworkPageable {
-    override val id: String
-        get() = notificationId
-}
+)
