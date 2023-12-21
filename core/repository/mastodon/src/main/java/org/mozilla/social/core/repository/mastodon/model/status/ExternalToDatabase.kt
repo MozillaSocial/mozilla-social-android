@@ -58,11 +58,11 @@ fun Account.toDatabaseModel(): DatabaseAccount =
     )
 
 fun Account.toDatabaseBlock(isBlocked: Boolean, position: Int): DatabaseBlock =
-    DatabaseBlock(accountId = id, isBlocked = isBlocked, position = position)
+    DatabaseBlock(accountId = accountId, isBlocked = isBlocked, position = position)
 
 
 fun Account.toDatabaseMute(isMuted: Boolean, position: Int): DatabaseMute =
-    DatabaseMute(accountId = id, isMuted = isMuted, position = position)
+    DatabaseMute(accountId = accountId, isMuted = isMuted, position = position)
 
 fun StatusVisibility.toDatabaseModel(): DatabaseStatusVisibility =
     when (this) {

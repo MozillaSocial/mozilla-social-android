@@ -2,7 +2,6 @@ package org.mozilla.social.core.model
 
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
-import org.mozilla.social.core.model.paging.Pageable
 
 /**
  * Represents a user of Mastodon and their associated profile.
@@ -113,7 +112,4 @@ data class Account(
      * Instant when a timed mute will expire, if applicable.
      */
     val muteExpiresAt: Instant? = null,
-) : Pageable {
-    override val id: String
-        get() = accountId
-}
+)

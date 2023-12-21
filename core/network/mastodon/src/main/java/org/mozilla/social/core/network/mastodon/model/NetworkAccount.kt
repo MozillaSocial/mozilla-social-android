@@ -4,7 +4,6 @@ import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import org.mozilla.social.core.network.mastodon.model.paging.NetworkPageable
 
 /**
  * Represents a user of Mastodon and their associated profile.
@@ -141,7 +140,4 @@ data class NetworkAccount(
      */
     @SerialName("mute_expires_at")
     val muteExpiresAt: Instant? = null,
-) : NetworkPageable {
-    override val id: String
-        get() = accountId
-}
+)
