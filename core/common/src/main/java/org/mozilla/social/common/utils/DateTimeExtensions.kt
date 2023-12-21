@@ -12,11 +12,7 @@ fun Instant.timeSinceNow(): StringFactory {
 
     return when {
         durationSince.inWholeSeconds < 60 ->
-            StringFactory.quantityResource(
-                R.plurals.seconds_ago,
-                durationSince.inWholeSeconds.toInt(),
-                durationSince.inWholeSeconds.toInt(),
-            )
+            StringFactory.resource(R.string.just_now)
         durationSince.inWholeMinutes < 60 ->
             StringFactory.quantityResource(
                 R.plurals.minutes_ago,
