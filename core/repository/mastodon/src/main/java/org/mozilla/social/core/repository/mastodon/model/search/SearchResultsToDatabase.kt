@@ -7,10 +7,12 @@ import org.mozilla.social.core.model.Account
 import org.mozilla.social.core.model.HashTag
 import org.mozilla.social.core.model.Status
 
-fun List<Account>.toSearchedAccount(): List<SearchedAccount> = mapIndexed { index, account ->
+fun List<Account>.toSearchedAccount(
+    startIndex: Int = 0,
+): List<SearchedAccount> = mapIndexed { index, account ->
     SearchedAccount(
         accountId = account.accountId,
-        position = index,
+        position = startIndex + index,
     )
 }
 

@@ -45,6 +45,7 @@ class SearchAll(
             try {
                 val searchResult = searchRepository.search(
                     query = query,
+                    limit = limit,
                 )
 
                 val relationships = accountRepository.getAccountRelationships(

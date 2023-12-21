@@ -66,7 +66,9 @@ class SearchAccountsRemoteMediator(
 
                 accountRepository.insertAll(response.accounts)
                 relationshipRepository.insertAll(relationships)
-                searchRepository.insertAllAccounts(response.accounts.toSearchedAccount())
+                searchRepository.insertAllAccounts(
+                    response.accounts.toSearchedAccount(startIndex = nextPositionIndex)
+                )
             }
 
             nextPositionIndex += response.accounts.size

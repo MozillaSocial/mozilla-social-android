@@ -120,9 +120,11 @@ private fun SearchScreen(
                         query = uiState.query,
                         onQueryChange = { searchInteractions.onQueryTextChanged(it) },
                         onSearch = {
-                            keyboardController?.hide()
-                            focusManager.clearFocus()
-                            searchInteractions.onSearchClicked()
+                            if (uiState.query.isNotBlank()) {
+                                keyboardController?.hide()
+                                focusManager.clearFocus()
+                                searchInteractions.onSearchClicked()
+                            }
                         },
                         leadingIcon = {
                             Icon(
@@ -133,7 +135,12 @@ private fun SearchScreen(
                             )
                         },
                         trailingIcon = {
-                            IconButton(onClick = { searchInteractions.onQueryTextChanged("") }) {
+                            IconButton(
+                                onClick = {
+                                    searchInteractions.onQueryTextChanged("")
+                                    searchFocusRequester.requestFocus()
+                                }
+                            ) {
                                 Icon(
                                     modifier = Modifier.size(16.dp),
                                     painter = MoSoIcons.x(),
