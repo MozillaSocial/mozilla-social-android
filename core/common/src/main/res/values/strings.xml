@@ -32,4 +32,5 @@
         <item quantity="one">%d day left</item>
         <item quantity="other">%d days left</item>
     </plurals>
+    <string name="just_now">just now</string>
 </resources>
