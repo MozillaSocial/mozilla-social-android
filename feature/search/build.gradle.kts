@@ -11,6 +11,7 @@ dependencies {
     implementation(project(":core:datastore"))
     implementation(project(":core:model"))
     implementation(project(":core:repository:mastodon"))
+    implementation(project(":core:repository:paging"))
     implementation(project(":core:designsystem"))
     implementation(project(":core:ui:common"))
     implementation(project(":core:navigation"))
@@ -27,4 +28,7 @@ dependencies {
     implementation(libs.androidx.datastore)
     implementation(libs.protobuf.kotlin.lite)
     implementation(libs.jakewharton.timber)
+
+    implementation(libs.androidx.paging.runtime)
+    implementation(libs.androidx.paging.compose)
 }

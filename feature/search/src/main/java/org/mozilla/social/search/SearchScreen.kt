@@ -40,6 +40,10 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.paging.PagingData
+import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.itemKey
+import kotlinx.coroutines.flow.Flow
 import org.koin.androidx.compose.koinViewModel
 import org.mozilla.social.common.Resource
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
@@ -47,6 +51,8 @@ import org.mozilla.social.core.designsystem.theme.MoSoRadius
 import org.mozilla.social.core.designsystem.theme.MoSoSpacing
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.designsystem.utils.NoRipple
+import org.mozilla.social.core.ui.accountfollower.AccountFollower
+import org.mozilla.social.core.ui.accountfollower.AccountFollowerUiState
 import org.mozilla.social.core.ui.accountfollower.AccountFollowingButton
 import org.mozilla.social.core.ui.common.MoSoSearchBar
 import org.mozilla.social.core.ui.common.MoSoSurface
@@ -66,10 +72,12 @@ internal fun SearchScreen(
     viewModel: SearchViewModel = koinViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val accountFeed by viewModel.accountsFlow.collectAsStateWithLifecycle()
     SearchScreen(
         uiState = uiState,
         searchInteractions = viewModel,
         postCardInteractions = viewModel.postCardDelegate,
+        accountFeed = accountFeed,
     )
 }
 
@@ -79,6 +87,7 @@ private fun SearchScreen(
     uiState: SearchUiState,
     searchInteractions: SearchInteractions,
     postCardInteractions: PostCardInteractions,
+    accountFeed: Flow<PagingData<AccountFollowerUiState>>?,
 ) {
     MoSoSurface {
         Column(Modifier.systemBarsPadding()) {
@@ -149,6 +158,7 @@ private fun SearchScreen(
                         uiState = uiState,
                         searchInteractions = searchInteractions,
                         postCardInteractions = postCardInteractions,
+                        accountFeed = accountFeed,
                     )
                 }
                 androidx.compose.animation.AnimatedVisibility(
@@ -195,6 +205,7 @@ private fun ListContent(
     uiState: SearchUiState,
     searchInteractions: SearchInteractions,
     postCardInteractions: PostCardInteractions,
+    accountFeed: Flow<PagingData<AccountFollowerUiState>>?,
 ) {
     when (uiState.topResource) {
         is Resource.Loading -> {
@@ -214,7 +225,12 @@ private fun ListContent(
                         postCardInteractions = postCardInteractions,
                     )
                 }
-                SearchTab.ACCOUNTS -> {}
+                SearchTab.ACCOUNTS -> {
+                    AccountsList(
+                        accountFeed = accountFeed,
+                        searchInteractions = searchInteractions,
+                    )
+                }
                 SearchTab.HASHTAGS -> {}
                 SearchTab.POSTS -> {}
             }
@@ -316,6 +332,40 @@ private fun TopList(
                 )
                 if (index < searchResultUiState.postCardUiStates.count()) {
                     MoSoDivider()
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun AccountsList(
+    accountFeed: Flow<PagingData<AccountFollowerUiState>>?,
+    searchInteractions: SearchInteractions,
+) {
+    accountFeed?.collectAsLazyPagingItems()?.let { lazyPagingItems ->
+        LazyColumn {
+            items(
+                count = lazyPagingItems.itemCount,
+                key = lazyPagingItems.itemKey { it.accountQuickViewUiState.accountId },
+            ) { index ->
+                lazyPagingItems[index]?.let { uiState ->
+                    AccountFollower(
+                        uiState = uiState,
+                        onButtonClicked = {
+                            searchInteractions.onFollowClicked(
+                                uiState.accountQuickViewUiState.accountId,
+                                isFollowing = uiState.isFollowing,
+                            )
+                        },
+                        modifier = Modifier
+                            .padding(MoSoSpacing.md)
+                            .clickable {
+                                searchInteractions.onAccountClicked(
+                                    accountId = uiState.accountQuickViewUiState.accountId
+                                )
+                            },
+                    )
                 }
             }
         }
