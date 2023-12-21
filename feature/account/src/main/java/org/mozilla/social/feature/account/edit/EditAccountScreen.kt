@@ -248,6 +248,7 @@ private fun EditImageOverlay(onClick: () -> Unit) {
                     .align(Alignment.Center),
             painter = MoSoIcons.image(),
             contentDescription = "",
+            tint = MoSoTheme.colors.actionSecondary,
         )
     }
 }
