@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
@@ -61,6 +62,45 @@ fun AccountQuickView(
                     buttonSlot()
                 }
             }
+            extraInfoSlot()
+        }
+    }
+}
+
+@Composable
+fun AccountQuickViewBox(
+    uiState: AccountQuickViewUiState,
+    modifier: Modifier = Modifier,
+    buttonSlot: @Composable () -> Unit = {},
+    extraInfoSlot: @Composable () -> Unit = {},
+) {
+    Column(modifier = modifier) {
+        Row {
+            CircleAvatar(
+                modifier = Modifier.align(Alignment.CenterVertically),
+                avatarUrl = uiState.avatarUrl,
+            )
+            Spacer(modifier = Modifier.weight(1f))
+            Box(
+                modifier = Modifier.align(Alignment.CenterVertically)
+            ) {
+                buttonSlot()
+            }
+        }
+
+        Spacer(modifier = Modifier.width(MoSoSpacing.sm))
+
+        Column {
+            LargeTextBody(
+                text = uiState.displayName,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
+            MediumTextBody(
+                text = "@${uiState.webFinger}",
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
             extraInfoSlot()
         }
     }
@@ -131,6 +171,32 @@ private fun AccountQuickViewPreview3() {
                 accountId = "",
                 displayName = "really long name really long name really long name",
                 webFinger = "webfinger",
+                avatarUrl = "url",
+            ),
+            buttonSlot = {
+                MoSoButton(onClick = { /*TODO*/ }) {
+                    Text(text = "button")
+                }
+            },
+            extraInfoSlot = {
+                Text(text = "this is more info")
+            }
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun AccountQuickViewBoxPreview() {
+    PreviewTheme {
+        AccountQuickViewBox(
+            modifier = Modifier
+                .width(240.dp)
+                .padding(20.dp),
+            uiState = AccountQuickViewUiState(
+                accountId = "",
+                displayName = "name",
+                webFinger = "webfingerThatIsReallyLong@lalalalala",
                 avatarUrl = "url",
             ),
             buttonSlot = {

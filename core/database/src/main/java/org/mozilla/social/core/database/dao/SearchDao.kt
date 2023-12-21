@@ -37,9 +37,19 @@ interface SearchDao {
     fun hashTagsPagingSource(): PagingSource<Int, SearchedHashTagWrapper>
 
     @Query(
-        "DELETE FROM searchedAccounts ",
+        "DELETE FROM searchedAccounts "
     )
-    suspend fun deleteAllSearches()
+    suspend fun deleteAllSearchedAccounts()
+
+    @Query(
+        "DELETE FROM searchedStatuses "
+    )
+    suspend fun deleteAllSearchedStatues()
+
+    @Query(
+        "DELETE FROM searchedHashTags "
+    )
+    suspend fun deleteAllSearchedHashTags()
 
     @Upsert
     fun upsertAccounts(accounts: List<SearchedAccount>)

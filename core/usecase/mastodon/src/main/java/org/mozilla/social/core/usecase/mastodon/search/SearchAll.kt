@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import org.mozilla.social.common.Resource
 import org.mozilla.social.core.model.SearchResult
+import org.mozilla.social.core.model.SearchResultDetailed
 import org.mozilla.social.core.repository.mastodon.AccountRepository
 import org.mozilla.social.core.repository.mastodon.DatabaseDelegate
 import org.mozilla.social.core.repository.mastodon.HashtagRepository
@@ -29,13 +30,17 @@ class SearchAll(
     private val relationshipRepository: RelationshipRepository,
 ) {
 
-    operator fun invoke(
+    /**
+     * @param transform used to transform the search result into a UI state model of some kind
+     */
+    operator fun <T> invoke(
         query: String,
         coroutineScope: CoroutineScope,
         limit: Int = 5,
-    ): Flow<Resource<SearchResult>> = flow {
+        transform: (searchResult: SearchResultDetailed) -> T,
+    ): Flow<Resource<T>> = flow {
         emit(Resource.Loading())
-        val deferred = CompletableDeferred<Resource<SearchResult>>()
+        val deferred = CompletableDeferred<Resource<Unit>>()
         coroutineScope.launch {
             try {
                 val searchResult = searchRepository.search(
@@ -60,7 +65,7 @@ class SearchAll(
 
                 deferred.complete(
                     Resource.Loaded(
-                        searchResult
+                        Unit
                     )
                 )
             } catch (e: Exception) {
@@ -70,12 +75,12 @@ class SearchAll(
         }
 
         when (val deferredResult = deferred.await()) {
-            is Resource.Error -> emit(deferredResult)
+            is Resource.Error -> emit(Resource.Error(deferredResult.exception))
             else -> {
                 try {
                     emitAll(
                         searchRepository.getTopSearchResultsFlow(limit).map {
-                            Resource.Loaded(it)
+                            Resource.Loaded(transform(it))
                         }
                     )
                 } catch (e: Exception) {

@@ -2,19 +2,18 @@ package org.mozilla.social.core.repository.mastodon
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.map
 import org.mozilla.social.core.database.dao.SearchDao
 import org.mozilla.social.core.database.model.entities.accountCollections.SearchedAccount
-import org.mozilla.social.core.database.model.entities.accountCollections.SearchedAccountWrapper
 import org.mozilla.social.core.database.model.entities.hashtagCollections.SearchedHashTag
 import org.mozilla.social.core.database.model.entities.statusCollections.SearchedStatus
-import org.mozilla.social.core.database.model.entities.statusCollections.SearchedStatusWrapper
 import org.mozilla.social.core.database.model.entities.statusCollections.toStatusWrapper
 import org.mozilla.social.core.model.Account
 import org.mozilla.social.core.model.HashTag
 import org.mozilla.social.core.model.SearchResult
+import org.mozilla.social.core.model.SearchResultDetailed
 import org.mozilla.social.core.model.SearchType
 import org.mozilla.social.core.network.mastodon.SearchApi
+import org.mozilla.social.core.repository.mastodon.model.account.toDetailedAccount
 import org.mozilla.social.core.repository.mastodon.model.hashtag.toExternalModel
 import org.mozilla.social.core.repository.mastodon.model.search.toExternal
 import org.mozilla.social.core.repository.mastodon.model.status.toExternalModel
@@ -22,6 +21,7 @@ import org.mozilla.social.core.repository.mastodon.model.status.toExternalModel
 class SearchRepository internal constructor(
     private val searchApi: SearchApi,
     private val searchDao: SearchDao,
+    private val databaseDelegate: DatabaseDelegate,
 ) {
     suspend fun searchForAccounts(query: String): List<Account> {
         return searchApi.search(
@@ -69,13 +69,13 @@ class SearchRepository internal constructor(
 
     fun getTopSearchResultsFlow(
         count: Int,
-    ): Flow<SearchResult> = combine(
+    ): Flow<SearchResultDetailed> = combine(
         searchDao.getTopAccountsFlow(count),
         searchDao.getTopStatusesFlow(count),
         searchDao.getTopHashTagsFlow(count),
     ) { accounts, statuses, hashtags ->
-        SearchResult(
-            accounts = accounts.map { it.account.toExternalModel() },
+        SearchResultDetailed(
+            accounts = accounts.map { it.toDetailedAccount() },
             statuses = statuses.map {
                 it.toStatusWrapper().toExternalModel()
             },
@@ -85,5 +85,11 @@ class SearchRepository internal constructor(
         )
     }
 
-    suspend fun deleteSearchResults() = searchDao.deleteAllSearches()
+    suspend fun deleteSearchResults() {
+        databaseDelegate.withTransaction {
+            searchDao.deleteAllSearchedAccounts()
+            searchDao.deleteAllSearchedHashTags()
+            searchDao.deleteAllSearchedStatues()
+        }
+    }
 }
