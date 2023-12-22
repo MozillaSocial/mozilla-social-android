@@ -14,6 +14,7 @@ data class SearchUiState(
     val selectedTab: SearchTab = SearchTab.TOP,
     val topResource: Resource<SearchResultUiState> = Resource.Loading(),
     val accountsFeed: Flow<PagingData<AccountFollowerUiState>>? = null,
+    val statusFeed: Flow<PagingData<PostCardUiState>>? = null,
 )
 
 data class SearchResultUiState(

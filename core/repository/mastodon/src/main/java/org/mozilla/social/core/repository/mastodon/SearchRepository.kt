@@ -15,12 +15,14 @@ import org.mozilla.social.core.database.model.entities.accountCollections.Search
 import org.mozilla.social.core.database.model.entities.accountCollections.SearchedAccountWrapper
 import org.mozilla.social.core.database.model.entities.hashtagCollections.SearchedHashTag
 import org.mozilla.social.core.database.model.entities.statusCollections.SearchedStatus
+import org.mozilla.social.core.database.model.entities.statusCollections.SearchedStatusWrapper
 import org.mozilla.social.core.database.model.entities.statusCollections.toStatusWrapper
 import org.mozilla.social.core.model.Account
 import org.mozilla.social.core.model.HashTag
 import org.mozilla.social.core.model.SearchResult
 import org.mozilla.social.core.model.SearchResultDetailed
 import org.mozilla.social.core.model.SearchType
+import org.mozilla.social.core.model.Status
 import org.mozilla.social.core.model.wrappers.DetailedAccountWrapper
 import org.mozilla.social.core.network.mastodon.SearchApi
 import org.mozilla.social.core.repository.mastodon.model.account.toDetailedAccount
@@ -121,6 +123,27 @@ class SearchRepository internal constructor(
         }.flow.map { pagingData ->
             pagingData.map {
                 it.toDetailedAccount()
+            }
+        }
+
+    @ExperimentalPagingApi
+    fun getStatusesPager(
+        remoteMediator: RemoteMediator<Int, SearchedStatusWrapper>,
+        pageSize: Int = 40,
+        initialLoadSize: Int = 40,
+    ): Flow<PagingData<Status>> =
+        Pager(
+            config =
+            PagingConfig(
+                pageSize = pageSize,
+                initialLoadSize = initialLoadSize,
+            ),
+            remoteMediator = remoteMediator,
+        ) {
+            searchDao.statusesPagingSource()
+        }.flow.map { pagingData ->
+            pagingData.map {
+                it.toStatusWrapper().toExternalModel()
             }
         }
 }

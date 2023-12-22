@@ -165,11 +165,11 @@ private fun PostCardLazyColumn(
                     }
                 }
                 if (pullToRefreshEnabled) {
-                    listContent(lazyingPagingItems, postCardInteractions)
+                    postListContent(lazyingPagingItems, postCardInteractions)
                 }
             }
             is LoadState.NotLoading -> {
-                listContent(lazyingPagingItems, postCardInteractions)
+                postListContent(lazyingPagingItems, postCardInteractions)
             }
         }
 
@@ -199,20 +199,20 @@ private fun PostCardLazyColumn(
     }
 }
 
-private fun LazyListScope.listContent(
-    lazyingPagingItems: LazyPagingItems<PostCardUiState>,
+fun LazyListScope.postListContent(
+    lazyPagingItems: LazyPagingItems<PostCardUiState>,
     postCardInteractions: PostCardInteractions,
 ) {
     items(
-        count = lazyingPagingItems.itemCount,
-        key = lazyingPagingItems.itemKey { it.statusId },
+        count = lazyPagingItems.itemCount,
+        key = lazyPagingItems.itemKey { it.statusId },
     ) { index ->
-        lazyingPagingItems[index]?.let { item ->
+        lazyPagingItems[index]?.let { item ->
             PostCard(
                 post = item,
                 postCardInteractions = postCardInteractions,
             )
-            if (index < lazyingPagingItems.itemCount) {
+            if (index < lazyPagingItems.itemCount) {
                 MoSoDivider()
             }
         }

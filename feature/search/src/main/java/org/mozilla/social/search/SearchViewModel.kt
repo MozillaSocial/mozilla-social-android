@@ -23,6 +23,7 @@ import org.mozilla.social.core.navigation.NavigationDestination
 import org.mozilla.social.core.navigation.usecases.NavigateTo
 import org.mozilla.social.core.repository.mastodon.SearchRepository
 import org.mozilla.social.core.repository.paging.SearchAccountsRemoteMediator
+import org.mozilla.social.core.repository.paging.SearchStatusesRemoteMediator
 import org.mozilla.social.core.ui.accountfollower.AccountFollowerUiState
 import org.mozilla.social.core.ui.accountfollower.toAccountFollowerUiState
 import org.mozilla.social.core.ui.postcard.PostCardDelegate
@@ -75,6 +76,24 @@ class SearchViewModel(
         ) }
     }
 
+    private fun updateStatusFeed() {
+        val statusesRemoteMediator = getKoin().inject<SearchStatusesRemoteMediator> {
+            parametersOf(
+                _uiState.value.query
+            )
+        }.value
+
+        _uiState.edit { copy(
+            statusFeed = searchRepository.getStatusesPager(
+                remoteMediator = statusesRemoteMediator,
+            ).map { pagingData ->
+                pagingData.map {
+                    it.toPostCardUiState(usersAccountId)
+                }
+            }.cachedIn(viewModelScope)
+        ) }
+    }
+
     override fun onQueryTextChanged(text: String) {
         _uiState.edit { copy(
             query = text,
@@ -85,6 +104,7 @@ class SearchViewModel(
         searchJob?.cancel()
         searchJob = viewModelScope.launch {
             updateAccountFeed()
+            updateStatusFeed()
             searchAll(
                 uiState.value.query,
                 viewModelScope,

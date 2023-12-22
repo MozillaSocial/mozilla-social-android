@@ -20,7 +20,6 @@ import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -62,7 +61,6 @@ import org.mozilla.social.core.ui.common.MoSoSurface
 import org.mozilla.social.core.ui.common.MoSoTab
 import org.mozilla.social.core.ui.common.MoSoTabRow
 import org.mozilla.social.core.ui.common.account.quickview.AccountQuickViewBox
-import org.mozilla.social.core.ui.common.animation.DelayedVisibility
 import org.mozilla.social.core.ui.common.appbar.MoSoCloseableTopAppBar
 import org.mozilla.social.core.ui.common.divider.MoSoDivider
 import org.mozilla.social.core.ui.common.error.GenericError
@@ -70,6 +68,8 @@ import org.mozilla.social.core.ui.common.loading.MaxSizeLoading
 import org.mozilla.social.core.ui.common.paging.SearchPagingColumn
 import org.mozilla.social.core.ui.postcard.PostCard
 import org.mozilla.social.core.ui.postcard.PostCardInteractions
+import org.mozilla.social.core.ui.postcard.PostCardUiState
+import org.mozilla.social.core.ui.postcard.postListContent
 import org.mozilla.social.feature.search.R
 
 @Composable
@@ -239,7 +239,12 @@ private fun ListContent(
                     )
                 }
                 SearchTab.HASHTAGS -> {}
-                SearchTab.POSTS -> {}
+                SearchTab.POSTS -> {
+                    StatusesList(
+                        statusFeed = uiState.statusFeed,
+                        postCardInteractions = postCardInteractions,
+                    )
+                }
             }
         }
     }
@@ -402,6 +407,24 @@ private fun AccountsList(
                     )
                 }
             }
+        }
+    }
+}
+
+@Composable
+private fun StatusesList(
+    statusFeed: Flow<PagingData<PostCardUiState>>?,
+    postCardInteractions: PostCardInteractions,
+) {
+    statusFeed?.collectAsLazyPagingItems()?.let { lazyPagingItems ->
+        SearchPagingColumn(
+            lazyPagingItems = lazyPagingItems,
+            noResultText = stringResource(id = R.string.search_empty)
+        ) {
+            postListContent(
+                lazyPagingItems = lazyPagingItems,
+                postCardInteractions = postCardInteractions,
+            )
         }
     }
 }
