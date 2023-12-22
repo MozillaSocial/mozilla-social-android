@@ -1,6 +1,7 @@
 package org.mozilla.social.core.ui.common.account.toggleablelist
 
 import androidx.annotation.StringRes
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -39,6 +40,7 @@ import org.mozilla.social.core.ui.common.text.SmallTextLabel
 @Composable
 fun <B : ToggleableButtonState, A : ToggleableAccountListItemState<B>> ToggleableAccountList(
     pagingData: Flow<PagingData<A>>,
+    onAccountClicked: (accountId: String) -> Unit,
     onButtonClicked: (accountId: String, buttonState: B) -> Unit,
 ) {
     val lazyPagingItems: LazyPagingItems<A> = pagingData.collectAsLazyPagingItems()
@@ -55,6 +57,7 @@ fun <B : ToggleableButtonState, A : ToggleableAccountListItemState<B>> Toggleabl
                         UserRow(
                             account = account.account,
                             buttonState = account.buttonState,
+                            onAccountClicked = onAccountClicked,
                             onButtonClicked = onButtonClicked
                         )
                     }
@@ -91,6 +94,7 @@ fun <B : ToggleableButtonState, A : ToggleableAccountListItemState<B>> Toggleabl
 private fun <B : ToggleableButtonState> UserRow(
     account: AccountQuickViewUiState,
     buttonState: B,
+    onAccountClicked: (accountId: String) -> Unit,
     onButtonClicked: (accountId: String, buttonState: B) -> Unit
 ) {
     var openConfirmationDialog: String? by remember { mutableStateOf(null) }
@@ -115,7 +119,10 @@ private fun <B : ToggleableButtonState> UserRow(
         val context = LocalContext.current
         AccountQuickView(
             uiState = account,
-            modifier = Modifier.fillMaxWidth().padding(vertical = MoSoSpacing.md),
+            modifier = Modifier
+                .clickable { onAccountClicked(account.accountId) }
+                .fillMaxWidth()
+                .padding(vertical = MoSoSpacing.md),
             buttonSlot = {
                 MoSoButton(
                     onClick = {
