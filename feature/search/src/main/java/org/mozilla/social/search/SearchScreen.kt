@@ -55,7 +55,6 @@ import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.designsystem.utils.NoRipple
 import org.mozilla.social.core.ui.accountfollower.AccountFollower
 import org.mozilla.social.core.ui.accountfollower.AccountFollowerUiState
-import org.mozilla.social.core.ui.accountfollower.AccountFollowingButton
 import org.mozilla.social.core.ui.common.MoSoSearchBar
 import org.mozilla.social.core.ui.common.MoSoSurface
 import org.mozilla.social.core.ui.common.MoSoTab
@@ -64,6 +63,9 @@ import org.mozilla.social.core.ui.common.account.quickview.AccountQuickViewBox
 import org.mozilla.social.core.ui.common.appbar.MoSoCloseableTopAppBar
 import org.mozilla.social.core.ui.common.divider.MoSoDivider
 import org.mozilla.social.core.ui.common.error.GenericError
+import org.mozilla.social.core.ui.common.following.FollowingButton
+import org.mozilla.social.core.ui.common.hashtag.quickview.HashTagQuickView
+import org.mozilla.social.core.ui.common.hashtag.quickview.HashTagQuickViewUiState
 import org.mozilla.social.core.ui.common.loading.MaxSizeLoading
 import org.mozilla.social.core.ui.common.paging.SearchPagingColumn
 import org.mozilla.social.core.ui.postcard.PostCard
@@ -238,7 +240,11 @@ private fun ListContent(
                         searchInteractions = searchInteractions,
                     )
                 }
-                SearchTab.HASHTAGS -> {}
+                SearchTab.HASHTAGS -> {
+                    HashTagsList(
+                        hashTagsFeed = uiState.hashTagFeed,
+                    )
+                }
                 SearchTab.POSTS -> {
                     StatusesList(
                         statusFeed = uiState.statusFeed,
@@ -356,7 +362,7 @@ private fun TopAccounts(
                         .padding(MoSoSpacing.md),
                     uiState = item.quickViewUiState,
                     buttonSlot = {
-                        AccountFollowingButton(
+                        FollowingButton(
                             onButtonClicked = {
                                 searchInteractions.onFollowClicked(
                                     item.quickViewUiState.accountId,
@@ -425,6 +431,30 @@ private fun StatusesList(
                 lazyPagingItems = lazyPagingItems,
                 postCardInteractions = postCardInteractions,
             )
+        }
+    }
+}
+
+@Composable
+private fun HashTagsList(
+    hashTagsFeed: Flow<PagingData<HashTagQuickViewUiState>>?,
+) {
+    hashTagsFeed?.collectAsLazyPagingItems()?.let { lazyPagingItems ->
+        SearchPagingColumn(
+            lazyPagingItems = lazyPagingItems,
+            noResultText = stringResource(id = R.string.search_empty)
+        ) {
+            items(
+                count = lazyPagingItems.itemCount,
+                key = lazyPagingItems.itemKey { it.name },
+            ) { index ->
+                lazyPagingItems[index]?.let { uiState ->
+                    HashTagQuickView(
+                        uiState = uiState,
+                        onButtonClicked = {}
+                    )
+                }
+            }
         }
     }
 }
