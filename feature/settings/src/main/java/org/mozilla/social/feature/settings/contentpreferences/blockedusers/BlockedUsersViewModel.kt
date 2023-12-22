@@ -15,14 +15,15 @@ import org.mozilla.social.core.analytics.AnalyticsIdentifiers
 import org.mozilla.social.core.model.BlockedUser
 import org.mozilla.social.core.navigation.usecases.NavigateToAccount
 import org.mozilla.social.core.repository.mastodon.BlocksRepository
+import org.mozilla.social.core.repository.paging.BlocksListRemoteMediator
 import org.mozilla.social.core.ui.common.account.quickview.toQuickViewUiState
 import org.mozilla.social.core.ui.common.account.toggleablelist.ToggleableAccountListItemState
 import org.mozilla.social.core.usecase.mastodon.account.BlockAccount
 import org.mozilla.social.core.usecase.mastodon.account.GetLoggedInUserAccountId
 import org.mozilla.social.core.usecase.mastodon.account.UnblockAccount
-import org.mozilla.social.core.repository.paging.BlocksListRemoteMediator
 import org.mozilla.social.feature.settings.R
 import org.mozilla.social.feature.settings.SettingsInteractions
+import timber.log.Timber
 
 class BlockedUsersViewModel(
     repository: BlocksRepository,
@@ -44,8 +45,21 @@ class BlockedUsersViewModel(
     fun onButtonClicked(accountId: String, buttonState: BlockedButtonState) {
         viewModelScope.launch(Dispatchers.IO) {
             when (buttonState) {
-                is BlockedButtonState.Blocked -> unblockAccount(accountId)
-                is BlockedButtonState.Unblocked -> blockAccount(accountId)
+                is BlockedButtonState.Blocked -> {
+                    try {
+                        unblockAccount(accountId)
+                    } catch (e: UnblockAccount.UnblockFailedException) {
+                        Timber.e(e)
+                    }
+                }
+
+                is BlockedButtonState.Unblocked -> {
+                    try {
+                        blockAccount(accountId)
+                    } catch (e: BlockAccount.BlockFailedException) {
+                        Timber.e(e)
+                    }
+                }
             }
         }
     }
