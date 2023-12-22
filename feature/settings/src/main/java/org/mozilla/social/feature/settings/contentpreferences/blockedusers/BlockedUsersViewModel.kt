@@ -13,6 +13,7 @@ import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.core.analytics.Analytics
 import org.mozilla.social.core.analytics.AnalyticsIdentifiers
 import org.mozilla.social.core.model.BlockedUser
+import org.mozilla.social.core.navigation.usecases.NavigateToAccount
 import org.mozilla.social.core.repository.mastodon.BlocksRepository
 import org.mozilla.social.core.ui.common.account.quickview.toQuickViewUiState
 import org.mozilla.social.core.ui.common.account.toggleablelist.ToggleableAccountListItemState
@@ -30,6 +31,7 @@ class BlockedUsersViewModel(
     private val analytics: Analytics,
     private val blockAccount: BlockAccount,
     private val unblockAccount: UnblockAccount,
+    private val navigateToAccount: NavigateToAccount,
 ) : ViewModel(), SettingsInteractions {
 
     private val userAccountId: String = getLoggedInUserAccountId()
@@ -46,6 +48,10 @@ class BlockedUsersViewModel(
                 is BlockedButtonState.Unblocked -> blockAccount(accountId)
             }
         }
+    }
+
+    fun onAccountClicked(accountId: String) {
+        navigateToAccount(accountId)
     }
 
     override fun onScreenViewed() {

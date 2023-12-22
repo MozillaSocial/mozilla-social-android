@@ -21,6 +21,7 @@ fun MutedUsersSettingsScreen(viewModel: MutedUsersSettingsViewModel = koinViewMo
         SettingsColumn(title = stringResource(id = R.string.muted_users_title)) {
             ToggleableAccountList(
                 pagingData = viewModel.mutes,
+                onAccountClicked = viewModel::onAccountClicked,
                 onButtonClicked = viewModel::onButtonClicked
             )
         }

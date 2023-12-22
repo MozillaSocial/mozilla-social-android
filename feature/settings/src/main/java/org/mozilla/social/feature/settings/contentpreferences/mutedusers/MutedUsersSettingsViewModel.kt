@@ -13,6 +13,7 @@ import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.core.analytics.Analytics
 import org.mozilla.social.core.analytics.AnalyticsIdentifiers
 import org.mozilla.social.core.model.MutedUser
+import org.mozilla.social.core.navigation.usecases.NavigateToAccount
 import org.mozilla.social.core.repository.mastodon.MutesRepository
 import org.mozilla.social.core.ui.common.account.quickview.toQuickViewUiState
 import org.mozilla.social.core.ui.common.account.toggleablelist.ToggleableAccountListItemState
@@ -30,7 +31,8 @@ class MutedUsersSettingsViewModel(
     private val analytics: Analytics,
     private val muteAccount: MuteAccount,
     private val unmuteAccount: UnmuteAccount,
-) : ViewModel(), SettingsInteractions {
+    private val navigateToAccount: NavigateToAccount,
+    ) : ViewModel(), SettingsInteractions {
 
     private val userAccountId: String = getLoggedInUserAccountId()
 
@@ -46,6 +48,10 @@ class MutedUsersSettingsViewModel(
                 is MutedButtonState.Unmuted -> muteAccount(accountId)
             }
         }
+    }
+
+    fun onAccountClicked(accountId: String) {
+        navigateToAccount(accountId)
     }
 
     override fun onScreenViewed() {

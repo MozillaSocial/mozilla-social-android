@@ -20,7 +20,11 @@ import org.mozilla.social.feature.settings.ui.SettingsColumn
 
 @Composable
 fun BlockedUsersSettingsScreen(viewModel: BlockedUsersViewModel = koinViewModel()) {
-    BlockedUsersSettingsScreen(viewModel.blocks, viewModel::onButtonClicked)
+    BlockedUsersSettingsScreen(
+        pagingData = viewModel.blocks,
+        onAccountClicked = viewModel::onAccountClicked,
+        onButtonClicked = viewModel::onButtonClicked
+    )
 
     LaunchedEffect(Unit) {
         viewModel.onScreenViewed()
@@ -30,12 +34,14 @@ fun BlockedUsersSettingsScreen(viewModel: BlockedUsersViewModel = koinViewModel(
 @Composable
 fun BlockedUsersSettingsScreen(
     pagingData: Flow<PagingData<ToggleableAccountListItemState<BlockedButtonState>>>,
+    onAccountClicked: (accountId: String) -> Unit,
     onButtonClicked: (accountId: String, buttonState: BlockedButtonState) -> Unit,
 ) {
     MoSoSurface {
         SettingsColumn(title = stringResource(id = R.string.blocked_users_title)) {
             ToggleableAccountList(
                 pagingData = pagingData,
+                onAccountClicked = onAccountClicked,
                 onButtonClicked = onButtonClicked,
             )
         }
