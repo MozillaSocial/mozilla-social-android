@@ -16,10 +16,12 @@ fun List<Account>.toSearchedAccount(
     )
 }
 
-fun List<Status>.toSearchedStatus(): List<SearchedStatus> = mapIndexed { index, status ->
+fun List<Status>.toSearchedStatus(
+    startIndex: Int = 0,
+): List<SearchedStatus> = mapIndexed { index, status ->
     SearchedStatus(
         statusId = status.statusId,
-        position = index,
+        position = startIndex + index,
         accountId = status.account.accountId,
         pollId = status.poll?.pollId,
         boostedStatusId = status.boostedStatus?.statusId,
@@ -28,9 +30,11 @@ fun List<Status>.toSearchedStatus(): List<SearchedStatus> = mapIndexed { index, 
     )
 }
 
-fun List<HashTag>.toSearchedHashTags(): List<SearchedHashTag> = mapIndexed { index, hashTag ->
+fun List<HashTag>.toSearchedHashTags(
+    startIndex: Int = 0,
+): List<SearchedHashTag> = mapIndexed { index, hashTag ->
     SearchedHashTag(
         hashTagName = hashTag.name,
-        position = index,
+        position = startIndex + index,
     )
 }

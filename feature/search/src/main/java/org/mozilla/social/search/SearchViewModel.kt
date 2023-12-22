@@ -23,6 +23,7 @@ import org.mozilla.social.core.navigation.NavigationDestination
 import org.mozilla.social.core.navigation.usecases.NavigateTo
 import org.mozilla.social.core.repository.mastodon.SearchRepository
 import org.mozilla.social.core.repository.paging.SearchAccountsRemoteMediator
+import org.mozilla.social.core.repository.paging.SearchStatusesRemoteMediator
 import org.mozilla.social.core.ui.accountfollower.AccountFollowerUiState
 import org.mozilla.social.core.ui.accountfollower.toAccountFollowerUiState
 import org.mozilla.social.core.ui.postcard.PostCardDelegate
@@ -57,9 +58,6 @@ class SearchViewModel(
         )
     }
 
-    private val _accountsFlow = MutableStateFlow<Flow<PagingData<AccountFollowerUiState>>?>(null)
-    val accountsFlow = _accountsFlow.asStateFlow()
-
     private fun updateAccountFeed() {
         val accountsRemoteMediator = getKoin().inject<SearchAccountsRemoteMediator> {
             parametersOf(
@@ -67,15 +65,33 @@ class SearchViewModel(
             )
         }.value
 
-        _accountsFlow.update {
-            searchRepository.getAccountsPager(
+        _uiState.edit { copy(
+            accountsFeed = searchRepository.getAccountsPager(
                 remoteMediator = accountsRemoteMediator,
             ).map { pagingData ->
                 pagingData.map {
                     it.toAccountFollowerUiState()
                 }
             }.cachedIn(viewModelScope)
-        }
+        ) }
+    }
+
+    private fun updateStatusFeed() {
+        val statusesRemoteMediator = getKoin().inject<SearchStatusesRemoteMediator> {
+            parametersOf(
+                _uiState.value.query
+            )
+        }.value
+
+        _uiState.edit { copy(
+            statusFeed = searchRepository.getStatusesPager(
+                remoteMediator = statusesRemoteMediator,
+            ).map { pagingData ->
+                pagingData.map {
+                    it.toPostCardUiState(usersAccountId)
+                }
+            }.cachedIn(viewModelScope)
+        ) }
     }
 
     override fun onQueryTextChanged(text: String) {
@@ -88,6 +104,7 @@ class SearchViewModel(
         searchJob?.cancel()
         searchJob = viewModelScope.launch {
             updateAccountFeed()
+            updateStatusFeed()
             searchAll(
                 uiState.value.query,
                 viewModelScope,
