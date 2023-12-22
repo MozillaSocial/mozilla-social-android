@@ -450,6 +450,8 @@ private fun HashTagsList(
             ) { index ->
                 lazyPagingItems[index]?.let { uiState ->
                     HashTagQuickView(
+                        modifier = Modifier
+                            .padding(MoSoSpacing.md),
                         uiState = uiState,
                         onButtonClicked = {}
                     )

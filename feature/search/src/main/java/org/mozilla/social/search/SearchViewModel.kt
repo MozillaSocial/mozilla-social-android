@@ -171,4 +171,12 @@ class SearchViewModel(
     override fun onAccountClicked(accountId: String) {
         navigateTo(NavigationDestination.Account(accountId = accountId))
     }
+
+    override fun onHashTagClicked(name: String) {
+        navigateTo(NavigationDestination.HashTag(name))
+    }
+
+    override fun onHashTagFollowClicked(name: String, isFollowing: Boolean) {
+        super.onHashTagFollowClicked(name, isFollowing)
+    }
 }
