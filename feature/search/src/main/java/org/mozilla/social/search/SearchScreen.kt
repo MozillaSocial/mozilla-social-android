@@ -243,6 +243,7 @@ private fun ListContent(
                 SearchTab.HASHTAGS -> {
                     HashTagsList(
                         hashTagsFeed = uiState.hashTagFeed,
+                        searchInteractions = searchInteractions,
                     )
                 }
                 SearchTab.POSTS -> {
@@ -438,6 +439,7 @@ private fun StatusesList(
 @Composable
 private fun HashTagsList(
     hashTagsFeed: Flow<PagingData<HashTagQuickViewUiState>>?,
+    searchInteractions: SearchInteractions,
 ) {
     hashTagsFeed?.collectAsLazyPagingItems()?.let { lazyPagingItems ->
         SearchPagingColumn(
@@ -451,9 +453,15 @@ private fun HashTagsList(
                 lazyPagingItems[index]?.let { uiState ->
                     HashTagQuickView(
                         modifier = Modifier
-                            .padding(MoSoSpacing.md),
+                            .padding(MoSoSpacing.md)
+                            .clickable { searchInteractions.onHashTagClicked(uiState.name) },
                         uiState = uiState,
-                        onButtonClicked = {}
+                        onButtonClicked = {
+                            searchInteractions.onHashTagFollowClicked(
+                                name = uiState.name,
+                                isFollowing = uiState.isFollowing
+                            )
+                        }
                     )
                 }
             }
