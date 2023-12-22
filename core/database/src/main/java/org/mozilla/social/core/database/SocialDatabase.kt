@@ -72,7 +72,7 @@ import org.mozilla.social.core.database.model.entities.statusCollections.Searche
         SearchedStatus::class,
         SearchedHashTag::class,
     ],
-    version = 17,
+    version = 18,
     autoMigrations = [
         AutoMigration(1, 2, DatabaseMigrations.Schema1to2::class),
         AutoMigration(2, 3),
@@ -90,6 +90,7 @@ import org.mozilla.social.core.database.model.entities.statusCollections.Searche
         AutoMigration(14, 15, DatabaseMigrations.Schema14to15::class),
         AutoMigration(15, 16),
         AutoMigration(16, 17),
+        AutoMigration(17, 18, DatabaseMigrations.Schema17to18::class),
     ],
     exportSchema = true,
 )

@@ -54,4 +54,14 @@ object DatabaseMigrations {
         tableName = "hashTags"
     )
     class Schema14to15 : AutoMigrationSpec
+
+    @DeleteColumn(
+        tableName = "mutes",
+        columnName = "isMuted",
+    )
+    @DeleteColumn(
+        tableName = "blocks",
+        columnName = "isBlocked",
+    )
+    class Schema17to18 : AutoMigrationSpec
 }

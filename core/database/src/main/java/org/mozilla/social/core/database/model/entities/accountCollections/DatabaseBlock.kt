@@ -17,11 +17,17 @@ import org.mozilla.social.core.database.model.entities.DatabaseRelationship
         childColumns = arrayOf("accountId"),
         onDelete = CASCADE,
         onUpdate = CASCADE,
-    )]
+    ),
+        ForeignKey(
+            entity = DatabaseRelationship::class,
+            parentColumns = arrayOf("accountId"),
+            childColumns = arrayOf("accountId"),
+            onDelete = CASCADE,
+            onUpdate = CASCADE,
+        )]
 )
 data class DatabaseBlock(
     @PrimaryKey val accountId: String,
-    val isBlocked: Boolean,
     val position: Int,
 )
 
