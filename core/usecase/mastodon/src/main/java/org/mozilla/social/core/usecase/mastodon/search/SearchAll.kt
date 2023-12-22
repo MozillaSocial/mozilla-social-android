@@ -36,7 +36,7 @@ class SearchAll(
     operator fun <T> invoke(
         query: String,
         coroutineScope: CoroutineScope,
-        limit: Int = 5,
+        limit: Int = 8,
         transform: (searchResult: SearchResultDetailed) -> T,
     ): Flow<Resource<T>> = flow {
         emit(Resource.Loading())

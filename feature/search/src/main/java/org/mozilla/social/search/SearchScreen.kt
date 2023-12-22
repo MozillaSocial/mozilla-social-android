@@ -16,9 +16,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -29,6 +31,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -63,6 +66,7 @@ import org.mozilla.social.core.ui.common.appbar.MoSoCloseableTopAppBar
 import org.mozilla.social.core.ui.common.divider.MoSoDivider
 import org.mozilla.social.core.ui.common.error.GenericError
 import org.mozilla.social.core.ui.common.loading.MaxSizeLoading
+import org.mozilla.social.core.ui.common.paging.SearchPagingColumn
 import org.mozilla.social.core.ui.postcard.PostCard
 import org.mozilla.social.core.ui.postcard.PostCardInteractions
 import org.mozilla.social.feature.search.R
@@ -351,7 +355,10 @@ private fun AccountsList(
     searchInteractions: SearchInteractions,
 ) {
     accountFeed?.collectAsLazyPagingItems()?.let { lazyPagingItems ->
-        LazyColumn {
+        SearchPagingColumn(
+            lazyPagingItems = lazyPagingItems,
+            noResultText = stringResource(id = R.string.search_empty)
+        ) {
             items(
                 count = lazyPagingItems.itemCount,
                 key = lazyPagingItems.itemKey { it.accountQuickViewUiState.accountId },
