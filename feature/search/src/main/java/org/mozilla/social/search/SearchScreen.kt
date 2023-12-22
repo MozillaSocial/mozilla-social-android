@@ -62,6 +62,7 @@ import org.mozilla.social.core.ui.common.MoSoSurface
 import org.mozilla.social.core.ui.common.MoSoTab
 import org.mozilla.social.core.ui.common.MoSoTabRow
 import org.mozilla.social.core.ui.common.account.quickview.AccountQuickViewBox
+import org.mozilla.social.core.ui.common.animation.DelayedVisibility
 import org.mozilla.social.core.ui.common.appbar.MoSoCloseableTopAppBar
 import org.mozilla.social.core.ui.common.divider.MoSoDivider
 import org.mozilla.social.core.ui.common.error.GenericError
@@ -344,6 +345,19 @@ private fun TopList(
                 if (index < searchResultUiState.postCardUiStates.count()) {
                     MoSoDivider()
                 }
+            }
+        }
+
+        if (searchResultUiState.accountUiStates.isEmpty() &&
+            searchResultUiState.postCardUiStates.isEmpty()) {
+            item {
+                Text(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .wrapContentWidth(Alignment.CenterHorizontally)
+                        .padding(16.dp),
+                    text = stringResource(id = R.string.search_empty),
+                )
             }
         }
     }
