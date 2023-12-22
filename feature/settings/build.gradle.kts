@@ -29,5 +29,5 @@ dependencies {
     implementation(libs.koin.core)
     implementation(libs.koin.androidx.compose)
     implementation(libs.protobuf.kotlin.lite)
-
+    implementation(libs.jakewharton.timber)
 }

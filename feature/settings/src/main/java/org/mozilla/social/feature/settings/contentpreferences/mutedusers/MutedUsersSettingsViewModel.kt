@@ -15,14 +15,15 @@ import org.mozilla.social.core.analytics.AnalyticsIdentifiers
 import org.mozilla.social.core.model.MutedUser
 import org.mozilla.social.core.navigation.usecases.NavigateToAccount
 import org.mozilla.social.core.repository.mastodon.MutesRepository
+import org.mozilla.social.core.repository.paging.MutesListRemoteMediator
 import org.mozilla.social.core.ui.common.account.quickview.toQuickViewUiState
 import org.mozilla.social.core.ui.common.account.toggleablelist.ToggleableAccountListItemState
 import org.mozilla.social.core.usecase.mastodon.account.GetLoggedInUserAccountId
 import org.mozilla.social.core.usecase.mastodon.account.MuteAccount
 import org.mozilla.social.core.usecase.mastodon.account.UnmuteAccount
-import org.mozilla.social.core.repository.paging.MutesListRemoteMediator
 import org.mozilla.social.feature.settings.R
 import org.mozilla.social.feature.settings.SettingsInteractions
+import timber.log.Timber
 
 class MutedUsersSettingsViewModel(
     repository: MutesRepository,
@@ -32,7 +33,7 @@ class MutedUsersSettingsViewModel(
     private val muteAccount: MuteAccount,
     private val unmuteAccount: UnmuteAccount,
     private val navigateToAccount: NavigateToAccount,
-    ) : ViewModel(), SettingsInteractions {
+) : ViewModel(), SettingsInteractions {
 
     private val userAccountId: String = getLoggedInUserAccountId()
 
@@ -44,8 +45,21 @@ class MutedUsersSettingsViewModel(
     fun onButtonClicked(accountId: String, mutedButtonState: MutedButtonState) {
         viewModelScope.launch(Dispatchers.IO) {
             when (mutedButtonState) {
-                is MutedButtonState.Muted -> unmuteAccount(accountId)
-                is MutedButtonState.Unmuted -> muteAccount(accountId)
+                is MutedButtonState.Muted -> {
+                    try {
+                        unmuteAccount(accountId)
+                    } catch (e: UnmuteAccount.UnmuteFailedException) {
+                        Timber.e(e)
+                    }
+                }
+
+                is MutedButtonState.Unmuted -> {
+                    try {
+                        muteAccount(accountId)
+                    } catch (e: MuteAccount.MuteFailedException) {
+                        Timber.e(e)
+                    }
+                }
             }
         }
     }
