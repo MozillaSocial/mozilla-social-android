@@ -24,6 +24,7 @@ import org.mozilla.social.core.usecase.mastodon.search.SearchAll
 import org.mozilla.social.core.usecase.mastodon.status.BoostStatus
 import org.mozilla.social.core.usecase.mastodon.status.DeleteStatus
 import org.mozilla.social.core.usecase.mastodon.status.FavoriteStatus
+import org.mozilla.social.core.usecase.mastodon.status.GetInReplyToAccountNames
 import org.mozilla.social.core.usecase.mastodon.status.PostStatus
 import org.mozilla.social.core.usecase.mastodon.status.SaveStatusToDatabase
 import org.mozilla.social.core.usecase.mastodon.status.UndoBoostStatus
@@ -189,4 +190,5 @@ val mastodonUsecaseModule =
 
         singleOf(::GetDomain)
         singleOf(::SearchAll)
+        singleOf(::GetInReplyToAccountNames)
     }
