@@ -262,57 +262,10 @@ private fun TopList(
     ) {
         if (searchResultUiState.accountUiStates.isNotEmpty()) {
             item {
-                Row(
-                    modifier = Modifier
-                        .padding(start = MoSoSpacing.md, end = MoSoSpacing.md, top = MoSoSpacing.md)
-                        .clickable { searchInteractions.onTabClicked(SearchTab.ACCOUNTS) }
-                ) {
-                    Text(
-                        modifier = Modifier
-                            .weight(1f),
-                        text = stringResource(id = R.string.accounts_tab),
-                        style = MoSoTheme.typography.titleMedium,
-                    )
-                    Icon(painter = MoSoIcons.caretRight(), contentDescription = "")
-                }
-                LazyRow {
-                    items(
-                        count = searchResultUiState.accountUiStates.count(),
-                        key = { searchResultUiState.accountUiStates[it].quickViewUiState.accountId },
-                    ) { index ->
-                        val item = searchResultUiState.accountUiStates[index]
-                        NoRipple {
-                            AccountQuickViewBox(
-                                modifier = Modifier
-                                    .padding(MoSoSpacing.md)
-                                    .border(
-                                        width = 1.dp,
-                                        color = MoSoTheme.colors.borderPrimary,
-                                        shape = RoundedCornerShape(MoSoRadius.lg_16_dp)
-                                    )
-                                    .clickable {
-                                        searchInteractions.onAccountClicked(item.quickViewUiState.accountId)
-                                    }
-                                    .width(256.dp)
-                                    .padding(MoSoSpacing.md),
-                                uiState = item.quickViewUiState,
-                                buttonSlot = {
-                                    AccountFollowingButton(
-                                        onButtonClicked = {
-                                            searchInteractions.onFollowClicked(
-                                                item.quickViewUiState.accountId,
-                                                item.isFollowing
-                                            )
-                                        },
-                                        isFollowing = item.isFollowing
-                                    )
-                                },
-                            )
-                        }
-                    }
-                }
-
-                MoSoDivider()
+                TopAccounts(
+                    searchResultUiState = searchResultUiState,
+                    searchInteractions = searchInteractions,
+                )
             }
         }
 
@@ -361,6 +314,64 @@ private fun TopList(
             }
         }
     }
+}
+
+@Composable
+private fun TopAccounts(
+    searchResultUiState: SearchResultUiState,
+    searchInteractions: SearchInteractions,
+) {
+    Row(
+        modifier = Modifier
+            .padding(start = MoSoSpacing.md, end = MoSoSpacing.md, top = MoSoSpacing.md)
+            .clickable { searchInteractions.onTabClicked(SearchTab.ACCOUNTS) }
+    ) {
+        Text(
+            modifier = Modifier
+                .weight(1f),
+            text = stringResource(id = R.string.accounts_tab),
+            style = MoSoTheme.typography.titleMedium,
+        )
+        Icon(painter = MoSoIcons.caretRight(), contentDescription = "")
+    }
+    LazyRow {
+        items(
+            count = searchResultUiState.accountUiStates.count(),
+            key = { searchResultUiState.accountUiStates[it].quickViewUiState.accountId },
+        ) { index ->
+            val item = searchResultUiState.accountUiStates[index]
+            NoRipple {
+                AccountQuickViewBox(
+                    modifier = Modifier
+                        .padding(MoSoSpacing.md)
+                        .border(
+                            width = 1.dp,
+                            color = MoSoTheme.colors.borderPrimary,
+                            shape = RoundedCornerShape(MoSoRadius.lg_16_dp)
+                        )
+                        .clickable {
+                            searchInteractions.onAccountClicked(item.quickViewUiState.accountId)
+                        }
+                        .width(256.dp)
+                        .padding(MoSoSpacing.md),
+                    uiState = item.quickViewUiState,
+                    buttonSlot = {
+                        AccountFollowingButton(
+                            onButtonClicked = {
+                                searchInteractions.onFollowClicked(
+                                    item.quickViewUiState.accountId,
+                                    item.isFollowing
+                                )
+                            },
+                            isFollowing = item.isFollowing
+                        )
+                    },
+                )
+            }
+        }
+    }
+
+    MoSoDivider()
 }
 
 @Composable
