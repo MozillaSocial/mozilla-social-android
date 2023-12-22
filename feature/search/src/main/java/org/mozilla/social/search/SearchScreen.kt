@@ -77,12 +77,10 @@ internal fun SearchScreen(
     viewModel: SearchViewModel = koinViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val accountFeed by viewModel.accountsFlow.collectAsStateWithLifecycle()
     SearchScreen(
         uiState = uiState,
         searchInteractions = viewModel,
         postCardInteractions = viewModel.postCardDelegate,
-        accountFeed = accountFeed,
     )
 }
 
@@ -92,7 +90,6 @@ private fun SearchScreen(
     uiState: SearchUiState,
     searchInteractions: SearchInteractions,
     postCardInteractions: PostCardInteractions,
-    accountFeed: Flow<PagingData<AccountFollowerUiState>>?,
 ) {
     MoSoSurface {
         Column(Modifier.systemBarsPadding()) {
@@ -170,7 +167,6 @@ private fun SearchScreen(
                         uiState = uiState,
                         searchInteractions = searchInteractions,
                         postCardInteractions = postCardInteractions,
-                        accountFeed = accountFeed,
                     )
                 }
                 androidx.compose.animation.AnimatedVisibility(
@@ -217,7 +213,6 @@ private fun ListContent(
     uiState: SearchUiState,
     searchInteractions: SearchInteractions,
     postCardInteractions: PostCardInteractions,
-    accountFeed: Flow<PagingData<AccountFollowerUiState>>?,
 ) {
     when (uiState.topResource) {
         is Resource.Loading -> {
@@ -239,7 +234,7 @@ private fun ListContent(
                 }
                 SearchTab.ACCOUNTS -> {
                     AccountsList(
-                        accountFeed = accountFeed,
+                        accountFeed = uiState.accountsFeed,
                         searchInteractions = searchInteractions,
                     )
                 }

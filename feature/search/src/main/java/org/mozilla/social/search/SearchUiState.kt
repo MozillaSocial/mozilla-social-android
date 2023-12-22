@@ -1,8 +1,11 @@
 package org.mozilla.social.search
 
+import androidx.paging.PagingData
+import kotlinx.coroutines.flow.Flow
 import org.mozilla.social.common.Resource
 import org.mozilla.social.core.model.Account
 import org.mozilla.social.core.model.wrappers.DetailedAccountWrapper
+import org.mozilla.social.core.ui.accountfollower.AccountFollowerUiState
 import org.mozilla.social.core.ui.common.account.quickview.AccountQuickViewUiState
 import org.mozilla.social.core.ui.postcard.PostCardUiState
 
@@ -10,6 +13,7 @@ data class SearchUiState(
     val query: String = "",
     val selectedTab: SearchTab = SearchTab.TOP,
     val topResource: Resource<SearchResultUiState> = Resource.Loading(),
+    val accountsFeed: Flow<PagingData<AccountFollowerUiState>>? = null,
 )
 
 data class SearchResultUiState(

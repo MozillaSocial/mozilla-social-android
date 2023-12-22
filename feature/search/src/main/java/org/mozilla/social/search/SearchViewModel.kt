@@ -57,9 +57,6 @@ class SearchViewModel(
         )
     }
 
-    private val _accountsFlow = MutableStateFlow<Flow<PagingData<AccountFollowerUiState>>?>(null)
-    val accountsFlow = _accountsFlow.asStateFlow()
-
     private fun updateAccountFeed() {
         val accountsRemoteMediator = getKoin().inject<SearchAccountsRemoteMediator> {
             parametersOf(
@@ -67,15 +64,15 @@ class SearchViewModel(
             )
         }.value
 
-        _accountsFlow.update {
-            searchRepository.getAccountsPager(
+        _uiState.edit { copy(
+            accountsFeed = searchRepository.getAccountsPager(
                 remoteMediator = accountsRemoteMediator,
             ).map { pagingData ->
                 pagingData.map {
                     it.toAccountFollowerUiState()
                 }
             }.cachedIn(viewModelScope)
-        }
+        ) }
     }
 
     override fun onQueryTextChanged(text: String) {
