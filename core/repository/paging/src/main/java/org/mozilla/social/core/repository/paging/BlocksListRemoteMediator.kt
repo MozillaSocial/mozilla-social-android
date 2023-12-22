@@ -69,7 +69,7 @@ class BlocksListRemoteMediator(
                 relationshipRepository.insertAll(relationships)
                 blocksRepository.insertAll(
                     response.accounts.mapIndexed { index, account ->
-                        account.toDatabaseBlock(isBlocked = true, position = index)
+                        account.toDatabaseBlock(position = nextPositionIndex + index)
                     },
                 )
             }

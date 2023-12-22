@@ -57,12 +57,11 @@ fun Account.toDatabaseModel(): DatabaseAccount =
         muteExpiresAt = muteExpiresAt,
     )
 
-fun Account.toDatabaseBlock(isBlocked: Boolean, position: Int): DatabaseBlock =
-    DatabaseBlock(accountId = accountId, isBlocked = isBlocked, position = position)
+fun Account.toDatabaseBlock(position: Int): DatabaseBlock =
+    DatabaseBlock(accountId = accountId, position = position)
 
-
-fun Account.toDatabaseMute(isMuted: Boolean, position: Int): DatabaseMute =
-    DatabaseMute(accountId = accountId, isMuted = isMuted, position = position)
+fun Account.toDatabaseMute(position: Int): DatabaseMute =
+    DatabaseMute(accountId = accountId, position = position)
 
 fun StatusVisibility.toDatabaseModel(): DatabaseStatusVisibility =
     when (this) {

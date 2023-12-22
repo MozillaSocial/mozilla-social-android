@@ -68,7 +68,7 @@ class MutesListRemoteMediator(
                 relationshipRepository.insertAll(relationships)
                 mutesRepository.insertAll(
                     response.accounts.mapIndexed { index, account ->
-                        account.toDatabaseMute(isMuted = true, position = index)
+                        account.toDatabaseMute(position = nextPositionIndex + index)
                     },
                 )
             }
