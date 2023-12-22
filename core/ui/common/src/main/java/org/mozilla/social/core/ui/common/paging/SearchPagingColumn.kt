@@ -52,10 +52,7 @@ fun <A : Any> SearchPagingColumn(
                 }
                 is LoadState.NotLoading -> {
                     item {
-                        DelayedVisibility(
-                            key = lazyPagingItems.loadState.refresh,
-                            visible = lazyPagingItems.itemCount == 0
-                        ) {
+                        DelayedVisibility {
                             Text(
                                 modifier = Modifier
                                     .fillMaxWidth()
