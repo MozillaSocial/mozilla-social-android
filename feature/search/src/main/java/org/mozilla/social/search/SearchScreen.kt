@@ -16,9 +16,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -29,6 +31,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -40,6 +43,10 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.paging.PagingData
+import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.itemKey
+import kotlinx.coroutines.flow.Flow
 import org.koin.androidx.compose.koinViewModel
 import org.mozilla.social.common.Resource
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
@@ -47,16 +54,20 @@ import org.mozilla.social.core.designsystem.theme.MoSoRadius
 import org.mozilla.social.core.designsystem.theme.MoSoSpacing
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.designsystem.utils.NoRipple
+import org.mozilla.social.core.ui.accountfollower.AccountFollower
+import org.mozilla.social.core.ui.accountfollower.AccountFollowerUiState
 import org.mozilla.social.core.ui.accountfollower.AccountFollowingButton
 import org.mozilla.social.core.ui.common.MoSoSearchBar
 import org.mozilla.social.core.ui.common.MoSoSurface
 import org.mozilla.social.core.ui.common.MoSoTab
 import org.mozilla.social.core.ui.common.MoSoTabRow
 import org.mozilla.social.core.ui.common.account.quickview.AccountQuickViewBox
+import org.mozilla.social.core.ui.common.animation.DelayedVisibility
 import org.mozilla.social.core.ui.common.appbar.MoSoCloseableTopAppBar
 import org.mozilla.social.core.ui.common.divider.MoSoDivider
 import org.mozilla.social.core.ui.common.error.GenericError
 import org.mozilla.social.core.ui.common.loading.MaxSizeLoading
+import org.mozilla.social.core.ui.common.paging.SearchPagingColumn
 import org.mozilla.social.core.ui.postcard.PostCard
 import org.mozilla.social.core.ui.postcard.PostCardInteractions
 import org.mozilla.social.feature.search.R
@@ -66,10 +77,12 @@ internal fun SearchScreen(
     viewModel: SearchViewModel = koinViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val accountFeed by viewModel.accountsFlow.collectAsStateWithLifecycle()
     SearchScreen(
         uiState = uiState,
         searchInteractions = viewModel,
         postCardInteractions = viewModel.postCardDelegate,
+        accountFeed = accountFeed,
     )
 }
 
@@ -79,6 +92,7 @@ private fun SearchScreen(
     uiState: SearchUiState,
     searchInteractions: SearchInteractions,
     postCardInteractions: PostCardInteractions,
+    accountFeed: Flow<PagingData<AccountFollowerUiState>>?,
 ) {
     MoSoSurface {
         Column(Modifier.systemBarsPadding()) {
@@ -111,9 +125,11 @@ private fun SearchScreen(
                         query = uiState.query,
                         onQueryChange = { searchInteractions.onQueryTextChanged(it) },
                         onSearch = {
-                            keyboardController?.hide()
-                            focusManager.clearFocus()
-                            searchInteractions.onSearchClicked()
+                            if (uiState.query.isNotBlank()) {
+                                keyboardController?.hide()
+                                focusManager.clearFocus()
+                                searchInteractions.onSearchClicked()
+                            }
                         },
                         leadingIcon = {
                             Icon(
@@ -124,7 +140,12 @@ private fun SearchScreen(
                             )
                         },
                         trailingIcon = {
-                            IconButton(onClick = { searchInteractions.onQueryTextChanged("") }) {
+                            IconButton(
+                                onClick = {
+                                    searchInteractions.onQueryTextChanged("")
+                                    searchFocusRequester.requestFocus()
+                                }
+                            ) {
                                 Icon(
                                     modifier = Modifier.size(16.dp),
                                     painter = MoSoIcons.x(),
@@ -149,6 +170,7 @@ private fun SearchScreen(
                         uiState = uiState,
                         searchInteractions = searchInteractions,
                         postCardInteractions = postCardInteractions,
+                        accountFeed = accountFeed,
                     )
                 }
                 androidx.compose.animation.AnimatedVisibility(
@@ -195,6 +217,7 @@ private fun ListContent(
     uiState: SearchUiState,
     searchInteractions: SearchInteractions,
     postCardInteractions: PostCardInteractions,
+    accountFeed: Flow<PagingData<AccountFollowerUiState>>?,
 ) {
     when (uiState.topResource) {
         is Resource.Loading -> {
@@ -214,7 +237,12 @@ private fun ListContent(
                         postCardInteractions = postCardInteractions,
                     )
                 }
-                SearchTab.ACCOUNTS -> {}
+                SearchTab.ACCOUNTS -> {
+                    AccountsList(
+                        accountFeed = accountFeed,
+                        searchInteractions = searchInteractions,
+                    )
+                }
                 SearchTab.HASHTAGS -> {}
                 SearchTab.POSTS -> {}
             }
@@ -234,57 +262,10 @@ private fun TopList(
     ) {
         if (searchResultUiState.accountUiStates.isNotEmpty()) {
             item {
-                Row(
-                    modifier = Modifier
-                        .padding(start = MoSoSpacing.md, end = MoSoSpacing.md, top = MoSoSpacing.md)
-                        .clickable { searchInteractions.onTabClicked(SearchTab.ACCOUNTS) }
-                ) {
-                    Text(
-                        modifier = Modifier
-                            .weight(1f),
-                        text = stringResource(id = R.string.accounts_tab),
-                        style = MoSoTheme.typography.titleMedium,
-                    )
-                    Icon(painter = MoSoIcons.caretRight(), contentDescription = "")
-                }
-                LazyRow {
-                    items(
-                        count = searchResultUiState.accountUiStates.count(),
-                        key = { searchResultUiState.accountUiStates[it].quickViewUiState.accountId },
-                    ) { index ->
-                        val item = searchResultUiState.accountUiStates[index]
-                        NoRipple {
-                            AccountQuickViewBox(
-                                modifier = Modifier
-                                    .padding(MoSoSpacing.md)
-                                    .border(
-                                        width = 1.dp,
-                                        color = MoSoTheme.colors.borderPrimary,
-                                        shape = RoundedCornerShape(MoSoRadius.lg_16_dp)
-                                    )
-                                    .clickable {
-                                        searchInteractions.onAccountClicked(item.quickViewUiState.accountId)
-                                    }
-                                    .width(256.dp)
-                                    .padding(MoSoSpacing.md),
-                                uiState = item.quickViewUiState,
-                                buttonSlot = {
-                                    AccountFollowingButton(
-                                        onButtonClicked = {
-                                            searchInteractions.onFollowClicked(
-                                                item.quickViewUiState.accountId,
-                                                item.isFollowing
-                                            )
-                                        },
-                                        isFollowing = item.isFollowing
-                                    )
-                                },
-                            )
-                        }
-                    }
-                }
-
-                MoSoDivider()
+                TopAccounts(
+                    searchResultUiState = searchResultUiState,
+                    searchInteractions = searchInteractions,
+                )
             }
         }
 
@@ -316,6 +297,114 @@ private fun TopList(
                 )
                 if (index < searchResultUiState.postCardUiStates.count()) {
                     MoSoDivider()
+                }
+            }
+        }
+
+        if (searchResultUiState.accountUiStates.isEmpty() &&
+            searchResultUiState.postCardUiStates.isEmpty()) {
+            item {
+                Text(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .wrapContentWidth(Alignment.CenterHorizontally)
+                        .padding(16.dp),
+                    text = stringResource(id = R.string.search_empty),
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun TopAccounts(
+    searchResultUiState: SearchResultUiState,
+    searchInteractions: SearchInteractions,
+) {
+    Row(
+        modifier = Modifier
+            .padding(start = MoSoSpacing.md, end = MoSoSpacing.md, top = MoSoSpacing.md)
+            .clickable { searchInteractions.onTabClicked(SearchTab.ACCOUNTS) }
+    ) {
+        Text(
+            modifier = Modifier
+                .weight(1f),
+            text = stringResource(id = R.string.accounts_tab),
+            style = MoSoTheme.typography.titleMedium,
+        )
+        Icon(painter = MoSoIcons.caretRight(), contentDescription = "")
+    }
+    LazyRow {
+        items(
+            count = searchResultUiState.accountUiStates.count(),
+            key = { searchResultUiState.accountUiStates[it].quickViewUiState.accountId },
+        ) { index ->
+            val item = searchResultUiState.accountUiStates[index]
+            NoRipple {
+                AccountQuickViewBox(
+                    modifier = Modifier
+                        .padding(MoSoSpacing.md)
+                        .border(
+                            width = 1.dp,
+                            color = MoSoTheme.colors.borderPrimary,
+                            shape = RoundedCornerShape(MoSoRadius.lg_16_dp)
+                        )
+                        .clickable {
+                            searchInteractions.onAccountClicked(item.quickViewUiState.accountId)
+                        }
+                        .width(256.dp)
+                        .padding(MoSoSpacing.md),
+                    uiState = item.quickViewUiState,
+                    buttonSlot = {
+                        AccountFollowingButton(
+                            onButtonClicked = {
+                                searchInteractions.onFollowClicked(
+                                    item.quickViewUiState.accountId,
+                                    item.isFollowing
+                                )
+                            },
+                            isFollowing = item.isFollowing
+                        )
+                    },
+                )
+            }
+        }
+    }
+
+    MoSoDivider()
+}
+
+@Composable
+private fun AccountsList(
+    accountFeed: Flow<PagingData<AccountFollowerUiState>>?,
+    searchInteractions: SearchInteractions,
+) {
+    accountFeed?.collectAsLazyPagingItems()?.let { lazyPagingItems ->
+        SearchPagingColumn(
+            lazyPagingItems = lazyPagingItems,
+            noResultText = stringResource(id = R.string.search_empty)
+        ) {
+            items(
+                count = lazyPagingItems.itemCount,
+                key = lazyPagingItems.itemKey { it.accountQuickViewUiState.accountId },
+            ) { index ->
+                lazyPagingItems[index]?.let { uiState ->
+                    AccountFollower(
+                        uiState = uiState,
+                        onButtonClicked = {
+                            searchInteractions.onFollowClicked(
+                                uiState.accountQuickViewUiState.accountId,
+                                isFollowing = uiState.isFollowing,
+                            )
+                        },
+                        modifier = Modifier
+                            .padding(MoSoSpacing.md)
+                            .clickable {
+                                searchInteractions.onAccountClicked(
+                                    accountId = uiState.accountQuickViewUiState.accountId
+                                )
+                            },
+                    )
                 }
             }
         }

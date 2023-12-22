@@ -52,4 +52,14 @@ val pagingModule = module {
             parametersHolder[0],
         )
     }
+
+    factory { parametersHolder ->
+        SearchAccountsRemoteMediator(
+            searchRepository = get(),
+            databaseDelegate = get(),
+            accountRepository = get(),
+            relationshipRepository = get(),
+            query = parametersHolder[0],
+        )
+    }
 }

@@ -1,9 +1,18 @@
 package org.mozilla.social.core.repository.mastodon
 
+import androidx.paging.ExperimentalPagingApi
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.RemoteMediator
+import androidx.paging.map
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
 import org.mozilla.social.core.database.dao.SearchDao
+import org.mozilla.social.core.database.model.entities.accountCollections.FollowerWrapper
 import org.mozilla.social.core.database.model.entities.accountCollections.SearchedAccount
+import org.mozilla.social.core.database.model.entities.accountCollections.SearchedAccountWrapper
 import org.mozilla.social.core.database.model.entities.hashtagCollections.SearchedHashTag
 import org.mozilla.social.core.database.model.entities.statusCollections.SearchedStatus
 import org.mozilla.social.core.database.model.entities.statusCollections.toStatusWrapper
@@ -12,6 +21,7 @@ import org.mozilla.social.core.model.HashTag
 import org.mozilla.social.core.model.SearchResult
 import org.mozilla.social.core.model.SearchResultDetailed
 import org.mozilla.social.core.model.SearchType
+import org.mozilla.social.core.model.wrappers.DetailedAccountWrapper
 import org.mozilla.social.core.network.mastodon.SearchApi
 import org.mozilla.social.core.repository.mastodon.model.account.toDetailedAccount
 import org.mozilla.social.core.repository.mastodon.model.hashtag.toExternalModel
@@ -92,4 +102,25 @@ class SearchRepository internal constructor(
             searchDao.deleteAllSearchedStatues()
         }
     }
+
+    @ExperimentalPagingApi
+    fun getAccountsPager(
+        remoteMediator: RemoteMediator<Int, SearchedAccountWrapper>,
+        pageSize: Int = 40,
+        initialLoadSize: Int = 40,
+    ): Flow<PagingData<DetailedAccountWrapper>> =
+        Pager(
+            config =
+            PagingConfig(
+                pageSize = pageSize,
+                initialLoadSize = initialLoadSize,
+            ),
+            remoteMediator = remoteMediator,
+        ) {
+            searchDao.accountsPagingSource()
+        }.flow.map { pagingData ->
+            pagingData.map {
+                it.toDetailedAccount()
+            }
+        }
 }
