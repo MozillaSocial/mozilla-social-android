@@ -9,18 +9,18 @@ import org.mozilla.social.common.Rel
 import org.mozilla.social.common.getMaxIdValue
 import org.mozilla.social.core.database.model.entities.statusCollections.FavoritesTimelineStatus
 import org.mozilla.social.core.database.model.entities.statusCollections.FavoritesTimelineStatusWrapper
-import org.mozilla.social.core.repository.mastodon.AccountRepository
 import org.mozilla.social.core.repository.mastodon.DatabaseDelegate
 import org.mozilla.social.core.repository.mastodon.FavoritesRepository
+import org.mozilla.social.core.usecase.mastodon.status.GetInReplyToAccountNames
 import org.mozilla.social.core.usecase.mastodon.status.SaveStatusToDatabase
 import timber.log.Timber
 
 @OptIn(ExperimentalPagingApi::class)
 class FavoritesRemoteMediator(
     private val favoritesRepository: FavoritesRepository,
-    private val accountRepository: AccountRepository,
     private val saveStatusToDatabase: SaveStatusToDatabase,
     private val databaseDelegate: DatabaseDelegate,
+    private val getInReplyToAccountNames: GetInReplyToAccountNames,
 )  : RemoteMediator<Int, FavoritesTimelineStatusWrapper>() {
     private var nextKey: String? = null
     private var nextPositionIndex = 0
@@ -65,7 +65,7 @@ class FavoritesRemoteMediator(
                     }
                 }
 
-            val result = response.statuses.getInReplyToAccountNames(accountRepository)
+            val result = getInReplyToAccountNames(response.statuses)
 
             databaseDelegate.withTransaction {
                 if (loadType == LoadType.REFRESH) {

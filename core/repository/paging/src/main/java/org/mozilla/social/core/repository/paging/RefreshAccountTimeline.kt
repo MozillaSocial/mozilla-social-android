@@ -11,6 +11,7 @@ import org.mozilla.social.core.model.AccountTimelineType
 import org.mozilla.social.core.repository.mastodon.AccountRepository
 import org.mozilla.social.core.repository.mastodon.DatabaseDelegate
 import org.mozilla.social.core.repository.mastodon.TimelineRepository
+import org.mozilla.social.core.usecase.mastodon.status.GetInReplyToAccountNames
 import org.mozilla.social.core.usecase.mastodon.status.SaveStatusToDatabase
 import timber.log.Timber
 
@@ -19,6 +20,7 @@ class RefreshAccountTimeline internal constructor(
     private val databaseDelegate: DatabaseDelegate,
     private val timelineRepository: TimelineRepository,
     private val saveStatusToDatabase: SaveStatusToDatabase,
+    private val getInReplyToAccountNames: GetInReplyToAccountNames,
     private val accountId: String,
     private val timelineType: AccountTimelineType,
 ) {
@@ -72,7 +74,7 @@ class RefreshAccountTimeline internal constructor(
                     }
                 }
 
-            val result = response.statuses.getInReplyToAccountNames(accountRepository)
+            val result = getInReplyToAccountNames(response.statuses)
 
             databaseDelegate.withTransaction {
                 if (loadType == LoadType.REFRESH) {
