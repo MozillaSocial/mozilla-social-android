@@ -15,6 +15,7 @@ import org.mozilla.social.core.model.Status
 import org.mozilla.social.core.model.paging.FollowersPagingWrapper
 import org.mozilla.social.core.model.paging.StatusPagingWrapper
 import org.mozilla.social.core.network.mastodon.AccountApi
+import org.mozilla.social.core.repository.mastodon.exceptions.GetAccountFailedException
 import org.mozilla.social.core.repository.mastodon.model.account.toExternal
 import org.mozilla.social.core.repository.mastodon.model.status.toDatabaseModel
 import org.mozilla.social.core.repository.mastodon.model.status.toExternalModel
@@ -25,8 +26,16 @@ class AccountRepository internal constructor(
     private val api: AccountApi,
     private val dao: AccountsDao,
 ) {
+    @Suppress("SwallowedException")
     suspend fun getAccount(accountId: String): Account {
-        return api.getAccount(accountId).toExternalModel()
+        try {
+            return api.getAccount(accountId).toExternalModel()
+        } catch (e: HttpException) {
+            throw GetAccountFailedException(
+                e.code(),
+                e.message(),
+            )
+        }
     }
 
     fun getAccountFlow(accountId: String): Flow<Account> =
