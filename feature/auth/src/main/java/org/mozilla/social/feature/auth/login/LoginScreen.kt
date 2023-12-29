@@ -218,7 +218,7 @@ private fun LoginBox(
             modifier =
                 Modifier
                     .fillMaxWidth()
-                    .semantics { contentDescription = "Sign in or sign up"
+                    .semantics { contentDescription = "Login and Signup"
                     },
             enabled = !uiState.isLoading,
             onClick = { loginInteractions.onSignInClicked() },
