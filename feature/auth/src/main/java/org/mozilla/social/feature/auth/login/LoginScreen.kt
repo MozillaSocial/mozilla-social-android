@@ -1,5 +1,6 @@
 package org.mozilla.social.feature.auth.login
 
+import android.provider.Settings.Global.getString
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -35,6 +36,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.res.TypedArrayUtils.getText
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.koin.androidx.compose.koinViewModel
 import org.mozilla.social.core.designsystem.font.MoSoFonts
@@ -216,7 +218,8 @@ private fun LoginBox(
             modifier =
                 Modifier
                     .fillMaxWidth()
-                    .semantics { contentDescription = "Sign in or sign up" },
+                    .semantics { contentDescription = "Sign in or sign up"
+                    },
             enabled = !uiState.isLoading,
             onClick = { loginInteractions.onSignInClicked() },
         ) {

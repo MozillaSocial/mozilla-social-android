@@ -1,7 +1,9 @@
 package org.mozilla.social
 
 
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.hasContentDescription
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
@@ -19,12 +21,18 @@ class SplashScreenTest {
 
     @get:Rule
     val composeTestRule = createAndroidComposeRule<MainActivity>()
-
     @Test
-    fun splash_screen_appears() {
+    fun splashScreenAppears() {
         composeTestRule
             .onNodeWithContentDescription("Sign in or sign up")
             .assertIsDisplayed()
+    }
+
+    @Test
+    fun clickingSignInLoadsLoginScreen() {
+        composeTestRule
+            .onNodeWithContentDescription("Sign in or sign up")
             .performClick()
     }
+
 }
