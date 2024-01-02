@@ -53,6 +53,7 @@ val mastodonNetworkModule =
         single { get<Retrofit>().create(SearchApi::class.java) }
         single { get<Retrofit>().create(StatusApi::class.java) }
         single { get<Retrofit>().create(TimelineApi::class.java) }
+        single { get<Retrofit>().create(TagsApi::class.java) }
     }
 
 private var json: Json = Json { ignoreUnknownKeys = true }

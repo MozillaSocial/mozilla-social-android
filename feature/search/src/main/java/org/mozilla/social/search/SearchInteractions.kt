@@ -7,4 +7,6 @@ interface SearchInteractions {
     fun onRetryClicked() = Unit
     fun onFollowClicked(accountId: String, isFollowing: Boolean) = Unit
     fun onAccountClicked(accountId: String) = Unit
+    fun onHashTagClicked(name: String) = Unit
+    fun onHashTagFollowClicked(name: String, isFollowing: Boolean) = Unit
 }

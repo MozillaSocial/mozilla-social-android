@@ -72,4 +72,13 @@ val pagingModule = module {
             query = parametersHolder[0],
         )
     }
+
+    factory { parametersHolder ->
+        SearchedHashTagsRemoteMediator(
+            databaseDelegate = get(),
+            searchRepository = get(),
+            hashtagRepository = get(),
+            query = parametersHolder[0],
+        )
+    }
 }

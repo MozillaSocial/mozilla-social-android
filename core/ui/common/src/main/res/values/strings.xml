@@ -44,4 +44,12 @@
     <string name="visibility_direct">Direct</string>
     <string name="theres_nothing_here">There\'s nothing here</string>
 
+    <string name="follow_button">Follow</string>
+    <string name="following_button">Following</string>
+
+    <plurals name="hash_tag_details">
+        <item quantity="one">%d in the past %d day</item>
+        <item quantity="other">%d in the past %d days</item>
+    </plurals>
+
 </resources>

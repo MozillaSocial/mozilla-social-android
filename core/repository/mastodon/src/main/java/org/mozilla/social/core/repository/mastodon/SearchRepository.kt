@@ -14,6 +14,7 @@ import org.mozilla.social.core.database.model.entities.accountCollections.Follow
 import org.mozilla.social.core.database.model.entities.accountCollections.SearchedAccount
 import org.mozilla.social.core.database.model.entities.accountCollections.SearchedAccountWrapper
 import org.mozilla.social.core.database.model.entities.hashtagCollections.SearchedHashTag
+import org.mozilla.social.core.database.model.entities.hashtagCollections.SearchedHashTagWrapper
 import org.mozilla.social.core.database.model.entities.statusCollections.SearchedStatus
 import org.mozilla.social.core.database.model.entities.statusCollections.SearchedStatusWrapper
 import org.mozilla.social.core.database.model.entities.statusCollections.toStatusWrapper
@@ -144,6 +145,27 @@ class SearchRepository internal constructor(
         }.flow.map { pagingData ->
             pagingData.map {
                 it.toStatusWrapper().toExternalModel()
+            }
+        }
+
+    @ExperimentalPagingApi
+    fun getHashTagsPager(
+        remoteMediator: RemoteMediator<Int, SearchedHashTagWrapper>,
+        pageSize: Int = 40,
+        initialLoadSize: Int = 40,
+    ): Flow<PagingData<HashTag>> =
+        Pager(
+            config =
+            PagingConfig(
+                pageSize = pageSize,
+                initialLoadSize = initialLoadSize,
+            ),
+            remoteMediator = remoteMediator,
+        ) {
+            searchDao.hashTagsPagingSource()
+        }.flow.map { pagingData ->
+            pagingData.map {
+                it.hashTag.toExternalModel()
             }
         }
 }
