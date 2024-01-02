@@ -26,6 +26,8 @@ class AccountRepository internal constructor(
     private val api: AccountApi,
     private val dao: AccountsDao,
 ) {
+
+    @Suppress("SwallowedException")
     suspend fun getAccount(accountId: String): Account {
         try {
             return api.getAccount(accountId).toExternalModel()
