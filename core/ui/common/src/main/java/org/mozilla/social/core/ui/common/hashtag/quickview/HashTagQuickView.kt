@@ -53,34 +53,32 @@ fun HashTagQuickView(
 
         Spacer(modifier = Modifier.width(MoSoSpacing.sm))
 
-        Column {
-            Row {
-                Column(
-                    modifier = Modifier
-                        .weight(1f)
-                        .align(Alignment.CenterVertically)
-                ) {
-                    LargeTextBody(
-                        text = "#${uiState.name}",
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                    )
-                    val context = LocalContext.current
-                    MediumTextBody(
-                        text = uiState.details.build(context),
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                    )
-                }
+        Row {
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .align(Alignment.CenterVertically)
+            ) {
+                LargeTextBody(
+                    text = "#${uiState.name}",
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+                val context = LocalContext.current
+                MediumTextBody(
+                    text = uiState.details.build(context),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+            }
 
-                Box(
-                    modifier = Modifier.align(Alignment.CenterVertically)
-                ) {
-                    FollowingButton(
-                        onButtonClicked = onButtonClicked,
-                        isFollowing = uiState.isFollowing
-                    )
-                }
+            Box(
+                modifier = Modifier.align(Alignment.CenterVertically)
+            ) {
+                FollowingButton(
+                    onButtonClicked = onButtonClicked,
+                    isFollowing = uiState.isFollowing
+                )
             }
         }
     }
