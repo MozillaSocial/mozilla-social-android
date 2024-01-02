@@ -27,15 +27,13 @@ class AccountRepository internal constructor(
     private val dao: AccountsDao,
 ) {
 
-    @Suppress("SwallowedException")
     suspend fun getAccount(accountId: String): Account {
         try {
             return api.getAccount(accountId).toExternalModel()
         } catch (e: HttpException) {
             throw GetAccountFailedException(
                 e.code(),
-                e.message(),
-                e.cause,
+                e,
             )
         }
     }
