@@ -88,4 +88,14 @@ object AnalyticsIdentifiers {
 
     const val FOLLOWS_SCREEN_FOLLOW = "follows.screen.follow"
     const val FOLLOWS_SCREEN_UNFOLLOW = "follows.screen.unfollow"
+
+    const val SEARCH_QUERY = "search.query"
+    const val SEARCH_TAB_ACCOUNTS = "search.tab.accounts"
+    const val SEARCH_TAB_POSTS = "search.tab.posts"
+    const val SEARCH_TAB_HASHTAGS = "search.tab.hashtags"
+    const val SEARCH_TAB_TOP = "search.tab.top"
+    const val SEARCH_ACCOUNT_CLICKED = "search.account.clicked"
+    const val SEARCH_HASHTAG_CLICKED = "search.hashtag.clicked"
+    const val SEARCH_ACCOUNT_FOLLOW = "search.account.follow"
+    const val SEARCH_HASHTAG_FOLLOW = "search.hashtag.follow"
 }
