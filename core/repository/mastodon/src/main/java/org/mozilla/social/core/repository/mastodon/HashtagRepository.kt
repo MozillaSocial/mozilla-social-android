@@ -28,10 +28,6 @@ class HashtagRepository(
         it.toExternalModel()
     }
 
-    fun getLocalHashTag(
-        hashTag: String
-    ): HashTag = dao.getHashTag(hashTag).toExternalModel()
-
     @PreferUseCase
     suspend fun updateFollowing(
         hashTag: String,
