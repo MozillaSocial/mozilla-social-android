@@ -18,6 +18,7 @@ val pagingModule = module {
             saveStatusToDatabase = get(),
             databaseDelegate = get(),
             timelineRepository = get(),
+            getInReplyToAccountNames = get(),
             accountId = it[0],
             timelineType = it[1],
         )
@@ -67,7 +68,7 @@ val pagingModule = module {
         SearchStatusesRemoteMediator(
             searchRepository = get(),
             databaseDelegate = get(),
-            accountRepository = get(),
+            getInReplyToAccountNames = get(),
             saveStatusToDatabase = get(),
             query = parametersHolder[0],
         )

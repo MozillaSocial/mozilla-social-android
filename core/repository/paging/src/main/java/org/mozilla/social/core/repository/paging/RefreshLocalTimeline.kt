@@ -7,16 +7,16 @@ import androidx.paging.RemoteMediator
 import kotlinx.coroutines.delay
 import org.mozilla.social.common.Rel
 import org.mozilla.social.core.database.model.entities.statusCollections.LocalTimelineStatusWrapper
-import org.mozilla.social.core.repository.mastodon.AccountRepository
 import org.mozilla.social.core.repository.mastodon.DatabaseDelegate
 import org.mozilla.social.core.repository.mastodon.TimelineRepository
+import org.mozilla.social.core.usecase.mastodon.status.GetInReplyToAccountNames
 import org.mozilla.social.core.usecase.mastodon.status.SaveStatusToDatabase
 import timber.log.Timber
 
 class RefreshLocalTimeline internal constructor(
     private val timelineRepository: TimelineRepository,
-    private val accountRepository: AccountRepository,
     private val saveStatusToDatabase: SaveStatusToDatabase,
+    private val getInReplyToAccountNames: GetInReplyToAccountNames,
     private val databaseDelegate: DatabaseDelegate,
 ) {
     @OptIn(ExperimentalPagingApi::class)
@@ -64,7 +64,7 @@ class RefreshLocalTimeline internal constructor(
                     }
                 }
 
-            val result = response.statuses.getInReplyToAccountNames(accountRepository)
+            val result = getInReplyToAccountNames(response.statuses)
 
             databaseDelegate.withTransaction {
                 if (loadType == LoadType.REFRESH) {

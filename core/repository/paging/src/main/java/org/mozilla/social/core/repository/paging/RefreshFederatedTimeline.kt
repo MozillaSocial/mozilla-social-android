@@ -10,14 +10,15 @@ import org.mozilla.social.core.database.model.entities.statusCollections.Federat
 import org.mozilla.social.core.repository.mastodon.AccountRepository
 import org.mozilla.social.core.repository.mastodon.DatabaseDelegate
 import org.mozilla.social.core.repository.mastodon.TimelineRepository
+import org.mozilla.social.core.usecase.mastodon.status.GetInReplyToAccountNames
 import org.mozilla.social.core.usecase.mastodon.status.SaveStatusToDatabase
 import timber.log.Timber
 
 class RefreshFederatedTimeline internal constructor(
     private val timelineRepository: TimelineRepository,
-    private val accountRepository: AccountRepository,
     private val databaseDelegate: DatabaseDelegate,
     private val saveStatusToDatabase: SaveStatusToDatabase,
+    private val getInReplyToAccountNames: GetInReplyToAccountNames,
 ) {
     @OptIn(ExperimentalPagingApi::class)
     suspend operator fun invoke(
@@ -63,7 +64,7 @@ class RefreshFederatedTimeline internal constructor(
                     }
                 }
 
-            val result = response.statuses.getInReplyToAccountNames(accountRepository)
+            val result = getInReplyToAccountNames(response.statuses)
 
             databaseDelegate.withTransaction {
                 if (loadType == LoadType.REFRESH) {

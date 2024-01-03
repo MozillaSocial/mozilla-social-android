@@ -7,10 +7,10 @@ import androidx.paging.RemoteMediator
 import kotlinx.coroutines.delay
 import org.mozilla.social.core.database.model.entities.statusCollections.SearchedStatusWrapper
 import org.mozilla.social.core.model.SearchType
-import org.mozilla.social.core.repository.mastodon.AccountRepository
 import org.mozilla.social.core.repository.mastodon.DatabaseDelegate
 import org.mozilla.social.core.repository.mastodon.SearchRepository
 import org.mozilla.social.core.repository.mastodon.model.search.toSearchedStatus
+import org.mozilla.social.core.usecase.mastodon.status.GetInReplyToAccountNames
 import org.mozilla.social.core.usecase.mastodon.status.SaveStatusToDatabase
 import timber.log.Timber
 
@@ -18,8 +18,8 @@ import timber.log.Timber
 class SearchStatusesRemoteMediator(
     private val searchRepository: SearchRepository,
     private val databaseDelegate: DatabaseDelegate,
-    private val accountRepository: AccountRepository,
     private val saveStatusToDatabase: SaveStatusToDatabase,
+    private val getInReplyToAccountNames: GetInReplyToAccountNames,
     private val query: String,
 ) : RemoteMediator<Int, SearchedStatusWrapper>() {
     private var nextPositionIndex = 0
@@ -57,7 +57,7 @@ class SearchStatusesRemoteMediator(
                     }
                 }
 
-            val result = response.statuses.getInReplyToAccountNames(accountRepository)
+            val result = getInReplyToAccountNames(response.statuses)
 
             databaseDelegate.withTransaction {
                 if (loadType == LoadType.REFRESH) {

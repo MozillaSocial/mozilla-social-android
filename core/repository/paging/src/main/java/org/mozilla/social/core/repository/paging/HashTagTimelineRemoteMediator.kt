@@ -7,17 +7,17 @@ import androidx.paging.RemoteMediator
 import kotlinx.coroutines.delay
 import org.mozilla.social.common.Rel
 import org.mozilla.social.core.database.model.entities.statusCollections.HashTagTimelineStatusWrapper
-import org.mozilla.social.core.repository.mastodon.AccountRepository
 import org.mozilla.social.core.repository.mastodon.DatabaseDelegate
 import org.mozilla.social.core.repository.mastodon.TimelineRepository
+import org.mozilla.social.core.usecase.mastodon.status.GetInReplyToAccountNames
 import org.mozilla.social.core.usecase.mastodon.status.SaveStatusToDatabase
 
 @OptIn(ExperimentalPagingApi::class)
 class HashTagTimelineRemoteMediator(
     private val timelineRepository: TimelineRepository,
-    private val accountRepository: AccountRepository,
     private val saveStatusToDatabase: SaveStatusToDatabase,
     private val databaseDelegate: DatabaseDelegate,
+    private val getInReplyToAccountNames: GetInReplyToAccountNames,
     private val hashTag: String,
 ) : RemoteMediator<Int, HashTagTimelineStatusWrapper>() {
     @Suppress("ReturnCount")
@@ -64,7 +64,7 @@ class HashTagTimelineRemoteMediator(
                     }
                 }
 
-            val result = response.statuses.getInReplyToAccountNames(accountRepository)
+            val result = getInReplyToAccountNames(response.statuses)
 
             databaseDelegate.withTransaction {
                 if (loadType == LoadType.REFRESH) {
