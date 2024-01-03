@@ -11,7 +11,6 @@ class GetInReplyToAccountNames internal constructor(
     private val accountRepository: AccountRepository,
 ) {
 
-    @Suppress("MagicNumber")
     suspend operator fun invoke(
         statuses: List<Status>
     ): List<Status> =

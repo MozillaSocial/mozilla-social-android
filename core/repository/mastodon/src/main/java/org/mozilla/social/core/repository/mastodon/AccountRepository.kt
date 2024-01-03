@@ -27,6 +27,7 @@ class AccountRepository internal constructor(
     private val dao: AccountsDao,
 ) {
 
+    @Suppress("MagicNumber")
     suspend fun getAccount(accountId: String): Account {
         try {
             return api.getAccount(accountId).toExternalModel()
