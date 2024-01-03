@@ -14,7 +14,9 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.koin.core.parameter.parametersOf
 import org.mozilla.social.common.utils.edit
+import org.mozilla.social.core.analytics.Analytics
 import org.mozilla.social.core.analytics.AnalyticsIdentifiers
+import org.mozilla.social.core.analytics.EngagementType
 import org.mozilla.social.core.navigation.NavigationDestination
 import org.mozilla.social.core.navigation.usecases.NavigateTo
 import org.mozilla.social.core.repository.mastodon.SearchRepository
@@ -43,6 +45,7 @@ class SearchViewModel(
     private val searchRepository: SearchRepository,
     private val followHashTag: FollowHashTag,
     private val unfollowHashTag: UnfollowHashTag,
+    private val analytics: Analytics,
 ) : ViewModel(), SearchInteractions, KoinComponent {
 
     private val usersAccountId: String = getLoggedInUserAccountId()
@@ -139,6 +142,11 @@ class SearchViewModel(
                 ) }
             }
         }
+        analytics.uiEngagement(
+            engagementType = EngagementType.GENERAL,
+            uiIdentifier = AnalyticsIdentifiers.SEARCH_QUERY,
+            uiAdditionalDetail = uiState.value.query,
+        )
     }
 
     override fun onRetryClicked() {
@@ -149,6 +157,15 @@ class SearchViewModel(
         _uiState.edit { copy(
             selectedTab = tab
         ) }
+        analytics.uiEngagement(
+            engagementType = EngagementType.GENERAL,
+            uiIdentifier = when (tab) {
+                SearchTab.POSTS -> AnalyticsIdentifiers.SEARCH_TAB_POSTS
+                SearchTab.ACCOUNTS -> AnalyticsIdentifiers.SEARCH_TAB_ACCOUNTS
+                SearchTab.HASHTAGS -> AnalyticsIdentifiers.SEARCH_TAB_HASHTAGS
+                SearchTab.TOP -> AnalyticsIdentifiers.SEARCH_TAB_TOP
+            }
+        )
     }
 
     override fun onFollowClicked(accountId: String, isFollowing: Boolean) {
@@ -167,14 +184,26 @@ class SearchViewModel(
                 }
             }
         }
+        analytics.uiEngagement(
+            engagementType = EngagementType.GENERAL,
+            uiIdentifier = AnalyticsIdentifiers.SEARCH_ACCOUNT_FOLLOW,
+        )
     }
 
     override fun onAccountClicked(accountId: String) {
         navigateTo(NavigationDestination.Account(accountId = accountId))
+        analytics.uiEngagement(
+            engagementType = EngagementType.GENERAL,
+            uiIdentifier = AnalyticsIdentifiers.SEARCH_ACCOUNT_CLICKED,
+        )
     }
 
     override fun onHashTagClicked(name: String) {
         navigateTo(NavigationDestination.HashTag(name))
+        analytics.uiEngagement(
+            engagementType = EngagementType.GENERAL,
+            uiIdentifier = AnalyticsIdentifiers.SEARCH_HASHTAG_CLICKED,
+        )
     }
 
     override fun onHashTagFollowClicked(name: String, isFollowing: Boolean) {
@@ -193,5 +222,9 @@ class SearchViewModel(
                 }
             }
         }
+        analytics.uiEngagement(
+            engagementType = EngagementType.GENERAL,
+            uiIdentifier = AnalyticsIdentifiers.SEARCH_HASHTAG_FOLLOW,
+        )
     }
 }
