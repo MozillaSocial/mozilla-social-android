@@ -6,8 +6,10 @@ import androidx.paging.ExperimentalPagingApi
 import androidx.paging.cachedIn
 import androidx.paging.map
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import org.koin.core.parameter.parametersOf
-import org.koin.java.KoinJavaComponent.inject
 import org.mozilla.social.core.analytics.Analytics
 import org.mozilla.social.core.analytics.AnalyticsIdentifiers
 import org.mozilla.social.core.repository.mastodon.TimelineRepository
@@ -15,16 +17,26 @@ import org.mozilla.social.core.repository.paging.HashTagTimelineRemoteMediator
 import org.mozilla.social.core.ui.postcard.PostCardDelegate
 import org.mozilla.social.core.ui.postcard.toPostCardUiState
 import org.mozilla.social.core.usecase.mastodon.account.GetLoggedInUserAccountId
+import org.mozilla.social.core.usecase.mastodon.hashtag.FollowHashTag
+import org.mozilla.social.core.usecase.mastodon.hashtag.UnfollowHashTag
+import timber.log.Timber
 
 class HashTagViewModel(
     private val analytics: Analytics,
     timelineRepository: TimelineRepository,
     hashTag: String,
     userAccountId: GetLoggedInUserAccountId,
-) : ViewModel(), HashTagInteractions {
-    private val hashTagTimelineRemoteMediator: HashTagTimelineRemoteMediator by inject(
-        HashTagTimelineRemoteMediator::class.java,
-    ) { parametersOf(hashTag) }
+    private val unfollowHashTag: UnfollowHashTag,
+    private val followHashTag: FollowHashTag,
+) : ViewModel(), HashTagInteractions, KoinComponent {
+
+    private val hashTagTimelineRemoteMediator: HashTagTimelineRemoteMediator by inject {
+        parametersOf(hashTag)
+    }
+
+    val postCardDelegate: PostCardDelegate by inject {
+        parametersOf(viewModelScope, AnalyticsIdentifiers.FEED_PREFIX_HASHTAG)
+    }
 
     @OptIn(ExperimentalPagingApi::class)
     val feed = timelineRepository.getHashtagTimelinePager(
@@ -42,7 +54,21 @@ class HashTagViewModel(
         )
     }
 
-    val postCardDelegate: PostCardDelegate by inject(
-        PostCardDelegate::class.java,
-    ) { parametersOf(viewModelScope, AnalyticsIdentifiers.FEED_PREFIX_HASHTAG) }
+    override fun onFollowClicked(name: String, isFollowing: Boolean) {
+        viewModelScope.launch {
+            if (isFollowing) {
+                try {
+                    unfollowHashTag(name)
+                } catch (e: UnfollowHashTag.UnfollowFailedException) {
+                    Timber.e(e)
+                }
+            } else {
+                try {
+                    followHashTag(name)
+                } catch (e: FollowHashTag.FollowFailedException) {
+                    Timber.e(e)
+                }
+            }
+        }
+    }
 }

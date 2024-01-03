@@ -11,6 +11,7 @@ import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 import org.mozilla.social.core.ui.common.MoSoSurface
 import org.mozilla.social.core.ui.common.appbar.MoSoCloseableTopAppBar
+import org.mozilla.social.core.ui.common.following.FollowingButton
 import org.mozilla.social.core.ui.postcard.PostCardInteractions
 import org.mozilla.social.core.ui.postcard.PostCardList
 import org.mozilla.social.core.ui.postcard.PostCardUiState
@@ -24,6 +25,7 @@ internal fun HashTagScreen(
         hashTag = hashTag,
         feed = viewModel.feed,
         postCardInteractions = viewModel.postCardDelegate,
+        hashTagInteractions = viewModel,
     )
 
     LaunchedEffect(Unit) {
@@ -36,6 +38,7 @@ private fun HashTagScreen(
     hashTag: String,
     feed: Flow<PagingData<PostCardUiState>>,
     postCardInteractions: PostCardInteractions,
+    hashTagInteractions: HashTagInteractions,
 ) {
     MoSoSurface {
         Column(
@@ -43,6 +46,12 @@ private fun HashTagScreen(
         ) {
             MoSoCloseableTopAppBar(
                 title = "#$hashTag",
+                actions = {
+                    FollowingButton(
+                        onButtonClicked = { hashTagInteractions.onFollowClicked(hashTag, false) },
+                        isFollowing = false
+                    )
+                }
             )
 
             PostCardList(
