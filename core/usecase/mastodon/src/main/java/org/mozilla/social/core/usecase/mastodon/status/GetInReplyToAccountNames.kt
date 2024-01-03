@@ -4,7 +4,8 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import org.mozilla.social.core.model.Status
 import org.mozilla.social.core.repository.mastodon.AccountRepository
-import org.mozilla.social.core.repository.mastodon.exceptions.GetAccountFailedException
+import org.mozilla.social.core.repository.mastodon.exceptions.AccountNotFoundException
+import timber.log.Timber
 
 class GetInReplyToAccountNames internal constructor(
     private val accountRepository: AccountRepository,
@@ -23,13 +24,9 @@ class GetInReplyToAccountNames internal constructor(
                                 accountRepository.getAccount(accountId).displayName
                             },
                         )
-                    } catch (e: GetAccountFailedException) {
-                        // if there was a 404, then the account doesn't exist.  Continue as if
-                        // the status is not a reply
-                        if (e.errorCode == 404) {
-                            return@async status
-                        }
-                        throw e
+                    } catch (e: AccountNotFoundException) {
+                        Timber.e(e)
+                        return@async status
                     }
                 }
             }.map {

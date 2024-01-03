@@ -15,7 +15,7 @@ import org.mozilla.social.core.model.Status
 import org.mozilla.social.core.model.paging.FollowersPagingWrapper
 import org.mozilla.social.core.model.paging.StatusPagingWrapper
 import org.mozilla.social.core.network.mastodon.AccountApi
-import org.mozilla.social.core.repository.mastodon.exceptions.GetAccountFailedException
+import org.mozilla.social.core.repository.mastodon.exceptions.AccountNotFoundException
 import org.mozilla.social.core.repository.mastodon.model.account.toExternal
 import org.mozilla.social.core.repository.mastodon.model.status.toDatabaseModel
 import org.mozilla.social.core.repository.mastodon.model.status.toExternalModel
@@ -31,10 +31,10 @@ class AccountRepository internal constructor(
         try {
             return api.getAccount(accountId).toExternalModel()
         } catch (e: HttpException) {
-            throw GetAccountFailedException(
-                e.code(),
-                e,
-            )
+            if (e.code() == 404) {
+                throw AccountNotFoundException(e)
+            }
+            throw e
         }
     }
 
