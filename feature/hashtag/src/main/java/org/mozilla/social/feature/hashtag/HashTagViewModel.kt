@@ -18,6 +18,7 @@ import org.mozilla.social.common.Resource
 import org.mozilla.social.common.utils.edit
 import org.mozilla.social.core.analytics.Analytics
 import org.mozilla.social.core.analytics.AnalyticsIdentifiers
+import org.mozilla.social.core.analytics.EngagementType
 import org.mozilla.social.core.model.HashTag
 import org.mozilla.social.core.repository.mastodon.TimelineRepository
 import org.mozilla.social.core.repository.paging.HashTagTimelineRemoteMediator
@@ -100,6 +101,10 @@ class HashTagViewModel(
                 }
             }
         }
+        analytics.uiEngagement(
+            engagementType = EngagementType.GENERAL,
+            uiIdentifier = AnalyticsIdentifiers.HASHTAG_FOLLOW,
+        )
     }
 
     override fun onRetryClicked() {
