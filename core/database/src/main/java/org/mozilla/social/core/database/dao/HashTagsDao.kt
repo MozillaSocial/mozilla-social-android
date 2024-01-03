@@ -24,4 +24,10 @@ interface HashTagsDao : BaseDao<DatabaseHashTagEntity> {
         "WHERE name = :name",
     )
     fun getHashTagFlow(name: String): Flow<DatabaseHashTagEntity>
+
+    @Query(
+        "SELECT * FROM hashtags " +
+                "WHERE name = :name",
+    )
+    fun getHashTag(name: String): DatabaseHashTagEntity
 }

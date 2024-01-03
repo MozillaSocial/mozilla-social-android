@@ -4,6 +4,7 @@ import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
@@ -45,7 +46,12 @@ class GetHashTag(
             when (val deferredResult = deferred.await()) {
                 is Resource.Error -> emit(Resource.Error(deferredResult.exception))
                 else -> {
-                    emitAll(hashtagRepository.getHashTagFlow(name).map { Resource.Loaded(it) })
+                    try {
+                        emitAll(hashtagRepository.getHashTagFlow(name).map { Resource.Loaded(it) })
+                    } catch (e: Exception) {
+                        Timber.e(e)
+                        emit(Resource.Error(e))
+                    }
                 }
             }
         }

@@ -1,5 +1,6 @@
 package org.mozilla.social.core.repository.mastodon
 
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import org.mozilla.social.common.annotations.PreferUseCase
 import org.mozilla.social.core.database.dao.HashTagsDao
@@ -23,7 +24,13 @@ class HashtagRepository(
 
     fun getHashTagFlow(
         hashTag: String
-    ) = dao.getHashTagFlow(hashTag).map { it.toExternalModel() }
+    ): Flow<HashTag> = dao.getHashTagFlow(hashTag).map {
+        it.toExternalModel()
+    }
+
+    fun getLocalHashTag(
+        hashTag: String
+    ): HashTag = dao.getHashTag(hashTag).toExternalModel()
 
     @PreferUseCase
     suspend fun updateFollowing(
