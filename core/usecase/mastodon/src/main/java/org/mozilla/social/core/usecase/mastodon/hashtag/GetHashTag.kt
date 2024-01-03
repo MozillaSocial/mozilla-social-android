@@ -29,9 +29,13 @@ class GetHashTag(
         flow {
             emit(Resource.Loading())
             val deferred = CompletableDeferred<Resource<Unit>>()
+            // the hashtag from the server might be lower case, so we need to assign this
+            // to whatever we get back from the server
+            var realName: String = name
             coroutineScope.launch(dispatcherIo) {
                 try {
-                    val hashtag = hashtagRepository.getHashTag(name)
+                    val hashtag = hashtagRepository.getHashTag(realName)
+                    realName = hashtag.name
                     hashtagRepository.insert(hashtag)
                     deferred.complete(
                         Resource.Loaded(
@@ -47,7 +51,7 @@ class GetHashTag(
                 is Resource.Error -> emit(Resource.Error(deferredResult.exception))
                 else -> {
                     try {
-                        emitAll(hashtagRepository.getHashTagFlow(name).map { Resource.Loaded(it) })
+                        emitAll(hashtagRepository.getHashTagFlow(realName).map { Resource.Loaded(it) })
                     } catch (e: Exception) {
                         Timber.e(e)
                         emit(Resource.Error(e))
