@@ -17,6 +17,7 @@ import org.mozilla.social.core.repository.mastodon.AccountRepository
 import org.mozilla.social.core.repository.mastodon.AppRepository
 import org.mozilla.social.core.repository.mastodon.DatabaseDelegate
 import org.mozilla.social.core.repository.mastodon.FavoritesRepository
+import org.mozilla.social.core.repository.mastodon.HashtagRepository
 import org.mozilla.social.core.repository.mastodon.InstanceRepository
 import org.mozilla.social.core.repository.mastodon.MediaRepository
 import org.mozilla.social.core.repository.mastodon.OauthRepository
@@ -44,6 +45,7 @@ open class BaseUseCaseTest {
     protected val pollRepository = mockk<PollRepository>(relaxed = true)
     protected val timelineRepository = mockk<TimelineRepository>(relaxed = true)
     protected val favoritesRepository = mockk<FavoritesRepository>(relaxed = true)
+    protected val hashtagRepository = mockk<HashtagRepository>(relaxed = true)
 
     protected val databaseDelegate = mockk<DatabaseDelegate>(relaxed = true)
 

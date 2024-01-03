@@ -19,6 +19,8 @@ import org.mozilla.social.core.usecase.mastodon.account.UpdateMyAccount
 import org.mozilla.social.core.usecase.mastodon.auth.IsSignedInFlow
 import org.mozilla.social.core.usecase.mastodon.auth.Login
 import org.mozilla.social.core.usecase.mastodon.auth.Logout
+import org.mozilla.social.core.usecase.mastodon.hashtag.FollowHashTag
+import org.mozilla.social.core.usecase.mastodon.hashtag.UnfollowHashTag
 import org.mozilla.social.core.usecase.mastodon.report.Report
 import org.mozilla.social.core.usecase.mastodon.search.SearchAll
 import org.mozilla.social.core.usecase.mastodon.status.BoostStatus
@@ -183,6 +185,22 @@ val mastodonUsecaseModule =
                 showSnackbar = get(),
                 timelineRepository = get(),
                 databaseDelegate = get(),
+            )
+        }
+
+        single {
+            FollowHashTag(
+                externalScope = get<AppScope>(),
+                showSnackbar = get(),
+                hashtagRepository = get(),
+            )
+        }
+
+        single {
+            UnfollowHashTag(
+                externalScope = get<AppScope>(),
+                showSnackbar = get(),
+                hashtagRepository = get(),
             )
         }
 
