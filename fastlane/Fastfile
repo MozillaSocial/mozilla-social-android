@@ -27,5 +27,15 @@ platform :android do
       track: "alpha",
       skip_upload_metadata: true,
     )
+
+    set_github_release(
+        repository_name: "MozillaSocial/mozilla-social-android",
+        api_bearer: ENV["GITHUB_TOKEN"],
+        name: "Nightly",
+        tag_name: ENV["GITHUB_RUN_NUMBER"],
+        is_prerelease: true,
+        is_generate_release_notes: true,
+        upload_assets: ["secrets/mozilla-social-nightly.apk"]
+    )
   end
 end
