@@ -3,12 +3,12 @@
 # Fail if any commands fails.
 set -e
 
-BUILD_OUTPUT_DIR="app/build/outputs/bundle/nightly"
-
-UNSIGNED_AAB="$BUILD_OUTPUT_DIR/app-nightly.aab"
+BUNDLE_OUTPUT_DIR="app/build/outputs/bundle/nightly"
+UNSIGNED_AAB="$BUNDLE_OUTPUT_DIR/app-nightly.aab"
 SIGNED_AAB="secrets/mozilla-social-nightly.aab"
 
-UNSIGNED_APK="$BUILD_OUTPUT_DIR/app-nightly-unsigned.apk"
+APK_OUTPUT_DIR="app/build/outputs/apk/nightly"
+UNSIGNED_APK="$APK_OUTPUT_DIR/app-nightly-unsigned.apk"
 SIGNED_APK="secrets/mozilla-social-nightly.apk"
 
 SECRET_ENV="secrets/secret-environment-variables.sh"
@@ -26,6 +26,8 @@ source "$SECRET_ENV"
 
 echo "Building APK…"
 ./gradlew :app:assembleNightly
+
+ls $APK_OUTPUT_DIR
 
 #echo "Signing AAB…"
 #curl \
