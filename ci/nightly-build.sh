@@ -13,9 +13,6 @@ SIGNED_APK="secrets/mozilla-social-nightly.apk"
 
 SECRET_ENV="secrets/secret-environment-variables.sh"
 
-echo "test"
-echo $GITHUB_TOKEN | awk '{print substr($0,1,2)}'
-
 if [[ ! -f "$SECRET_ENV" ]]; then
   echo "Secrets not decrypted"
   exit 1

@@ -14,7 +14,7 @@ default_platform(:android)
 
 platform :android do
   desc "Submit a new nightly build to Play Store."
-  lane :nightly do
+  lane :nightly do |options|
     # Switch to the root directory to run the release script.
     # https://docs.fastlane.tools/advanced/fastlane/#directory-behavior
     Dir.chdir("..") do
@@ -30,7 +30,7 @@ platform :android do
 
     set_github_release(
         repository_name: "MozillaSocial/mozilla-social-android",
-        api_bearer: ENV["GITHUB_TOKEN"],
+        api_bearer: options[:token],
         name: "Nightly",
         tag_name: ENV["GITHUB_RUN_NUMBER"],
         is_prerelease: true,

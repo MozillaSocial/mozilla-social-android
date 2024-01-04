@@ -36,7 +36,7 @@ jobs:
     - name: Build and release
       env:
         GRADLE_OPTS: -Dorg.gradle.daemon=false
-      run: ci/nightly-release.sh ${{ github.run_number }}
+      run: ci/nightly-release.sh ${{ github.run_number }} ${{ secrets.GITHUB_TOKEN }}
     - name: Archive the release
       uses: actions/upload-artifact@a8a3f3ad30e3422c9c7b888a15615d19a852ae32 # v3.1.3
       with:
