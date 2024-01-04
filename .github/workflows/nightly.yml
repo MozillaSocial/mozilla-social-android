@@ -1,8 +1,7 @@
 name: nightly
 
 on:
-  push:
-    branches: [ "main" ]
+  pull_request
 
 # Cancel in-progress/pending daily release workflows if a new one starts.
 # When we merge PRs one after another quickly, we only need one release with the latest code.

@@ -21,12 +21,12 @@ platform :android do
       sh "ci/nightly-build.sh"
     end
 
-    upload_to_play_store(
-      package_name: "org.mozilla.social.nightly",
-      aab: "secrets/mozilla-social-nightly.aab",
-      track: "alpha",
-      skip_upload_metadata: true,
-    )
+#     upload_to_play_store(
+#       package_name: "org.mozilla.social.nightly",
+#       aab: "secrets/mozilla-social-nightly.aab",
+#       track: "alpha",
+#       skip_upload_metadata: true,
+#     )
 
     set_github_release(
         repository_name: "MozillaSocial/mozilla-social-android",
