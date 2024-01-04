@@ -19,7 +19,7 @@ source "$SECRET_ENV"
 echo "Bumping version code to ${RELEASE_VERSION_CODE}…"
 ci/set-version-code.sh "$RELEASE_VERSION_CODE"
 
-VERSION_NAME=${cat app/build.gradle.kts | grep versionName | cut -d "\"" -f2}
+VERSION_NAME=$(cat app/build.gradle.kts | grep versionName | cut -d "\"" -f2)
 TAG="$VERSION_NAME.$RELEASE_VERSION_CODE"
 RELEASE_NAME="Nightly $TAG"
 
