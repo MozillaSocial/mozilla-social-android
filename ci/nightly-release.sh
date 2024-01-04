@@ -24,4 +24,4 @@ TAG="$VERSION_NAME.$RELEASE_VERSION_CODE"
 RELEASE_NAME="Nightly $TAG"
 
 echo "Releasing with fastlane…"
-bundle exec fastlane nightly token:$GITHUB_TOKEN name:$RELEASE_NAME tag:$TAG
+bundle exec fastlane nightly token:$GITHUB_TOKEN name:"$RELEASE_NAME" tag:"$TAG"
