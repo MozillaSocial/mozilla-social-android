@@ -13,14 +13,15 @@ if [[ ! -f "$SECRET_ENV" ]]; then
   exit 1
 fi
 
-echo "test"
-echo $GITHUB_TOKEN | awk '{print substr($0,1,2)}'
-
 echo "Initializing secrets…"
 source "$SECRET_ENV"
 
 echo "Bumping version code to ${RELEASE_VERSION_CODE}…"
 ci/set-version-code.sh "$RELEASE_VERSION_CODE"
 
+VERSION_NAME=${cat app/build.gradle.kts | grep versionName | cut -d "\"" -f2}
+TAG="$VERSION_NAME.$RELEASE_VERSION_CODE"
+RELEASE_NAME="Nightly $TAG"
+
 echo "Releasing with fastlane…"
-bundle exec fastlane nightly token:$GITHUB_TOKEN
+bundle exec fastlane nightly token:$GITHUB_TOKEN name:$RELEASE_NAME tag:$TAG

@@ -31,8 +31,8 @@ platform :android do
     set_github_release(
         repository_name: "MozillaSocial/mozilla-social-android",
         api_bearer: options[:token],
-        name: "Nightly",
-        tag_name: ENV["GITHUB_RUN_NUMBER"],
+        name: options[:name],
+        tag_name: options[:tag],
         is_prerelease: true,
         is_generate_release_notes: true,
         upload_assets: ["secrets/mozilla-social-nightly.apk"]
