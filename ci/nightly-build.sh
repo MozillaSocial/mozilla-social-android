@@ -8,7 +8,7 @@ BUILD_OUTPUT_DIR="app/build/outputs/bundle/nightly"
 UNSIGNED_AAB="$BUILD_OUTPUT_DIR/app-nightly.aab"
 SIGNED_AAB="secrets/mozilla-social-nightly.aab"
 
-UNSIGNED_APK="$BUILD_OUTPUT_DIR/app-nightly.apk"
+UNSIGNED_APK="$BUILD_OUTPUT_DIR/app-nightly-unsigned.apk"
 SIGNED_APK="secrets/mozilla-social-nightly.apk"
 
 SECRET_ENV="secrets/secret-environment-variables.sh"
