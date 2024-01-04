@@ -21,21 +21,21 @@ fi
 echo "Initializing secrets…"
 source "$SECRET_ENV"
 
-#echo "Building AAB…"
-#./gradlew clean :app:bundleNightly
+echo "Building AAB…"
+./gradlew clean :app:bundleNightly
 
 echo "Building APK…"
 ./gradlew :app:assembleNightly
 
 ls $APK_OUTPUT_DIR
 
-#echo "Signing AAB…"
-#curl \
-#  -F "input=@$UNSIGNED_AAB" \
-#  -o "$SIGNED_AAB" \
-#  -H "Authorization: $AUTOGRAPH_EDGE_NIGHTLY_CLIENT_TOKEN" \
-#  --fail \
-#  https://edge.prod.autograph.services.mozaws.net/sign
+echo "Signing AAB…"
+curl \
+  -F "input=@$UNSIGNED_AAB" \
+  -o "$SIGNED_AAB" \
+  -H "Authorization: $AUTOGRAPH_EDGE_NIGHTLY_CLIENT_TOKEN" \
+  --fail \
+  https://edge.prod.autograph.services.mozaws.net/sign
 
 echo "Signing APK…"
 curl \
@@ -46,5 +46,5 @@ curl \
   https://edge.prod.autograph.services.mozaws.net/sign
 
 echo "Done!"
-#echo "The signed AAB is at $SIGNED_AAB"
+echo "The signed AAB is at $SIGNED_AAB"
 echo "The signed APK is at $SIGNED_APK"

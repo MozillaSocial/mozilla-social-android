@@ -1,7 +1,8 @@
 name: nightly
 
 on:
-  pull_request
+  push:
+    branches: [ "main" ]
 
 # Cancel in-progress/pending daily release workflows if a new one starts.
 # When we merge PRs one after another quickly, we only need one release with the latest code.
@@ -37,9 +38,3 @@ jobs:
       env:
         GRADLE_OPTS: -Dorg.gradle.daemon=false
       run: ci/nightly-release.sh ${{ github.run_number }} ${{ secrets.GITHUB_TOKEN }}
-    - name: Archive the release
-      uses: actions/upload-artifact@a8a3f3ad30e3422c9c7b888a15615d19a852ae32 # v3.1.3
-      with:
-        name: aab
-        path: secrets/mozilla-social-nightly.aab
-        if-no-files-found: error

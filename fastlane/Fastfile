@@ -21,12 +21,12 @@ platform :android do
       sh "ci/nightly-build.sh"
     end
 
-#     upload_to_play_store(
-#       package_name: "org.mozilla.social.nightly",
-#       aab: "secrets/mozilla-social-nightly.aab",
-#       track: "alpha",
-#       skip_upload_metadata: true,
-#     )
+    upload_to_play_store(
+      package_name: "org.mozilla.social.nightly",
+      aab: "secrets/mozilla-social-nightly.aab",
+      track: "alpha",
+      skip_upload_metadata: true,
+    )
 
     set_github_release(
         repository_name: "MozillaSocial/mozilla-social-android",
@@ -35,7 +35,7 @@ platform :android do
         tag_name: options[:tag],
         is_prerelease: true,
         is_generate_release_notes: true,
-        upload_assets: ["secrets/mozilla-social-nightly.apk"]
+        upload_assets: ["secrets/mozilla-social-nightly.apk", "secrets/mozilla-social-nightly.aab"]
     )
   end
 end
