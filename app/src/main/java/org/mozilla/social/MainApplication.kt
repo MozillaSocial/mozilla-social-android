@@ -17,6 +17,7 @@ import org.koin.dsl.module
 import org.mozilla.social.common.Version
 import org.mozilla.social.core.analytics.Analytics
 import org.mozilla.social.core.repository.mastodon.AuthCredentialObserver
+import org.mozilla.social.core.workmanager.workManagerModule
 import org.mozilla.social.feature.account.accountModule
 import org.mozilla.social.feature.auth.authModule
 import org.mozilla.social.feature.discover.discoverModule
@@ -43,12 +44,13 @@ class MainApplication : Application(), ImageLoaderFactory {
         }
 
         startKoin {
-            workManagerFactory()
             androidLogger()
             androidContext(this@MainApplication)
+            workManagerFactory()
             modules(
                 featureModules,
                 mainModule,
+                workManagerModule,
             )
         }
 

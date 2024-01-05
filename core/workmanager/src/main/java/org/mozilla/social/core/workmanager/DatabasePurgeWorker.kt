@@ -68,17 +68,17 @@ class DatabasePurgeWorker(
 
                 val homeStatuses = timelineRepository.getTopHomePostsFromDatabase(40)
                 val statusIdsToKeep = buildList {
-                    addAll(homeStatuses.map { it.status.statusId })
+                    addAll(homeStatuses.map { it.statusId })
                     addAll(homeStatuses.mapNotNull { it.boostedStatus?.statusId })
                 }
                 val accountIdsToKeep = buildList {
                     addAll(homeStatuses.map { it.account.accountId })
-                    addAll(homeStatuses.mapNotNull { it.boostedAccount?.accountId })
+                    addAll(homeStatuses.mapNotNull { it.boostedStatus?.account?.accountId })
                     add(loggedInUserId)
                 }
                 val pollsIdsToKeep = buildList {
                     addAll(homeStatuses.mapNotNull { it.poll?.pollId })
-                    addAll(homeStatuses.mapNotNull { it.boostedPoll?.pollId })
+                    addAll(homeStatuses.mapNotNull { it.boostedStatus?.poll?.pollId })
                 }
 
                 statusRepository.deleteAllLocal(statusIdsToKeep)

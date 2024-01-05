@@ -9,6 +9,7 @@ android {
 dependencies {
     implementation(project(":core:repository:mastodon"))
     implementation(project(":core:usecase:mastodon"))
+    implementation(project(":core:model"))
 
     implementation(libs.androidx.work.runtime)
     implementation(libs.jakewharton.timber)

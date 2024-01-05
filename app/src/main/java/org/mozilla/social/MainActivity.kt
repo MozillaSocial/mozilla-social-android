@@ -37,7 +37,7 @@ class MainActivity : ComponentActivity() {
             }
         }
 
-        setupPurgeWork()
+        setupPurgeWork(this)
     }
 
     override fun onNewIntent(intent: Intent) {

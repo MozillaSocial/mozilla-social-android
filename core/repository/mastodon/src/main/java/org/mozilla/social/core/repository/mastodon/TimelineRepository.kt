@@ -211,7 +211,8 @@ class TimelineRepository internal constructor(
 
     suspend fun getTopHomePostsFromDatabase(
         count: Int,
-    ) = homeTimelineStatusDao.getTopPosts(count)
+    ): List<Status> = homeTimelineStatusDao.getTopPosts(count)
+        .map { it.toStatusWrapper().toExternalModel() }
     //endregion
 
     //region Hashtag timeline
