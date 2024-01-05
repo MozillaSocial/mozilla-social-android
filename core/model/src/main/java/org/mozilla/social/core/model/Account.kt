@@ -62,10 +62,6 @@ data class Account(
      */
     val createdAt: Instant,
     /**
-     * Date at which the last status was posted.
-     */
-    val lastStatusAt: LocalDate? = null,
-    /**
      * Total number of statuses posted.
      */
     val statusesCount: Long,

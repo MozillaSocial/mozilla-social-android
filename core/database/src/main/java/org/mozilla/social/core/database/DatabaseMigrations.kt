@@ -64,4 +64,10 @@ object DatabaseMigrations {
         columnName = "isBlocked",
     )
     class Schema17to18 : AutoMigrationSpec
+
+    @DeleteColumn(
+        tableName = "accounts",
+        columnName = "lastStatusAt",
+    )
+    class Schema18to19 : AutoMigrationSpec
 }
