@@ -1,6 +1,7 @@
 package org.mozilla.social.core.workmanager
 
 import android.content.Context
+import androidx.work.Constraints
 import androidx.work.CoroutineWorker
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.ExistingWorkPolicy
@@ -86,6 +87,7 @@ class DatabasePurgeWorker(
                 pollRepository.deleteAll(pollsIdsToKeep)
             }
 
+            Runtime.getRuntime().exit(0)
             Result.success()
         } catch (e: Exception) {
             Timber.e(e)
@@ -98,6 +100,11 @@ fun setupPurgeWork(
     context: Context,
 ) {
     val workRequest = PeriodicWorkRequestBuilder<DatabasePurgeWorker>(7, TimeUnit.DAYS)
+        .setConstraints(
+            Constraints.Builder()
+                .setRequiresDeviceIdle(true)
+                .build()
+        )
         .build()
 
     WorkManager.getInstance(context).enqueueUniquePeriodicWork(
