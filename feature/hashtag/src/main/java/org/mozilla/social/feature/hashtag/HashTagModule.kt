@@ -28,6 +28,9 @@ val hashTagModule =
                 analytics = get(),
                 userAccountId = get(),
                 timelineRepository = get(),
+                unfollowHashTag = get(),
+                followHashTag = get(),
+                getHashTag = get(),
             )
         }
     }

@@ -20,6 +20,7 @@ import org.mozilla.social.core.usecase.mastodon.auth.IsSignedInFlow
 import org.mozilla.social.core.usecase.mastodon.auth.Login
 import org.mozilla.social.core.usecase.mastodon.auth.Logout
 import org.mozilla.social.core.usecase.mastodon.hashtag.FollowHashTag
+import org.mozilla.social.core.usecase.mastodon.hashtag.GetHashTag
 import org.mozilla.social.core.usecase.mastodon.hashtag.UnfollowHashTag
 import org.mozilla.social.core.usecase.mastodon.report.Report
 import org.mozilla.social.core.usecase.mastodon.search.SearchAll
@@ -209,4 +210,10 @@ val mastodonUsecaseModule =
         singleOf(::GetDomain)
         singleOf(::SearchAll)
         singleOf(::GetInReplyToAccountNames)
+
+        single {
+            GetHashTag(
+                hashtagRepository = get(),
+            )
+        }
     }

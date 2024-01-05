@@ -14,9 +14,10 @@ import org.mozilla.social.core.ui.common.text.SmallTextLabel
 fun FollowingButton(
     onButtonClicked: () -> Unit,
     isFollowing: Boolean,
+    modifier: Modifier = Modifier,
 ) {
     MoSoToggleButton(
-        modifier = Modifier.height(32.dp),
+        modifier = modifier.height(32.dp),
         onClick = { onButtonClicked() },
         toggleState = if (isFollowing) {
             ToggleButtonState.Secondary
