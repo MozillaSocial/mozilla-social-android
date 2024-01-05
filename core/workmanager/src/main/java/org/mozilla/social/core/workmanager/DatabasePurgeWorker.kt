@@ -2,6 +2,10 @@ package org.mozilla.social.core.workmanager
 
 import android.content.Context
 import androidx.work.CoroutineWorker
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.OneTimeWorkRequest
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import org.mozilla.social.core.repository.mastodon.AccountRepository
 import org.mozilla.social.core.repository.mastodon.BlocksRepository
@@ -18,6 +22,7 @@ import org.mozilla.social.core.repository.mastodon.StatusRepository
 import org.mozilla.social.core.repository.mastodon.TimelineRepository
 import org.mozilla.social.core.usecase.mastodon.account.GetLoggedInUserAccountId
 import timber.log.Timber
+import java.util.concurrent.TimeUnit
 
 class DatabasePurgeWorker(
     context: Context,
@@ -86,4 +91,23 @@ class DatabasePurgeWorker(
             Result.failure()
         }
     }
+}
+
+fun setupPurgeWork(
+    context: Context,
+) {
+    val workRequest = PeriodicWorkRequestBuilder<DatabasePurgeWorker>(7, TimeUnit.DAYS)
+        .build()
+
+    WorkManager.getInstance(context).enqueueUniquePeriodicWork(
+        "purge",
+        ExistingPeriodicWorkPolicy.KEEP,
+        workRequest,
+    )
+}
+
+fun testPurge(
+    context: Context,
+) {
+    val workRequest = OneTimeWorkRequest.from(DatabasePurgeWorker::class.java)
 }
