@@ -9,8 +9,10 @@ SIGNED_AAB="secrets/mozilla-social-nightly.aab"
 
 APK_OUTPUT_DIR="app/build/outputs/apk/nightly"
 UNSIGNED_APK="$APK_OUTPUT_DIR/app-nightly-unsigned.apk"
+ALIGNED_APK="$APK_OUTPUT_DIR/app-nightly-unsigned-aligned.apk"
 SIGNED_APK="secrets/mozilla-social-nightly.apk"
 
+BUILD_TOOLS_DIR="$ANDROID_HOME/build-tools/33.0.1"
 SECRET_ENV="secrets/secret-environment-variables.sh"
 
 if [[ ! -f "$SECRET_ENV" ]]; then
@@ -27,7 +29,8 @@ echo "Building AAB…"
 echo "Building APK…"
 ./gradlew :app:assembleNightly
 
-ls $APK_OUTPUT_DIR
+echo "Aligning APK…"
+"$BUILD_TOOLS_DIR/zipalign" -p 4 "$UNSIGNED_APK" "$ALIGNED_APK"
 
 echo "Signing AAB…"
 curl \
@@ -39,7 +42,7 @@ curl \
 
 echo "Signing APK…"
 curl \
-  -F "input=@$UNSIGNED_APK" \
+  -F "input=@$ALIGNED_APK" \
   -o "$SIGNED_APK" \
   -H "Authorization: $AUTOGRAPH_EDGE_NIGHTLY_CLIENT_TOKEN" \
   --fail \
