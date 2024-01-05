@@ -87,12 +87,16 @@ class DatabasePurgeWorker(
                 pollRepository.deleteAll(pollsIdsToKeep)
             }
 
-            Runtime.getRuntime().exit(0)
             Result.success()
         } catch (e: Exception) {
             Timber.e(e)
             Result.failure()
         }
+    }
+
+    companion object {
+        const val WORKER_NAME = "purge"
+        const val TEST_WORKER_NAME = "purgeTest"
     }
 }
 
@@ -108,7 +112,7 @@ fun setupPurgeWork(
         .build()
 
     WorkManager.getInstance(context).enqueueUniquePeriodicWork(
-        "purge",
+        DatabasePurgeWorker.WORKER_NAME,
         ExistingPeriodicWorkPolicy.KEEP,
         workRequest,
     )
@@ -120,7 +124,7 @@ fun testPurge(
     val workRequest = OneTimeWorkRequest.from(DatabasePurgeWorker::class.java)
 
     WorkManager.getInstance(context).beginUniqueWork(
-        "purgeTest",
+        DatabasePurgeWorker.TEST_WORKER_NAME,
         ExistingWorkPolicy.KEEP,
         workRequest,
     ).enqueue()
