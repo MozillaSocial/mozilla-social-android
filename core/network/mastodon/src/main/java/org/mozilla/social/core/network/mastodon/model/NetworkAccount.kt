@@ -78,11 +78,6 @@ data class NetworkAccount(
     @SerialName("created_at")
     val createdAt: Instant,
     /**
-     * Date at which the last status was posted.
-     */
-    @SerialName("last_status_at")
-    val lastStatusAt: LocalDate? = null,
-    /**
      * Total number of statuses posted.
      */
     @SerialName("statuses_count")

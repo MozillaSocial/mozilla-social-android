@@ -118,7 +118,6 @@ fun DatabaseAccount.toExternalModel(): Account =
         isLocked = isLocked,
         emojis = emojis.map { it.toExternalModel() },
         createdAt = createdAt,
-        lastStatusAt = lastStatusAt,
         statusesCount = statusesCount,
         followersCount = followersCount,
         followingCount = followingCount,

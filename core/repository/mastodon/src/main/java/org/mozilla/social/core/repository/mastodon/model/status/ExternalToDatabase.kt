@@ -42,7 +42,6 @@ fun Account.toDatabaseModel(): DatabaseAccount =
         isLocked = isLocked,
         emojis = emojis.map { it.toDatabaseModel() },
         createdAt = createdAt,
-        lastStatusAt = lastStatusAt,
         statusesCount = statusesCount,
         followersCount = followersCount,
         followingCount = followingCount,
