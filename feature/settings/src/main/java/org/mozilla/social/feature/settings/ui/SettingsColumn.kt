@@ -13,7 +13,7 @@ import org.mozilla.social.core.ui.common.appbar.MoSoCloseableTopAppBar
 @Composable
 internal fun SettingsColumn(
     title: String,
-    modifier: Modifier = Modifier.padding(MoSoSpacing.sm),
+    modifier: Modifier = Modifier,
     verticalArrangement: Arrangement.Vertical = Arrangement.Top,
     horizontalAlignment: Alignment.Horizontal = Alignment.Start,
     content: @Composable ColumnScope.() -> Unit,
@@ -21,7 +21,8 @@ internal fun SettingsColumn(
     Column {
         MoSoCloseableTopAppBar(title = title)
         Column(
-            modifier = modifier,
+            modifier = modifier
+                .padding(MoSoSpacing.sm),
             verticalArrangement = verticalArrangement,
             horizontalAlignment = horizontalAlignment,
         ) { content() }
