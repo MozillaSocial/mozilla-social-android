@@ -3,6 +3,7 @@ package org.mozilla.social.core.workmanager
 import android.content.Context
 import androidx.work.CoroutineWorker
 import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequest
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
@@ -110,4 +111,10 @@ fun testPurge(
     context: Context,
 ) {
     val workRequest = OneTimeWorkRequest.from(DatabasePurgeWorker::class.java)
+
+    WorkManager.getInstance(context).beginUniqueWork(
+        "purgeTest",
+        ExistingWorkPolicy.KEEP,
+        workRequest,
+    ).enqueue()
 }

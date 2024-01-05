@@ -12,4 +12,5 @@ dependencies {
 
     implementation(libs.androidx.work.runtime)
     implementation(libs.jakewharton.timber)
+    implementation(libs.koin.androidx.workmanager)
 }
