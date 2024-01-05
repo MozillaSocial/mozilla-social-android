@@ -98,4 +98,6 @@ object AnalyticsIdentifiers {
     const val SEARCH_HASHTAG_CLICKED = "search.hashtag.clicked"
     const val SEARCH_ACCOUNT_FOLLOW = "search.account.follow"
     const val SEARCH_HASHTAG_FOLLOW = "search.hashtag.follow"
+
+    const val HASHTAG_FOLLOW = "hashtag.follow"
 }

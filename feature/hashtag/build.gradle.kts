@@ -30,4 +30,6 @@ dependencies {
     implementation(libs.protobuf.kotlin.lite)
 
     implementation(libs.androidx.room)
+
+    implementation(libs.jakewharton.timber)
 }
