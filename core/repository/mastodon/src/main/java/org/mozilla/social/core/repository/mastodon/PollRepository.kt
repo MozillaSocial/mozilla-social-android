@@ -24,6 +24,10 @@ class PollRepository internal constructor(private val dao: PollsDao) {
     }
 
     fun insert(poll: Poll) = dao.upsert(poll.toDatabaseModel())
+
+    suspend fun deleteAll(
+        pollIdsToKeep: List<String> = emptyList()
+    ) = dao.deleteAll(pollIdsToKeep)
 }
 
 private fun Poll.toDatabaseModel(): DatabasePoll =

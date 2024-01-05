@@ -23,4 +23,9 @@ interface HashTagsDao : BaseDao<DatabaseHashTagEntity> {
         "WHERE name = :name",
     )
     fun getHashTagFlow(name: String): Flow<DatabaseHashTagEntity>
+
+    @Query(
+        "DELETE FROM hashtags"
+    )
+    suspend fun deleteAll()
 }
