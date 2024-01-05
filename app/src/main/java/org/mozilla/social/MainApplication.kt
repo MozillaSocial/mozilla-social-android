@@ -13,6 +13,7 @@ import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
 import org.koin.dsl.module
+import org.mozilla.social.common.Version
 import org.mozilla.social.core.analytics.Analytics
 import org.mozilla.social.core.repository.mastodon.AuthCredentialObserver
 import org.mozilla.social.feature.account.accountModule
@@ -52,6 +53,8 @@ class MainApplication : Application(), ImageLoaderFactory {
         analytics.initialize(applicationContext)
 
         authCredentialObserver = get()
+        Version.name = BuildConfig.VERSION_NAME
+        Version.code = BuildConfig.VERSION_CODE
     }
 
     // setup coil
