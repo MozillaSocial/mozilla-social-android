@@ -9,6 +9,7 @@ import androidx.work.CoroutineWorker
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequest
+import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
@@ -29,6 +30,7 @@ import org.mozilla.social.core.repository.mastodon.StatusRepository
 import org.mozilla.social.core.repository.mastodon.TimelineRepository
 import org.mozilla.social.core.usecase.mastodon.account.GetLoggedInUserAccountId
 import timber.log.Timber
+import java.time.Duration
 import java.util.concurrent.TimeUnit
 
 /**
@@ -146,8 +148,11 @@ fun setupPurgeWork(
 fun testPurge(
     activity: Activity,
     lifecycleCoroutineScope: LifecycleCoroutineScope,
+    delay: Duration = Duration.ofSeconds(0),
 ) {
-    val workRequest = OneTimeWorkRequest.from(DatabasePurgeWorker::class.java)
+    val workRequest = OneTimeWorkRequestBuilder<DatabasePurgeWorker>()
+        .setInitialDelay(delay)
+        .build()
 
     WorkManager.getInstance(activity).beginUniqueWork(
         DatabasePurgeWorker.TEST_WORKER_NAME,
