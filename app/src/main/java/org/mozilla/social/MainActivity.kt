@@ -40,17 +40,7 @@ class MainActivity : ComponentActivity() {
             }
         }
 
-        setupPurgeWork(this)
-        lifecycleScope.launch {
-            WorkManager.getInstance(this@MainActivity)
-                .getWorkInfosForUniqueWorkFlow(DatabasePurgeWorker.WORKER_NAME)
-                .collect {
-                    val workInfo = it.first()
-                    if (workInfo.state == WorkInfo.State.SUCCEEDED) {
-                        finish()
-                    }
-                }
-        }
+        setupPurgeWork(this, lifecycleScope)
     }
 
     override fun onNewIntent(intent: Intent) {

@@ -1,14 +1,20 @@
 package org.mozilla.social.core.workmanager
 
+import android.app.Activity
 import android.content.Context
+import androidx.lifecycle.LifecycleCoroutineScope
+import androidx.lifecycle.lifecycleScope
 import androidx.work.Constraints
 import androidx.work.CoroutineWorker
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequest
 import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import org.mozilla.social.core.repository.mastodon.AccountRepository
 import org.mozilla.social.core.repository.mastodon.BlocksRepository
 import org.mozilla.social.core.repository.mastodon.DatabaseDelegate
@@ -101,7 +107,8 @@ class DatabasePurgeWorker(
 }
 
 fun setupPurgeWork(
-    context: Context,
+    context: Activity,
+    coroutineScope: LifecycleCoroutineScope,
 ) {
     val workRequest = PeriodicWorkRequestBuilder<DatabasePurgeWorker>(7, TimeUnit.DAYS)
         .setConstraints(
@@ -116,10 +123,22 @@ fun setupPurgeWork(
         ExistingPeriodicWorkPolicy.KEEP,
         workRequest,
     )
+
+    coroutineScope.launch {
+        WorkManager.getInstance(context)
+            .getWorkInfosForUniqueWorkFlow(DatabasePurgeWorker.WORKER_NAME)
+            .collect {
+                val workInfo = it.first()
+                if (workInfo.state == WorkInfo.State.SUCCEEDED) {
+                    context.finish()
+                }
+            }
+    }
 }
 
 fun testPurge(
-    context: Context,
+    context: Activity,
+    coroutineScope: LifecycleCoroutineScope,
 ) {
     val workRequest = OneTimeWorkRequest.from(DatabasePurgeWorker::class.java)
 
@@ -128,4 +147,15 @@ fun testPurge(
         ExistingWorkPolicy.KEEP,
         workRequest,
     ).enqueue()
+
+    coroutineScope.launch {
+        WorkManager.getInstance(context)
+            .getWorkInfosForUniqueWorkFlow(DatabasePurgeWorker.TEST_WORKER_NAME)
+            .collect {
+                val workInfo = it.first()
+                if (workInfo.state == WorkInfo.State.SUCCEEDED) {
+                    context.finish()
+                }
+            }
+    }
 }
