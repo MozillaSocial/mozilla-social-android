@@ -2,8 +2,8 @@ package org.mozilla.social.core.workmanager
 
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import androidx.lifecycle.LifecycleCoroutineScope
-import androidx.lifecycle.lifecycleScope
 import androidx.work.Constraints
 import androidx.work.CoroutineWorker
 import androidx.work.ExistingPeriodicWorkPolicy
@@ -13,7 +13,6 @@ import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.mozilla.social.core.repository.mastodon.AccountRepository
 import org.mozilla.social.core.repository.mastodon.BlocksRepository
@@ -32,6 +31,9 @@ import org.mozilla.social.core.usecase.mastodon.account.GetLoggedInUserAccountId
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
+/**
+ * A worker that purges most data from the database.
+ */
 class DatabasePurgeWorker(
     context: Context,
     workerParams: WorkerParameters,
@@ -106,9 +108,16 @@ class DatabasePurgeWorker(
     }
 }
 
+/**
+ * Creates a periodic work request for the [DatabasePurgeWorker]
+ * It then observes that work and restarts the app when complete.
+ * We need to restart the app if it is open because purging the database could put us in
+ * a weird state.
+ * The user won't be using the app during this because there is a constraint put on the work request.
+ */
 fun setupPurgeWork(
-    context: Activity,
-    coroutineScope: LifecycleCoroutineScope,
+    activity: Activity,
+    lifecycleCoroutineScope: LifecycleCoroutineScope,
 ) {
     val workRequest = PeriodicWorkRequestBuilder<DatabasePurgeWorker>(7, TimeUnit.DAYS)
         .setConstraints(
@@ -118,43 +127,58 @@ fun setupPurgeWork(
         )
         .build()
 
-    WorkManager.getInstance(context).enqueueUniquePeriodicWork(
+    WorkManager.getInstance(activity).enqueueUniquePeriodicWork(
         DatabasePurgeWorker.WORKER_NAME,
         ExistingPeriodicWorkPolicy.KEEP,
         workRequest,
     )
 
-    coroutineScope.launch {
-        WorkManager.getInstance(context)
-            .getWorkInfosForUniqueWorkFlow(DatabasePurgeWorker.WORKER_NAME)
-            .collect {
-                val workInfo = it.first()
-                if (workInfo.state == WorkInfo.State.SUCCEEDED) {
-                    context.finish()
-                }
-            }
-    }
+    observeWork(
+        activity,
+        lifecycleCoroutineScope,
+        DatabasePurgeWorker.WORKER_NAME
+    )
 }
 
+/**
+ * Can be used for UI testing in the future, or manual testing now.
+ */
 fun testPurge(
-    context: Activity,
-    coroutineScope: LifecycleCoroutineScope,
+    activity: Activity,
+    lifecycleCoroutineScope: LifecycleCoroutineScope,
 ) {
     val workRequest = OneTimeWorkRequest.from(DatabasePurgeWorker::class.java)
 
-    WorkManager.getInstance(context).beginUniqueWork(
+    WorkManager.getInstance(activity).beginUniqueWork(
         DatabasePurgeWorker.TEST_WORKER_NAME,
         ExistingWorkPolicy.KEEP,
         workRequest,
     ).enqueue()
 
-    coroutineScope.launch {
-        WorkManager.getInstance(context)
-            .getWorkInfosForUniqueWorkFlow(DatabasePurgeWorker.TEST_WORKER_NAME)
+    observeWork(
+        activity,
+        lifecycleCoroutineScope,
+        DatabasePurgeWorker.TEST_WORKER_NAME
+    )
+}
+
+/**
+ * Observes a work request and restarted that app when the request is complete.
+ * Because the coroutine scope is a [LifecycleCoroutineScope], the app will not restart
+ * if it is not running.
+ */
+private fun observeWork(
+    activity: Activity,
+    lifecycleCoroutineScope: LifecycleCoroutineScope,
+    workName: String,
+) {
+    lifecycleCoroutineScope.launch {
+        WorkManager.getInstance(activity)
+            .getWorkInfosForUniqueWorkFlow(workName)
             .collect {
                 val workInfo = it.first()
                 if (workInfo.state == WorkInfo.State.SUCCEEDED) {
-                    context.finish()
+                    activity.startActivity(Intent.makeRestartActivityTask(activity.intent.component))
                 }
             }
     }
