@@ -16,6 +16,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.LifecycleOwner
@@ -25,6 +26,7 @@ import org.mozilla.social.core.ui.common.appbar.MoSoCloseableTopAppBar
 import org.mozilla.social.core.ui.common.button.MoSoButton
 import org.mozilla.social.core.ui.common.text.MoSoTextField
 import org.mozilla.social.core.workmanager.testPurge
+import org.mozilla.social.feature.settings.R
 import java.time.Duration
 
 @Composable
@@ -35,7 +37,9 @@ fun DeveloperOptionsScreen() {
             .systemBarsPadding(),
     ) {
         Column {
-            MoSoCloseableTopAppBar()
+            MoSoCloseableTopAppBar(
+                title = stringResource(id = R.string.developer_options_title)
+            )
 
             Row(
                 modifier = Modifier
