@@ -29,7 +29,7 @@ val settingsModule =
             mastodonUsecaseModule,
         )
 
-        viewModel { _ -> SettingsViewModel(get(), get(), get()) }
+        viewModelOf(::SettingsViewModel)
         viewModelOf(::AccountSettingsViewModel)
         viewModelOf(::PrivacySettingsViewModel)
         viewModelOf(::AboutSettingsViewModel)

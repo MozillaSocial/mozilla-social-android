@@ -20,21 +20,17 @@ import org.mozilla.social.feature.settings.ui.SettingsColumn
 import org.mozilla.social.feature.settings.ui.SettingsSection
 
 @Composable
-fun SettingsScreen(viewModel: SettingsViewModel = koinViewModel()) {
+fun SettingsScreen(
+    viewModel: SettingsViewModel = koinViewModel()
+) {
     SettingsScreen(
-        onAccountClicked = viewModel::onAccountClicked,
-        onContentPreferencesClicked = viewModel::onContentPreferencesClicked,
-        onPrivacyClicked = viewModel::onPrivacyClicked,
-        onAboutClicked = viewModel::onAboutClicked,
+        settingsInteractions = viewModel
     )
 }
 
 @Composable
 fun SettingsScreen(
-    onAccountClicked: () -> Unit,
-    onContentPreferencesClicked: () -> Unit,
-    onPrivacyClicked: () -> Unit,
-    onAboutClicked: () -> Unit,
+    settingsInteractions: SettingsInteractions,
 ) {
     MoSoSurface {
         Box(
@@ -48,23 +44,31 @@ fun SettingsScreen(
                 SettingsSection(
                     title = stringResource(id = R.string.account_settings_title),
                     iconPainter = MoSoIcons.identificationCard(),
-                    onClick = onAccountClicked,
+                    onClick = settingsInteractions::onAccountClicked,
                 )
                 SettingsSection(
                     title = stringResource(id = R.string.content_preferences_title),
                     iconPainter = MoSoIcons.listChecks(),
-                    onClick = onContentPreferencesClicked,
+                    onClick = settingsInteractions::onContentPreferencesClicked,
                 )
                 SettingsSection(
                     title = stringResource(id = R.string.privacy_settings_title),
                     iconPainter = MoSoIcons.lockKey(),
-                    onClick = onPrivacyClicked,
+                    onClick = settingsInteractions::onPrivacyClicked,
                 )
                 SettingsSection(
                     title = stringResource(id = R.string.about_settings_title),
                     iconPainter = MoSoIcons.info(),
-                    onClick = onAboutClicked,
+                    onClick = settingsInteractions::onAboutClicked,
                 )
+
+                if (BuildConfig.DEBUG) {
+                    SettingsSection(
+                        title = stringResource(id = R.string.developer_options_title),
+                        iconPainter = MoSoIcons.robot(),
+                        onClick = settingsInteractions::onDeveloperOptionsClicked,
+                    )
+                }
 
                 Spacer(modifier = Modifier.weight(1f))
                 Text(
@@ -84,10 +88,7 @@ private fun SettingsScreenPreview() {
         modules = listOf(navigationModule)
     ) {
         SettingsScreen(
-            onAboutClicked = {},
-            onContentPreferencesClicked = {},
-            onPrivacyClicked = {},
-            onAccountClicked = {},
+            settingsInteractions = object : SettingsInteractions {}
         )
     }
 }
