@@ -104,86 +104,87 @@ class DatabasePurgeWorker(
     }
 
     companion object {
-        const val WORKER_NAME = "purge"
-        const val TEST_WORKER_NAME = "purgeTest"
-    }
-}
+        private const val WORKER_NAME = "purge"
+        private const val TEST_WORKER_NAME = "purgeTest"
 
-/**
- * Creates a periodic work request for the [DatabasePurgeWorker]
- * It then observes that work and restarts the app when complete.
- * We need to restart the app if it is open because purging the database could put us in
- * a weird state.
- * The user won't be using the app during this because there is a constraint put on the work request.
- */
-fun setupPurgeWork(
-    activity: Activity,
-    lifecycleCoroutineScope: LifecycleCoroutineScope,
-) {
-    val workRequest = PeriodicWorkRequestBuilder<DatabasePurgeWorker>(20, TimeUnit.DAYS)
-        .setConstraints(
-            Constraints.Builder()
-                .setRequiresDeviceIdle(true)
+        /**
+         * Creates a periodic work request for the [DatabasePurgeWorker]
+         * It then observes that work and restarts the app when complete.
+         * We need to restart the app if it is open because purging the database could put us in
+         * a weird state.
+         * The user won't be using the app during this because there is a constraint put on the work request.
+         */
+        fun setupPurgeWork(
+            activity: Activity,
+            lifecycleCoroutineScope: LifecycleCoroutineScope,
+        ) {
+            val workRequest = PeriodicWorkRequestBuilder<DatabasePurgeWorker>(20, TimeUnit.DAYS)
+                .setConstraints(
+                    Constraints.Builder()
+                        .setRequiresDeviceIdle(true)
+                        .build()
+                )
                 .build()
-        )
-        .build()
 
-    WorkManager.getInstance(activity).enqueueUniquePeriodicWork(
-        DatabasePurgeWorker.WORKER_NAME,
-        ExistingPeriodicWorkPolicy.KEEP,
-        workRequest,
-    )
+            WorkManager.getInstance(activity).enqueueUniquePeriodicWork(
+                WORKER_NAME,
+                ExistingPeriodicWorkPolicy.KEEP,
+                workRequest,
+            )
 
-    observeWork(
-        activity,
-        lifecycleCoroutineScope,
-        DatabasePurgeWorker.WORKER_NAME
-    )
-}
+            observeWork(
+                activity,
+                lifecycleCoroutineScope,
+                WORKER_NAME
+            )
+        }
 
-/**
- * Can be used for UI testing in the future, or manual testing now.
- */
-fun setupTestPurge(
-    activity: Activity,
-    lifecycleCoroutineScope: LifecycleCoroutineScope,
-    delay: Duration = Duration.ofSeconds(0),
-) {
-    val workRequest = OneTimeWorkRequestBuilder<DatabasePurgeWorker>()
-        .setInitialDelay(delay)
-        .build()
+        /**
+         * Can be used for UI testing in the future, or manual testing now.
+         */
+        fun setupTestPurgeWork(
+            activity: Activity,
+            lifecycleCoroutineScope: LifecycleCoroutineScope,
+            delay: Duration = Duration.ofSeconds(0),
+        ) {
+            val workRequest = OneTimeWorkRequestBuilder<DatabasePurgeWorker>()
+                .setInitialDelay(delay)
+                .build()
 
-    WorkManager.getInstance(activity).beginUniqueWork(
-        DatabasePurgeWorker.TEST_WORKER_NAME,
-        ExistingWorkPolicy.KEEP,
-        workRequest,
-    ).enqueue()
+            WorkManager.getInstance(activity).beginUniqueWork(
+                TEST_WORKER_NAME,
+                ExistingWorkPolicy.KEEP,
+                workRequest,
+            ).enqueue()
 
-    observeWork(
-        activity,
-        lifecycleCoroutineScope,
-        DatabasePurgeWorker.TEST_WORKER_NAME
-    )
-}
+            observeWork(
+                activity,
+                lifecycleCoroutineScope,
+                TEST_WORKER_NAME
+            )
+        }
 
-/**
- * Observes a work request and restarted that app when the request is complete.
- * Because the coroutine scope is a [LifecycleCoroutineScope], the app will not restart
- * if it is not running.
- */
-private fun observeWork(
-    activity: Activity,
-    lifecycleCoroutineScope: LifecycleCoroutineScope,
-    workName: String,
-) {
-    lifecycleCoroutineScope.launch {
-        WorkManager.getInstance(activity)
-            .getWorkInfosForUniqueWorkFlow(workName)
-            .collect {
-                val workInfo = it.first()
-                if (workInfo.state == WorkInfo.State.SUCCEEDED) {
-                    activity.startActivity(Intent.makeRestartActivityTask(activity.intent.component))
-                }
+        /**
+         * Observes a work request and restarted that app when the request is complete.
+         * Because the coroutine scope is a [LifecycleCoroutineScope], the app will not restart
+         * if it is not running.
+         */
+        private fun observeWork(
+            activity: Activity,
+            lifecycleCoroutineScope: LifecycleCoroutineScope,
+            workName: String,
+        ) {
+            lifecycleCoroutineScope.launch {
+                WorkManager.getInstance(activity)
+                    .getWorkInfosForUniqueWorkFlow(workName)
+                    .collect {
+                        val workInfo = it.first()
+                        if (workInfo.state == WorkInfo.State.SUCCEEDED) {
+                            activity.startActivity(Intent.makeRestartActivityTask(activity.intent.component))
+                        }
+                    }
             }
+        }
+
     }
 }
