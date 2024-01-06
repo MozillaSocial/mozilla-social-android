@@ -25,7 +25,7 @@ import org.mozilla.social.core.ui.common.MoSoSurface
 import org.mozilla.social.core.ui.common.appbar.MoSoCloseableTopAppBar
 import org.mozilla.social.core.ui.common.button.MoSoButton
 import org.mozilla.social.core.ui.common.text.MoSoTextField
-import org.mozilla.social.core.workmanager.testPurge
+import org.mozilla.social.core.workmanager.setupTestPurge
 import org.mozilla.social.feature.settings.R
 import java.time.Duration
 
@@ -72,7 +72,7 @@ fun DeveloperOptionsScreen() {
                         .padding(8.dp)
                         .weight(1f),
                     onClick = {
-                        testPurge(
+                        setupTestPurge(
                             context as Activity,
                             (context as LifecycleOwner).lifecycleScope,
                             Duration.ofSeconds(delay.toLongOrNull() ?: 0)

@@ -144,7 +144,7 @@ fun setupPurgeWork(
 /**
  * Can be used for UI testing in the future, or manual testing now.
  */
-fun testPurge(
+fun setupTestPurge(
     activity: Activity,
     lifecycleCoroutineScope: LifecycleCoroutineScope,
     delay: Duration = Duration.ofSeconds(0),
