@@ -50,6 +50,7 @@ class MainApplication : Application(), ImageLoaderFactory {
             modules(
                 featureModules,
                 mainModule,
+                workManagerModule,
             )
         }
 
