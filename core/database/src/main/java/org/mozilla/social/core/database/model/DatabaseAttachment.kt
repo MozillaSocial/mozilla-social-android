@@ -57,7 +57,7 @@ sealed class DatabaseAttachment {
         override val textUrl: String? = null,
         override val description: String? = null,
         override val blurHash: String? = null,
-        val meta: Meta = Meta(),
+        val meta: Meta? = null,
     ) : DatabaseAttachment() {
         @Serializable
         data class Meta(
@@ -85,7 +85,7 @@ sealed class DatabaseAttachment {
         override val textUrl: String? = null,
         override val description: String? = null,
         override val blurHash: String? = null,
-        val meta: Meta = Meta(),
+        val meta: Meta? = null,
     ) : DatabaseAttachment() {
         @Serializable
         data class Meta(
@@ -117,7 +117,7 @@ sealed class DatabaseAttachment {
         override val textUrl: String? = null,
         override val description: String? = null,
         override val blurHash: String? = null,
-        val meta: Meta = Meta(),
+        val meta: Meta? = null,
     ) : DatabaseAttachment() {
         @Serializable
         data class Meta(
@@ -147,7 +147,7 @@ sealed class DatabaseAttachment {
         override val textUrl: String? = null,
         override val description: String? = null,
         override val blurHash: String? = null,
-        val meta: Meta = Meta(),
+        val meta: Meta? = null,
     ) : DatabaseAttachment() {
         @Serializable
         data class Meta(

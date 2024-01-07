@@ -152,7 +152,7 @@ fun DatabaseAttachment.toExternalModel(): Attachment =
                 textUrl = textUrl,
                 description = description,
                 blurHash = blurHash,
-                meta = meta.toExternalModel(),
+                meta = meta?.toExternalModel(),
             )
         is DatabaseAttachment.Gifv ->
             Attachment.Gifv(
@@ -163,7 +163,7 @@ fun DatabaseAttachment.toExternalModel(): Attachment =
                 previewRemoteUrl = previewRemoteUrl,
                 textUrl = textUrl,
                 description = description,
-                meta = meta.toExternalModel(),
+                meta = meta?.toExternalModel(),
             )
         is DatabaseAttachment.Video ->
             Attachment.Video(
@@ -175,7 +175,7 @@ fun DatabaseAttachment.toExternalModel(): Attachment =
                 textUrl = textUrl,
                 description = description,
                 blurHash = blurHash,
-                meta = meta.toExternalModel(),
+                meta = meta?.toExternalModel(),
             )
         is DatabaseAttachment.Audio ->
             Attachment.Audio(
@@ -187,7 +187,7 @@ fun DatabaseAttachment.toExternalModel(): Attachment =
                 textUrl = textUrl,
                 description = description,
                 blurHash = blurHash,
-                meta = meta.toExternalModel(),
+                meta = meta?.toExternalModel(),
             )
         is DatabaseAttachment.Unknown ->
             Attachment.Unknown(
