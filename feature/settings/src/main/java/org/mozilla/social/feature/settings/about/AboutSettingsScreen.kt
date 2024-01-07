@@ -52,7 +52,7 @@ fun AboutSettingsScreen(
     AboutSettingsScreen(
         aboutSettingsResource = aboutSettings,
         htmlContentInteractions = aboutSettingsViewModel,
-        onOpenSourceLicensesClicked = aboutSettingsViewModel::onOpenSourceLicensesClicked,
+        aboutInteractions = aboutSettingsViewModel,
     )
 
     LaunchedEffect(Unit) {
@@ -64,7 +64,7 @@ fun AboutSettingsScreen(
 fun AboutSettingsScreen(
     aboutSettingsResource: Resource<AboutSettings>,
     htmlContentInteractions: HtmlContentInteractions,
-    onOpenSourceLicensesClicked: () -> Unit,
+    aboutInteractions: AboutInteractions,
 ) {
     Column(
         modifier = Modifier.fillMaxSize()
@@ -78,13 +78,13 @@ fun AboutSettingsScreen(
                 LoadedScreen(
                     aboutSettings = aboutSettingsResource.data,
                     htmlContentInteractions = htmlContentInteractions,
-                    onOpenSourceLicensesClicked = onOpenSourceLicensesClicked,
+                    onOpenSourceLicensesClicked = aboutInteractions::onOpenSourceLicensesClicked,
                 )
             }
             is Resource.Error -> {
                 GenericError(
                     modifier = Modifier.fillMaxSize(),
-                    onRetryClicked = {}
+                    onRetryClicked = aboutInteractions::onRetryClicked,
                 )
             }
         }
@@ -198,7 +198,7 @@ fun AboutSettingsScreenPreview() {
         modules = listOf(navigationModule)
     ) {
         AboutSettingsScreen(
-            onOpenSourceLicensesClicked = {},
+            aboutInteractions = object : AboutInteractions {},
             htmlContentInteractions = object : HtmlContentInteractions {},
             aboutSettingsResource = Resource.Loaded(
                 AboutSettings(
