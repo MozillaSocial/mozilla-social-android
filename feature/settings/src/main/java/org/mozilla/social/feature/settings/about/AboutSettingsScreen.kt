@@ -1,7 +1,9 @@
 package org.mozilla.social.feature.settings.about
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -22,33 +24,36 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import org.koin.androidx.compose.koinViewModel
+import org.mozilla.social.common.Resource
 import org.mozilla.social.core.designsystem.theme.MoSoRadius
 import org.mozilla.social.core.designsystem.theme.MoSoSpacing
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.model.InstanceRule
 import org.mozilla.social.core.navigation.navigationModule
-import org.mozilla.social.core.ui.common.MoSoSurface
 import org.mozilla.social.core.ui.common.account.quickview.AccountQuickView
 import org.mozilla.social.core.ui.common.account.quickview.AccountQuickViewUiState
+import org.mozilla.social.core.ui.common.appbar.MoSoCloseableTopAppBar
 import org.mozilla.social.core.ui.common.divider.MoSoDivider
+import org.mozilla.social.core.ui.common.error.GenericError
+import org.mozilla.social.core.ui.common.loading.MaxSizeLoading
 import org.mozilla.social.core.ui.common.text.MediumTextBody
 import org.mozilla.social.core.ui.common.text.MediumTextTitle
 import org.mozilla.social.core.ui.common.utils.PreviewTheme
 import org.mozilla.social.core.ui.htmlcontent.HtmlContent
 import org.mozilla.social.core.ui.htmlcontent.HtmlContentInteractions
 import org.mozilla.social.feature.settings.R
-import org.mozilla.social.feature.settings.ui.SettingsColumn
 
 @Composable
-fun AboutSettingsScreen(aboutSettingsViewModel: AboutSettingsViewModel = koinViewModel()) {
-    val aboutSettings: AboutSettings? by aboutSettingsViewModel.aboutSettings.collectAsStateWithLifecycle()
-    aboutSettings?.let {
-        AboutSettingsScreen(
-            aboutSettings = it,
-            htmlContentInteractions = aboutSettingsViewModel,
-            onOpenSourceLicensesClicked = aboutSettingsViewModel::onOpenSourceLicensesClicked,
-        )
-    }
+fun AboutSettingsScreen(
+    aboutSettingsViewModel: AboutSettingsViewModel = koinViewModel()
+) {
+    val aboutSettings: Resource<AboutSettings> by aboutSettingsViewModel.aboutSettings.collectAsStateWithLifecycle()
+
+    AboutSettingsScreen(
+        aboutSettingsResource = aboutSettings,
+        htmlContentInteractions = aboutSettingsViewModel,
+        onOpenSourceLicensesClicked = aboutSettingsViewModel::onOpenSourceLicensesClicked,
+    )
 
     LaunchedEffect(Unit) {
         aboutSettingsViewModel.onScreenViewed()
@@ -57,80 +62,107 @@ fun AboutSettingsScreen(aboutSettingsViewModel: AboutSettingsViewModel = koinVie
 
 @Composable
 fun AboutSettingsScreen(
+    aboutSettingsResource: Resource<AboutSettings>,
+    htmlContentInteractions: HtmlContentInteractions,
+    onOpenSourceLicensesClicked: () -> Unit,
+) {
+    Column(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        MoSoCloseableTopAppBar(title = stringResource(id = R.string.about_settings_title))
+        when (aboutSettingsResource) {
+            is Resource.Loading -> {
+                MaxSizeLoading()
+            }
+            is Resource.Loaded -> {
+                LoadedScreen(
+                    aboutSettings = aboutSettingsResource.data,
+                    htmlContentInteractions = htmlContentInteractions,
+                    onOpenSourceLicensesClicked = onOpenSourceLicensesClicked,
+                )
+            }
+            is Resource.Error -> {
+                GenericError(
+                    modifier = Modifier.fillMaxSize(),
+                    onRetryClicked = {}
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun LoadedScreen(
     aboutSettings: AboutSettings,
     htmlContentInteractions: HtmlContentInteractions,
     onOpenSourceLicensesClicked: () -> Unit,
 ) {
-    MoSoSurface {
-        SettingsColumn(
-            title = stringResource(id = R.string.about_settings_title),
+    Column(
+        modifier = Modifier
+            .verticalScroll(rememberScrollState())
+            .padding(MoSoSpacing.lg)
+    ) {
+        AsyncImage(
             modifier =
             Modifier
-                .verticalScroll(rememberScrollState())
-                .padding(MoSoSpacing.lg),
-        ) {
-            AsyncImage(
-                modifier =
-                Modifier
-                    .clip(RoundedCornerShape(MoSoRadius.lg_16_dp))
-                    .fillMaxWidth()
-                    .wrapContentHeight(),
-                model = aboutSettings.thumbnailUrl,
-                contentDescription = null,
-                contentScale = ContentScale.FillWidth,
-            )
+                .clip(RoundedCornerShape(MoSoRadius.lg_16_dp))
+                .fillMaxWidth()
+                .wrapContentHeight(),
+            model = aboutSettings.thumbnailUrl,
+            contentDescription = null,
+            contentScale = ContentScale.FillWidth,
+        )
 
-            Spacer(modifier = Modifier.height(MoSoSpacing.lg))
+        Spacer(modifier = Modifier.height(MoSoSpacing.lg))
 
-            Text(text = aboutSettings.title, style = MoSoTheme.typography.labelLarge)
+        Text(text = aboutSettings.title, style = MoSoTheme.typography.labelLarge)
 
-            Spacer(modifier = Modifier.height(MoSoSpacing.lg))
+        Spacer(modifier = Modifier.height(MoSoSpacing.lg))
 
+        Text(
+            text = stringResource(id = R.string.decentralized_social_media_powered_by_mastodon),
+            style = MoSoTheme.typography.bodyMedium,
+        )
+
+        Divider()
+
+        aboutSettings.administeredBy?.let { state ->
             Text(
-                text = stringResource(id = R.string.decentralized_social_media_powered_by_mastodon),
+                text = stringResource(id = R.string.administered_by),
+                style = MoSoTheme.typography.titleSmall,
+            )
+            AccountQuickView(uiState = state)
+        }
+
+        Divider()
+
+        aboutSettings.contactEmail?.let { contactEmail ->
+            Text(
+                text = stringResource(id = R.string.contact_email, contactEmail),
                 style = MoSoTheme.typography.bodyMedium,
             )
-
-            Divider()
-
-            aboutSettings.administeredBy?.let { state ->
-                Text(
-                    text = stringResource(id = R.string.administered_by),
-                    style = MoSoTheme.typography.titleSmall,
-                )
-                AccountQuickView(uiState = state)
-            }
-
-            Divider()
-
-            aboutSettings.contactEmail?.let { contactEmail ->
-                Text(
-                    text = stringResource(id = R.string.contact_email, contactEmail),
-                    style = MoSoTheme.typography.bodyMedium,
-                )
-            }
-
-            Divider()
-
-            aboutSettings.extendedDescription?.let { description ->
-                HtmlContent(
-                    htmlText = description,
-                    htmlContentInteractions = htmlContentInteractions,
-                    maximumLineCount = Int.MAX_VALUE,
-                )
-
-            }
-
-            Divider()
-
-            ServerRules(aboutSettings.rules)
-
-            Divider()
-
-            OpenSourceLicenses(onClick = onOpenSourceLicensesClicked)
-
-            Spacer(modifier = Modifier.height(MoSoSpacing.xxl))
         }
+
+        Divider()
+
+        aboutSettings.extendedDescription?.let { description ->
+            HtmlContent(
+                htmlText = description,
+                htmlContentInteractions = htmlContentInteractions,
+                maximumLineCount = Int.MAX_VALUE,
+            )
+
+        }
+
+        Divider()
+
+        ServerRules(aboutSettings.rules)
+
+        Divider()
+
+        OpenSourceLicenses(onClick = onOpenSourceLicensesClicked)
+
+        Spacer(modifier = Modifier.height(MoSoSpacing.xxl))
     }
 }
 
@@ -168,25 +200,26 @@ fun AboutSettingsScreenPreview() {
         AboutSettingsScreen(
             onOpenSourceLicensesClicked = {},
             htmlContentInteractions = object : HtmlContentInteractions {},
-            aboutSettings =
-            AboutSettings(
-                title = "mozilla.social",
-                administeredBy =
-                AccountQuickViewUiState(
-                    accountId = "",
-                    displayName = "Mozilla Social",
-                    webFinger = "@social",
-                    avatarUrl = "",
-                ),
-                contactEmail = "support@mozilla-social.zendesk.com",
-                extendedDescription =
-                "We’re here to build a social platform that puts " +
-                        "people first. Mozilla.social is currently available to a closed " +
-                        "beta group as we experiment, gain input from participants, learn, " +
-                        "and improve the experience. Eventually we hope to build a safe, " +
-                        "well-organized space within Mastodon that is open to all audiences.",
-                thumbnailUrl = "",
-                rules = listOf(),
+            aboutSettingsResource = Resource.Loaded(
+                AboutSettings(
+                    title = "mozilla.social",
+                    administeredBy =
+                    AccountQuickViewUiState(
+                        accountId = "",
+                        displayName = "Mozilla Social",
+                        webFinger = "@social",
+                        avatarUrl = "",
+                    ),
+                    contactEmail = "support@mozilla-social.zendesk.com",
+                    extendedDescription =
+                    "We’re here to build a social platform that puts " +
+                            "people first. Mozilla.social is currently available to a closed " +
+                            "beta group as we experiment, gain input from participants, learn, " +
+                            "and improve the experience. Eventually we hope to build a safe, " +
+                            "well-organized space within Mastodon that is open to all audiences.",
+                    thumbnailUrl = "",
+                    rules = listOf(),
+                )
             ),
         )
     }
