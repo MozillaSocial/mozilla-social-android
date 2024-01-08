@@ -2,11 +2,13 @@ package org.mozilla.social.feature.settings.about
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import org.mozilla.social.common.Resource
 import org.mozilla.social.core.analytics.Analytics
 import org.mozilla.social.core.analytics.AnalyticsIdentifiers
 import org.mozilla.social.core.model.Instance
@@ -18,6 +20,7 @@ import org.mozilla.social.core.ui.htmlcontent.HtmlContentInteractions
 import org.mozilla.social.core.usecase.mastodon.account.GetLoggedInUserAccountId
 import org.mozilla.social.core.usecase.mastodon.htmlcontent.DefaultHtmlInteractions
 import org.mozilla.social.feature.settings.SettingsInteractions
+import timber.log.Timber
 
 class AboutSettingsViewModel(
     getLoggedInUserAccountId: GetLoggedInUserAccountId,
@@ -25,20 +28,40 @@ class AboutSettingsViewModel(
     private val navigateTo: NavigateTo,
     private val instanceRepository: InstanceRepository,
     private val defaultHtmlInteractions: DefaultHtmlInteractions,
-) : ViewModel(), SettingsInteractions, HtmlContentInteractions by defaultHtmlInteractions {
+) : ViewModel(),
+    AboutInteractions,
+    SettingsInteractions,
+    HtmlContentInteractions by defaultHtmlInteractions {
 
     private val userAccountId: String = getLoggedInUserAccountId()
-    val aboutSettings: StateFlow<AboutSettings?> =
-        flow {
-            val instanceDeferred = viewModelScope.async { instanceRepository.getInstance() }
-            val extendedDescriptionDeferred =
-                viewModelScope.async { instanceRepository.getExtendedDescription() }
 
-            val instance = instanceDeferred.await()
-            val extendedDescription = extendedDescriptionDeferred.await()
+    private val _aboutSettings = MutableStateFlow<Resource<AboutSettings>>(Resource.Loading())
+    val aboutSettings = _aboutSettings.asStateFlow()
 
-            emit(instance.toAboutSettings(extendedDescription))
-        }.stateIn(viewModelScope, SharingStarted.Eagerly, null)
+    private var loadingJob: Job? = null
+
+    init {
+        loadServerInfo()
+    }
+
+    private fun loadServerInfo() {
+        loadingJob?.cancel()
+        loadingJob = viewModelScope.launch {
+            _aboutSettings.update { Resource.Loading() }
+            try {
+                val instanceDeferred = viewModelScope.async { instanceRepository.getInstance() }
+                val extendedDescriptionDeferred =
+                    viewModelScope.async { instanceRepository.getExtendedDescription() }
+
+                val instance = instanceDeferred.await()
+                val extendedDescription = extendedDescriptionDeferred.await()
+                _aboutSettings.update { Resource.Loaded(instance.toAboutSettings(extendedDescription)) }
+            } catch (e: Exception) {
+                _aboutSettings.update { Resource.Error(e) }
+                Timber.e(e)
+            }
+        }
+    }
 
     override fun onScreenViewed() {
         analytics.uiImpression(
@@ -47,8 +70,12 @@ class AboutSettingsViewModel(
         )
     }
 
-    fun onOpenSourceLicensesClicked() {
+    override fun onOpenSourceLicensesClicked() {
         navigateTo(SettingsNavigationDestination.OpenSourceLicensesSettings)
+    }
+
+    override fun onRetryClicked() {
+        loadServerInfo()
     }
 }
 
