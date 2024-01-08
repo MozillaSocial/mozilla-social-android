@@ -198,7 +198,10 @@ fun AboutSettingsScreenPreview() {
         modules = listOf(navigationModule)
     ) {
         AboutSettingsScreen(
-            aboutInteractions = object : AboutInteractions {},
+            aboutInteractions = object : AboutInteractions {
+                override fun onOpenSourceLicensesClicked() = Unit
+                override fun onRetryClicked() = Unit
+            },
             htmlContentInteractions = object : HtmlContentInteractions {},
             aboutSettingsResource = Resource.Loaded(
                 AboutSettings(
