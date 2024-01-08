@@ -68,7 +68,7 @@ sealed class NetworkAttachment {
         @SerialName("blurhash")
         override val blurHash: String? = null,
         @SerialName("meta")
-        val meta: Meta = Meta(),
+        val meta: Meta? = null,
     ) : NetworkAttachment() {
         @Serializable
         data class Meta(
@@ -113,7 +113,7 @@ sealed class NetworkAttachment {
         @SerialName("blurhash")
         override val blurHash: String? = null,
         @SerialName("meta")
-        val meta: Meta = Meta(),
+        val meta: Meta? = null,
     ) : NetworkAttachment() {
         @Serializable
         data class Meta(
@@ -166,7 +166,7 @@ sealed class NetworkAttachment {
         @SerialName("blurhash")
         override val blurHash: String? = null,
         @SerialName("meta")
-        val meta: Meta = Meta(),
+        val meta: Meta? = null,
     ) : NetworkAttachment() {
         @Serializable
         data class Meta(
@@ -215,7 +215,7 @@ sealed class NetworkAttachment {
         @SerialName("blurhash")
         override val blurHash: String? = null,
         @SerialName("meta")
-        val meta: Meta = Meta(),
+        val meta: Meta? = null,
     ) : NetworkAttachment() {
         @Serializable
         data class Meta(
