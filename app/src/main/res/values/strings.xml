@@ -23,4 +23,6 @@
 
     <string name="sign_out">Sign Out</string>
 
+    <string name="cd_sign_in_button">Login and Signup</string>
+
 </resources>
