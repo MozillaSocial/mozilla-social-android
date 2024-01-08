@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.koin.androidx.compose.koinViewModel
@@ -17,6 +18,7 @@ import org.mozilla.social.core.ui.common.MoSoSurface
 import org.mozilla.social.core.ui.common.MoSoTab
 import org.mozilla.social.core.ui.common.MoSoTabRow
 import org.mozilla.social.core.ui.common.appbar.MoSoTopBar
+import org.mozilla.social.core.ui.common.text.MediumTextLabel
 
 @Composable
 internal fun NotificationsScreen(
@@ -41,7 +43,7 @@ private fun NotificationsScreen(
     ) {
         Column {
             MoSoTopBar(
-                title = "Notifications",
+                title = stringResource(id = R.string.notifications_title),
                 icon = null,
                 onIconClicked = {},
                 showDivider = false,
@@ -70,10 +72,7 @@ private fun Tabs(
                 selected = uiState.selectedTab == tabType,
                 onClick = { notificationsInteractions.onTabClicked(tabType) },
                 content = {
-                    Text(
-                        text = tabType.tabTitle.build(context),
-                        style = MoSoTheme.typography.labelMedium,
-                    )
+                    MediumTextLabel(text = tabType.tabTitle.build(context))
                 },
             )
         }
