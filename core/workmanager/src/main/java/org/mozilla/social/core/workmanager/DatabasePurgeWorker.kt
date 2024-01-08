@@ -41,15 +41,11 @@ class DatabasePurgeWorker(
     getLoggedInUserAccountId: GetLoggedInUserAccountId,
     private val databaseDelegate: DatabaseDelegate,
     private val accountRepository: AccountRepository,
-    private val blocksRepository: BlocksRepository,
-    private val favoritesRepository: FavoritesRepository,
     private val followersRepository: FollowersRepository,
     private val followingsRepository: FollowingsRepository,
     private val hashtagRepository: HashtagRepository,
-    private val mutesRepository: MutesRepository,
     private val pollRepository: PollRepository,
     private val relationshipRepository: RelationshipRepository,
-    private val searchRepository: SearchRepository,
     private val statusRepository: StatusRepository,
     private val timelineRepository: TimelineRepository,
 ): CoroutineWorker(
@@ -67,12 +63,16 @@ class DatabasePurgeWorker(
                 timelineRepository.deleteAllHashTagTimelines()
                 timelineRepository.deleteAllAccountTimelines(listOf(loggedInUserId))
 
-                hashtagRepository.deleteAll()
-                relationshipRepository.deleteAll()
-
+                // order matters
+                // statuses first
                 statusRepository.deleteOldStatusesFromDatabase()
+                // accounts second
                 accountRepository.deleteOldAccountFromDatabase(listOf(loggedInUserId))
+                // relationships third
+                relationshipRepository.deleteOldRelationships()
+                // polls fourth
                 pollRepository.deleteOldPolls()
+                hashtagRepository.deleteAll()
 
                 databaseDelegate.vacuum()
             }

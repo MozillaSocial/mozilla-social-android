@@ -47,4 +47,10 @@ interface RelationshipsDao : BaseDao<DatabaseRelationship> {
         "DELETE FROM relationships"
     )
     suspend fun deleteAll()
+
+    @Query(
+        "DELETE FROM accounts " +
+        "WHERE accountId NOT IN (SELECT accountId FROM accounts)"
+    )
+    suspend fun deleteOldRelationships()
 }

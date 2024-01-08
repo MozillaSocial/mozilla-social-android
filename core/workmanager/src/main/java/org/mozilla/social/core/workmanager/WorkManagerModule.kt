@@ -19,10 +19,6 @@ val workManagerModule = module {
             get(),
             get(),
             get(),
-            get(),
-            get(),
-            get(),
-            get(),
         )
     }
 }
