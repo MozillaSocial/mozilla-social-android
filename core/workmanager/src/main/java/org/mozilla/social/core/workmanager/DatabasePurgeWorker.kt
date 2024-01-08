@@ -181,7 +181,7 @@ class DatabasePurgeWorker(
                     .getWorkInfosForUniqueWorkFlow(workName)
                     .collect {
                         val workInfo = it.first()
-                        if (workInfo.state == WorkInfo.State.SUCCEEDED) {
+                        if (workInfo.state == WorkInfo.State.SUCCEEDED || workInfo.state == WorkInfo.State.CANCELLED) {
                             activity.startActivity(Intent.makeRestartActivityTask(activity.intent.component))
                         }
                     }
