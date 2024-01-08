@@ -1,3 +1,5 @@
+import com.android.build.api.dsl.ManagedVirtualDevice
+
 plugins {
     id("org.mozilla.social.android.application")
     id("org.mozilla.social.android.application.compose")
@@ -41,6 +43,18 @@ android {
     packaging {
         resources {
             excludes.add("/META-INF/{AL2.0,LGPL2.1}")
+        }
+    }
+
+    testOptions {
+        managedDevices {
+            devices {
+                register("phone", ManagedVirtualDevice::class) {
+                    device = "Pixel 7"
+                    apiLevel = 34
+                    systemImageSource = "aosp-atd"
+                }
+            }
         }
     }
 }

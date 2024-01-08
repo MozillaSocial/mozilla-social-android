@@ -46,3 +46,13 @@ jobs:
         env:
           GRADLE_OPTS: -Dorg.gradle.daemon=false
         run: ./gradlew testDebugUnitTest
+
+  ui-test:
+    runs-on: macos-latest
+    steps:
+      - name: Run UI tests
+        uses: gradle/gradle-build-action@v2.11.1
+        with:
+          arguments: |
+            :app:phoneDebugAndroidTest
+            -Pandroid.testoptions.manageddevices.emulator.gpu=swiftshader_indirect
