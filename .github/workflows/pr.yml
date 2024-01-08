@@ -54,5 +54,5 @@ jobs:
         uses: gradle/gradle-build-action@v2.11.1
         with:
           arguments: |
-            :app:phoneDebugAndroidTest
             -Pandroid.testoptions.manageddevices.emulator.gpu=swiftshader_indirect
+        run: ./gradlew phoneDebugAndroidTest
