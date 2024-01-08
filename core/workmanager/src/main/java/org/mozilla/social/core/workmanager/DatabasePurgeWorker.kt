@@ -15,16 +15,12 @@ import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import kotlinx.coroutines.launch
 import org.mozilla.social.core.repository.mastodon.AccountRepository
-import org.mozilla.social.core.repository.mastodon.BlocksRepository
 import org.mozilla.social.core.repository.mastodon.DatabaseDelegate
-import org.mozilla.social.core.repository.mastodon.FavoritesRepository
 import org.mozilla.social.core.repository.mastodon.FollowersRepository
 import org.mozilla.social.core.repository.mastodon.FollowingsRepository
 import org.mozilla.social.core.repository.mastodon.HashtagRepository
-import org.mozilla.social.core.repository.mastodon.MutesRepository
 import org.mozilla.social.core.repository.mastodon.PollRepository
 import org.mozilla.social.core.repository.mastodon.RelationshipRepository
-import org.mozilla.social.core.repository.mastodon.SearchRepository
 import org.mozilla.social.core.repository.mastodon.StatusRepository
 import org.mozilla.social.core.repository.mastodon.TimelineRepository
 import org.mozilla.social.core.usecase.mastodon.account.GetLoggedInUserAccountId
