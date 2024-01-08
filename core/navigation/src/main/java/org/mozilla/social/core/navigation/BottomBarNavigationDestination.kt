@@ -20,16 +20,16 @@ sealed class BottomBarNavigationDestination(val route: String) {
         }
     }
 
-    data object Bookmarks : BottomBarNavigationDestination(
-        route = "bookmarks",
-    ) {
-        fun NavController.navigateToBookmarksScreen(navOptions: NavOptions? = null) {
+    data object MyAccount : BottomBarNavigationDestination(route = "myAccount") {
+        fun NavController.navigateToMyAccount(navOptions: NavOptions? = null) {
             navigate(route, navOptions)
         }
     }
 
-    data object MyAccount : BottomBarNavigationDestination(route = "myAccount") {
-        fun NavController.navigateToMyAccount(navOptions: NavOptions? = null) {
+    data object Notifications : BottomBarNavigationDestination(
+        route = "notifications",
+    ) {
+        fun NavController.navigateToNotificationsScreen(navOptions: NavOptions? = null) {
             navigate(route, navOptions)
         }
     }

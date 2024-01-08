@@ -22,6 +22,7 @@ import org.mozilla.social.feature.discover.discoverModule
 import org.mozilla.social.feature.favorites.favoritesModule
 import org.mozilla.social.feature.followers.followersModule
 import org.mozilla.social.feature.hashtag.hashTagModule
+import org.mozilla.social.feature.notifications.notificationsModule
 import org.mozilla.social.feature.report.reportModule
 import org.mozilla.social.feature.settings.settingsModule
 import org.mozilla.social.feature.thread.threadModule
@@ -82,6 +83,7 @@ val featureModules =
             followersModule,
             hashTagModule,
             newPostModule,
+            notificationsModule,
             reportModule,
             searchModule,
             settingsModule,
