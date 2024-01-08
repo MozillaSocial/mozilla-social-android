@@ -24,7 +24,10 @@ interface FollowersDao : BaseDao<Follower> {
     suspend fun deleteFollowers(accountId: String)
 
     @Query(
-        "DELETE FROM followers"
+        "DELETE FROM followers " +
+        "WHERE accountId NOT IN (:accountsToKeep)"
     )
-    suspend fun deleteAllFollowers()
+    suspend fun deleteAllFollowers(
+        accountsToKeep: List<String> = emptyList()
+    )
 }

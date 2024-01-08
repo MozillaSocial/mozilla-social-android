@@ -40,4 +40,13 @@ interface PollsDao : BaseDao<DatabasePoll> {
     suspend fun deleteAll(
         pollIdsToKeep: List<String> = emptyList()
     )
+
+    @Query(
+        "DELETE FROM polls " +
+        "WHERE pollId NOT IN " +
+        "(" +
+            "SELECT pollId FROM statuses" +
+        ")"
+    )
+    suspend fun deleteOldPolls()
 }

@@ -62,38 +62,17 @@ class DatabasePurgeWorker(
     override suspend fun doWork(): Result {
         return try {
             databaseDelegate.withTransaction {
-                blocksRepository.deleteAll()
-                favoritesRepository.deleteFavoritesTimeline()
-                followersRepository.deleteAllFollowers()
-                followingsRepository.deleteAllFollowings()
-                mutesRepository.deleteAll()
-                searchRepository.deleteSearchResults()
-                timelineRepository.deleteLocalTimeline()
-                timelineRepository.deleteFederatedTimeline()
+                followersRepository.deleteAllFollowers(listOf(loggedInUserId))
+                followingsRepository.deleteAllFollowings(listOf(loggedInUserId))
                 timelineRepository.deleteAllHashTagTimelines()
-                timelineRepository.deleteAllAccountTimelines()
+                timelineRepository.deleteAllAccountTimelines(listOf(loggedInUserId))
 
                 hashtagRepository.deleteAll()
                 relationshipRepository.deleteAll()
 
-                val homeStatuses = timelineRepository.getTopHomePostsFromDatabase(40)
-                val statusIdsToKeep = buildList {
-                    addAll(homeStatuses.map { it.statusId })
-                    addAll(homeStatuses.mapNotNull { it.boostedStatus?.statusId })
-                }
-                val accountIdsToKeep = buildList {
-                    addAll(homeStatuses.map { it.account.accountId })
-                    addAll(homeStatuses.mapNotNull { it.boostedStatus?.account?.accountId })
-                    add(loggedInUserId)
-                }
-                val pollsIdsToKeep = buildList {
-                    addAll(homeStatuses.mapNotNull { it.poll?.pollId })
-                    addAll(homeStatuses.mapNotNull { it.boostedStatus?.poll?.pollId })
-                }
-
-                statusRepository.deleteAllLocal(statusIdsToKeep)
-                accountRepository.deleteAllLocal(accountIdsToKeep)
-                pollRepository.deleteAll(pollsIdsToKeep)
+                statusRepository.deleteOldStatusesFromDatabase()
+                accountRepository.deleteOldAccountFromDatabase(listOf(loggedInUserId))
+                pollRepository.deleteOldPolls()
 
                 databaseDelegate.vacuum()
             }

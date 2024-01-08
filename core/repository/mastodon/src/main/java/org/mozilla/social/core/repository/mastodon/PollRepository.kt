@@ -28,6 +28,8 @@ class PollRepository internal constructor(private val dao: PollsDao) {
     suspend fun deleteAll(
         pollIdsToKeep: List<String> = emptyList()
     ) = dao.deleteAll(pollIdsToKeep)
+
+    suspend fun deleteOldPolls() = dao.deleteOldPolls()
 }
 
 private fun Poll.toDatabaseModel(): DatabasePoll =

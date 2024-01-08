@@ -158,6 +158,10 @@ class AccountRepository internal constructor(
         accountIdsToKeep: List<String> = emptyList()
     ) = dao.deleteAll(accountIdsToKeep)
 
+    suspend fun deleteOldAccountFromDatabase(
+        accountIdsToKeep: List<String> = emptyList()
+    ) = dao.deleteOldAccounts(accountIdsToKeep)
+
     @PreferUseCase
     @Suppress("MagicNumber")
     suspend fun updateAccount(

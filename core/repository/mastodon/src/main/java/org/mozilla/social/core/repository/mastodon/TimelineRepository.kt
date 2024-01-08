@@ -308,7 +308,11 @@ class TimelineRepository internal constructor(
         timelineType: AccountTimelineType,
     ) = accountTimelineStatusDao.deleteAccountTimeline(accountId, timelineType)
 
-    suspend fun deleteAllAccountTimelines() = accountTimelineStatusDao.deleteAllAccountTimelines()
+    suspend fun deleteAllAccountTimelines(
+        accountsToKeep: List<String> = emptyList()
+    ) = accountTimelineStatusDao.deleteAllAccountTimelines(
+        accountsToKeep
+    )
 
     suspend fun deleteStatusFromAccountTimelines(statusId: String) =
         accountTimelineStatusDao.deletePost(statusId)

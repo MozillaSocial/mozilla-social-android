@@ -36,4 +36,24 @@ interface AccountsDao : BaseDao<DatabaseAccount> {
     suspend fun deleteAll(
         accountIdsToKeep: List<String> = emptyList()
     )
+
+    @Query(
+        "DELETE FROM accounts " +
+        "WHERE accountId NOT IN " +
+        "(" +
+            "SELECT accountId FROM blocks " +
+            "UNION " +
+            "SELECT accountId FROM mutes " +
+            "UNION " +
+            "SELECT followerAccountId FROM followers " +
+            "UNION " +
+            "SELECT followeeAccountId FROM followings " +
+            "UNION " +
+            "SELECT accountId FROM statuses " +
+        ") " +
+        "AND accountId NOT IN (:accountIdsToKeep)"
+    )
+    suspend fun deleteOldAccounts(
+        accountIdsToKeep: List<String> = emptyList()
+    )
 }

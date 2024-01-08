@@ -47,7 +47,7 @@ fun DeveloperOptionsScreen() {
             ) {
                 val context = LocalContext.current
                 var delay by remember {
-                    mutableStateOf("5")
+                    mutableStateOf("0")
                 }
 
                 MoSoTextField(
