@@ -53,7 +53,7 @@ sealed class Attachment {
         override val textUrl: String? = null,
         override val description: String? = null,
         override val blurHash: String? = null,
-        val meta: Meta = Meta(),
+        val meta: Meta? = null,
     ) : Attachment() {
         data class Meta(
             val focalPoint: FocalPoint? = null,
@@ -78,7 +78,7 @@ sealed class Attachment {
         override val textUrl: String? = null,
         override val description: String? = null,
         override val blurHash: String? = null,
-        val meta: Meta = Meta(),
+        val meta: Meta? = null,
     ) : Attachment() {
         data class Meta(
             val aspectRatio: Float? = null,
@@ -107,7 +107,7 @@ sealed class Attachment {
         override val textUrl: String? = null,
         override val description: String? = null,
         override val blurHash: String? = null,
-        val meta: Meta = Meta(),
+        val meta: Meta? = null,
     ) : Attachment() {
         data class Meta(
             val aspectRatio: Float? = null,
@@ -134,7 +134,7 @@ sealed class Attachment {
         override val textUrl: String? = null,
         override val description: String? = null,
         override val blurHash: String? = null,
-        val meta: Meta = Meta(),
+        val meta: Meta? = null,
     ) : Attachment() {
         data class Meta(
             val durationSeconds: Double? = null,

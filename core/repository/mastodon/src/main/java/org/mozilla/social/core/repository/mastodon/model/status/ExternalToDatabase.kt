@@ -82,7 +82,7 @@ fun Attachment.toDatabaseModel(): DatabaseAttachment =
                 textUrl = textUrl,
                 description = description,
                 blurHash = blurHash,
-                meta = meta.toDatabaseModel(),
+                meta = meta?.toDatabaseModel(),
             )
 
         is Attachment.Gifv ->
@@ -94,7 +94,7 @@ fun Attachment.toDatabaseModel(): DatabaseAttachment =
                 previewRemoteUrl = previewRemoteUrl,
                 textUrl = textUrl,
                 description = description,
-                meta = meta.toDatabaseModel(),
+                meta = meta?.toDatabaseModel(),
             )
 
         is Attachment.Video ->
@@ -107,7 +107,7 @@ fun Attachment.toDatabaseModel(): DatabaseAttachment =
                 textUrl = textUrl,
                 description = description,
                 blurHash = blurHash,
-                meta = meta.toDatabaseModel(),
+                meta = meta?.toDatabaseModel(),
             )
 
         is Attachment.Audio ->
@@ -120,7 +120,7 @@ fun Attachment.toDatabaseModel(): DatabaseAttachment =
                 textUrl = textUrl,
                 description = description,
                 blurHash = blurHash,
-                meta = meta.toDatabaseModel(),
+                meta = meta?.toDatabaseModel(),
             )
 
         is Attachment.Unknown ->
