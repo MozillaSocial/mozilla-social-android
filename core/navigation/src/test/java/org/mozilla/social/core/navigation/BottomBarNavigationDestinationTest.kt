@@ -7,6 +7,7 @@ import org.junit.Test
 import org.mozilla.social.core.navigation.BottomBarNavigationDestination.Discover.navigateToDiscover
 import org.mozilla.social.core.navigation.BottomBarNavigationDestination.Feed.navigateToFeed
 import org.mozilla.social.core.navigation.BottomBarNavigationDestination.MyAccount.navigateToMyAccount
+import org.mozilla.social.core.navigation.BottomBarNavigationDestination.Notifications.navigateToNotificationsScreen
 
 class BottomBarNavigationDestinationTest {
     private val navController = mockk<NavController>(relaxed = true)
@@ -30,5 +31,12 @@ class BottomBarNavigationDestinationTest {
         navController.navigateToFeed()
 
         verify { navController.navigate("feed") }
+    }
+
+    @Test
+    fun navigateToNotifications() {
+        navController.navigateToNotificationsScreen()
+
+        verify { navController.navigate("notifications") }
     }
 }

@@ -73,6 +73,7 @@ dependencies {
     implementation(project(":feature:discover"))
     implementation(project(":feature:favorites"))
     implementation(project(":core:workmanager"))
+    implementation(project(":feature:notifications"))
 
     implementation(kotlin("reflect"))
 

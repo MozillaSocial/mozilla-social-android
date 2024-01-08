@@ -71,22 +71,22 @@ enum class BottomBarTabs(
                     Destination.Main(NavigationDestination.NewPost())
             },
     ),
-    BOOKMARKS(
+    NOTIFICATIONS(
         bottomBarTab =
             object : BottomBarTab {
                 @Composable
                 override fun selectedIcon(): Painter {
-                    return MoSoIcons.bookmarkFill()
+                    return MoSoIcons.bellFill()
                 }
 
                 @Composable
                 override fun unselectedIcon(): Painter {
-                    return MoSoIcons.bookmark()
+                    return MoSoIcons.bell()
                 }
 
-                override val tabText = StringFactory.resource(R.string.settings_tab_text)
+                override val tabText = StringFactory.resource(R.string.notifications_tab_text)
                 override val navigationDestination: Destination =
-                    Destination.BottomBar(BottomBarNavigationDestination.Bookmarks)
+                    Destination.BottomBar(BottomBarNavigationDestination.Notifications)
             },
     ),
     ACCOUNT(

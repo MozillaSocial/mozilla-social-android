@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tab_all">All</string>
+    <string name="tab_mentions">Mentions</string>
+    <string name="tab_requests">Requests</string>
+
+    <string name="notifications_title">Notifications</string>
+</resources>
