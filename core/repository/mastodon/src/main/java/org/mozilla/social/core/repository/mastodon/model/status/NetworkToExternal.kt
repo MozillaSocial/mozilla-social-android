@@ -112,7 +112,7 @@ fun NetworkAttachment.toExternalModel(): Attachment =
                 textUrl = textUrl,
                 description = description,
                 blurHash = blurHash,
-                meta = meta.toExternalModel(),
+                meta = meta?.toExternalModel(),
             )
         is NetworkAttachment.Gifv ->
             Attachment.Gifv(
@@ -123,7 +123,7 @@ fun NetworkAttachment.toExternalModel(): Attachment =
                 previewRemoteUrl = previewRemoteUrl,
                 textUrl = textUrl,
                 description = description,
-                meta = meta.toExternalModel(),
+                meta = meta?.toExternalModel(),
             )
         is NetworkAttachment.Video ->
             Attachment.Video(
@@ -135,7 +135,7 @@ fun NetworkAttachment.toExternalModel(): Attachment =
                 textUrl = textUrl,
                 description = description,
                 blurHash = blurHash,
-                meta = meta.toExternalModel(),
+                meta = meta?.toExternalModel(),
             )
         is NetworkAttachment.Audio ->
             Attachment.Audio(
@@ -147,7 +147,7 @@ fun NetworkAttachment.toExternalModel(): Attachment =
                 textUrl = textUrl,
                 description = description,
                 blurHash = blurHash,
-                meta = meta.toExternalModel(),
+                meta = meta?.toExternalModel(),
             )
         is NetworkAttachment.Unknown ->
             Attachment.Unknown(
