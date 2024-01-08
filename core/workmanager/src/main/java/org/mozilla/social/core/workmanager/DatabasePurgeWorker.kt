@@ -94,6 +94,8 @@ class DatabasePurgeWorker(
                 statusRepository.deleteAllLocal(statusIdsToKeep)
                 accountRepository.deleteAllLocal(accountIdsToKeep)
                 pollRepository.deleteAll(pollsIdsToKeep)
+
+                databaseDelegate.vacuum()
             }
 
             Result.success()
