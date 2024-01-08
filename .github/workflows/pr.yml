@@ -50,6 +50,10 @@ jobs:
   ui-test:
     runs-on: macos-latest
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # v4.1.0
+      - name: Setup
+        uses: ./.github/actions/setup-environment
       - name: Run UI tests
         uses: gradle/gradle-build-action@v2.11.1
         with:
