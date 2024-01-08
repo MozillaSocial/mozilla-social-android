@@ -120,7 +120,7 @@ class DatabasePurgeWorker(
             activity: Activity,
             lifecycleCoroutineScope: LifecycleCoroutineScope,
         ) {
-            val workRequest = PeriodicWorkRequestBuilder<DatabasePurgeWorker>(20, TimeUnit.DAYS)
+            val workRequest = PeriodicWorkRequestBuilder<DatabasePurgeWorker>(7, TimeUnit.DAYS)
                 .setConstraints(
                     Constraints.Builder()
                         .setRequiresDeviceIdle(true)
