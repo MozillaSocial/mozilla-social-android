@@ -9,6 +9,7 @@
     <string name="privacy_settings_title">Privacy</string>
     <string name="about_settings_title">About</string>
     <string name="licenses_settings_title">Licenses</string>
+    <string name="developer_options_title">Developer Options</string>
     <string name="server_community_rules">Server/Community Rules</string>
     <string name="administered_by">Administered by</string>
     <string name="decentralized_social_media_powered_by_mastodon">Decentralized social media powered by Mastodon</string>

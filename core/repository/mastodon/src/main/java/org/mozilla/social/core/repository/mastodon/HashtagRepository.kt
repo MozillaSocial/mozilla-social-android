@@ -22,6 +22,8 @@ class HashtagRepository(
         hashTag: HashTag,
     ) = dao.upsert(hashTag.toDatabaseModel())
 
+    suspend fun deleteAll() = dao.deleteAll()
+
     fun getHashTagFlow(
         hashTag: String
     ): Flow<HashTag> = dao.getHashTagFlow(hashTag).map {

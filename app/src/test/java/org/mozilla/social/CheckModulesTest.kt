@@ -1,6 +1,7 @@
 package org.mozilla.social
 
 import android.content.Context
+import androidx.work.WorkerParameters
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.StateFlow
@@ -30,6 +31,7 @@ class CheckModulesTest : KoinTest {
                     FollowType::class,
                     CoroutineScope::class,
                     AccountTimelineType::class,
+                    WorkerParameters::class,
                 ),
         )
     }

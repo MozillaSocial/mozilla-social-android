@@ -64,4 +64,12 @@ sealed class SettingsNavigationDestination(val route: String) {
             navigate(route = route)
         }
     }
+
+    data object DeveloperOptions : SettingsNavigationDestination(
+        route = "developerOptions",
+    ) {
+        fun NavController.navigateToDeveloperOptions() {
+            navigate(route = route)
+        }
+    }
 }

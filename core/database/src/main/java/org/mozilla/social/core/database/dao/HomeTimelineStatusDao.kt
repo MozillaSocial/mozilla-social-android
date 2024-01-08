@@ -39,4 +39,11 @@ interface HomeTimelineStatusDao : BaseDao<HomeTimelineStatus> {
             "OR boostedStatusAccountId = :accountId",
     )
     suspend fun getPostsFromAccount(accountId: String): List<HomeTimelineStatusWrapper>
+
+    @Query(
+        "SELECT * FROM homeTimeline " +
+        "ORDER BY statusId DESC " +
+        "LIMIT :limit",
+    )
+    suspend fun getTopPosts(limit: Int): List<HomeTimelineStatusWrapper>
 }

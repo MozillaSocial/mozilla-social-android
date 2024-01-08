@@ -63,8 +63,13 @@ interface StatusDao : BaseDao<DatabaseStatus> {
         valueChange: Long,
     )
 
-    @Query("DELETE FROM statuses")
-    fun deleteAll()
+    @Query(
+        "DELETE FROM statuses " +
+        "WHERE statusId NOT IN (:statusIdsToKeep)"
+    )
+    fun deleteAll(
+        statusIdsToKeep: List<String> = emptyList()
+    )
 
     @Query(
         "DELETE FROM statuses " +

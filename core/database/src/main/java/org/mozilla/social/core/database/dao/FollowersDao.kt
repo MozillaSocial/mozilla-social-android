@@ -22,4 +22,9 @@ interface FollowersDao : BaseDao<Follower> {
             "WHERE accountId = :accountId",
     )
     suspend fun deleteFollowers(accountId: String)
+
+    @Query(
+        "DELETE FROM followers"
+    )
+    suspend fun deleteAllFollowers()
 }

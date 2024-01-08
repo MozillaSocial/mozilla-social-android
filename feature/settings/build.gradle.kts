@@ -5,6 +5,10 @@ plugins {
 
 android {
     namespace = "org.mozilla.social.feature.settings"
+
+    buildFeatures {
+        buildConfig = true
+    }
 }
 
 dependencies {
@@ -20,6 +24,7 @@ dependencies {
     implementation(project(":core:ui:common"))
     implementation(project(":core:ui:htmlcontent"))
     implementation(project(":core:usecase:mastodon"))
+    implementation(project(":core:workmanager"))
 
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.datastore)

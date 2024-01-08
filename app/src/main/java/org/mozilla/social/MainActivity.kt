@@ -13,6 +13,7 @@ import org.koin.androidx.compose.KoinAndroidContext
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.ui.common.MoSoSurface
+import org.mozilla.social.core.workmanager.DatabasePurgeWorker
 import org.mozilla.social.ui.MainActivityScreen
 import timber.log.Timber
 
@@ -35,6 +36,8 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+
+        DatabasePurgeWorker.setupPurgeWork(this, lifecycleScope)
     }
 
     override fun onNewIntent(intent: Intent) {

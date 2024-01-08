@@ -43,6 +43,7 @@ import org.mozilla.social.core.navigation.SettingsNavigationDestination.AboutSet
 import org.mozilla.social.core.navigation.SettingsNavigationDestination.AccountSettings.navigateToAccountSettings
 import org.mozilla.social.core.navigation.SettingsNavigationDestination.BlockedUsersSettings.navigateToBlockedUsers
 import org.mozilla.social.core.navigation.SettingsNavigationDestination.ContentPreferencesSettings.navigateToContentPreferencesSettings
+import org.mozilla.social.core.navigation.SettingsNavigationDestination.DeveloperOptions.navigateToDeveloperOptions
 import org.mozilla.social.core.navigation.SettingsNavigationDestination.MainSettings.navigateToMainSettings
 import org.mozilla.social.core.navigation.SettingsNavigationDestination.MutedUsersSettings.navigateToMutedUsers
 import org.mozilla.social.core.navigation.SettingsNavigationDestination.OpenSourceLicensesSettings.navigateToOpenSourceSettings
@@ -288,6 +289,10 @@ class AppState(
 
             SettingsNavigationDestination.OpenSourceLicensesSettings -> {
                 mainNavController.navigateToOpenSourceSettings()
+            }
+
+            SettingsNavigationDestination.DeveloperOptions -> {
+                mainNavController.navigateToDeveloperOptions()
             }
         }
     }

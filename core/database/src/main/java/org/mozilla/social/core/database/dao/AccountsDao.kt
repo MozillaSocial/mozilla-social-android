@@ -28,4 +28,12 @@ interface AccountsDao : BaseDao<DatabaseAccount> {
         accountId: String,
         valueChange: Long,
     )
+
+    @Query(
+        "DELETE FROM accounts " +
+        "WHERE accountId NOT IN (:accountIdsToKeep)"
+    )
+    suspend fun deleteAll(
+        accountIdsToKeep: List<String> = emptyList()
+    )
 }
