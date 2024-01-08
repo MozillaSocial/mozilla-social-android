@@ -32,6 +32,12 @@ import org.mozilla.social.core.designsystem.R
  */
 object MoSoIcons {
     @Composable
+    fun bell() = painterResource(id = R.drawable.bell)
+
+    @Composable
+    fun bellFill() = painterResource(id = R.drawable.bell_fill)
+
+    @Composable
     fun bookmark() = painterResource(R.drawable.bookmark_simple)
 
     @Composable
