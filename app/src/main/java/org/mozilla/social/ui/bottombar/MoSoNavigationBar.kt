@@ -22,6 +22,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import org.mozilla.social.common.utils.StringFactory
@@ -43,6 +46,7 @@ fun MoSoBottomNavigationBar(
     tonalElevation: Dp = NavigationBarDefaults.Elevation,
     windowInsets: WindowInsets = MoSoNavigationBarDefaults.windowInsets,
 ) {
+    val context = LocalContext.current
     MoSoNavigationBar(
         modifier = modifier,
         containerColor = containerColor,
@@ -54,6 +58,8 @@ fun MoSoBottomNavigationBar(
             when (it.navigationDestination) {
                 is Destination.BottomBar -> {
                     MoSoNavigationBarItem(
+                        modifier = Modifier
+                            .semantics { contentDescription = it.tabText.build(context) },
                         destination = it,
                         isSelected =
                             currentDestination ==
@@ -64,7 +70,9 @@ fun MoSoBottomNavigationBar(
 
                 is Main -> {
                     NavigationBarItem(
-                        modifier = modifier.height(48.dp),
+                        modifier = Modifier
+                            .semantics { contentDescription = it.tabText.build(context) }
+                            .height(48.dp),
                         selected = false,
                         onClick = { navigateTo(it.navigationDestination) },
                         colors = MoSoNavigationBarItemDefaults.colors(),
@@ -122,7 +130,8 @@ private fun RowScope.MoSoNavigationBarItem(
     navigateTo: (route: Destination) -> Unit,
 ) {
     NavigationBarItem(
-        modifier = modifier.height(48.dp),
+        modifier = modifier
+            .height(48.dp),
         selected = isSelected,
         onClick = { navigateTo(destination.navigationDestination) },
         colors = MoSoNavigationBarItemDefaults.colors(),
