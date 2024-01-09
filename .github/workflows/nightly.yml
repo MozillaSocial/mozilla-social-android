@@ -1,15 +1,9 @@
 name: nightly
 
-# Run every weekday at 12:45am
+# Run every day at 12:45am
 on:
   schedule:
-    - cron: 45 0 * * 1-5
-
-# Cancel in-progress/pending daily release workflows if a new one starts.
-# When we merge PRs one after another quickly, we only need one release with the latest code.
-concurrency:
-  group: ${{ github.workflow }}
-  cancel-in-progress: true
+    - cron: 45 0 * * *
 
 jobs:
   # Check if the latest commit was within the last 24 hours
