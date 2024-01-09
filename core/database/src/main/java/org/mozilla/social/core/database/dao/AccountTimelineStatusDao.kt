@@ -32,8 +32,13 @@ interface AccountTimelineStatusDao : BaseDao<AccountTimelineStatus> {
         timelineType: AccountTimelineType,
     )
 
-    @Query("DELETE FROM accountTimeline")
-    fun deleteAllAccountTimelines()
+    @Query(
+        "DELETE FROM accountTimeline " +
+        "WHERE accountId NOT IN (:accountsToKeep)"
+    )
+    suspend fun deleteAllAccountTimelines(
+        accountsToKeep: List<String> = emptyList()
+    )
 
     @Query(
         "DELETE FROM accountTimeline " +

@@ -72,6 +72,7 @@ dependencies {
     implementation(project(":core:navigation"))
     implementation(project(":feature:discover"))
     implementation(project(":feature:favorites"))
+    implementation(project(":core:workmanager"))
     implementation(project(":feature:notifications"))
 
     implementation(kotlin("reflect"))
@@ -86,6 +87,7 @@ dependencies {
     implementation(libs.koin.androidx.compose)
     implementation(libs.koin.android)
     implementation(libs.koin.compose)
+    implementation(libs.koin.androidx.workmanager)
 
     implementation(libs.androidx.browser)
 

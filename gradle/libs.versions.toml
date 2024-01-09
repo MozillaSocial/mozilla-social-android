@@ -6,6 +6,7 @@ androidx-media3 = "1.1.1"
 androidx-navigation = "2.7.5"
 androidx-paging = "3.2.1"
 androidx-room = "2.6.0"
+androidx-work = "2.9.0"
 coil = "2.4.0"
 detekt = "1.23.1"
 espresso-intents = "3.5.1"
@@ -57,6 +58,7 @@ androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref =
 androidx-room-paging = { module = "androidx.room:room-paging", version.ref = "androidx-room" }
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "androidx-room" }
 androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidx-test-ext-junit" }
+androidx-work-runtime = { module = "androidx.work:work-runtime", version.ref = "androidx-work" }
 coil = { module = "io.coil-kt:coil-compose", version.ref = "coil" }
 coil-gif = { module = "io.coil-kt:coil-gif", version.ref = "coil" }
 coil-video = { module = "io.coil-kt:coil-video", version.ref = "coil" }
@@ -69,6 +71,7 @@ jakewharton-timber = { module = "com.jakewharton.timber:timber", version = "5.0.
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
 koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koin" }
+koin-androidx-workmanager = { module = "io.insert-koin:koin-androidx-workmanager", version.ref = "koin" }
 koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
 koin-compose = { module = "io.insert-koin:koin-compose", version.ref = "koin-compose" }
 koin-test = { module = "io.insert-koin:koin-test", version.ref = "koin" }
