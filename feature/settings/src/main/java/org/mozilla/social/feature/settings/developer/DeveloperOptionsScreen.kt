@@ -82,7 +82,6 @@ fun DeveloperOptionsScreen() {
                     Text(text = "Test database purge")
                 }
             }
-
         }
     }
 }
