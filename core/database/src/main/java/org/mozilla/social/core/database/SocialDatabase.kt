@@ -27,12 +27,14 @@ import org.mozilla.social.core.database.dao.HashTagsDao
 import org.mozilla.social.core.database.dao.HomeTimelineStatusDao
 import org.mozilla.social.core.database.dao.LocalTimelineStatusDao
 import org.mozilla.social.core.database.dao.MutesDao
+import org.mozilla.social.core.database.dao.NotificationsDao
 import org.mozilla.social.core.database.dao.PollsDao
 import org.mozilla.social.core.database.dao.RelationshipsDao
 import org.mozilla.social.core.database.dao.SearchDao
 import org.mozilla.social.core.database.dao.StatusDao
 import org.mozilla.social.core.database.model.entities.DatabaseAccount
 import org.mozilla.social.core.database.model.entities.DatabaseHashTagEntity
+import org.mozilla.social.core.database.model.entities.DatabaseNotification
 import org.mozilla.social.core.database.model.entities.DatabasePoll
 import org.mozilla.social.core.database.model.entities.DatabaseRelationship
 import org.mozilla.social.core.database.model.entities.DatabaseStatus
@@ -71,6 +73,7 @@ import org.mozilla.social.core.database.model.entities.statusCollections.Searche
         SearchedAccount::class,
         SearchedStatus::class,
         SearchedHashTag::class,
+        DatabaseNotification::class,
     ],
     version = 19,
     autoMigrations = [
@@ -92,6 +95,7 @@ import org.mozilla.social.core.database.model.entities.statusCollections.Searche
         AutoMigration(16, 17),
         AutoMigration(17, 18, DatabaseMigrations.Schema17to18::class),
         AutoMigration(18, 19, DatabaseMigrations.Schema18to19::class),
+        AutoMigration(19, 20),
     ],
     exportSchema = true,
 )
@@ -140,4 +144,6 @@ abstract class SocialDatabase : RoomDatabase() {
     abstract fun hashTagsDao(): HashTagsDao
 
     abstract fun searchDao(): SearchDao
+
+    abstract fun notificationsDao(): NotificationsDao
 }
