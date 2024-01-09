@@ -75,7 +75,7 @@ import org.mozilla.social.core.database.model.entities.statusCollections.Searche
         SearchedHashTag::class,
         DatabaseNotification::class,
     ],
-    version = 19,
+    version = 20,
     autoMigrations = [
         AutoMigration(1, 2, DatabaseMigrations.Schema1to2::class),
         AutoMigration(2, 3),
