@@ -215,11 +215,6 @@ private fun LoginBox(
         )
         Spacer(modifier = Modifier.height(24.dp))
         MoSoButton(
-            modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .semantics { contentDescription = "Login and Signup"
-                    },
             enabled = !uiState.isLoading,
             onClick = { loginInteractions.onSignInClicked() },
         ) {

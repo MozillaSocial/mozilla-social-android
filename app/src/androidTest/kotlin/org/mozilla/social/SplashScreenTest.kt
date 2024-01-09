@@ -22,19 +22,17 @@ class SplashScreenTest {
     @get:Rule
     val composeTestRule = createAndroidComposeRule<MainActivity>()
 
-    val cdSignInOrSignUpButton = composeTestRule.activity
-        .getString(R.string.cd_sign_in_button)
     @Test
     fun splashScreenAppears() {
         composeTestRule
-            .onNodeWithContentDescription(cdSignInOrSignUpButton)
+            .onNodeWithText("Sign in or sign up")
             .assertIsDisplayed()
     }
 
     @Test
     fun clickingSignInLoadsLoginScreen() {
         composeTestRule
-            .onNodeWithContentDescription(cdSignInOrSignUpButton)
+            .onNodeWithText("Sign in or sign up")
             .performClick()
     }
 
