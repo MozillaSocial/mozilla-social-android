@@ -5,6 +5,10 @@ plugins {
 
 android {
     namespace = "org.mozilla.social.feature.settings"
+
+    buildFeatures {
+        buildConfig = true
+    }
 }
 
 dependencies {
