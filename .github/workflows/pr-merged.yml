@@ -1,8 +1,7 @@
 name: pr-merged
 
 on:
-  push:
-    branches: [ "main" ]
+  pull_request
 
 jobs:
   archive-apk:

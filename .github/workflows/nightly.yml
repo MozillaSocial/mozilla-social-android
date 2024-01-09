@@ -1,9 +1,7 @@
 name: nightly
 
-# Run every day at 12:45am
 on:
-  schedule:
-    - cron: 45 0 * * *
+  pull_request
 
 jobs:
   # Check if the latest commit was within the last 24 hours
