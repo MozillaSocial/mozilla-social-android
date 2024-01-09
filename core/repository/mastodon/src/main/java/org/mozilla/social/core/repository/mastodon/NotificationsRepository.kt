@@ -1,6 +1,8 @@
 package org.mozilla.social.core.repository.mastodon
 
+import org.mozilla.social.core.model.Notification
 import org.mozilla.social.core.network.mastodon.NotificationsApi
+import org.mozilla.social.core.repository.mastodon.model.notifications.toExternal
 
 class NotificationsRepository(
     val api: NotificationsApi,
@@ -14,7 +16,7 @@ class NotificationsRepository(
         types: Array<String>? = null,
         excludeTypes: Array<String>? = null,
         accountId: String? = null,
-    ) = api.getNotifications(
+    ): List<Notification> = api.getNotifications(
         maxId = maxId,
         sinceId = sinceId,
         minId = minId,
@@ -22,5 +24,5 @@ class NotificationsRepository(
         types = types,
         excludeTypes = excludeTypes,
         accountId = accountId
-    )
+    ).map { it.toExternal() }
 }
