@@ -13,13 +13,12 @@ jobs:
       uses: ./.github/actions/setup-environment
     - name: Verify KSP version
       run: ci/verify-ksp-version.sh
-    - name: Compile a release build
+    - name: Compile a release test build
       env:
         GRADLE_OPTS: -Dorg.gradle.daemon=false
-      run: ci/nightly-build.sh
+      run: ci/release-test-build.sh
     - name: Archive the APK
       uses: actions/upload-artifact@a8a3f3ad30e3422c9c7b888a15615d19a852ae32 # v3.1.3
       with:
-        name: apk
-        path: secrets/mozilla-social-nightly.apk
+        path: app/build/outputs/apk/releaseTest/app-releaseTest.apk
         if-no-files-found: error

@@ -3,4 +3,4 @@
 # Fail if any commands fails.
 set -e
 
-./gradlew :app:assembleRelease
+./gradlew :app:assembleReleaseTest

@@ -17,7 +17,7 @@ jobs:
         run: echo ${{ github.sha }}
       - id: should_run
         continue-on-error: true
-        name: check latest commit is less than a day
+        name: check latest commit is less than a day old
         if: ${{ github.event_name == 'schedule' }}
         run: test -z $(git rev-list --after="24 hours" ${{ github.sha }}) &amp;&amp; echo "::set-output name=should_run::false"
 
@@ -37,32 +37,34 @@ jobs:
             :app:phoneReleaseAndroidTest
             -Pandroid.testoptions.manageddevices.emulator.gpu=swiftshader_indirect
 
-  release:
-    needs: check_date
-    if: ${{ needs.check_date.outputs.should_run != 'false' }}
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # v4.1.0
-    - name: Set up JDK
-      uses: actions/setup-java@0ab4596768b603586c0de567f2430c30f5b0d2b0 # v3.13.0
-      with:
-        java-version: '17'
-        distribution: 'temurin'
-        # Using 'temurin' speeds up the job, because this distribution is cached by the runner.
-        # See: https://github.com/actions/setup-java/blob/main/docs/advanced-usage.md#Hosted-Tool-Cache
-    - name: Set up Gradle
-      uses: gradle/gradle-build-action@842c587ad8aa4c68eeba24c396e15af4c2e9f30a # v2.9.0
-    - name: Set up Homebrew
-      run: .github/workflows/setup-homebrew.sh
-    - name: Set up Ruby
-      run: .github/workflows/setup-ruby.sh
-    - name: Decrypt secrets
-      env:
-        GPG_KEY: ${{ secrets.gpg_key }}
-      run: ./decrypt.sh
-      working-directory: ./secrets
-    - name: Build and release
-      env:
-        GRADLE_OPTS: -Dorg.gradle.daemon=false
-      run: ci/nightly-release.sh ${{ github.run_number }} ${{ secrets.GITHUB_TOKEN }}
+
+# TODO@DA uncomment before merging
+#  release:
+#    needs: check_date
+#    if: ${{ needs.check_date.outputs.should_run != 'false' }}
+#    runs-on: ubuntu-latest
+#    steps:
+#    - name: Checkout repository
+#      uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # v4.1.0
+#    - name: Set up JDK
+#      uses: actions/setup-java@0ab4596768b603586c0de567f2430c30f5b0d2b0 # v3.13.0
+#      with:
+#        java-version: '17'
+#        distribution: 'temurin'
+#        # Using 'temurin' speeds up the job, because this distribution is cached by the runner.
+#        # See: https://github.com/actions/setup-java/blob/main/docs/advanced-usage.md#Hosted-Tool-Cache
+#    - name: Set up Gradle
+#      uses: gradle/gradle-build-action@842c587ad8aa4c68eeba24c396e15af4c2e9f30a # v2.9.0
+#    - name: Set up Homebrew
+#      run: .github/workflows/setup-homebrew.sh
+#    - name: Set up Ruby
+#      run: .github/workflows/setup-ruby.sh
+#    - name: Decrypt secrets
+#      env:
+#        GPG_KEY: ${{ secrets.gpg_key }}
+#      run: ./decrypt.sh
+#      working-directory: ./secrets
+#    - name: Build and release
+#      env:
+#        GRADLE_OPTS: -Dorg.gradle.daemon=false
+#      run: ci/nightly-release.sh ${{ github.run_number }} ${{ secrets.GITHUB_TOKEN }}

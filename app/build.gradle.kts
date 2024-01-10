@@ -34,6 +34,10 @@ android {
             initWith(getByName("release"))
             applicationIdSuffix = ".nightly"
         }
+        create("releaseTest") {
+            initWith(getByName("release"))
+            signingConfig = signingConfigs.getByName("debug")
+        }
     }
 
     buildFeatures {

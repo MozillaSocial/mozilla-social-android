@@ -21,7 +21,7 @@ jobs:
     - name: Compile a release build
       env:
         GRADLE_OPTS: -Dorg.gradle.daemon=false
-      run: ci/unsigned-release-build.sh
+      run: ci/release-test-build.sh
 
   detekt:
     runs-on: ubuntu-latest
