@@ -7,16 +7,17 @@ import androidx.room.Transaction
 import androidx.room.Upsert
 import org.mozilla.social.core.database.model.entities.DatabaseNotification
 import org.mozilla.social.core.database.model.entities.notificationCollections.MainNotification
+import org.mozilla.social.core.database.model.entities.notificationCollections.MainNotificationWrapper
 import org.mozilla.social.core.database.model.wrappers.NotificationWrapper
 
 @Dao
 interface NotificationsDao: BaseDao<DatabaseNotification> {
     @Transaction
     @Query(
-        "SELECT * FROM notifications " +
-        "ORDER BY createdAt DESC",
+        "SELECT * FROM mainNotifications " +
+        "ORDER BY id DESC",
     )
-    fun notificationsPagingSource(): PagingSource<Int, NotificationWrapper>
+    fun mainNotificationsPagingSource(): PagingSource<Int, MainNotificationWrapper>
 
     @Query(
         "DELETE FROM notifications"

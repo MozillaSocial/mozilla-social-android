@@ -10,18 +10,18 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import org.mozilla.social.common.utils.edit
 import org.mozilla.social.core.repository.mastodon.NotificationsRepository
-import org.mozilla.social.core.repository.paging.NotificationsRemoteMediator
+import org.mozilla.social.core.repository.paging.AllNotificationsRemoteMediator
 
 class NotificationsViewModel(
     notificationsRepository: NotificationsRepository,
-    notificationsRemoteMediator: NotificationsRemoteMediator,
+    allNotificationsRemoteMediator: AllNotificationsRemoteMediator,
 ) : ViewModel(), NotificationsInteractions {
     private val _uiState = MutableStateFlow(NotificationsUiState())
     val uiState = _uiState.asStateFlow()
 
     @OptIn(ExperimentalPagingApi::class)
-    val feed = notificationsRepository.getNotificationsPager(
-        remoteMediator = notificationsRemoteMediator,
+    val feed = notificationsRepository.getMainNotificationsPager(
+        remoteMediator = allNotificationsRemoteMediator,
     ).map { pagingData ->
         pagingData.map {
             //TODO map to ui state

@@ -6,23 +6,24 @@ import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import kotlinx.coroutines.delay
 import org.mozilla.social.common.Rel
-import org.mozilla.social.core.database.model.wrappers.NotificationWrapper
+import org.mozilla.social.core.database.model.entities.notificationCollections.MainNotification
+import org.mozilla.social.core.database.model.entities.notificationCollections.MainNotificationWrapper
 import org.mozilla.social.core.repository.mastodon.DatabaseDelegate
 import org.mozilla.social.core.repository.mastodon.NotificationsRepository
 import org.mozilla.social.core.usecase.mastodon.notification.SaveNotificationsToDatabase
 import timber.log.Timber
 
 @OptIn(ExperimentalPagingApi::class)
-class NotificationsRemoteMediator(
+class AllNotificationsRemoteMediator(
     private val notificationsRepository: NotificationsRepository,
     private val databaseDelegate: DatabaseDelegate,
     private val saveNotificationsToDatabase: SaveNotificationsToDatabase,
-) : RemoteMediator<Int, NotificationWrapper>() {
+) : RemoteMediator<Int, MainNotificationWrapper>() {
 
     @Suppress("ComplexMethod")
     override suspend fun load(
         loadType: LoadType,
-        state: PagingState<Int, NotificationWrapper>
+        state: PagingState<Int, MainNotificationWrapper>
     ): MediatorResult {
         return try {
             var pageSize: Int = state.config.pageSize
@@ -45,7 +46,7 @@ class NotificationsRemoteMediator(
                             state.lastItemOrNull()
                                 ?: return MediatorResult.Success(endOfPaginationReached = true)
                         notificationsRepository.getNotifications(
-                            maxId = lastItem.notification.id,
+                            maxId = lastItem.notificationWrapper.notification.id,
                             limit = pageSize,
                         )
                     }
@@ -57,6 +58,13 @@ class NotificationsRemoteMediator(
                 }
 
                 saveNotificationsToDatabase(response.notifications)
+                notificationsRepository.insertAllMainNotifications(
+                    response.notifications.map {
+                        MainNotification(
+                            id = it.id,
+                        )
+                    }
+                )
             }
 
             // There seems to be some race condition for refreshes.  Subsequent pages do

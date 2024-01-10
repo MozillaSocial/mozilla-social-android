@@ -12,7 +12,7 @@ import org.mozilla.social.common.annotations.PreferUseCase
 import org.mozilla.social.common.parseMastodonLinkHeader
 import org.mozilla.social.core.database.dao.NotificationsDao
 import org.mozilla.social.core.database.model.entities.notificationCollections.MainNotification
-import org.mozilla.social.core.database.model.wrappers.NotificationWrapper
+import org.mozilla.social.core.database.model.entities.notificationCollections.MainNotificationWrapper
 import org.mozilla.social.core.model.Notification
 import org.mozilla.social.core.model.paging.NotificationsPagingWrapper
 import org.mozilla.social.core.network.mastodon.NotificationsApi
@@ -56,8 +56,8 @@ class NotificationsRepository(
     }
 
     @ExperimentalPagingApi
-    fun getNotificationsPager(
-        remoteMediator: RemoteMediator<Int, NotificationWrapper>,
+    fun getMainNotificationsPager(
+        remoteMediator: RemoteMediator<Int, MainNotificationWrapper>,
         pageSize: Int = 20,
         initialLoadSize: Int = 40,
     ): Flow<PagingData<Notification>> =
@@ -69,10 +69,10 @@ class NotificationsRepository(
             ),
             remoteMediator = remoteMediator,
         ) {
-            dao.notificationsPagingSource()
+            dao.mainNotificationsPagingSource()
         }.flow.map { pagingData ->
             pagingData.map {
-                it.toExternal()
+                it.notificationWrapper.toExternal()
             }
         }
 
