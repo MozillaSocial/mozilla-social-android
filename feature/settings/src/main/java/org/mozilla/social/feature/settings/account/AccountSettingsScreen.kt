@@ -37,7 +37,7 @@ import org.mozilla.social.feature.settings.ui.SettingsColumn
 import org.mozilla.social.feature.settings.ui.SettingsSection
 
 @Composable
-fun AccountSettingsScreen(
+internal fun AccountSettingsScreen(
     viewModel: AccountSettingsViewModel = koinViewModel()
 ) {
     val userHeader by viewModel.userHeader.collectAsStateWithLifecycle(
