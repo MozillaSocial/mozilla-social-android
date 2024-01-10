@@ -18,7 +18,6 @@ jobs:
       - id: should_run
         continue-on-error: true
         name: check latest commit is less than a day old
-        if: ${{ github.event_name == 'schedule' }}
         run: test -z $(git rev-list --after="24 hours" ${{ github.sha }}) &amp;&amp; echo "::set-output name=should_run::false"
 
   run-ui-tests:
@@ -34,7 +33,7 @@ jobs:
         uses: gradle/gradle-build-action@v2.11.1
         with:
           arguments: |
-            :app:phoneReleaseAndroidTest
+            :app:phoneReleaseTestAndroidTest
             -Pandroid.testoptions.manageddevices.emulator.gpu=swiftshader_indirect
 
 
