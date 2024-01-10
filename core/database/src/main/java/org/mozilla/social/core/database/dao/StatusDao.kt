@@ -101,7 +101,9 @@ interface StatusDao : BaseDao<DatabaseStatus> {
             "UNION " +
             "SELECT statusId FROM federatedTimeline " +
             "UNION " +
-            "SELECT statusId FROM accountTimeline" +
+            "SELECT statusId FROM accountTimeline " +
+            "UNION " +
+            "SELECT statusId FROM notifications" +
         ")"
     )
     suspend fun deleteOldStatuses()
