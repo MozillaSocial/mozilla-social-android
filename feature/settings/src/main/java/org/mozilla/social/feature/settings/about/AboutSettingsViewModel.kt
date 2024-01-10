@@ -30,7 +30,6 @@ class AboutSettingsViewModel(
     private val defaultHtmlInteractions: DefaultHtmlInteractions,
 ) : ViewModel(),
     AboutInteractions,
-    SettingsInteractions,
     HtmlContentInteractions by defaultHtmlInteractions {
 
     private val userAccountId: String = getLoggedInUserAccountId()

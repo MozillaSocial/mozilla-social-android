@@ -33,7 +33,7 @@ class BlockedUsersViewModel(
     private val blockAccount: BlockAccount,
     private val unblockAccount: UnblockAccount,
     private val navigateToAccount: NavigateToAccount,
-) : ViewModel(), SettingsInteractions {
+) : ViewModel(), BlockedUsersInteractions {
 
     private val userAccountId: String = getLoggedInUserAccountId()
 
@@ -42,7 +42,7 @@ class BlockedUsersViewModel(
         repository.getBlocksPager(remoteMediator = remoteMediator)
             .map { pagingData -> pagingData.map { blockedUser -> blockedUser.toToggleableState() } }
 
-    fun onButtonClicked(accountId: String, buttonState: BlockedButtonState) {
+    override fun onButtonClicked(accountId: String, buttonState: BlockedButtonState) {
         viewModelScope.launch(Dispatchers.IO) {
             when (buttonState) {
                 is BlockedButtonState.Blocked -> {
@@ -64,7 +64,7 @@ class BlockedUsersViewModel(
         }
     }
 
-    fun onAccountClicked(accountId: String) {
+    override fun onAccountClicked(accountId: String) {
         navigateToAccount(accountId)
     }
 

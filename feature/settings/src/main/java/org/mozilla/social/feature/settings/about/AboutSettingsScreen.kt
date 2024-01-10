@@ -44,7 +44,7 @@ import org.mozilla.social.core.ui.htmlcontent.HtmlContentInteractions
 import org.mozilla.social.feature.settings.R
 
 @Composable
-fun AboutSettingsScreen(
+internal fun AboutSettingsScreen(
     aboutSettingsViewModel: AboutSettingsViewModel = koinViewModel()
 ) {
     val aboutSettings: Resource<AboutSettings> by aboutSettingsViewModel.aboutSettings.collectAsStateWithLifecycle()
@@ -61,7 +61,7 @@ fun AboutSettingsScreen(
 }
 
 @Composable
-fun AboutSettingsScreen(
+private fun AboutSettingsScreen(
     aboutSettingsResource: Resource<AboutSettings>,
     htmlContentInteractions: HtmlContentInteractions,
     aboutInteractions: AboutInteractions,
@@ -199,6 +199,7 @@ fun AboutSettingsScreenPreview() {
     ) {
         AboutSettingsScreen(
             aboutInteractions = object : AboutInteractions {
+                override fun onScreenViewed() = Unit
                 override fun onOpenSourceLicensesClicked() = Unit
                 override fun onRetryClicked() = Unit
             },

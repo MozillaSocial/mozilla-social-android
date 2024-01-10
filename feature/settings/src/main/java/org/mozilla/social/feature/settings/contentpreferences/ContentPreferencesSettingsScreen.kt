@@ -11,7 +11,7 @@ import org.mozilla.social.feature.settings.ui.SettingsColumn
 import org.mozilla.social.feature.settings.ui.SettingsSection
 
 @Composable
-fun ContentPreferencesSettingsScreen(viewModel: ContentPreferencesSettingsViewModel = koinViewModel()) {
+internal fun ContentPreferencesSettingsScreen(viewModel: ContentPreferencesSettingsViewModel = koinViewModel()) {
     ContentPreferencesSettingsScreen(
         onBlockedUsersClicked = viewModel::onBlockedUsersClicked,
         onMutedUsersClicked = viewModel::onMutedUsersClicked,
