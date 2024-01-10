@@ -17,7 +17,7 @@ import org.mozilla.social.feature.settings.ui.SettingsGroup
 import org.mozilla.social.feature.settings.ui.SettingsSwitch
 
 @Composable
-fun PrivacySettingsScreen(viewModel: PrivacySettingsViewModel = koinViewModel()) {
+internal fun PrivacySettingsScreen(viewModel: PrivacySettingsViewModel = koinViewModel()) {
     val isAnalyticsToggled by viewModel.allowAnalytics.collectAsStateWithLifecycle()
 
     PrivacySettingsScreen(
