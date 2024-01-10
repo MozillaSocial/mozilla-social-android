@@ -42,7 +42,7 @@ class MutedUsersSettingsViewModel(
         repository.getMutesPager(remoteMediator)
             .map { pagingData -> pagingData.map { mutedUser -> mutedUser.toToggleableState() } }
 
-    fun onButtonClicked(accountId: String, mutedButtonState: MutedButtonState) {
+    override fun onButtonClicked(accountId: String, mutedButtonState: MutedButtonState) {
         viewModelScope.launch(Dispatchers.IO) {
             when (mutedButtonState) {
                 is MutedButtonState.Muted -> {
@@ -64,7 +64,7 @@ class MutedUsersSettingsViewModel(
         }
     }
 
-    fun onAccountClicked(accountId: String) {
+    override fun onAccountClicked(accountId: String) {
         navigateToAccount(accountId)
     }
 

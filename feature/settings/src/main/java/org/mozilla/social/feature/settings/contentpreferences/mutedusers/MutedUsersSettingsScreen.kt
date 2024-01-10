@@ -16,7 +16,7 @@ import org.mozilla.social.feature.settings.R
 import org.mozilla.social.feature.settings.ui.SettingsColumn
 
 @Composable
-fun MutedUsersSettingsScreen(viewModel: MutedUsersSettingsViewModel = koinViewModel()) {
+internal fun MutedUsersSettingsScreen(viewModel: MutedUsersSettingsViewModel = koinViewModel()) {
     MoSoSurface {
         SettingsColumn(title = stringResource(id = R.string.muted_users_title)) {
             ToggleableAccountList(
