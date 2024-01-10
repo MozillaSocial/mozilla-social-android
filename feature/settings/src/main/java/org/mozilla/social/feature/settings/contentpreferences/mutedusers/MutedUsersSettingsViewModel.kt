@@ -33,7 +33,7 @@ class MutedUsersSettingsViewModel(
     private val muteAccount: MuteAccount,
     private val unmuteAccount: UnmuteAccount,
     private val navigateToAccount: NavigateToAccount,
-) : ViewModel(), SettingsInteractions {
+) : ViewModel(), MutedUsersInteractions {
 
     private val userAccountId: String = getLoggedInUserAccountId()
 

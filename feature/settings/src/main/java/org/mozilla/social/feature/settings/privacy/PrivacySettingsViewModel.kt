@@ -16,7 +16,7 @@ class PrivacySettingsViewModel(
     private val appPreferencesDatastore: AppPreferencesDatastore,
     private val analytics: Analytics,
     getLoggedInUserAccountId: GetLoggedInUserAccountId,
-) : ViewModel(), SettingsInteractions {
+) : ViewModel(), PrivacySettingsInteractions {
 
     private val userAccountId: String = getLoggedInUserAccountId()
 

@@ -33,7 +33,7 @@ class BlockedUsersViewModel(
     private val blockAccount: BlockAccount,
     private val unblockAccount: UnblockAccount,
     private val navigateToAccount: NavigateToAccount,
-) : ViewModel(), SettingsInteractions {
+) : ViewModel(), BlockedUsersInteractions {
 
     private val userAccountId: String = getLoggedInUserAccountId()
 

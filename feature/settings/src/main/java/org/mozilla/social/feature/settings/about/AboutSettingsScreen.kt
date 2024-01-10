@@ -199,6 +199,7 @@ fun AboutSettingsScreenPreview() {
     ) {
         AboutSettingsScreen(
             aboutInteractions = object : AboutInteractions {
+                override fun onScreenViewed() = Unit
                 override fun onOpenSourceLicensesClicked() = Unit
                 override fun onRetryClicked() = Unit
             },

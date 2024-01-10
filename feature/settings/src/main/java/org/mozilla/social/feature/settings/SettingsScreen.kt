@@ -88,7 +88,14 @@ private fun SettingsScreenPreview() {
         modules = listOf(navigationModule)
     ) {
         SettingsScreen(
-            settingsInteractions = object : SettingsInteractions {}
+            settingsInteractions = object : SettingsInteractions {
+                override fun onScreenViewed() = Unit
+                override fun onAboutClicked() = Unit
+                override fun onAccountClicked() = Unit
+                override fun onContentPreferencesClicked() = Unit
+                override fun onPrivacyClicked() = Unit
+                override fun onDeveloperOptionsClicked() = Unit
+            }
         )
     }
 }

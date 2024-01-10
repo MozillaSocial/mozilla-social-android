@@ -12,7 +12,7 @@ class ContentPreferencesSettingsViewModel(
     private val navigateTo: NavigateTo,
     private val analytics: Analytics,
     getLoggedInUserAccountId: GetLoggedInUserAccountId,
-) : ViewModel(), SettingsInteractions {
+) : ViewModel(), ContentPreferencesSettingsInteractions {
 
     private val userAccountId: String = getLoggedInUserAccountId()
 

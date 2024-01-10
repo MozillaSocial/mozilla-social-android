@@ -37,29 +37,45 @@ import org.mozilla.social.feature.settings.ui.SettingsColumn
 import org.mozilla.social.feature.settings.ui.SettingsSection
 
 @Composable
-fun AccountSettingsScreen(viewModel: AccountSettingsViewModel = koinViewModel()) {
+fun AccountSettingsScreen(
+    viewModel: AccountSettingsViewModel = koinViewModel()
+) {
+    val userHeader by viewModel.userHeader.collectAsStateWithLifecycle(
+        initialValue = Resource.Loading(),
+    )
+    val subtitle: StringFactory? by viewModel.subtitle.collectAsStateWithLifecycle(initialValue = null)
+
+    AccountSettingsScreen(
+        userHeader = userHeader,
+        subtitle = subtitle,
+        accountSettingsInteractions = viewModel,
+    )
+
+    LaunchedEffect(Unit) {
+        viewModel.onScreenViewed()
+    }
+}
+
+@Composable
+private fun AccountSettingsScreen(
+    userHeader: Resource<UserHeader>,
+    subtitle: StringFactory?,
+    accountSettingsInteractions: AccountSettingsInteractions,
+) {
     MoSoSurface {
         SettingsColumn(title = stringResource(id = R.string.account_settings_title)) {
-            val userHeader by viewModel.userHeader.collectAsStateWithLifecycle(
-                initialValue = Resource.Loading(),
-            )
             when (userHeader) {
                 is Resource.Error -> {}
                 is Resource.Loading -> {}
                 is Resource.Loaded -> {
-                    userHeader.data?.let { UserHeader(userHeader = it) }
-                    val subtitle: StringFactory? by viewModel.subtitle.collectAsStateWithLifecycle(initialValue = null)
+                    UserHeader(userHeader = userHeader.data)
 
-                    ManageAccount(subtitle = subtitle, onClick = viewModel::onManageAccountClicked)
+                    ManageAccount(subtitle = subtitle, onClick = accountSettingsInteractions::onManageAccountClicked)
 
-                    SignoutButton(onLogoutClicked = viewModel::onLogoutClicked)
+                    SignoutButton(onLogoutClicked = accountSettingsInteractions::onLogoutClicked)
                 }
             }
         }
-    }
-
-    LaunchedEffect(Unit) {
-        viewModel.onScreenViewed()
     }
 }
 
@@ -115,6 +131,20 @@ private fun AccountSettingsScreenPreview() {
     PreviewTheme(
         modules = listOf(navigationModule)
     ) {
-        AccountSettingsScreen()
+        AccountSettingsScreen(
+            userHeader = Resource.Loaded(
+                UserHeader(
+                    avatarUrl = "",
+                    accountName = "account",
+                    url = ""
+                )
+            ),
+            subtitle = StringFactory.literal("subtitle"),
+            accountSettingsInteractions = object : AccountSettingsInteractions {
+                override fun onScreenViewed() = Unit
+                override fun onLogoutClicked() = Unit
+                override fun onManageAccountClicked() = Unit
+            }
+        )
     }
 }
