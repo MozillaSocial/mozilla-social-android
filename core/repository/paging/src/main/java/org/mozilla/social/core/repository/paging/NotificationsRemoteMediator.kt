@@ -7,21 +7,19 @@ import androidx.paging.RemoteMediator
 import kotlinx.coroutines.delay
 import org.mozilla.social.common.Rel
 import org.mozilla.social.core.database.model.wrappers.NotificationWrapper
-import org.mozilla.social.core.model.Notification
-import org.mozilla.social.core.repository.mastodon.AccountRepository
 import org.mozilla.social.core.repository.mastodon.DatabaseDelegate
 import org.mozilla.social.core.repository.mastodon.NotificationsRepository
-import org.mozilla.social.core.usecase.mastodon.status.SaveStatusToDatabase
+import org.mozilla.social.core.usecase.mastodon.notification.SaveNotificationsToDatabase
 import timber.log.Timber
 
 @OptIn(ExperimentalPagingApi::class)
 class NotificationsRemoteMediator(
     private val notificationsRepository: NotificationsRepository,
     private val databaseDelegate: DatabaseDelegate,
-    private val accountRepository: AccountRepository,
-    private val saveStatusToDatabase: SaveStatusToDatabase,
+    private val saveNotificationsToDatabase: SaveNotificationsToDatabase,
 ) : RemoteMediator<Int, NotificationWrapper>() {
 
+    @Suppress("ComplexMethod")
     override suspend fun load(
         loadType: LoadType,
         state: PagingState<Int, NotificationWrapper>
@@ -58,19 +56,7 @@ class NotificationsRemoteMediator(
                     notificationsRepository.deleteAll()
                 }
 
-                accountRepository.insertAll(response.notifications.map { it.account })
-                response.notifications.forEach {
-                    when (it) {
-                        is Notification.StatusUpdated -> saveStatusToDatabase(it.status)
-                        is Notification.PollEnded -> saveStatusToDatabase(it.status)
-                        is Notification.Favorite -> saveStatusToDatabase(it.status)
-                        is Notification.Repost -> saveStatusToDatabase(it.status)
-                        is Notification.NewStatus -> saveStatusToDatabase(it.status)
-                        is Notification.Mention -> saveStatusToDatabase(it.status)
-                        else -> {}
-                    }
-                }
-                notificationsRepository.insertAll(response.notifications)
+                saveNotificationsToDatabase(response.notifications)
             }
 
             // There seems to be some race condition for refreshes.  Subsequent pages do

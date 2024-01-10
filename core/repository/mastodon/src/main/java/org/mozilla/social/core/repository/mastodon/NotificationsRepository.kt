@@ -8,6 +8,7 @@ import androidx.paging.RemoteMediator
 import androidx.paging.map
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import org.mozilla.social.common.annotations.PreferUseCase
 import org.mozilla.social.common.parseMastodonLinkHeader
 import org.mozilla.social.core.database.dao.NotificationsDao
 import org.mozilla.social.core.database.model.wrappers.NotificationWrapper
@@ -74,6 +75,7 @@ class NotificationsRepository(
             }
         }
 
+    @PreferUseCase
     suspend fun insertAll(
         notifications: List<Notification>
     ) = dao.upsertAll(notifications.map { it.toDatabase() })
