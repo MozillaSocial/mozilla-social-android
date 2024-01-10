@@ -11,6 +11,7 @@ val pagingModule = module {
     factoryOf(::FavoritesRemoteMediator)
     factoryOf(::BlocksListRemoteMediator)
     factoryOf(::MutesListRemoteMediator)
+    factoryOf(::AllNotificationsRemoteMediator)
 
     factory {
         RefreshAccountTimeline(

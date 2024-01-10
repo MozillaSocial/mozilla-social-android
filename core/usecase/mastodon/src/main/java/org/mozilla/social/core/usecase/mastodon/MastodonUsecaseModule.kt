@@ -22,6 +22,7 @@ import org.mozilla.social.core.usecase.mastodon.auth.Logout
 import org.mozilla.social.core.usecase.mastodon.hashtag.FollowHashTag
 import org.mozilla.social.core.usecase.mastodon.hashtag.GetHashTag
 import org.mozilla.social.core.usecase.mastodon.hashtag.UnfollowHashTag
+import org.mozilla.social.core.usecase.mastodon.notification.SaveNotificationsToDatabase
 import org.mozilla.social.core.usecase.mastodon.report.Report
 import org.mozilla.social.core.usecase.mastodon.search.SearchAll
 import org.mozilla.social.core.usecase.mastodon.status.BoostStatus
@@ -210,6 +211,7 @@ val mastodonUsecaseModule =
         singleOf(::GetDomain)
         singleOf(::SearchAll)
         singleOf(::GetInReplyToAccountNames)
+        singleOf(::SaveNotificationsToDatabase)
 
         single {
             GetHashTag(
