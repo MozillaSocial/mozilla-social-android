@@ -193,7 +193,7 @@ private fun LoginBox(
     ) {
         MoSoBadge {
             Text(
-                text = stringResource(id = R.string.beta_badge),
+                text = stringResource(id = R.string.alpha_badge),
                 style = MoSoTheme.typography.labelSmall,
             )
         }
