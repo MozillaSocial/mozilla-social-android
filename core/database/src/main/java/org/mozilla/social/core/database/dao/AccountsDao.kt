@@ -50,6 +50,8 @@ interface AccountsDao : BaseDao<DatabaseAccount> {
             "SELECT followeeAccountId FROM followings " +
             "UNION " +
             "SELECT accountId FROM statuses " +
+            "UNION " +
+            "SELECT accountId FROM notifications " +
         ") " +
         "AND accountId NOT IN (:accountIdsToKeep)"
     )
