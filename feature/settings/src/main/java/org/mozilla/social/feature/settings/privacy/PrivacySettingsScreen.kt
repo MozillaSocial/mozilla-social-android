@@ -8,8 +8,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.koin.androidx.compose.koinViewModel
-import org.mozilla.social.core.designsystem.theme.MoSoTheme
+import org.mozilla.social.core.navigation.navigationModule
 import org.mozilla.social.core.ui.common.MoSoSurface
+import org.mozilla.social.core.ui.common.utils.PreviewTheme
 import org.mozilla.social.feature.settings.R
 import org.mozilla.social.feature.settings.ui.SettingsColumn
 import org.mozilla.social.feature.settings.ui.SettingsGroup
@@ -30,7 +31,7 @@ fun PrivacySettingsScreen(viewModel: PrivacySettingsViewModel = koinViewModel())
 }
 
 @Composable
-fun PrivacySettingsScreen(
+private fun PrivacySettingsScreen(
     isAnalyticsToggledOn: Boolean,
     toggleAnalyticsSwitch: () -> Unit,
 ) {
@@ -64,7 +65,12 @@ private fun AllowAnalyticsSwitch(
 @Preview
 @Composable
 private fun PrivacySettingsScreenPreview() {
-    MoSoTheme {
-        PrivacySettingsScreen(isAnalyticsToggledOn = true, {})
+    PreviewTheme(
+        modules = listOf(navigationModule)
+    ) {
+        PrivacySettingsScreen(
+            isAnalyticsToggledOn = true,
+            toggleAnalyticsSwitch = {},
+        )
     }
 }
