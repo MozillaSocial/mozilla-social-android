@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.map
 import org.mozilla.social.common.annotations.PreferUseCase
 import org.mozilla.social.common.parseMastodonLinkHeader
 import org.mozilla.social.core.database.dao.NotificationsDao
+import org.mozilla.social.core.database.model.entities.notificationCollections.MainNotification
 import org.mozilla.social.core.database.model.wrappers.NotificationWrapper
 import org.mozilla.social.core.model.Notification
 import org.mozilla.social.core.model.paging.NotificationsPagingWrapper
@@ -80,5 +81,11 @@ class NotificationsRepository(
         notifications: List<Notification>
     ) = dao.upsertAll(notifications.map { it.toDatabase() })
 
+    suspend fun insertAllMainNotifications(
+        mainNotifications: List<MainNotification>
+    ) = dao.insertAllIntoMainNotificationList(mainNotifications)
+
     suspend fun deleteAll() = dao.deleteAll()
+
+    suspend fun deleteMainNotificationsList() = dao.deleteMainNotificationsList()
 }

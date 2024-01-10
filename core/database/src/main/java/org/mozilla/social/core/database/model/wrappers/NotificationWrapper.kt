@@ -6,7 +6,6 @@ import org.mozilla.social.core.database.model.entities.DatabaseAccount
 import org.mozilla.social.core.database.model.entities.DatabaseNotification
 import org.mozilla.social.core.database.model.entities.DatabasePoll
 import org.mozilla.social.core.database.model.entities.DatabaseStatus
-import org.mozilla.social.core.database.model.entities.statusCollections.LocalTimelineStatusWrapper
 
 data class NotificationWrapper(
     @Embedded
@@ -31,7 +30,7 @@ data class NotificationWrapper(
         parentColumn = "statusPollId",
         entityColumn = "pollId",
     )
-    val poll: DatabasePoll?,
+    val statusPoll: DatabasePoll?,
     @Relation(
         parentColumn = "boostedStatusId",
         entityColumn = "statusId",
@@ -51,12 +50,14 @@ data class NotificationWrapper(
 
 fun NotificationWrapper.extractStatusWrapper(): StatusWrapper? =
     status?.let {
-        StatusWrapper(
-            status = status,
-            account = account,
-            poll = poll,
-            boostedStatus = boostedStatus,
-            boostedAccount = boostedAccount,
-            boostedPoll = boostedPoll,
-        )
+        statusAccount?.let {
+            StatusWrapper(
+                status = status,
+                account = statusAccount,
+                poll = statusPoll,
+                boostedStatus = boostedStatus,
+                boostedAccount = boostedAccount,
+                boostedPoll = boostedPoll,
+            )
+        }
     }
