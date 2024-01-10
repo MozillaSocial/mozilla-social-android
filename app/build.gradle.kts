@@ -19,6 +19,8 @@ android {
         }
     }
 
+    testBuildType = "releaseTest"
+
     buildTypes {
         release {
             isMinifyEnabled = true
