@@ -1,6 +1,7 @@
 package org.mozilla.social.core.network.mastodon
 
 import org.mozilla.social.core.network.mastodon.model.NetworkNotification
+import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -15,5 +16,5 @@ interface NotificationsApi {
         @Query("types[]") types: Array<String>? = null,
         @Query("exclude_types[]") excludeTypes: Array<String>? = null,
         @Query("account_id") accountId: String? = null,
-    ): List<NetworkNotification>
+    ): Response<List<NetworkNotification>>
 }

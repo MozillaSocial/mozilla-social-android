@@ -15,4 +15,9 @@ interface NotificationsDao: BaseDao<DatabaseNotification> {
         "ORDER BY createdAt DESC",
     )
     fun notificationsPagingSource(): PagingSource<Int, NotificationWrapper>
+
+    @Query(
+        "DELETE FROM notifications"
+    )
+    suspend fun deleteAll()
 }
