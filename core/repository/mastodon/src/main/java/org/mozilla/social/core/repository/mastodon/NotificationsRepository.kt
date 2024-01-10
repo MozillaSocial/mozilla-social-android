@@ -88,4 +88,6 @@ class NotificationsRepository(
     suspend fun deleteAll() = dao.deleteAll()
 
     suspend fun deleteMainNotificationsList() = dao.deleteMainNotificationsList()
+
+    suspend fun deleteOldNotifications() = dao.deleteOldNotifications()
 }

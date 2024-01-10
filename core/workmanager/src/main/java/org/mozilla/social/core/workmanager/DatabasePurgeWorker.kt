@@ -19,6 +19,7 @@ import org.mozilla.social.core.repository.mastodon.DatabaseDelegate
 import org.mozilla.social.core.repository.mastodon.FollowersRepository
 import org.mozilla.social.core.repository.mastodon.FollowingsRepository
 import org.mozilla.social.core.repository.mastodon.HashtagRepository
+import org.mozilla.social.core.repository.mastodon.NotificationsRepository
 import org.mozilla.social.core.repository.mastodon.PollRepository
 import org.mozilla.social.core.repository.mastodon.RelationshipRepository
 import org.mozilla.social.core.repository.mastodon.StatusRepository
@@ -44,6 +45,7 @@ class DatabasePurgeWorker(
     private val relationshipRepository: RelationshipRepository,
     private val statusRepository: StatusRepository,
     private val timelineRepository: TimelineRepository,
+    private val notificationsRepository: NotificationsRepository,
 ): CoroutineWorker(
     context,
     workerParams,
@@ -59,14 +61,16 @@ class DatabasePurgeWorker(
                 timelineRepository.deleteAllHashTagTimelines()
                 timelineRepository.deleteAllAccountTimelines(listOf(loggedInUserId))
 
-                // order matters
-                // statuses first
+                // order matters because some queries will look at other entities to determine
+                // what can be deleted
+                notificationsRepository.deleteOldNotifications()
+                // statuses must be after notifications
                 statusRepository.deleteOldStatusesFromDatabase()
-                // accounts second
+                // accounts must be after statuses and notifications
                 accountRepository.deleteOldAccountFromDatabase(listOf(loggedInUserId))
-                // relationships third
+                // relationships must be after accounts
                 relationshipRepository.deleteOldRelationships()
-                // polls fourth
+                // polls must be after statuses
                 pollRepository.deleteOldPolls()
                 hashtagRepository.deleteAll()
 

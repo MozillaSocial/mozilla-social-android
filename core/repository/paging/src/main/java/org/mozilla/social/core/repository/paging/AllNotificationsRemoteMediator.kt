@@ -54,7 +54,7 @@ class AllNotificationsRemoteMediator(
 
             databaseDelegate.withTransaction {
                 if (loadType == LoadType.REFRESH) {
-                    notificationsRepository.deleteAll()
+                    notificationsRepository.deleteMainNotificationsList()
                 }
 
                 saveNotificationsToDatabase(response.notifications)

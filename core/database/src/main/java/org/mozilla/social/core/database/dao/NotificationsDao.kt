@@ -24,6 +24,15 @@ interface NotificationsDao: BaseDao<DatabaseNotification> {
     )
     suspend fun deleteAll()
 
+    @Query(
+        "DELETE FROM notifications " +
+        "WHERE id NOT IN " +
+        "(" +
+            "SELECT id FROM mainNotifications" +
+        ")"
+    )
+    suspend fun deleteOldNotifications()
+
     @Upsert
     suspend fun insertAllIntoMainNotificationList(
         mainNotifications: List<MainNotification>
