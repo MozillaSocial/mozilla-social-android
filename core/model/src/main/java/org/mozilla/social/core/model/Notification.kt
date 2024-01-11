@@ -3,7 +3,7 @@ package org.mozilla.social.core.model
 import kotlinx.datetime.Instant
 
 sealed class Notification {
-    abstract val id: String
+    abstract val id: Int
     abstract val createdAt: Instant
     abstract val account: Account
 
@@ -11,7 +11,7 @@ sealed class Notification {
      * Someone mentioned you in their status
      */
     data class Mention(
-        override val id: String,
+        override val id: Int,
         override val createdAt: Instant,
         override val account: Account,
         val status: Status,
@@ -21,7 +21,7 @@ sealed class Notification {
      * Someone you enabled notifications for has posted a status
      */
     data class NewStatus(
-        override val id: String,
+        override val id: Int,
         override val createdAt: Instant,
         override val account: Account,
         val status: Status,
@@ -31,7 +31,7 @@ sealed class Notification {
      * Someone boosted one of your statuses
      */
     data class Repost(
-        override val id: String,
+        override val id: Int,
         override val createdAt: Instant,
         override val account: Account,
         val status: Status,
@@ -41,7 +41,7 @@ sealed class Notification {
      * Someone followed you
      */
     data class Follow(
-        override val id: String,
+        override val id: Int,
         override val createdAt: Instant,
         override val account: Account,
     ): Notification()
@@ -50,7 +50,7 @@ sealed class Notification {
      * Someone requested to follow you
      */
     data class FollowRequest(
-        override val id: String,
+        override val id: Int,
         override val createdAt: Instant,
         override val account: Account,
     ): Notification()
@@ -59,7 +59,7 @@ sealed class Notification {
      * Someone favourited one of your statuses
      */
     data class Favorite(
-        override val id: String,
+        override val id: Int,
         override val createdAt: Instant,
         override val account: Account,
         val status: Status,
@@ -69,7 +69,7 @@ sealed class Notification {
      * A poll you have voted in or created has ended
      */
     data class PollEnded(
-        override val id: String,
+        override val id: Int,
         override val createdAt: Instant,
         override val account: Account,
         val status: Status,
@@ -79,7 +79,7 @@ sealed class Notification {
      * A status you interacted with has been edited
      */
     data class StatusUpdated(
-        override val id: String,
+        override val id: Int,
         override val createdAt: Instant,
         override val account: Account,
         val status: Status,
