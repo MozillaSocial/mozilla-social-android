@@ -1,6 +1,7 @@
 package org.mozilla.social.feature.settings.licenses
 
 import android.content.Intent
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -18,32 +19,25 @@ import org.mozilla.social.core.ui.common.text.MediumTextBody
 import org.mozilla.social.feature.settings.R
 import org.mozilla.social.feature.settings.ui.SettingsColumn
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
+import com.mikepenz.aboutlibraries.ui.compose.LibrariesContainer
 
 @Composable
 fun OpenSourceLicensesScreen(viewModel: OpenSourceLicensesViewModel = koinViewModel()) {
     OpenSourceLicensesScreen()
 
     LaunchedEffect(Unit) {
-        viewModel.onScreenViewed()
     }
 }
 
 @Composable
 private fun OpenSourceLicensesScreen() {
     val context = LocalContext.current
+
     MoSoSurface {
-        SettingsColumn(
-            title = stringResource(id = R.string.licenses_settings_title),
-            modifier = Modifier
-                .verticalScroll(rememberScrollState())
-                .padding(MoSoSpacing.lg),
-        ) {
-            MediumTextBody(text = "Here's where open source licenses will go")
-            Button(onClick = {
-                context.startActivity(Intent(context, OssLicensesMenuActivity::class.java))
-            }) {
-                Text(text = "Show List")
-            }
+        SettingsColumn(title = stringResource(id = R.string.settings_title)) {
+            LibrariesContainer(
+                Modifier.fillMaxSize()
+            )
         }
     }
 }

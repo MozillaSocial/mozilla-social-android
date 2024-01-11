@@ -31,7 +31,7 @@ class SettingsViewModel(
         navigateTo(SettingsNavigationDestination.DeveloperOptions)
     }
 
-    fun onOpenSourceLicensesClicked() {
+    override fun onOpenSourceLicensesClicked() {
         navigateTo(SettingsNavigationDestination.OpenSourceLicensesSettings)
     }
 

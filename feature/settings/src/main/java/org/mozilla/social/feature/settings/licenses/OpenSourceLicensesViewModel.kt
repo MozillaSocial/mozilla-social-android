@@ -9,13 +9,7 @@ import org.mozilla.social.feature.settings.SettingsInteractions
 class OpenSourceLicensesViewModel(
     private val analytics: Analytics,
     getLoggedInUserAccountId: GetLoggedInUserAccountId,
-) : ViewModel(), SettingsInteractions {
+) : ViewModel() {
 
     private val userAccountId: String = getLoggedInUserAccountId()
-    override fun onScreenViewed() {
-        analytics.uiImpression(
-            uiIdentifier = AnalyticsIdentifiers.SETTINGS_CONTENT_OPEN_SOURCE_LICENSE,
-            mastodonAccountId = userAccountId
-        )
-    }
 }

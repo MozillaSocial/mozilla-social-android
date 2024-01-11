@@ -1,8 +1,6 @@
 plugins {
     id("org.mozilla.social.android.application")
     id("org.mozilla.social.android.application.compose")
-    alias(libs.plugins.oss.licenses.plugin) apply false
-    alias(libs.plugins.about.libraries.plugin) apply false
 }
 
 android {
