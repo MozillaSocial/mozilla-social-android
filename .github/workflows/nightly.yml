@@ -29,7 +29,13 @@ jobs:
         uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # v4.1.0
       - name: Setup
         uses: ./.github/actions/setup-environment
+      - name: Clean managed devices
+        env:
+          GRADLE_OPTS: -Dorg.gradle.daemon=false
+        run: ./gradlew cleanManagedDevices
       - name: Run UI tests
+        env:
+          GRADLE_OPTS: -Dorg.gradle.daemon=false
         uses: gradle/gradle-build-action@v2.11.1
         with:
           arguments: |
