@@ -223,8 +223,10 @@ fun PostContent(
     uiState: PostContentUiState,
     htmlContentInteractions: HtmlContentInteractions,
     pollInteractions: PollInteractions,
+    modifier: Modifier = Modifier,
 ) {
     ContentWarning(
+        modifier = modifier,
         contentWarningText = uiState.contentWarning,
     ) {
         Column {
@@ -252,10 +254,13 @@ fun PostContent(
 
 @Composable
 private fun ContentWarning(
+    modifier: Modifier = Modifier,
     contentWarningText: String,
     content: @Composable () -> Unit,
 ) {
-    Column {
+    Column(
+        modifier = modifier,
+    ) {
         val hasContentWarning by remember(contentWarningText) {
             derivedStateOf { contentWarningText.isNotBlank() }
         }

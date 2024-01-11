@@ -3,6 +3,7 @@ package org.mozilla.social.feature.notifications
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -19,6 +20,7 @@ import androidx.paging.compose.itemKey
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import org.koin.androidx.compose.koinViewModel
+import org.mozilla.social.core.designsystem.theme.MoSoSpacing
 import org.mozilla.social.core.ui.common.MoSoSurface
 import org.mozilla.social.core.ui.common.MoSoTab
 import org.mozilla.social.core.ui.common.MoSoTabRow
@@ -132,6 +134,7 @@ private fun NotificationsList(
                     lazyPagingItems[index]?.let { uiState ->
                         Column {
                             NotificationCard(
+                                modifier = Modifier.padding(MoSoSpacing.md),
                                 uiState = uiState,
                                 pollInteractions = pollInteractions,
                                 htmlContentInteractions = htmlContentInteractions,
