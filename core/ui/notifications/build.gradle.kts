@@ -13,4 +13,6 @@ dependencies {
     implementation(project(":core:ui:common"))
     implementation(project(":core:ui:postcard"))
     implementation(project(":core:common"))
+
+    implementation(libs.kotlinx.datetime)
 }

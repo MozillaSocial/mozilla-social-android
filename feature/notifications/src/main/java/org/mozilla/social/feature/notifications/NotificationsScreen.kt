@@ -28,8 +28,10 @@ import org.mozilla.social.core.ui.common.pullrefresh.PullRefreshLazyColumn
 import org.mozilla.social.core.ui.common.pullrefresh.rememberPullRefreshState
 import org.mozilla.social.core.ui.common.text.MediumTextLabel
 import org.mozilla.social.core.ui.common.utils.PreviewTheme
+import org.mozilla.social.core.ui.htmlcontent.HtmlContentInteractions
 import org.mozilla.social.core.ui.notifications.NotificationCard
 import org.mozilla.social.core.ui.notifications.NotificationUiState
+import org.mozilla.social.core.ui.poll.PollInteractions
 
 @Composable
 internal fun NotificationsScreen(
@@ -40,6 +42,8 @@ internal fun NotificationsScreen(
         uiState = uiState,
         feed = viewModel.feed,
         notificationsInteractions = viewModel,
+        pollInteractions = viewModel.postCardDelegate,
+        htmlContentInteractions = viewModel.postCardDelegate,
     )
 }
 
@@ -48,6 +52,8 @@ private fun NotificationsScreen(
     uiState: NotificationsUiState,
     feed: Flow<PagingData<NotificationUiState>>,
     notificationsInteractions: NotificationsInteractions,
+    pollInteractions: PollInteractions,
+    htmlContentInteractions: HtmlContentInteractions,
 ) {
     MoSoSurface(
         modifier = Modifier
@@ -65,7 +71,11 @@ private fun NotificationsScreen(
                 uiState = uiState,
                 notificationsInteractions = notificationsInteractions
             )
-            NotificationsList(list = feed)
+            NotificationsList(
+                list = feed,
+                pollInteractions = pollInteractions,
+                htmlContentInteractions = htmlContentInteractions,
+            )
         }
     }
 }
@@ -96,6 +106,8 @@ private fun Tabs(
 @Composable
 private fun NotificationsList(
     list: Flow<PagingData<NotificationUiState>>,
+    pollInteractions: PollInteractions,
+    htmlContentInteractions: HtmlContentInteractions,
 ) {
     val lazyPagingItems = list.collectAsLazyPagingItems()
 
@@ -119,7 +131,11 @@ private fun NotificationsList(
                 ) { index ->
                     lazyPagingItems[index]?.let { uiState ->
                         Column {
-                            NotificationCard(uiState = uiState)
+                            NotificationCard(
+                                uiState = uiState,
+                                pollInteractions = pollInteractions,
+                                htmlContentInteractions = htmlContentInteractions,
+                            )
                             MoSoDivider()
                         }
                     }
@@ -139,7 +155,9 @@ private fun NotificationsScreenPreview() {
             feed = flowOf(),
             notificationsInteractions = object : NotificationsInteractions {
                 override fun onTabClicked(tab: NotificationsTab) = Unit
-            }
+            },
+            pollInteractions = object : PollInteractions {},
+            htmlContentInteractions = object : HtmlContentInteractions {},
         )
     }
 }
