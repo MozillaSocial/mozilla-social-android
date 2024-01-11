@@ -6,6 +6,7 @@ import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import kotlinx.coroutines.delay
 import org.mozilla.social.common.Rel
+import org.mozilla.social.common.getMaxIdValue
 import org.mozilla.social.core.database.model.entities.notificationCollections.MainNotification
 import org.mozilla.social.core.database.model.entities.notificationCollections.MainNotificationWrapper
 import org.mozilla.social.core.repository.mastodon.DatabaseDelegate
@@ -19,6 +20,7 @@ class AllNotificationsRemoteMediator(
     private val databaseDelegate: DatabaseDelegate,
     private val saveNotificationsToDatabase: SaveNotificationsToDatabase,
 ) : RemoteMediator<Int, MainNotificationWrapper>() {
+    private var nextKey: String? = null
 
     @Suppress("ComplexMethod")
     override suspend fun load(
@@ -42,11 +44,11 @@ class AllNotificationsRemoteMediator(
                     }
 
                     LoadType.APPEND -> {
-                        val lastItem =
-                            state.lastItemOrNull()
-                                ?: return MediatorResult.Success(endOfPaginationReached = true)
+                        if (nextKey == null) {
+                            return MediatorResult.Success(endOfPaginationReached = true)
+                        }
                         notificationsRepository.getNotifications(
-                            maxId = lastItem.notificationWrapper.notification.id,
+                            maxId = nextKey,
                             limit = pageSize,
                         )
                     }
@@ -66,6 +68,8 @@ class AllNotificationsRemoteMediator(
                     }
                 )
             }
+
+            nextKey = response.pagingLinks?.getMaxIdValue()
 
             // There seems to be some race condition for refreshes.  Subsequent pages do
             // not get loaded because once we return a mediator result, the next append
