@@ -22,12 +22,6 @@ fun Status.toPostCardUiState(currentUserAccountId: String): PostCardUiState =
 private fun Status.toMainPostCardUiState(currentUserAccountId: String): MainPostCardUiState =
     MainPostCardUiState(
         url = url,
-        pollUiState =
-            poll?.toPollUiState(
-                isUserCreatedPoll = currentUserAccountId == account.accountId,
-            ),
-        statusTextHtml = content,
-        mediaAttachments = mediaAttachments,
         profilePictureUrl = account.avatarStaticUrl,
         postTimeSince = createdAt.timeSinceNow(),
         accountName = StringFactory.literal(account.acct),
@@ -39,12 +33,22 @@ private fun Status.toMainPostCardUiState(currentUserAccountId: String): MainPost
         userBoosted = isBoosted ?: false,
         isFavorited = isFavourited ?: false,
         accountId = account.accountId,
-        mentions = mentions,
-        previewCard = card?.toPreviewCard(),
         isUsersPost = currentUserAccountId == account.accountId,
         isBeingDeleted = isBeingDeleted,
-        contentWarning = contentWarningText,
+        postContentUiState = toPostContentUiState(currentUserAccountId)
     )
+
+private fun Status.toPostContentUiState(currentUserAccountId: String): PostContentUiState = PostContentUiState(
+    statusId = statusId,
+    pollUiState = poll?.toPollUiState(
+        isUserCreatedPoll = currentUserAccountId == account.accountId,
+    ),
+    statusTextHtml = content,
+    mediaAttachments = mediaAttachments,
+    mentions = mentions,
+    previewCard = card?.toPreviewCard(),
+    contentWarning = contentWarningText,
+)
 
 private fun Status.toTopRowMetaDataUiState(): TopRowMetaDataUiState? =
     if (boostedStatus != null) {

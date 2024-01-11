@@ -19,11 +19,12 @@ import coil.compose.AsyncImage
 import org.mozilla.social.core.designsystem.theme.MoSoRadius
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.ui.common.utils.media
+import org.mozilla.social.core.ui.htmlcontent.HtmlContentInteractions
 
 @Composable
 fun PreviewCard(
     previewCard: PreviewCard,
-    postCardInteractions: PostCardInteractions,
+    htmlContentInteractions: HtmlContentInteractions,
 ) {
     val borderShape = RoundedCornerShape(MoSoRadius.media)
     Column(
@@ -36,7 +37,7 @@ fun PreviewCard(
                     shape = borderShape,
                 )
                 .clickable {
-                    postCardInteractions.onLinkClicked(previewCard.url)
+                    htmlContentInteractions.onLinkClicked(previewCard.url)
                 },
     ) {
         AsyncImage(

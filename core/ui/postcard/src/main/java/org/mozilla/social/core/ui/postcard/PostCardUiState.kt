@@ -15,10 +15,7 @@ data class PostCardUiState(
  */
 data class MainPostCardUiState(
     val url: String?,
-    val pollUiState: org.mozilla.social.core.ui.poll.PollUiState?,
     val username: String,
-    val statusTextHtml: String,
-    val mediaAttachments: List<Attachment>,
     val profilePictureUrl: String,
     val postTimeSince: StringFactory,
     val accountName: StringFactory,
@@ -29,10 +26,18 @@ data class MainPostCardUiState(
     val userBoosted: Boolean,
     val isFavorited: Boolean,
     val accountId: String,
-    val mentions: List<Mention>,
-    val previewCard: PreviewCard?,
     val isUsersPost: Boolean,
     val isBeingDeleted: Boolean,
+    val postContentUiState: PostContentUiState,
+)
+
+data class PostContentUiState(
+    val statusId: String,
+    val pollUiState: org.mozilla.social.core.ui.poll.PollUiState?,
+    val statusTextHtml: String,
+    val mediaAttachments: List<Attachment>,
+    val mentions: List<Mention>,
+    val previewCard: PreviewCard?,
     val contentWarning: String,
 )
 
