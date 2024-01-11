@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.map
 import org.mozilla.social.common.utils.edit
 import org.mozilla.social.core.repository.mastodon.NotificationsRepository
 import org.mozilla.social.core.repository.paging.AllNotificationsRemoteMediator
+import org.mozilla.social.core.ui.notifications.toUiState
 
 class NotificationsViewModel(
     notificationsRepository: NotificationsRepository,
@@ -24,7 +25,7 @@ class NotificationsViewModel(
         remoteMediator = allNotificationsRemoteMediator,
     ).map { pagingData ->
         pagingData.map {
-            //TODO map to ui state
+            it.toUiState()
         }
     }.cachedIn(viewModelScope)
 
