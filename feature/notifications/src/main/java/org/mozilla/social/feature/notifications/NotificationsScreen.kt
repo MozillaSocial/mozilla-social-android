@@ -12,6 +12,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.paging.PagingData
+import kotlinx.coroutines.flow.Flow
 import org.koin.androidx.compose.koinViewModel
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.ui.common.MoSoSurface
@@ -19,6 +21,7 @@ import org.mozilla.social.core.ui.common.MoSoTab
 import org.mozilla.social.core.ui.common.MoSoTabRow
 import org.mozilla.social.core.ui.common.appbar.MoSoTopBar
 import org.mozilla.social.core.ui.common.text.MediumTextLabel
+import org.mozilla.social.core.ui.notifications.NotificationUiState
 
 @Composable
 internal fun NotificationsScreen(
@@ -27,6 +30,7 @@ internal fun NotificationsScreen(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     NotificationsScreen(
         uiState = uiState,
+        feed = viewModel.feed,
         notificationsInteractions = viewModel,
     )
 }
@@ -34,6 +38,7 @@ internal fun NotificationsScreen(
 @Composable
 private fun NotificationsScreen(
     uiState: NotificationsUiState,
+    feed: Flow<PagingData<NotificationUiState>>,
     notificationsInteractions: NotificationsInteractions,
 ) {
     MoSoSurface(
