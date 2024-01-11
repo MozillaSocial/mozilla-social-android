@@ -7,9 +7,11 @@ import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import com.mikepenz.aboutlibraries.ui.compose.LibrariesContainer
 import org.koin.androidx.compose.koinViewModel
 import org.mozilla.social.common.Version
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
@@ -24,7 +26,12 @@ fun SettingsScreen(
     viewModel: SettingsViewModel = koinViewModel()
 ) {
     SettingsScreen(
-        settingsInteractions = viewModel
+        settingsInteractions = viewModel,
+        onAccountClicked = viewModel::onAccountClicked,
+        onContentPreferencesClicked = viewModel::onContentPreferencesClicked,
+        onPrivacyClicked = viewModel::onPrivacyClicked,
+        onAboutClicked = viewModel::onAboutClicked,
+        onOpenSourceLicensesClicked = viewModel::onOpenSourceLicensesClicked,
     )
 }
 
@@ -75,6 +82,14 @@ fun SettingsScreen(
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally),
                     text = "v${Version.name}.${Version.code}",
+                )
+            }
+        }
+
+        MoSoSurface {
+            SettingsColumn(title = stringResource(id = R.string.settings_title)) {
+                LibrariesContainer(
+                    Modifier.fillMaxSize()
                 )
             }
         }

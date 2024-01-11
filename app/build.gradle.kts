@@ -1,6 +1,8 @@
 plugins {
     id("org.mozilla.social.android.application")
     id("org.mozilla.social.android.application.compose")
+    alias(libs.plugins.oss.licenses.plugin) apply false
+    alias(libs.plugins.about.libraries.plugin) apply false
 }
 
 android {
@@ -99,9 +101,11 @@ dependencies {
 
     implementation(libs.androidx.navigation.compose)
 
-    testImplementation(libs.koin.test)
-
     implementation(libs.jakewharton.timber)
+
+    implementation(libs.oss.licenses.library)
+
+    testImplementation(libs.koin.test)
 
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit)

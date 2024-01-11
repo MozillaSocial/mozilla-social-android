@@ -48,4 +48,15 @@ class MainActivity : ComponentActivity() {
             Timber.e("caught exception: $exception")
         }
     }
+
+    private fun setupAboutLibraries() {
+//        val libs = Libs.Builder()
+//            .withJson(aboutLibsJson) // provide the metaData (alternative APIs available)
+//            .build()
+//        val libraries = libs.libraries // retrieve all libraries defined in the metadata
+//        val licenses = libs.licenses // retrieve all licenses defined in the metadata
+//        for (lib in libraries) {
+//            Log.i("AboutLibraries", "${lib.name}")
+//        }
+    }
 }

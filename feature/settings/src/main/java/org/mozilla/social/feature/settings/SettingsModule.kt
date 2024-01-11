@@ -16,6 +16,7 @@ import org.mozilla.social.feature.settings.account.AccountSettingsViewModel
 import org.mozilla.social.feature.settings.contentpreferences.ContentPreferencesSettingsViewModel
 import org.mozilla.social.feature.settings.contentpreferences.blockedusers.BlockedUsersViewModel
 import org.mozilla.social.feature.settings.contentpreferences.mutedusers.MutedUsersSettingsViewModel
+import org.mozilla.social.feature.settings.licenses.OpenSourceLicensesViewModel
 import org.mozilla.social.feature.settings.privacy.PrivacySettingsViewModel
 
 val settingsModule =
@@ -37,5 +38,6 @@ val settingsModule =
         viewModelOf(::ContentPreferencesSettingsViewModel)
         viewModelOf(::BlockedUsersViewModel)
         viewModelOf(::MutedUsersSettingsViewModel)
+        viewModelOf(::OpenSourceLicensesViewModel)
         singleOf(::DefaultHtmlInteractions)
     }
