@@ -32,7 +32,6 @@ data class MainPostCardUiState(
 )
 
 data class PostContentUiState(
-    val statusId: String,
     val pollUiState: org.mozilla.social.core.ui.poll.PollUiState?,
     val statusTextHtml: String,
     val mediaAttachments: List<Attachment>,

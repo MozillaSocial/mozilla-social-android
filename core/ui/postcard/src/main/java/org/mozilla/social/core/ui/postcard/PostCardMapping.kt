@@ -38,8 +38,7 @@ private fun Status.toMainPostCardUiState(currentUserAccountId: String): MainPost
         postContentUiState = toPostContentUiState(currentUserAccountId)
     )
 
-private fun Status.toPostContentUiState(currentUserAccountId: String): PostContentUiState = PostContentUiState(
-    statusId = statusId,
+fun Status.toPostContentUiState(currentUserAccountId: String): PostContentUiState = PostContentUiState(
     pollUiState = poll?.toPollUiState(
         isUserCreatedPoll = currentUserAccountId == account.accountId,
     ),

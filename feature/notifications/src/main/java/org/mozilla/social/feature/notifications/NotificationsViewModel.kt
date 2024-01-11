@@ -12,11 +12,16 @@ import org.mozilla.social.common.utils.edit
 import org.mozilla.social.core.repository.mastodon.NotificationsRepository
 import org.mozilla.social.core.repository.paging.AllNotificationsRemoteMediator
 import org.mozilla.social.core.ui.notifications.toUiState
+import org.mozilla.social.core.usecase.mastodon.account.GetLoggedInUserAccountId
 
 class NotificationsViewModel(
     notificationsRepository: NotificationsRepository,
     allNotificationsRemoteMediator: AllNotificationsRemoteMediator,
+    getLoggedInUserAccountId: GetLoggedInUserAccountId,
 ) : ViewModel(), NotificationsInteractions {
+
+    private val loggedInUserAccountId = getLoggedInUserAccountId()
+
     private val _uiState = MutableStateFlow(NotificationsUiState())
     val uiState = _uiState.asStateFlow()
 
@@ -25,7 +30,7 @@ class NotificationsViewModel(
         remoteMediator = allNotificationsRemoteMediator,
     ).map { pagingData ->
         pagingData.map {
-            it.toUiState()
+            it.toUiState(loggedInUserAccountId)
         }
     }.cachedIn(viewModelScope)
 

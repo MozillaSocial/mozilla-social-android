@@ -11,4 +11,6 @@ dependencies {
     implementation(project(":core:model"))
     implementation(project(":core:designsystem"))
     implementation(project(":core:ui:common"))
+    implementation(project(":core:ui:postcard"))
+    implementation(project(":core:common"))
 }
