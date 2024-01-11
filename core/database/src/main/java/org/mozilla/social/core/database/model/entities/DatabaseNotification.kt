@@ -61,7 +61,7 @@ import kotlinx.datetime.Instant
 )
 data class DatabaseNotification(
     @PrimaryKey
-    val id: String,
+    val id: Int,
     val type: Type,
     val createdAt: Instant,
     val accountId: String,

@@ -22,7 +22,7 @@ import org.mozilla.social.core.database.model.wrappers.NotificationWrapper
 )
 data class MainNotification(
     @PrimaryKey
-    val id: String,
+    val id: Int,
 )
 
 data class MainNotificationWrapper(
