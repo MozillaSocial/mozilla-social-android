@@ -32,6 +32,9 @@ import org.mozilla.social.core.designsystem.R
  */
 object MoSoIcons {
     @Composable
+    fun at() = painterResource(id = R.drawable.at)
+
+    @Composable
     fun bell() = painterResource(id = R.drawable.bell)
 
     @Composable
@@ -69,6 +72,9 @@ object MoSoIcons {
 
     @Composable
     fun connect() = painterResource(id = R.drawable.connect)
+
+    @Composable
+    fun following() = painterResource(id = R.drawable.following)
 
     @Composable
     fun gear() = painterResource(id = R.drawable.gear)
@@ -150,6 +156,9 @@ object MoSoIcons {
 
     @Composable
     fun userJoin() = painterResource(id = R.drawable.user_join)
+
+    @Composable
+    fun users() = painterResource(id = R.drawable.users)
 
     @Composable
     fun warning() = painterResource(id = R.drawable.warning)
