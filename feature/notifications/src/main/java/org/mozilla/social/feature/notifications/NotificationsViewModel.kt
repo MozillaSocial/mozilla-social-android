@@ -15,6 +15,7 @@ import org.mozilla.social.common.utils.edit
 import org.mozilla.social.core.analytics.AnalyticsIdentifiers
 import org.mozilla.social.core.repository.mastodon.NotificationsRepository
 import org.mozilla.social.core.repository.paging.AllNotificationsRemoteMediator
+import org.mozilla.social.core.ui.notifications.NotificationCardDelegate
 import org.mozilla.social.core.ui.notifications.toUiState
 import org.mozilla.social.core.ui.postcard.PostCardDelegate
 import org.mozilla.social.core.usecase.mastodon.account.GetLoggedInUserAccountId
@@ -23,6 +24,7 @@ class NotificationsViewModel(
     notificationsRepository: NotificationsRepository,
     allNotificationsRemoteMediator: AllNotificationsRemoteMediator,
     getLoggedInUserAccountId: GetLoggedInUserAccountId,
+    val notificationCardDelegate: NotificationCardDelegate,
 ) : ViewModel(), NotificationsInteractions, KoinComponent {
 
     val postCardDelegate by inject<PostCardDelegate> {

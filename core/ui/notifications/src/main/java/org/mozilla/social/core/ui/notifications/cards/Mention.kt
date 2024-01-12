@@ -1,18 +1,14 @@
 package org.mozilla.social.core.ui.notifications.cards
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.clickable
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.core.ui.common.utils.PreviewTheme
 import org.mozilla.social.core.ui.htmlcontent.HtmlContentInteractions
-import org.mozilla.social.core.ui.notifications.Avatar
-import org.mozilla.social.core.ui.notifications.NotificationMetaData
+import org.mozilla.social.core.ui.notifications.NotificationCard
+import org.mozilla.social.core.ui.notifications.NotificationInteractions
 import org.mozilla.social.core.ui.notifications.NotificationUiState
 import org.mozilla.social.core.ui.poll.PollInteractions
 import org.mozilla.social.core.ui.postcard.PostContent
@@ -23,23 +19,21 @@ fun MentionNotification(
     uiState: NotificationUiState.Mention,
     htmlContentInteractions: HtmlContentInteractions,
     pollInteractions: PollInteractions,
+    notificationInteractions: NotificationInteractions,
 ) {
-    Row {
-        Avatar(avatarUrl = uiState.avatarUrl)
-        Spacer(modifier = Modifier.padding(start = 8.dp))
-        Column {
-            NotificationMetaData(
-                modifier = Modifier
-                    .padding(bottom = 9.dp, top = 9.dp),
-                uiState = uiState,
-            )
+    NotificationCard(
+        modifier = Modifier
+            .clickable { notificationInteractions.onMentionClicked(uiState.statusId) },
+        uiState = uiState,
+        notificationInteractions = notificationInteractions,
+        content = {
             PostContent(
                 uiState = uiState.postContentUiState,
                 htmlContentInteractions = htmlContentInteractions,
                 pollInteractions = pollInteractions,
             )
         }
-    }
+    )
 }
 
 @Preview
@@ -58,11 +52,17 @@ private fun MentionNotificationPreview() {
                     mediaAttachments = emptyList(),
                     mentions = emptyList(),
                     previewCard = null,
-                    contentWarning = ""
-                )
+                    contentWarning = "",
+                ),
+                accountId = "",
+                statusId = "",
             ),
             htmlContentInteractions = object : HtmlContentInteractions {},
             pollInteractions = object : PollInteractions {},
+            notificationInteractions = object : NotificationInteractions {
+                override fun onAvatarClicked(accountId: String) = Unit
+                override fun onMentionClicked(statusId: String) = Unit
+            },
         )
     }
 }

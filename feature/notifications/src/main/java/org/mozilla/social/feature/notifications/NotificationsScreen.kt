@@ -32,6 +32,7 @@ import org.mozilla.social.core.ui.common.text.MediumTextLabel
 import org.mozilla.social.core.ui.common.utils.PreviewTheme
 import org.mozilla.social.core.ui.htmlcontent.HtmlContentInteractions
 import org.mozilla.social.core.ui.notifications.NotificationCard
+import org.mozilla.social.core.ui.notifications.NotificationInteractions
 import org.mozilla.social.core.ui.notifications.NotificationUiState
 import org.mozilla.social.core.ui.poll.PollInteractions
 
@@ -46,6 +47,7 @@ internal fun NotificationsScreen(
         notificationsInteractions = viewModel,
         pollInteractions = viewModel.postCardDelegate,
         htmlContentInteractions = viewModel.postCardDelegate,
+        notificationInteractions = viewModel.notificationCardDelegate,
     )
 }
 
@@ -56,6 +58,7 @@ private fun NotificationsScreen(
     notificationsInteractions: NotificationsInteractions,
     pollInteractions: PollInteractions,
     htmlContentInteractions: HtmlContentInteractions,
+    notificationInteractions: NotificationInteractions,
 ) {
     MoSoSurface(
         modifier = Modifier
@@ -77,6 +80,7 @@ private fun NotificationsScreen(
                 list = feed,
                 pollInteractions = pollInteractions,
                 htmlContentInteractions = htmlContentInteractions,
+                notificationInteractions = notificationInteractions,
             )
         }
     }
@@ -110,6 +114,7 @@ private fun NotificationsList(
     list: Flow<PagingData<NotificationUiState>>,
     pollInteractions: PollInteractions,
     htmlContentInteractions: HtmlContentInteractions,
+    notificationInteractions: NotificationInteractions,
 ) {
     val lazyPagingItems = list.collectAsLazyPagingItems()
 
@@ -138,6 +143,7 @@ private fun NotificationsList(
                                 uiState = uiState,
                                 pollInteractions = pollInteractions,
                                 htmlContentInteractions = htmlContentInteractions,
+                                notificationInteractions = notificationInteractions,
                             )
                             MoSoDivider()
                         }
@@ -161,6 +167,10 @@ private fun NotificationsScreenPreview() {
             },
             pollInteractions = object : PollInteractions {},
             htmlContentInteractions = object : HtmlContentInteractions {},
+            notificationInteractions = object : NotificationInteractions {
+                override fun onAvatarClicked(accountId: String) = Unit
+                override fun onMentionClicked(statusId: String) = Unit
+            },
         )
     }
 }
