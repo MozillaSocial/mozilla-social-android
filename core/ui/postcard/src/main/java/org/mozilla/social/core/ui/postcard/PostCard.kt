@@ -180,7 +180,7 @@ private fun Avatar(
                 .background(MoSoTheme.colors.layer2)
                 .clickable { postCardInteractions.onAccountImageClicked(post.accountId) },
         model = post.profilePictureUrl,
-        contentDescription = "",
+        contentDescription = null,
     )
 }
 
