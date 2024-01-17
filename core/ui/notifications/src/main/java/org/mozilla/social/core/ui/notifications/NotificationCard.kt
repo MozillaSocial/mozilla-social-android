@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
@@ -130,15 +131,17 @@ private fun Avatar(
     notificationInteractions: NotificationInteractions,
 ) {
     Box(
-        modifier = Modifier.size(size)
+        modifier = modifier
+            .size(size)
+            .clickable { notificationInteractions.onAvatarClicked(accountId) }
+            .semantics(mergeDescendants = true) {}
     ) {
         AsyncImage(
-            modifier = modifier
+            modifier = Modifier
                 .size(36.dp)
                 .align(Alignment.CenterEnd)
                 .clip(CircleShape)
-                .background(MoSoTheme.colors.layer2)
-                .clickable { notificationInteractions.onAvatarClicked(accountId) },
+                .background(MoSoTheme.colors.layer2),
             model = avatarUrl,
             contentDescription = "",
         )
