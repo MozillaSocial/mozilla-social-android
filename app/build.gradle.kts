@@ -1,6 +1,7 @@
 plugins {
     id("org.mozilla.social.android.application")
     id("org.mozilla.social.android.application.compose")
+    alias(libs.plugins.about.libraries.plugin)
 }
 
 android {
@@ -76,6 +77,8 @@ dependencies {
     implementation(project(":feature:notifications"))
 
     implementation(kotlin("reflect"))
+
+    implementation("com.ober:vmr-link:3.0.17")
 
     implementation(libs.google.material)
 

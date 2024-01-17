@@ -26,6 +26,7 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        jcenter()
         maven { url = uri("https://maven.mozilla.org/maven2") }
     }
 }

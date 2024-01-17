@@ -18,7 +18,6 @@ import org.mozilla.social.core.ui.common.MoSoSurface
 import org.mozilla.social.core.ui.common.text.MediumTextBody
 import org.mozilla.social.feature.settings.R
 import org.mozilla.social.feature.settings.ui.SettingsColumn
-import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import com.mikepenz.aboutlibraries.ui.compose.LibrariesContainer
 
 @Composable
