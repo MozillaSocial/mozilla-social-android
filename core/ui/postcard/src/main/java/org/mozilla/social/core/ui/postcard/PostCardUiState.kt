@@ -39,6 +39,7 @@ data class PostContentUiState(
     val mentions: List<Mention>,
     val previewCard: PreviewCard?,
     val contentWarning: String,
+    val onlyShowPreviewOfText: Boolean = false,
 )
 
 data class TopRowMetaDataUiState(

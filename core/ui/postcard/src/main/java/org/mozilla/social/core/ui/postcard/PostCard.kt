@@ -234,6 +234,16 @@ fun PostContent(
                 mentions = uiState.mentions,
                 htmlText = uiState.statusTextHtml,
                 htmlContentInteractions = htmlContentInteractions,
+                maximumLineCount = if (uiState.onlyShowPreviewOfText) {
+                    1
+                } else {
+                    Int.MAX_VALUE
+                },
+                textColor = if (uiState.onlyShowPreviewOfText) {
+                    MoSoTheme.colors.textSecondary
+                } else {
+                    MoSoTheme.colors.textPrimary
+                }
             )
             Spacer(modifier = Modifier.padding(top = 8.dp))
 

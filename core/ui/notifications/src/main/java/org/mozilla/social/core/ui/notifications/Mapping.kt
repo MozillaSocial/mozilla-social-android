@@ -33,6 +33,7 @@ fun Notification.toUiState(
         postContentUiState = status.toPostContentUiState(
             currentUserAccountId = currentUserAccountId,
             contentWarningOverride = "",
+            onlyShowPreviewOfText = true,
         ),
         statusId = status.statusId,
     )

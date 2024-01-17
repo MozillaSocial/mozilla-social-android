@@ -41,6 +41,7 @@ private fun Status.toMainPostCardUiState(currentUserAccountId: String): MainPost
 fun Status.toPostContentUiState(
     currentUserAccountId: String,
     contentWarningOverride: String? = null,
+    onlyShowPreviewOfText: Boolean = false,
 ): PostContentUiState = PostContentUiState(
     pollUiState = poll?.toPollUiState(
         isUserCreatedPoll = currentUserAccountId == account.accountId,
@@ -50,6 +51,7 @@ fun Status.toPostContentUiState(
     mentions = mentions,
     previewCard = card?.toPreviewCard(),
     contentWarning = contentWarningOverride ?: contentWarningText,
+    onlyShowPreviewOfText = onlyShowPreviewOfText,
 )
 
 private fun Status.toTopRowMetaDataUiState(): TopRowMetaDataUiState? =
