@@ -1,7 +1,6 @@
 plugins {
     id("org.mozilla.social.android.library")
     id("org.mozilla.social.android.library.compose")
-    alias(libs.plugins.about.libraries.plugin)
 }
 
 android {
