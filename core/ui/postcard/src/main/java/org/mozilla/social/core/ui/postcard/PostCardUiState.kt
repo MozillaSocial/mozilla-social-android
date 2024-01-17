@@ -3,6 +3,7 @@ package org.mozilla.social.core.ui.postcard
 import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.core.model.Attachment
 import org.mozilla.social.core.model.Mention
+import org.mozilla.social.core.ui.poll.PollUiState
 
 data class PostCardUiState(
     val statusId: String,
@@ -15,10 +16,7 @@ data class PostCardUiState(
  */
 data class MainPostCardUiState(
     val url: String?,
-    val pollUiState: org.mozilla.social.core.ui.poll.PollUiState?,
     val username: String,
-    val statusTextHtml: String,
-    val mediaAttachments: List<Attachment>,
     val profilePictureUrl: String,
     val postTimeSince: StringFactory,
     val accountName: StringFactory,
@@ -29,10 +27,17 @@ data class MainPostCardUiState(
     val userBoosted: Boolean,
     val isFavorited: Boolean,
     val accountId: String,
-    val mentions: List<Mention>,
-    val previewCard: PreviewCard?,
     val isUsersPost: Boolean,
     val isBeingDeleted: Boolean,
+    val postContentUiState: PostContentUiState,
+)
+
+data class PostContentUiState(
+    val pollUiState: PollUiState?,
+    val statusTextHtml: String,
+    val mediaAttachments: List<Attachment>,
+    val mentions: List<Mention>,
+    val previewCard: PreviewCard?,
     val contentWarning: String,
 )
 

@@ -8,15 +8,31 @@ import androidx.paging.map
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
+import org.koin.core.parameter.parametersOf
 import org.mozilla.social.common.utils.edit
+import org.mozilla.social.core.analytics.AnalyticsIdentifiers
 import org.mozilla.social.core.repository.mastodon.NotificationsRepository
 import org.mozilla.social.core.repository.paging.AllNotificationsRemoteMediator
+import org.mozilla.social.core.ui.notifications.NotificationCardDelegate
 import org.mozilla.social.core.ui.notifications.toUiState
+import org.mozilla.social.core.ui.postcard.PostCardDelegate
+import org.mozilla.social.core.usecase.mastodon.account.GetLoggedInUserAccountId
 
 class NotificationsViewModel(
     notificationsRepository: NotificationsRepository,
     allNotificationsRemoteMediator: AllNotificationsRemoteMediator,
-) : ViewModel(), NotificationsInteractions {
+    getLoggedInUserAccountId: GetLoggedInUserAccountId,
+    val notificationCardDelegate: NotificationCardDelegate,
+) : ViewModel(), NotificationsInteractions, KoinComponent {
+
+    val postCardDelegate by inject<PostCardDelegate> {
+        parametersOf(viewModelScope, AnalyticsIdentifiers.FEED_PREFIX_NOTIFICATIONS)
+    }
+
+    private val loggedInUserAccountId = getLoggedInUserAccountId()
+
     private val _uiState = MutableStateFlow(NotificationsUiState())
     val uiState = _uiState.asStateFlow()
 
@@ -25,7 +41,7 @@ class NotificationsViewModel(
         remoteMediator = allNotificationsRemoteMediator,
     ).map { pagingData ->
         pagingData.map {
-            it.toUiState()
+            it.toUiState(loggedInUserAccountId)
         }
     }.cachedIn(viewModelScope)
 

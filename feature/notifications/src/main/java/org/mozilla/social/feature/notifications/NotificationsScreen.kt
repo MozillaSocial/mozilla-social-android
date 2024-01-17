@@ -3,6 +3,7 @@ package org.mozilla.social.feature.notifications
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -19,6 +20,7 @@ import androidx.paging.compose.itemKey
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import org.koin.androidx.compose.koinViewModel
+import org.mozilla.social.core.designsystem.theme.MoSoSpacing
 import org.mozilla.social.core.ui.common.MoSoSurface
 import org.mozilla.social.core.ui.common.MoSoTab
 import org.mozilla.social.core.ui.common.MoSoTabRow
@@ -28,8 +30,11 @@ import org.mozilla.social.core.ui.common.pullrefresh.PullRefreshLazyColumn
 import org.mozilla.social.core.ui.common.pullrefresh.rememberPullRefreshState
 import org.mozilla.social.core.ui.common.text.MediumTextLabel
 import org.mozilla.social.core.ui.common.utils.PreviewTheme
+import org.mozilla.social.core.ui.htmlcontent.HtmlContentInteractions
 import org.mozilla.social.core.ui.notifications.NotificationCard
+import org.mozilla.social.core.ui.notifications.NotificationInteractions
 import org.mozilla.social.core.ui.notifications.NotificationUiState
+import org.mozilla.social.core.ui.poll.PollInteractions
 
 @Composable
 internal fun NotificationsScreen(
@@ -40,6 +45,9 @@ internal fun NotificationsScreen(
         uiState = uiState,
         feed = viewModel.feed,
         notificationsInteractions = viewModel,
+        pollInteractions = viewModel.postCardDelegate,
+        htmlContentInteractions = viewModel.postCardDelegate,
+        notificationInteractions = viewModel.notificationCardDelegate,
     )
 }
 
@@ -48,6 +56,9 @@ private fun NotificationsScreen(
     uiState: NotificationsUiState,
     feed: Flow<PagingData<NotificationUiState>>,
     notificationsInteractions: NotificationsInteractions,
+    pollInteractions: PollInteractions,
+    htmlContentInteractions: HtmlContentInteractions,
+    notificationInteractions: NotificationInteractions,
 ) {
     MoSoSurface(
         modifier = Modifier
@@ -65,7 +76,12 @@ private fun NotificationsScreen(
                 uiState = uiState,
                 notificationsInteractions = notificationsInteractions
             )
-            NotificationsList(list = feed)
+            NotificationsList(
+                list = feed,
+                pollInteractions = pollInteractions,
+                htmlContentInteractions = htmlContentInteractions,
+                notificationInteractions = notificationInteractions,
+            )
         }
     }
 }
@@ -96,6 +112,9 @@ private fun Tabs(
 @Composable
 private fun NotificationsList(
     list: Flow<PagingData<NotificationUiState>>,
+    pollInteractions: PollInteractions,
+    htmlContentInteractions: HtmlContentInteractions,
+    notificationInteractions: NotificationInteractions,
 ) {
     val lazyPagingItems = list.collectAsLazyPagingItems()
 
@@ -119,7 +138,13 @@ private fun NotificationsList(
                 ) { index ->
                     lazyPagingItems[index]?.let { uiState ->
                         Column {
-                            NotificationCard(uiState = uiState)
+                            NotificationCard(
+                                modifier = Modifier.padding(MoSoSpacing.md),
+                                uiState = uiState,
+                                pollInteractions = pollInteractions,
+                                htmlContentInteractions = htmlContentInteractions,
+                                notificationInteractions = notificationInteractions,
+                            )
                             MoSoDivider()
                         }
                     }
@@ -139,7 +164,13 @@ private fun NotificationsScreenPreview() {
             feed = flowOf(),
             notificationsInteractions = object : NotificationsInteractions {
                 override fun onTabClicked(tab: NotificationsTab) = Unit
-            }
+            },
+            pollInteractions = object : PollInteractions {},
+            htmlContentInteractions = object : HtmlContentInteractions {},
+            notificationInteractions = object : NotificationInteractions {
+                override fun onAvatarClicked(accountId: String) = Unit
+                override fun onMentionClicked(statusId: String) = Unit
+            },
         )
     }
 }

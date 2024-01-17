@@ -50,6 +50,7 @@ object AnalyticsIdentifiers {
     const val FEED_PREFIX_THREAD = "thread"
     const val FEED_PREFIX_FAVORITES = "favorites"
     const val FEED_PREFIX_SEARCH = "search"
+    const val FEED_PREFIX_NOTIFICATIONS = "notifications"
 
     const val FEED_HOME_SCREEN_HOME = "feed.screen.home"
     const val FEED_LOCAL_SCREEN_HOME = "feed.screen.local"
