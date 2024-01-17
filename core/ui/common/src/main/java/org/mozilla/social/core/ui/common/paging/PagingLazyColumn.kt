@@ -25,7 +25,7 @@ import org.mozilla.social.core.ui.common.animation.DelayedVisibility
 import org.mozilla.social.core.ui.common.error.GenericError
 
 @Composable
-fun <A : Any> SearchPagingColumn(
+fun <A : Any> PagingLazyColumn(
     lazyPagingItems: LazyPagingItems<A>,
     modifier: Modifier = Modifier,
     noResultText: String,
