@@ -14,4 +14,8 @@ class NotificationCardDelegate(
     override fun onMentionClicked(statusId: String) {
         navigateTo(NavigationDestination.Thread(statusId))
     }
+
+    override fun onRepostClicked(statusId: String) {
+        navigateTo(NavigationDestination.Thread(statusId))
+    }
 }

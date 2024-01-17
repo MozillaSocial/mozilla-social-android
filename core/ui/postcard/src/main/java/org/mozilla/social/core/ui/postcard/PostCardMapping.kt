@@ -38,7 +38,10 @@ private fun Status.toMainPostCardUiState(currentUserAccountId: String): MainPost
         postContentUiState = toPostContentUiState(currentUserAccountId)
     )
 
-fun Status.toPostContentUiState(currentUserAccountId: String): PostContentUiState = PostContentUiState(
+fun Status.toPostContentUiState(
+    currentUserAccountId: String,
+    contentWarningOverride: String? = null,
+): PostContentUiState = PostContentUiState(
     pollUiState = poll?.toPollUiState(
         isUserCreatedPoll = currentUserAccountId == account.accountId,
     ),
@@ -46,7 +49,7 @@ fun Status.toPostContentUiState(currentUserAccountId: String): PostContentUiStat
     mediaAttachments = mediaAttachments,
     mentions = mentions,
     previewCard = card?.toPreviewCard(),
-    contentWarning = contentWarningText,
+    contentWarning = contentWarningOverride ?: contentWarningText,
 )
 
 private fun Status.toTopRowMetaDataUiState(): TopRowMetaDataUiState? =

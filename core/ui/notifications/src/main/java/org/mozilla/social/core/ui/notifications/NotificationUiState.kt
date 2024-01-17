@@ -34,6 +34,8 @@ sealed class NotificationUiState {
         override val avatarUrl: String,
         override val timeStamp: StringFactory,
         override val accountId: String,
+        val postContentUiState: PostContentUiState,
+        val statusId: String,
     ): NotificationUiState()
 
     data class Follow(
