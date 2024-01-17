@@ -9,15 +9,19 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.mikepenz.aboutlibraries.ui.compose.LibrariesContainer
 import com.mikepenz.aboutlibraries.ui.compose.LibraryDefaults
+import org.koin.androidx.compose.koinViewModel
 import org.mozilla.social.core.ui.common.MoSoSurface
 import org.mozilla.social.feature.settings.R
 import org.mozilla.social.feature.settings.ui.SettingsColumn
 
 @Composable
-fun OpenSourceLicensesScreen() {
+fun OpenSourceLicensesScreen(
+    viewModel: OpenSourceLicensesViewModel = koinViewModel()
+) {
     OpenSourceLicensesScreenLibrary()
 
     LaunchedEffect(Unit) {
+        viewModel.onScreenViewed()
     }
 }
 
