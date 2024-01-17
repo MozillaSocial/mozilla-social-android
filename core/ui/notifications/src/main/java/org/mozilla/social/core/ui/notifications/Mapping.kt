@@ -3,6 +3,7 @@ package org.mozilla.social.core.ui.notifications
 import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.common.utils.timeSinceNow
 import org.mozilla.social.core.model.Notification
+import org.mozilla.social.core.ui.poll.toPollUiState
 import org.mozilla.social.core.ui.postcard.toPostContentUiState
 
 fun Notification.toUiState(
@@ -64,6 +65,10 @@ fun Notification.toUiState(
         title = StringFactory.resource(resId = R.string.poll_ended_title, account.displayName),
         avatarUrl = account.avatarUrl,
         accountId = account.accountId,
+        pollUiState = status.poll?.toPollUiState(
+            isUserCreatedPoll = currentUserAccountId == status.account.accountId,
+        ),
+        statusId = status.statusId,
     )
     is Notification.StatusUpdated -> NotificationUiState.StatusUpdated(
         id = id,

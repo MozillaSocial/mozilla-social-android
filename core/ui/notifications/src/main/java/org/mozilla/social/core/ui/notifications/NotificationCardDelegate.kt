@@ -18,4 +18,8 @@ class NotificationCardDelegate(
     override fun onRepostClicked(statusId: String) {
         navigateTo(NavigationDestination.Thread(statusId))
     }
+
+    override fun onPollEndedClicked(statusId: String) {
+        navigateTo(NavigationDestination.Thread(statusId))
+    }
 }

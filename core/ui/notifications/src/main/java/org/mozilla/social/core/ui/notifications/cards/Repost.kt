@@ -33,7 +33,7 @@ private fun RepostNotificationPreview() {
             uiState = NotificationUiState.Repost(
                 id = 1,
                 timeStamp = StringFactory.literal("1 day ago"),
-                title = StringFactory.literal("John mentioned you:"),
+                title = StringFactory.literal("John reposted your post:"),
                 avatarUrl = "",
                 postContentUiState = PostContentUiState(
                     pollUiState = null,

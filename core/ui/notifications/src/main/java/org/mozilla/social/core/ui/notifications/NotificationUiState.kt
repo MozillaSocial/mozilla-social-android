@@ -1,6 +1,7 @@
 package org.mozilla.social.core.ui.notifications
 
 import org.mozilla.social.common.utils.StringFactory
+import org.mozilla.social.core.ui.poll.PollUiState
 import org.mozilla.social.core.ui.postcard.PostContentUiState
 
 sealed class NotificationUiState {
@@ -68,6 +69,8 @@ sealed class NotificationUiState {
         override val avatarUrl: String,
         override val timeStamp: StringFactory,
         override val accountId: String,
+        val pollUiState: PollUiState?,
+        val statusId: String,
     ): NotificationUiState()
 
     data class StatusUpdated(
