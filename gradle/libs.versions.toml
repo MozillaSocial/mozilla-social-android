@@ -1,5 +1,5 @@
 [versions]
-android-gradle-plugin = "8.1.4"
+android-gradle-plugin = "8.2.0"
 android-secrets-plugin = "2.0.1"
 androidx-lifecycle = "2.6.2"
 androidx-media3 = "1.1.1"

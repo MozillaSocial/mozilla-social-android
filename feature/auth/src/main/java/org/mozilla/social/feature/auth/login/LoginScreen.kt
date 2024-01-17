@@ -28,6 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight.Companion.W700
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
@@ -189,7 +190,8 @@ private fun LoginBox(
             modifier
                 .fillMaxWidth()
                 .background(MoSoTheme.colors.layer1)
-                .padding(MoSoSpacing.lg),
+                .padding(MoSoSpacing.lg)
+                .semantics(mergeDescendants = true) {},
     ) {
         MoSoBadge {
             Text(
