@@ -45,6 +45,7 @@ private fun RepostNotificationPreview() {
                 ),
                 accountId = "",
                 statusId = "",
+                accountName = "",
             ),
             htmlContentInteractions = object : HtmlContentInteractions {},
             pollInteractions = object : PollInteractions {},

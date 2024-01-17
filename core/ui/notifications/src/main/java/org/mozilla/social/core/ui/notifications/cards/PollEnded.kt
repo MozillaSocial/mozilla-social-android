@@ -74,6 +74,7 @@ private fun PollEndedNotificationPreview() {
                 ),
                 accountId = "",
                 statusId = "",
+                accountName = "",
             ),
             htmlContentInteractions = object : HtmlContentInteractions {},
             pollInteractions = object : PollInteractions {},

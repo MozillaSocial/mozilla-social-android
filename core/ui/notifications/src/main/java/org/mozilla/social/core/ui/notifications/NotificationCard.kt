@@ -17,6 +17,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.isTraversalGroup
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -116,6 +120,7 @@ private fun NotificationCard(
                 avatarUrl = uiState.avatarUrl,
                 size = 48.dp,
                 accountId = uiState.accountId,
+                accountName = uiState.accountName,
                 notificationTypeIcon = notificationTypeIcon,
                 notificationInteractions = notificationInteractions,
             )
@@ -139,7 +144,8 @@ private fun NotificationMetaData(
 ) {
     val context = LocalContext.current
     Row(
-        modifier = modifier,
+        modifier = modifier
+            .semantics(mergeDescendants = true) { heading() },
     ) {
         MediumTextLabel(
             modifier = Modifier
@@ -162,14 +168,19 @@ private fun Avatar(
     avatarUrl: String,
     size: Dp,
     accountId: String,
+    accountName: String,
     notificationTypeIcon: Painter,
     notificationInteractions: NotificationInteractions,
 ) {
     Box(
         modifier = modifier
             .size(size)
-            .clickable { notificationInteractions.onAvatarClicked(accountId) }
-            .semantics(mergeDescendants = true) {}
+            .clickable(
+                onClickLabel = stringResource(id = R.string.view_account_of_user, accountName)
+            ) { notificationInteractions.onAvatarClicked(accountId) }
+            .semantics(mergeDescendants = true) {
+                contentDescription = accountName
+            }
     ) {
         AsyncImage(
             modifier = Modifier
