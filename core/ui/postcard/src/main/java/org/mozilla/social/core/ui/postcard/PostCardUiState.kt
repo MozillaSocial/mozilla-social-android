@@ -3,6 +3,7 @@ package org.mozilla.social.core.ui.postcard
 import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.core.model.Attachment
 import org.mozilla.social.core.model.Mention
+import org.mozilla.social.core.ui.poll.PollUiState
 
 data class PostCardUiState(
     val statusId: String,
@@ -32,7 +33,7 @@ data class MainPostCardUiState(
 )
 
 data class PostContentUiState(
-    val pollUiState: org.mozilla.social.core.ui.poll.PollUiState?,
+    val pollUiState: PollUiState?,
     val statusTextHtml: String,
     val mediaAttachments: List<Attachment>,
     val mentions: List<Mention>,
