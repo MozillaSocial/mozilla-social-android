@@ -33,6 +33,7 @@ import org.mozilla.social.core.ui.common.utils.PreviewTheme
 import org.mozilla.social.core.ui.htmlcontent.HtmlContentInteractions
 import org.mozilla.social.core.ui.notifications.NotificationCard
 import org.mozilla.social.core.ui.notifications.NotificationInteractions
+import org.mozilla.social.core.ui.notifications.NotificationInteractionsNoOp
 import org.mozilla.social.core.ui.notifications.NotificationUiState
 import org.mozilla.social.core.ui.poll.PollInteractions
 
@@ -167,10 +168,7 @@ private fun NotificationsScreenPreview() {
             },
             pollInteractions = object : PollInteractions {},
             htmlContentInteractions = object : HtmlContentInteractions {},
-            notificationInteractions = object : NotificationInteractions {
-                override fun onAvatarClicked(accountId: String) = Unit
-                override fun onMentionClicked(statusId: String) = Unit
-            },
+            notificationInteractions = NotificationInteractionsNoOp,
         )
     }
 }
