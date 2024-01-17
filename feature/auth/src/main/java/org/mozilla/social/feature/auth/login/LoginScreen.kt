@@ -42,7 +42,9 @@ import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.ui.common.MoSoBadge
 import org.mozilla.social.core.ui.common.MoSoSurface
 import org.mozilla.social.core.ui.common.button.MoSoButton
+import org.mozilla.social.core.ui.common.button.MoSoButtonSecondary
 import org.mozilla.social.core.ui.common.loading.MoSoCircularProgressIndicator
+import org.mozilla.social.core.ui.common.text.MediumTextLabel
 import org.mozilla.social.core.ui.common.utils.getWindowHeightClass
 import org.mozilla.social.core.ui.common.utils.getWindowWidthClass
 import org.mozilla.social.feature.auth.R
@@ -222,24 +224,17 @@ private fun LoginBox(
                     modifier = Modifier.size(20.dp),
                 )
             } else {
-                Text(
-                    text = stringResource(id = R.string.sign_in_button),
-                )
+                MediumTextLabel(text = stringResource(id = R.string.sign_in_button))
             }
         }
-        Spacer(modifier = Modifier.height(24.dp))
-        Text(
-            modifier =
-                Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .clickable(
-                        enabled = !uiState.isLoading,
-                    ) { loginInteractions.onChooseServerClicked() },
-            text = stringResource(id = R.string.choose_server_option),
-            style = MoSoTheme.typography.labelSmallLink,
-            textDecoration = TextDecoration.Underline,
-            color = MoSoTheme.colors.textLink,
-        )
+        Spacer(modifier = Modifier.height(MoSoSpacing.sm))
+        MoSoButtonSecondary(
+            modifier = Modifier.fillMaxWidth(),
+            onClick = { loginInteractions.onChooseServerClicked() },
+            enabled = !uiState.isLoading,
+        ) {
+            MediumTextLabel(text = stringResource(id = R.string.choose_server_option))
+        }
     }
 }
 
