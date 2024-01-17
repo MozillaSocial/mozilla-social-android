@@ -30,6 +30,12 @@ fun Notification.toUiState(
         title = StringFactory.resource(resId = R.string.repost_title, account.displayName),
         avatarUrl = account.avatarUrl,
         accountId = account.accountId,
+        postContentUiState = status.toPostContentUiState(
+            currentUserAccountId = currentUserAccountId,
+            contentWarningOverride = "",
+            onlyShowPreviewOfText = true,
+        ),
+        statusId = status.statusId,
     )
     is Notification.Follow -> NotificationUiState.Follow(
         id = id,

@@ -33,7 +33,7 @@ import org.mozilla.social.core.ui.notifications.cards.FollowRequestNotification
 import org.mozilla.social.core.ui.notifications.cards.MentionNotificationContent
 import org.mozilla.social.core.ui.notifications.cards.NewStatusNotification
 import org.mozilla.social.core.ui.notifications.cards.PollEndedNotification
-import org.mozilla.social.core.ui.notifications.cards.RepostNotification
+import org.mozilla.social.core.ui.notifications.cards.RepostNotificationContent
 import org.mozilla.social.core.ui.notifications.cards.StatusUpdatedNotification
 import org.mozilla.social.core.ui.poll.PollInteractions
 
@@ -51,6 +51,9 @@ fun NotificationCard(
             is NotificationUiState.Follow -> FollowNotification(uiState = uiState)
             is NotificationUiState.FollowRequest -> FollowRequestNotification(uiState = uiState)
             is NotificationUiState.Mention -> NotificationCard(
+                modifier = Modifier.clickable {
+                    notificationInteractions.onMentionClicked(uiState.statusId)
+                },
                 uiState = uiState,
                 notificationInteractions = notificationInteractions,
                 notificationTypeIcon = MoSoIcons.at(),
@@ -64,7 +67,20 @@ fun NotificationCard(
 
             is NotificationUiState.NewStatus -> NewStatusNotification(uiState = uiState)
             is NotificationUiState.PollEnded -> PollEndedNotification(uiState = uiState)
-            is NotificationUiState.Repost -> RepostNotification(uiState = uiState)
+            is NotificationUiState.Repost -> NotificationCard(
+                modifier = Modifier.clickable {
+                    notificationInteractions.onRepostClicked(uiState.statusId)
+                },
+                uiState = uiState,
+                notificationInteractions = notificationInteractions,
+                notificationTypeIcon = MoSoIcons.boost(),
+            ) {
+                RepostNotificationContent(
+                    uiState = uiState,
+                    htmlContentInteractions = htmlContentInteractions,
+                    pollInteractions = pollInteractions
+                )
+            }
             is NotificationUiState.StatusUpdated -> StatusUpdatedNotification(uiState = uiState)
         }
     }
