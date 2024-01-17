@@ -21,6 +21,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.designsystem.utils.NoRipple
 import org.mozilla.social.core.ui.common.text.MediumTextLabel
@@ -29,13 +30,12 @@ import org.mozilla.social.core.ui.htmlcontent.HtmlContentInteractions
 import org.mozilla.social.core.ui.notifications.cards.FavoriteNotification
 import org.mozilla.social.core.ui.notifications.cards.FollowNotification
 import org.mozilla.social.core.ui.notifications.cards.FollowRequestNotification
-import org.mozilla.social.core.ui.notifications.cards.MentionNotification
+import org.mozilla.social.core.ui.notifications.cards.MentionNotificationContent
 import org.mozilla.social.core.ui.notifications.cards.NewStatusNotification
 import org.mozilla.social.core.ui.notifications.cards.PollEndedNotification
 import org.mozilla.social.core.ui.notifications.cards.RepostNotification
 import org.mozilla.social.core.ui.notifications.cards.StatusUpdatedNotification
 import org.mozilla.social.core.ui.poll.PollInteractions
-import org.mozilla.social.core.ui.postcard.PostContent
 
 @Composable
 fun NotificationCard(
@@ -50,12 +50,17 @@ fun NotificationCard(
             is NotificationUiState.Favorite -> FavoriteNotification(uiState = uiState)
             is NotificationUiState.Follow -> FollowNotification(uiState = uiState)
             is NotificationUiState.FollowRequest -> FollowRequestNotification(uiState = uiState)
-            is NotificationUiState.Mention -> MentionNotification(
+            is NotificationUiState.Mention -> NotificationCard(
                 uiState = uiState,
-                htmlContentInteractions = htmlContentInteractions,
-                pollInteractions = pollInteractions,
                 notificationInteractions = notificationInteractions,
-            )
+                notificationTypeIcon = MoSoIcons.at(),
+            ) {
+                MentionNotificationContent(
+                    uiState = uiState,
+                    htmlContentInteractions = htmlContentInteractions,
+                    pollInteractions = pollInteractions
+                )
+            }
 
             is NotificationUiState.NewStatus -> NewStatusNotification(uiState = uiState)
             is NotificationUiState.PollEnded -> PollEndedNotification(uiState = uiState)
@@ -66,7 +71,7 @@ fun NotificationCard(
 }
 
 @Composable
-internal fun NotificationCard(
+private fun NotificationCard(
     uiState: NotificationUiState,
     notificationInteractions: NotificationInteractions,
     notificationTypeIcon: Painter,
@@ -161,5 +166,4 @@ private fun Avatar(
             )
         }
     }
-
 }

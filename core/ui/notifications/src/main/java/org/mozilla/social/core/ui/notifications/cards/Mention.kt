@@ -1,11 +1,8 @@
 package org.mozilla.social.core.ui.notifications.cards
 
-import androidx.compose.foundation.clickable
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import org.mozilla.social.common.utils.StringFactory
-import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.ui.common.utils.PreviewTheme
 import org.mozilla.social.core.ui.htmlcontent.HtmlContentInteractions
 import org.mozilla.social.core.ui.notifications.NotificationCard
@@ -16,25 +13,15 @@ import org.mozilla.social.core.ui.postcard.PostContent
 import org.mozilla.social.core.ui.postcard.PostContentUiState
 
 @Composable
-fun MentionNotification(
+internal fun MentionNotificationContent(
     uiState: NotificationUiState.Mention,
     htmlContentInteractions: HtmlContentInteractions,
     pollInteractions: PollInteractions,
-    notificationInteractions: NotificationInteractions,
 ) {
-    NotificationCard(
-        modifier = Modifier
-            .clickable { notificationInteractions.onMentionClicked(uiState.statusId) },
-        uiState = uiState,
-        notificationInteractions = notificationInteractions,
-        notificationTypeIcon = MoSoIcons.at(),
-        content = {
-            PostContent(
-                uiState = uiState.postContentUiState,
-                htmlContentInteractions = htmlContentInteractions,
-                pollInteractions = pollInteractions,
-            )
-        }
+    PostContent(
+        uiState = uiState.postContentUiState,
+        htmlContentInteractions = htmlContentInteractions,
+        pollInteractions = pollInteractions,
     )
 }
 
@@ -42,7 +29,7 @@ fun MentionNotification(
 @Composable
 private fun MentionNotificationPreview() {
     PreviewTheme {
-        MentionNotification(
+        NotificationCard(
             uiState = NotificationUiState.Mention(
                 id = 1,
                 timeStamp = StringFactory.literal("1 day ago"),
