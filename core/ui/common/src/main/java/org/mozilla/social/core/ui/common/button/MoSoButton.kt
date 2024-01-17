@@ -13,6 +13,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.tooling.preview.Preview
@@ -24,9 +25,9 @@ fun MoSoButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
-    shape: Shape = ButtonDefaults.shape,
+    shape: Shape = MoSoButtonDefaults.shape,
     theme: MoSoButtonTheme = MoSoButtonPrimaryDefaults,
-    contentPadding: PaddingValues = ButtonDefaults.ContentPadding,
+    contentPadding: PaddingValues = MoSoButtonDefaults.ContentPadding,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     content: @Composable RowScope.() -> Unit,
 ) {
@@ -49,11 +50,11 @@ fun MoSoButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
-    shape: Shape = ButtonDefaults.shape,
+    shape: Shape = MoSoButtonDefaults.shape,
     colors: ButtonColors = MoSoButtonPrimaryDefaults.colors(),
-    elevation: ButtonElevation? = ButtonDefaults.buttonElevation(),
+    elevation: ButtonElevation? = MoSoButtonDefaults.buttonElevation(),
     border: BorderStroke? = MoSoButtonPrimaryDefaults.border(),
-    contentPadding: PaddingValues = ButtonDefaults.ContentPadding,
+    contentPadding: PaddingValues = MoSoButtonDefaults.ContentPadding,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     content: @Composable RowScope.() -> Unit,
 ) {
@@ -76,11 +77,11 @@ fun MoSoButtonSecondary(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
-    shape: Shape = ButtonDefaults.shape,
+    shape: Shape = MoSoButtonDefaults.shape,
     colors: ButtonColors = MoSoButtonSecondaryDefaults.colors(),
-    elevation: ButtonElevation? = ButtonDefaults.buttonElevation(),
+    elevation: ButtonElevation? = MoSoButtonDefaults.buttonElevation(),
     border: BorderStroke? = MoSoButtonSecondaryDefaults.border(),
-    contentPadding: PaddingValues = ButtonDefaults.ContentPadding,
+    contentPadding: PaddingValues = MoSoButtonDefaults.ContentPadding,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     content: @Composable RowScope.() -> Unit,
 ) {
@@ -148,10 +149,10 @@ private fun ButtonPreview() {
     }
 }
 
-object MoSoButtonPrimaryDefaults: MoSoButtonTheme {
+object MoSoButtonPrimaryDefaults : MoSoButtonTheme {
     @Composable
     override fun colors(): ButtonColors =
-        ButtonDefaults.buttonColors(
+        MoSoButtonDefaults.buttonColors(
             containerColor = MoSoTheme.colors.layerActionPrimaryEnabled,
             contentColor = MoSoTheme.colors.textActionPrimary,
             disabledContainerColor = MoSoTheme.colors.layerActionDisabled,
@@ -162,10 +163,10 @@ object MoSoButtonPrimaryDefaults: MoSoButtonTheme {
     override fun border(): BorderStroke? = null
 }
 
-object MoSoButtonSecondaryDefaults: MoSoButtonTheme {
+object MoSoButtonSecondaryDefaults : MoSoButtonTheme {
     @Composable
     override fun colors(): ButtonColors =
-        ButtonDefaults.buttonColors(
+        MoSoButtonDefaults.buttonColors(
             containerColor = MoSoTheme.colors.layer1,
             contentColor = MoSoTheme.colors.textActionSecondary,
             disabledContainerColor = MoSoTheme.colors.layer2,
@@ -180,8 +181,43 @@ object MoSoButtonSecondaryDefaults: MoSoButtonTheme {
 }
 
 interface MoSoButtonTheme {
-    @Composable fun colors(): ButtonColors
-    @Composable fun border(): BorderStroke?
+    @Composable
+    fun colors(): ButtonColors
+    @Composable
+    fun border(): BorderStroke?
 
-    @Composable fun elevation(): ButtonElevation? = ButtonDefaults.buttonElevation()
+    @Composable
+    fun elevation(): ButtonElevation? = MoSoButtonDefaults.buttonElevation()
+}
+
+object MoSoButtonDefaults {
+
+    private val ButtonHorizontalPadding = 24.dp
+    private val ButtonVerticalPadding = 14.dp
+
+    val ContentPadding =
+        PaddingValues(
+            start = ButtonHorizontalPadding,
+            top = ButtonVerticalPadding,
+            end = ButtonHorizontalPadding,
+            bottom = ButtonVerticalPadding
+        )
+
+    val shape: Shape @Composable get() = ButtonDefaults.shape
+
+    @Composable
+    fun buttonElevation() = ButtonDefaults.buttonElevation()
+
+    @Composable
+    fun buttonColors(
+        containerColor: Color,
+        contentColor: Color,
+        disabledContainerColor: Color,
+        disabledContentColor: Color,
+    ) = ButtonDefaults.buttonColors(
+        containerColor = containerColor,
+        contentColor = contentColor,
+        disabledContainerColor = disabledContainerColor,
+        disabledContentColor = disabledContentColor
+    )
 }
