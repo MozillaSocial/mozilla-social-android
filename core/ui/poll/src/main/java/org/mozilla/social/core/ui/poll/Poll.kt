@@ -154,17 +154,20 @@ private fun PollOptionText(
     pollOptionUiState: PollOptionUiState,
     onOptionSelected: (index: Int) -> Unit,
 ) {
+    // split into a separate modifier so clicks are not consumed if the user can't vote.
+    val clickModifier = if (pollUiState.canVote) {
+        Modifier.clickable {
+            onOptionSelected(optionIndex)
+        }
+    } else Modifier
+
     NoRipple {
         Row(
             modifier =
                 Modifier
                     .fillMaxWidth()
                     .height(height)
-                    .clickable(
-                        enabled = pollUiState.canVote,
-                    ) {
-                        onOptionSelected(optionIndex)
-                    },
+                    .then(clickModifier),
         ) {
             Row(
                 modifier =
