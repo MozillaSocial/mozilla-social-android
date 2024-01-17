@@ -78,8 +78,6 @@ dependencies {
 
     implementation(kotlin("reflect"))
 
-    implementation("com.ober:vmr-link:3.0.17")
-
     implementation(libs.google.material)
 
     implementation(libs.androidx.datastore)
