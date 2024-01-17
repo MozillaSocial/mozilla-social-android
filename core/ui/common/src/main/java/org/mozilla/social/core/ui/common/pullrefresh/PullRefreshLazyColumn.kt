@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -41,6 +43,8 @@ fun <A : Any> PullRefreshLazyColumn(
             )
 
         },
+    listState: LazyListState = rememberLazyListState(),
+    emptyListState: LazyListState = rememberLazyListState(),
     content: LazyListScope.() -> Unit,
 ) {
     Box(
@@ -48,7 +52,14 @@ fun <A : Any> PullRefreshLazyColumn(
             .pullRefresh(pullRefreshState)
             .fillMaxSize(),
     ) {
-        LazyColumn(modifier = modifier) {
+        LazyColumn(
+            modifier = modifier,
+            state = if (lazyPagingItems.itemCount == 0) {
+                emptyListState
+            } else {
+                listState
+            },
+        ) {
             when (lazyPagingItems.loadState.refresh) {
                 is LoadState.Error -> {} // handle the error outside the lazy column
                 else -> {

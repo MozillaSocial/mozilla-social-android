@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -27,13 +29,21 @@ fun <A : Any> SearchPagingColumn(
     lazyPagingItems: LazyPagingItems<A>,
     modifier: Modifier = Modifier,
     noResultText: String,
+    listState: LazyListState = rememberLazyListState(),
+    emptyListState: LazyListState = rememberLazyListState(),
     content: LazyListScope.() -> Unit,
 ) {
     Box(
         modifier = modifier
             .fillMaxSize(),
     ) {
-        LazyColumn {
+        LazyColumn(
+            state = if (lazyPagingItems.itemCount == 0) {
+                emptyListState
+            } else {
+                listState
+            },
+        ) {
             when (lazyPagingItems.loadState.refresh) {
                 is LoadState.Error -> {} // handle the error outside the lazy column
                 is LoadState.Loading -> {
