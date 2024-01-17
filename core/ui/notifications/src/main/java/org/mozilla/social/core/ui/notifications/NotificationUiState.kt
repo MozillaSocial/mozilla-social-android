@@ -69,7 +69,7 @@ sealed class NotificationUiState {
         override val avatarUrl: String,
         override val timeStamp: StringFactory,
         override val accountId: String,
-        val pollUiState: PollUiState?,
+        val postContentUiState: PostContentUiState,
         val statusId: String,
     ): NotificationUiState()
 

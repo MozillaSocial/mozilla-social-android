@@ -65,8 +65,8 @@ fun Notification.toUiState(
         title = StringFactory.resource(resId = R.string.poll_ended_title, account.displayName),
         avatarUrl = account.avatarUrl,
         accountId = account.accountId,
-        pollUiState = status.poll?.toPollUiState(
-            isUserCreatedPoll = currentUserAccountId == status.account.accountId,
+        postContentUiState = status.toPostContentUiState(
+            currentUserAccountId = currentUserAccountId,
         ),
         statusId = status.statusId,
     )

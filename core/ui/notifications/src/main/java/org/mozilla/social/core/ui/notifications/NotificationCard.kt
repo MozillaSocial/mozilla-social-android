@@ -61,7 +61,7 @@ fun NotificationCard(
                 MentionNotificationContent(
                     uiState = uiState,
                     htmlContentInteractions = htmlContentInteractions,
-                    pollInteractions = pollInteractions
+                    pollInteractions = pollInteractions,
                 )
             }
 
@@ -76,7 +76,8 @@ fun NotificationCard(
             ) {
                 PollEndedNotificationContent(
                     uiState = uiState,
-                    pollInteractions = pollInteractions
+                    htmlContentInteractions = htmlContentInteractions,
+                    pollInteractions = pollInteractions,
                 )
             }
 
@@ -91,7 +92,7 @@ fun NotificationCard(
                 RepostNotificationContent(
                     uiState = uiState,
                     htmlContentInteractions = htmlContentInteractions,
-                    pollInteractions = pollInteractions
+                    pollInteractions = pollInteractions,
                 )
             }
             is NotificationUiState.StatusUpdated -> StatusUpdatedNotification(uiState = uiState)
