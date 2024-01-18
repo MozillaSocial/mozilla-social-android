@@ -30,4 +30,8 @@ class NotificationCardDelegate(
     override fun onNewStatusClicked(statusId: String) {
         navigateTo(NavigationDestination.Thread(statusId))
     }
+
+    override fun onFavoritedCardClicked(statusId: String) {
+        navigateTo(NavigationDestination.Thread(statusId))
+    }
 }

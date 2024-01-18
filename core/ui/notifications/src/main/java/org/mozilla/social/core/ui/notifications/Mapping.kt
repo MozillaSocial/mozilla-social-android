@@ -68,6 +68,12 @@ fun Notification.toUiState(
         avatarUrl = account.avatarUrl,
         accountId = account.accountId,
         accountName = account.displayName,
+        postContentUiState = status.toPostContentUiState(
+            currentUserAccountId = currentUserAccountId,
+            contentWarningOverride = "",
+            onlyShowPreviewOfText = true,
+        ),
+        statusId = status.statusId,
     )
     is Notification.PollEnded -> NotificationUiState.PollEnded(
         id = id,
