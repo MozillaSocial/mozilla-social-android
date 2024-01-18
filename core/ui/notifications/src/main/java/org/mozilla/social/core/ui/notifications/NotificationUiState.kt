@@ -70,6 +70,8 @@ sealed class NotificationUiState {
         override val timeStamp: StringFactory,
         override val accountId: String,
         override val accountName: String,
+        val postContentUiState: PostContentUiState,
+        val statusId: String,
     ): NotificationUiState()
 
     data class PollEnded(

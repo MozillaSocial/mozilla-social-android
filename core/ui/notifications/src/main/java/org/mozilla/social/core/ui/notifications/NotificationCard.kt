@@ -29,7 +29,7 @@ import org.mozilla.social.core.designsystem.utils.NoRipple
 import org.mozilla.social.core.ui.common.text.MediumTextLabel
 import org.mozilla.social.core.ui.common.text.SmallTextLabel
 import org.mozilla.social.core.ui.htmlcontent.HtmlContentInteractions
-import org.mozilla.social.core.ui.notifications.cards.FavoriteNotification
+import org.mozilla.social.core.ui.notifications.cards.FavoriteNotificationContent
 import org.mozilla.social.core.ui.notifications.cards.FollowNotification
 import org.mozilla.social.core.ui.notifications.cards.FollowRequestNotification
 import org.mozilla.social.core.ui.notifications.cards.MentionNotificationContent
@@ -49,7 +49,20 @@ fun NotificationCard(
 ) {
     Box(modifier = modifier) {
         when (uiState) {
-            is NotificationUiState.Favorite -> FavoriteNotification(uiState = uiState)
+            is NotificationUiState.Favorite -> NotificationCard(
+                modifier = Modifier.clickable {
+                    notificationInteractions.onFavoritedCardClicked(uiState.statusId)
+                },
+                uiState = uiState,
+                notificationInteractions = notificationInteractions,
+                notificationTypeIcon = MoSoIcons.heart(),
+            ) {
+                FavoriteNotificationContent(
+                    uiState = uiState,
+                    htmlContentInteractions = htmlContentInteractions,
+                    pollInteractions = pollInteractions,
+                )
+            }
             is NotificationUiState.Follow -> FollowNotification(uiState = uiState)
             is NotificationUiState.FollowRequest -> FollowRequestNotification(uiState = uiState)
             is NotificationUiState.Mention -> NotificationCard(
