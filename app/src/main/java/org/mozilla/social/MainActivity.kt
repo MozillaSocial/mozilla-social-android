@@ -11,6 +11,7 @@ import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.KoinAndroidContext
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.annotation.KoinExperimentalAPI
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.ui.common.MoSoSurface
 import org.mozilla.social.core.workmanager.DatabasePurgeWorker
@@ -20,6 +21,7 @@ import timber.log.Timber
 class MainActivity : ComponentActivity() {
     private val viewModel: MainViewModel by viewModel()
 
+    @OptIn(KoinExperimentalAPI::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         lifecycleScope.launch {
