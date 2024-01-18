@@ -35,7 +35,7 @@ class BoostStatus internal constructor(
                     statusRepository.updateBoosted(statusId, false)
                 }
                 showSnackbar(
-                    text = StringFactory.resource(R.string.error_boosting),
+                    text = StringFactory.resource(R.string.error_reposting),
                     isError = true,
                 )
                 throw BoostStatusFailedException(e)
