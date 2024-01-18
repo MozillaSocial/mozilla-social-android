@@ -49,10 +49,10 @@ data class NotificationWrapper(
     val boostedPoll: DatabasePoll?,
 
     @Relation(
-        parentColumn = "accountId",
+        parentColumn = "relationshipAccountId",
         entityColumn = "accountId",
     )
-    val relationship: DatabaseRelationship,
+    val relationship: DatabaseRelationship?,
 )
 
 fun NotificationWrapper.extractStatusWrapper(): StatusWrapper? =

@@ -60,7 +60,7 @@ import kotlinx.datetime.Instant
         ForeignKey(
             entity = DatabaseRelationship::class,
             parentColumns = arrayOf("accountId"),
-            childColumns = arrayOf("accountId"),
+            childColumns = arrayOf("relationshipAccountId"),
             onDelete = ForeignKey.CASCADE,
             onUpdate = ForeignKey.CASCADE,
         ),
@@ -79,6 +79,7 @@ data class DatabaseNotification(
     val boostedStatusId: String?,
     val boostedStatusAccountId: String?,
     val boostedPollId: String?,
+    val relationshipAccountId: String?,
 ) {
     enum class Type {
         MENTION,

@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 23,
-    "identityHash": "0a6caa0d4b3216b7c479aff5c7ddc845",
+    "identityHash": "f227fb14cb16dabc1654b7d671d1aebe",
     "entities": [
       {
         "tableName": "statuses",
@@ -1781,7 +1781,7 @@
       },
       {
         "tableName": "notifications",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `type` TEXT NOT NULL, `createdAt` INTEGER NOT NULL, `accountId` TEXT NOT NULL, `statusId` TEXT, `statusAccountId` TEXT, `statusPollId` TEXT, `boostedStatusId` TEXT, `boostedStatusAccountId` TEXT, `boostedPollId` TEXT, PRIMARY KEY(`id`), FOREIGN KEY(`accountId`) REFERENCES `accounts`(`accountId`) ON UPDATE CASCADE ON DELETE CASCADE , FOREIGN KEY(`statusId`) REFERENCES `statuses`(`statusId`) ON UPDATE CASCADE ON DELETE CASCADE , FOREIGN KEY(`boostedStatusId`) REFERENCES `statuses`(`statusId`) ON UPDATE CASCADE ON DELETE CASCADE , FOREIGN KEY(`statusAccountId`) REFERENCES `accounts`(`accountId`) ON UPDATE CASCADE ON DELETE CASCADE , FOREIGN KEY(`boostedStatusAccountId`) REFERENCES `accounts`(`accountId`) ON UPDATE CASCADE ON DELETE CASCADE , FOREIGN KEY(`statusPollId`) REFERENCES `polls`(`pollId`) ON UPDATE CASCADE ON DELETE CASCADE , FOREIGN KEY(`boostedPollId`) REFERENCES `polls`(`pollId`) ON UPDATE CASCADE ON DELETE CASCADE , FOREIGN KEY(`accountId`) REFERENCES `relationships`(`accountId`) ON UPDATE CASCADE ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `type` TEXT NOT NULL, `createdAt` INTEGER NOT NULL, `accountId` TEXT NOT NULL, `statusId` TEXT, `statusAccountId` TEXT, `statusPollId` TEXT, `boostedStatusId` TEXT, `boostedStatusAccountId` TEXT, `boostedPollId` TEXT, `relationshipAccountId` TEXT, PRIMARY KEY(`id`), FOREIGN KEY(`accountId`) REFERENCES `accounts`(`accountId`) ON UPDATE CASCADE ON DELETE CASCADE , FOREIGN KEY(`statusId`) REFERENCES `statuses`(`statusId`) ON UPDATE CASCADE ON DELETE CASCADE , FOREIGN KEY(`boostedStatusId`) REFERENCES `statuses`(`statusId`) ON UPDATE CASCADE ON DELETE CASCADE , FOREIGN KEY(`statusAccountId`) REFERENCES `accounts`(`accountId`) ON UPDATE CASCADE ON DELETE CASCADE , FOREIGN KEY(`boostedStatusAccountId`) REFERENCES `accounts`(`accountId`) ON UPDATE CASCADE ON DELETE CASCADE , FOREIGN KEY(`statusPollId`) REFERENCES `polls`(`pollId`) ON UPDATE CASCADE ON DELETE CASCADE , FOREIGN KEY(`boostedPollId`) REFERENCES `polls`(`pollId`) ON UPDATE CASCADE ON DELETE CASCADE , FOREIGN KEY(`relationshipAccountId`) REFERENCES `relationships`(`accountId`) ON UPDATE CASCADE ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -1840,6 +1840,12 @@
           {
             "fieldPath": "boostedPollId",
             "columnName": "boostedPollId",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "relationshipAccountId",
+            "columnName": "relationshipAccountId",
             "affinity": "TEXT",
             "notNull": false
           }
@@ -1934,7 +1940,7 @@
             "onDelete": "CASCADE",
             "onUpdate": "CASCADE",
             "columns": [
-              "accountId"
+              "relationshipAccountId"
             ],
             "referencedColumns": [
               "accountId"
@@ -1978,7 +1984,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '0a6caa0d4b3216b7c479aff5c7ddc845')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'f227fb14cb16dabc1654b7d671d1aebe')"
     ]
   }
 }

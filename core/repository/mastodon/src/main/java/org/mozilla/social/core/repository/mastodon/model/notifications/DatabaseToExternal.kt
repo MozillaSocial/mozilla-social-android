@@ -38,13 +38,13 @@ fun NotificationWrapper.toExternal(): Notification =
             id = notification.id,
             createdAt = notification.createdAt,
             account = account.toExternalModel(),
-            relationship = relationship.toExternal(),
+            relationship = relationship?.toExternal() ?: throw MissingDataException(),
         )
         DatabaseNotification.Type.FOLLOW_REQUEST -> Notification.FollowRequest(
             id = notification.id,
             createdAt = notification.createdAt,
             account = account.toExternalModel(),
-            relationship = relationship.toExternal(),
+            relationship = relationship?.toExternal()  ?: throw MissingDataException(),
         )
         DatabaseNotification.Type.FAVORITE -> extractStatusWrapper()?.let {
             Notification.Favorite(

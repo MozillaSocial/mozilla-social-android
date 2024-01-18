@@ -3,6 +3,7 @@ package org.mozilla.social.core.repository.mastodon.model.notifications
 import org.mozilla.social.core.database.model.entities.DatabaseNotification
 import org.mozilla.social.core.model.Notification
 
+@Suppress("LongMethod")
 fun Notification.toDatabase(): DatabaseNotification = when (this) {
     is Notification.Mention -> DatabaseNotification(
         id = id,
@@ -15,6 +16,7 @@ fun Notification.toDatabase(): DatabaseNotification = when (this) {
         boostedStatusId = status.boostedStatus?.statusId,
         boostedStatusAccountId = status.boostedStatus?.account?.accountId,
         boostedPollId = status.boostedStatus?.poll?.pollId,
+        relationshipAccountId = null,
     )
     is Notification.NewStatus -> DatabaseNotification(
         id = id,
@@ -27,6 +29,7 @@ fun Notification.toDatabase(): DatabaseNotification = when (this) {
         boostedStatusId = status.boostedStatus?.statusId,
         boostedStatusAccountId = status.boostedStatus?.account?.accountId,
         boostedPollId = status.boostedStatus?.poll?.pollId,
+        relationshipAccountId = null,
     )
     is Notification.Repost -> DatabaseNotification(
         id = id,
@@ -39,6 +42,7 @@ fun Notification.toDatabase(): DatabaseNotification = when (this) {
         boostedStatusId = status.boostedStatus?.statusId,
         boostedStatusAccountId = status.boostedStatus?.account?.accountId,
         boostedPollId = status.boostedStatus?.poll?.pollId,
+        relationshipAccountId = null,
     )
     is Notification.Favorite -> DatabaseNotification(
         id = id,
@@ -51,6 +55,7 @@ fun Notification.toDatabase(): DatabaseNotification = when (this) {
         boostedStatusId = status.boostedStatus?.statusId,
         boostedStatusAccountId = status.boostedStatus?.account?.accountId,
         boostedPollId = status.boostedStatus?.poll?.pollId,
+        relationshipAccountId = null,
     )
     is Notification.PollEnded -> DatabaseNotification(
         id = id,
@@ -63,6 +68,7 @@ fun Notification.toDatabase(): DatabaseNotification = when (this) {
         boostedStatusId = status.boostedStatus?.statusId,
         boostedStatusAccountId = status.boostedStatus?.account?.accountId,
         boostedPollId = status.boostedStatus?.poll?.pollId,
+        relationshipAccountId = null,
     )
     is Notification.StatusUpdated -> DatabaseNotification(
         id = id,
@@ -75,6 +81,7 @@ fun Notification.toDatabase(): DatabaseNotification = when (this) {
         boostedStatusId = status.boostedStatus?.statusId,
         boostedStatusAccountId = status.boostedStatus?.account?.accountId,
         boostedPollId = status.boostedStatus?.poll?.pollId,
+        relationshipAccountId = null,
     )
     is Notification.FollowRequest -> DatabaseNotification(
         id = id,
@@ -87,6 +94,7 @@ fun Notification.toDatabase(): DatabaseNotification = when (this) {
         boostedStatusId = null,
         boostedStatusAccountId = null,
         boostedPollId = null,
+        relationshipAccountId = relationship.accountId,
     )
     is Notification.Follow -> DatabaseNotification(
         id = id,
@@ -99,5 +107,6 @@ fun Notification.toDatabase(): DatabaseNotification = when (this) {
         boostedStatusId = null,
         boostedStatusAccountId = null,
         boostedPollId = null,
+        relationshipAccountId = relationship.accountId,
     )
 }
