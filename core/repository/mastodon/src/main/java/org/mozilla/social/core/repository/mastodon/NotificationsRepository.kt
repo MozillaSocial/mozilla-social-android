@@ -15,14 +15,17 @@ import org.mozilla.social.core.database.model.entities.notificationCollections.M
 import org.mozilla.social.core.database.model.entities.notificationCollections.MainNotificationWrapper
 import org.mozilla.social.core.model.Notification
 import org.mozilla.social.core.model.paging.NotificationsPagingWrapper
+import org.mozilla.social.core.network.mastodon.AccountApi
 import org.mozilla.social.core.network.mastodon.NotificationsApi
+import org.mozilla.social.core.network.mastodon.model.NetworkNotification
 import org.mozilla.social.core.repository.mastodon.model.notifications.toDatabase
 import org.mozilla.social.core.repository.mastodon.model.notifications.toExternal
 import retrofit2.HttpException
 
 class NotificationsRepository(
-    val api: NotificationsApi,
-    val dao: NotificationsDao,
+    private val api: NotificationsApi,
+    private val dao: NotificationsDao,
+    private val accountApi: AccountApi,
 ) {
 
     suspend fun getNotifications(
@@ -49,8 +52,12 @@ class NotificationsRepository(
             throw HttpException(response)
         }
 
+        val relationships = response.body()
+            ?.filter { it is NetworkNotification.Follow || it is NetworkNotification.FollowRequest }
+            ?.map { it.account.accountId }?.let { accountApi.getRelationships(it.toTypedArray()) } ?: emptyList()
+
         return NotificationsPagingWrapper(
-            notifications = response.body()?.map { it.toExternal() } ?: emptyList(),
+            notifications = response.body()?.map { it.toExternal(relationships) } ?: emptyList(),
             pagingLinks = response.headers().get("link")?.parseMastodonLinkHeader(),
         )
     }

@@ -57,6 +57,13 @@ import kotlinx.datetime.Instant
             onDelete = ForeignKey.CASCADE,
             onUpdate = ForeignKey.CASCADE,
         ),
+        ForeignKey(
+            entity = DatabaseRelationship::class,
+            parentColumns = arrayOf("accountId"),
+            childColumns = arrayOf("accountId"),
+            onDelete = ForeignKey.CASCADE,
+            onUpdate = ForeignKey.CASCADE,
+        ),
     ]
 )
 data class DatabaseNotification(

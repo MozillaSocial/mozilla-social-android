@@ -44,6 +44,7 @@ sealed class Notification {
         override val id: Int,
         override val createdAt: Instant,
         override val account: Account,
+        val relationship: Relationship,
     ): Notification()
 
     /**
@@ -53,6 +54,7 @@ sealed class Notification {
         override val id: Int,
         override val createdAt: Instant,
         override val account: Account,
+        val relationship: Relationship,
     ): Notification()
 
     /**

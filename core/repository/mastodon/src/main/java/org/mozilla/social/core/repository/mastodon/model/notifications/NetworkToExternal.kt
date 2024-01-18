@@ -2,9 +2,13 @@ package org.mozilla.social.core.repository.mastodon.model.notifications
 
 import org.mozilla.social.core.model.Notification
 import org.mozilla.social.core.network.mastodon.model.NetworkNotification
+import org.mozilla.social.core.network.mastodon.model.NetworkRelationship
+import org.mozilla.social.core.repository.mastodon.model.account.toExternal
 import org.mozilla.social.core.repository.mastodon.model.status.toExternalModel
 
-fun NetworkNotification.toExternal(): Notification =
+fun NetworkNotification.toExternal(
+    relationships: List<NetworkRelationship>
+): Notification =
     when (this) {
         is NetworkNotification.Mention -> Notification.Mention(
             id = id.toInt(),
@@ -28,11 +32,15 @@ fun NetworkNotification.toExternal(): Notification =
             id = id.toInt(),
             createdAt = createdAt,
             account = account.toExternalModel(),
+            relationship = relationships.find { it.accountId == account.accountId }?.toExternal()
+                ?: throw MissingDataException()
         )
         is NetworkNotification.FollowRequest -> Notification.FollowRequest(
             id = id.toInt(),
             createdAt = createdAt,
             account = account.toExternalModel(),
+            relationship = relationships.find { it.accountId == account.accountId }?.toExternal()
+                ?: throw MissingDataException()
         )
         is NetworkNotification.Favorite -> Notification.Favorite(
             id = id.toInt(),

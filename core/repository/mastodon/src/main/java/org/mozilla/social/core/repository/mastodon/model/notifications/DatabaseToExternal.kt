@@ -4,6 +4,7 @@ import org.mozilla.social.core.database.model.entities.DatabaseNotification
 import org.mozilla.social.core.database.model.wrappers.NotificationWrapper
 import org.mozilla.social.core.database.model.wrappers.extractStatusWrapper
 import org.mozilla.social.core.model.Notification
+import org.mozilla.social.core.repository.mastodon.model.account.toExternal
 import org.mozilla.social.core.repository.mastodon.model.status.toExternalModel
 
 @Suppress("ComplexMethod")
@@ -37,11 +38,13 @@ fun NotificationWrapper.toExternal(): Notification =
             id = notification.id,
             createdAt = notification.createdAt,
             account = account.toExternalModel(),
+            relationship = relationship.toExternal(),
         )
         DatabaseNotification.Type.FOLLOW_REQUEST -> Notification.FollowRequest(
             id = notification.id,
             createdAt = notification.createdAt,
             account = account.toExternalModel(),
+            relationship = relationship.toExternal(),
         )
         DatabaseNotification.Type.FAVORITE -> extractStatusWrapper()?.let {
             Notification.Favorite(
