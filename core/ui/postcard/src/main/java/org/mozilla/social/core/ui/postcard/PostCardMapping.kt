@@ -57,7 +57,7 @@ fun Status.toPostContentUiState(
 private fun Status.toTopRowMetaDataUiState(): TopRowMetaDataUiState? =
     if (boostedStatus != null) {
         TopRowMetaDataUiState(
-            text = StringFactory.resource(R.string.user_has_boosted_post, account.username),
+            text = StringFactory.resource(R.string.user_has_reposted_post, account.username),
             iconType = TopRowIconType.BOOSTED,
         )
     } else if (inReplyToAccountName != null) {
