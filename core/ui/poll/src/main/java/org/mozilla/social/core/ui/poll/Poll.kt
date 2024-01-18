@@ -68,7 +68,6 @@ fun Poll(
             Spacer(modifier = Modifier.padding(top = 4.dp))
         }
         Text(
-            modifier = Modifier.semantics(mergeDescendants = true) {  },
             text = pollUiState.pollInfoText.build(LocalContext.current),
             style = MoSoTheme.typography.bodyMedium,
         )
