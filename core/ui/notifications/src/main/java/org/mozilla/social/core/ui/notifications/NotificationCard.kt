@@ -19,8 +19,6 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
-import androidx.compose.ui.semantics.heading
-import androidx.compose.ui.semantics.isTraversalGroup
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -35,7 +33,6 @@ import org.mozilla.social.core.ui.notifications.cards.FavoriteNotification
 import org.mozilla.social.core.ui.notifications.cards.FollowNotification
 import org.mozilla.social.core.ui.notifications.cards.FollowRequestNotification
 import org.mozilla.social.core.ui.notifications.cards.MentionNotificationContent
-import org.mozilla.social.core.ui.notifications.cards.NewStatusNotification
 import org.mozilla.social.core.ui.notifications.cards.NewStatusNotificationContent
 import org.mozilla.social.core.ui.notifications.cards.PollEndedNotificationContent
 import org.mozilla.social.core.ui.notifications.cards.RepostNotificationContent
