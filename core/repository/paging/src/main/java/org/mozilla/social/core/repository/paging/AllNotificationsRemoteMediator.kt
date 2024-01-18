@@ -9,6 +9,8 @@ import org.mozilla.social.common.Rel
 import org.mozilla.social.common.getMaxIdValue
 import org.mozilla.social.core.database.model.entities.notificationCollections.MainNotification
 import org.mozilla.social.core.database.model.entities.notificationCollections.MainNotificationWrapper
+import org.mozilla.social.core.model.Notification
+import org.mozilla.social.core.repository.mastodon.AccountRepository
 import org.mozilla.social.core.repository.mastodon.DatabaseDelegate
 import org.mozilla.social.core.repository.mastodon.NotificationsRepository
 import org.mozilla.social.core.usecase.mastodon.notification.SaveNotificationsToDatabase
@@ -19,6 +21,7 @@ class AllNotificationsRemoteMediator(
     private val notificationsRepository: NotificationsRepository,
     private val databaseDelegate: DatabaseDelegate,
     private val saveNotificationsToDatabase: SaveNotificationsToDatabase,
+    private val accountRepository: AccountRepository,
 ) : RemoteMediator<Int, MainNotificationWrapper>() {
     private var nextKey: String? = null
 
@@ -54,12 +57,17 @@ class AllNotificationsRemoteMediator(
                     }
                 }
 
+            val relationships = response.notifications
+                .filter { it is Notification.Follow || it is Notification.FollowRequest }
+                .map { it.account }
+                .getRelationships(accountRepository)
+
             databaseDelegate.withTransaction {
                 if (loadType == LoadType.REFRESH) {
                     notificationsRepository.deleteMainNotificationsList()
                 }
 
-                saveNotificationsToDatabase(response.notifications)
+                saveNotificationsToDatabase(response.notifications, relationships)
                 notificationsRepository.insertAllMainNotifications(
                     response.notifications.map {
                         MainNotification(
