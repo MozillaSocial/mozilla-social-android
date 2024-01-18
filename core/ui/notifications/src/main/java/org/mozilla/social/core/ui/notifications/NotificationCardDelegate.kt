@@ -22,4 +22,8 @@ class NotificationCardDelegate(
     override fun onPollEndedClicked(statusId: String) {
         navigateTo(NavigationDestination.Thread(statusId))
     }
+
+    override fun onStatusUpdatedCardClicked(statusId: String) {
+        navigateTo(NavigationDestination.Thread(statusId))
+    }
 }
