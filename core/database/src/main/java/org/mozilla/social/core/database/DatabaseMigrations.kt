@@ -70,9 +70,4 @@ object DatabaseMigrations {
         columnName = "lastStatusAt",
     )
     class Schema18to19 : AutoMigrationSpec
-
-    @DeleteTable(
-        tableName = "notifications"
-    )
-    class Schema22to23 : AutoMigrationSpec
 }
