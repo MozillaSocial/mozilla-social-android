@@ -24,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -103,7 +104,8 @@ private fun PollOption(
                     width = 1.dp,
                     color = MoSoTheme.colors.borderPrimary,
                     shape = RoundedCornerShape(90.dp),
-                ),
+                )
+                .semantics(mergeDescendants = true) {  },
     ) {
         PollOptionFill(
             height = height,
@@ -154,17 +156,20 @@ private fun PollOptionText(
     pollOptionUiState: PollOptionUiState,
     onOptionSelected: (index: Int) -> Unit,
 ) {
+    // split into a separate modifier so clicks are not consumed if the user can't vote.
+    val clickModifier = if (pollUiState.canVote) {
+        Modifier.clickable {
+            onOptionSelected(optionIndex)
+        }
+    } else Modifier
+
     NoRipple {
         Row(
             modifier =
                 Modifier
                     .fillMaxWidth()
                     .height(height)
-                    .clickable(
-                        enabled = pollUiState.canVote,
-                    ) {
-                        onOptionSelected(optionIndex)
-                    },
+                    .then(clickModifier),
         ) {
             Row(
                 modifier =

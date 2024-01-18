@@ -8,4 +8,6 @@
     <string name="follow_request_title">%s wants to follow you</string>
     <string name="poll_ended_title">A poll by %s has ended</string>
     <string name="status_updated_title">%s has updated their post:</string>
+
+    <string name="view_account_of_user">View account of %s</string>
 </resources>

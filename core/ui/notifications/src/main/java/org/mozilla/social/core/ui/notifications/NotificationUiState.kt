@@ -1,6 +1,7 @@
 package org.mozilla.social.core.ui.notifications
 
 import org.mozilla.social.common.utils.StringFactory
+import org.mozilla.social.core.ui.poll.PollUiState
 import org.mozilla.social.core.ui.postcard.PostContentUiState
 
 sealed class NotificationUiState {
@@ -9,6 +10,7 @@ sealed class NotificationUiState {
     abstract val title: StringFactory
     abstract val avatarUrl: String
     abstract val accountId: String
+    abstract val accountName: String
 
     data class Mention(
         override val id: Int,
@@ -16,6 +18,7 @@ sealed class NotificationUiState {
         override val title: StringFactory,
         override val avatarUrl: String,
         override val accountId: String,
+        override val accountName: String,
         val postContentUiState: PostContentUiState,
         val statusId: String,
     ): NotificationUiState()
@@ -26,6 +29,7 @@ sealed class NotificationUiState {
         override val avatarUrl: String,
         override val timeStamp: StringFactory,
         override val accountId: String,
+        override val accountName: String,
     ): NotificationUiState()
 
     data class Repost(
@@ -34,6 +38,7 @@ sealed class NotificationUiState {
         override val avatarUrl: String,
         override val timeStamp: StringFactory,
         override val accountId: String,
+        override val accountName: String,
         val postContentUiState: PostContentUiState,
         val statusId: String,
     ): NotificationUiState()
@@ -44,6 +49,7 @@ sealed class NotificationUiState {
         override val avatarUrl: String,
         override val timeStamp: StringFactory,
         override val accountId: String,
+        override val accountName: String,
     ): NotificationUiState()
 
     data class FollowRequest(
@@ -52,6 +58,7 @@ sealed class NotificationUiState {
         override val avatarUrl: String,
         override val timeStamp: StringFactory,
         override val accountId: String,
+        override val accountName: String,
     ): NotificationUiState()
 
     data class Favorite(
@@ -60,6 +67,7 @@ sealed class NotificationUiState {
         override val avatarUrl: String,
         override val timeStamp: StringFactory,
         override val accountId: String,
+        override val accountName: String,
     ): NotificationUiState()
 
     data class PollEnded(
@@ -68,6 +76,9 @@ sealed class NotificationUiState {
         override val avatarUrl: String,
         override val timeStamp: StringFactory,
         override val accountId: String,
+        override val accountName: String,
+        val postContentUiState: PostContentUiState,
+        val statusId: String,
     ): NotificationUiState()
 
     data class StatusUpdated(
@@ -76,5 +87,6 @@ sealed class NotificationUiState {
         override val avatarUrl: String,
         override val timeStamp: StringFactory,
         override val accountId: String,
+        override val accountName: String,
     ): NotificationUiState()
 }

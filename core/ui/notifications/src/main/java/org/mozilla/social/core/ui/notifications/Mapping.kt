@@ -3,6 +3,7 @@ package org.mozilla.social.core.ui.notifications
 import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.common.utils.timeSinceNow
 import org.mozilla.social.core.model.Notification
+import org.mozilla.social.core.ui.poll.toPollUiState
 import org.mozilla.social.core.ui.postcard.toPostContentUiState
 
 fun Notification.toUiState(
@@ -16,6 +17,7 @@ fun Notification.toUiState(
         postContentUiState = status.toPostContentUiState(currentUserAccountId),
         accountId = account.accountId,
         statusId = status.statusId,
+        accountName = account.displayName,
     )
     is Notification.NewStatus -> NotificationUiState.NewStatus(
         id = id,
@@ -23,6 +25,7 @@ fun Notification.toUiState(
         title = StringFactory.resource(resId = R.string.new_status_title, account.displayName),
         avatarUrl = account.avatarUrl,
         accountId = account.accountId,
+        accountName = account.displayName,
     )
     is Notification.Repost -> NotificationUiState.Repost(
         id = id,
@@ -30,6 +33,7 @@ fun Notification.toUiState(
         title = StringFactory.resource(resId = R.string.repost_title, account.displayName),
         avatarUrl = account.avatarUrl,
         accountId = account.accountId,
+        accountName = account.displayName,
         postContentUiState = status.toPostContentUiState(
             currentUserAccountId = currentUserAccountId,
             contentWarningOverride = "",
@@ -43,6 +47,7 @@ fun Notification.toUiState(
         title = StringFactory.resource(resId = R.string.follow_title, account.displayName),
         avatarUrl = account.avatarUrl,
         accountId = account.accountId,
+        accountName = account.displayName,
     )
     is Notification.FollowRequest -> NotificationUiState.FollowRequest(
         id = id,
@@ -50,6 +55,7 @@ fun Notification.toUiState(
         title = StringFactory.resource(resId = R.string.follow_request_title, account.displayName),
         avatarUrl = account.avatarUrl,
         accountId = account.accountId,
+        accountName = account.displayName,
     )
     is Notification.Favorite -> NotificationUiState.Favorite(
         id = id,
@@ -57,6 +63,7 @@ fun Notification.toUiState(
         title = StringFactory.resource(resId = R.string.favorited_title, account.displayName),
         avatarUrl = account.avatarUrl,
         accountId = account.accountId,
+        accountName = account.displayName,
     )
     is Notification.PollEnded -> NotificationUiState.PollEnded(
         id = id,
@@ -64,6 +71,11 @@ fun Notification.toUiState(
         title = StringFactory.resource(resId = R.string.poll_ended_title, account.displayName),
         avatarUrl = account.avatarUrl,
         accountId = account.accountId,
+        accountName = account.displayName,
+        postContentUiState = status.toPostContentUiState(
+            currentUserAccountId = currentUserAccountId,
+        ),
+        statusId = status.statusId,
     )
     is Notification.StatusUpdated -> NotificationUiState.StatusUpdated(
         id = id,
@@ -71,5 +83,6 @@ fun Notification.toUiState(
         title = StringFactory.resource(resId = R.string.status_updated_title, account.displayName),
         avatarUrl = account.avatarUrl,
         accountId = account.accountId,
+        accountName = account.displayName,
     )
 }
