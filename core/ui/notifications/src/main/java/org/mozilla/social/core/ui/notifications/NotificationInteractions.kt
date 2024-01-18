@@ -6,6 +6,7 @@ interface NotificationInteractions {
     fun onRepostClicked(statusId: String)
     fun onPollEndedClicked(statusId: String)
     fun onStatusUpdatedCardClicked(statusId: String)
+    fun onNewStatusClicked(statusId: String)
 }
 
 object NotificationInteractionsNoOp : NotificationInteractions {
@@ -14,4 +15,5 @@ object NotificationInteractionsNoOp : NotificationInteractions {
     override fun onRepostClicked(statusId: String) = Unit
     override fun onPollEndedClicked(statusId: String) = Unit
     override fun onStatusUpdatedCardClicked(statusId: String) = Unit
+    override fun onNewStatusClicked(statusId: String) = Unit
 }
