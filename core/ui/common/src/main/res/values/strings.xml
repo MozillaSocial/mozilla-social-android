@@ -15,19 +15,6 @@
     <string name="report_user">Report %s</string>
     <string name="delete_post">Delete</string>
 
-    <string name="error_voting">Error voting</string>
-    <string name="error_boosting">Error boosting</string>
-    <string name="error_undoing_boost">Error undoing boost</string>
-    <string name="error_adding_favorite">Error adding favorite</string>
-    <string name="error_removing_favorite">Error removing favorite</string>
-    <string name="error_muting_account">Error muting account</string>
-    <string name="error_unmuting_account">Error unmuting account</string>
-    <string name="error_blocking_account">Error blocking account</string>
-    <string name="error_unblocking_account">Error unblocking account</string>
-    <string name="error_following_account">Error following account</string>
-    <string name="error_unfollowing_account">Error unfollowing account</string>
-    <string name="error_deleting_post">Error deleting post</string>
-
     <string name="feed_recommendations_why_am_i_seeing_this">Why am I seeing this?</string>
     <string name="feed_recommendations_reason_you_are_seeing_this">You\'re seeing this because it\'s the same thing we show to everyone.</string>
 
