@@ -2,8 +2,7 @@ plugins {
     id("org.mozilla.social.android.application")
     id("org.mozilla.social.android.application.compose")
     id("org.mozilla.social.android.application.secrets")
-
-    id("io.sentry.android.gradle") version "4.2.0"
+    alias(libs.plugins.sentry)
 }
 
 android {
