@@ -36,7 +36,7 @@ import org.mozilla.social.core.ui.notifications.cards.MentionNotificationContent
 import org.mozilla.social.core.ui.notifications.cards.NewStatusNotificationContent
 import org.mozilla.social.core.ui.notifications.cards.PollEndedNotificationContent
 import org.mozilla.social.core.ui.notifications.cards.RepostNotificationContent
-import org.mozilla.social.core.ui.notifications.cards.StatusUpdatedNotification
+import org.mozilla.social.core.ui.notifications.cards.StatusUpdatedNotificationContent
 import org.mozilla.social.core.ui.poll.PollInteractions
 
 @Composable
@@ -110,7 +110,20 @@ fun NotificationCard(
                     pollInteractions = pollInteractions,
                 )
             }
-            is NotificationUiState.StatusUpdated -> StatusUpdatedNotification(uiState = uiState)
+            is NotificationUiState.StatusUpdated -> NotificationCard(
+                modifier = Modifier.clickable {
+                    notificationInteractions.onStatusUpdatedCardClicked(uiState.statusId)
+                },
+                uiState = uiState,
+                notificationInteractions = notificationInteractions,
+                notificationTypeIcon = MoSoIcons.bell(),
+            ) {
+                StatusUpdatedNotificationContent(
+                    uiState = uiState,
+                    htmlContentInteractions = htmlContentInteractions,
+                    pollInteractions = pollInteractions,
+                )
+            }
         }
     }
 }

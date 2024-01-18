@@ -23,6 +23,10 @@ class NotificationCardDelegate(
         navigateTo(NavigationDestination.Thread(statusId))
     }
 
+    override fun onStatusUpdatedCardClicked(statusId: String) {
+        navigateTo(NavigationDestination.Thread(statusId))
+    }
+
     override fun onNewStatusClicked(statusId: String) {
         navigateTo(NavigationDestination.Thread(statusId))
     }

@@ -88,5 +88,9 @@ fun Notification.toUiState(
         avatarUrl = account.avatarUrl,
         accountId = account.accountId,
         accountName = account.displayName,
+        postContentUiState = status.toPostContentUiState(
+            currentUserAccountId = currentUserAccountId,
+        ),
+        statusId = status.statusId,
     )
 }
