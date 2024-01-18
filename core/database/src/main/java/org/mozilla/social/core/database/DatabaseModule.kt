@@ -11,9 +11,7 @@ val databaseModule =
                 androidContext(),
                 SocialDatabase::class.java,
                 "database-social",
-            )
-                .addMigrations(DatabaseMigrations.Schema22to23())
-                .build()
+            ).build()
         }
 
         single { get<SocialDatabase>().accountsDao() }

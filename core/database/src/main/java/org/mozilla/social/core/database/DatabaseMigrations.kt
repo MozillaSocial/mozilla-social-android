@@ -73,8 +73,8 @@ object DatabaseMigrations {
     )
     class Schema18to19 : AutoMigrationSpec
 
-    class Schema22to23 : Migration(22, 23) {
-        override fun migrate(db: SupportSQLiteDatabase) {
+    class Schema22to23 : AutoMigrationSpec {
+        override fun onPostMigrate(db: SupportSQLiteDatabase) {
             db.execSQL(
                 "DELETE FROM notifications"
             )
