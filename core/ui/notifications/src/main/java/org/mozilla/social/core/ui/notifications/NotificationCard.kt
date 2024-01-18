@@ -145,7 +145,7 @@ private fun NotificationMetaData(
     val context = LocalContext.current
     Row(
         modifier = modifier
-            .semantics(mergeDescendants = true) { heading() },
+            .semantics(mergeDescendants = true) { },
     ) {
         MediumTextLabel(
             modifier = Modifier
