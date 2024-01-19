@@ -55,7 +55,10 @@ class NotificationsRepository(
 
         val relationships = response.body()
             ?.filter { it is NetworkNotification.Follow || it is NetworkNotification.FollowRequest }
-            ?.map { it.account.accountId }?.let { accountApi.getRelationships(it.toTypedArray()) } ?: emptyList()
+            ?.map { it.account.accountId }
+            ?.distinct()
+            ?.let { accountApi.getRelationships(it.toTypedArray()) }
+            ?: emptyList()
 
         return NotificationsPagingWrapper(
             notifications = response.body()?.map { it.toExternal(relationships) } ?: emptyList(),
