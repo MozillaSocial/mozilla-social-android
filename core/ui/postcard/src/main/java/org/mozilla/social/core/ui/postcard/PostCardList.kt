@@ -32,8 +32,6 @@ import org.mozilla.social.core.ui.common.pullrefresh.rememberPullRefreshState
 /**
  * Shows a list of post cards and various loading and error states.
  *
- * @param errorToastMessage a flow of toast messages to show when an error happens
- * @param refreshSignalFlow a flow that causes the list to refresh when it's emitted to
  * @param pullToRefreshEnabled if true, the user will be able to pull to refresh, and
  * the pull to refresh loading indicator will be used when doing an initial load or a refresh.
  * @param isFullScreenLoading if false, loading and error states will appear below the header
@@ -44,7 +42,6 @@ import org.mozilla.social.core.ui.common.pullrefresh.rememberPullRefreshState
 @Composable
 fun PostCardList(
     feed: Flow<PagingData<PostCardUiState>>,
-    refreshSignalFlow: Flow<Any>? = null,
     postCardInteractions: PostCardInteractions,
     pullToRefreshEnabled: Boolean = false,
     isFullScreenLoading: Boolean = false,
@@ -52,12 +49,6 @@ fun PostCardList(
     headerContent: @Composable () -> Unit = {},
 ) {
     val lazyingPagingItems: LazyPagingItems<PostCardUiState> = feed.collectAsLazyPagingItems()
-
-    LaunchedEffect(Unit) {
-        refreshSignalFlow?.collect {
-            lazyingPagingItems.refresh()
-        }
-    }
 
     val pullRefreshState =
         rememberPullRefreshState(

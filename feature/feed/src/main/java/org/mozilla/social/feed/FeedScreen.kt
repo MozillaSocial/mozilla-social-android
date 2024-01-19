@@ -150,7 +150,6 @@ private fun FeedScreen(
                 },
                 pullToRefreshEnabled = true,
                 isFullScreenLoading = true,
-                refreshSignalFlow = timelineTypeFlow,
                 scrollState =
                     when (selectedTimelineType) {
                         TimelineType.FOR_YOU -> forYouScrollState
