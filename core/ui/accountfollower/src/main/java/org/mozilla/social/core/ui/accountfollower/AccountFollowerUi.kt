@@ -24,10 +24,12 @@ fun AccountFollower(
             modifier = modifier,
             uiState = uiState.accountQuickViewUiState,
             buttonSlot = {
-                FollowingButton(
-                    onButtonClicked = onButtonClicked,
-                    isFollowing = uiState.isFollowing
-                )
+                if (uiState.followButtonVisible) {
+                    FollowingButton(
+                        onButtonClicked = onButtonClicked,
+                        isFollowing = uiState.isFollowing
+                    )
+                }
             },
             extraInfoSlot = {
                 if (uiState.bioHtml.isNotBlank()) {
@@ -56,7 +58,8 @@ private fun AccountFollowerPreview() {
                     avatarUrl = "url",
                 ),
                 isFollowing = true,
-                bioHtml = "Engineer at mozilla"
+                bioHtml = "Engineer at mozilla",
+                followButtonVisible = true,
             ),
             onButtonClicked = {},
         )
