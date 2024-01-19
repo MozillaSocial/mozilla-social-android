@@ -65,11 +65,7 @@ class NewPostViewModel(
         )
     val statusInteractions: StatusInteractions = statusDelegate
     val contentWarningInteractions: ContentWarningInteractions = statusDelegate
-    val statusText = statusDelegate.statusText
-    val accountList = statusDelegate.accountList
-    val hashtagList = statusDelegate.hashtagList
-    val inReplyToAccountName = statusDelegate.inReplyToAccountName
-    val contentWarningText = statusDelegate.contentWarningText
+    val statusUiState = statusDelegate.uiState
 
     private val pollDelegate: PollDelegate = PollDelegate(analytics)
     val pollInteractions: PollInteractions = pollDelegate
@@ -91,22 +87,21 @@ class NewPostViewModel(
             images,
             videos,
             poll,
-            contentWarningText,
-            statusText,
-        ) { images, videos, poll, contentWarningText, statusText ->
+            statusUiState,
+        ) { images, videos, poll, statusUiState ->
             BottomBarState(
                 imageButtonEnabled = videos.isEmpty() && images.size < MAX_IMAGES && poll == null,
                 videoButtonEnabled = images.isEmpty() && poll == null,
                 pollButtonEnabled = images.isEmpty() && videos.isEmpty() && poll == null,
-                contentWarningText = contentWarningText,
-                characterCountText = "${MAX_POST_LENGTH - statusText.text.length - (contentWarningText?.length ?: 0)}",
+                contentWarningText = statusUiState.contentWarningText,
+                characterCountText = "${MAX_POST_LENGTH - statusUiState.statusText.text.length - (statusUiState.contentWarningText?.length ?: 0)}",
                 maxImages = MAX_IMAGES - images.size,
             )
         }.stateIn(viewModelScope, SharingStarted.Eagerly, BottomBarState())
 
     val sendButtonEnabled: StateFlow<Boolean> =
-        combine(statusText, mediaStates, poll) { statusText, imageStates, poll ->
-            (statusText.text.isNotBlank() || imageStates.isNotEmpty()) &&
+        combine(statusUiState, mediaStates, poll) { statusUiState, imageStates, poll ->
+            (statusUiState.statusText.text.isNotBlank() || imageStates.isNotEmpty()) &&
                 // all images are loaded
                 imageStates.find { it.loadState != LoadState.LOADED } == null &&
                 // poll options have text if they exist
@@ -145,7 +140,7 @@ class NewPostViewModel(
             _isSendingPost.update { true }
             try {
                 postStatus(
-                    statusText = statusText.value.text,
+                    statusText = statusUiState.value.statusText.text,
                     imageStates = mediaStates.value.toList(),
                     visibility = visibility.value,
                     pollCreate =
@@ -157,7 +152,7 @@ class NewPostViewModel(
                                 hideTotals = poll.hideTotals,
                             )
                         },
-                    contentWarningText = contentWarningText.value,
+                    contentWarningText = statusUiState.value.contentWarningText,
                     inReplyToId = replyStatusId,
                 )
 

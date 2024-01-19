@@ -29,20 +29,9 @@ class StatusDelegate(
     private val inReplyToId: String?,
     private val analytics: Analytics,
 ) : StatusInteractions, ContentWarningInteractions {
-    private val _statusText = MutableStateFlow(TextFieldValue(""))
-    val statusText = _statusText.asStateFlow()
 
-    private val _accountList = MutableStateFlow<List<Account>?>(null)
-    val accountList = _accountList.asStateFlow()
-
-    private val _hashtagList = MutableStateFlow<List<String>?>(null)
-    val hashtagList = _hashtagList.asStateFlow()
-
-    private val _contentWarningText = MutableStateFlow<String?>(null)
-    val contentWarningText = _contentWarningText.asStateFlow()
-
-    private val _inReplyToAccountName = MutableStateFlow<String?>(null)
-    val inReplyToAccountName = _inReplyToAccountName.asStateFlow()
+    private val _uiState = MutableStateFlow(StatusUiState())
+    val uiState = _uiState.asStateFlow()
 
     private var searchJob: Job? = null
 
@@ -50,25 +39,26 @@ class StatusDelegate(
         coroutineScope.launch {
             inReplyToId?.let {
                 statusRepository.getStatusLocal(inReplyToId)?.account?.let { account ->
-                    _statusText.update {
-                        TextFieldValue(
+                    _uiState.edit { copy(
+                        statusText = TextFieldValue(
                             text = "@${account.acct} ",
                             selection = TextRange(account.acct.length + 2),
-                        )
-                    }
-                    _inReplyToAccountName.edit { account.username }
+                        ),
+                        inReplyToAccountName = account.username
+                    ) }
                 }
             }
         }
     }
 
     override fun onStatusTextUpdated(textFieldValue: TextFieldValue) {
-        if (textFieldValue.text.length + (contentWarningText.value?.length
-                ?: 0) > NewPostViewModel.MAX_POST_LENGTH
+        if (textFieldValue.text.length +
+            (uiState.value.contentWarningText?.length ?: 0)
+            > NewPostViewModel.MAX_POST_LENGTH
         ) return
-        _statusText.update {
-            textFieldValue
-        }
+        _uiState.edit { copy(
+            statusText = textFieldValue
+        ) }
 
         searchForAccountsAndHashtags(textFieldValue)
     }
@@ -78,12 +68,16 @@ class StatusDelegate(
 
         val accountText = textFieldValue.accountText()
         if (accountText.isNullOrBlank()) {
-            _accountList.update { null }
+            _uiState.edit { copy(
+                accountList = null
+            ) }
         }
 
         val hashtagText = textFieldValue.hashtagText()
         if (hashtagText.isNullOrBlank()) {
-            _hashtagList.update { null }
+            _uiState.edit { copy(
+                hashtagList = null
+            ) }
         }
 
         searchJob =
@@ -93,14 +87,15 @@ class StatusDelegate(
 
                 if (!accountText.isNullOrBlank()) {
                     try {
-                        _accountList.update {
-                            searchRepository.searchForAccounts(accountText).map {
-                                Account(
-                                    accountId = it.acct,
-                                    profilePicUrl = it.avatarStaticUrl,
-                                )
-                            }
+                        val list = searchRepository.searchForAccounts(accountText).map {
+                            Account(
+                                accountId = it.acct,
+                                profilePicUrl = it.avatarStaticUrl,
+                            )
                         }
+                        _uiState.edit { copy(
+                            accountList = list
+                        ) }
                     } catch (e: Exception) {
                         Timber.e(e)
                     }
@@ -108,9 +103,10 @@ class StatusDelegate(
 
                 if (!hashtagText.isNullOrBlank()) {
                     try {
-                        _hashtagList.update {
-                            searchRepository.searchForHashtags(hashtagText).map { it.name }
-                        }
+                        val list = searchRepository.searchForHashtags(hashtagText).map { it.name }
+                        _uiState.edit { copy(
+                            hashtagList = list
+                        ) }
                     } catch (e: Exception) {
                         Timber.e(e)
                     }
@@ -119,13 +115,17 @@ class StatusDelegate(
     }
 
     override fun onAccountClicked(accountName: String) {
-        _statusText.update { it.replaceAccount(accountName) }
-        _accountList.update { null }
+        _uiState.edit { copy(
+            statusText = uiState.value.statusText.replaceAccount(accountName),
+            accountList = null,
+        ) }
     }
 
     override fun onHashtagClicked(hashtag: String) {
-        _statusText.update { it.replaceHashtag(hashtag) }
-        _hashtagList.update { null }
+        _uiState.edit { copy(
+            statusText = uiState.value.statusText.replaceHashtag(hashtag),
+            hashtagList = null,
+        ) }
     }
 
     override fun onContentWarningClicked() {
@@ -133,16 +133,22 @@ class StatusDelegate(
             engagementType = EngagementType.POST,
             uiIdentifier = AnalyticsIdentifiers.NEW_POST_CONTENT_WARNING
         )
-        if (contentWarningText.value == null) {
-            _contentWarningText.update { "" }
+        if (uiState.value.contentWarningText == null) {
+            _uiState.edit { copy(
+                contentWarningText = ""
+            ) }
         } else {
-            _contentWarningText.update { null }
+            _uiState.edit { copy(
+                contentWarningText = null
+            ) }
         }
     }
 
     override fun onContentWarningTextChanged(text: String) {
-        if (text.length + statusText.value.text.length > NewPostViewModel.MAX_POST_LENGTH) return
-        _contentWarningText.update { text }
+        if (text.length + uiState.value.statusText.text.length > NewPostViewModel.MAX_POST_LENGTH) return
+        _uiState.edit { copy(
+            contentWarningText = text
+        ) }
     }
 
     companion object {

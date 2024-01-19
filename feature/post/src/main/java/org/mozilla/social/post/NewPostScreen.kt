@@ -59,7 +59,6 @@ import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 import org.mozilla.social.common.LoadState
 import org.mozilla.social.common.utils.buildAnnotatedStringForAccountsAndHashtags
-import org.mozilla.social.core.analytics.Analytics
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.designsystem.theme.MoSoSpacing
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
@@ -88,31 +87,28 @@ import org.mozilla.social.post.poll.PollDurationDropDown
 import org.mozilla.social.post.poll.PollInteractions
 import org.mozilla.social.post.poll.PollStyle
 import org.mozilla.social.post.poll.PollStyleDropDown
-import org.mozilla.social.post.status.Account
 import org.mozilla.social.post.status.AccountSearchBar
 import org.mozilla.social.post.status.ContentWarningInteractions
 import org.mozilla.social.post.status.HashtagSearchBar
 import org.mozilla.social.post.status.StatusInteractions
+import org.mozilla.social.post.status.StatusUiState
 
 @Composable
 internal fun NewPostScreen(
     replyStatusId: String?,
     viewModel: NewPostViewModel = koinViewModel(parameters = { parametersOf(replyStatusId) }),
 ) {
-    val statusText by viewModel.statusText.collectAsStateWithLifecycle()
+    val statusUiState by viewModel.statusUiState.collectAsStateWithLifecycle()
     val sendButtonEnabled by viewModel.sendButtonEnabled.collectAsStateWithLifecycle()
     val mediaStates by viewModel.mediaStates.collectAsStateWithLifecycle()
     val isSendingPost by viewModel.isSendingPost.collectAsStateWithLifecycle()
     val visibility by viewModel.visibility.collectAsStateWithLifecycle()
     val poll by viewModel.poll.collectAsStateWithLifecycle()
-    val contextWarningText by viewModel.contentWarningText.collectAsStateWithLifecycle()
-    val accounts by viewModel.accountList.collectAsStateWithLifecycle()
-    val hashTags by viewModel.hashtagList.collectAsStateWithLifecycle()
-    val inReplyToAccountName by viewModel.inReplyToAccountName.collectAsStateWithLifecycle()
     val userHeaderState by viewModel.userHeaderState.collectAsStateWithLifecycle(initialValue = null)
     val bottomBarState by viewModel.bottomBarState.collectAsStateWithLifecycle()
+
     NewPostScreen(
-        statusText = statusText,
+        statusUiState = statusUiState,
         statusInteractions = viewModel.statusInteractions,
         onPostClicked = viewModel::onPostClicked,
         sendButtonEnabled = sendButtonEnabled,
@@ -123,11 +119,7 @@ internal fun NewPostScreen(
         onVisibilitySelected = viewModel::onVisibilitySelected,
         poll = poll,
         pollInteractions = viewModel.pollInteractions,
-        contentWarningText = contextWarningText,
         contentWarningInteractions = viewModel.contentWarningInteractions,
-        accounts = accounts,
-        hashTags = hashTags,
-        inReplyToAccountName = inReplyToAccountName,
         userHeaderState = userHeaderState,
         bottomBarState = bottomBarState,
         onUploadImageClicked = viewModel::onUploadImageClicked,
@@ -143,8 +135,8 @@ data class UserHeaderState(val avatarUrl: String, val displayName: String)
 
 @Composable
 private fun NewPostScreen(
+    statusUiState: StatusUiState,
     bottomBarState: BottomBarState,
-    statusText: TextFieldValue,
     statusInteractions: StatusInteractions,
     onPostClicked: () -> Unit,
     sendButtonEnabled: Boolean,
@@ -155,26 +147,22 @@ private fun NewPostScreen(
     onVisibilitySelected: (StatusVisibility) -> Unit,
     poll: Poll?,
     pollInteractions: PollInteractions,
-    contentWarningText: String?,
     contentWarningInteractions: ContentWarningInteractions,
-    accounts: List<Account>?,
-    hashTags: List<String>?,
-    inReplyToAccountName: String?,
     userHeaderState: UserHeaderState?,
     onUploadImageClicked: () -> Unit,
     onUploadMediaClicked: () -> Unit
 ) {
     Box(
         modifier =
-            Modifier
-                .systemBarsPadding()
-                .imePadding()
-                .background(MoSoTheme.colors.layer1),
+        Modifier
+            .systemBarsPadding()
+            .imePadding()
+            .background(MoSoTheme.colors.layer1),
     ) {
         if (getWindowHeightClass() == WindowHeightSizeClass.Compact) {
             Row {
                 CompactNewPostScreenContent(
-                    statusText = statusText,
+                    statusUiState = statusUiState,
                     statusInteractions = statusInteractions,
                     onPostClicked = onPostClicked,
                     sendButtonEnabled = sendButtonEnabled,
@@ -182,15 +170,13 @@ private fun NewPostScreen(
                     mediaInteractions = mediaInteractions,
                     poll = poll,
                     pollInteractions = pollInteractions,
-                    contentWarningText = contentWarningText,
                     contentWarningInteractions = contentWarningInteractions,
-                    inReplyToAccountName = inReplyToAccountName,
                 )
             }
         } else {
             NewPostScreenContent(
+                statusUiState = statusUiState,
                 bottomBarState = bottomBarState,
-                statusText = statusText,
                 statusInteractions = statusInteractions,
                 onPostClicked = onPostClicked,
                 sendButtonEnabled = sendButtonEnabled,
@@ -200,11 +186,7 @@ private fun NewPostScreen(
                 onVisibilitySelected = onVisibilitySelected,
                 poll = poll,
                 pollInteractions = pollInteractions,
-                contentWarningText = contentWarningText,
                 contentWarningInteractions = contentWarningInteractions,
-                accounts = accounts,
-                hashTags = hashTags,
-                inReplyToAccountName = inReplyToAccountName,
                 userHeaderState = userHeaderState,
                 onUploadImageClicked = onUploadImageClicked,
                 onUploadMediaClicked = onUploadMediaClicked
@@ -222,7 +204,7 @@ private fun NewPostScreen(
 
 @Composable
 private fun CompactNewPostScreenContent(
-    statusText: TextFieldValue,
+    statusUiState: StatusUiState,
     statusInteractions: StatusInteractions,
     onPostClicked: () -> Unit,
     sendButtonEnabled: Boolean,
@@ -230,9 +212,7 @@ private fun CompactNewPostScreenContent(
     mediaInteractions: MediaInteractions,
     poll: Poll?,
     pollInteractions: PollInteractions,
-    contentWarningText: String?,
     contentWarningInteractions: ContentWarningInteractions,
-    inReplyToAccountName: String?,
 ) {
     Row {
         Box(
@@ -241,15 +221,13 @@ private fun CompactNewPostScreenContent(
                     .weight(1f),
         ) {
             MainBox(
-                statusText = statusText,
+                statusUiState = statusUiState,
                 statusInteractions = statusInteractions,
                 imageStates = imageStates,
                 mediaInteractions = mediaInteractions,
                 poll = poll,
                 pollInteractions = pollInteractions,
-                contentWarningText = contentWarningText,
                 contentWarningInteractions = contentWarningInteractions,
-                inReplyToAccountName = inReplyToAccountName,
             )
         }
 
@@ -263,8 +241,8 @@ private fun CompactNewPostScreenContent(
 
 @Composable
 private fun NewPostScreenContent(
+    statusUiState: StatusUiState,
     bottomBarState: BottomBarState,
-    statusText: TextFieldValue,
     statusInteractions: StatusInteractions,
     onPostClicked: () -> Unit,
     sendButtonEnabled: Boolean,
@@ -274,11 +252,7 @@ private fun NewPostScreenContent(
     onVisibilitySelected: (StatusVisibility) -> Unit,
     poll: Poll?,
     pollInteractions: PollInteractions,
-    contentWarningText: String?,
     contentWarningInteractions: ContentWarningInteractions,
-    accounts: List<Account>?,
-    hashTags: List<String>?,
-    inReplyToAccountName: String?,
     userHeaderState: UserHeaderState?,
     onUploadImageClicked: () -> Unit,
     onUploadMediaClicked: () -> Unit,
@@ -301,22 +275,20 @@ private fun NewPostScreenContent(
                     .weight(1f),
         ) {
             MainBox(
-                statusText = statusText,
+                statusUiState = statusUiState,
                 statusInteractions = statusInteractions,
                 imageStates = imageStates,
                 mediaInteractions = mediaInteractions,
                 poll = poll,
                 pollInteractions = pollInteractions,
-                contentWarningText = contentWarningText,
                 contentWarningInteractions = contentWarningInteractions,
-                inReplyToAccountName = inReplyToAccountName,
             )
         }
-        accounts?.let {
-            AccountSearchBar(accounts = accounts, statusInteractions = statusInteractions)
+        statusUiState.accountList?.let {
+            AccountSearchBar(accounts = statusUiState.accountList, statusInteractions = statusInteractions)
         }
-        hashTags?.let {
-            HashtagSearchBar(hashTags = hashTags, statusInteractions = statusInteractions)
+        statusUiState.hashtagList?.let {
+            HashtagSearchBar(hashTags = statusUiState.hashtagList, statusInteractions = statusInteractions)
         }
         BottomBar(
             bottomBarState = bottomBarState,
@@ -395,15 +367,13 @@ private fun PostButton(
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 private fun MainBox(
-    statusText: TextFieldValue,
+    statusUiState: StatusUiState,
     statusInteractions: StatusInteractions,
     imageStates: List<ImageState>,
     mediaInteractions: MediaInteractions,
     poll: Poll?,
     pollInteractions: PollInteractions,
-    contentWarningText: String?,
     contentWarningInteractions: ContentWarningInteractions,
-    inReplyToAccountName: String?,
 ) {
     val localIndication = LocalIndication.current
     // disable ripple on click for the background
@@ -427,11 +397,11 @@ private fun MainBox(
             ) {
                 LazyColumn {
                     item {
-                        InReplyToText(inReplyToAccountName = inReplyToAccountName)
+                        InReplyToText(inReplyToAccountName = statusUiState.inReplyToAccountName)
                     }
-                    contentWarningText?.let {
+                    statusUiState.contentWarningText?.let {
                         item {
-                            ContentWarningEntry(contentWarningText, contentWarningInteractions)
+                            ContentWarningEntry(statusUiState.contentWarningText, contentWarningInteractions)
                         }
                     }
 
@@ -442,7 +412,7 @@ private fun MainBox(
                                 Modifier
                                     .fillMaxWidth()
                                     .focusRequester(textFieldFocusRequester),
-                            value = statusText,
+                            value = statusUiState.statusText,
                             onValueChange = { statusInteractions.onStatusTextUpdated(it) },
                             label = {
                                 Text(
@@ -715,7 +685,13 @@ private fun NewPostScreenPreview() {
         false,
     ) {
         NewPostScreen(
-            statusText = TextFieldValue(),
+            statusUiState = StatusUiState(
+                statusText = TextFieldValue(),
+                contentWarningText = null,
+                accountList = null,
+                hashtagList = null,
+                inReplyToAccountName = null,
+            ),
             statusInteractions = object : StatusInteractions {},
             onPostClicked = {},
             sendButtonEnabled = true,
@@ -726,11 +702,7 @@ private fun NewPostScreenPreview() {
             onVisibilitySelected = {},
             poll = null,
             pollInteractions = object : PollInteractions {},
-            contentWarningText = null,
             contentWarningInteractions = object : ContentWarningInteractions {},
-            accounts = null,
-            hashTags = null,
-            inReplyToAccountName = null,
             userHeaderState = UserHeaderState("", "Barack Obama"),
             bottomBarState = BottomBarState(),
             onUploadImageClicked = {},
@@ -746,7 +718,13 @@ private fun NewPostScreenWithPollPreview() {
         false,
     ) {
         NewPostScreen(
-            statusText = TextFieldValue(),
+            statusUiState = StatusUiState(
+                statusText = TextFieldValue(),
+                contentWarningText = null,
+                accountList = null,
+                hashtagList = null,
+                inReplyToAccountName = null,
+            ),
             statusInteractions = object : StatusInteractions {},
             onPostClicked = {},
             sendButtonEnabled = true,
@@ -763,11 +741,7 @@ private fun NewPostScreenWithPollPreview() {
                     hideTotals = false,
                 ),
             pollInteractions = object : PollInteractions {},
-            contentWarningText = null,
             contentWarningInteractions = object : ContentWarningInteractions {},
-            accounts = null,
-            hashTags = null,
-            inReplyToAccountName = null,
             userHeaderState = UserHeaderState("", "Barack Obama"),
             bottomBarState = BottomBarState(),
             onUploadImageClicked = {},
@@ -783,7 +757,13 @@ private fun NewPostScreenWithContentWarningPreview() {
         false,
     ) {
         NewPostScreen(
-            statusText = TextFieldValue(),
+            statusUiState = StatusUiState(
+                statusText = TextFieldValue(),
+                contentWarningText = "Content is bad",
+                accountList = null,
+                hashtagList = null,
+                inReplyToAccountName = null,
+            ),
             statusInteractions = object : StatusInteractions {},
             onPostClicked = {},
             sendButtonEnabled = true,
@@ -794,11 +774,7 @@ private fun NewPostScreenWithContentWarningPreview() {
             onVisibilitySelected = {},
             poll = null,
             pollInteractions = object : PollInteractions {},
-            contentWarningText = "Content is bad",
             contentWarningInteractions = object : ContentWarningInteractions {},
-            accounts = null,
-            hashTags = null,
-            inReplyToAccountName = null,
             userHeaderState = UserHeaderState("", "Barack Obama"),
             bottomBarState = BottomBarState(),
             onUploadImageClicked = {},
