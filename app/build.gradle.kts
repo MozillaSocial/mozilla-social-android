@@ -115,8 +115,6 @@ dependencies {
 
     implementation(libs.jakewharton.timber)
 
-    implementation(libs.oss.licenses.library)
-
     testImplementation(libs.koin.test)
 
     androidTestImplementation(platform(libs.androidx.compose.bom))
