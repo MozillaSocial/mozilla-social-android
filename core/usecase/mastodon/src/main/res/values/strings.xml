@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="error_voting">Error voting</string>
-    <string name="error_boosting">Error boosting</string>
-    <string name="error_undoing_boost">Error undoing boost</string>
+    <string name="error_reposting">Error reposting</string>
+    <string name="error_undoing_repost">Error undoing repost</string>
     <string name="error_adding_favorite">Error adding favorite</string>
     <string name="error_removing_favorite">Error removing favorite</string>
     <string name="error_muting_account">Error muting account</string>

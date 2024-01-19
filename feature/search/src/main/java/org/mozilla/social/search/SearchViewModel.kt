@@ -74,7 +74,7 @@ class SearchViewModel(
                 remoteMediator = accountsRemoteMediator,
             ).map { pagingData ->
                 pagingData.map {
-                    it.toAccountFollowerUiState()
+                    it.toAccountFollowerUiState(usersAccountId)
                 }
             }.cachedIn(viewModelScope)
         ) }
@@ -134,7 +134,7 @@ class SearchViewModel(
             ) { searchResult ->
                 SearchResultUiState(
                     postCardUiStates = searchResult.statuses.map { it.toPostCardUiState(usersAccountId) },
-                    accountUiStates = searchResult.accounts.map { it.toSearchedAccountUiState() },
+                    accountUiStates = searchResult.accounts.map { it.toSearchedAccountUiState(usersAccountId) },
                 )
             }.collect {
                 _uiState.edit { copy(

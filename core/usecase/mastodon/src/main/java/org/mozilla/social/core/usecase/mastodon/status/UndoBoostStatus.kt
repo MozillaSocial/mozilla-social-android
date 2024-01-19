@@ -35,7 +35,7 @@ class UndoBoostStatus internal constructor(
                     statusRepository.updateBoosted(boostedStatusId, true)
                 }
                 showSnackbar(
-                    text = StringFactory.resource(R.string.error_undoing_boost),
+                    text = StringFactory.resource(R.string.error_undoing_repost),
                     isError = true,
                 )
                 throw UndoBoostStatusFailedException(e)

@@ -18,6 +18,11 @@ jobs:
       uses: ./.github/actions/setup-environment
     - name: Verify KSP version
       run: ci/verify-ksp-version.sh
+    - name: Decrypt secrets
+      env:
+        GPG_KEY: ${{ secrets.gpg_key }}
+      run: ./decrypt.sh
+      working-directory: ./secrets
     - name: Compile a release build
       env:
         GRADLE_OPTS: -Dorg.gradle.daemon=false

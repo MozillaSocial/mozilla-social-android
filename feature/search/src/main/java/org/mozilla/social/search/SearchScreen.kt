@@ -363,15 +363,17 @@ private fun TopAccounts(
                         .padding(MoSoSpacing.md),
                     uiState = item.quickViewUiState,
                     buttonSlot = {
-                        FollowingButton(
-                            onButtonClicked = {
-                                searchInteractions.onFollowClicked(
-                                    item.quickViewUiState.accountId,
-                                    item.isFollowing
-                                )
-                            },
-                            isFollowing = item.isFollowing
-                        )
+                        if (item.followButtonVisible) {
+                            FollowingButton(
+                                onButtonClicked = {
+                                    searchInteractions.onFollowClicked(
+                                        item.quickViewUiState.accountId,
+                                        item.isFollowing
+                                    )
+                                },
+                                isFollowing = item.isFollowing
+                            )
+                        }
                     },
                 )
             }
