@@ -52,7 +52,7 @@ class FollowersViewModel(
             remoteMediator = followersRemoteMediator,
         ).map { pagingData ->
             pagingData.map {
-                it.toAccountFollowerUiState()
+                it.toAccountFollowerUiState(loggedInUserAccountId)
             }
         }.cachedIn(viewModelScope)
 
@@ -62,7 +62,7 @@ class FollowersViewModel(
             remoteMediator = followingsRemoteMediator,
         ).map { pagingData ->
             pagingData.map {
-                it.toAccountFollowerUiState()
+                it.toAccountFollowerUiState(loggedInUserAccountId)
             }
         }.cachedIn(viewModelScope)
 

@@ -197,7 +197,8 @@ private fun FollowersScreenPreview() {
                                 avatarUrl = "",
                             ),
                             isFollowing = false,
-                            bioHtml = ""
+                            bioHtml = "",
+                            followButtonVisible = true,
                         )
                     ),
                 ),
