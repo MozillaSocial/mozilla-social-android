@@ -9,6 +9,7 @@ import org.mozilla.social.core.datastore.dataStoreModule
 import org.mozilla.social.core.navigation.navigationModule
 import org.mozilla.social.core.repository.mastodon.mastodonRepositoryModule
 import org.mozilla.social.core.usecase.mastodon.mastodonUsecaseModule
+import org.mozilla.social.post.media.MediaDelegate
 import org.mozilla.social.post.poll.PollDelegate
 import org.mozilla.social.post.status.StatusDelegate
 
@@ -26,7 +27,6 @@ val newPostModule = module {
         NewPostViewModel(
             analytics = get(),
             replyStatusId = parametersHolder.getOrNull(),
-            mediaRepository = get(),
             postStatus = get(),
             popNavBackstack = get(),
             showSnackbar = get(),
@@ -46,4 +46,11 @@ val newPostModule = module {
     }
 
     factoryOf(::PollDelegate)
+
+    factory { parametersHolder ->
+        MediaDelegate(
+            coroutineScope = parametersHolder[0],
+            mediaRepository = get(),
+        )
+    }
 }

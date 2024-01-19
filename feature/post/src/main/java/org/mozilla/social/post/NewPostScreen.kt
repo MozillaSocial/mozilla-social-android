@@ -100,7 +100,7 @@ internal fun NewPostScreen(
 ) {
     val statusUiState by viewModel.statusDelegate.uiState.collectAsStateWithLifecycle()
     val sendButtonEnabled by viewModel.sendButtonEnabled.collectAsStateWithLifecycle()
-    val mediaStates by viewModel.mediaStates.collectAsStateWithLifecycle()
+    val mediaStates by viewModel.mediaDelegate.imageStates.collectAsStateWithLifecycle()
     val isSendingPost by viewModel.isSendingPost.collectAsStateWithLifecycle()
     val visibility by viewModel.visibility.collectAsStateWithLifecycle()
     val pollUiState by viewModel.pollDelegate.uiState.collectAsStateWithLifecycle()
@@ -113,7 +113,7 @@ internal fun NewPostScreen(
         onPostClicked = viewModel::onPostClicked,
         sendButtonEnabled = sendButtonEnabled,
         imageStates = mediaStates,
-        mediaInteractions = viewModel.mediaInteractions,
+        mediaInteractions = viewModel.mediaDelegate,
         isSendingPost = isSendingPost,
         visibility = visibility,
         onVisibilitySelected = viewModel::onVisibilitySelected,

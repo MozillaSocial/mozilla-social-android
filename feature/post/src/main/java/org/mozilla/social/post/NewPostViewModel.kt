@@ -24,19 +24,16 @@ import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.core.analytics.Analytics
 import org.mozilla.social.core.analytics.AnalyticsIdentifiers
 import org.mozilla.social.core.analytics.EngagementType
-import org.mozilla.social.core.model.ImageState
 import org.mozilla.social.core.model.StatusVisibility
 import org.mozilla.social.core.model.request.PollCreate
 import org.mozilla.social.core.navigation.usecases.PopNavBackstack
 import org.mozilla.social.core.navigation.usecases.ShowSnackbar
 import org.mozilla.social.core.repository.mastodon.AccountRepository
-import org.mozilla.social.core.repository.mastodon.MediaRepository
 import org.mozilla.social.core.usecase.mastodon.account.GetLoggedInUserAccountId
 import org.mozilla.social.core.usecase.mastodon.status.PostStatus
 import org.mozilla.social.feature.post.R
 import org.mozilla.social.post.bottombar.BottomBarState
 import org.mozilla.social.post.media.MediaDelegate
-import org.mozilla.social.post.media.MediaInteractions
 import org.mozilla.social.post.poll.PollDelegate
 import org.mozilla.social.post.poll.PollStyle
 import org.mozilla.social.post.status.StatusDelegate
@@ -46,7 +43,6 @@ import timber.log.Timber
 class NewPostViewModel(
     private val analytics: Analytics,
     private val replyStatusId: String?,
-    mediaRepository: MediaRepository,
     getLoggedInUserAccountId: GetLoggedInUserAccountId,
     accountRepository: AccountRepository,
     private val postStatus: PostStatus,
@@ -63,20 +59,18 @@ class NewPostViewModel(
 
     val pollDelegate: PollDelegate by inject()
 
-    private val mediaDelegate: MediaDelegate =
-        MediaDelegate(
+    val mediaDelegate: MediaDelegate by inject {
+        parametersOf(
             viewModelScope,
-            mediaRepository,
         )
-    val mediaInteractions: MediaInteractions = mediaDelegate
-    val mediaStates: StateFlow<List<ImageState>> = mediaDelegate.imageStates
+    }
 
-    private val images = mediaStates.mapLatest { imageStates ->
+    private val images = mediaDelegate.imageStates.mapLatest { imageStates ->
         imageStates.filter { imageState ->
             imageState.fileType == FileType.IMAGE
         }
     }
-    private val videos = mediaStates.mapLatest { imageStates ->
+    private val videos = mediaDelegate.imageStates.mapLatest { imageStates ->
         imageStates.filter { imageState ->
             imageState.fileType == FileType.VIDEO
         }
@@ -102,7 +96,7 @@ class NewPostViewModel(
 
     val sendButtonEnabled: StateFlow<Boolean> = combine(
         statusDelegate.uiState,
-        mediaStates,
+        mediaDelegate.imageStates,
         pollDelegate.uiState
     ) { statusUiState, imageStates, poll ->
         (statusUiState.statusText.text.isNotBlank() || imageStates.isNotEmpty()) &&
@@ -145,7 +139,7 @@ class NewPostViewModel(
             try {
                 postStatus(
                     statusText = statusDelegate.uiState.value.statusText.text,
-                    imageStates = mediaStates.value.toList(),
+                    imageStates = mediaDelegate.imageStates.value.toList(),
                     visibility = visibility.value,
                     pollCreate = pollDelegate.uiState.value?.let { poll ->
                         PollCreate(
