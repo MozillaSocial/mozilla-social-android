@@ -1,12 +1,9 @@
 plugins {
     id("org.mozilla.social.android.application")
     id("org.mozilla.social.android.application.compose")
-<<<<<<< HEAD
     alias(libs.plugins.about.libraries.plugin)
-=======
     id("org.mozilla.social.android.application.secrets")
     alias(libs.plugins.sentry)
->>>>>>> main
 }
 
 android {
