@@ -92,8 +92,7 @@ fun EditAccountScreen(
                         MoSoButton(
                             modifier =
                                 Modifier
-                                    .padding(8.dp)
-                                    .height(38.dp),
+                                    .padding(8.dp),
                             onClick = { editAccountInteractions.onSaveClicked() },
                         ) {
                             Text(text = stringResource(id = R.string.edit_account_save_button))
