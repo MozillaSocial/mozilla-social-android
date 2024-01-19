@@ -38,7 +38,6 @@ import org.mozilla.social.post.bottombar.BottomBarState
 import org.mozilla.social.post.media.MediaDelegate
 import org.mozilla.social.post.media.MediaInteractions
 import org.mozilla.social.post.poll.PollDelegate
-import org.mozilla.social.post.poll.PollInteractions
 import org.mozilla.social.post.poll.PollStyle
 import org.mozilla.social.post.status.StatusDelegate
 import timber.log.Timber
@@ -62,9 +61,7 @@ class NewPostViewModel(
         )
     }
 
-    private val pollDelegate: PollDelegate = PollDelegate(analytics)
-    val pollInteractions: PollInteractions = pollDelegate
-    val poll = pollDelegate.poll
+    val pollDelegate: PollDelegate by inject()
 
     private val mediaDelegate: MediaDelegate =
         MediaDelegate(
@@ -88,13 +85,13 @@ class NewPostViewModel(
     val bottomBarState: StateFlow<BottomBarState> = combine(
         images,
         videos,
-        poll,
+        pollDelegate.uiState,
         statusDelegate.uiState,
-    ) { images, videos, poll, statusUiState ->
+    ) { images, videos, pollUiState, statusUiState ->
         BottomBarState(
-            imageButtonEnabled = videos.isEmpty() && images.size < MAX_IMAGES && poll == null,
-            videoButtonEnabled = images.isEmpty() && poll == null,
-            pollButtonEnabled = images.isEmpty() && videos.isEmpty() && poll == null,
+            imageButtonEnabled = videos.isEmpty() && images.size < MAX_IMAGES && pollUiState == null,
+            videoButtonEnabled = images.isEmpty() && pollUiState == null,
+            pollButtonEnabled = images.isEmpty() && videos.isEmpty() && pollUiState == null,
             contentWarningText = statusUiState.contentWarningText,
             characterCountText = "${MAX_POST_LENGTH - 
                     statusUiState.statusText.text.length - 
@@ -106,7 +103,7 @@ class NewPostViewModel(
     val sendButtonEnabled: StateFlow<Boolean> = combine(
         statusDelegate.uiState,
         mediaStates,
-        poll
+        pollDelegate.uiState
     ) { statusUiState, imageStates, poll ->
         (statusUiState.statusText.text.isNotBlank() || imageStates.isNotEmpty()) &&
             // all images are loaded
@@ -150,15 +147,14 @@ class NewPostViewModel(
                     statusText = statusDelegate.uiState.value.statusText.text,
                     imageStates = mediaStates.value.toList(),
                     visibility = visibility.value,
-                    pollCreate =
-                        poll.value?.let { poll ->
-                            PollCreate(
-                                options = poll.options,
-                                expiresInSec = poll.pollDuration.inSeconds,
-                                allowMultipleChoices = poll.style == PollStyle.MULTIPLE_CHOICE,
-                                hideTotals = poll.hideTotals,
-                            )
-                        },
+                    pollCreate = pollDelegate.uiState.value?.let { poll ->
+                        PollCreate(
+                            options = poll.options,
+                            expiresInSec = poll.pollDuration.inSeconds,
+                            allowMultipleChoices = poll.style == PollStyle.MULTIPLE_CHOICE,
+                            hideTotals = poll.hideTotals,
+                        )
+                    },
                     contentWarningText = statusDelegate.uiState.value.contentWarningText,
                     inReplyToId = replyStatusId,
                 )

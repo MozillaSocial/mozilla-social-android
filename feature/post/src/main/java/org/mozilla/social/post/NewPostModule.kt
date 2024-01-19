@@ -1,6 +1,7 @@
 package org.mozilla.social.post
 
 import org.koin.androidx.viewmodel.dsl.viewModel
+import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.module
 import org.mozilla.social.common.commonModule
 import org.mozilla.social.core.analytics.analyticsModule
@@ -8,6 +9,7 @@ import org.mozilla.social.core.datastore.dataStoreModule
 import org.mozilla.social.core.navigation.navigationModule
 import org.mozilla.social.core.repository.mastodon.mastodonRepositoryModule
 import org.mozilla.social.core.usecase.mastodon.mastodonUsecaseModule
+import org.mozilla.social.post.poll.PollDelegate
 import org.mozilla.social.post.status.StatusDelegate
 
 val newPostModule = module {
@@ -42,4 +44,6 @@ val newPostModule = module {
             inReplyToId = parametersHolder[1],
         )
     }
+
+    factoryOf(::PollDelegate)
 }

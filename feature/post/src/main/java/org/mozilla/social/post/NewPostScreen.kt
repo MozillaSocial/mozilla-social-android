@@ -81,7 +81,7 @@ import org.mozilla.social.post.NewPostViewModel.Companion.MIN_POLL_COUNT
 import org.mozilla.social.post.bottombar.BottomBar
 import org.mozilla.social.post.bottombar.BottomBarState
 import org.mozilla.social.post.media.MediaInteractions
-import org.mozilla.social.post.poll.Poll
+import org.mozilla.social.post.poll.PollUiState
 import org.mozilla.social.post.poll.PollDuration
 import org.mozilla.social.post.poll.PollDurationDropDown
 import org.mozilla.social.post.poll.PollInteractions
@@ -103,7 +103,7 @@ internal fun NewPostScreen(
     val mediaStates by viewModel.mediaStates.collectAsStateWithLifecycle()
     val isSendingPost by viewModel.isSendingPost.collectAsStateWithLifecycle()
     val visibility by viewModel.visibility.collectAsStateWithLifecycle()
-    val poll by viewModel.poll.collectAsStateWithLifecycle()
+    val pollUiState by viewModel.pollDelegate.uiState.collectAsStateWithLifecycle()
     val userHeaderState by viewModel.userHeaderState.collectAsStateWithLifecycle(initialValue = null)
     val bottomBarState by viewModel.bottomBarState.collectAsStateWithLifecycle()
 
@@ -117,8 +117,8 @@ internal fun NewPostScreen(
         isSendingPost = isSendingPost,
         visibility = visibility,
         onVisibilitySelected = viewModel::onVisibilitySelected,
-        poll = poll,
-        pollInteractions = viewModel.pollInteractions,
+        pollUiState = pollUiState,
+        pollInteractions = viewModel.pollDelegate,
         contentWarningInteractions = viewModel.statusDelegate,
         userHeaderState = userHeaderState,
         bottomBarState = bottomBarState,
@@ -145,7 +145,7 @@ private fun NewPostScreen(
     isSendingPost: Boolean,
     visibility: StatusVisibility,
     onVisibilitySelected: (StatusVisibility) -> Unit,
-    poll: Poll?,
+    pollUiState: PollUiState?,
     pollInteractions: PollInteractions,
     contentWarningInteractions: ContentWarningInteractions,
     userHeaderState: UserHeaderState?,
@@ -168,7 +168,7 @@ private fun NewPostScreen(
                     sendButtonEnabled = sendButtonEnabled,
                     imageStates = imageStates,
                     mediaInteractions = mediaInteractions,
-                    poll = poll,
+                    pollUiState = pollUiState,
                     pollInteractions = pollInteractions,
                     contentWarningInteractions = contentWarningInteractions,
                 )
@@ -184,7 +184,7 @@ private fun NewPostScreen(
                 mediaInteractions = mediaInteractions,
                 visibility = visibility,
                 onVisibilitySelected = onVisibilitySelected,
-                poll = poll,
+                pollUiState = pollUiState,
                 pollInteractions = pollInteractions,
                 contentWarningInteractions = contentWarningInteractions,
                 userHeaderState = userHeaderState,
@@ -210,7 +210,7 @@ private fun CompactNewPostScreenContent(
     sendButtonEnabled: Boolean,
     imageStates: List<ImageState>,
     mediaInteractions: MediaInteractions,
-    poll: Poll?,
+    pollUiState: PollUiState?,
     pollInteractions: PollInteractions,
     contentWarningInteractions: ContentWarningInteractions,
 ) {
@@ -225,7 +225,7 @@ private fun CompactNewPostScreenContent(
                 statusInteractions = statusInteractions,
                 imageStates = imageStates,
                 mediaInteractions = mediaInteractions,
-                poll = poll,
+                pollUiState = pollUiState,
                 pollInteractions = pollInteractions,
                 contentWarningInteractions = contentWarningInteractions,
             )
@@ -250,7 +250,7 @@ private fun NewPostScreenContent(
     mediaInteractions: MediaInteractions,
     visibility: StatusVisibility,
     onVisibilitySelected: (StatusVisibility) -> Unit,
-    poll: Poll?,
+    pollUiState: PollUiState?,
     pollInteractions: PollInteractions,
     contentWarningInteractions: ContentWarningInteractions,
     userHeaderState: UserHeaderState?,
@@ -279,7 +279,7 @@ private fun NewPostScreenContent(
                 statusInteractions = statusInteractions,
                 imageStates = imageStates,
                 mediaInteractions = mediaInteractions,
-                poll = poll,
+                pollUiState = pollUiState,
                 pollInteractions = pollInteractions,
                 contentWarningInteractions = contentWarningInteractions,
             )
@@ -371,7 +371,7 @@ private fun MainBox(
     statusInteractions: StatusInteractions,
     imageStates: List<ImageState>,
     mediaInteractions: MediaInteractions,
-    poll: Poll?,
+    pollUiState: PollUiState?,
     pollInteractions: PollInteractions,
     contentWarningInteractions: ContentWarningInteractions,
 ) {
@@ -436,15 +436,15 @@ private fun MainBox(
                         }
                     }
 
-                    poll?.let {
-                        items(poll.options.size) { index ->
+                    pollUiState?.let {
+                        items(pollUiState.options.size) { index ->
                             PollChoice(
                                 index = index,
-                                poll = poll,
+                                pollUiState = pollUiState,
                                 pollInteractions = pollInteractions,
                             )
                         }
-                        item { PollSettings(poll = poll, pollInteractions = pollInteractions) }
+                        item { PollSettings(pollUiState = pollUiState, pollInteractions = pollInteractions) }
                     }
 
                     items(imageStates.size) { index ->
@@ -569,10 +569,10 @@ private fun ImageUploadBox(
 @Composable
 private fun PollChoice(
     index: Int,
-    poll: Poll,
+    pollUiState: PollUiState,
     pollInteractions: PollInteractions,
 ) {
-    val deleteEnabled = remember(poll) { poll.options.size > MIN_POLL_COUNT }
+    val deleteEnabled = remember(pollUiState) { pollUiState.options.size > MIN_POLL_COUNT }
     Row(
         modifier =
             Modifier
@@ -583,7 +583,7 @@ private fun PollChoice(
                 Modifier
                     .weight(1f)
                     .align(Alignment.CenterVertically),
-            value = poll.options[index],
+            value = pollUiState.options[index],
             onValueChange = { pollInteractions.onPollOptionTextChanged(index, it) },
             label = {
                 Text(
@@ -614,7 +614,7 @@ private fun PollChoice(
 
 @Composable
 private fun PollSettings(
-    poll: Poll,
+    pollUiState: PollUiState,
     pollInteractions: PollInteractions,
 ) {
     Row(
@@ -622,7 +622,7 @@ private fun PollSettings(
             Modifier
                 .padding(start = 8.dp, end = 16.dp, top = 16.dp, bottom = 0.dp),
     ) {
-        val addNewOptionEnabled = remember(poll) { poll.options.size < MAX_POLL_COUNT }
+        val addNewOptionEnabled = remember(pollUiState) { pollUiState.options.size < MAX_POLL_COUNT }
         IconButton(
             onClick = {
                 pollInteractions.onAddPollOptionClicked()
@@ -648,14 +648,14 @@ private fun PollSettings(
                         .padding(start = 8.dp, end = 8.dp)
                         .height(40.dp),
             )
-            PollDurationDropDown(poll = poll, pollInteractions = pollInteractions)
+            PollDurationDropDown(pollUiState = pollUiState, pollInteractions = pollInteractions)
             MoSoVerticalDivider(
                 modifier =
                     Modifier
                         .padding(start = 8.dp, end = 8.dp)
                         .height(40.dp),
             )
-            PollStyleDropDown(poll = poll, pollInteractions = pollInteractions)
+            PollStyleDropDown(pollUiState = pollUiState, pollInteractions = pollInteractions)
         }
     }
     Row(
@@ -666,7 +666,7 @@ private fun PollSettings(
     ) {
         Checkbox(
             modifier = Modifier.align(Alignment.CenterVertically),
-            checked = poll.hideTotals,
+            checked = pollUiState.hideTotals,
             onCheckedChange = { pollInteractions.onHideCountUntilEndClicked() },
         )
         Text(
@@ -700,7 +700,7 @@ private fun NewPostScreenPreview() {
             isSendingPost = false,
             visibility = StatusVisibility.Private,
             onVisibilitySelected = {},
-            poll = null,
+            pollUiState = null,
             pollInteractions = object : PollInteractions {},
             contentWarningInteractions = object : ContentWarningInteractions {},
             userHeaderState = UserHeaderState("", "Barack Obama"),
@@ -733,8 +733,8 @@ private fun NewPostScreenWithPollPreview() {
             isSendingPost = false,
             visibility = StatusVisibility.Private,
             onVisibilitySelected = {},
-            poll =
-                Poll(
+            pollUiState =
+                PollUiState(
                     options = listOf("option 1", "option 2"),
                     style = PollStyle.SINGLE_CHOICE,
                     pollDuration = PollDuration.ONE_DAY,
@@ -772,7 +772,7 @@ private fun NewPostScreenWithContentWarningPreview() {
             isSendingPost = false,
             visibility = StatusVisibility.Private,
             onVisibilitySelected = {},
-            poll = null,
+            pollUiState = null,
             pollInteractions = object : PollInteractions {},
             contentWarningInteractions = object : ContentWarningInteractions {},
             userHeaderState = UserHeaderState("", "Barack Obama"),
