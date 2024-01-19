@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -116,11 +118,18 @@ private fun FollowersScreen(
                 }
             }
 
+            val followersListState = rememberLazyListState()
+            val followingListState = rememberLazyListState()
+
             FollowersList(
                 list =
                 when (selectedTab) {
                     FollowType.FOLLOWERS -> followers
                     FollowType.FOLLOWING -> following
+                },
+                listState = when (selectedTab) {
+                    FollowType.FOLLOWERS -> followersListState
+                    FollowType.FOLLOWING -> followingListState
                 },
                 followersInteractions = followersInteractions,
             )
@@ -131,6 +140,7 @@ private fun FollowersScreen(
 @Composable
 private fun FollowersList(
     list: Flow<PagingData<AccountFollowerUiState>>,
+    listState: LazyListState,
     followersInteractions: FollowersInteractions,
 ) {
     val lazyPagingItems = list.collectAsLazyPagingItems()
@@ -142,9 +152,10 @@ private fun FollowersList(
         )
 
     PullRefreshLazyColumn(
-        lazyPagingItems,
-        pullRefreshState = pullRefreshState,
         modifier = Modifier.fillMaxSize(),
+        lazyPagingItems = lazyPagingItems,
+        pullRefreshState = pullRefreshState,
+        listState = listState,
     ) {
         when (lazyPagingItems.loadState.refresh) {
             is LoadState.Error -> {} // handle the error outside the lazy column
@@ -164,10 +175,11 @@ private fun FollowersList(
                             },
                             modifier = Modifier
                                 .padding(MoSoSpacing.md)
-                                .clickable { followersInteractions
-                                    .onAccountClicked(
-                                        accountId = uiState.accountQuickViewUiState.accountId
-                                    )
+                                .clickable {
+                                    followersInteractions
+                                        .onAccountClicked(
+                                            accountId = uiState.accountQuickViewUiState.accountId
+                                        )
                                 },
                         )
                     }
