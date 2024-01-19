@@ -98,7 +98,7 @@ internal fun NewPostScreen(
     replyStatusId: String?,
     viewModel: NewPostViewModel = koinViewModel(parameters = { parametersOf(replyStatusId) }),
 ) {
-    val statusUiState by viewModel.statusUiState.collectAsStateWithLifecycle()
+    val statusUiState by viewModel.statusDelegate.uiState.collectAsStateWithLifecycle()
     val sendButtonEnabled by viewModel.sendButtonEnabled.collectAsStateWithLifecycle()
     val mediaStates by viewModel.mediaStates.collectAsStateWithLifecycle()
     val isSendingPost by viewModel.isSendingPost.collectAsStateWithLifecycle()
@@ -109,7 +109,7 @@ internal fun NewPostScreen(
 
     NewPostScreen(
         statusUiState = statusUiState,
-        statusInteractions = viewModel.statusInteractions,
+        statusInteractions = viewModel.statusDelegate,
         onPostClicked = viewModel::onPostClicked,
         sendButtonEnabled = sendButtonEnabled,
         imageStates = mediaStates,
@@ -119,7 +119,7 @@ internal fun NewPostScreen(
         onVisibilitySelected = viewModel::onVisibilitySelected,
         poll = poll,
         pollInteractions = viewModel.pollInteractions,
-        contentWarningInteractions = viewModel.contentWarningInteractions,
+        contentWarningInteractions = viewModel.statusDelegate,
         userHeaderState = userHeaderState,
         bottomBarState = bottomBarState,
         onUploadImageClicked = viewModel::onUploadImageClicked,

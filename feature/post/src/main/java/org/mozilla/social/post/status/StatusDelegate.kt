@@ -23,11 +23,11 @@ import org.mozilla.social.post.NewPostViewModel
 import timber.log.Timber
 
 class StatusDelegate(
-    private val coroutineScope: CoroutineScope,
+    private val analytics: Analytics,
     private val searchRepository: SearchRepository,
     private val statusRepository: StatusRepository,
+    private val coroutineScope: CoroutineScope,
     private val inReplyToId: String?,
-    private val analytics: Analytics,
 ) : StatusInteractions, ContentWarningInteractions {
 
     private val _uiState = MutableStateFlow(StatusUiState())
