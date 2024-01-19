@@ -12,7 +12,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
@@ -81,7 +81,7 @@ fun PostCard(
             Column(
                 Modifier
                     .padding(8.dp)
-                    .fillMaxSize()
+                    .fillMaxWidth()
                     .clickable {
                         // prevent the user from being able to click on the same status
                         // as the root thread status
@@ -431,26 +431,26 @@ private fun BottomRow(
                 .requiredWidth(getMaxWidth() + 20.dp),
     ) {
         BottomIconButton(
+            modifier = Modifier.weight(1f),
             onClick = { postCardInteractions.onReplyClicked(post.statusId) },
             painter = MoSoIcons.chatBubbles(),
             count = post.replyCount,
         )
-        Spacer(modifier = Modifier.weight(1f))
         BottomIconButton(
+            modifier = Modifier.weight(1f),
             onClick = { postCardInteractions.onBoostClicked(post.statusId, !post.userBoosted) },
             painter = MoSoIcons.boost(),
             count = post.boostCount,
             highlighted = post.userBoosted,
         )
-        Spacer(modifier = Modifier.weight(1f))
         BottomIconButton(
+            modifier = Modifier.weight(1f),
             onClick = { postCardInteractions.onFavoriteClicked(post.statusId, !post.isFavorited) },
             painter = if (post.isFavorited) MoSoIcons.heartFilled() else MoSoIcons.heart(),
             count = post.favoriteCount,
             highlighted = post.isFavorited,
             highlightColor = MoSoTheme.colors.textWarning,
         )
-        Spacer(modifier = Modifier.weight(1f))
         BottomIconButton(
             onClick = {
                 post.url?.let { url ->
@@ -458,7 +458,6 @@ private fun BottomRow(
                 }
             },
             painter = MoSoIcons.share(),
-            count = 0,
         )
     }
 }
@@ -468,7 +467,7 @@ private fun BottomIconButton(
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
     painter: Painter,
-    count: Long,
+    count: String? = null,
     highlighted: Boolean = false,
     highlightColor: Color = MoSoTheme.colors.iconAccent,
 ) {
@@ -493,13 +492,13 @@ private fun BottomIconButton(
                     },
             )
         }
-        if (count > 0) {
+        if (count != null) {
             Text(
                 modifier =
                     Modifier
                         .align(Alignment.CenterVertically)
                         .offset(x = -6.dp),
-                text = "$count",
+                text = count,
             )
         }
     }
@@ -526,9 +525,9 @@ private fun PostCardPreview() {
                             profilePictureUrl = "",
                             postTimeSince = Instant.fromEpochMilliseconds(1695308821000L).timeSinceNow(),
                             accountName = StringFactory.literal("coolguy"),
-                            replyCount = 4000L,
-                            boostCount = 30000L,
-                            favoriteCount = 7L,
+                            replyCount = "4",
+                            boostCount = "300k",
+                            favoriteCount = "4.4m",
                             statusId = "",
                             userBoosted = false,
                             isFavorited = false,
@@ -571,9 +570,9 @@ private fun PostCardWithContentWarningPreview() {
                             profilePictureUrl = "",
                             postTimeSince = Instant.fromEpochMilliseconds(1695308821000L).timeSinceNow(),
                             accountName = StringFactory.literal("coolguy"),
-                            replyCount = 4000L,
-                            boostCount = 30000L,
-                            favoriteCount = 7L,
+                            replyCount = "4",
+                            boostCount = "300k",
+                            favoriteCount = "4.4m",
                             statusId = "",
                             userBoosted = false,
                             isFavorited = false,
