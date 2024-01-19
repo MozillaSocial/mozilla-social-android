@@ -2,6 +2,7 @@ package org.mozilla.social.core.ui.postcard
 
 import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.common.utils.timeSinceNow
+import org.mozilla.social.common.utils.toShortenedStringValue
 import org.mozilla.social.core.model.Card
 import org.mozilla.social.core.model.Status
 import org.mozilla.social.core.ui.common.R
@@ -22,34 +23,42 @@ fun Status.toPostCardUiState(currentUserAccountId: String): PostCardUiState =
 private fun Status.toMainPostCardUiState(currentUserAccountId: String): MainPostCardUiState =
     MainPostCardUiState(
         url = url,
-        pollUiState =
-            poll?.toPollUiState(
-                isUserCreatedPoll = currentUserAccountId == account.accountId,
-            ),
-        statusTextHtml = content,
-        mediaAttachments = mediaAttachments,
         profilePictureUrl = account.avatarStaticUrl,
         postTimeSince = createdAt.timeSinceNow(),
         accountName = StringFactory.literal(account.acct),
-        replyCount = repliesCount,
-        boostCount = boostsCount,
-        favoriteCount = favouritesCount,
+        replyCount = repliesCount.toShortenedStringValue(),
+        boostCount = boostsCount.toShortenedStringValue(),
+        favoriteCount = favouritesCount.toShortenedStringValue(),
         username = account.displayName,
         statusId = statusId,
         userBoosted = isBoosted ?: false,
         isFavorited = isFavourited ?: false,
         accountId = account.accountId,
-        mentions = mentions,
-        previewCard = card?.toPreviewCard(),
         isUsersPost = currentUserAccountId == account.accountId,
         isBeingDeleted = isBeingDeleted,
-        contentWarning = contentWarningText,
+        postContentUiState = toPostContentUiState(currentUserAccountId)
     )
+
+fun Status.toPostContentUiState(
+    currentUserAccountId: String,
+    contentWarningOverride: String? = null,
+    onlyShowPreviewOfText: Boolean = false,
+): PostContentUiState = PostContentUiState(
+    pollUiState = poll?.toPollUiState(
+        isUserCreatedPoll = currentUserAccountId == account.accountId,
+    ),
+    statusTextHtml = content,
+    mediaAttachments = mediaAttachments,
+    mentions = mentions,
+    previewCard = card?.toPreviewCard(),
+    contentWarning = contentWarningOverride ?: contentWarningText,
+    onlyShowPreviewOfText = onlyShowPreviewOfText,
+)
 
 private fun Status.toTopRowMetaDataUiState(): TopRowMetaDataUiState? =
     if (boostedStatus != null) {
         TopRowMetaDataUiState(
-            text = StringFactory.resource(R.string.user_has_boosted_post, account.username),
+            text = StringFactory.resource(R.string.user_has_reposted_post, account.username),
             iconType = TopRowIconType.BOOSTED,
         )
     } else if (inReplyToAccountName != null) {

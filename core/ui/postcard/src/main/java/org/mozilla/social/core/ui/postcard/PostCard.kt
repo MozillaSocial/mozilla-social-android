@@ -12,7 +12,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
@@ -61,7 +61,9 @@ import org.mozilla.social.core.ui.common.utils.PreviewTheme
 import org.mozilla.social.core.ui.common.utils.getMaxWidth
 import org.mozilla.social.core.ui.common.utils.shareUrl
 import org.mozilla.social.core.ui.htmlcontent.HtmlContent
+import org.mozilla.social.core.ui.htmlcontent.HtmlContentInteractions
 import org.mozilla.social.core.ui.poll.Poll
+import org.mozilla.social.core.ui.poll.PollInteractions
 
 /**
  * @param threadId if viewing this post from a thread, pass the threadId in to prevent
@@ -79,7 +81,7 @@ fun PostCard(
             Column(
                 Modifier
                     .padding(8.dp)
-                    .fillMaxSize()
+                    .fillMaxWidth()
                     .clickable {
                         // prevent the user from being able to click on the same status
                         // as the root thread status
@@ -152,9 +154,10 @@ private fun Post(
                 postCardInteractions = postCardInteractions,
             )
 
-            MainContent(
-                post = post,
-                postCardInteractions = postCardInteractions,
+            PostContent(
+                uiState = post.postContentUiState,
+                htmlContentInteractions = postCardInteractions,
+                pollInteractions = postCardInteractions,
             )
 
             BottomRow(
@@ -216,30 +219,43 @@ private fun MetaData(
 }
 
 @Composable
-private fun MainContent(
-    post: MainPostCardUiState,
-    postCardInteractions: PostCardInteractions,
+fun PostContent(
+    uiState: PostContentUiState,
+    htmlContentInteractions: HtmlContentInteractions,
+    pollInteractions: PollInteractions,
+    modifier: Modifier = Modifier,
 ) {
     ContentWarning(
-        contentWarningText = post.contentWarning,
+        modifier = modifier,
+        contentWarningText = uiState.contentWarning,
     ) {
         Column {
             HtmlContent(
-                mentions = post.mentions,
-                htmlText = post.statusTextHtml,
-                htmlContentInteractions = postCardInteractions,
+                mentions = uiState.mentions,
+                htmlText = uiState.statusTextHtml,
+                htmlContentInteractions = htmlContentInteractions,
+                maximumLineCount = if (uiState.onlyShowPreviewOfText) {
+                    1
+                } else {
+                    Int.MAX_VALUE
+                },
+                textColor = if (uiState.onlyShowPreviewOfText) {
+                    MoSoTheme.colors.textSecondary
+                } else {
+                    MoSoTheme.colors.textPrimary
+                }
             )
             Spacer(modifier = Modifier.padding(top = 8.dp))
 
-            MediaDisplay(attachments = post.mediaAttachments)
+            MediaDisplay(attachments = uiState.mediaAttachments)
 
-            post.pollUiState?.let { Poll(it, postCardInteractions) }
+            uiState.pollUiState?.let { Poll(it, pollInteractions) }
 
             // only display preview card if there are no other media attachments
-            if (post.previewCard != null && post.mediaAttachments.isEmpty()) {
+            if (uiState.previewCard != null && uiState.mediaAttachments.isEmpty()) {
                 PreviewCard(
-                    previewCard = post.previewCard,
-                    postCardInteractions = postCardInteractions,
+                    previewCard = uiState.previewCard,
+                    htmlContentInteractions = htmlContentInteractions,
                 )
             }
         }
@@ -248,10 +264,13 @@ private fun MainContent(
 
 @Composable
 private fun ContentWarning(
+    modifier: Modifier = Modifier,
     contentWarningText: String,
     content: @Composable () -> Unit,
 ) {
-    Column {
+    Column(
+        modifier = modifier,
+    ) {
         val hasContentWarning by remember(contentWarningText) {
             derivedStateOf { contentWarningText.isNotBlank() }
         }
@@ -412,26 +431,26 @@ private fun BottomRow(
                 .requiredWidth(getMaxWidth() + 20.dp),
     ) {
         BottomIconButton(
+            modifier = Modifier.weight(1f),
             onClick = { postCardInteractions.onReplyClicked(post.statusId) },
             painter = MoSoIcons.chatBubbles(),
             count = post.replyCount,
         )
-        Spacer(modifier = Modifier.weight(1f))
         BottomIconButton(
+            modifier = Modifier.weight(1f),
             onClick = { postCardInteractions.onBoostClicked(post.statusId, !post.userBoosted) },
             painter = MoSoIcons.boost(),
             count = post.boostCount,
             highlighted = post.userBoosted,
         )
-        Spacer(modifier = Modifier.weight(1f))
         BottomIconButton(
+            modifier = Modifier.weight(1f),
             onClick = { postCardInteractions.onFavoriteClicked(post.statusId, !post.isFavorited) },
             painter = if (post.isFavorited) MoSoIcons.heartFilled() else MoSoIcons.heart(),
             count = post.favoriteCount,
             highlighted = post.isFavorited,
             highlightColor = MoSoTheme.colors.textWarning,
         )
-        Spacer(modifier = Modifier.weight(1f))
         BottomIconButton(
             onClick = {
                 post.url?.let { url ->
@@ -439,7 +458,6 @@ private fun BottomRow(
                 }
             },
             painter = MoSoIcons.share(),
-            count = 0,
         )
     }
 }
@@ -449,7 +467,7 @@ private fun BottomIconButton(
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
     painter: Painter,
-    count: Long,
+    count: String? = null,
     highlighted: Boolean = false,
     highlightColor: Color = MoSoTheme.colors.iconAccent,
 ) {
@@ -474,13 +492,13 @@ private fun BottomIconButton(
                     },
             )
         }
-        if (count > 0) {
+        if (count != null) {
             Text(
                 modifier =
                     Modifier
                         .align(Alignment.CenterVertically)
                         .offset(x = -6.dp),
-                text = "$count",
+                text = count,
             )
         }
     }
@@ -503,25 +521,27 @@ private fun PostCardPreview() {
                     mainPostCardUiState =
                         MainPostCardUiState(
                             url = "",
-                            pollUiState = null,
                             username = "Cool guy",
-                            statusTextHtml = "<p><span class=\"h-card\"><a href=\"https://mozilla.social/@obez\" class=\"u-url mention\" rel=\"nofollow noopener noreferrer\" target=\"_blank\">@<span>obez</span></a></span> This is a text status.  Here is the text and that is all I have to say about that.</p>",
-                            mediaAttachments = emptyList(),
                             profilePictureUrl = "",
                             postTimeSince = Instant.fromEpochMilliseconds(1695308821000L).timeSinceNow(),
                             accountName = StringFactory.literal("coolguy"),
-                            replyCount = 4000L,
-                            boostCount = 30000L,
-                            favoriteCount = 7L,
+                            replyCount = "4",
+                            boostCount = "300k",
+                            favoriteCount = "4.4m",
                             statusId = "",
                             userBoosted = false,
                             isFavorited = false,
                             accountId = "",
-                            mentions = emptyList(),
-                            previewCard = null,
                             isUsersPost = false,
                             isBeingDeleted = false,
-                            contentWarning = "",
+                            postContentUiState = PostContentUiState(
+                                pollUiState = null,
+                                statusTextHtml = "<p><span class=\"h-card\"><a href=\"https://mozilla.social/@obez\" class=\"u-url mention\" rel=\"nofollow noopener noreferrer\" target=\"_blank\">@<span>obez</span></a></span> This is a text status.  Here is the text and that is all I have to say about that.</p>",
+                                mediaAttachments = emptyList(),
+                                mentions = emptyList(),
+                                previewCard = null,
+                                contentWarning = "",
+                            )
                         ),
                 ),
             postCardInteractions = object : PostCardInteractions {},
@@ -546,25 +566,27 @@ private fun PostCardWithContentWarningPreview() {
                     mainPostCardUiState =
                         MainPostCardUiState(
                             url = "",
-                            pollUiState = null,
                             username = "Cool guy",
-                            statusTextHtml = "<p><span class=\"h-card\"><a href=\"https://mozilla.social/@obez\" class=\"u-url mention\" rel=\"nofollow noopener noreferrer\" target=\"_blank\">@<span>obez</span></a></span> This is a text status.  Here is the text and that is all I have to say about that.</p>",
-                            mediaAttachments = emptyList(),
                             profilePictureUrl = "",
                             postTimeSince = Instant.fromEpochMilliseconds(1695308821000L).timeSinceNow(),
                             accountName = StringFactory.literal("coolguy"),
-                            replyCount = 4000L,
-                            boostCount = 30000L,
-                            favoriteCount = 7L,
+                            replyCount = "4",
+                            boostCount = "300k",
+                            favoriteCount = "4.4m",
                             statusId = "",
                             userBoosted = false,
                             isFavorited = false,
                             accountId = "",
-                            mentions = emptyList(),
-                            previewCard = null,
                             isUsersPost = false,
                             isBeingDeleted = false,
-                            contentWarning = "Micky mouse spoilers!",
+                            postContentUiState = PostContentUiState(
+                                pollUiState = null,
+                                statusTextHtml = "<p><span class=\"h-card\"><a href=\"https://mozilla.social/@obez\" class=\"u-url mention\" rel=\"nofollow noopener noreferrer\" target=\"_blank\">@<span>obez</span></a></span> This is a text status.  Here is the text and that is all I have to say about that.</p>",
+                                mediaAttachments = emptyList(),
+                                mentions = emptyList(),
+                                previewCard = null,
+                                contentWarning = "Micky mouse spoilers!",
+                            )
                         ),
                 ),
             postCardInteractions = object : PostCardInteractions {},

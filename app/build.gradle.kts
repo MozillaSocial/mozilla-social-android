@@ -1,7 +1,12 @@
 plugins {
     id("org.mozilla.social.android.application")
     id("org.mozilla.social.android.application.compose")
+<<<<<<< HEAD
     alias(libs.plugins.about.libraries.plugin)
+=======
+    id("org.mozilla.social.android.application.secrets")
+    alias(libs.plugins.sentry)
+>>>>>>> main
 }
 
 android {
@@ -16,6 +21,7 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+        manifestPlaceholders["debug"] = false
     }
 
     buildTypes {
@@ -24,14 +30,24 @@ android {
             isShrinkResources = true
             proguardFile("proguard-rules.pro")
             matchingFallbacks += "release"
+            manifestPlaceholders["environment"] = "release"
         }
         debug {
             isDefault = true
             applicationIdSuffix = ".debug"
+            manifestPlaceholders["environment"] = "debug"
+            manifestPlaceholders["debug"] = true
         }
         create("nightly") {
             initWith(getByName("release"))
             applicationIdSuffix = ".nightly"
+            manifestPlaceholders["environment"] = "nightly"
+        }
+
+        create("unsignedRelease") {
+            initWith(getByName("release"))
+            signingConfig = signingConfigs.getByName("debug")
+            manifestPlaceholders["environment"] = "unsignedRelease"
         }
     }
 
@@ -114,4 +130,14 @@ dependencies {
 
     debugImplementation(libs.androidx.compose.ui.test.manifest)
     debugImplementation(libs.androidx.compose.ui.tooling)
+}
+
+
+sentry {
+    org.set("mozilla")
+    projectName.set("moso-android")
+
+    // this will upload your source code to Sentry to show it as part of the stack traces
+    // disable if you don't want to expose your sources
+    includeSourceContext.set(true)
 }

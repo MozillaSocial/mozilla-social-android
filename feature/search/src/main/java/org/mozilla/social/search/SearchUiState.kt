@@ -28,9 +28,12 @@ data class SearchResultUiState(
 data class SearchedAccountUiState(
     val quickViewUiState: AccountQuickViewUiState,
     val isFollowing: Boolean,
+    val followButtonVisible: Boolean,
 )
 
-fun DetailedAccountWrapper.toSearchedAccountUiState(): SearchedAccountUiState =
+fun DetailedAccountWrapper.toSearchedAccountUiState(
+    currentUserAccountId: String,
+): SearchedAccountUiState =
     SearchedAccountUiState(
         quickViewUiState = AccountQuickViewUiState(
             accountId = account.accountId,
@@ -39,4 +42,5 @@ fun DetailedAccountWrapper.toSearchedAccountUiState(): SearchedAccountUiState =
             avatarUrl = account.avatarUrl,
         ),
         isFollowing = relationship.isFollowing,
+        followButtonVisible = currentUserAccountId != account.accountId,
     )

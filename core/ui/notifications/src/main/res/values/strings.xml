@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="mention_title">%s mentioned you:</string>
+    <string name="new_status_title">%s created a new post:</string>
+    <string name="favorited_title">%s favorited your post:</string>
+    <string name="repost_title">%s reposted your post:</string>
+    <string name="follow_title">%s followed you</string>
+    <string name="follow_request_title">%s wants to follow you</string>
+    <string name="poll_ended_title">A poll by %s has ended</string>
+    <string name="status_updated_title">%s has updated their post:</string>
+
+    <string name="view_account_of_user">View account of %s</string>
+</resources>

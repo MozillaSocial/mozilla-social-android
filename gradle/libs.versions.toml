@@ -115,3 +115,4 @@ kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", vers
 protobuf = { id = "com.google.protobuf", version = "0.9.3" }
 oss-licenses-plugin = { id = "com.google.android.gms.oss-licenses-plugin", version.ref = "oss-licenses-plugin" }
 about-libraries-plugin = { id = "com.mikepenz.aboutlibraries.plugin", version.ref = "about-libraries" }
+sentry = { id = "io.sentry.android.gradle", version = "4.2.0" }
