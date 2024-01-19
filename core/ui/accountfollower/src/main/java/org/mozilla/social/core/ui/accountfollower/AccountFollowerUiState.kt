@@ -6,4 +6,5 @@ data class AccountFollowerUiState(
     val accountQuickViewUiState: AccountQuickViewUiState,
     val isFollowing: Boolean,
     val bioHtml: String,
+    val followButtonVisible: Boolean,
 )

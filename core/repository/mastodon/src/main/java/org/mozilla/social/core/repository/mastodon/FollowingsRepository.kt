@@ -41,5 +41,11 @@ class FollowingsRepository(
 
     suspend fun deleteFollowings(accountId: String) = dao.deleteFollowings(accountId)
 
+    suspend fun deleteAllFollowings(
+        accountsToKeep: List<String> = emptyList()
+    ) = dao.deleteAllFollowings(
+        accountsToKeep
+    )
+
     fun insertAll(followees: List<Followee>) = dao.upsertAll(followees)
 }

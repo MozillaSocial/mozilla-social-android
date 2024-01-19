@@ -2,25 +2,86 @@ package org.mozilla.social.core.model
 
 import kotlinx.datetime.Instant
 
-/**
- * Represents a notification of an event relevant to the user.
- */
-data class Notification(
-    val notificationId: String,
+sealed class Notification {
+    abstract val id: Int
+    abstract val createdAt: Instant
+    abstract val account: Account
+
     /**
-     * The type of event that resulted in the notification.
+     * Someone mentioned you in their status
      */
-    val type: NotificationType,
+    data class Mention(
+        override val id: Int,
+        override val createdAt: Instant,
+        override val account: Account,
+        val status: Status,
+    ): Notification()
+
     /**
-     * The time of this notification.
+     * Someone you enabled notifications for has posted a status
      */
-    val createdAt: Instant,
+    data class NewStatus(
+        override val id: Int,
+        override val createdAt: Instant,
+        override val account: Account,
+        val status: Status,
+    ): Notification()
+
     /**
-     * The account that performed the action that generated the notification.
+     * Someone boosted one of your statuses
      */
-    val account: Account,
+    data class Repost(
+        override val id: Int,
+        override val createdAt: Instant,
+        override val account: Account,
+        val status: Status,
+    ): Notification()
+
     /**
-     * Status that was the object of the notification, if relevant.
+     * Someone followed you
      */
-    val status: Status? = null,
-)
+    data class Follow(
+        override val id: Int,
+        override val createdAt: Instant,
+        override val account: Account,
+    ): Notification()
+
+    /**
+     * Someone requested to follow you
+     */
+    data class FollowRequest(
+        override val id: Int,
+        override val createdAt: Instant,
+        override val account: Account,
+    ): Notification()
+
+    /**
+     * Someone favourited one of your statuses
+     */
+    data class Favorite(
+        override val id: Int,
+        override val createdAt: Instant,
+        override val account: Account,
+        val status: Status,
+    ): Notification()
+
+    /**
+     * A poll you have voted in or created has ended
+     */
+    data class PollEnded(
+        override val id: Int,
+        override val createdAt: Instant,
+        override val account: Account,
+        val status: Status,
+    ): Notification()
+
+    /**
+     * A status you interacted with has been edited
+     */
+    data class StatusUpdated(
+        override val id: Int,
+        override val createdAt: Instant,
+        override val account: Account,
+        val status: Status,
+    ): Notification()
+}

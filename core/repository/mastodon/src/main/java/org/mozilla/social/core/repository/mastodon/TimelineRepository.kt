@@ -208,6 +208,11 @@ class TimelineRepository internal constructor(
 
     suspend fun deleteStatusFromHomeTimeline(statusId: String) =
         homeTimelineStatusDao.deletePost(statusId)
+
+    suspend fun getTopHomePostsFromDatabase(
+        count: Int,
+    ): List<Status> = homeTimelineStatusDao.getTopPosts(count)
+        .map { it.toStatusWrapper().toExternalModel() }
     //endregion
 
     //region Hashtag timeline
@@ -260,6 +265,8 @@ class TimelineRepository internal constructor(
     suspend fun deleteHashTagTimeline(hashTag: String) =
         hashTagTimelineStatusDao.deleteHashTagTimeline(hashTag)
 
+    suspend fun deleteAllHashTagTimelines() = hashTagTimelineStatusDao.deleteAllHashTagTimelines()
+
     suspend fun deleteStatusFromAllHashTagTimelines(statusId: String) =
         hashTagTimelineStatusDao.deletePost(statusId)
 
@@ -300,6 +307,12 @@ class TimelineRepository internal constructor(
         accountId: String,
         timelineType: AccountTimelineType,
     ) = accountTimelineStatusDao.deleteAccountTimeline(accountId, timelineType)
+
+    suspend fun deleteAllAccountTimelines(
+        accountsToKeep: List<String> = emptyList()
+    ) = accountTimelineStatusDao.deleteAllAccountTimelines(
+        accountsToKeep
+    )
 
     suspend fun deleteStatusFromAccountTimelines(statusId: String) =
         accountTimelineStatusDao.deletePost(statusId)

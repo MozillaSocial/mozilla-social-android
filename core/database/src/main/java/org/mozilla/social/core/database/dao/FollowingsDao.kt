@@ -22,4 +22,12 @@ interface FollowingsDao : BaseDao<Followee> {
             "WHERE accountId = :accountId",
     )
     suspend fun deleteFollowings(accountId: String)
+
+    @Query(
+        "DELETE FROM followings " +
+        "WHERE accountId NOT IN (:accountsToKeep)"
+    )
+    suspend fun deleteAllFollowings(
+        accountsToKeep: List<String> = emptyList()
+    )
 }

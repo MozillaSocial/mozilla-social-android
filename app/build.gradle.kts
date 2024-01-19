@@ -3,6 +3,8 @@ import com.android.build.api.dsl.ManagedVirtualDevice
 plugins {
     id("org.mozilla.social.android.application")
     id("org.mozilla.social.android.application.compose")
+    id("org.mozilla.social.android.application.secrets")
+    alias(libs.plugins.sentry)
 }
 
 android {
@@ -17,6 +19,7 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+        manifestPlaceholders["debug"] = false
     }
 
     testBuildType = "releaseTest"
@@ -27,14 +30,24 @@ android {
             isShrinkResources = true
             proguardFile("proguard-rules.pro")
             matchingFallbacks += "release"
+            manifestPlaceholders["environment"] = "release"
         }
         debug {
             isDefault = true
             applicationIdSuffix = ".debug"
+            manifestPlaceholders["environment"] = "debug"
+            manifestPlaceholders["debug"] = true
         }
         create("nightly") {
             initWith(getByName("release"))
             applicationIdSuffix = ".nightly"
+            manifestPlaceholders["environment"] = "nightly"
+        }
+
+        create("unsignedRelease") {
+            initWith(getByName("release"))
+            signingConfig = signingConfigs.getByName("debug")
+            manifestPlaceholders["environment"] = "unsignedRelease"
         }
         create("releaseTest") {
             initWith(getByName("release"))
@@ -92,6 +105,7 @@ dependencies {
     implementation(project(":core:navigation"))
     implementation(project(":feature:discover"))
     implementation(project(":feature:favorites"))
+    implementation(project(":core:workmanager"))
     implementation(project(":feature:notifications"))
 
     implementation(kotlin("reflect"))
@@ -106,6 +120,7 @@ dependencies {
     implementation(libs.koin.androidx.compose)
     implementation(libs.koin.android)
     implementation(libs.koin.compose)
+    implementation(libs.koin.androidx.workmanager)
 
     implementation(libs.androidx.browser)
 
@@ -129,4 +144,14 @@ dependencies {
 
     debugImplementation(libs.androidx.compose.ui.test.manifest)
     debugImplementation(libs.androidx.compose.ui.tooling)
+}
+
+
+sentry {
+    org.set("mozilla")
+    projectName.set("moso-android")
+
+    // this will upload your source code to Sentry to show it as part of the stack traces
+    // disable if you don't want to expose your sources
+    includeSourceContext.set(true)
 }

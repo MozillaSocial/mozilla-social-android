@@ -63,8 +63,13 @@ interface StatusDao : BaseDao<DatabaseStatus> {
         valueChange: Long,
     )
 
-    @Query("DELETE FROM statuses")
-    fun deleteAll()
+    @Query(
+        "DELETE FROM statuses " +
+        "WHERE statusId NOT IN (:statusIdsToKeep)"
+    )
+    suspend fun deleteAll(
+        statusIdsToKeep: List<String> = emptyList()
+    )
 
     @Query(
         "DELETE FROM statuses " +
@@ -81,4 +86,25 @@ interface StatusDao : BaseDao<DatabaseStatus> {
         statusId: String,
         isBeingDeleted: Boolean,
     )
+
+    @Query(
+        "DELETE FROM statuses " +
+        "WHERE statusId NOT IN " +
+        "(" +
+            "SELECT statusId FROM favoritesTimeline " +
+            "UNION " +
+            "SELECT statusId FROM homeTimeline " +
+            "UNION " +
+            "SELECT statusId FROM localTimeline " +
+            "UNION " +
+            "SELECT statusId FROM hashTagTimeline " +
+            "UNION " +
+            "SELECT statusId FROM federatedTimeline " +
+            "UNION " +
+            "SELECT statusId FROM accountTimeline " +
+            "UNION " +
+            "SELECT statusId FROM notifications" +
+        ")"
+    )
+    suspend fun deleteOldStatuses()
 }

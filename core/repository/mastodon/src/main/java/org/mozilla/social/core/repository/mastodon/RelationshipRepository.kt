@@ -16,6 +16,10 @@ class RelationshipRepository(
     fun insert(relationship: Relationship) =
         dao.upsert(relationship.toDatabaseModel())
 
+    suspend fun deleteAll() = dao.deleteAll()
+
+    suspend fun deleteOldRelationships() = dao.deleteOldRelationships()
+
     fun getRelationshipFlow(accountId: String): Flow<Relationship> =
         dao.getRelationshipFlow(accountId).map { it.toExternal() }
 

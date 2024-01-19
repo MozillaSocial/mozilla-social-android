@@ -1,6 +1,5 @@
 package org.mozilla.social.feature.settings
 
-import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
@@ -11,6 +10,7 @@ import org.mozilla.social.core.navigation.navigationModule
 import org.mozilla.social.core.repository.mastodon.mastodonRepositoryModule
 import org.mozilla.social.core.usecase.mastodon.htmlcontent.DefaultHtmlInteractions
 import org.mozilla.social.core.usecase.mastodon.mastodonUsecaseModule
+import org.mozilla.social.core.workmanager.workManagerModule
 import org.mozilla.social.feature.settings.about.AboutSettingsViewModel
 import org.mozilla.social.feature.settings.account.AccountSettingsViewModel
 import org.mozilla.social.feature.settings.contentpreferences.ContentPreferencesSettingsViewModel
@@ -27,9 +27,10 @@ val settingsModule =
             navigationModule,
             mastodonRepositoryModule,
             mastodonUsecaseModule,
+            workManagerModule,
         )
 
-        viewModel { _ -> SettingsViewModel(get(), get(), get()) }
+        viewModelOf(::SettingsViewModel)
         viewModelOf(::AccountSettingsViewModel)
         viewModelOf(::PrivacySettingsViewModel)
         viewModelOf(::AboutSettingsViewModel)

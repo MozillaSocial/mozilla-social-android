@@ -27,7 +27,7 @@ class AccountSettingsViewModel(
     private val getDomain: GetDomain,
     getLoggedInUserAccountId: GetLoggedInUserAccountId,
     accountRepository: AccountRepository,
-) : ViewModel(), SettingsInteractions {
+) : ViewModel(), AccountSettingsInteractions {
 
     private val userAccountId: String = getLoggedInUserAccountId()
     private val domain = getDomain().stateIn(viewModelScope, SharingStarted.Eagerly, null)
@@ -41,7 +41,7 @@ class AccountSettingsViewModel(
         }
 
 
-    fun onLogoutClicked() {
+    override fun onLogoutClicked() {
         logoutClickedAnalytics()
         viewModelScope.launch {
             logout()
@@ -55,7 +55,7 @@ class AccountSettingsViewModel(
         )
     }
 
-    fun onManageAccountClicked() {
+    override fun onManageAccountClicked() {
         domain.value?.let { openLink("$it/settings/profile") }
     }
 

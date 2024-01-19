@@ -3,7 +3,9 @@ package org.mozilla.social.core.ui.accountfollower
 import org.mozilla.social.core.model.wrappers.DetailedAccountWrapper
 import org.mozilla.social.core.ui.common.account.quickview.AccountQuickViewUiState
 
-fun DetailedAccountWrapper.toAccountFollowerUiState(): AccountFollowerUiState =
+fun DetailedAccountWrapper.toAccountFollowerUiState(
+    currentUserAccountId: String,
+): AccountFollowerUiState =
     AccountFollowerUiState(
         accountQuickViewUiState = AccountQuickViewUiState(
             accountId = account.accountId,
@@ -13,4 +15,5 @@ fun DetailedAccountWrapper.toAccountFollowerUiState(): AccountFollowerUiState =
         ),
         isFollowing = relationship.isFollowing,
         bioHtml = account.bio,
+        followButtonVisible = currentUserAccountId != account.accountId,
     )

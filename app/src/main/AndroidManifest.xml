@@ -33,5 +33,34 @@
                     android:scheme="mozsoc"/>
             </intent-filter>
         </activity>
-    </application>
+
+        <!--> Remove the work manager provider so we can use koin's https://insert-koin.io/docs/reference/koin-android/workmanager/ <-->
+        <provider
+            android:name="androidx.startup.InitializationProvider"
+            android:authorities="${applicationId}.androidx-startup"
+            android:exported="false"
+            tools:node="merge">
+            <meta-data
+                android:name="androidx.work.WorkManagerInitializer"
+                android:value="androidx.startup"
+                tools:node="remove" />
+        </provider>
+    
+    <!-- Required: set your sentry.io project identifier (DSN) -->
+        <meta-data android:name="io.sentry.dsn" android:value="${sentryDsn}" />
+        <meta-data android:name="io.sentry.debug" android:value="${debug}" />
+        <meta-data android:name="io.sentry.environment" android:value="${environment}" />
+
+    <!-- enable automatic breadcrumbs for user interactions (clicks, swipes, scrolls) -->
+    <meta-data android:name="io.sentry.traces.user-interaction.enable" android:value="true" />
+    <!-- enable screenshot for crashes (could contain sensitive/PII data) -->
+    <meta-data android:name="io.sentry.attach-screenshot" android:value="true" />
+    <!-- enable view hierarchy for crashes -->
+    <meta-data android:name="io.sentry.attach-view-hierarchy" android:value="true" />
+
+    <!-- enable the performance API by setting a sample-rate, adjust in production env -->
+    <meta-data android:name="io.sentry.traces.sample-rate" android:value="1.0" />
+    <!-- enable profiling when starting transactions, adjust in production env -->
+    <meta-data android:name="io.sentry.traces.profiling.sample-rate" android:value="1.0" />
+</application>
 </manifest>

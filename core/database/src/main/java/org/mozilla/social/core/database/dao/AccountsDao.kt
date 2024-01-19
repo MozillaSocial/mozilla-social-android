@@ -28,4 +28,34 @@ interface AccountsDao : BaseDao<DatabaseAccount> {
         accountId: String,
         valueChange: Long,
     )
+
+    @Query(
+        "DELETE FROM accounts " +
+        "WHERE accountId NOT IN (:accountIdsToKeep)"
+    )
+    suspend fun deleteAll(
+        accountIdsToKeep: List<String> = emptyList()
+    )
+
+    @Query(
+        "DELETE FROM accounts " +
+        "WHERE accountId NOT IN " +
+        "(" +
+            "SELECT accountId FROM blocks " +
+            "UNION " +
+            "SELECT accountId FROM mutes " +
+            "UNION " +
+            "SELECT followerAccountId FROM followers " +
+            "UNION " +
+            "SELECT followeeAccountId FROM followings " +
+            "UNION " +
+            "SELECT accountId FROM statuses " +
+            "UNION " +
+            "SELECT accountId FROM notifications " +
+        ") " +
+        "AND accountId NOT IN (:accountIdsToKeep)"
+    )
+    suspend fun deleteOldAccounts(
+        accountIdsToKeep: List<String> = emptyList()
+    )
 }

@@ -7,15 +7,20 @@ import coil.ImageLoaderFactory
 import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
 import coil.decode.VideoFrameDecoder
+import io.sentry.SentryLevel
+import io.sentry.android.core.SentryAndroid
+import io.sentry.android.timber.SentryTimberIntegration
 import org.koin.android.ext.android.get
 import org.koin.android.ext.android.inject
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
+import org.koin.androidx.workmanager.koin.workManagerFactory
 import org.koin.core.context.startKoin
 import org.koin.dsl.module
 import org.mozilla.social.common.Version
 import org.mozilla.social.core.analytics.Analytics
 import org.mozilla.social.core.repository.mastodon.AuthCredentialObserver
+import org.mozilla.social.core.workmanager.workManagerModule
 import org.mozilla.social.feature.account.accountModule
 import org.mozilla.social.feature.auth.authModule
 import org.mozilla.social.feature.discover.discoverModule
@@ -32,28 +37,53 @@ import org.mozilla.social.search.searchModule
 import timber.log.Timber
 
 class MainApplication : Application(), ImageLoaderFactory {
-    private lateinit var authCredentialObserver: AuthCredentialObserver
 
+    private lateinit var authCredentialObserver: AuthCredentialObserver
     private val analytics: Analytics by inject()
 
     override fun onCreate() {
         super.onCreate()
-        if (BuildConfig.DEBUG) {
-            Timber.plant(Timber.DebugTree())
-        }
+        initializeAppVersion()
+        initializeSentryAndTimber()
+        initializeKoin()
+        initializeAnalytics()
+        initializeAuthCredentialInterceptor()
+    }
 
+    private fun initializeSentryAndTimber() {
+        SentryAndroid.init(this) { options ->
+            if (!BuildConfig.DEBUG) {
+                options.addIntegration(
+                    SentryTimberIntegration(
+                        minEventLevel = SentryLevel.ERROR,
+                        minBreadcrumbLevel = SentryLevel.INFO
+                    )
+                )
+            } else {
+                Timber.plant(Timber.DebugTree())
+            }
+        }
+    }
+
+    private fun initializeKoin() {
         startKoin {
             androidLogger()
             androidContext(this@MainApplication)
+            workManagerFactory()
             modules(
                 featureModules,
                 mainModule,
+                workManagerModule,
             )
         }
+    }
 
-        analytics.initialize(applicationContext)
-
+    private fun initializeAnalytics() = analytics.initialize(applicationContext)
+    private fun initializeAuthCredentialInterceptor() {
         authCredentialObserver = get()
+    }
+
+    private fun initializeAppVersion() {
         Version.name = BuildConfig.VERSION_NAME
         Version.code = BuildConfig.VERSION_CODE
     }

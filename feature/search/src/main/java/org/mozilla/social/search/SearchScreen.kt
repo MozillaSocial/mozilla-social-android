@@ -67,7 +67,7 @@ import org.mozilla.social.core.ui.common.following.FollowingButton
 import org.mozilla.social.core.ui.common.hashtag.quickview.HashTagQuickView
 import org.mozilla.social.core.ui.common.hashtag.quickview.HashTagQuickViewUiState
 import org.mozilla.social.core.ui.common.loading.MaxSizeLoading
-import org.mozilla.social.core.ui.common.paging.SearchPagingColumn
+import org.mozilla.social.core.ui.common.paging.PagingLazyColumn
 import org.mozilla.social.core.ui.postcard.PostCard
 import org.mozilla.social.core.ui.postcard.PostCardInteractions
 import org.mozilla.social.core.ui.postcard.PostCardUiState
@@ -363,15 +363,17 @@ private fun TopAccounts(
                         .padding(MoSoSpacing.md),
                     uiState = item.quickViewUiState,
                     buttonSlot = {
-                        FollowingButton(
-                            onButtonClicked = {
-                                searchInteractions.onFollowClicked(
-                                    item.quickViewUiState.accountId,
-                                    item.isFollowing
-                                )
-                            },
-                            isFollowing = item.isFollowing
-                        )
+                        if (item.followButtonVisible) {
+                            FollowingButton(
+                                onButtonClicked = {
+                                    searchInteractions.onFollowClicked(
+                                        item.quickViewUiState.accountId,
+                                        item.isFollowing
+                                    )
+                                },
+                                isFollowing = item.isFollowing
+                            )
+                        }
                     },
                 )
             }
@@ -387,7 +389,7 @@ private fun AccountsList(
     searchInteractions: SearchInteractions,
 ) {
     accountFeed?.collectAsLazyPagingItems()?.let { lazyPagingItems ->
-        SearchPagingColumn(
+        PagingLazyColumn(
             lazyPagingItems = lazyPagingItems,
             noResultText = stringResource(id = R.string.search_empty)
         ) {
@@ -424,7 +426,7 @@ private fun StatusesList(
     postCardInteractions: PostCardInteractions,
 ) {
     statusFeed?.collectAsLazyPagingItems()?.let { lazyPagingItems ->
-        SearchPagingColumn(
+        PagingLazyColumn(
             lazyPagingItems = lazyPagingItems,
             noResultText = stringResource(id = R.string.search_empty)
         ) {
@@ -442,7 +444,7 @@ private fun HashTagsList(
     searchInteractions: SearchInteractions,
 ) {
     hashTagsFeed?.collectAsLazyPagingItems()?.let { lazyPagingItems ->
-        SearchPagingColumn(
+        PagingLazyColumn(
             lazyPagingItems = lazyPagingItems,
             noResultText = stringResource(id = R.string.search_empty)
         ) {

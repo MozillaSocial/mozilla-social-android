@@ -28,6 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight.Companion.W700
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
@@ -41,7 +42,9 @@ import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.ui.common.MoSoBadge
 import org.mozilla.social.core.ui.common.MoSoSurface
 import org.mozilla.social.core.ui.common.button.MoSoButton
+import org.mozilla.social.core.ui.common.button.MoSoButtonSecondary
 import org.mozilla.social.core.ui.common.loading.MoSoCircularProgressIndicator
+import org.mozilla.social.core.ui.common.text.MediumTextLabel
 import org.mozilla.social.core.ui.common.utils.getWindowHeightClass
 import org.mozilla.social.core.ui.common.utils.getWindowWidthClass
 import org.mozilla.social.feature.auth.R
@@ -189,11 +192,12 @@ private fun LoginBox(
             modifier
                 .fillMaxWidth()
                 .background(MoSoTheme.colors.layer1)
-                .padding(MoSoSpacing.lg),
+                .padding(MoSoSpacing.lg)
+                .semantics(mergeDescendants = true) {},
     ) {
         MoSoBadge {
             Text(
-                text = stringResource(id = R.string.beta_badge),
+                text = stringResource(id = R.string.alpha_badge),
                 style = MoSoTheme.typography.labelSmall,
             )
         }
@@ -220,24 +224,17 @@ private fun LoginBox(
                     modifier = Modifier.size(20.dp),
                 )
             } else {
-                Text(
-                    text = stringResource(id = R.string.sign_in_button),
-                )
+                MediumTextLabel(text = stringResource(id = R.string.sign_in_button))
             }
         }
-        Spacer(modifier = Modifier.height(24.dp))
-        Text(
-            modifier =
-                Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .clickable(
-                        enabled = !uiState.isLoading,
-                    ) { loginInteractions.onChooseServerClicked() },
-            text = stringResource(id = R.string.choose_server_option),
-            style = MoSoTheme.typography.labelSmallLink,
-            textDecoration = TextDecoration.Underline,
-            color = MoSoTheme.colors.textLink,
-        )
+        Spacer(modifier = Modifier.height(MoSoSpacing.sm))
+        MoSoButtonSecondary(
+            modifier = Modifier.fillMaxWidth(),
+            onClick = { loginInteractions.onChooseServerClicked() },
+            enabled = !uiState.isLoading,
+        ) {
+            MediumTextLabel(text = stringResource(id = R.string.choose_server_option))
+        }
     }
 }
 

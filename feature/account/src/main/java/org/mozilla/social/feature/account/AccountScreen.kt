@@ -73,6 +73,7 @@ import org.mozilla.social.core.ui.common.dropdown.DropDownItem
 import org.mozilla.social.core.ui.common.dropdown.MoSoDropdownMenu
 import org.mozilla.social.core.ui.common.error.GenericError
 import org.mozilla.social.core.ui.common.loading.MoSoCircularProgressIndicator
+import org.mozilla.social.core.ui.htmlcontent.HtmlContent
 import org.mozilla.social.core.ui.htmlcontent.HtmlContentInteractions
 import org.mozilla.social.core.ui.postcard.PostCardInteractions
 import org.mozilla.social.core.ui.postcard.PostCardList
@@ -456,9 +457,11 @@ private fun Counter(
 private fun UserBio(
     modifier: Modifier = Modifier,
     account: AccountUiState,
-    htmlContentInteractions: org.mozilla.social.core.ui.htmlcontent.HtmlContentInteractions,
+    htmlContentInteractions: HtmlContentInteractions,
 ) {
     var expanded by remember { mutableStateOf(false) }
+    val bioIsBlank by remember(account.bio) { mutableStateOf(account.bio.isBlank()) }
+
     NoRipple {
         Box(
             modifier =
@@ -496,14 +499,18 @@ private fun UserBio(
                 },
             ) { targetState ->
                 Column {
-                    org.mozilla.social.core.ui.htmlcontent.HtmlContent(
-                        mentions = emptyList(),
-                        htmlText = account.bio,
-                        htmlContentInteractions = htmlContentInteractions,
-                        maximumLineCount = if (targetState) Int.MAX_VALUE else BIO_MAX_LINES_NOT_EXPANDED,
-                    )
-                    if (targetState) {
-                        Spacer(modifier = Modifier.height(8.dp))
+                    if (!bioIsBlank) {
+                        HtmlContent(
+                            mentions = emptyList(),
+                            htmlText = account.bio,
+                            htmlContentInteractions = htmlContentInteractions,
+                            maximumLineCount = if (targetState) Int.MAX_VALUE else BIO_MAX_LINES_NOT_EXPANDED,
+                        )
+                    }
+                    if (targetState || bioIsBlank) {
+                        if (!bioIsBlank) {
+                            Spacer(modifier = Modifier.height(8.dp))
+                        }
                         account.fields.forEach { field ->
                             UserLabel(
                                 label = field.name,
@@ -525,21 +532,23 @@ private fun UserBio(
                 }
             }
 
-            val rotatedDegrees = 180f
+            if (!bioIsBlank) {
+                val rotatedDegrees = 180f
 
-            val rotation: Float by animateFloatAsState(
-                targetValue = if (expanded) rotatedDegrees else 0f,
-                animationSpec = tween(animationDuration),
-                label = "",
-            )
-            Icon(
-                modifier =
-                Modifier
-                    .rotate(rotation)
-                    .align(Alignment.TopEnd),
-                painter = MoSoIcons.caret(),
-                contentDescription = null,
-            )
+                val rotation: Float by animateFloatAsState(
+                    targetValue = if (expanded) rotatedDegrees else 0f,
+                    animationSpec = tween(animationDuration),
+                    label = "",
+                )
+                Icon(
+                    modifier =
+                    Modifier
+                        .rotate(rotation)
+                        .align(Alignment.TopEnd),
+                    painter = MoSoIcons.caret(),
+                    contentDescription = null,
+                )
+            }
         }
     }
 }
@@ -549,7 +558,7 @@ private fun UserLabel(
     icon: Painter? = null,
     label: String? = null,
     text: String,
-    htmlContentInteractions: org.mozilla.social.core.ui.htmlcontent.HtmlContentInteractions,
+    htmlContentInteractions: HtmlContentInteractions,
 ) {
     Row {
         icon?.let {
@@ -575,7 +584,7 @@ private fun UserLabel(
             Spacer(modifier = Modifier.width(4.dp))
         }
 
-        org.mozilla.social.core.ui.htmlcontent.HtmlContent(
+        HtmlContent(
             modifier =
                 Modifier
                     .weight(1f),
@@ -607,7 +616,7 @@ fun AccountScreenPreview() {
                             AccountUiState(
                                 accountId = "",
                                 username = "Coolguy",
-                                webFinger = "@coolguy",
+                                webFinger = "coolguy",
                                 displayName = "Cool Guy",
                                 accountUrl = "",
                                 bio = "I'm pretty cool",

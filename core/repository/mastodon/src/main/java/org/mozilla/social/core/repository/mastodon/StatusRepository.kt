@@ -76,6 +76,12 @@ class StatusRepository(
         dao.deleteStatus(statusId)
     }
 
+    suspend fun deleteAllLocal(
+        statusIdsToKeep: List<String> = emptyList()
+    ) = dao.deleteAll(statusIdsToKeep)
+
+    suspend fun deleteOldStatusesFromDatabase() = dao.deleteOldStatuses()
+
     suspend fun getStatusLocal(statusId: String): Status? {
         val status = dao.getStatus(statusId)
         return status?.toExternalModel()
