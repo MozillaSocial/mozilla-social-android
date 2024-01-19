@@ -17,10 +17,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
+import org.mozilla.social.core.ui.common.R
 import org.mozilla.social.core.ui.common.animation.DelayedVisibility
 import org.mozilla.social.core.ui.common.error.GenericError
 
@@ -28,9 +30,10 @@ import org.mozilla.social.core.ui.common.error.GenericError
 fun <A : Any> PagingLazyColumn(
     lazyPagingItems: LazyPagingItems<A>,
     modifier: Modifier = Modifier,
-    noResultText: String,
+    noResultText: String = stringResource(id = R.string.theres_nothing_here),
     listState: LazyListState = rememberLazyListState(),
     emptyListState: LazyListState = rememberLazyListState(),
+    headerContent: LazyListScope.() -> Unit = {},
     content: LazyListScope.() -> Unit,
 ) {
     Box(
@@ -44,6 +47,7 @@ fun <A : Any> PagingLazyColumn(
                 listState
             },
         ) {
+            headerContent()
             when (lazyPagingItems.loadState.refresh) {
                 is LoadState.Error -> {} // handle the error outside the lazy column
                 is LoadState.Loading -> {
