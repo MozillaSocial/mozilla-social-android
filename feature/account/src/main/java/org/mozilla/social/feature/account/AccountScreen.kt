@@ -79,7 +79,6 @@ import org.mozilla.social.core.ui.common.paging.PagingLazyColumn
 import org.mozilla.social.core.ui.htmlcontent.HtmlContent
 import org.mozilla.social.core.ui.htmlcontent.HtmlContentInteractions
 import org.mozilla.social.core.ui.postcard.PostCardInteractions
-import org.mozilla.social.core.ui.postcard.PostCardList
 import org.mozilla.social.core.ui.postcard.postListContent
 
 @Composable
