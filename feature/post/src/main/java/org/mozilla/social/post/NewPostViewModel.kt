@@ -2,6 +2,7 @@ package org.mozilla.social.post
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -43,6 +44,7 @@ import org.mozilla.social.post.status.StatusDelegate
 import org.mozilla.social.post.status.StatusInteractions
 import timber.log.Timber
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class NewPostViewModel(
     private val analytics: Analytics,
     private val replyStatusId: String?,
@@ -79,8 +81,16 @@ class NewPostViewModel(
     val mediaInteractions: MediaInteractions = mediaDelegate
     val mediaStates: StateFlow<List<ImageState>> = mediaDelegate.imageStates
 
-    private val images = mediaStates.mapLatest { it.filter { it.fileType == FileType.IMAGE } }
-    private val videos = mediaStates.mapLatest { it.filter { it.fileType == FileType.VIDEO } }
+    private val images = mediaStates.mapLatest { imageStates ->
+        imageStates.filter { imageState ->
+            imageState.fileType == FileType.IMAGE
+        }
+    }
+    private val videos = mediaStates.mapLatest { imageStates ->
+        imageStates.filter { imageState ->
+            imageState.fileType == FileType.VIDEO
+        } 
+    }
 
     val bottomBarState: StateFlow<BottomBarState> =
         combine(
@@ -94,7 +104,9 @@ class NewPostViewModel(
                 videoButtonEnabled = images.isEmpty() && poll == null,
                 pollButtonEnabled = images.isEmpty() && videos.isEmpty() && poll == null,
                 contentWarningText = statusUiState.contentWarningText,
-                characterCountText = "${MAX_POST_LENGTH - statusUiState.statusText.text.length - (statusUiState.contentWarningText?.length ?: 0)}",
+                characterCountText = "${MAX_POST_LENGTH - 
+                        statusUiState.statusText.text.length - 
+                        (statusUiState.contentWarningText?.length ?: 0)}",
                 maxImages = MAX_IMAGES - images.size,
             )
         }.stateIn(viewModelScope, SharingStarted.Eagerly, BottomBarState())
