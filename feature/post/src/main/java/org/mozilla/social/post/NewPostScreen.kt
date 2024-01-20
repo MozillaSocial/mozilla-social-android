@@ -110,20 +110,17 @@ internal fun NewPostScreen(
     NewPostScreen(
         statusUiState = statusUiState,
         statusInteractions = viewModel.statusDelegate,
-        onPostClicked = viewModel::onPostClicked,
         sendButtonEnabled = sendButtonEnabled,
         imageStates = mediaStates,
         mediaInteractions = viewModel.mediaDelegate,
         isSendingPost = isSendingPost,
         visibility = visibility,
-        onVisibilitySelected = viewModel::onVisibilitySelected,
         pollUiState = pollUiState,
         pollInteractions = viewModel.pollDelegate,
         contentWarningInteractions = viewModel.statusDelegate,
         userHeaderState = userHeaderState,
         bottomBarState = bottomBarState,
-        onUploadImageClicked = viewModel::onUploadImageClicked,
-        onUploadMediaClicked = viewModel::onUploadMediaClicked
+        newPostInteractions = viewModel,
     )
 
     LaunchedEffect(Unit) {
@@ -138,19 +135,16 @@ private fun NewPostScreen(
     statusUiState: StatusUiState,
     bottomBarState: BottomBarState,
     statusInteractions: StatusInteractions,
-    onPostClicked: () -> Unit,
     sendButtonEnabled: Boolean,
     imageStates: List<ImageState>,
     mediaInteractions: MediaInteractions,
     isSendingPost: Boolean,
     visibility: StatusVisibility,
-    onVisibilitySelected: (StatusVisibility) -> Unit,
     pollUiState: PollUiState?,
     pollInteractions: PollInteractions,
     contentWarningInteractions: ContentWarningInteractions,
     userHeaderState: UserHeaderState?,
-    onUploadImageClicked: () -> Unit,
-    onUploadMediaClicked: () -> Unit
+    newPostInteractions: NewPostInteractions,
 ) {
     Box(
         modifier =
@@ -164,13 +158,13 @@ private fun NewPostScreen(
                 CompactNewPostScreenContent(
                     statusUiState = statusUiState,
                     statusInteractions = statusInteractions,
-                    onPostClicked = onPostClicked,
                     sendButtonEnabled = sendButtonEnabled,
                     imageStates = imageStates,
                     mediaInteractions = mediaInteractions,
                     pollUiState = pollUiState,
                     pollInteractions = pollInteractions,
                     contentWarningInteractions = contentWarningInteractions,
+                    newPostInteractions = newPostInteractions,
                 )
             }
         } else {
@@ -178,18 +172,15 @@ private fun NewPostScreen(
                 statusUiState = statusUiState,
                 bottomBarState = bottomBarState,
                 statusInteractions = statusInteractions,
-                onPostClicked = onPostClicked,
                 sendButtonEnabled = sendButtonEnabled,
                 imageStates = imageStates,
                 mediaInteractions = mediaInteractions,
                 visibility = visibility,
-                onVisibilitySelected = onVisibilitySelected,
                 pollUiState = pollUiState,
                 pollInteractions = pollInteractions,
                 contentWarningInteractions = contentWarningInteractions,
                 userHeaderState = userHeaderState,
-                onUploadImageClicked = onUploadImageClicked,
-                onUploadMediaClicked = onUploadMediaClicked
+                newPostInteractions = newPostInteractions,
             )
         }
 
@@ -206,13 +197,13 @@ private fun NewPostScreen(
 private fun CompactNewPostScreenContent(
     statusUiState: StatusUiState,
     statusInteractions: StatusInteractions,
-    onPostClicked: () -> Unit,
     sendButtonEnabled: Boolean,
     imageStates: List<ImageState>,
     mediaInteractions: MediaInteractions,
     pollUiState: PollUiState?,
     pollInteractions: PollInteractions,
     contentWarningInteractions: ContentWarningInteractions,
+    newPostInteractions: NewPostInteractions,
 ) {
     Row {
         Box(
@@ -233,7 +224,7 @@ private fun CompactNewPostScreenContent(
 
         PostButton(
             modifier = Modifier.padding(end = 16.dp),
-            onPostClicked = onPostClicked,
+            onPostClicked = newPostInteractions::onPostClicked,
             sendButtonEnabled = sendButtonEnabled,
         )
     }
@@ -244,29 +235,26 @@ private fun NewPostScreenContent(
     statusUiState: StatusUiState,
     bottomBarState: BottomBarState,
     statusInteractions: StatusInteractions,
-    onPostClicked: () -> Unit,
     sendButtonEnabled: Boolean,
     imageStates: List<ImageState>,
     mediaInteractions: MediaInteractions,
     visibility: StatusVisibility,
-    onVisibilitySelected: (StatusVisibility) -> Unit,
     pollUiState: PollUiState?,
     pollInteractions: PollInteractions,
     contentWarningInteractions: ContentWarningInteractions,
     userHeaderState: UserHeaderState?,
-    onUploadImageClicked: () -> Unit,
-    onUploadMediaClicked: () -> Unit,
+    newPostInteractions: NewPostInteractions,
 ) {
     Column {
         TopBar(
-            onPostClicked = onPostClicked,
+            onPostClicked = newPostInteractions::onPostClicked,
             sendButtonEnabled = sendButtonEnabled,
         )
         userHeaderState?.let { userHeaderState ->
             UserHeader(
                 userHeaderState = userHeaderState,
                 visibility = visibility,
-                onVisibilitySelected = onVisibilitySelected,
+                onVisibilitySelected = newPostInteractions::onVisibilitySelected,
             )
         }
         Box(
@@ -295,8 +283,8 @@ private fun NewPostScreenContent(
             onMediaInserted = mediaInteractions::onMediaInserted,
             pollInteractions = pollInteractions,
             contentWarningInteractions = contentWarningInteractions,
-            onUploadImageClicked = onUploadImageClicked,
-            onUploadMediaClicked = onUploadMediaClicked
+            onUploadImageClicked = newPostInteractions::onUploadImageClicked,
+            onUploadMediaClicked = newPostInteractions::onUploadMediaClicked,
         )
     }
 }
@@ -693,20 +681,17 @@ private fun NewPostScreenPreview() {
                 inReplyToAccountName = null,
             ),
             statusInteractions = object : StatusInteractions {},
-            onPostClicked = {},
             sendButtonEnabled = true,
             imageStates = listOf(),
             mediaInteractions = object : MediaInteractions {},
             isSendingPost = false,
             visibility = StatusVisibility.Private,
-            onVisibilitySelected = {},
             pollUiState = null,
             pollInteractions = object : PollInteractions {},
             contentWarningInteractions = object : ContentWarningInteractions {},
             userHeaderState = UserHeaderState("", "Barack Obama"),
             bottomBarState = BottomBarState(),
-            onUploadImageClicked = {},
-            onUploadMediaClicked = {},
+            newPostInteractions = NewPostInteractionsNoOp,
         )
     }
 }
@@ -726,13 +711,11 @@ private fun NewPostScreenWithPollPreview() {
                 inReplyToAccountName = null,
             ),
             statusInteractions = object : StatusInteractions {},
-            onPostClicked = {},
             sendButtonEnabled = true,
             imageStates = listOf(),
             mediaInteractions = object : MediaInteractions {},
             isSendingPost = false,
             visibility = StatusVisibility.Private,
-            onVisibilitySelected = {},
             pollUiState =
                 PollUiState(
                     options = listOf("option 1", "option 2"),
@@ -744,8 +727,7 @@ private fun NewPostScreenWithPollPreview() {
             contentWarningInteractions = object : ContentWarningInteractions {},
             userHeaderState = UserHeaderState("", "Barack Obama"),
             bottomBarState = BottomBarState(),
-            onUploadImageClicked = {},
-            onUploadMediaClicked = {},
+            newPostInteractions = NewPostInteractionsNoOp,
         )
     }
 }
@@ -765,20 +747,17 @@ private fun NewPostScreenWithContentWarningPreview() {
                 inReplyToAccountName = null,
             ),
             statusInteractions = object : StatusInteractions {},
-            onPostClicked = {},
             sendButtonEnabled = true,
             imageStates = listOf(),
             mediaInteractions = object : MediaInteractions {},
             isSendingPost = false,
             visibility = StatusVisibility.Private,
-            onVisibilitySelected = {},
             pollUiState = null,
             pollInteractions = object : PollInteractions {},
             contentWarningInteractions = object : ContentWarningInteractions {},
             userHeaderState = UserHeaderState("", "Barack Obama"),
             bottomBarState = BottomBarState(),
-            onUploadImageClicked = {},
-            onUploadMediaClicked = {},
+            newPostInteractions = NewPostInteractionsNoOp,
         )
     }
 }

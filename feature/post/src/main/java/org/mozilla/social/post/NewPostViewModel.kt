@@ -125,11 +125,11 @@ class NewPostViewModel(
             }
         }
 
-    fun onVisibilitySelected(statusVisibility: StatusVisibility) {
+    override fun onVisibilitySelected(statusVisibility: StatusVisibility) {
         _visibility.update { statusVisibility }
     }
 
-    fun onPostClicked() {
+    override fun onPostClicked() {
         analytics.uiEngagement(
             engagementType = EngagementType.POST,
             uiIdentifier = AnalyticsIdentifiers.NEW_POST_POST,
