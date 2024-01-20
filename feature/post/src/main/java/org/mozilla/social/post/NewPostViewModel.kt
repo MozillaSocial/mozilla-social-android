@@ -2,17 +2,10 @@ package org.mozilla.social.post
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.mapNotNull
-import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -40,7 +33,6 @@ import org.mozilla.social.post.poll.PollStyle
 import org.mozilla.social.post.status.StatusDelegate
 import timber.log.Timber
 
-@OptIn(ExperimentalCoroutinesApi::class)
 class NewPostViewModel(
     private val analytics: Analytics,
     private val replyStatusId: String?,
@@ -68,25 +60,15 @@ class NewPostViewModel(
     private val _newPostUiState = MutableStateFlow(NewPostUiState())
     val newPostUiState = _newPostUiState.asStateFlow()
 
-    private val images = mediaDelegate.imageStates.mapLatest { imageStates ->
-        imageStates.filter { imageState ->
-            imageState.fileType == FileType.IMAGE
-        }
-    }
-    private val videos = mediaDelegate.imageStates.mapLatest { imageStates ->
-        imageStates.filter { imageState ->
-            imageState.fileType == FileType.VIDEO
-        }
-    }
-
     init {
         viewModelScope.launch {
             combine(
-                images,
-                videos,
+                mediaDelegate.imageStates,
                 pollDelegate.uiState,
                 statusDelegate.uiState,
-            ) { images, videos, pollUiState, statusUiState ->
+            ) { imagesStates, pollUiState, statusUiState ->
+                val images = imagesStates.filter { it.fileType == FileType.IMAGE }
+                val videos = imagesStates.filter { it.fileType == FileType.VIDEO }
                 BottomBarState(
                     imageButtonEnabled = videos.isEmpty() && images.size < MAX_IMAGES && pollUiState == null,
                     videoButtonEnabled = images.isEmpty() && pollUiState == null,
