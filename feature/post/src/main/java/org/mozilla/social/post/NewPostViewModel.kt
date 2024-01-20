@@ -21,6 +21,7 @@ import org.mozilla.social.common.LoadState
 import org.mozilla.social.common.loadResource
 import org.mozilla.social.common.utils.FileType
 import org.mozilla.social.common.utils.StringFactory
+import org.mozilla.social.common.utils.edit
 import org.mozilla.social.core.analytics.Analytics
 import org.mozilla.social.core.analytics.AnalyticsIdentifiers
 import org.mozilla.social.core.analytics.EngagementType
@@ -48,6 +49,7 @@ class NewPostViewModel(
     private val postStatus: PostStatus,
     private val popNavBackstack: PopNavBackstack,
     private val showSnackbar: ShowSnackbar,
+    val pollDelegate: PollDelegate,
 ) : ViewModel(), NewPostInteractions, KoinComponent {
 
     val statusDelegate: StatusDelegate by inject {
@@ -57,13 +59,14 @@ class NewPostViewModel(
         )
     }
 
-    val pollDelegate: PollDelegate by inject()
-
     val mediaDelegate: MediaDelegate by inject {
         parametersOf(
             viewModelScope,
         )
     }
+
+    private val _newPostUiState = MutableStateFlow(NewPostUiState())
+    val newPostUiState = _newPostUiState.asStateFlow()
 
     private val images = mediaDelegate.imageStates.mapLatest { imageStates ->
         imageStates.filter { imageState ->
@@ -76,57 +79,68 @@ class NewPostViewModel(
         }
     }
 
-    val bottomBarState: StateFlow<BottomBarState> = combine(
-        images,
-        videos,
-        pollDelegate.uiState,
-        statusDelegate.uiState,
-    ) { images, videos, pollUiState, statusUiState ->
-        BottomBarState(
-            imageButtonEnabled = videos.isEmpty() && images.size < MAX_IMAGES && pollUiState == null,
-            videoButtonEnabled = images.isEmpty() && pollUiState == null,
-            pollButtonEnabled = images.isEmpty() && videos.isEmpty() && pollUiState == null,
-            contentWarningText = statusUiState.contentWarningText,
-            characterCountText = "${MAX_POST_LENGTH - 
-                    statusUiState.statusText.text.length - 
-                    (statusUiState.contentWarningText?.length ?: 0)}",
-            maxImages = MAX_IMAGES - images.size,
-        )
-    }.stateIn(viewModelScope, SharingStarted.Eagerly, BottomBarState())
-
-    val sendButtonEnabled: StateFlow<Boolean> = combine(
-        statusDelegate.uiState,
-        mediaDelegate.imageStates,
-        pollDelegate.uiState
-    ) { statusUiState, imageStates, poll ->
-        (statusUiState.statusText.text.isNotBlank() || imageStates.isNotEmpty()) &&
-            // all images are loaded
-            imageStates.find { it.loadState != LoadState.LOADED } == null &&
-            // poll options have text if they exist
-            poll?.options?.find { it.isBlank() } == null
-    }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.Lazily,
-        initialValue = false,
-    )
-
-    private val _isSendingPost = MutableStateFlow(false)
-    val isSendingPost = _isSendingPost.asStateFlow()
-
-    private val _visibility = MutableStateFlow(StatusVisibility.Public)
-    val visibility = _visibility.asStateFlow()
-
-    val userHeaderState: Flow<UserHeaderState> =
-        loadResource {
-            accountRepository.getAccount(getLoggedInUserAccountId())
-        }.mapNotNull { resource ->
-            resource.data?.let { account ->
-                UserHeaderState(avatarUrl = account.avatarUrl, displayName = account.displayName)
+    init {
+        viewModelScope.launch {
+            combine(
+                images,
+                videos,
+                pollDelegate.uiState,
+                statusDelegate.uiState,
+            ) { images, videos, pollUiState, statusUiState ->
+                BottomBarState(
+                    imageButtonEnabled = videos.isEmpty() && images.size < MAX_IMAGES && pollUiState == null,
+                    videoButtonEnabled = images.isEmpty() && pollUiState == null,
+                    pollButtonEnabled = images.isEmpty() && videos.isEmpty() && pollUiState == null,
+                    contentWarningText = statusUiState.contentWarningText,
+                    characterCountText = "${MAX_POST_LENGTH -
+                            statusUiState.statusText.text.length -
+                            (statusUiState.contentWarningText?.length ?: 0)}",
+                    maxImages = MAX_IMAGES - images.size,
+                )
+            }.collect {
+                _newPostUiState.edit { copy(
+                    bottomBarState = it
+                ) }
             }
         }
 
+        viewModelScope.launch {
+            combine(
+                statusDelegate.uiState,
+                mediaDelegate.imageStates,
+                pollDelegate.uiState
+            ) { statusUiState, imageStates, poll ->
+                (statusUiState.statusText.text.isNotBlank() || imageStates.isNotEmpty()) &&
+                        // all images are loaded
+                        imageStates.find { it.loadState != LoadState.LOADED } == null &&
+                        // poll options have text if they exist
+                        poll?.options?.find { it.isBlank() } == null
+            }.collect {
+                _newPostUiState.edit { copy(
+                    sendButtonEnabled = it
+                ) }
+            }
+        }
+
+        viewModelScope.launch {
+            loadResource {
+                accountRepository.getAccount(getLoggedInUserAccountId())
+            }.mapNotNull { resource ->
+                resource.data?.let { account ->
+                    UserHeaderState(avatarUrl = account.avatarUrl, displayName = account.displayName)
+                }
+            }.collect {
+                _newPostUiState.edit { copy(
+                    userHeaderState = it
+                ) }
+            }
+        }
+    }
+
     override fun onVisibilitySelected(statusVisibility: StatusVisibility) {
-        _visibility.update { statusVisibility }
+        _newPostUiState.edit { copy(
+            visibility = statusVisibility
+        ) }
     }
 
     override fun onPostClicked() {
@@ -135,12 +149,14 @@ class NewPostViewModel(
             uiIdentifier = AnalyticsIdentifiers.NEW_POST_POST,
         )
         viewModelScope.launch {
-            _isSendingPost.update { true }
+            _newPostUiState.edit { copy(
+                isSendingPost = true
+            ) }
             try {
                 postStatus(
                     statusText = statusDelegate.uiState.value.statusText.text,
                     imageStates = mediaDelegate.imageStates.value.toList(),
-                    visibility = visibility.value,
+                    visibility = newPostUiState.value.visibility,
                     pollCreate = pollDelegate.uiState.value?.let { poll ->
                         PollCreate(
                             options = poll.options,
@@ -156,7 +172,9 @@ class NewPostViewModel(
                 onStatusPosted()
             } catch (e: Exception) {
                 Timber.e(e)
-                _isSendingPost.update { false }
+                _newPostUiState.edit { copy(
+                    isSendingPost = false
+                ) }
             }
         }
     }

@@ -99,27 +99,19 @@ internal fun NewPostScreen(
     viewModel: NewPostViewModel = koinViewModel(parameters = { parametersOf(replyStatusId) }),
 ) {
     val statusUiState by viewModel.statusDelegate.uiState.collectAsStateWithLifecycle()
-    val sendButtonEnabled by viewModel.sendButtonEnabled.collectAsStateWithLifecycle()
     val mediaStates by viewModel.mediaDelegate.imageStates.collectAsStateWithLifecycle()
-    val isSendingPost by viewModel.isSendingPost.collectAsStateWithLifecycle()
-    val visibility by viewModel.visibility.collectAsStateWithLifecycle()
     val pollUiState by viewModel.pollDelegate.uiState.collectAsStateWithLifecycle()
-    val userHeaderState by viewModel.userHeaderState.collectAsStateWithLifecycle(initialValue = null)
-    val bottomBarState by viewModel.bottomBarState.collectAsStateWithLifecycle()
+    val newPostUiState by viewModel.newPostUiState.collectAsStateWithLifecycle()
 
     NewPostScreen(
         statusUiState = statusUiState,
-        statusInteractions = viewModel.statusDelegate,
-        sendButtonEnabled = sendButtonEnabled,
         imageStates = mediaStates,
-        mediaInteractions = viewModel.mediaDelegate,
-        isSendingPost = isSendingPost,
-        visibility = visibility,
         pollUiState = pollUiState,
+        newPostUiState = newPostUiState,
+        statusInteractions = viewModel.statusDelegate,
+        mediaInteractions = viewModel.mediaDelegate,
         pollInteractions = viewModel.pollDelegate,
         contentWarningInteractions = viewModel.statusDelegate,
-        userHeaderState = userHeaderState,
-        bottomBarState = bottomBarState,
         newPostInteractions = viewModel,
     )
 
@@ -128,22 +120,16 @@ internal fun NewPostScreen(
     }
 }
 
-data class UserHeaderState(val avatarUrl: String, val displayName: String)
-
 @Composable
 private fun NewPostScreen(
     statusUiState: StatusUiState,
-    bottomBarState: BottomBarState,
-    statusInteractions: StatusInteractions,
-    sendButtonEnabled: Boolean,
     imageStates: List<ImageState>,
-    mediaInteractions: MediaInteractions,
-    isSendingPost: Boolean,
-    visibility: StatusVisibility,
     pollUiState: PollUiState?,
+    newPostUiState: NewPostUiState,
+    statusInteractions: StatusInteractions,
+    mediaInteractions: MediaInteractions,
     pollInteractions: PollInteractions,
     contentWarningInteractions: ContentWarningInteractions,
-    userHeaderState: UserHeaderState?,
     newPostInteractions: NewPostInteractions,
 ) {
     Box(
@@ -157,11 +143,11 @@ private fun NewPostScreen(
             Row {
                 CompactNewPostScreenContent(
                     statusUiState = statusUiState,
-                    statusInteractions = statusInteractions,
-                    sendButtonEnabled = sendButtonEnabled,
+                    newPostUiState = newPostUiState,
                     imageStates = imageStates,
-                    mediaInteractions = mediaInteractions,
                     pollUiState = pollUiState,
+                    statusInteractions = statusInteractions,
+                    mediaInteractions = mediaInteractions,
                     pollInteractions = pollInteractions,
                     contentWarningInteractions = contentWarningInteractions,
                     newPostInteractions = newPostInteractions,
@@ -170,21 +156,18 @@ private fun NewPostScreen(
         } else {
             NewPostScreenContent(
                 statusUiState = statusUiState,
-                bottomBarState = bottomBarState,
-                statusInteractions = statusInteractions,
-                sendButtonEnabled = sendButtonEnabled,
-                imageStates = imageStates,
-                mediaInteractions = mediaInteractions,
-                visibility = visibility,
                 pollUiState = pollUiState,
+                imageStates = imageStates,
+                newPostUiState = newPostUiState,
+                statusInteractions = statusInteractions,
+                mediaInteractions = mediaInteractions,
                 pollInteractions = pollInteractions,
                 contentWarningInteractions = contentWarningInteractions,
-                userHeaderState = userHeaderState,
                 newPostInteractions = newPostInteractions,
             )
         }
 
-        if (isSendingPost) {
+        if (newPostUiState.isSendingPost) {
             TransparentNoTouchOverlay()
             CircularProgressIndicator(
                 modifier = Modifier.align(Alignment.Center),
@@ -196,11 +179,11 @@ private fun NewPostScreen(
 @Composable
 private fun CompactNewPostScreenContent(
     statusUiState: StatusUiState,
-    statusInteractions: StatusInteractions,
-    sendButtonEnabled: Boolean,
+    newPostUiState: NewPostUiState,
     imageStates: List<ImageState>,
-    mediaInteractions: MediaInteractions,
     pollUiState: PollUiState?,
+    statusInteractions: StatusInteractions,
+    mediaInteractions: MediaInteractions,
     pollInteractions: PollInteractions,
     contentWarningInteractions: ContentWarningInteractions,
     newPostInteractions: NewPostInteractions,
@@ -225,7 +208,7 @@ private fun CompactNewPostScreenContent(
         PostButton(
             modifier = Modifier.padding(end = 16.dp),
             onPostClicked = newPostInteractions::onPostClicked,
-            sendButtonEnabled = sendButtonEnabled,
+            sendButtonEnabled = newPostUiState.sendButtonEnabled,
         )
     }
 }
@@ -233,27 +216,24 @@ private fun CompactNewPostScreenContent(
 @Composable
 private fun NewPostScreenContent(
     statusUiState: StatusUiState,
-    bottomBarState: BottomBarState,
-    statusInteractions: StatusInteractions,
-    sendButtonEnabled: Boolean,
-    imageStates: List<ImageState>,
-    mediaInteractions: MediaInteractions,
-    visibility: StatusVisibility,
     pollUiState: PollUiState?,
+    imageStates: List<ImageState>,
+    newPostUiState: NewPostUiState,
+    statusInteractions: StatusInteractions,
+    mediaInteractions: MediaInteractions,
     pollInteractions: PollInteractions,
     contentWarningInteractions: ContentWarningInteractions,
-    userHeaderState: UserHeaderState?,
     newPostInteractions: NewPostInteractions,
 ) {
     Column {
         TopBar(
             onPostClicked = newPostInteractions::onPostClicked,
-            sendButtonEnabled = sendButtonEnabled,
+            sendButtonEnabled = newPostUiState.sendButtonEnabled,
         )
-        userHeaderState?.let { userHeaderState ->
+        newPostUiState.userHeaderState?.let { userHeaderState ->
             UserHeader(
                 userHeaderState = userHeaderState,
-                visibility = visibility,
+                visibility = newPostUiState.visibility,
                 onVisibilitySelected = newPostInteractions::onVisibilitySelected,
             )
         }
@@ -279,7 +259,7 @@ private fun NewPostScreenContent(
             HashtagSearchBar(hashTags = statusUiState.hashtagList, statusInteractions = statusInteractions)
         }
         BottomBar(
-            bottomBarState = bottomBarState,
+            bottomBarState = newPostUiState.bottomBarState,
             onMediaInserted = mediaInteractions::onMediaInserted,
             pollInteractions = pollInteractions,
             contentWarningInteractions = contentWarningInteractions,
@@ -298,15 +278,15 @@ fun UserHeader(
     Row {
         AsyncImage(
             modifier =
-                Modifier
-                    .padding(horizontal = MoSoSpacing.sm)
-                    .size(92.dp)
-                    .clip(CircleShape)
-                    .border(
-                        width = 3.dp,
-                        color = MoSoTheme.colors.layer1,
-                        shape = CircleShape,
-                    ),
+            Modifier
+                .padding(horizontal = MoSoSpacing.sm)
+                .size(92.dp)
+                .clip(CircleShape)
+                .border(
+                    width = 3.dp,
+                    color = MoSoTheme.colors.layer1,
+                    shape = CircleShape,
+                ),
             model = userHeaderState.avatarUrl,
             contentDescription = null,
         )
@@ -680,17 +660,19 @@ private fun NewPostScreenPreview() {
                 hashtagList = null,
                 inReplyToAccountName = null,
             ),
+            newPostUiState = NewPostUiState(
+                sendButtonEnabled = true,
+                isSendingPost = false,
+                visibility = StatusVisibility.Private,
+                userHeaderState = UserHeaderState("", "Barack Obama"),
+                bottomBarState = BottomBarState(),
+            ),
             statusInteractions = object : StatusInteractions {},
-            sendButtonEnabled = true,
             imageStates = listOf(),
             mediaInteractions = object : MediaInteractions {},
-            isSendingPost = false,
-            visibility = StatusVisibility.Private,
             pollUiState = null,
             pollInteractions = object : PollInteractions {},
             contentWarningInteractions = object : ContentWarningInteractions {},
-            userHeaderState = UserHeaderState("", "Barack Obama"),
-            bottomBarState = BottomBarState(),
             newPostInteractions = NewPostInteractionsNoOp,
         )
     }
@@ -710,12 +692,16 @@ private fun NewPostScreenWithPollPreview() {
                 hashtagList = null,
                 inReplyToAccountName = null,
             ),
+            newPostUiState = NewPostUiState(
+                sendButtonEnabled = true,
+                isSendingPost = false,
+                visibility = StatusVisibility.Private,
+                userHeaderState = UserHeaderState("", "Barack Obama"),
+                bottomBarState = BottomBarState(),
+            ),
             statusInteractions = object : StatusInteractions {},
-            sendButtonEnabled = true,
             imageStates = listOf(),
             mediaInteractions = object : MediaInteractions {},
-            isSendingPost = false,
-            visibility = StatusVisibility.Private,
             pollUiState =
                 PollUiState(
                     options = listOf("option 1", "option 2"),
@@ -725,8 +711,6 @@ private fun NewPostScreenWithPollPreview() {
                 ),
             pollInteractions = object : PollInteractions {},
             contentWarningInteractions = object : ContentWarningInteractions {},
-            userHeaderState = UserHeaderState("", "Barack Obama"),
-            bottomBarState = BottomBarState(),
             newPostInteractions = NewPostInteractionsNoOp,
         )
     }
@@ -746,17 +730,19 @@ private fun NewPostScreenWithContentWarningPreview() {
                 hashtagList = null,
                 inReplyToAccountName = null,
             ),
+            newPostUiState = NewPostUiState(
+                sendButtonEnabled = true,
+                isSendingPost = false,
+                visibility = StatusVisibility.Private,
+                userHeaderState = UserHeaderState("", "Barack Obama"),
+                bottomBarState = BottomBarState(),
+            ),
             statusInteractions = object : StatusInteractions {},
-            sendButtonEnabled = true,
             imageStates = listOf(),
             mediaInteractions = object : MediaInteractions {},
-            isSendingPost = false,
-            visibility = StatusVisibility.Private,
             pollUiState = null,
             pollInteractions = object : PollInteractions {},
             contentWarningInteractions = object : ContentWarningInteractions {},
-            userHeaderState = UserHeaderState("", "Barack Obama"),
-            bottomBarState = BottomBarState(),
             newPostInteractions = NewPostInteractionsNoOp,
         )
     }
