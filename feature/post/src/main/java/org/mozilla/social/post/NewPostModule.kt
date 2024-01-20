@@ -32,6 +32,7 @@ val newPostModule = module {
             showSnackbar = get(),
             getLoggedInUserAccountId = get(),
             accountRepository = get(),
+            pollDelegate = get(),
         )
     }
 
