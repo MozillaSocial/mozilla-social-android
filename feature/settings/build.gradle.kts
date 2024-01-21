@@ -35,4 +35,5 @@ dependencies {
     implementation(libs.koin.androidx.compose)
     implementation(libs.protobuf.kotlin.lite)
     implementation(libs.jakewharton.timber)
+    implementation(libs.koin.androidx.workmanager)
 }
