@@ -149,6 +149,9 @@ object MoSoIcons {
     fun speakerX() = painterResource(id = R.drawable.speaker_x)
 
     @Composable
+    fun trash() = painterResource(id = R.drawable.trash)
+
+    @Composable
     fun userCircle() = painterResource(id = R.drawable.user_circle)
 
     @Composable

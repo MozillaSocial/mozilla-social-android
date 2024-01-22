@@ -12,7 +12,7 @@
     <string name="poll_style_single_choice">Single choice</string>
     <string name="poll_style_multiple_choice">Multiple choice</string>
     <string name="poll_style">Poll style</string>
-    <string name="poll_choice_label">Choice %d</string>
+    <string name="poll_choice_label">Poll choice %d</string>
     <string name="poll_option_hide_results">Hide results until complete</string>
 
     <string name="send_post_button_content_description">post</string>

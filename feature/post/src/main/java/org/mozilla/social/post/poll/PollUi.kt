@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.ui.common.divider.MoSoVerticalDivider
+import org.mozilla.social.core.ui.common.text.MoSoTextField
 import org.mozilla.social.core.ui.common.utils.PreviewTheme
 import org.mozilla.social.feature.post.R
 import org.mozilla.social.post.NewPostViewModel
@@ -55,9 +56,8 @@ private fun PollChoice(
         Modifier
             .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 0.dp),
     ) {
-        OutlinedTextField(
-            modifier =
-            Modifier
+        MoSoTextField(
+            modifier = Modifier
                 .weight(1f)
                 .align(Alignment.CenterVertically),
             value = pollUiState.options[index],
@@ -80,9 +80,9 @@ private fun PollChoice(
             Icon(
                 modifier =
                 Modifier
-                    .width(40.dp)
-                    .height(40.dp),
-                painter = MoSoIcons.deleteOutline(),
+                    .width(24.dp)
+                    .height(24.dp),
+                painter = MoSoIcons.trash(),
                 contentDescription = stringResource(id = R.string.remove_poll_option_button_content_description),
             )
         }
