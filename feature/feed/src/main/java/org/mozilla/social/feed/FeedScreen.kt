@@ -23,6 +23,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -44,6 +45,7 @@ import org.mozilla.social.core.ui.common.pullrefresh.PullRefreshLazyColumn
 import org.mozilla.social.core.ui.postcard.PostCardInteractions
 import org.mozilla.social.core.ui.postcard.PostCardUiState
 import org.mozilla.social.core.ui.postcard.postListContent
+import org.mozilla.social.feature.feed.R
 
 @Composable
 internal fun FeedScreen(viewModel: FeedViewModel = koinViewModel()) {
@@ -105,7 +107,7 @@ private fun FeedScreen(
                         Icon(
                             modifier = Modifier.size(24.dp),
                             painter = MoSoIcons.magnifyingGlass(),
-                            contentDescription = "",
+                            contentDescription = stringResource(R.string.search_button),
                             tint = MoSoTheme.colors.iconPrimary
                         )
                     }
