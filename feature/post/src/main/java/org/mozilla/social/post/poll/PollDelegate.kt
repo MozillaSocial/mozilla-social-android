@@ -10,18 +10,19 @@ import org.mozilla.social.core.analytics.EngagementType
 class PollDelegate(
     private val analytics: Analytics,
 ) : PollInteractions {
-    private val _poll = MutableStateFlow<Poll?>(null)
-    val poll = _poll.asStateFlow()
+
+    private val _uiState = MutableStateFlow<PollUiState?>(null)
+    val uiState = _uiState.asStateFlow()
 
     override fun onNewPollClicked() {
         analytics.uiEngagement(
             engagementType = EngagementType.POST,
             uiIdentifier = AnalyticsIdentifiers.NEW_POST_POLL
         )
-        if (poll.value == null) {
-            _poll.value = newPoll()
+        if (uiState.value == null) {
+            _uiState.value = newPoll()
         } else {
-            _poll.value = null
+            _uiState.value = null
         }
     }
 
@@ -30,7 +31,7 @@ class PollDelegate(
         text: String,
     ) {
         if (text.length > MAX_POLL_CHOICE_CHARACTERS) return
-        _poll.edit {
+        _uiState.edit {
             this?.copy(
                 options =
                     options.toMutableList().apply {
@@ -42,7 +43,7 @@ class PollDelegate(
     }
 
     override fun onPollOptionDeleteClicked(optionIndex: Int) {
-        _poll.edit {
+        _uiState.edit {
             this?.copy(
                 options =
                     options.toMutableList().apply {
@@ -53,7 +54,7 @@ class PollDelegate(
     }
 
     override fun onAddPollOptionClicked() {
-        _poll.edit {
+        _uiState.edit {
             this?.copy(
                 options =
                     options.toMutableList().apply {
@@ -64,7 +65,7 @@ class PollDelegate(
     }
 
     override fun onPollDurationSelected(pollDuration: PollDuration) {
-        _poll.edit {
+        _uiState.edit {
             this?.copy(
                 pollDuration = pollDuration,
             )
@@ -72,7 +73,7 @@ class PollDelegate(
     }
 
     override fun onPollStyleSelected(style: PollStyle) {
-        _poll.edit {
+        _uiState.edit {
             this?.copy(
                 style = style,
             )
@@ -80,15 +81,15 @@ class PollDelegate(
     }
 
     override fun onHideCountUntilEndClicked() {
-        _poll.edit {
+        _uiState.edit {
             this?.copy(
                 hideTotals = !hideTotals,
             )
         }
     }
 
-    private fun newPoll(): Poll =
-        Poll(
+    private fun newPoll(): PollUiState =
+        PollUiState(
             options =
                 listOf(
                     "",
