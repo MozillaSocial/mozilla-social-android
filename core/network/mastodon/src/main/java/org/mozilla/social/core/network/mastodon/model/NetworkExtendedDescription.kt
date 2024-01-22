@@ -1,4 +1,4 @@
-package org.mozilla.social.core.model
+package org.mozilla.social.core.network.mastodon.model
 
 import kotlinx.serialization.Serializable
 

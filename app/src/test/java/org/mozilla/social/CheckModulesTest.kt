@@ -34,5 +34,13 @@ class CheckModulesTest : KoinTest {
                     WorkerParameters::class,
                 ),
         )
+
+        mainModule.verify(
+            extraTypes = listOf(
+                Context::class,
+                CoroutineDispatcher::class,
+                CoroutineScope::class,
+            )
+        )
     }
 }
