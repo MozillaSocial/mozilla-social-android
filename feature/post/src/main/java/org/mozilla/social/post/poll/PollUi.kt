@@ -55,7 +55,10 @@ internal fun Poll(
             )
             Spacer(modifier = Modifier.height(16.dp))
         }
-        MoSoButtonSecondary(onClick = pollInteractions::onAddPollOptionClicked) {
+        MoSoButtonSecondary(
+            enabled = pollUiState.options.size < 4,
+            onClick = pollInteractions::onAddPollOptionClicked
+        ) {
             Icon(
                 modifier = Modifier.size(16.dp),
                 painter = MoSoIcons.plus(),
