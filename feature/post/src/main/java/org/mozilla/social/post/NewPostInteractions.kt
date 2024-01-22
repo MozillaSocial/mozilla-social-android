@@ -1,9 +1,19 @@
 package org.mozilla.social.post
 
+import org.mozilla.social.core.model.StatusVisibility
+
 interface NewPostInteractions {
-    fun onScreenViewed() = Unit
+    fun onScreenViewed()
+    fun onUploadImageClicked()
+    fun onUploadMediaClicked()
+    fun onPostClicked()
+    fun onVisibilitySelected(statusVisibility: StatusVisibility)
+}
 
-    fun onUploadImageClicked() = Unit
-
-    fun onUploadMediaClicked() = Unit
+object NewPostInteractionsNoOp : NewPostInteractions {
+    override fun onScreenViewed() = Unit
+    override fun onUploadImageClicked() = Unit
+    override fun onUploadMediaClicked() = Unit
+    override fun onPostClicked() = Unit
+    override fun onVisibilitySelected(statusVisibility: StatusVisibility) = Unit
 }

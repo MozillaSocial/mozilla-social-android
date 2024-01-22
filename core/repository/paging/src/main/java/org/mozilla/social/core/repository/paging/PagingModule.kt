@@ -3,8 +3,15 @@ package org.mozilla.social.core.repository.paging
 import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
+import org.mozilla.social.core.repository.mastodon.mastodonRepositoryModule
+import org.mozilla.social.core.usecase.mastodon.mastodonUsecaseModule
 
 val pagingModule = module {
+    includes(
+        mastodonRepositoryModule,
+        mastodonUsecaseModule,
+    )
+
     singleOf(::RefreshHomeTimeline)
     singleOf(::RefreshFederatedTimeline)
     singleOf(::RefreshLocalTimeline)

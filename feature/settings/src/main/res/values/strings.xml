@@ -8,6 +8,7 @@
     <string name="blocked_users_title">Blocked Users</string>
     <string name="privacy_settings_title">Privacy</string>
     <string name="about_settings_title">About</string>
+    <string name="about_settings_open_source_libraries">Open Source Libraries</string>
     <string name="licenses_settings_title">Licenses</string>
     <string name="developer_options_title">Developer Options</string>
     <string name="server_community_rules">Server/Community Rules</string>

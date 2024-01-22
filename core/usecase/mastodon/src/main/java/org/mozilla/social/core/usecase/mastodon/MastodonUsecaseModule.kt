@@ -137,7 +137,7 @@ val mastodonUsecaseModule =
         }
         single {
             BoostStatus(
-                externalScope = get(),
+                externalScope = get<AppScope>(),
                 statusRepository = get(),
                 saveStatusToDatabase = get(),
                 databaseDelegate = get(),
@@ -174,7 +174,7 @@ val mastodonUsecaseModule =
         }
         single {
             VoteOnPoll(
-                externalScope = get(),
+                externalScope = get<AppScope>(),
                 statusRepository = get(),
                 pollRepository = get(),
                 showSnackbar = get(),

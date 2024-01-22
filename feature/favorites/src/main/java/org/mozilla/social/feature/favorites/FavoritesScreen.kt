@@ -6,13 +6,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.paging.PagingData
+import androidx.paging.compose.collectAsLazyPagingItems
 import kotlinx.coroutines.flow.Flow
 import org.koin.androidx.compose.koinViewModel
 import org.mozilla.social.core.ui.common.MoSoSurface
 import org.mozilla.social.core.ui.common.appbar.MoSoCloseableTopAppBar
+import org.mozilla.social.core.ui.common.pullrefresh.PullRefreshLazyColumn
 import org.mozilla.social.core.ui.postcard.PostCardInteractions
-import org.mozilla.social.core.ui.postcard.PostCardList
 import org.mozilla.social.core.ui.postcard.PostCardUiState
+import org.mozilla.social.core.ui.postcard.postListContent
 
 @Composable
 internal fun FavoritesScreen(
@@ -33,12 +35,16 @@ private fun FavoritesScreen(
         Column(Modifier.systemBarsPadding()) {
             MoSoCloseableTopAppBar(title = stringResource(id = R.string.favorites_title))
 
-            PostCardList(
-                feed = feed,
-                postCardInteractions = postCardInteractions,
-                pullToRefreshEnabled = true,
-                isFullScreenLoading = true,
-            )
+            val feedListState = feed.collectAsLazyPagingItems()
+
+            PullRefreshLazyColumn(
+                lazyPagingItems = feedListState,
+            ) {
+                postListContent(
+                    lazyPagingItems = feedListState,
+                    postCardInteractions = postCardInteractions,
+                )
+            }
         }
     }
 }

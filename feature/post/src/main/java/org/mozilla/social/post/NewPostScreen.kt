@@ -59,7 +59,6 @@ import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 import org.mozilla.social.common.LoadState
 import org.mozilla.social.common.utils.buildAnnotatedStringForAccountsAndHashtags
-import org.mozilla.social.core.analytics.Analytics
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.designsystem.theme.MoSoSpacing
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
@@ -82,56 +81,38 @@ import org.mozilla.social.post.NewPostViewModel.Companion.MIN_POLL_COUNT
 import org.mozilla.social.post.bottombar.BottomBar
 import org.mozilla.social.post.bottombar.BottomBarState
 import org.mozilla.social.post.media.MediaInteractions
-import org.mozilla.social.post.poll.Poll
+import org.mozilla.social.post.poll.PollUiState
 import org.mozilla.social.post.poll.PollDuration
 import org.mozilla.social.post.poll.PollDurationDropDown
 import org.mozilla.social.post.poll.PollInteractions
 import org.mozilla.social.post.poll.PollStyle
 import org.mozilla.social.post.poll.PollStyleDropDown
-import org.mozilla.social.post.status.Account
 import org.mozilla.social.post.status.AccountSearchBar
 import org.mozilla.social.post.status.ContentWarningInteractions
 import org.mozilla.social.post.status.HashtagSearchBar
 import org.mozilla.social.post.status.StatusInteractions
+import org.mozilla.social.post.status.StatusUiState
 
 @Composable
 internal fun NewPostScreen(
     replyStatusId: String?,
     viewModel: NewPostViewModel = koinViewModel(parameters = { parametersOf(replyStatusId) }),
 ) {
-    val statusText by viewModel.statusText.collectAsStateWithLifecycle()
-    val sendButtonEnabled by viewModel.sendButtonEnabled.collectAsStateWithLifecycle()
-    val mediaStates by viewModel.mediaStates.collectAsStateWithLifecycle()
-    val isSendingPost by viewModel.isSendingPost.collectAsStateWithLifecycle()
-    val visibility by viewModel.visibility.collectAsStateWithLifecycle()
-    val poll by viewModel.poll.collectAsStateWithLifecycle()
-    val contextWarningText by viewModel.contentWarningText.collectAsStateWithLifecycle()
-    val accounts by viewModel.accountList.collectAsStateWithLifecycle()
-    val hashTags by viewModel.hashtagList.collectAsStateWithLifecycle()
-    val inReplyToAccountName by viewModel.inReplyToAccountName.collectAsStateWithLifecycle()
-    val userHeaderState by viewModel.userHeaderState.collectAsStateWithLifecycle(initialValue = null)
-    val bottomBarState by viewModel.bottomBarState.collectAsStateWithLifecycle()
+    val statusUiState by viewModel.statusDelegate.uiState.collectAsStateWithLifecycle()
+    val mediaStates by viewModel.mediaDelegate.imageStates.collectAsStateWithLifecycle()
+    val pollUiState by viewModel.pollDelegate.uiState.collectAsStateWithLifecycle()
+    val newPostUiState by viewModel.newPostUiState.collectAsStateWithLifecycle()
+
     NewPostScreen(
-        statusText = statusText,
-        statusInteractions = viewModel.statusInteractions,
-        onPostClicked = viewModel::onPostClicked,
-        sendButtonEnabled = sendButtonEnabled,
+        statusUiState = statusUiState,
         imageStates = mediaStates,
-        mediaInteractions = viewModel.mediaInteractions,
-        isSendingPost = isSendingPost,
-        visibility = visibility,
-        onVisibilitySelected = viewModel::onVisibilitySelected,
-        poll = poll,
-        pollInteractions = viewModel.pollInteractions,
-        contentWarningText = contextWarningText,
-        contentWarningInteractions = viewModel.contentWarningInteractions,
-        accounts = accounts,
-        hashTags = hashTags,
-        inReplyToAccountName = inReplyToAccountName,
-        userHeaderState = userHeaderState,
-        bottomBarState = bottomBarState,
-        onUploadImageClicked = viewModel::onUploadImageClicked,
-        onUploadMediaClicked = viewModel::onUploadMediaClicked
+        pollUiState = pollUiState,
+        newPostUiState = newPostUiState,
+        statusInteractions = viewModel.statusDelegate,
+        mediaInteractions = viewModel.mediaDelegate,
+        pollInteractions = viewModel.pollDelegate,
+        contentWarningInteractions = viewModel.statusDelegate,
+        newPostInteractions = viewModel,
     )
 
     LaunchedEffect(Unit) {
@@ -139,79 +120,54 @@ internal fun NewPostScreen(
     }
 }
 
-data class UserHeaderState(val avatarUrl: String, val displayName: String)
-
 @Composable
 private fun NewPostScreen(
-    bottomBarState: BottomBarState,
-    statusText: TextFieldValue,
-    statusInteractions: StatusInteractions,
-    onPostClicked: () -> Unit,
-    sendButtonEnabled: Boolean,
+    statusUiState: StatusUiState,
     imageStates: List<ImageState>,
+    pollUiState: PollUiState?,
+    newPostUiState: NewPostUiState,
+    statusInteractions: StatusInteractions,
     mediaInteractions: MediaInteractions,
-    isSendingPost: Boolean,
-    visibility: StatusVisibility,
-    onVisibilitySelected: (StatusVisibility) -> Unit,
-    poll: Poll?,
     pollInteractions: PollInteractions,
-    contentWarningText: String?,
     contentWarningInteractions: ContentWarningInteractions,
-    accounts: List<Account>?,
-    hashTags: List<String>?,
-    inReplyToAccountName: String?,
-    userHeaderState: UserHeaderState?,
-    onUploadImageClicked: () -> Unit,
-    onUploadMediaClicked: () -> Unit
+    newPostInteractions: NewPostInteractions,
 ) {
     Box(
         modifier =
-            Modifier
-                .systemBarsPadding()
-                .imePadding()
-                .background(MoSoTheme.colors.layer1),
+        Modifier
+            .systemBarsPadding()
+            .imePadding()
+            .background(MoSoTheme.colors.layer1),
     ) {
         if (getWindowHeightClass() == WindowHeightSizeClass.Compact) {
             Row {
                 CompactNewPostScreenContent(
-                    statusText = statusText,
-                    statusInteractions = statusInteractions,
-                    onPostClicked = onPostClicked,
-                    sendButtonEnabled = sendButtonEnabled,
+                    statusUiState = statusUiState,
+                    newPostUiState = newPostUiState,
                     imageStates = imageStates,
+                    pollUiState = pollUiState,
+                    statusInteractions = statusInteractions,
                     mediaInteractions = mediaInteractions,
-                    poll = poll,
                     pollInteractions = pollInteractions,
-                    contentWarningText = contentWarningText,
                     contentWarningInteractions = contentWarningInteractions,
-                    inReplyToAccountName = inReplyToAccountName,
+                    newPostInteractions = newPostInteractions,
                 )
             }
         } else {
             NewPostScreenContent(
-                bottomBarState = bottomBarState,
-                statusText = statusText,
-                statusInteractions = statusInteractions,
-                onPostClicked = onPostClicked,
-                sendButtonEnabled = sendButtonEnabled,
+                statusUiState = statusUiState,
+                pollUiState = pollUiState,
                 imageStates = imageStates,
+                newPostUiState = newPostUiState,
+                statusInteractions = statusInteractions,
                 mediaInteractions = mediaInteractions,
-                visibility = visibility,
-                onVisibilitySelected = onVisibilitySelected,
-                poll = poll,
                 pollInteractions = pollInteractions,
-                contentWarningText = contentWarningText,
                 contentWarningInteractions = contentWarningInteractions,
-                accounts = accounts,
-                hashTags = hashTags,
-                inReplyToAccountName = inReplyToAccountName,
-                userHeaderState = userHeaderState,
-                onUploadImageClicked = onUploadImageClicked,
-                onUploadMediaClicked = onUploadMediaClicked
+                newPostInteractions = newPostInteractions,
             )
         }
 
-        if (isSendingPost) {
+        if (newPostUiState.isSendingPost) {
             TransparentNoTouchOverlay()
             CircularProgressIndicator(
                 modifier = Modifier.align(Alignment.Center),
@@ -222,17 +178,15 @@ private fun NewPostScreen(
 
 @Composable
 private fun CompactNewPostScreenContent(
-    statusText: TextFieldValue,
-    statusInteractions: StatusInteractions,
-    onPostClicked: () -> Unit,
-    sendButtonEnabled: Boolean,
+    statusUiState: StatusUiState,
+    newPostUiState: NewPostUiState,
     imageStates: List<ImageState>,
+    pollUiState: PollUiState?,
+    statusInteractions: StatusInteractions,
     mediaInteractions: MediaInteractions,
-    poll: Poll?,
     pollInteractions: PollInteractions,
-    contentWarningText: String?,
     contentWarningInteractions: ContentWarningInteractions,
-    inReplyToAccountName: String?,
+    newPostInteractions: NewPostInteractions,
 ) {
     Row {
         Box(
@@ -241,58 +195,46 @@ private fun CompactNewPostScreenContent(
                     .weight(1f),
         ) {
             MainBox(
-                statusText = statusText,
+                statusUiState = statusUiState,
                 statusInteractions = statusInteractions,
                 imageStates = imageStates,
                 mediaInteractions = mediaInteractions,
-                poll = poll,
+                pollUiState = pollUiState,
                 pollInteractions = pollInteractions,
-                contentWarningText = contentWarningText,
                 contentWarningInteractions = contentWarningInteractions,
-                inReplyToAccountName = inReplyToAccountName,
             )
         }
 
         PostButton(
             modifier = Modifier.padding(end = 16.dp),
-            onPostClicked = onPostClicked,
-            sendButtonEnabled = sendButtonEnabled,
+            onPostClicked = newPostInteractions::onPostClicked,
+            sendButtonEnabled = newPostUiState.sendButtonEnabled,
         )
     }
 }
 
 @Composable
 private fun NewPostScreenContent(
-    bottomBarState: BottomBarState,
-    statusText: TextFieldValue,
-    statusInteractions: StatusInteractions,
-    onPostClicked: () -> Unit,
-    sendButtonEnabled: Boolean,
+    statusUiState: StatusUiState,
+    pollUiState: PollUiState?,
     imageStates: List<ImageState>,
+    newPostUiState: NewPostUiState,
+    statusInteractions: StatusInteractions,
     mediaInteractions: MediaInteractions,
-    visibility: StatusVisibility,
-    onVisibilitySelected: (StatusVisibility) -> Unit,
-    poll: Poll?,
     pollInteractions: PollInteractions,
-    contentWarningText: String?,
     contentWarningInteractions: ContentWarningInteractions,
-    accounts: List<Account>?,
-    hashTags: List<String>?,
-    inReplyToAccountName: String?,
-    userHeaderState: UserHeaderState?,
-    onUploadImageClicked: () -> Unit,
-    onUploadMediaClicked: () -> Unit,
+    newPostInteractions: NewPostInteractions,
 ) {
     Column {
         TopBar(
-            onPostClicked = onPostClicked,
-            sendButtonEnabled = sendButtonEnabled,
+            onPostClicked = newPostInteractions::onPostClicked,
+            sendButtonEnabled = newPostUiState.sendButtonEnabled,
         )
-        userHeaderState?.let { userHeaderState ->
+        newPostUiState.userHeaderState?.let { userHeaderState ->
             UserHeader(
                 userHeaderState = userHeaderState,
-                visibility = visibility,
-                onVisibilitySelected = onVisibilitySelected,
+                visibility = newPostUiState.visibility,
+                onVisibilitySelected = newPostInteractions::onVisibilitySelected,
             )
         }
         Box(
@@ -301,30 +243,28 @@ private fun NewPostScreenContent(
                     .weight(1f),
         ) {
             MainBox(
-                statusText = statusText,
+                statusUiState = statusUiState,
                 statusInteractions = statusInteractions,
                 imageStates = imageStates,
                 mediaInteractions = mediaInteractions,
-                poll = poll,
+                pollUiState = pollUiState,
                 pollInteractions = pollInteractions,
-                contentWarningText = contentWarningText,
                 contentWarningInteractions = contentWarningInteractions,
-                inReplyToAccountName = inReplyToAccountName,
             )
         }
-        accounts?.let {
-            AccountSearchBar(accounts = accounts, statusInteractions = statusInteractions)
+        statusUiState.accountList?.let {
+            AccountSearchBar(accounts = statusUiState.accountList, statusInteractions = statusInteractions)
         }
-        hashTags?.let {
-            HashtagSearchBar(hashTags = hashTags, statusInteractions = statusInteractions)
+        statusUiState.hashtagList?.let {
+            HashtagSearchBar(hashTags = statusUiState.hashtagList, statusInteractions = statusInteractions)
         }
         BottomBar(
-            bottomBarState = bottomBarState,
+            bottomBarState = newPostUiState.bottomBarState,
             onMediaInserted = mediaInteractions::onMediaInserted,
             pollInteractions = pollInteractions,
             contentWarningInteractions = contentWarningInteractions,
-            onUploadImageClicked = onUploadImageClicked,
-            onUploadMediaClicked = onUploadMediaClicked
+            onUploadImageClicked = newPostInteractions::onUploadImageClicked,
+            onUploadMediaClicked = newPostInteractions::onUploadMediaClicked,
         )
     }
 }
@@ -338,15 +278,15 @@ fun UserHeader(
     Row {
         AsyncImage(
             modifier =
-                Modifier
-                    .padding(horizontal = MoSoSpacing.sm)
-                    .size(92.dp)
-                    .clip(CircleShape)
-                    .border(
-                        width = 3.dp,
-                        color = MoSoTheme.colors.layer1,
-                        shape = CircleShape,
-                    ),
+            Modifier
+                .padding(horizontal = MoSoSpacing.sm)
+                .size(92.dp)
+                .clip(CircleShape)
+                .border(
+                    width = 3.dp,
+                    color = MoSoTheme.colors.layer1,
+                    shape = CircleShape,
+                ),
             model = userHeaderState.avatarUrl,
             contentDescription = null,
         )
@@ -395,15 +335,13 @@ private fun PostButton(
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 private fun MainBox(
-    statusText: TextFieldValue,
+    statusUiState: StatusUiState,
     statusInteractions: StatusInteractions,
     imageStates: List<ImageState>,
     mediaInteractions: MediaInteractions,
-    poll: Poll?,
+    pollUiState: PollUiState?,
     pollInteractions: PollInteractions,
-    contentWarningText: String?,
     contentWarningInteractions: ContentWarningInteractions,
-    inReplyToAccountName: String?,
 ) {
     val localIndication = LocalIndication.current
     // disable ripple on click for the background
@@ -427,11 +365,11 @@ private fun MainBox(
             ) {
                 LazyColumn {
                     item {
-                        InReplyToText(inReplyToAccountName = inReplyToAccountName)
+                        InReplyToText(inReplyToAccountName = statusUiState.inReplyToAccountName)
                     }
-                    contentWarningText?.let {
+                    statusUiState.contentWarningText?.let {
                         item {
-                            ContentWarningEntry(contentWarningText, contentWarningInteractions)
+                            ContentWarningEntry(statusUiState.contentWarningText, contentWarningInteractions)
                         }
                     }
 
@@ -442,7 +380,7 @@ private fun MainBox(
                                 Modifier
                                     .fillMaxWidth()
                                     .focusRequester(textFieldFocusRequester),
-                            value = statusText,
+                            value = statusUiState.statusText,
                             onValueChange = { statusInteractions.onStatusTextUpdated(it) },
                             label = {
                                 Text(
@@ -466,15 +404,15 @@ private fun MainBox(
                         }
                     }
 
-                    poll?.let {
-                        items(poll.options.size) { index ->
+                    pollUiState?.let {
+                        items(pollUiState.options.size) { index ->
                             PollChoice(
                                 index = index,
-                                poll = poll,
+                                pollUiState = pollUiState,
                                 pollInteractions = pollInteractions,
                             )
                         }
-                        item { PollSettings(poll = poll, pollInteractions = pollInteractions) }
+                        item { PollSettings(pollUiState = pollUiState, pollInteractions = pollInteractions) }
                     }
 
                     items(imageStates.size) { index ->
@@ -599,10 +537,10 @@ private fun ImageUploadBox(
 @Composable
 private fun PollChoice(
     index: Int,
-    poll: Poll,
+    pollUiState: PollUiState,
     pollInteractions: PollInteractions,
 ) {
-    val deleteEnabled = remember(poll) { poll.options.size > MIN_POLL_COUNT }
+    val deleteEnabled = remember(pollUiState) { pollUiState.options.size > MIN_POLL_COUNT }
     Row(
         modifier =
             Modifier
@@ -613,7 +551,7 @@ private fun PollChoice(
                 Modifier
                     .weight(1f)
                     .align(Alignment.CenterVertically),
-            value = poll.options[index],
+            value = pollUiState.options[index],
             onValueChange = { pollInteractions.onPollOptionTextChanged(index, it) },
             label = {
                 Text(
@@ -644,7 +582,7 @@ private fun PollChoice(
 
 @Composable
 private fun PollSettings(
-    poll: Poll,
+    pollUiState: PollUiState,
     pollInteractions: PollInteractions,
 ) {
     Row(
@@ -652,7 +590,7 @@ private fun PollSettings(
             Modifier
                 .padding(start = 8.dp, end = 16.dp, top = 16.dp, bottom = 0.dp),
     ) {
-        val addNewOptionEnabled = remember(poll) { poll.options.size < MAX_POLL_COUNT }
+        val addNewOptionEnabled = remember(pollUiState) { pollUiState.options.size < MAX_POLL_COUNT }
         IconButton(
             onClick = {
                 pollInteractions.onAddPollOptionClicked()
@@ -678,14 +616,14 @@ private fun PollSettings(
                         .padding(start = 8.dp, end = 8.dp)
                         .height(40.dp),
             )
-            PollDurationDropDown(poll = poll, pollInteractions = pollInteractions)
+            PollDurationDropDown(pollUiState = pollUiState, pollInteractions = pollInteractions)
             MoSoVerticalDivider(
                 modifier =
                     Modifier
                         .padding(start = 8.dp, end = 8.dp)
                         .height(40.dp),
             )
-            PollStyleDropDown(poll = poll, pollInteractions = pollInteractions)
+            PollStyleDropDown(pollUiState = pollUiState, pollInteractions = pollInteractions)
         }
     }
     Row(
@@ -696,7 +634,7 @@ private fun PollSettings(
     ) {
         Checkbox(
             modifier = Modifier.align(Alignment.CenterVertically),
-            checked = poll.hideTotals,
+            checked = pollUiState.hideTotals,
             onCheckedChange = { pollInteractions.onHideCountUntilEndClicked() },
         )
         Text(
@@ -715,26 +653,27 @@ private fun NewPostScreenPreview() {
         false,
     ) {
         NewPostScreen(
-            statusText = TextFieldValue(),
+            statusUiState = StatusUiState(
+                statusText = TextFieldValue(),
+                contentWarningText = null,
+                accountList = null,
+                hashtagList = null,
+                inReplyToAccountName = null,
+            ),
+            newPostUiState = NewPostUiState(
+                sendButtonEnabled = true,
+                isSendingPost = false,
+                visibility = StatusVisibility.Private,
+                userHeaderState = UserHeaderState("", "Barack Obama"),
+                bottomBarState = BottomBarState(),
+            ),
             statusInteractions = object : StatusInteractions {},
-            onPostClicked = {},
-            sendButtonEnabled = true,
             imageStates = listOf(),
             mediaInteractions = object : MediaInteractions {},
-            isSendingPost = false,
-            visibility = StatusVisibility.Private,
-            onVisibilitySelected = {},
-            poll = null,
+            pollUiState = null,
             pollInteractions = object : PollInteractions {},
-            contentWarningText = null,
             contentWarningInteractions = object : ContentWarningInteractions {},
-            accounts = null,
-            hashTags = null,
-            inReplyToAccountName = null,
-            userHeaderState = UserHeaderState("", "Barack Obama"),
-            bottomBarState = BottomBarState(),
-            onUploadImageClicked = {},
-            onUploadMediaClicked = {},
+            newPostInteractions = NewPostInteractionsNoOp,
         )
     }
 }
@@ -746,32 +685,33 @@ private fun NewPostScreenWithPollPreview() {
         false,
     ) {
         NewPostScreen(
-            statusText = TextFieldValue(),
+            statusUiState = StatusUiState(
+                statusText = TextFieldValue(),
+                contentWarningText = null,
+                accountList = null,
+                hashtagList = null,
+                inReplyToAccountName = null,
+            ),
+            newPostUiState = NewPostUiState(
+                sendButtonEnabled = true,
+                isSendingPost = false,
+                visibility = StatusVisibility.Private,
+                userHeaderState = UserHeaderState("", "Barack Obama"),
+                bottomBarState = BottomBarState(),
+            ),
             statusInteractions = object : StatusInteractions {},
-            onPostClicked = {},
-            sendButtonEnabled = true,
             imageStates = listOf(),
             mediaInteractions = object : MediaInteractions {},
-            isSendingPost = false,
-            visibility = StatusVisibility.Private,
-            onVisibilitySelected = {},
-            poll =
-                Poll(
+            pollUiState =
+                PollUiState(
                     options = listOf("option 1", "option 2"),
                     style = PollStyle.SINGLE_CHOICE,
                     pollDuration = PollDuration.ONE_DAY,
                     hideTotals = false,
                 ),
             pollInteractions = object : PollInteractions {},
-            contentWarningText = null,
             contentWarningInteractions = object : ContentWarningInteractions {},
-            accounts = null,
-            hashTags = null,
-            inReplyToAccountName = null,
-            userHeaderState = UserHeaderState("", "Barack Obama"),
-            bottomBarState = BottomBarState(),
-            onUploadImageClicked = {},
-            onUploadMediaClicked = {},
+            newPostInteractions = NewPostInteractionsNoOp,
         )
     }
 }
@@ -783,26 +723,27 @@ private fun NewPostScreenWithContentWarningPreview() {
         false,
     ) {
         NewPostScreen(
-            statusText = TextFieldValue(),
+            statusUiState = StatusUiState(
+                statusText = TextFieldValue(),
+                contentWarningText = "Content is bad",
+                accountList = null,
+                hashtagList = null,
+                inReplyToAccountName = null,
+            ),
+            newPostUiState = NewPostUiState(
+                sendButtonEnabled = true,
+                isSendingPost = false,
+                visibility = StatusVisibility.Private,
+                userHeaderState = UserHeaderState("", "Barack Obama"),
+                bottomBarState = BottomBarState(),
+            ),
             statusInteractions = object : StatusInteractions {},
-            onPostClicked = {},
-            sendButtonEnabled = true,
             imageStates = listOf(),
             mediaInteractions = object : MediaInteractions {},
-            isSendingPost = false,
-            visibility = StatusVisibility.Private,
-            onVisibilitySelected = {},
-            poll = null,
+            pollUiState = null,
             pollInteractions = object : PollInteractions {},
-            contentWarningText = "Content is bad",
             contentWarningInteractions = object : ContentWarningInteractions {},
-            accounts = null,
-            hashTags = null,
-            inReplyToAccountName = null,
-            userHeaderState = UserHeaderState("", "Barack Obama"),
-            bottomBarState = BottomBarState(),
-            onUploadImageClicked = {},
-            onUploadMediaClicked = {},
+            newPostInteractions = NewPostInteractionsNoOp,
         )
     }
 }

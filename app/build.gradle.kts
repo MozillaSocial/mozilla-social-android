@@ -3,6 +3,7 @@ import com.android.build.api.dsl.ManagedVirtualDevice
 plugins {
     id("org.mozilla.social.android.application")
     id("org.mozilla.social.android.application.compose")
+    alias(libs.plugins.about.libraries.plugin)
     id("org.mozilla.social.android.application.secrets")
     alias(libs.plugins.sentry)
 }
@@ -132,9 +133,9 @@ dependencies {
 
     implementation(libs.androidx.navigation.compose)
 
-    testImplementation(libs.koin.test)
-
     implementation(libs.jakewharton.timber)
+
+    testImplementation(libs.koin.test)
 
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit)
