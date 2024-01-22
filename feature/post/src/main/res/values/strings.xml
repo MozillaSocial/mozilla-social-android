@@ -15,6 +15,7 @@
     <string name="poll_choice_label">Poll choice %d</string>
     <string name="poll_option_hide_results">Hide results until complete</string>
     <string name="poll_add_choice_button">Add choice</string>
+    <string name="close_poll_content_description">Close poll</string>
 
     <string name="send_post_button_content_description">post</string>
     <string name="attach_image_button_content_description">attach image</string>

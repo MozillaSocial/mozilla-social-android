@@ -20,6 +20,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
+import org.mozilla.social.core.designsystem.utils.NoRipple
 import org.mozilla.social.core.ui.common.utils.PreviewTheme
 
 @Composable
@@ -32,20 +33,22 @@ fun MoSoDropDown(
     Box(
         modifier = modifier,
     ) {
-        Row(
-            modifier = Modifier
-                .clickable { expanded.value = true },
-        ) {
-            content()
-            Spacer(modifier = Modifier.padding(start = 8.dp))
-            Icon(
+        NoRipple {
+            Row(
                 modifier = Modifier
-                    .size(MoSoIcons.Sizes.small)
-                    .align(Alignment.CenterVertically),
-                painter = MoSoIcons.caretDown(),
-                contentDescription = null,
-                tint = MoSoTheme.colors.iconPrimary,
-            )
+                    .clickable { expanded.value = true },
+            ) {
+                content()
+                Spacer(modifier = Modifier.padding(start = 8.dp))
+                Icon(
+                    modifier = Modifier
+                        .size(MoSoIcons.Sizes.small)
+                        .align(Alignment.CenterVertically),
+                    painter = MoSoIcons.caretDown(),
+                    contentDescription = null,
+                    tint = MoSoTheme.colors.iconPrimary,
+                )
+            }
         }
         MoSoDropdownMenu(
             expanded = expanded.value,
