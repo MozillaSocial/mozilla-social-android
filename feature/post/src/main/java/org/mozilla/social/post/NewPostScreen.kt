@@ -1,5 +1,4 @@
 @file:OptIn(
-    ExperimentalMaterial3Api::class,
     ExperimentalComposeUiApi::class,
 )
 
@@ -15,21 +14,16 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.windowsizeclass.WindowHeightSizeClass
 import androidx.compose.runtime.Composable
@@ -69,24 +63,20 @@ import org.mozilla.social.core.ui.common.MoSoSurface
 import org.mozilla.social.core.ui.common.TransparentNoTouchOverlay
 import org.mozilla.social.core.ui.common.appbar.MoSoCloseableTopAppBar
 import org.mozilla.social.core.ui.common.button.MoSoButton
-import org.mozilla.social.core.ui.common.divider.MoSoVerticalDivider
 import org.mozilla.social.core.ui.common.dropdown.VisibilityDropDownButton
 import org.mozilla.social.core.ui.common.media.MediaUpload
 import org.mozilla.social.core.ui.common.text.MoSoTextField
 import org.mozilla.social.core.ui.common.transparentTextFieldColors
 import org.mozilla.social.core.ui.common.utils.getWindowHeightClass
 import org.mozilla.social.feature.post.R
-import org.mozilla.social.post.NewPostViewModel.Companion.MAX_POLL_COUNT
-import org.mozilla.social.post.NewPostViewModel.Companion.MIN_POLL_COUNT
 import org.mozilla.social.post.bottombar.BottomBar
 import org.mozilla.social.post.bottombar.BottomBarState
 import org.mozilla.social.post.media.MediaInteractions
+import org.mozilla.social.post.poll.Poll
 import org.mozilla.social.post.poll.PollUiState
 import org.mozilla.social.post.poll.PollDuration
-import org.mozilla.social.post.poll.PollDurationDropDown
 import org.mozilla.social.post.poll.PollInteractions
 import org.mozilla.social.post.poll.PollStyle
-import org.mozilla.social.post.poll.PollStyleDropDown
 import org.mozilla.social.post.status.AccountSearchBar
 import org.mozilla.social.post.status.ContentWarningInteractions
 import org.mozilla.social.post.status.HashtagSearchBar
@@ -353,11 +343,11 @@ private fun MainBox(
         val textFieldFocusRequester = remember { FocusRequester() }
         MoSoSurface(
             modifier =
-                Modifier
-                    .fillMaxSize()
-                    .clickable {
-                        keyboard?.show()
-                    },
+            Modifier
+                .fillMaxSize()
+                .clickable {
+                    keyboard?.show()
+                },
         ) {
             // re-enable ripple
             CompositionLocalProvider(
@@ -377,9 +367,9 @@ private fun MainBox(
                         val highlightColor = MoSoTheme.colors.textLink
                         MoSoTextField(
                             modifier =
-                                Modifier
-                                    .fillMaxWidth()
-                                    .focusRequester(textFieldFocusRequester),
+                            Modifier
+                                .fillMaxWidth()
+                                .focusRequester(textFieldFocusRequester),
                             value = statusUiState.statusText,
                             onValueChange = { statusInteractions.onStatusTextUpdated(it) },
                             label = {
@@ -405,14 +395,9 @@ private fun MainBox(
                     }
 
                     pollUiState?.let {
-                        items(pollUiState.options.size) { index ->
-                            PollChoice(
-                                index = index,
-                                pollUiState = pollUiState,
-                                pollInteractions = pollInteractions,
-                            )
+                        item {
+                            Poll(pollUiState = pollUiState, pollInteractions = pollInteractions)
                         }
-                        item { PollSettings(pollUiState = pollUiState, pollInteractions = pollInteractions) }
                     }
 
                     items(imageStates.size) { index ->
@@ -435,9 +420,9 @@ private fun InReplyToText(inReplyToAccountName: String?) {
         ) {
             Icon(
                 modifier =
-                    Modifier
-                        .size(20.dp)
-                        .align(Alignment.CenterVertically),
+                Modifier
+                    .size(20.dp)
+                    .align(Alignment.CenterVertically),
                 painter = MoSoIcons.chatBubbles(),
                 contentDescription = "",
             )
@@ -461,9 +446,9 @@ private fun ContentWarningEntry(
 ) {
     MoSoTextField(
         modifier =
-            Modifier
-                .padding(16.dp)
-                .fillMaxWidth(),
+        Modifier
+            .padding(16.dp)
+            .fillMaxWidth(),
         value = contentWarningText,
         onValueChange = { contentWarningInteractions.onContentWarningTextChanged(it) },
         label = { Text(text = stringResource(id = R.string.content_warning_label)) },
@@ -479,17 +464,17 @@ private fun ImageUploadBox(
     val outlineShape = RoundedCornerShape(12.dp)
     Column(
         modifier =
-            Modifier
-                .padding(16.dp)
-                .border(
-                    width = 2.dp,
-                    color = MoSoTheme.colors.borderPrimary,
-                    shape = outlineShape,
-                )
-                .clip(
-                    outlineShape,
-                )
-                .fillMaxWidth(),
+        Modifier
+            .padding(16.dp)
+            .border(
+                width = 2.dp,
+                color = MoSoTheme.colors.borderPrimary,
+                shape = outlineShape,
+            )
+            .clip(
+                outlineShape,
+            )
+            .fillMaxWidth(),
     ) {
         MediaUpload(
             uri = imageState.uri,
@@ -531,118 +516,6 @@ private fun ImageUploadBox(
                 )
             }
         }
-    }
-}
-
-@Composable
-private fun PollChoice(
-    index: Int,
-    pollUiState: PollUiState,
-    pollInteractions: PollInteractions,
-) {
-    val deleteEnabled = remember(pollUiState) { pollUiState.options.size > MIN_POLL_COUNT }
-    Row(
-        modifier =
-            Modifier
-                .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 0.dp),
-    ) {
-        OutlinedTextField(
-            modifier =
-                Modifier
-                    .weight(1f)
-                    .align(Alignment.CenterVertically),
-            value = pollUiState.options[index],
-            onValueChange = { pollInteractions.onPollOptionTextChanged(index, it) },
-            label = {
-                Text(
-                    text = stringResource(id = R.string.poll_choice_label, index + 1),
-                )
-            },
-        )
-        IconButton(
-            modifier =
-                Modifier
-                    .align(Alignment.CenterVertically),
-            onClick = {
-                pollInteractions.onPollOptionDeleteClicked(index)
-            },
-            enabled = deleteEnabled,
-        ) {
-            Icon(
-                modifier =
-                    Modifier
-                        .width(40.dp)
-                        .height(40.dp),
-                painter = MoSoIcons.deleteOutline(),
-                contentDescription = stringResource(id = R.string.remove_poll_option_button_content_description),
-            )
-        }
-    }
-}
-
-@Composable
-private fun PollSettings(
-    pollUiState: PollUiState,
-    pollInteractions: PollInteractions,
-) {
-    Row(
-        modifier =
-            Modifier
-                .padding(start = 8.dp, end = 16.dp, top = 16.dp, bottom = 0.dp),
-    ) {
-        val addNewOptionEnabled = remember(pollUiState) { pollUiState.options.size < MAX_POLL_COUNT }
-        IconButton(
-            onClick = {
-                pollInteractions.onAddPollOptionClicked()
-            },
-            enabled = addNewOptionEnabled,
-        ) {
-            Icon(
-                modifier =
-                    Modifier
-                        .width(40.dp)
-                        .height(40.dp),
-                painter = MoSoIcons.addCircleOutline(),
-                contentDescription = stringResource(id = R.string.add_poll_option_button_content_description),
-            )
-        }
-
-        Row(
-            modifier = Modifier.padding(top = 4.dp),
-        ) {
-            MoSoVerticalDivider(
-                modifier =
-                    Modifier
-                        .padding(start = 8.dp, end = 8.dp)
-                        .height(40.dp),
-            )
-            PollDurationDropDown(pollUiState = pollUiState, pollInteractions = pollInteractions)
-            MoSoVerticalDivider(
-                modifier =
-                    Modifier
-                        .padding(start = 8.dp, end = 8.dp)
-                        .height(40.dp),
-            )
-            PollStyleDropDown(pollUiState = pollUiState, pollInteractions = pollInteractions)
-        }
-    }
-    Row(
-        modifier =
-            Modifier
-                .padding(start = 8.dp, top = 8.dp, end = 8.dp)
-                .clickable { pollInteractions.onHideCountUntilEndClicked() },
-    ) {
-        Checkbox(
-            modifier = Modifier.align(Alignment.CenterVertically),
-            checked = pollUiState.hideTotals,
-            onCheckedChange = { pollInteractions.onHideCountUntilEndClicked() },
-        )
-        Text(
-            modifier = Modifier.align(Alignment.CenterVertically),
-            text = stringResource(id = R.string.poll_option_hide_results),
-            fontSize = 16.sp,
-        )
-        Spacer(modifier = Modifier.width(8.dp))
     }
 }
 
