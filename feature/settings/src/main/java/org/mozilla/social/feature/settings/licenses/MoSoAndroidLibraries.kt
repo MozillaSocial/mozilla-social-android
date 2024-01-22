@@ -6,12 +6,14 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.produceState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
@@ -24,6 +26,7 @@ import com.mikepenz.aboutlibraries.ui.compose.util.stable
 import com.mikepenz.aboutlibraries.util.withContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import org.mozilla.social.core.designsystem.theme.MoSoTheme
 
 /**
  * Displays all provided libraries in a simple list.
@@ -89,41 +92,12 @@ fun HtmlText(
     }, update = { it.text = HtmlCompat.fromHtml(html, HtmlCompat.FROM_HTML_MODE_COMPACT) })
 }
 
-//@Preview("Library items (Default)")
-//@Composable
-//fun PreviewLibraries() {
-//    MaterialTheme {
-//        Surface {
-//            com.mikepenz.aboutlibraries.ui.compose.Libraries()
-//        }
-//    }
-//}
-//
-//
-//@Preview("Library items (Off)")
-//@Composable
-//fun PreviewLibrariesOff() {
-//    MaterialTheme {
-//        Surface {
-//            com.mikepenz.aboutlibraries.ui.compose.Libraries(
-//                fakeData.libraries.stable,
-//                showAuthor = false,
-//                showLicenseBadges = false
-//            )
-//        }
-//    }
-//}
-//
-//@Preview("Library item")
-//@Composable
-//fun PreviewLibrary() {
-//    MaterialTheme {
-//        Surface {
-//            com.mikepenz.aboutlibraries.ui.compose.Library(
-//                fakeData.libraries.first().stable
-//            ) {
-//                // on-click
-//            }
-//        }
-//    }
-//}
+@Preview("Library items (Default)")
+@Composable
+fun PreviewLibraries() {
+    MoSoTheme {
+        Surface {
+            Libraries(fakeData.libraries.stable)
+        }
+    }
+}

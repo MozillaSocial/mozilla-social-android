@@ -6,10 +6,13 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.LazyListState
@@ -37,6 +40,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import com.mikepenz.aboutlibraries.Libs
 import com.mikepenz.aboutlibraries.entity.Library
 import com.mikepenz.aboutlibraries.ui.compose.util.StableLibrary
 import com.mikepenz.aboutlibraries.ui.compose.util.StableLibs
@@ -84,23 +88,22 @@ fun MoSoLibrariesContainer(
         itemContentPadding = itemContentPadding,
         itemSpacing = itemSpacing,
         header = header,
-        onLibraryClick = { library ->
-            val license = library.library.licenses.firstOrNull()
-            if (onLibraryClick != null) {
-                onLibraryClick(library)
-            } else if (!license?.htmlReadyLicenseContent.isNullOrBlank()) {
-                openDialog.value = library
-            } else if (!license?.url.isNullOrBlank()) {
-                license?.url?.also {
-                    try {
-                        uriHandler.openUri(it)
-                    } catch (t: Throwable) {
-                        println("Failed to open url: ${it}")
-                    }
+    ) { library ->
+        val license = library.library.licenses.firstOrNull()
+        if (onLibraryClick != null) {
+            onLibraryClick(library)
+        } else if (!license?.htmlReadyLicenseContent.isNullOrBlank()) {
+            openDialog.value = library
+        } else if (!license?.url.isNullOrBlank()) {
+            license?.url?.also {
+                try {
+                    uriHandler.openUri(it)
+                } catch (t: Throwable) {
+                    println("Failed to open url: ${it}")
                 }
             }
-        },
-    )
+        }
+    }
 
     val library = openDialog.value
     if (library != null && licenseDialogBody != null) {
@@ -258,7 +261,7 @@ internal fun Library(
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             Text(
                 text = library.library.name,
@@ -288,11 +291,15 @@ internal fun Library(
             )
         }
         if (showLicenseBadges && library.library.licenses.isNotEmpty()) {
-            Row {
-                library.library.licenses.forEach {
+            library.library.licenses.forEach {
+                Row (
+                    modifier = Modifier
+                        .padding(2.dp)
+                ) {
                     MoSoBadge {
                         Text(
-                            modifier = Modifier.padding(padding.badgeContentPadding),
+                            modifier = Modifier
+                                .padding(padding.badgeContentPadding),
                             text = it.name
                         )
                     }
@@ -301,7 +308,6 @@ internal fun Library(
         }
     }
 }
-
 
 /**
  * Contains the default values used by [Library]
