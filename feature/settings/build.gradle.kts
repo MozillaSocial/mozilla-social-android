@@ -35,5 +35,8 @@ dependencies {
     implementation(libs.koin.androidx.compose)
     implementation(libs.protobuf.kotlin.lite)
     implementation(libs.jakewharton.timber)
+    implementation(libs.about.libraries.core)
+    implementation(libs.about.libraries.ui)
+    implementation(libs.kotlinx.collections.immutable)
     implementation(libs.koin.androidx.workmanager)
 }
