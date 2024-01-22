@@ -9,10 +9,8 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
-import org.mozilla.social.core.ui.common.R
 import org.mozilla.social.core.ui.common.paging.PagingLazyColumn
 
 @Composable
@@ -34,6 +32,7 @@ fun <A : Any> PullRefreshLazyColumn(
         },
     listState: LazyListState = rememberLazyListState(),
     emptyListState: LazyListState = rememberLazyListState(),
+    headerContent: LazyListScope.() -> Unit = {},
     content: LazyListScope.() -> Unit,
 ) {
     Box(
@@ -43,9 +42,9 @@ fun <A : Any> PullRefreshLazyColumn(
     ) {
         PagingLazyColumn(
             lazyPagingItems = lazyPagingItems,
-            noResultText = stringResource(id = R.string.theres_nothing_here),
             listState = listState,
             emptyListState = emptyListState,
+            headerContent = headerContent,
             content = content,
         )
 

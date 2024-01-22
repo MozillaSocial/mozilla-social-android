@@ -27,6 +27,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.PagingData
+import androidx.paging.compose.collectAsLazyPagingItems
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -39,9 +40,10 @@ import org.mozilla.social.core.ui.common.MoSoSurface
 import org.mozilla.social.core.ui.common.MoSoTab
 import org.mozilla.social.core.ui.common.MoSoTabRow
 import org.mozilla.social.core.ui.common.appbar.MoSoAppBar
+import org.mozilla.social.core.ui.common.pullrefresh.PullRefreshLazyColumn
 import org.mozilla.social.core.ui.postcard.PostCardInteractions
-import org.mozilla.social.core.ui.postcard.PostCardList
 import org.mozilla.social.core.ui.postcard.PostCardUiState
+import org.mozilla.social.core.ui.postcard.postListContent
 
 @Composable
 internal fun FeedScreen(viewModel: FeedViewModel = koinViewModel()) {
@@ -136,28 +138,35 @@ private fun FeedScreen(
             val localScrollState = rememberLazyListState()
             val federatedScrollState = rememberLazyListState()
 
-            PostCardList(
-                feed =
-                    when (selectedTimelineType) {
-                        TimelineType.FOR_YOU -> homeFeed
-                        TimelineType.LOCAL -> localFeed
-                        TimelineType.FEDERATED -> federatedFeed
-                    },
-                postCardInteractions = when (selectedTimelineType) {
-                    TimelineType.FOR_YOU -> homePostCardInteractions
-                    TimelineType.LOCAL -> localPostCardInteractions
-                    TimelineType.FEDERATED -> federatedPostCardInteractions
+            val homeFeedPagingItems = homeFeed.collectAsLazyPagingItems()
+            val localFeedPagingItems = localFeed.collectAsLazyPagingItems()
+            val federatedPagingItems = federatedFeed.collectAsLazyPagingItems()
+
+            PullRefreshLazyColumn(
+                lazyPagingItems = when (selectedTimelineType) {
+                    TimelineType.FOR_YOU -> homeFeedPagingItems
+                    TimelineType.LOCAL -> localFeedPagingItems
+                    TimelineType.FEDERATED -> federatedPagingItems
                 },
-                pullToRefreshEnabled = true,
-                isFullScreenLoading = true,
-                refreshSignalFlow = timelineTypeFlow,
-                scrollState =
-                    when (selectedTimelineType) {
-                        TimelineType.FOR_YOU -> forYouScrollState
-                        TimelineType.LOCAL -> localScrollState
-                        TimelineType.FEDERATED -> federatedScrollState
+                listState = when (selectedTimelineType) {
+                    TimelineType.FOR_YOU -> forYouScrollState
+                    TimelineType.LOCAL -> localScrollState
+                    TimelineType.FEDERATED -> federatedScrollState
+                },
+            ) {
+                postListContent(
+                    lazyPagingItems = when (selectedTimelineType) {
+                        TimelineType.FOR_YOU -> homeFeedPagingItems
+                        TimelineType.LOCAL -> localFeedPagingItems
+                        TimelineType.FEDERATED -> federatedPagingItems
                     },
-            )
+                    postCardInteractions = when (selectedTimelineType) {
+                        TimelineType.FOR_YOU -> homePostCardInteractions
+                        TimelineType.LOCAL -> localPostCardInteractions
+                        TimelineType.FEDERATED -> federatedPostCardInteractions
+                    },
+                )
+            }
         }
     }
 }

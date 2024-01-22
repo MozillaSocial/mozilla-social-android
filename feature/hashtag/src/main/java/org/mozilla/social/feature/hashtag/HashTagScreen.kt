@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.PagingData
+import androidx.paging.compose.collectAsLazyPagingItems
 import kotlinx.coroutines.flow.Flow
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
@@ -21,9 +22,10 @@ import org.mozilla.social.core.ui.common.appbar.MoSoCloseableTopAppBar
 import org.mozilla.social.core.ui.common.error.GenericError
 import org.mozilla.social.core.ui.common.following.FollowingButton
 import org.mozilla.social.core.ui.common.loading.MaxSizeLoading
+import org.mozilla.social.core.ui.common.pullrefresh.PullRefreshLazyColumn
 import org.mozilla.social.core.ui.postcard.PostCardInteractions
-import org.mozilla.social.core.ui.postcard.PostCardList
 import org.mozilla.social.core.ui.postcard.PostCardUiState
+import org.mozilla.social.core.ui.postcard.postListContent
 
 @Composable
 internal fun HashTagScreen(
@@ -82,12 +84,16 @@ private fun HashTagScreen(
                     MaxSizeLoading()
                 }
                 is Resource.Loaded -> {
-                    PostCardList(
-                        feed = feed,
-                        postCardInteractions = postCardInteractions,
-                        pullToRefreshEnabled = true,
-                        isFullScreenLoading = true,
-                    )
+                    val feedListState = feed.collectAsLazyPagingItems()
+
+                    PullRefreshLazyColumn(
+                        lazyPagingItems = feedListState,
+                    ) {
+                        postListContent(
+                            lazyPagingItems = feedListState,
+                            postCardInteractions = postCardInteractions,
+                        )
+                    }
                 }
                 is Resource.Error -> {
                     GenericError(
