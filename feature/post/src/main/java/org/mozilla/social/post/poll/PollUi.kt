@@ -4,6 +4,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -24,6 +25,7 @@ import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.ui.common.button.MoSoButtonSecondary
 import org.mozilla.social.core.ui.common.divider.MoSoDivider
 import org.mozilla.social.core.ui.common.divider.MoSoVerticalDivider
+import org.mozilla.social.core.ui.common.dropdown.MoSoDropDown
 import org.mozilla.social.core.ui.common.text.MoSoTextField
 import org.mozilla.social.core.ui.common.text.SmallTextLabel
 import org.mozilla.social.core.ui.common.utils.PreviewTheme
@@ -182,8 +184,14 @@ internal fun PollBar(
             .height(56.dp)
     ) {
         MoSoDivider()
-        Row {
-
+        Row(
+            modifier = Modifier.weight(1f)
+        ) {
+            PollDurationDropDown(
+                modifier = Modifier.align(Alignment.CenterVertically),
+                pollUiState = pollUiState,
+                pollInteractions = pollInteractions,
+            )
         }
     }
 }

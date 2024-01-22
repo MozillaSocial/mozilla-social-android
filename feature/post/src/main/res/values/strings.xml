@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="five_minutes">5 minutes</string>
-    <string name="thirty_minutes">30 minutes</string>
-    <string name="one_hour">1 hour</string>
-    <string name="six_hours">6 hours</string>
-    <string name="one_day">1 day</string>
-    <string name="three_days">3 days</string>
-    <string name="one_week">1 week</string>
+    <string name="five_minutes">Run for 5 minutes</string>
+    <string name="thirty_minutes">Run for 30 minutes</string>
+    <string name="one_hour">Run for 1 hour</string>
+    <string name="six_hours">Run for 6 hours</string>
+    <string name="one_day">Run for 1 day</string>
+    <string name="three_days">Run for 3 days</string>
+    <string name="one_week">Run for 1 week</string>
 
     <string name="poll_duration">Poll duration</string>
     <string name="poll_style_single_choice">Single choice</string>

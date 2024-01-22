@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -73,6 +74,7 @@ import org.mozilla.social.post.bottombar.BottomBar
 import org.mozilla.social.post.bottombar.BottomBarState
 import org.mozilla.social.post.media.MediaInteractions
 import org.mozilla.social.post.poll.Poll
+import org.mozilla.social.post.poll.PollBar
 import org.mozilla.social.post.poll.PollUiState
 import org.mozilla.social.post.poll.PollDuration
 import org.mozilla.social.post.poll.PollInteractions
@@ -248,6 +250,9 @@ private fun NewPostScreenContent(
         statusUiState.hashtagList?.let {
             HashtagSearchBar(hashTags = statusUiState.hashtagList, statusInteractions = statusInteractions)
         }
+        pollUiState?.let {
+            PollBar(pollUiState = pollUiState, pollInteractions = pollInteractions)
+        }
         BottomBar(
             bottomBarState = newPostUiState.bottomBarState,
             onMediaInserted = mediaInteractions::onMediaInserted,
@@ -283,6 +288,8 @@ fun UserHeader(
 
         Column {
             Text(text = userHeaderState.displayName, style = MoSoTheme.typography.labelMedium)
+
+            Spacer(modifier = Modifier.height(4.dp))
 
             VisibilityDropDownButton(
                 visibility = visibility,
