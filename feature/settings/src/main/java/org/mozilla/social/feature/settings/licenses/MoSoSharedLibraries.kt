@@ -47,6 +47,7 @@ import kotlinx.collections.immutable.ImmutableList
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.designsystem.theme.MoSoTypography
 import org.mozilla.social.core.ui.common.MoSoBadge
+import java.net.MalformedURLException
 
 @Composable
 fun MoSoLibrariesContainer(
@@ -94,8 +95,8 @@ fun MoSoLibrariesContainer(
             license?.url?.also {
                 try {
                     uriHandler.openUri(it)
-                } catch (t: Throwable) {
-                    println("Failed to open url: ${it}")
+                } catch (t: MalformedURLException) {
+                    println("Failed to open url: $it")
                 }
             }
         }
@@ -202,8 +203,8 @@ fun Libraries(
                 license?.url?.also {
                     try {
                         uriHandler.openUri(it)
-                    } catch (t: Throwable) {
-                        println("Failed to open url: ${it}")
+                    } catch (t: MalformedURLException) {
+                        println("Failed to open url: $it")
                     }
                 }
             }

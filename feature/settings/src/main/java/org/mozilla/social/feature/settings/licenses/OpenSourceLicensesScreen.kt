@@ -48,7 +48,6 @@ private fun OpenSourceLicensesScreenLibrary() {
                     .fillMaxSize(),
                 padding = customPadding,
                 colors = customColors,
-                showLicenseBadges = true,
             )
         }
     }
