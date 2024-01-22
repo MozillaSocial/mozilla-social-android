@@ -12,6 +12,7 @@ internal fun Project.configureUnitTests(commonExtension: CommonExtension<*, *, *
             add("testImplementation", libs.findLibrary("kotlin-test-junit").get())
             add("testImplementation", libs.findLibrary("kotlinx-coroutines-test").get())
             add("testImplementation", libs.findLibrary("google-truth").get())
+            add("testImplementation", libs.findLibrary("koin-test").get())
             add("testImplementation", project(":core:test"))
         }
     }
