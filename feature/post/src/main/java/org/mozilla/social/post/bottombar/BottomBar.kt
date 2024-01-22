@@ -133,7 +133,7 @@ internal fun BottomBar(
         Row(
             modifier =
                 Modifier
-                    .height(60.dp)
+                    .height(56.dp)
                     .fillMaxWidth()
                     .background(MoSoTheme.colors.layer1),
             verticalAlignment = Alignment.CenterVertically,

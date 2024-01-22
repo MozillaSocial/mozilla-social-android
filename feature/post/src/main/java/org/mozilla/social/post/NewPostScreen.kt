@@ -396,7 +396,11 @@ private fun MainBox(
 
                     pollUiState?.let {
                         item {
-                            Poll(pollUiState = pollUiState, pollInteractions = pollInteractions)
+                            Poll(
+                                modifier = Modifier.padding(16.dp),
+                                pollUiState = pollUiState,
+                                pollInteractions = pollInteractions,
+                            )
                         }
                     }
 

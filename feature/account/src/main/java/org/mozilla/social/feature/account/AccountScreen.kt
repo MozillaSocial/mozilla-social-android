@@ -71,7 +71,7 @@ import org.mozilla.social.core.ui.common.MoSoTabRow
 import org.mozilla.social.core.ui.common.appbar.MoSoCloseableTopAppBar
 import org.mozilla.social.core.ui.common.button.MoSoButton
 import org.mozilla.social.core.ui.common.button.MoSoButtonSecondary
-import org.mozilla.social.core.ui.common.dropdown.DropDownItem
+import org.mozilla.social.core.ui.common.dropdown.MoSoDropDownItem
 import org.mozilla.social.core.ui.common.dropdown.MoSoDropdownMenu
 import org.mozilla.social.core.ui.common.error.GenericError
 import org.mozilla.social.core.ui.common.loading.MoSoCircularProgressIndicator
@@ -343,14 +343,14 @@ private fun OverflowMenu(
             },
         ) {
             if (isUsersProfile) {
-                DropDownItem(
+                MoSoDropDownItem(
                     text = stringResource(id = R.string.favorites_option),
                     expanded = overflowMenuExpanded,
                     onClick = { overflowInteractions.onOverflowFavoritesClicked() }
                 )
             }
 
-            DropDownItem(
+            MoSoDropDownItem(
                 text = stringResource(R.string.share_option),
                 expanded = overflowMenuExpanded,
                 onClick = {
@@ -372,7 +372,7 @@ private fun OverflowMenu(
 
             if (!isUsersProfile) {
                 if (account.isMuted) {
-                    DropDownItem(
+                    MoSoDropDownItem(
                         text =
                             stringResource(
                                 id = org.mozilla.social.core.ui.common.R.string.unmute_user,
@@ -382,7 +382,7 @@ private fun OverflowMenu(
                         onClick = { overflowInteractions.onOverflowUnmuteClicked() },
                     )
                 } else {
-                    DropDownItem(
+                    MoSoDropDownItem(
                         text =
                             stringResource(
                                 id = org.mozilla.social.core.ui.common.R.string.mute_user,
@@ -394,7 +394,7 @@ private fun OverflowMenu(
                 }
 
                 if (account.isBlocked) {
-                    DropDownItem(
+                    MoSoDropDownItem(
                         text =
                             stringResource(
                                 id = org.mozilla.social.core.ui.common.R.string.unblock_user,
@@ -404,7 +404,7 @@ private fun OverflowMenu(
                         onClick = { overflowInteractions.onOverflowUnblockClicked() },
                     )
                 } else {
-                    DropDownItem(
+                    MoSoDropDownItem(
                         text =
                             stringResource(
                                 id = org.mozilla.social.core.ui.common.R.string.block_user,
@@ -415,7 +415,7 @@ private fun OverflowMenu(
                     )
                 }
 
-                DropDownItem(
+                MoSoDropDownItem(
                     text =
                         stringResource(
                             id = org.mozilla.social.core.ui.common.R.string.report_user,

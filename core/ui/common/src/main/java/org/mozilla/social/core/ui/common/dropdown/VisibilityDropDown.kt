@@ -80,28 +80,28 @@ fun VisibilityDropDownButton(
                 expanded.value = false
             },
         ) {
-            DropDownItem(
+            MoSoDropDownItem(
                 type = StatusVisibility.Public,
                 icon = MoSoIcons.public(),
                 text = stringResource(id = R.string.visibility_public),
                 expanded = expanded,
                 onVisibilitySelected = onVisibilitySelected,
             )
-            DropDownItem(
+            MoSoDropDownItem(
                 type = StatusVisibility.Unlisted,
                 icon = MoSoIcons.lockOpen(),
                 text = stringResource(id = R.string.visibility_unlisted),
                 expanded = expanded,
                 onVisibilitySelected = onVisibilitySelected,
             )
-            DropDownItem(
+            MoSoDropDownItem(
                 type = StatusVisibility.Private,
                 icon = MoSoIcons.materialLock(),
                 text = stringResource(id = R.string.visibility_private),
                 expanded = expanded,
                 onVisibilitySelected = onVisibilitySelected,
             )
-            DropDownItem(
+            MoSoDropDownItem(
                 type = StatusVisibility.Direct,
                 icon = MoSoIcons.message(),
                 text = stringResource(id = R.string.visibility_direct),
@@ -132,7 +132,7 @@ private fun ButtonContent(
 }
 
 @Composable
-private fun DropDownItem(
+private fun MoSoDropDownItem(
     type: StatusVisibility,
     icon: Painter,
     text: String,

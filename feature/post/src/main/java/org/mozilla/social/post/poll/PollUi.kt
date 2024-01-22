@@ -6,11 +6,11 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -21,8 +21,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
+import org.mozilla.social.core.ui.common.button.MoSoButtonSecondary
+import org.mozilla.social.core.ui.common.divider.MoSoDivider
 import org.mozilla.social.core.ui.common.divider.MoSoVerticalDivider
 import org.mozilla.social.core.ui.common.text.MoSoTextField
+import org.mozilla.social.core.ui.common.text.SmallTextLabel
 import org.mozilla.social.core.ui.common.utils.PreviewTheme
 import org.mozilla.social.feature.post.R
 import org.mozilla.social.post.NewPostViewModel
@@ -31,15 +34,29 @@ import org.mozilla.social.post.NewPostViewModel
 internal fun Poll(
     pollUiState: PollUiState,
     pollInteractions: PollInteractions,
+    modifier: Modifier = Modifier,
 ) {
-    Column {
+    Column(
+        modifier = modifier,
+    ) {
         pollUiState.options.forEachIndexed { index, _ ->
             PollChoice(
                 index = index,
                 pollUiState = pollUiState,
                 pollInteractions = pollInteractions,
             )
+            Spacer(modifier = Modifier.height(16.dp))
         }
+        MoSoButtonSecondary(onClick = pollInteractions::onAddPollOptionClicked) {
+            Icon(
+                modifier = Modifier.size(16.dp),
+                painter = MoSoIcons.plus(),
+                contentDescription = null,
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            SmallTextLabel(text = stringResource(id = R.string.poll_add_choice_button))
+        }
+
         PollSettings(pollUiState = pollUiState, pollInteractions = pollInteractions)
     }
 }
@@ -49,12 +66,11 @@ private fun PollChoice(
     index: Int,
     pollUiState: PollUiState,
     pollInteractions: PollInteractions,
+    modifier: Modifier = Modifier,
 ) {
     val deleteEnabled = remember(pollUiState) { pollUiState.options.size > NewPostViewModel.MIN_POLL_COUNT }
     Row(
-        modifier =
-        Modifier
-            .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 0.dp),
+        modifier = modifier,
     ) {
         MoSoTextField(
             modifier = Modifier
@@ -155,11 +171,44 @@ private fun PollSettings(
     }
 }
 
+@Composable
+internal fun PollBar(
+    pollUiState: PollUiState,
+    pollInteractions: PollInteractions,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier
+            .height(56.dp)
+    ) {
+        MoSoDivider()
+        Row {
+
+        }
+    }
+}
+
 @Preview
 @Composable
 private fun PollPreview() {
     PreviewTheme {
         Poll(
+            pollUiState = PollUiState(
+                options = listOf("option 1", "option 2"),
+                style = PollStyle.SINGLE_CHOICE,
+                pollDuration = PollDuration.ONE_DAY,
+                hideTotals = false,
+            ),
+            pollInteractions = object : PollInteractions {},
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun PollBarPreview() {
+    PreviewTheme {
+        PollBar(
             pollUiState = PollUiState(
                 options = listOf("option 1", "option 2"),
                 style = PollStyle.SINGLE_CHOICE,
