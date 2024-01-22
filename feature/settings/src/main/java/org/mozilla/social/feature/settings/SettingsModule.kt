@@ -8,6 +8,7 @@ import org.mozilla.social.core.analytics.analyticsModule
 import org.mozilla.social.core.datastore.dataStoreModule
 import org.mozilla.social.core.navigation.navigationModule
 import org.mozilla.social.core.repository.mastodon.mastodonRepositoryModule
+import org.mozilla.social.core.repository.paging.pagingModule
 import org.mozilla.social.core.usecase.mastodon.htmlcontent.DefaultHtmlInteractions
 import org.mozilla.social.core.usecase.mastodon.mastodonUsecaseModule
 import org.mozilla.social.core.workmanager.workManagerModule
@@ -29,6 +30,7 @@ val settingsModule =
             mastodonRepositoryModule,
             mastodonUsecaseModule,
             workManagerModule,
+            pagingModule,
         )
 
         viewModelOf(::SettingsViewModel)

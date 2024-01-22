@@ -19,7 +19,7 @@ import org.mozilla.social.feature.post.R
 
 @Composable
 fun PollStyleDropDown(
-    poll: Poll,
+    pollUiState: PollUiState,
     pollInteractions: PollInteractions,
 ) {
     val expanded = remember { mutableStateOf(false) }
@@ -36,7 +36,7 @@ fun PollStyleDropDown(
                 fontSize = 12.sp,
             )
             Text(
-                text = poll.style.label.build(LocalContext.current),
+                text = pollUiState.style.label.build(LocalContext.current),
             )
         }
     }
@@ -64,8 +64,8 @@ fun PollStyleDropDown(
 private fun PollStyleDropDownPreview() {
     MoSoTheme {
         PollStyleDropDown(
-            poll =
-                Poll(
+            pollUiState =
+                PollUiState(
                     options = listOf("option 1", "option 2"),
                     style = PollStyle.SINGLE_CHOICE,
                     pollDuration = PollDuration.ONE_DAY,

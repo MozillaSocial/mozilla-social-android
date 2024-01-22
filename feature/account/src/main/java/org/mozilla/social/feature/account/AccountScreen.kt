@@ -27,6 +27,7 @@ import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -48,6 +49,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.paging.compose.collectAsLazyPagingItems
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
@@ -73,10 +75,11 @@ import org.mozilla.social.core.ui.common.dropdown.DropDownItem
 import org.mozilla.social.core.ui.common.dropdown.MoSoDropdownMenu
 import org.mozilla.social.core.ui.common.error.GenericError
 import org.mozilla.social.core.ui.common.loading.MoSoCircularProgressIndicator
+import org.mozilla.social.core.ui.common.paging.PagingLazyColumn
 import org.mozilla.social.core.ui.htmlcontent.HtmlContent
 import org.mozilla.social.core.ui.htmlcontent.HtmlContentInteractions
 import org.mozilla.social.core.ui.postcard.PostCardInteractions
-import org.mozilla.social.core.ui.postcard.PostCardList
+import org.mozilla.social.core.ui.postcard.postListContent
 
 @Composable
 internal fun AccountScreen(
@@ -202,91 +205,119 @@ private fun MainContent(
             Modifier
                 .fillMaxSize(),
     ) {
-        PostCardList(
-            feed = timeline.feed,
-            postCardInteractions = postCardInteractions,
-        ) {
-            Header(
-                headerUrl = account.headerUrl,
-                avatarUrl = account.avatarUrl,
-                displayName = account.displayName,
-                handle = "@${account.webFinger}",
-                rightSideContent = {
-                    val buttonModifier = Modifier.padding(end = 8.dp)
-                    Row {
-                        if (isUsersProfile) {
-                            MoSoButtonSecondary(
-                                modifier = buttonModifier,
-                                onClick = { accountInteractions.onEditAccountClicked() },
-                            ) {
-                                Text(text = stringResource(id = R.string.edit_button))
-                            }
-                        } else {
-                            MoSoButton(
-                                modifier = buttonModifier,
-                                onClick = {
-                                    if (account.isFollowing) {
-                                        accountInteractions.onUnfollowClicked()
-                                    } else {
-                                        accountInteractions.onFollowClicked()
-                                    }
-                                },
-                            ) {
-                                Text(
-                                    text =
-                                        if (account.isFollowing) {
-                                            stringResource(id = R.string.unfollow_button)
-                                        } else {
-                                            stringResource(id = R.string.follow_button)
-                                        },
-                                )
-                            }
-                        }
-
-                        OverflowMenu(
-                            account = account,
-                            isUsersProfile = isUsersProfile,
-                            overflowInteractions = accountInteractions,
-                        )
-                    }
-                },
-            )
-
-            Spacer(modifier = Modifier.height(12.dp))
-            UserBio(
-                account = account,
-                htmlContentInteractions = htmlContentInteractions,
-            )
-            Spacer(modifier = Modifier.height(12.dp))
-            UserFollow(
-                account = account,
-                accountInteractions = accountInteractions,
-            )
-            MoSoTabRow(
-                modifier = Modifier.padding(top = 20.dp),
-                selectedTabIndex = timeline.type.ordinal,
-            ) {
-                AccountTimelineType.entries.forEach { timelineType ->
-                    MoSoTab(
-                        modifier =
-                            Modifier
-                                .height(40.dp),
-                        selected = timeline.type == timelineType,
-                        onClick = { accountInteractions.onTabClicked(timelineType) },
-                        content = {
-                            Text(
-                                text = when (timelineType) {
-                                    AccountTimelineType.POSTS -> stringResource(id = R.string.tab_posts)
-                                    AccountTimelineType.POSTS_AND_REPLIES ->
-                                        stringResource(id = R.string.tab_posts_and_replies)
-                                    AccountTimelineType.MEDIA -> stringResource(id = R.string.tab_media)
-                                },
-                                style = MoSoTheme.typography.labelMedium,
-                            )
-                        },
+        val feedPagingItems = timeline.feed.collectAsLazyPagingItems()
+        val listState = rememberLazyListState()
+        PagingLazyColumn(
+            lazyPagingItems = feedPagingItems,
+            headerContent = {
+                item {
+                    MainAccount(
+                        account = account,
+                        isUsersProfile = isUsersProfile,
+                        timeline = timeline,
+                        htmlContentInteractions = htmlContentInteractions,
+                        accountInteractions = accountInteractions,
                     )
                 }
+            },
+            listState = listState,
+            emptyListState = listState,
+        ) {
+            postListContent(
+                lazyPagingItems = feedPagingItems,
+                postCardInteractions = postCardInteractions,
+            )
+        }
+    }
+}
+
+@Composable
+private fun MainAccount(
+    account: AccountUiState,
+    isUsersProfile: Boolean,
+    timeline: Timeline,
+    htmlContentInteractions: HtmlContentInteractions,
+    accountInteractions: AccountInteractions,
+) {
+    Header(
+        headerUrl = account.headerUrl,
+        avatarUrl = account.avatarUrl,
+        displayName = account.displayName,
+        handle = "@${account.webFinger}",
+        rightSideContent = {
+            val buttonModifier = Modifier.padding(end = 8.dp)
+            Row {
+                if (isUsersProfile) {
+                    MoSoButtonSecondary(
+                        modifier = buttonModifier,
+                        onClick = { accountInteractions.onEditAccountClicked() },
+                    ) {
+                        Text(text = stringResource(id = R.string.edit_button))
+                    }
+                } else {
+                    MoSoButton(
+                        modifier = buttonModifier,
+                        onClick = {
+                            if (account.isFollowing) {
+                                accountInteractions.onUnfollowClicked()
+                            } else {
+                                accountInteractions.onFollowClicked()
+                            }
+                        },
+                    ) {
+                        Text(
+                            text =
+                            if (account.isFollowing) {
+                                stringResource(id = R.string.unfollow_button)
+                            } else {
+                                stringResource(id = R.string.follow_button)
+                            },
+                        )
+                    }
+                }
+
+                OverflowMenu(
+                    account = account,
+                    isUsersProfile = isUsersProfile,
+                    overflowInteractions = accountInteractions,
+                )
             }
+        },
+    )
+
+    Spacer(modifier = Modifier.height(12.dp))
+    UserBio(
+        account = account,
+        htmlContentInteractions = htmlContentInteractions,
+    )
+    Spacer(modifier = Modifier.height(12.dp))
+    UserFollow(
+        account = account,
+        accountInteractions = accountInteractions,
+    )
+    MoSoTabRow(
+        modifier = Modifier.padding(top = 20.dp),
+        selectedTabIndex = timeline.type.ordinal,
+    ) {
+        AccountTimelineType.entries.forEach { timelineType ->
+            MoSoTab(
+                modifier =
+                Modifier
+                    .height(40.dp),
+                selected = timeline.type == timelineType,
+                onClick = { accountInteractions.onTabClicked(timelineType) },
+                content = {
+                    Text(
+                        text = when (timelineType) {
+                            AccountTimelineType.POSTS -> stringResource(id = R.string.tab_posts)
+                            AccountTimelineType.POSTS_AND_REPLIES ->
+                                stringResource(id = R.string.tab_posts_and_replies)
+                            AccountTimelineType.MEDIA -> stringResource(id = R.string.tab_media)
+                        },
+                        style = MoSoTheme.typography.labelMedium,
+                    )
+                },
+            )
         }
     }
 }

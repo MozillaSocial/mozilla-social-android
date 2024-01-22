@@ -22,6 +22,7 @@ dependencies {
     implementation(project(":core:analytics"))
 
     implementation(libs.androidx.paging.runtime)
+    implementation(libs.androidx.paging.compose)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.koin.core)
     implementation(libs.koin.androidx.compose)
