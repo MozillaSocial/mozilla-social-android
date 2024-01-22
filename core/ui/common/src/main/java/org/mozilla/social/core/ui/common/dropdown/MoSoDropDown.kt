@@ -18,15 +18,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.PopupProperties
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.designsystem.utils.NoRipple
 import org.mozilla.social.core.ui.common.utils.PreviewTheme
 
 @Composable
-fun MoSoDropDown(
+fun MoSoDropDownMenu(
     modifier: Modifier = Modifier,
     expanded: MutableState<Boolean>,
+    properties: PopupProperties = PopupProperties(focusable = false),
     dropDownMenuContent: @Composable ColumnScope.() -> Unit,
     content: @Composable RowScope.() -> Unit,
 ) {
@@ -36,7 +38,7 @@ fun MoSoDropDown(
         NoRipple {
             Row(
                 modifier = Modifier
-                    .clickable { expanded.value = true },
+                    .clickable { if (!expanded.value) expanded.value = true },
             ) {
                 content()
                 Spacer(modifier = Modifier.padding(start = 8.dp))
@@ -55,6 +57,7 @@ fun MoSoDropDown(
             onDismissRequest = {
                 expanded.value = false
             },
+            properties = properties,
         ) {
             dropDownMenuContent()
         }
@@ -66,7 +69,7 @@ fun MoSoDropDown(
 @Composable
 private fun MoSoDropDownPreview() {
     PreviewTheme {
-        MoSoDropDown(
+        MoSoDropDownMenu(
             expanded = mutableStateOf(false),
             dropDownMenuContent = {},
         ) {

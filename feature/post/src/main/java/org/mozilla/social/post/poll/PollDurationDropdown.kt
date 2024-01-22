@@ -9,7 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
-import org.mozilla.social.core.ui.common.dropdown.MoSoDropDown
+import org.mozilla.social.core.ui.common.dropdown.MoSoDropDownMenu
 import org.mozilla.social.core.ui.common.text.SmallTextLabel
 
 @Composable
@@ -20,7 +20,7 @@ fun PollDurationDropDown(
 ) {
     val expanded = remember { mutableStateOf(false) }
 
-    MoSoDropDown(
+    MoSoDropDownMenu(
         modifier = modifier,
         expanded = expanded,
         dropDownMenuContent = {

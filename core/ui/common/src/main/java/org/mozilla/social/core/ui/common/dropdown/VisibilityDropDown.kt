@@ -29,7 +29,7 @@ fun VisibilityDropDownButton(
     onVisibilitySelected: (StatusVisibility) -> Unit,
 ) {
     val expanded = remember { mutableStateOf(false) }
-    MoSoDropDown(
+    MoSoDropDownMenu(
         modifier = modifier,
         expanded = expanded,
         dropDownMenuContent = {
