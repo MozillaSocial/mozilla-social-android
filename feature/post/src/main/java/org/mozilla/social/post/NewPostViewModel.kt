@@ -72,7 +72,7 @@ class NewPostViewModel(
                 BottomBarState(
                     imageButtonEnabled = videos.isEmpty() && images.size < MAX_IMAGES && pollUiState == null,
                     videoButtonEnabled = images.isEmpty() && pollUiState == null,
-                    pollButtonEnabled = images.isEmpty() && videos.isEmpty() && pollUiState == null,
+                    pollButtonEnabled = images.isEmpty() && videos.isEmpty(),
                     contentWarningText = statusUiState.contentWarningText,
                     characterCountText = "${MAX_POST_LENGTH -
                             statusUiState.statusText.text.length -
