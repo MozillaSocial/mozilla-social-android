@@ -34,4 +34,16 @@ class NotificationCardDelegate(
     override fun onFavoritedCardClicked(statusId: String) {
         navigateTo(NavigationDestination.Thread(statusId))
     }
+
+    override fun onFollowRequestCardClicked(accountId: String) {
+        navigateTo(NavigationDestination.Account(accountId))
+    }
+
+    override fun onAcceptFollowRequestClicked(accountId: String) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onDenyFollowRequestClicked(accountId: String) {
+        TODO("Not yet implemented")
+    }
 }

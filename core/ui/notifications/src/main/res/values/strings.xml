@@ -10,4 +10,7 @@
     <string name="status_updated_title">%s has updated their post:</string>
 
     <string name="view_account_of_user">View account of %s</string>
+
+    <string name="deny_follow_request">Deny</string>
+    <string name="accept_follow_request">Accept</string>
 </resources>
