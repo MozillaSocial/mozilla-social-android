@@ -7,11 +7,11 @@ import androidx.room.Upsert
 @Dao
 interface BaseDao<T> {
     @Upsert
-    fun upsert(t: T)
+    suspend fun upsert(t: T)
 
     @Upsert
-    fun upsertAll(t: List<T>)
+    suspend fun upsertAll(t: List<T>)
 
     @Delete
-    fun delete(t: T)
+    suspend fun delete(t: T)
 }

@@ -52,13 +52,13 @@ interface SearchDao {
     suspend fun deleteAllSearchedHashTags()
 
     @Upsert
-    fun upsertAccounts(accounts: List<SearchedAccount>)
+    suspend fun upsertAccounts(accounts: List<SearchedAccount>)
 
     @Upsert
-    fun upsertStatuses(statuses: List<SearchedStatus>)
+    suspend fun upsertStatuses(statuses: List<SearchedStatus>)
 
     @Upsert
-    fun upsertHashTags(hashTags: List<SearchedHashTag>)
+    suspend fun upsertHashTags(hashTags: List<SearchedHashTag>)
 
     @Transaction
     @Query(

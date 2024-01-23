@@ -2,14 +2,13 @@ package org.mozilla.social.core.repository.mastodon.model.notifications
 
 import org.mozilla.social.core.database.model.entities.DatabaseNotification
 import org.mozilla.social.core.database.model.wrappers.NotificationWrapper
-import org.mozilla.social.core.database.model.wrappers.extractStatusWrapper
 import org.mozilla.social.core.model.Notification
 import org.mozilla.social.core.repository.mastodon.model.status.toExternalModel
 
 @Suppress("ComplexMethod")
 fun NotificationWrapper.toExternal(): Notification =
     when(notification.type) {
-        DatabaseNotification.Type.MENTION -> extractStatusWrapper()?.let {
+        DatabaseNotification.Type.MENTION -> status?.let {
             Notification.Mention(
                 id = notification.id,
                 createdAt = notification.createdAt,
@@ -17,7 +16,7 @@ fun NotificationWrapper.toExternal(): Notification =
                 status = it.toExternalModel(),
             )
         } ?: throw MissingDataException()
-        DatabaseNotification.Type.NEW_STATUS -> extractStatusWrapper()?.let {
+        DatabaseNotification.Type.NEW_STATUS -> status?.let {
             Notification.NewStatus(
                 id = notification.id,
                 createdAt = notification.createdAt,
@@ -25,7 +24,7 @@ fun NotificationWrapper.toExternal(): Notification =
                 status = it.toExternalModel(),
             )
         } ?: throw MissingDataException()
-        DatabaseNotification.Type.REPOST -> extractStatusWrapper()?.let {
+        DatabaseNotification.Type.REPOST -> status?.let {
             Notification.Repost(
                 id = notification.id,
                 createdAt = notification.createdAt,
@@ -43,7 +42,7 @@ fun NotificationWrapper.toExternal(): Notification =
             createdAt = notification.createdAt,
             account = account.toExternalModel(),
         )
-        DatabaseNotification.Type.FAVORITE -> extractStatusWrapper()?.let {
+        DatabaseNotification.Type.FAVORITE -> status?.let {
             Notification.Favorite(
                 id = notification.id,
                 createdAt = notification.createdAt,
@@ -51,7 +50,7 @@ fun NotificationWrapper.toExternal(): Notification =
                 status = it.toExternalModel(),
             )
         } ?: throw MissingDataException()
-        DatabaseNotification.Type.POLL_ENDED -> extractStatusWrapper()?.let {
+        DatabaseNotification.Type.POLL_ENDED -> status?.let {
             Notification.PollEnded(
                 id = notification.id,
                 createdAt = notification.createdAt,
@@ -59,7 +58,7 @@ fun NotificationWrapper.toExternal(): Notification =
                 status = it.toExternalModel(),
             )
         } ?: throw MissingDataException()
-        DatabaseNotification.Type.STATUS_UPDATED -> extractStatusWrapper()?.let {
+        DatabaseNotification.Type.STATUS_UPDATED -> status?.let {
             Notification.StatusUpdated(
                 id = notification.id,
                 createdAt = notification.createdAt,

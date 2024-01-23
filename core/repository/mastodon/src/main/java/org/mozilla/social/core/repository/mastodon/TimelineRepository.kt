@@ -22,7 +22,6 @@ import org.mozilla.social.core.database.model.entities.statusCollections.Federat
 import org.mozilla.social.core.database.model.entities.statusCollections.HashTagTimelineStatusWrapper
 import org.mozilla.social.core.database.model.entities.statusCollections.HomeTimelineStatusWrapper
 import org.mozilla.social.core.database.model.entities.statusCollections.LocalTimelineStatusWrapper
-import org.mozilla.social.core.database.model.entities.statusCollections.toStatusWrapper
 import org.mozilla.social.core.model.Status
 import org.mozilla.social.core.model.StatusVisibility
 import org.mozilla.social.core.model.AccountTimelineType
@@ -101,20 +100,17 @@ class TimelineRepository internal constructor(
             localTimelineStatusDao.localTimelinePagingSource()
         }.flow.map { pagingData ->
             pagingData.map {
-                it.toStatusWrapper().toExternalModel()
+                it.status.toExternalModel()
             }
         }
 
-    fun insertAllIntoLocalTimeline(statuses: List<Status>) =
+    suspend fun insertAllIntoLocalTimeline(statuses: List<Status>) =
         localTimelineStatusDao.upsertAll(statuses.map { it.toLocalTimelineStatus() })
 
     suspend fun deleteLocalTimeline() = localTimelineStatusDao.deleteLocalTimeline()
 
     suspend fun removePostInLocalTimelineForAccount(accountId: String) =
         localTimelineStatusDao.removePostsFromAccount(accountId)
-
-    suspend fun deleteStatusFromLocalTimeline(statusId: String) =
-        localTimelineStatusDao.deletePost(statusId)
     //endregion
 
     //region Federated timeline
@@ -135,20 +131,17 @@ class TimelineRepository internal constructor(
             federatedTimelineStatusDao.federatedTimelinePagingSource()
         }.flow.map { pagingData ->
             pagingData.map {
-                it.toStatusWrapper().toExternalModel()
+                it.status.toExternalModel()
             }
         }
 
-    fun insertAllIntoFederatedTimeline(statuses: List<Status>) =
+    suspend fun insertAllIntoFederatedTimeline(statuses: List<Status>) =
         federatedTimelineStatusDao.upsertAll(statuses.map { it.toFederatedTimelineStatus() })
 
-    fun deleteFederatedTimeline() = federatedTimelineStatusDao.deleteFederatedTimeline()
+    suspend fun deleteFederatedTimeline() = federatedTimelineStatusDao.deleteFederatedTimeline()
 
     suspend fun removePostsFromFederatedTimelineForAccount(accountId: String) =
         federatedTimelineStatusDao.removePostsFromAccount(accountId)
-
-    suspend fun deleteStatusFromFederatedTimeline(statusId: String) =
-        federatedTimelineStatusDao.deletePost(statusId)
     //endregion
 
     //region Home timeline
@@ -191,28 +184,20 @@ class TimelineRepository internal constructor(
             homeTimelineStatusDao.homeTimelinePagingSource()
         }.flow.map { pagingData ->
             pagingData.map {
-                it.toStatusWrapper().toExternalModel()
+                it.status.toExternalModel()
             }
         }
 
-    fun insertAllIntoHomeTimeline(statuses: List<Status>) =
+    suspend fun insertAllIntoHomeTimeline(statuses: List<Status>) =
         homeTimelineStatusDao.upsertAll(statuses.map { it.toHomeTimelineStatus() })
 
     suspend fun getPostsFromHomeTimelineForAccount(accountId: String): List<Status> =
-        homeTimelineStatusDao.getPostsFromAccount(accountId).map { it.toStatusWrapper().toExternalModel() }
+        homeTimelineStatusDao.getPostsFromAccount(accountId).map { it.status.toExternalModel() }
 
-    fun deleteHomeTimeline() = homeTimelineStatusDao.deleteHomeTimeline()
+    suspend fun deleteHomeTimeline() = homeTimelineStatusDao.deleteHomeTimeline()
 
     suspend fun removePostInHomeTimelineForAccount(accountId: String) =
         homeTimelineStatusDao.removePostsFromAccount(accountId)
-
-    suspend fun deleteStatusFromHomeTimeline(statusId: String) =
-        homeTimelineStatusDao.deletePost(statusId)
-
-    suspend fun getTopHomePostsFromDatabase(
-        count: Int,
-    ): List<Status> = homeTimelineStatusDao.getTopPosts(count)
-        .map { it.toStatusWrapper().toExternalModel() }
     //endregion
 
     //region Hashtag timeline
@@ -258,7 +243,7 @@ class TimelineRepository internal constructor(
             hashTagTimelineStatusDao.hashTagTimelinePagingSource(hashTag)
         }.flow.map { pagingData ->
             pagingData.map {
-                it.toStatusWrapper().toExternalModel()
+                it.status.toExternalModel()
             }
         }
 
@@ -267,17 +252,14 @@ class TimelineRepository internal constructor(
 
     suspend fun deleteAllHashTagTimelines() = hashTagTimelineStatusDao.deleteAllHashTagTimelines()
 
-    suspend fun deleteStatusFromAllHashTagTimelines(statusId: String) =
-        hashTagTimelineStatusDao.deletePost(statusId)
-
-    fun insertAllIntoHashTagTimeline(
+    suspend fun insertAllIntoHashTagTimeline(
         hashTag: String,
         statuses: List<Status>
     ) = hashTagTimelineStatusDao.upsertAll(statuses.map { it.toHashTagTimelineStatus(hashTag) })
     //endregion
 
     //region Account timeline
-    fun insertAllIntoAccountTimeline(
+    suspend fun insertAllIntoAccountTimeline(
         statuses: List<Status>,
         timelineType: AccountTimelineType,
     ) = accountTimelineStatusDao.upsertAll(statuses.map { it.toAccountTimelineStatus(timelineType) })
@@ -299,7 +281,7 @@ class TimelineRepository internal constructor(
         accountTimelineStatusDao.accountTimelinePagingSource(accountId, timelineType)
     }.flow.map { pagingData ->
         pagingData.map {
-            it.toStatusWrapper().toExternalModel()
+            it.status.toExternalModel()
         }
     }
 
@@ -313,8 +295,5 @@ class TimelineRepository internal constructor(
     ) = accountTimelineStatusDao.deleteAllAccountTimelines(
         accountsToKeep
     )
-
-    suspend fun deleteStatusFromAccountTimelines(statusId: String) =
-        accountTimelineStatusDao.deletePost(statusId)
     //endregion
 }

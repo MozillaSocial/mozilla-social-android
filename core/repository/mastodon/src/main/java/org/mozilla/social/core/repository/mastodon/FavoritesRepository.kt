@@ -12,7 +12,6 @@ import org.mozilla.social.common.parseMastodonLinkHeader
 import org.mozilla.social.core.database.dao.FavoritesTimelineStatusDao
 import org.mozilla.social.core.database.model.entities.statusCollections.FavoritesTimelineStatus
 import org.mozilla.social.core.database.model.entities.statusCollections.FavoritesTimelineStatusWrapper
-import org.mozilla.social.core.database.model.entities.statusCollections.toStatusWrapper
 import org.mozilla.social.core.model.Status
 import org.mozilla.social.core.model.paging.StatusPagingWrapper
 import org.mozilla.social.core.network.mastodon.FavoritesApi
@@ -62,19 +61,19 @@ class FavoritesRepository(
             dao.favoritesTimelinePagingSource()
         }.flow.map { pagingData ->
             pagingData.map {
-                it.toStatusWrapper().toExternalModel()
+                it.status.toExternalModel()
             }
         }
 
-    fun deleteFavoritesTimeline() {
+    suspend fun deleteFavoritesTimeline() {
         dao.deleteFavoritesTimelines()
     }
 
-    fun insertAll(
+    suspend fun insertAll(
         statuses: List<FavoritesTimelineStatus>
     ) = dao.upsertAll(statuses)
 
-    fun insert(
+    suspend fun insert(
         status: FavoritesTimelineStatus
     ) = dao.upsert(status)
 

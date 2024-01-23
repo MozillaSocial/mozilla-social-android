@@ -22,9 +22,7 @@ class DeleteStatusTest : BaseUseCaseTest() {
                 externalScope = TestScope(testDispatcher),
                 showSnackbar = showSnackbar,
                 statusRepository = statusRepository,
-                databaseDelegate = databaseDelegate,
                 dispatcherIo = testDispatcher,
-                timelineRepository = timelineRepository,
             )
     }
 
@@ -36,11 +34,6 @@ class DeleteStatusTest : BaseUseCaseTest() {
             coVerify(exactly = 1) {
                 statusRepository.updateIsBeingDeleted("id", true)
                 statusRepository.deleteStatus("id")
-                timelineRepository.deleteStatusFromHomeTimeline("id")
-                timelineRepository.deleteStatusFromLocalTimeline("id")
-                timelineRepository.deleteStatusFromFederatedTimeline("id")
-                timelineRepository.deleteStatusFromAllHashTagTimelines("id")
-                timelineRepository.deleteStatusFromAccountTimelines("id")
                 statusRepository.deleteStatusLocal("id")
             }
         }
@@ -65,11 +58,6 @@ class DeleteStatusTest : BaseUseCaseTest() {
             }
 
             coVerify(exactly = 0) {
-                timelineRepository.deleteStatusFromHomeTimeline("id")
-                timelineRepository.deleteStatusFromLocalTimeline("id")
-                timelineRepository.deleteStatusFromFederatedTimeline("id")
-                timelineRepository.deleteStatusFromAllHashTagTimelines("id")
-                timelineRepository.deleteStatusFromAccountTimelines("id")
                 statusRepository.deleteStatusLocal("id")
             }
         }

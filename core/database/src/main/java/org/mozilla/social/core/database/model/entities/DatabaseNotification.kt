@@ -23,41 +23,6 @@ import kotlinx.datetime.Instant
             onDelete = ForeignKey.CASCADE,
             onUpdate = ForeignKey.CASCADE,
         ),
-        ForeignKey(
-            entity = DatabaseStatus::class,
-            parentColumns = ["statusId"],
-            childColumns = ["boostedStatusId"],
-            onDelete = ForeignKey.CASCADE,
-            onUpdate = ForeignKey.CASCADE,
-        ),
-        ForeignKey(
-            entity = DatabaseAccount::class,
-            parentColumns = ["accountId"],
-            childColumns = ["statusAccountId"],
-            onDelete = ForeignKey.CASCADE,
-            onUpdate = ForeignKey.CASCADE,
-        ),
-        ForeignKey(
-            entity = DatabaseAccount::class,
-            parentColumns = ["accountId"],
-            childColumns = ["boostedStatusAccountId"],
-            onDelete = ForeignKey.CASCADE,
-            onUpdate = ForeignKey.CASCADE,
-        ),
-        ForeignKey(
-            entity = DatabasePoll::class,
-            parentColumns = ["pollId"],
-            childColumns = ["statusPollId"],
-            onDelete = ForeignKey.CASCADE,
-            onUpdate = ForeignKey.CASCADE,
-        ),
-        ForeignKey(
-            entity = DatabasePoll::class,
-            parentColumns = ["pollId"],
-            childColumns = ["boostedPollId"],
-            onDelete = ForeignKey.CASCADE,
-            onUpdate = ForeignKey.CASCADE,
-        ),
     ]
 )
 data class DatabaseNotification(
@@ -67,19 +32,8 @@ data class DatabaseNotification(
     val createdAt: Instant,
     @ColumnInfo(index = true)
     val accountId: String,
-    // below are field for an optional status
     @ColumnInfo(index = true)
     val statusId: String?,
-    @ColumnInfo(index = true)
-    val statusAccountId: String?,
-    @ColumnInfo(index = true)
-    val statusPollId: String?,
-    @ColumnInfo(index = true)
-    val boostedStatusId: String?,
-    @ColumnInfo(index = true)
-    val boostedStatusAccountId: String?,
-    @ColumnInfo(index = true)
-    val boostedPollId: String?,
 ) {
     enum class Type {
         MENTION,

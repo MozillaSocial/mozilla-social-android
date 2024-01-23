@@ -17,12 +17,11 @@ interface FavoritesTimelineStatusDao: BaseDao<FavoritesTimelineStatus> {
     fun favoritesTimelinePagingSource(): PagingSource<Int, FavoritesTimelineStatusWrapper>
 
     @Query("DELETE FROM favoritesTimeline")
-    fun deleteFavoritesTimelines()
+    suspend fun deleteFavoritesTimelines()
 
     @Query(
         "DELETE FROM favoritesTimeline " +
-        "WHERE statusId = :statusId " +
-        "OR boostedStatusId = :statusId",
+        "WHERE statusId = :statusId"
     )
     suspend fun deletePost(statusId: String)
 

@@ -9,7 +9,8 @@ import org.mozilla.social.core.model.Poll
 import org.mozilla.social.core.model.PollOption
 
 class PollRepository internal constructor(private val dao: PollsDao) {
-    fun updateOwnVotes(
+
+    suspend fun updateOwnVotes(
         pollId: String,
         choices: List<Int>?,
     ) = dao.updateOwnVotes(
@@ -17,13 +18,11 @@ class PollRepository internal constructor(private val dao: PollsDao) {
         choices = choices,
     )
 
-    suspend fun deletePoll(pollId: String) = dao.deletePoll(pollId = pollId)
-
-    fun insertAll(polls: List<Poll>) {
+    suspend fun insertAll(polls: List<Poll>) {
         dao.upsertAll(polls.map { it.toDatabaseModel() })
     }
 
-    fun insert(poll: Poll) = dao.upsert(poll.toDatabaseModel())
+    suspend fun insert(poll: Poll) = dao.upsert(poll.toDatabaseModel())
 
     suspend fun deleteAll(
         pollIdsToKeep: List<String> = emptyList()

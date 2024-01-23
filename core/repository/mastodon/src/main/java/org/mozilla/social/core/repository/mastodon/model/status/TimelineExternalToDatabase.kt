@@ -11,31 +11,16 @@ import org.mozilla.social.core.model.AccountTimelineType
 fun Status.toHomeTimelineStatus(): HomeTimelineStatus =
     HomeTimelineStatus(
         statusId = statusId,
-        accountId = account.accountId,
-        pollId = poll?.pollId,
-        boostedStatusId = boostedStatus?.statusId,
-        boostedPollId = boostedStatus?.poll?.pollId,
-        boostedStatusAccountId = boostedStatus?.account?.accountId,
     )
 
 fun Status.toLocalTimelineStatus(): LocalTimelineStatus =
     LocalTimelineStatus(
         statusId = statusId,
-        accountId = account.accountId,
-        pollId = poll?.pollId,
-        boostedStatusId = boostedStatus?.statusId,
-        boostedPollId = boostedStatus?.poll?.pollId,
-        boostedStatusAccountId = boostedStatus?.account?.accountId,
     )
 
 fun Status.toFederatedTimelineStatus(): FederatedTimelineStatus =
     FederatedTimelineStatus(
         statusId = statusId,
-        accountId = account.accountId,
-        pollId = poll?.pollId,
-        boostedStatusId = boostedStatus?.statusId,
-        boostedPollId = boostedStatus?.poll?.pollId,
-        boostedStatusAccountId = boostedStatus?.account?.accountId,
     )
 
 fun Status.toAccountTimelineStatus(
@@ -45,10 +30,6 @@ fun Status.toAccountTimelineStatus(
         statusId = statusId,
         accountId = account.accountId,
         timelineType = timelineType,
-        pollId = poll?.pollId,
-        boostedStatusId = boostedStatus?.statusId,
-        boostedPollId = boostedStatus?.poll?.pollId,
-        boostedStatusAccountId = boostedStatus?.account?.accountId,
     )
 
 fun Status.toHashTagTimelineStatus(
@@ -57,9 +38,4 @@ fun Status.toHashTagTimelineStatus(
     HashTagTimelineStatus(
         hashTag = hashTag,
         statusId = statusId,
-        accountId = account.accountId,
-        pollId = poll?.pollId,
-        boostedStatusId = boostedStatus?.statusId,
-        boostedPollId = boostedStatus?.poll?.pollId,
-        boostedStatusAccountId = boostedStatus?.account?.accountId,
     )

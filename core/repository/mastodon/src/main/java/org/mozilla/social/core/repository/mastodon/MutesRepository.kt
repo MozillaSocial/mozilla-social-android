@@ -64,7 +64,7 @@ class MutesRepository(private val api: MutesApi, private val dao: MutesDao) {
         }.flow.map { it.map { it.toMutedUser() } }
     }
 
-    fun insertAll(databaseAccounts: List<DatabaseMute>) = dao.upsertAll(databaseAccounts)
+    suspend fun insertAll(databaseAccounts: List<DatabaseMute>) = dao.upsertAll(databaseAccounts)
 
     suspend fun deleteAll() = dao.deleteAll()
 }

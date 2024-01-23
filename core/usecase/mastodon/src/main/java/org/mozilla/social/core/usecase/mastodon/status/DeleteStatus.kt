@@ -7,16 +7,12 @@ import kotlinx.coroutines.async
 import org.mozilla.social.common.annotations.PreferUseCase
 import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.core.navigation.usecases.ShowSnackbar
-import org.mozilla.social.core.repository.mastodon.DatabaseDelegate
 import org.mozilla.social.core.repository.mastodon.StatusRepository
-import org.mozilla.social.core.repository.mastodon.TimelineRepository
 import org.mozilla.social.core.usecase.mastodon.R
 
 class DeleteStatus(
     private val externalScope: CoroutineScope,
     private val statusRepository: StatusRepository,
-    private val timelineRepository: TimelineRepository,
-    private val databaseDelegate: DatabaseDelegate,
     private val showSnackbar: ShowSnackbar,
     private val dispatcherIo: CoroutineDispatcher = Dispatchers.IO,
 ) {
@@ -26,14 +22,7 @@ class DeleteStatus(
             try {
                 statusRepository.updateIsBeingDeleted(statusId, true)
                 statusRepository.deleteStatus(statusId)
-                databaseDelegate.withTransaction {
-                    timelineRepository.deleteStatusFromHomeTimeline(statusId)
-                    timelineRepository.deleteStatusFromLocalTimeline(statusId)
-                    timelineRepository.deleteStatusFromFederatedTimeline(statusId)
-                    timelineRepository.deleteStatusFromAllHashTagTimelines(statusId)
-                    timelineRepository.deleteStatusFromAccountTimelines(statusId)
-                    statusRepository.deleteStatusLocal(statusId)
-                }
+                statusRepository.deleteStatusLocal(statusId)
             } catch (e: Exception) {
                 statusRepository.updateIsBeingDeleted(statusId, false)
                 showSnackbar(

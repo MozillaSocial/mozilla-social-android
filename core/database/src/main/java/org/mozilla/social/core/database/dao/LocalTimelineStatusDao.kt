@@ -12,24 +12,21 @@ interface LocalTimelineStatusDao : BaseDao<LocalTimelineStatus> {
     @Transaction
     @Query(
         "SELECT * FROM localTimeline " +
-            "ORDER BY statusId DESC",
+        "ORDER BY statusId DESC",
     )
     fun localTimelinePagingSource(): PagingSource<Int, LocalTimelineStatusWrapper>
 
     @Query("DELETE FROM localTimeline")
-    fun deleteLocalTimeline()
+    suspend fun deleteLocalTimeline()
 
     @Query(
         "DELETE FROM localTimeline " +
-            "WHERE accountId = :accountId " +
-            "OR boostedStatusAccountId = :accountId",
+        "WHERE statusId IN " +
+        "(" +
+                "SELECT statusId FROM statuses " +
+                "WHERE accountId = :accountId " +
+                "OR boostedStatusAccountId = :accountId" +
+        ")",
     )
     suspend fun removePostsFromAccount(accountId: String)
-
-    @Query(
-        "DELETE FROM localTimeline " +
-            "WHERE statusId = :statusId " +
-            "OR boostedStatusId = :statusId",
-    )
-    suspend fun deletePost(statusId: String)
 }

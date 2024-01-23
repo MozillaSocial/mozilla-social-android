@@ -46,7 +46,7 @@ class HashTagTimelineRemoteMediator(
                         timelineRepository.getHashtagTimeline(
                             hashTag = hashTag,
                             olderThanId = null,
-                            immediatelyNewerThanId = firstItem.status.statusId,
+                            immediatelyNewerThanId = firstItem.hashTagTimelineStatus.statusId,
                             loadSize = pageSize,
                         )
                     }
@@ -57,7 +57,7 @@ class HashTagTimelineRemoteMediator(
                                 ?: return MediatorResult.Success(endOfPaginationReached = true)
                         timelineRepository.getHashtagTimeline(
                             hashTag = hashTag,
-                            olderThanId = lastItem.status.statusId,
+                            olderThanId = lastItem.hashTagTimelineStatus.statusId,
                             immediatelyNewerThanId = null,
                             loadSize = pageSize,
                         )

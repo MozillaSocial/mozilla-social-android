@@ -10,10 +10,10 @@ import org.mozilla.social.core.repository.mastodon.model.account.toExternal
 class RelationshipRepository(
     private val dao: RelationshipsDao,
 ) {
-    fun insertAll(relationships: List<Relationship>) =
+    suspend fun insertAll(relationships: List<Relationship>) =
         dao.upsertAll(relationships.map { it.toDatabaseModel() })
 
-    fun insert(relationship: Relationship) =
+    suspend fun insert(relationship: Relationship) =
         dao.upsert(relationship.toDatabaseModel())
 
     suspend fun deleteAll() = dao.deleteAll()
