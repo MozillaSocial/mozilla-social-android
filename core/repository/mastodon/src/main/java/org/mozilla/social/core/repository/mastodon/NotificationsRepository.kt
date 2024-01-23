@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.map
 import org.mozilla.social.common.annotations.PreferUseCase
 import org.mozilla.social.common.parseMastodonLinkHeader
 import org.mozilla.social.core.database.dao.NotificationsDao
+import org.mozilla.social.core.database.model.entities.DatabaseNotification
 import org.mozilla.social.core.database.model.entities.notificationCollections.MainNotification
 import org.mozilla.social.core.database.model.entities.notificationCollections.MainNotificationWrapper
 import org.mozilla.social.core.model.Notification
@@ -90,4 +91,26 @@ class NotificationsRepository(
     suspend fun deleteMainNotificationsList() = dao.deleteMainNotificationsList()
 
     suspend fun deleteOldNotifications() = dao.deleteOldNotifications()
+
+    suspend fun changeNotificationTypeToFollow(
+        notificationId: Int,
+    ) = dao.changeNotificationType(
+        notificationId = notificationId,
+        type = DatabaseNotification.Type.FOLLOW,
+    )
+
+    suspend fun changeNotificationTypeToFollowRequest(
+        notificationId: Int,
+    ) = dao.changeNotificationType(
+        notificationId = notificationId,
+        type = DatabaseNotification.Type.FOLLOW_REQUEST,
+    )
+
+    suspend fun deleteNotification(
+        notificationId: Int,
+    ) = dao.deleteNotification(notificationId)
+
+    suspend fun getNotification(
+        notificationId: Int,
+    ): Notification = dao.getNotification(notificationId).toExternal()
 }

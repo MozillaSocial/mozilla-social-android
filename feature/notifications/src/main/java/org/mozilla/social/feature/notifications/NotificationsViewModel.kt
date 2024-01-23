@@ -24,8 +24,11 @@ class NotificationsViewModel(
     notificationsRepository: NotificationsRepository,
     allNotificationsRemoteMediator: AllNotificationsRemoteMediator,
     getLoggedInUserAccountId: GetLoggedInUserAccountId,
-    val notificationCardDelegate: NotificationCardDelegate,
 ) : ViewModel(), NotificationsInteractions, KoinComponent {
+
+    val notificationCardDelegate by inject<NotificationCardDelegate> {
+        parametersOf(viewModelScope)
+    }
 
     val postCardDelegate by inject<PostCardDelegate> {
         parametersOf(viewModelScope, AnalyticsIdentifiers.FEED_PREFIX_NOTIFICATIONS)

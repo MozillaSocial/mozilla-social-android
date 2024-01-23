@@ -42,4 +42,30 @@ interface NotificationsDao: BaseDao<DatabaseNotification> {
         "DELETE FROM mainNotifications"
     )
     suspend fun deleteMainNotificationsList()
+
+    @Query(
+        "UPDATE notifications " +
+        "SET type = :type " +
+        "WHERE id = :notificationId",
+    )
+    suspend fun changeNotificationType(
+        notificationId: Int,
+        type: DatabaseNotification.Type,
+    )
+
+    @Query(
+        "DELETE FROM notifications " +
+        "WHERE id = :notificationId",
+    )
+    suspend fun deleteNotification(
+        notificationId: Int,
+    )
+
+    @Query(
+        "SELECT * FROM notifications " +
+        "WHERE id = :notificationId",
+    )
+    suspend fun getNotification(
+        notificationId: Int,
+    ): NotificationWrapper
 }
