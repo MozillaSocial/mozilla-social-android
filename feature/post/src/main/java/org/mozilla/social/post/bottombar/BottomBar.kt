@@ -133,7 +133,7 @@ internal fun BottomBar(
         Row(
             modifier =
                 Modifier
-                    .height(60.dp)
+                    .height(56.dp)
                     .fillMaxWidth()
                     .background(MoSoTheme.colors.layer1),
             verticalAlignment = Alignment.CenterVertically,
@@ -227,12 +227,3 @@ private fun CharacterCountLabel(characterCountText: String) {
         color = MoSoTheme.colors.textSecondary,
     )
 }
-
-data class BottomBarState(
-    val imageButtonEnabled: Boolean = false,
-    val videoButtonEnabled: Boolean = false,
-    val pollButtonEnabled: Boolean = false,
-    val contentWarningText: String? = null,
-    val characterCountText: String = "",
-    val maxImages: Int = NewPostViewModel.MAX_IMAGES,
-)

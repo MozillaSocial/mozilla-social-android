@@ -1,18 +1,17 @@
 package org.mozilla.social.core.ui.common.dropdown
 
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.stringResource
@@ -30,78 +29,32 @@ fun VisibilityDropDownButton(
     onVisibilitySelected: (StatusVisibility) -> Unit,
 ) {
     val expanded = remember { mutableStateOf(false) }
-
-    Box {
-        OutlinedButton(
-            modifier = modifier,
-            onClick = { expanded.value = true },
-            border =
-                BorderStroke(
-                    1.dp,
-                    color = MoSoTheme.colors.borderPrimary,
-                ),
-        ) {
-            when (visibility) {
-                StatusVisibility.Public ->
-                    ButtonContent(
-                        icon = MoSoIcons.public(),
-                        text = stringResource(id = R.string.visibility_public),
-                    )
-
-                StatusVisibility.Unlisted ->
-                    ButtonContent(
-                        icon = MoSoIcons.lockOpen(),
-                        text = stringResource(id = R.string.visibility_unlisted),
-                    )
-
-                StatusVisibility.Private ->
-                    ButtonContent(
-                        icon = MoSoIcons.materialLock(),
-                        text = stringResource(id = R.string.visibility_private),
-                    )
-
-                StatusVisibility.Direct ->
-                    ButtonContent(
-                        icon = MoSoIcons.message(),
-                        text = stringResource(id = R.string.visibility_direct),
-                    )
-            }
-            Spacer(modifier = Modifier.padding(start = 8.dp))
-            Icon(
-                MoSoIcons.caretDown(),
-                "",
-                Modifier.size(MoSoIcons.Sizes.small),
-                tint = MoSoTheme.colors.iconPrimary,
-            )
-        }
-        MoSoDropdownMenu(
-            expanded = expanded.value,
-            onDismissRequest = {
-                expanded.value = false
-            },
-        ) {
-            DropDownItem(
+    MoSoDropDownMenu(
+        modifier = modifier,
+        expanded = expanded,
+        dropDownMenuContent = {
+            VisibilityDropDownItem(
                 type = StatusVisibility.Public,
                 icon = MoSoIcons.public(),
                 text = stringResource(id = R.string.visibility_public),
                 expanded = expanded,
                 onVisibilitySelected = onVisibilitySelected,
             )
-            DropDownItem(
+            VisibilityDropDownItem(
                 type = StatusVisibility.Unlisted,
                 icon = MoSoIcons.lockOpen(),
                 text = stringResource(id = R.string.visibility_unlisted),
                 expanded = expanded,
                 onVisibilitySelected = onVisibilitySelected,
             )
-            DropDownItem(
+            VisibilityDropDownItem(
                 type = StatusVisibility.Private,
                 icon = MoSoIcons.materialLock(),
                 text = stringResource(id = R.string.visibility_private),
                 expanded = expanded,
                 onVisibilitySelected = onVisibilitySelected,
             )
-            DropDownItem(
+            VisibilityDropDownItem(
                 type = StatusVisibility.Direct,
                 icon = MoSoIcons.message(),
                 text = stringResource(id = R.string.visibility_direct),
@@ -109,22 +62,51 @@ fun VisibilityDropDownButton(
                 onVisibilitySelected = onVisibilitySelected,
             )
         }
+    ) {
+        when (visibility) {
+            StatusVisibility.Public ->
+                ButtonContent(
+                    icon = MoSoIcons.public(),
+                    text = stringResource(id = R.string.visibility_public),
+                )
+
+            StatusVisibility.Unlisted ->
+                ButtonContent(
+                    icon = MoSoIcons.lockOpen(),
+                    text = stringResource(id = R.string.visibility_unlisted),
+                )
+
+            StatusVisibility.Private ->
+                ButtonContent(
+                    icon = MoSoIcons.materialLock(),
+                    text = stringResource(id = R.string.visibility_private),
+                )
+
+            StatusVisibility.Direct ->
+                ButtonContent(
+                    icon = MoSoIcons.message(),
+                    text = stringResource(id = R.string.visibility_direct),
+                )
+        }
     }
 }
 
 @Composable
-private fun ButtonContent(
+private fun RowScope.ButtonContent(
     icon: Painter,
     text: String,
 ) {
     Icon(
         icon,
         "",
-        modifier = Modifier.size(MoSoIcons.Sizes.small),
+        modifier = Modifier
+            .size(MoSoIcons.Sizes.small)
+            .align(Alignment.CenterVertically),
         tint = MoSoTheme.colors.iconPrimary,
     )
     Spacer(modifier = Modifier.padding(start = 8.dp))
     Text(
+        modifier = Modifier.align(Alignment.CenterVertically),
         text = text,
         color = MoSoTheme.colors.textPrimary,
         style = MoSoTheme.typography.labelMedium,
@@ -132,7 +114,7 @@ private fun ButtonContent(
 }
 
 @Composable
-private fun DropDownItem(
+private fun VisibilityDropDownItem(
     type: StatusVisibility,
     icon: Painter,
     text: String,

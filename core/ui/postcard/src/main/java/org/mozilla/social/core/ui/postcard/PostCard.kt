@@ -53,7 +53,7 @@ import org.mozilla.social.core.designsystem.theme.MoSoSpacing
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.designsystem.utils.NoRipple
 import org.mozilla.social.core.ui.common.TransparentNoTouchOverlay
-import org.mozilla.social.core.ui.common.dropdown.DropDownItem
+import org.mozilla.social.core.ui.common.dropdown.MoSoDropDownItem
 import org.mozilla.social.core.ui.common.dropdown.MoSoDropdownMenu
 import org.mozilla.social.core.ui.common.loading.MoSoCircularProgressIndicator
 import org.mozilla.social.core.ui.common.media.MediaDisplay
@@ -379,13 +379,13 @@ private fun OverflowMenu(
             },
         ) {
             if (post.isUsersPost) {
-                DropDownItem(
+                MoSoDropDownItem(
                     text = stringResource(id = R.string.delete_post),
                     expanded = overflowMenuExpanded,
                     onClick = { postCardInteractions.onOverflowDeleteClicked(post.statusId) },
                 )
             } else {
-                DropDownItem(
+                MoSoDropDownItem(
                     text = stringResource(id = R.string.mute_user, post.username),
                     expanded = overflowMenuExpanded,
                     onClick = { postCardInteractions.onOverflowMuteClicked(
@@ -393,7 +393,7 @@ private fun OverflowMenu(
                         statusId = post.statusId,
                     ) },
                 )
-                DropDownItem(
+                MoSoDropDownItem(
                     text = stringResource(id = R.string.block_user, post.username),
                     expanded = overflowMenuExpanded,
                     onClick = { postCardInteractions.onOverflowBlockClicked(
@@ -401,7 +401,7 @@ private fun OverflowMenu(
                         statusId =  post.statusId,
                     ) },
                 )
-                DropDownItem(
+                MoSoDropDownItem(
                     text = stringResource(id = R.string.report_user, post.username),
                     expanded = overflowMenuExpanded,
                     onClick = {
