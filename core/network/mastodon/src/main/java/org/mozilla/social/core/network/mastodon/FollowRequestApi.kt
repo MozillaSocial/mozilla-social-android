@@ -6,12 +6,12 @@ import retrofit2.http.Path
 
 interface FollowRequestApi {
 
-    @POST("/api/v1/follow_request/{accountId}/authorize")
+    @POST("/api/v1/follow_requests/{accountId}/authorize")
     suspend fun acceptFollowRequest(
         @Path("accountId") accountId: String,
     ): NetworkRelationship
 
-    @POST("/api/v1/follow_request/{accountId}/reject")
+    @POST("/api/v1/follow_requests/{accountId}/reject")
     suspend fun rejectFollowRequest(
         @Path("accountId") accountId: String,
     ): NetworkRelationship
