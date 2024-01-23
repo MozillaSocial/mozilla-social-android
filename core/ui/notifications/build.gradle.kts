@@ -15,9 +15,11 @@ dependencies {
     implementation(project(":core:ui:poll"))
     implementation(project(":core:common"))
     implementation(project(":core:navigation"))
+    implementation(project(":core:usecase:mastodon"))
 
     implementation(libs.kotlinx.datetime)
     implementation(libs.coil)
     implementation(libs.koin.core)
     implementation(libs.koin.androidx.compose)
+    implementation(libs.jakewharton.timber)
 }

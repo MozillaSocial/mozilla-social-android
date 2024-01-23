@@ -49,7 +49,7 @@ interface NotificationsDao: BaseDao<DatabaseNotification> {
         "WHERE id = :notificationId",
     )
     suspend fun changeNotificationType(
-        notificationId: String,
+        notificationId: Int,
         type: DatabaseNotification.Type,
     )
 
@@ -58,6 +58,14 @@ interface NotificationsDao: BaseDao<DatabaseNotification> {
         "WHERE id = :notificationId",
     )
     suspend fun deleteNotification(
-        notificationId: String,
+        notificationId: Int,
     )
+
+    @Query(
+        "SELECT * FROM notifications " +
+        "WHERE id = :notificationId",
+    )
+    suspend fun getNotification(
+        notificationId: Int,
+    ): NotificationWrapper
 }

@@ -225,6 +225,7 @@ val mastodonUsecaseModule =
                 followRequestRepository = get(),
                 notificationsRepository = get(),
                 relationshipRepository = get(),
+                saveNotificationsToDatabase = get(),
             )
         }
 

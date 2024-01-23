@@ -29,7 +29,12 @@ internal fun FollowRequestNotificationContent(
     Row {
         MoSoButtonSecondary(
             modifier = Modifier.weight(1f),
-            onClick = { notificationInteractions.onDenyFollowRequestClicked(uiState.accountId) }
+            onClick = {
+                notificationInteractions.onDenyFollowRequestClicked(
+                    accountId = uiState.accountId,
+                    notificationId = uiState.id,
+                )
+            }
         ) {
             SmallTextLabel(text = stringResource(id = R.string.deny_follow_request))
         }
@@ -38,7 +43,12 @@ internal fun FollowRequestNotificationContent(
 
         MoSoButton(
             modifier = Modifier.weight(1f),
-            onClick = { notificationInteractions.onAcceptFollowRequestClicked(uiState.accountId) }
+            onClick = {
+                notificationInteractions.onAcceptFollowRequestClicked(
+                    accountId = uiState.accountId,
+                    notificationId = uiState.id,
+                )
+            }
         ) {
             SmallTextLabel(text = stringResource(id = R.string.accept_follow_request))
         }

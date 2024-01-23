@@ -93,13 +93,24 @@ class NotificationsRepository(
     suspend fun deleteOldNotifications() = dao.deleteOldNotifications()
 
     suspend fun changeNotificationTypeToFollow(
-        notificationId: String,
+        notificationId: Int,
     ) = dao.changeNotificationType(
         notificationId = notificationId,
         type = DatabaseNotification.Type.FOLLOW,
     )
 
+    suspend fun changeNotificationTypeToFollowRequest(
+        notificationId: Int,
+    ) = dao.changeNotificationType(
+        notificationId = notificationId,
+        type = DatabaseNotification.Type.FOLLOW_REQUEST,
+    )
+
     suspend fun deleteNotification(
-        notificationId: String,
+        notificationId: Int,
     ) = dao.deleteNotification(notificationId)
+
+    suspend fun getNotification(
+        notificationId: Int,
+    ): Notification = dao.getNotification(notificationId).toExternal()
 }

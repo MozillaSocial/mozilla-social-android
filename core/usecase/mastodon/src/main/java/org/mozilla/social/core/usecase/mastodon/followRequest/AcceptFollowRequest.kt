@@ -6,6 +6,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import org.mozilla.social.common.annotations.PreferUseCase
 import org.mozilla.social.common.utils.StringFactory
+import org.mozilla.social.core.model.Notification
 import org.mozilla.social.core.navigation.usecases.ShowSnackbar
 import org.mozilla.social.core.repository.mastodon.FollowRequestRepository
 import org.mozilla.social.core.repository.mastodon.NotificationsRepository
@@ -26,21 +27,21 @@ class AcceptFollowRequest(
     @OptIn(PreferUseCase::class)
     suspend operator fun invoke(
         accountId: String,
-        notificationId: String,
-    ) =
-        externalScope.async(dispatcherIo) {
-            try {
-                val relationship = followRequestRepository.acceptFollowRequest(accountId)
-                relationshipRepository.insert(relationship)
-                notificationsRepository.changeNotificationTypeToFollow(notificationId)
-            } catch (e: Exception) {
-                showSnackbar(
-                    text = StringFactory.resource(R.string.error_accepting_follow_request),
-                    isError = true,
-                )
-                throw AcceptRequestFailedException(e)
-            }
-        }.await()
+        notificationId: Int,
+    ) = externalScope.async(dispatcherIo) {
+        try {
+            notificationsRepository.changeNotificationTypeToFollow(notificationId)
+            val relationship = followRequestRepository.acceptFollowRequest(accountId)
+            relationshipRepository.insert(relationship)
+        } catch (e: Exception) {
+            notificationsRepository.changeNotificationTypeToFollowRequest(notificationId)
+            showSnackbar(
+                text = StringFactory.resource(R.string.error_accepting_follow_request),
+                isError = true,
+            )
+            throw AcceptRequestFailedException(e)
+        }
+    }.await()
 
     class AcceptRequestFailedException(e: Exception) : Exception(e)
 }
