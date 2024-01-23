@@ -9,7 +9,8 @@ import org.mozilla.social.core.model.Poll
 import org.mozilla.social.core.model.PollOption
 
 class PollRepository internal constructor(private val dao: PollsDao) {
-    fun updateOwnVotes(
+
+    suspend fun updateOwnVotes(
         pollId: String,
         choices: List<Int>?,
     ) = dao.updateOwnVotes(

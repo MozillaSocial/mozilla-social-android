@@ -11,10 +11,10 @@ interface PollsDao : BaseDao<DatabasePoll> {
      */
     @Query(
         "UPDATE polls " +
-            "SET ownVotes = :choices " +
-            "WHERE pollId = :pollId",
+        "SET ownVotes = :choices " +
+        "WHERE pollId = :pollId",
     )
-    fun updateOwnVotes(
+    suspend fun updateOwnVotes(
         pollId: String,
         choices: List<Int>?,
     )
