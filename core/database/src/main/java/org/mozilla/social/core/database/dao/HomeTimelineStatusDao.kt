@@ -20,7 +20,7 @@ interface HomeTimelineStatusDao : BaseDao<HomeTimelineStatus> {
     suspend fun deleteHomeTimeline()
 
     @Query(
-        "DELETE FROM localTimeline " +
+        "DELETE FROM homeTimeline " +
         "WHERE statusId IN " +
         "(" +
             "SELECT statusId FROM statuses " +
