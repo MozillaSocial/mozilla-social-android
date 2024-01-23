@@ -34,6 +34,27 @@ import org.mozilla.social.core.database.model.DatabaseStatusVisibility
             onDelete = ForeignKey.CASCADE,
             onUpdate = ForeignKey.CASCADE,
         ),
+        ForeignKey(
+            entity = DatabaseStatus::class,
+            parentColumns = ["statusId"],
+            childColumns = ["boostedStatusId"],
+            onDelete = ForeignKey.CASCADE,
+            onUpdate = ForeignKey.CASCADE,
+        ),
+        ForeignKey(
+            entity = DatabaseAccount::class,
+            parentColumns = ["accountId"],
+            childColumns = ["boostedStatusAccountId"],
+            onDelete = ForeignKey.CASCADE,
+            onUpdate = ForeignKey.CASCADE,
+        ),
+        ForeignKey(
+            entity = DatabasePoll::class,
+            parentColumns = ["pollId"],
+            childColumns = ["boostedPollId"],
+            onDelete = ForeignKey.CASCADE,
+            onUpdate = ForeignKey.CASCADE,
+        ),
     ]
 )
 data class DatabaseStatus(
@@ -50,6 +71,7 @@ data class DatabaseStatus(
     /**
      * The account that authored this status.
      */
+    @ColumnInfo(index = true)
     val accountId: String,
     /**
      * HTML-encoded status content.
@@ -116,12 +138,16 @@ data class DatabaseStatus(
     /**
      * The status being boosted.
      */
+    @ColumnInfo(index = true)
     val boostedStatusId: String? = null,
+    @ColumnInfo(index = true)
     val boostedStatusAccountId: String? = null,
+    @ColumnInfo(index = true)
     val boostedPollId: String? = null,
     /**
      * The poll attached to the status.
      */
+    @ColumnInfo(index = true)
     val pollId: String? = null,
     /**
      * Preview card for links included within status content.
