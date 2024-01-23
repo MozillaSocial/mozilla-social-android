@@ -101,7 +101,7 @@ import org.mozilla.social.core.database.model.entities.statusCollections.Searche
         AutoMigration(20, 21),
         AutoMigration(21, 22),
         AutoMigration(22, 23),
-        AutoMigration(23, 24),
+        AutoMigration(23, 24, DatabaseMigrations.Schema23to24::class),
     ],
     exportSchema = true,
 )
