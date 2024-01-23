@@ -9,6 +9,7 @@ import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.core.database.model.entities.notificationCollections.MainNotification
 import org.mozilla.social.core.model.Notification
 import org.mozilla.social.core.navigation.usecases.ShowSnackbar
+import org.mozilla.social.core.repository.mastodon.DatabaseDelegate
 import org.mozilla.social.core.repository.mastodon.FollowRequestRepository
 import org.mozilla.social.core.repository.mastodon.NotificationsRepository
 import org.mozilla.social.core.repository.mastodon.RelationshipRepository
@@ -22,6 +23,7 @@ class DenyFollowRequest(
     private val notificationsRepository: NotificationsRepository,
     private val relationshipRepository: RelationshipRepository,
     private val saveNotificationsToDatabase: SaveNotificationsToDatabase,
+    private val databaseDelegate: DatabaseDelegate,
     private val dispatcherIo: CoroutineDispatcher = Dispatchers.IO,
 ) {
     /**
@@ -40,12 +42,12 @@ class DenyFollowRequest(
             relationshipRepository.insert(relationship)
         } catch (e: Exception) {
             notification?.let {
-                saveNotificationsToDatabase(notification)
-                notificationsRepository.insertAllMainNotifications(
-                    listOf(
-                        MainNotification(notificationId)
+                databaseDelegate.withTransaction {
+                    saveNotificationsToDatabase(notification)
+                    notificationsRepository.insertAllMainNotifications(
+                        listOf(MainNotification(notificationId))
                     )
-                )
+                }
             }
             showSnackbar(
                 text = StringFactory.resource(R.string.error_rejcting_follow_request),

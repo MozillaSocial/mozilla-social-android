@@ -39,6 +39,7 @@ import org.mozilla.social.core.ui.notifications.cards.RepostNotificationContent
 import org.mozilla.social.core.ui.notifications.cards.StatusUpdatedNotificationContent
 import org.mozilla.social.core.ui.poll.PollInteractions
 
+@Suppress("LongMethod")
 @Composable
 fun NotificationCard(
     uiState: NotificationUiState,
