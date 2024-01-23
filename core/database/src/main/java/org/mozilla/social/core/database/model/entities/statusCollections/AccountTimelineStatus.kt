@@ -65,12 +65,17 @@ import org.mozilla.social.core.model.AccountTimelineType
 )
 data class AccountTimelineStatus(
     val statusId: String,
+    @ColumnInfo(index = true)
     val accountId: String,
     @ColumnInfo(defaultValue = "POSTS")
     val timelineType: AccountTimelineType,
+    @ColumnInfo(index = true)
     val pollId: String?,
+    @ColumnInfo(index = true)
     val boostedStatusId: String?,
+    @ColumnInfo(index = true)
     val boostedStatusAccountId: String?,
+    @ColumnInfo(index = true)
     val boostedPollId: String?,
 )
 

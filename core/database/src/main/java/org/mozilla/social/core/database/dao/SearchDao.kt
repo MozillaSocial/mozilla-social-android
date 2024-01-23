@@ -60,18 +60,21 @@ interface SearchDao {
     @Upsert
     fun upsertHashTags(hashTags: List<SearchedHashTag>)
 
+    @Transaction
     @Query(
         "SELECT * FROM searchedAccounts " +
         "LIMIT :count"
     )
     fun getTopAccountsFlow(count: Int): Flow<List<SearchedAccountWrapper>>
 
+    @Transaction
     @Query(
         "SELECT * FROM searchedStatuses " +
         "LIMIT :count"
     )
     fun getTopStatusesFlow(count: Int): Flow<List<SearchedStatusWrapper>>
 
+    @Transaction
     @Query(
         "SELECT * FROM searchedHashTags " +
         "LIMIT :count"
