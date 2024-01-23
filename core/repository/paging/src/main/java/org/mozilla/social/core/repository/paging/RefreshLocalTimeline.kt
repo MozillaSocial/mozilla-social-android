@@ -46,7 +46,7 @@ class RefreshLocalTimeline internal constructor(
                         timelineRepository.getPublicTimeline(
                             localOnly = true,
                             olderThanId = null,
-                            immediatelyNewerThanId = firstItem.status.statusId,
+                            immediatelyNewerThanId = firstItem.localTimelineStatus.statusId,
                             loadSize = pageSize,
                         )
                     }
@@ -57,7 +57,7 @@ class RefreshLocalTimeline internal constructor(
                                 ?: return RemoteMediator.MediatorResult.Success(endOfPaginationReached = true)
                         timelineRepository.getPublicTimeline(
                             localOnly = true,
-                            olderThanId = lastItem.status.statusId,
+                            olderThanId = lastItem.localTimelineStatus.statusId,
                             immediatelyNewerThanId = null,
                             loadSize = pageSize,
                         )

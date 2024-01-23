@@ -44,7 +44,7 @@ class RefreshHomeTimeline internal constructor(
                                 ?: return RemoteMediator.MediatorResult.Success(endOfPaginationReached = true)
                         timelineRepository.getHomeTimeline(
                             olderThanId = null,
-                            immediatelyNewerThanId = firstItem.status.statusId,
+                            immediatelyNewerThanId = firstItem.homeTimelineStatus.statusId,
                             loadSize = pageSize,
                         )
                     }
@@ -54,7 +54,7 @@ class RefreshHomeTimeline internal constructor(
                             state.lastItemOrNull()
                                 ?: return RemoteMediator.MediatorResult.Success(endOfPaginationReached = true)
                         timelineRepository.getHomeTimeline(
-                            olderThanId = lastItem.status.statusId,
+                            olderThanId = lastItem.homeTimelineStatus.statusId,
                             immediatelyNewerThanId = null,
                             loadSize = pageSize,
                         )

@@ -12,20 +12,22 @@ import org.mozilla.social.core.database.model.entities.DatabaseRelationship
 
 @Entity(
     tableName = "mutes",
-    foreignKeys = [ForeignKey(
-        entity = DatabaseAccount::class,
-        parentColumns = arrayOf("accountId"),
-        childColumns = arrayOf("accountId"),
-        onDelete = CASCADE,
-        onUpdate = CASCADE,
-    ),
+    foreignKeys = [
+        ForeignKey(
+            entity = DatabaseAccount::class,
+            parentColumns = arrayOf("accountId"),
+            childColumns = arrayOf("accountId"),
+            onDelete = CASCADE,
+            onUpdate = CASCADE,
+        ),
         ForeignKey(
             entity = DatabaseRelationship::class,
             parentColumns = arrayOf("accountId"),
             childColumns = arrayOf("accountId"),
             onDelete = CASCADE,
             onUpdate = CASCADE,
-        )]
+        )
+    ]
 )
 data class DatabaseMute(
     @PrimaryKey val accountId: String,

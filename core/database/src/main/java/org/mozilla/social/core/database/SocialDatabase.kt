@@ -77,7 +77,7 @@ import org.mozilla.social.core.database.model.entities.statusCollections.Searche
         DatabaseNotification::class,
         MainNotification::class,
     ],
-    version = 23,
+    version = 24,
     autoMigrations = [
         AutoMigration(1, 2, DatabaseMigrations.Schema1to2::class),
         AutoMigration(2, 3),
@@ -101,6 +101,7 @@ import org.mozilla.social.core.database.model.entities.statusCollections.Searche
         AutoMigration(20, 21),
         AutoMigration(21, 22),
         AutoMigration(22, 23),
+        AutoMigration(23, 24),
     ],
     exportSchema = true,
 )

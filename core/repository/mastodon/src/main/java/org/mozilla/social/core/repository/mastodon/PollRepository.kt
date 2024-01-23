@@ -17,13 +17,11 @@ class PollRepository internal constructor(private val dao: PollsDao) {
         choices = choices,
     )
 
-    suspend fun deletePoll(pollId: String) = dao.deletePoll(pollId = pollId)
-
-    fun insertAll(polls: List<Poll>) {
+    suspend fun insertAll(polls: List<Poll>) {
         dao.upsertAll(polls.map { it.toDatabaseModel() })
     }
 
-    fun insert(poll: Poll) = dao.upsert(poll.toDatabaseModel())
+    suspend fun insert(poll: Poll) = dao.upsert(poll.toDatabaseModel())
 
     suspend fun deleteAll(
         pollIdsToKeep: List<String> = emptyList()

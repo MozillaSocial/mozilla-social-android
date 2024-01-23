@@ -47,5 +47,5 @@ class FollowingsRepository(
         accountsToKeep
     )
 
-    fun insertAll(followees: List<Followee>) = dao.upsertAll(followees)
+    suspend fun insertAll(followees: List<Followee>) = dao.upsertAll(followees)
 }

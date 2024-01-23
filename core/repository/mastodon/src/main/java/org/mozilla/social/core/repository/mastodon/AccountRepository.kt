@@ -203,9 +203,9 @@ class AccountRepository internal constructor(
         fieldContent3 = fields?.getOrNull(3)?.second?.toRequestBody(MultipartBody.FORM),
     ).toExternalModel()
 
-    fun insertAll(accounts: List<Account>) = dao.upsertAll(accounts.map { it.toDatabaseModel() })
+    suspend fun insertAll(accounts: List<Account>) = dao.upsertAll(accounts.map { it.toDatabaseModel() })
 
-    fun insert(account: Account) = dao.upsert(account.toDatabaseModel())
+    suspend fun insert(account: Account) = dao.upsert(account.toDatabaseModel())
 
     suspend fun updateFollowingCountInDatabase(
         accountId: String,

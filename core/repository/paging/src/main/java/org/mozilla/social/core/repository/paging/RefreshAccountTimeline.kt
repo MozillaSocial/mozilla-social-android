@@ -52,7 +52,7 @@ class RefreshAccountTimeline internal constructor(
                         accountRepository.getAccountStatuses(
                             accountId = accountId,
                             olderThanId = null,
-                            immediatelyNewerThanId = firstItem.status.statusId,
+                            immediatelyNewerThanId = firstItem.accountTimelineStatus.statusId,
                             loadSize = pageSize,
                             onlyMedia = timelineType == AccountTimelineType.MEDIA,
                             excludeReplies = timelineType == AccountTimelineType.POSTS,
@@ -65,7 +65,7 @@ class RefreshAccountTimeline internal constructor(
                                 ?: return RemoteMediator.MediatorResult.Success(endOfPaginationReached = true)
                         accountRepository.getAccountStatuses(
                             accountId = accountId,
-                            olderThanId = lastItem.status.statusId,
+                            olderThanId = lastItem.accountTimelineStatus.statusId,
                             immediatelyNewerThanId = null,
                             loadSize = pageSize,
                             onlyMedia = timelineType == AccountTimelineType.MEDIA,

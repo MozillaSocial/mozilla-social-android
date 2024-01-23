@@ -72,7 +72,7 @@ class BlocksRepository(private val api: BlocksApi, private val dao: BlocksDao) {
         )
     }
 
-    fun insertAll(databaseAccounts: List<DatabaseBlock>) = dao.upsertAll(databaseAccounts)
+    suspend fun insertAll(databaseAccounts: List<DatabaseBlock>) = dao.upsertAll(databaseAccounts)
 
     suspend fun deleteAll() = dao.deleteAll()
 }

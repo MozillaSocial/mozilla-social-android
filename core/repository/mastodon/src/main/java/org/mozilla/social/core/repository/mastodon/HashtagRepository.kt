@@ -14,11 +14,11 @@ class HashtagRepository(
     private val api: TagsApi,
 ) {
 
-    fun insertAll(
+    suspend fun insertAll(
         hashTags: List<HashTag>
     ) = dao.upsertAll(hashTags.map { it.toDatabaseModel() })
 
-    fun insert(
+    suspend fun insert(
         hashTag: HashTag,
     ) = dao.upsert(hashTag.toDatabaseModel())
 

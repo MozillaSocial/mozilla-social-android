@@ -76,10 +76,6 @@ class StatusRepository(
         dao.deleteStatus(statusId)
     }
 
-    suspend fun deleteAllLocal(
-        statusIdsToKeep: List<String> = emptyList()
-    ) = dao.deleteAll(statusIdsToKeep)
-
     suspend fun deleteOldStatusesFromDatabase() = dao.deleteOldStatuses()
 
     suspend fun getStatusLocal(statusId: String): Status? {
@@ -121,7 +117,7 @@ class StatusRepository(
      * in the statuses table
      */
     @PreferUseCase
-    fun insertAll(statuses: List<Status>) {
+    suspend fun insertAll(statuses: List<Status>) {
         dao.upsertAll(statuses.map { it.toDatabaseModel() })
     }
 }

@@ -185,8 +185,6 @@ val mastodonUsecaseModule =
                 externalScope = get<AppScope>(),
                 statusRepository = get(),
                 showSnackbar = get(),
-                timelineRepository = get(),
-                databaseDelegate = get(),
             )
         }
 

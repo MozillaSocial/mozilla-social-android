@@ -10,14 +10,12 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import org.mozilla.social.core.database.dao.SearchDao
-import org.mozilla.social.core.database.model.entities.accountCollections.FollowerWrapper
 import org.mozilla.social.core.database.model.entities.accountCollections.SearchedAccount
 import org.mozilla.social.core.database.model.entities.accountCollections.SearchedAccountWrapper
 import org.mozilla.social.core.database.model.entities.hashtagCollections.SearchedHashTag
 import org.mozilla.social.core.database.model.entities.hashtagCollections.SearchedHashTagWrapper
 import org.mozilla.social.core.database.model.entities.statusCollections.SearchedStatus
 import org.mozilla.social.core.database.model.entities.statusCollections.SearchedStatusWrapper
-import org.mozilla.social.core.database.model.entities.statusCollections.toStatusWrapper
 import org.mozilla.social.core.model.Account
 import org.mozilla.social.core.model.HashTag
 import org.mozilla.social.core.model.SearchResult
@@ -68,15 +66,15 @@ class SearchRepository internal constructor(
         offset = offset,
     ).toExternal()
 
-    fun insertAllAccounts(
+    suspend fun insertAllAccounts(
         searchedAccounts: List<SearchedAccount>
     ) = searchDao.upsertAccounts(searchedAccounts)
 
-    fun insertAllStatuses(
+    suspend fun insertAllStatuses(
         searchedStatuses: List<SearchedStatus>
     ) = searchDao.upsertStatuses(searchedStatuses)
 
-    fun insertAllHashTags(
+    suspend fun insertAllHashTags(
         searchedHashTags: List<SearchedHashTag>
     ) = searchDao.upsertHashTags(searchedHashTags)
 
@@ -90,7 +88,7 @@ class SearchRepository internal constructor(
         SearchResultDetailed(
             accounts = accounts.map { it.toDetailedAccount() },
             statuses = statuses.map {
-                it.toStatusWrapper().toExternalModel()
+                it.status.toExternalModel()
             },
             hashtags = hashtags.map {
                 it.hashTag.toExternalModel()
@@ -144,7 +142,7 @@ class SearchRepository internal constructor(
             searchDao.statusesPagingSource()
         }.flow.map { pagingData ->
             pagingData.map {
-                it.toStatusWrapper().toExternalModel()
+                it.status.toExternalModel()
             }
         }
 
