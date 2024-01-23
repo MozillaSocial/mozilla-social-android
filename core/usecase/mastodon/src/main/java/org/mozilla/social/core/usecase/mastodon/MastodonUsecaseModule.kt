@@ -19,6 +19,8 @@ import org.mozilla.social.core.usecase.mastodon.account.UpdateMyAccount
 import org.mozilla.social.core.usecase.mastodon.auth.IsSignedInFlow
 import org.mozilla.social.core.usecase.mastodon.auth.Login
 import org.mozilla.social.core.usecase.mastodon.auth.Logout
+import org.mozilla.social.core.usecase.mastodon.followRequest.AcceptFollowRequest
+import org.mozilla.social.core.usecase.mastodon.followRequest.DenyFollowRequest
 import org.mozilla.social.core.usecase.mastodon.hashtag.FollowHashTag
 import org.mozilla.social.core.usecase.mastodon.hashtag.GetHashTag
 import org.mozilla.social.core.usecase.mastodon.hashtag.UnfollowHashTag
@@ -203,6 +205,28 @@ val mastodonUsecaseModule =
                 externalScope = get<AppScope>(),
                 showSnackbar = get(),
                 hashtagRepository = get(),
+            )
+        }
+
+        single {
+            AcceptFollowRequest(
+                externalScope = get<AppScope>(),
+                showSnackbar = get(),
+                followRequestRepository = get(),
+                notificationsRepository = get(),
+                relationshipRepository = get(),
+            )
+        }
+
+        single {
+            DenyFollowRequest(
+                externalScope = get<AppScope>(),
+                showSnackbar = get(),
+                followRequestRepository = get(),
+                notificationsRepository = get(),
+                relationshipRepository = get(),
+                saveNotificationsToDatabase = get(),
+                databaseDelegate = get(),
             )
         }
 
