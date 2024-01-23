@@ -43,6 +43,10 @@ class NotificationCardDelegate(
         navigateTo(NavigationDestination.Thread(statusId))
     }
 
+    override fun onFollowCardClicked(accountId: String) {
+        navigateTo(NavigationDestination.Account(accountId))
+    }
+
     override fun onFollowRequestCardClicked(accountId: String) {
         navigateTo(NavigationDestination.Account(accountId))
     }

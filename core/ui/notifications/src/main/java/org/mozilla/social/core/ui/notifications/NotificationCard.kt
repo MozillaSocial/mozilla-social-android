@@ -30,7 +30,6 @@ import org.mozilla.social.core.ui.common.text.MediumTextLabel
 import org.mozilla.social.core.ui.common.text.SmallTextLabel
 import org.mozilla.social.core.ui.htmlcontent.HtmlContentInteractions
 import org.mozilla.social.core.ui.notifications.cards.FavoriteNotificationContent
-import org.mozilla.social.core.ui.notifications.cards.FollowNotification
 import org.mozilla.social.core.ui.notifications.cards.FollowRequestNotificationContent
 import org.mozilla.social.core.ui.notifications.cards.MentionNotificationContent
 import org.mozilla.social.core.ui.notifications.cards.NewStatusNotificationContent
@@ -64,7 +63,14 @@ fun NotificationCard(
                     pollInteractions = pollInteractions,
                 )
             }
-            is NotificationUiState.Follow -> FollowNotification(uiState = uiState)
+            is NotificationUiState.Follow -> NotificationCard(
+                modifier = Modifier.clickable {
+                    notificationInteractions.onFollowCardClicked(uiState.accountId)
+                },
+                uiState = uiState,
+                notificationInteractions = notificationInteractions,
+                notificationTypeIcon = MoSoIcons.following(),
+            ) {}
             is NotificationUiState.FollowRequest -> NotificationCard(
                 modifier = Modifier.clickable {
                     notificationInteractions.onFollowRequestCardClicked(uiState.accountId)
