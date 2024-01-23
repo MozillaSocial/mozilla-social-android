@@ -32,6 +32,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -43,10 +44,10 @@ import com.mikepenz.aboutlibraries.ui.compose.util.StableLibs
 import com.mikepenz.aboutlibraries.ui.compose.util.author
 import com.mikepenz.aboutlibraries.ui.compose.util.htmlReadyLicenseContent
 import com.mikepenz.aboutlibraries.ui.compose.util.stable
-import kotlinx.collections.immutable.ImmutableList
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.designsystem.theme.MoSoTypography
 import org.mozilla.social.core.ui.common.MoSoBadge
+import org.mozilla.social.feature.settings.R
 import java.net.MalformedURLException
 
 @Composable
@@ -65,7 +66,7 @@ fun MoSoLibrariesContainer(
     header: (LazyListScope.() -> Unit)? = null,
     onLibraryClick: ((StableLibrary) -> Unit)? = null,
     licenseDialogBody: (@Composable (StableLibrary) -> Unit)? = null,
-    licenseDialogConfirmText: String = "OK",
+    licenseDialogConfirmText: String = stringResource(id = R.string.license_okay_button),
 ) {
     val uriHandler = LocalUriHandler.current
 
@@ -115,7 +116,7 @@ fun MoSoLibrariesContainer(
 fun LicenseDialog(
     library: StableLibrary,
     colors: MoSoLibraryColors = MoSoLibraryDefaults.moSoLibraryColors(),
-    confirmText: String = "OK",
+    confirmText: String = stringResource(id = R.string.license_okay_button),
     body: @Composable (StableLibrary) -> Unit,
     onDismiss: () -> Unit,
 ) {
@@ -164,7 +165,7 @@ fun LicenseDialog(
  */
 @Composable
 fun Libraries(
-    libraries: ImmutableList<StableLibrary>,
+    libraries: List<StableLibrary>,
     modifier: Modifier = Modifier,
     lazyListState: LazyListState = rememberLazyListState(),
     contentPadding: PaddingValues = PaddingValues(0.dp),
@@ -213,7 +214,7 @@ fun Libraries(
 }
 
 internal inline fun LazyListScope.libraryItems(
-    libraries: ImmutableList<StableLibrary>,
+    libraries: List<StableLibrary>,
     showAuthor: Boolean = true,
     showVersion: Boolean = true,
     showLicenseBadges: Boolean = true,

@@ -32,4 +32,6 @@
     <string name="are_you_sure_you_want_to_block">Are you sure you want to block %s?</string>
     <string name="are_you_sure_you_want_to_mute">Are you sure you want to mute %s?</string>
     <string name="open_source_licenses">Open Source Licenses</string>
+
+    <string name="license_okay_button">OK</string>
 </resources>
