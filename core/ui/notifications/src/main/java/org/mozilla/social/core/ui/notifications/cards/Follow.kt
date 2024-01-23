@@ -12,7 +12,7 @@ import org.mozilla.social.core.ui.poll.PollInteractions
 
 @Preview
 @Composable
-private fun MentionNotificationPreview() {
+private fun FollowNotificationPreview() {
     PreviewTheme {
         NotificationCard(
             uiState = NotificationUiState.Follow(
