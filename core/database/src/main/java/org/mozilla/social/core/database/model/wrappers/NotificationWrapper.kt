@@ -19,5 +19,5 @@ data class NotificationWrapper(
         parentColumn = "statusId",
         entityColumn = "statusId",
     )
-    val status: StatusWrapper,
+    val status: StatusWrapper?,
 )
