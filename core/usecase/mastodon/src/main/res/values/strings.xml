@@ -16,6 +16,8 @@
     <string name="error_sending_post_toast">Error sending post</string>
     <string name="error_following_hashtag">Error following hashtag</string>
     <string name="error_unfollowing_hashtag">Error unfollowing hashtag</string>
+    <string name="error_accepting_follow_request">Error accepting request</string>
+    <string name="error_rejcting_follow_request">Error rejecting request</string>
 
     <string name="edit_account_save_failed">Failed to save changes</string>
 </resources>
