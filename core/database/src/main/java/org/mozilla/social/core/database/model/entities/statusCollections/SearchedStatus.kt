@@ -1,5 +1,6 @@
 package org.mozilla.social.core.database.model.entities.statusCollections
 
+import androidx.room.ColumnInfo
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.ForeignKey
@@ -61,10 +62,15 @@ data class SearchedStatus(
     @PrimaryKey
     val statusId: String,
     val position: Int,
+    @ColumnInfo(index = true)
     val accountId: String,
+    @ColumnInfo(index = true)
     val pollId: String?,
+    @ColumnInfo(index = true)
     val boostedStatusId: String?,
+    @ColumnInfo(index = true)
     val boostedStatusAccountId: String?,
+    @ColumnInfo(index = true)
     val boostedPollId: String?,
 )
 

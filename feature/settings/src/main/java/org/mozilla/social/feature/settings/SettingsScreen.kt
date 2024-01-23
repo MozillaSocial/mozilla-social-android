@@ -24,7 +24,7 @@ fun SettingsScreen(
     viewModel: SettingsViewModel = koinViewModel()
 ) {
     SettingsScreen(
-        settingsInteractions = viewModel
+        settingsInteractions = viewModel,
     )
 }
 
@@ -61,6 +61,11 @@ fun SettingsScreen(
                     iconPainter = MoSoIcons.info(),
                     onClick = settingsInteractions::onAboutClicked,
                 )
+                SettingsSection(
+                    title = stringResource(id = R.string.open_source_licenses),
+                    iconPainter = MoSoIcons.info(),
+                    onClick = settingsInteractions::onOpenSourceLicensesClicked,
+                )
 
                 if (BuildConfig.DEBUG) {
                     SettingsSection(
@@ -95,6 +100,7 @@ private fun SettingsScreenPreview() {
                 override fun onContentPreferencesClicked() = Unit
                 override fun onPrivacyClicked() = Unit
                 override fun onDeveloperOptionsClicked() = Unit
+                override fun onOpenSourceLicensesClicked() = Unit
             }
         )
     }

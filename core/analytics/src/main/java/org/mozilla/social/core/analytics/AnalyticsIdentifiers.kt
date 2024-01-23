@@ -18,6 +18,7 @@ object AnalyticsIdentifiers {
     const val SETTINGS_SCREEN_IMPRESSION = "settings.screen.impression"
     const val SETTINGS_ACCOUNT_IMPRESSION = "settings.account.impression"
     const val SETTINGS_CONTENT_PREFERENCES_IMPRESSION = "settings.content-preferences.impression"
+    const val SETTINGS_CONTENT_OPEN_SOURCE_LICENSE = "settings.open-source-licenses.impression"
     const val MUTED_USERS_SCREEN_IMPRESSION = "muted.users.screen.impression"
     const val BLOCKED_USERS_SCREEN_IMPRESSION = "blocked.users.screen.impression"
     const val SETTINGS_PRIVACY_IMPRESSION = "settings.privacy.impression"

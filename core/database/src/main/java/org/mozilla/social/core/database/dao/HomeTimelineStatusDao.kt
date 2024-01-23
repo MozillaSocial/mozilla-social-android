@@ -33,6 +33,7 @@ interface HomeTimelineStatusDao : BaseDao<HomeTimelineStatus> {
     )
     suspend fun deletePost(statusId: String)
 
+    @Transaction
     @Query(
         "SELECT * FROM homeTimeline " +
             "WHERE accountId = :accountId " +
@@ -40,6 +41,7 @@ interface HomeTimelineStatusDao : BaseDao<HomeTimelineStatus> {
     )
     suspend fun getPostsFromAccount(accountId: String): List<HomeTimelineStatusWrapper>
 
+    @Transaction
     @Query(
         "SELECT * FROM homeTimeline " +
         "ORDER BY statusId DESC " +

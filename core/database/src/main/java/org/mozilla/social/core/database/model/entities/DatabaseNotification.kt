@@ -1,5 +1,6 @@
 package org.mozilla.social.core.database.model.entities
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
@@ -64,13 +65,20 @@ data class DatabaseNotification(
     val id: Int,
     val type: Type,
     val createdAt: Instant,
+    @ColumnInfo(index = true)
     val accountId: String,
     // below are field for an optional status
+    @ColumnInfo(index = true)
     val statusId: String?,
+    @ColumnInfo(index = true)
     val statusAccountId: String?,
+    @ColumnInfo(index = true)
     val statusPollId: String?,
+    @ColumnInfo(index = true)
     val boostedStatusId: String?,
+    @ColumnInfo(index = true)
     val boostedStatusAccountId: String?,
+    @ColumnInfo(index = true)
     val boostedPollId: String?,
 ) {
     enum class Type {

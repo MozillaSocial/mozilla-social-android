@@ -31,6 +31,10 @@ class SettingsViewModel(
         navigateTo(SettingsNavigationDestination.DeveloperOptions)
     }
 
+    override fun onOpenSourceLicensesClicked() {
+        navigateTo(SettingsNavigationDestination.OpenSourceLicensesSettings)
+    }
+
     override fun onScreenViewed() {
         analytics.uiImpression(
             uiIdentifier = AnalyticsIdentifiers.SETTINGS_SCREEN_IMPRESSION,

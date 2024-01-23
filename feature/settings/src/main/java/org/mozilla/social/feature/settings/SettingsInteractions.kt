@@ -7,4 +7,5 @@ interface SettingsInteractions {
     fun onContentPreferencesClicked()
     fun onPrivacyClicked()
     fun onDeveloperOptionsClicked()
+    fun onOpenSourceLicensesClicked()
 }
