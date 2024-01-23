@@ -50,7 +50,9 @@ import org.mozilla.social.core.database.model.entities.accountCollections.Databa
 import org.mozilla.social.core.database.model.entities.accountCollections.DatabaseMute
 import org.mozilla.social.core.database.model.entities.accountCollections.SearchedAccount
 import org.mozilla.social.core.database.model.entities.hashtagCollections.SearchedHashTag
+import org.mozilla.social.core.database.model.entities.notificationCollections.FollowListNotification
 import org.mozilla.social.core.database.model.entities.notificationCollections.MainNotification
+import org.mozilla.social.core.database.model.entities.notificationCollections.MentionListNotification
 import org.mozilla.social.core.database.model.entities.statusCollections.SearchedStatus
 
 @Suppress("MagicNumber")
@@ -76,8 +78,10 @@ import org.mozilla.social.core.database.model.entities.statusCollections.Searche
         SearchedHashTag::class,
         DatabaseNotification::class,
         MainNotification::class,
+        MentionListNotification::class,
+        FollowListNotification::class,
     ],
-    version = 24,
+    version = 25,
     autoMigrations = [
         AutoMigration(1, 2, DatabaseMigrations.Schema1to2::class),
         AutoMigration(2, 3),
@@ -102,6 +106,7 @@ import org.mozilla.social.core.database.model.entities.statusCollections.Searche
         AutoMigration(21, 22),
         AutoMigration(22, 23),
         AutoMigration(23, 24, DatabaseMigrations.Schema23to24::class),
+        AutoMigration(24, 25),
     ],
     exportSchema = true,
 )
