@@ -2,6 +2,7 @@ package org.mozilla.social.core.ui.common.animation
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkHorizontally
@@ -26,7 +27,9 @@ fun DelayedVisibility(
     }
     AnimatedVisibility(
         visible = innerVisible,
-        enter = fadeIn(
+        enter = expandVertically(
+            animationSpec = tween(durationMillis = 0, delayMillis = delay)
+        ) + fadeIn(
             animationSpec = tween(delayMillis = delay)
         ),
         exit = shrinkVertically(
