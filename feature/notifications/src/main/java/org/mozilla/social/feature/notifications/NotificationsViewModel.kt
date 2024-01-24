@@ -14,7 +14,7 @@ import org.koin.core.parameter.parametersOf
 import org.mozilla.social.common.utils.edit
 import org.mozilla.social.core.analytics.AnalyticsIdentifiers
 import org.mozilla.social.core.repository.mastodon.NotificationsRepository
-import org.mozilla.social.core.repository.paging.AllNotificationsRemoteMediator
+import org.mozilla.social.core.repository.paging.notifications.AllNotificationsRemoteMediator
 import org.mozilla.social.core.ui.notifications.NotificationCardDelegate
 import org.mozilla.social.core.ui.notifications.toUiState
 import org.mozilla.social.core.ui.postcard.PostCardDelegate

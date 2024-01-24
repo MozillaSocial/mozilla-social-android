@@ -12,9 +12,11 @@ import org.mozilla.social.common.annotations.PreferUseCase
 import org.mozilla.social.common.parseMastodonLinkHeader
 import org.mozilla.social.core.database.dao.NotificationsDao
 import org.mozilla.social.core.database.model.entities.DatabaseNotification
+import org.mozilla.social.core.database.model.entities.notificationCollections.FollowListNotification
 import org.mozilla.social.core.database.model.entities.notificationCollections.FollowListNotificationWrapper
 import org.mozilla.social.core.database.model.entities.notificationCollections.MainNotification
 import org.mozilla.social.core.database.model.entities.notificationCollections.MainNotificationWrapper
+import org.mozilla.social.core.database.model.entities.notificationCollections.MentionListNotification
 import org.mozilla.social.core.database.model.entities.notificationCollections.MentionListNotificationWrapper
 import org.mozilla.social.core.model.Notification
 import org.mozilla.social.core.model.paging.NotificationsPagingWrapper
@@ -130,9 +132,21 @@ class NotificationsRepository(
         mainNotifications: List<MainNotification>
     ) = dao.insertAllIntoMainNotificationList(mainNotifications)
 
+    suspend fun insertMentionNotifications(
+        notifications: List<MentionListNotification>
+    ) = dao.insertAllIntoMentionsNotificationList(notifications)
+
+    suspend fun insertFollowNotifications(
+        notifications: List<FollowListNotification>
+    ) = dao.insertAllIntoFollowNotificationList(notifications)
+
     suspend fun deleteAll() = dao.deleteAll()
 
     suspend fun deleteMainNotificationsList() = dao.deleteMainNotificationsList()
+
+    suspend fun deleteMentionNotificationsList() = dao.deleteMentionNotificationsList()
+
+    suspend fun deleteFollowNotificationsList() = dao.deleteFollowNotificationsList()
 
     suspend fun deleteOldNotifications() = dao.deleteOldNotifications()
 

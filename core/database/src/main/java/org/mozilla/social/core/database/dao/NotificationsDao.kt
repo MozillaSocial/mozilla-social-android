@@ -6,9 +6,11 @@ import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Upsert
 import org.mozilla.social.core.database.model.entities.DatabaseNotification
+import org.mozilla.social.core.database.model.entities.notificationCollections.FollowListNotification
 import org.mozilla.social.core.database.model.entities.notificationCollections.FollowListNotificationWrapper
 import org.mozilla.social.core.database.model.entities.notificationCollections.MainNotification
 import org.mozilla.social.core.database.model.entities.notificationCollections.MainNotificationWrapper
+import org.mozilla.social.core.database.model.entities.notificationCollections.MentionListNotification
 import org.mozilla.social.core.database.model.entities.notificationCollections.MentionListNotificationWrapper
 import org.mozilla.social.core.database.model.wrappers.NotificationWrapper
 
@@ -54,10 +56,30 @@ interface NotificationsDao: BaseDao<DatabaseNotification> {
         mainNotifications: List<MainNotification>
     )
 
+    @Upsert
+    suspend fun insertAllIntoMentionsNotificationList(
+        mainNotifications: List<MentionListNotification>
+    )
+
+    @Upsert
+    suspend fun insertAllIntoFollowNotificationList(
+        mainNotifications: List<FollowListNotification>
+    )
+
     @Query(
         "DELETE FROM mainNotifications"
     )
     suspend fun deleteMainNotificationsList()
+
+    @Query(
+        "DELETE FROM mentionNotifications"
+    )
+    suspend fun deleteMentionNotificationsList()
+
+    @Query(
+        "DELETE FROM followNotifications"
+    )
+    suspend fun deleteFollowNotificationsList()
 
     @Query(
         "UPDATE notifications " +

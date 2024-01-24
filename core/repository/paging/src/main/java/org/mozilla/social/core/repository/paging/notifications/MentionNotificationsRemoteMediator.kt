@@ -1,4 +1,4 @@
-package org.mozilla.social.core.repository.paging
+package org.mozilla.social.core.repository.paging.notifications
 
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
@@ -7,25 +7,26 @@ import androidx.paging.RemoteMediator
 import kotlinx.coroutines.delay
 import org.mozilla.social.common.Rel
 import org.mozilla.social.common.getMaxIdValue
-import org.mozilla.social.core.database.model.entities.notificationCollections.MainNotification
-import org.mozilla.social.core.database.model.entities.notificationCollections.MainNotificationWrapper
+import org.mozilla.social.core.database.model.entities.notificationCollections.MentionListNotification
+import org.mozilla.social.core.database.model.entities.notificationCollections.MentionListNotificationWrapper
+import org.mozilla.social.core.model.Notification
 import org.mozilla.social.core.repository.mastodon.DatabaseDelegate
 import org.mozilla.social.core.repository.mastodon.NotificationsRepository
 import org.mozilla.social.core.usecase.mastodon.notification.SaveNotificationsToDatabase
 import timber.log.Timber
 
 @OptIn(ExperimentalPagingApi::class)
-class AllNotificationsRemoteMediator(
+class MentionNotificationsRemoteMediator(
     private val notificationsRepository: NotificationsRepository,
     private val databaseDelegate: DatabaseDelegate,
     private val saveNotificationsToDatabase: SaveNotificationsToDatabase,
-) : RemoteMediator<Int, MainNotificationWrapper>() {
+) : RemoteMediator<Int, MentionListNotificationWrapper>() {
     private var nextKey: String? = null
 
     @Suppress("ComplexMethod")
     override suspend fun load(
         loadType: LoadType,
-        state: PagingState<Int, MainNotificationWrapper>
+        state: PagingState<Int, MentionListNotificationWrapper>
     ): MediatorResult {
         return try {
             var pageSize: Int = state.config.pageSize
@@ -36,6 +37,7 @@ class AllNotificationsRemoteMediator(
                         notificationsRepository.getNotifications(
                             maxId = null,
                             limit = pageSize,
+                            types = arrayOf(Notification.Mention.VALUE),
                         )
                     }
 
@@ -50,19 +52,20 @@ class AllNotificationsRemoteMediator(
                         notificationsRepository.getNotifications(
                             maxId = nextKey,
                             limit = pageSize,
+                            types = arrayOf(Notification.Mention.VALUE),
                         )
                     }
                 }
 
             databaseDelegate.withTransaction {
                 if (loadType == LoadType.REFRESH) {
-                    notificationsRepository.deleteMainNotificationsList()
+                    notificationsRepository.deleteMentionNotificationsList()
                 }
 
                 saveNotificationsToDatabase(response.notifications)
-                notificationsRepository.insertAllMainNotifications(
+                notificationsRepository.insertMentionNotifications(
                     response.notifications.map {
-                        MainNotification(
+                        MentionListNotification(
                             id = it.id,
                         )
                     }

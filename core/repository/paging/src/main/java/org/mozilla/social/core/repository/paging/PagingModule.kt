@@ -4,6 +4,7 @@ import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 import org.mozilla.social.core.repository.mastodon.mastodonRepositoryModule
+import org.mozilla.social.core.repository.paging.notifications.AllNotificationsRemoteMediator
 import org.mozilla.social.core.usecase.mastodon.mastodonUsecaseModule
 
 val pagingModule = module {
