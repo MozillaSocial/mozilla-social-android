@@ -2,6 +2,7 @@ package org.mozilla.social.search
 
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -18,7 +19,9 @@ import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -43,6 +46,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.PagingData
+import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import kotlinx.coroutines.flow.Flow
@@ -226,29 +230,44 @@ private fun ListContent(
             )
         }
         is Resource.Loaded -> {
+            val accountFeed = uiState.accountsFeed?.collectAsLazyPagingItems()
+            val hashTagFeed = uiState.hashTagFeed?.collectAsLazyPagingItems()
+            val statusFeed = uiState.statusFeed?.collectAsLazyPagingItems()
+
+            val topScrollState = rememberLazyListState()
+            val topAccountsScrollState = rememberLazyListState()
+            val accountScrollState = rememberLazyListState()
+            val hashTagScrollState = rememberLazyListState()
+            val statusScrollState = rememberLazyListState()
+
             when (uiState.selectedTab) {
                 SearchTab.TOP -> {
                     TopList(
                         searchResultUiState = uiState.topResource.data,
+                        scrollState = topScrollState,
+                        topAccountsScrollState = topAccountsScrollState,
                         searchInteractions = searchInteractions,
                         postCardInteractions = postCardInteractions,
                     )
                 }
                 SearchTab.ACCOUNTS -> {
                     AccountsList(
-                        accountFeed = uiState.accountsFeed,
+                        accountFeed = accountFeed,
+                        scrollState = accountScrollState,
                         searchInteractions = searchInteractions,
                     )
                 }
                 SearchTab.HASHTAGS -> {
                     HashTagsList(
-                        hashTagsFeed = uiState.hashTagFeed,
+                        hashTagsFeed = hashTagFeed,
+                        scrollState = hashTagScrollState,
                         searchInteractions = searchInteractions,
                     )
                 }
                 SearchTab.POSTS -> {
                     StatusesList(
-                        statusFeed = uiState.statusFeed,
+                        statusFeed = statusFeed,
+                        scrollState = statusScrollState,
                         postCardInteractions = postCardInteractions,
                     )
                 }
@@ -260,17 +279,21 @@ private fun ListContent(
 @Composable
 private fun TopList(
     searchResultUiState: SearchResultUiState,
+    scrollState: LazyListState,
+    topAccountsScrollState: LazyListState,
     searchInteractions: SearchInteractions,
     postCardInteractions: PostCardInteractions,
 ) {
     LazyColumn(
         Modifier
             .fillMaxSize(),
+        state = scrollState,
     ) {
         if (searchResultUiState.accountUiStates.isNotEmpty()) {
             item {
                 TopAccounts(
                     searchResultUiState = searchResultUiState,
+                    scrollState = topAccountsScrollState,
                     searchInteractions = searchInteractions,
                 )
             }
@@ -326,6 +349,7 @@ private fun TopList(
 @Composable
 private fun TopAccounts(
     searchResultUiState: SearchResultUiState,
+    scrollState: LazyListState,
     searchInteractions: SearchInteractions,
 ) {
     Row(
@@ -341,7 +365,9 @@ private fun TopAccounts(
         )
         Icon(painter = MoSoIcons.caretRight(), contentDescription = "")
     }
-    LazyRow {
+    LazyRow(
+        state = scrollState,
+    ) {
         items(
             count = searchResultUiState.accountUiStates.count(),
             key = { searchResultUiState.accountUiStates[it].quickViewUiState.accountId },
@@ -385,13 +411,15 @@ private fun TopAccounts(
 
 @Composable
 private fun AccountsList(
-    accountFeed: Flow<PagingData<AccountFollowerUiState>>?,
+    accountFeed: LazyPagingItems<AccountFollowerUiState>?,
+    scrollState: LazyListState,
     searchInteractions: SearchInteractions,
 ) {
-    accountFeed?.collectAsLazyPagingItems()?.let { lazyPagingItems ->
+    accountFeed?.let { lazyPagingItems ->
         PagingLazyColumn(
             lazyPagingItems = lazyPagingItems,
-            noResultText = stringResource(id = R.string.search_empty)
+            noResultText = stringResource(id = R.string.search_empty),
+            listState = scrollState,
         ) {
             items(
                 count = lazyPagingItems.itemCount,
@@ -422,13 +450,15 @@ private fun AccountsList(
 
 @Composable
 private fun StatusesList(
-    statusFeed: Flow<PagingData<PostCardUiState>>?,
+    statusFeed: LazyPagingItems<PostCardUiState>?,
+    scrollState: LazyListState,
     postCardInteractions: PostCardInteractions,
 ) {
-    statusFeed?.collectAsLazyPagingItems()?.let { lazyPagingItems ->
+    statusFeed?.let { lazyPagingItems ->
         PagingLazyColumn(
             lazyPagingItems = lazyPagingItems,
-            noResultText = stringResource(id = R.string.search_empty)
+            noResultText = stringResource(id = R.string.search_empty),
+            listState = scrollState,
         ) {
             postListContent(
                 lazyPagingItems = lazyPagingItems,
@@ -440,13 +470,15 @@ private fun StatusesList(
 
 @Composable
 private fun HashTagsList(
-    hashTagsFeed: Flow<PagingData<HashTagQuickViewUiState>>?,
+    hashTagsFeed: LazyPagingItems<HashTagQuickViewUiState>?,
+    scrollState: LazyListState,
     searchInteractions: SearchInteractions,
 ) {
-    hashTagsFeed?.collectAsLazyPagingItems()?.let { lazyPagingItems ->
+    hashTagsFeed?.let { lazyPagingItems ->
         PagingLazyColumn(
             lazyPagingItems = lazyPagingItems,
-            noResultText = stringResource(id = R.string.search_empty)
+            noResultText = stringResource(id = R.string.search_empty),
+            listState = scrollState,
         ) {
             items(
                 count = lazyPagingItems.itemCount,

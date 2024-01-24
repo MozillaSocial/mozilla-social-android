@@ -134,7 +134,14 @@ class AccountViewModel(
         }
     }.cachedIn(viewModelScope)
 
-    private val _timeline = MutableStateFlow(Timeline(AccountTimelineType.POSTS, postsFeed))
+    private val _timeline = MutableStateFlow(
+        Timeline(
+            type = AccountTimelineType.POSTS,
+            postsFeed = postsFeed,
+            postsAndRepliesFeed = postsAndRepliesFeed,
+            mediaFeed = mediaFeed,
+        )
+    )
     val timeline = _timeline.asStateFlow()
 
     init {
@@ -324,32 +331,16 @@ class AccountViewModel(
     }
 
     override fun onTabClicked(timelineType: AccountTimelineType) {
-        _timeline.edit {
-            copy(
-                type = timelineType,
-                feed = when (timelineType) {
-                    AccountTimelineType.POSTS -> {
-                        analytics.uiEngagement(
-                            uiIdentifier = AnalyticsIdentifiers.PROFILE_FEED_POSTS,
-                        )
-                        postsFeed
-                    }
-
-                    AccountTimelineType.POSTS_AND_REPLIES -> {
-                        analytics.uiEngagement(
-                            uiIdentifier = AnalyticsIdentifiers.PROFILE_FEED_POSTS_AND_REPLIES,
-                        )
-                        postsAndRepliesFeed
-                    }
-
-                    AccountTimelineType.MEDIA -> {
-                        analytics.uiEngagement(
-                            uiIdentifier = AnalyticsIdentifiers.PROFILE_FEED_MEDIA,
-                        )
-                        mediaFeed
-                    }
-                }
-            )
+        _timeline.edit { copy(
+            type = timelineType
+        ) }
+        when (timelineType) {
+            AccountTimelineType.POSTS ->
+                analytics.uiEngagement(uiIdentifier = AnalyticsIdentifiers.PROFILE_FEED_POSTS)
+            AccountTimelineType.POSTS_AND_REPLIES ->
+                analytics.uiEngagement(uiIdentifier = AnalyticsIdentifiers.PROFILE_FEED_POSTS_AND_REPLIES,)
+            AccountTimelineType.MEDIA ->
+                analytics.uiEngagement(uiIdentifier = AnalyticsIdentifiers.PROFILE_FEED_MEDIA,)
         }
     }
 
