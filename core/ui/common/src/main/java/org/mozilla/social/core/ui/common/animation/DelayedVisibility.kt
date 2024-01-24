@@ -4,6 +4,9 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkHorizontally
+import androidx.compose.animation.shrinkOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -26,7 +29,11 @@ fun DelayedVisibility(
         enter = fadeIn(
             animationSpec = tween(delayMillis = delay)
         ),
-        exit = fadeOut(),
+        exit = shrinkVertically(
+            animationSpec = tween(durationMillis = 150)
+        ) + fadeOut(
+            animationSpec = tween(durationMillis = 50)
+        ),
     ) {
         content()
     }
