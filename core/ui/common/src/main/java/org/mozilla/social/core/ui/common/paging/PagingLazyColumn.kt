@@ -42,6 +42,7 @@ fun <A : Any> PagingLazyColumn(
             .fillMaxSize(),
     ) {
         LazyColumn(
+            modifier = Modifier.fillMaxSize(),
             state = if (lazyPagingItems.itemCount == 0) {
                 emptyListState
             } else {
@@ -105,13 +106,7 @@ fun <A : Any> PagingLazyColumn(
                     }
                 }
 
-                is LoadState.NotLoading -> {
-                    item {
-                        if (lazyPagingItems.itemSnapshotList.isNotEmpty()) {
-                            Spacer(modifier = Modifier.height(50.dp))
-                        }
-                    }
-                }
+                is LoadState.NotLoading -> {}
             }
         }
 
