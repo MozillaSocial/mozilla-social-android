@@ -25,6 +25,7 @@ import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.ui.common.R
 import org.mozilla.social.core.ui.common.animation.DelayedVisibility
 import org.mozilla.social.core.ui.common.error.GenericError
+import org.mozilla.social.core.ui.common.loading.MoSoCircularProgressIndicator
 
 @Composable
 fun <A : Any> PagingLazyColumn(
@@ -54,7 +55,7 @@ fun <A : Any> PagingLazyColumn(
                     content()
                     item {
                         DelayedVisibility {
-                            CircularProgressIndicator(
+                            MoSoCircularProgressIndicator(
                                 modifier =
                                 Modifier
                                     .fillMaxWidth()
@@ -86,7 +87,7 @@ fun <A : Any> PagingLazyColumn(
             when (lazyPagingItems.loadState.append) {
                 is LoadState.Loading -> {
                     item {
-                        CircularProgressIndicator(
+                        MoSoCircularProgressIndicator(
                             modifier =
                             Modifier
                                 .fillMaxWidth()
