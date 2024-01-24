@@ -5,6 +5,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -15,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.LoadState
 import androidx.paging.PagingData
+import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import kotlinx.coroutines.flow.Flow
@@ -45,6 +48,8 @@ internal fun NotificationsScreen(
     NotificationsScreen(
         uiState = uiState,
         feed = viewModel.feed,
+        mentionFeed = viewModel.mentionsFeed,
+        followsFeed = viewModel.followsFeed,
         notificationsInteractions = viewModel,
         pollInteractions = viewModel.postCardDelegate,
         htmlContentInteractions = viewModel.postCardDelegate,
@@ -56,6 +61,8 @@ internal fun NotificationsScreen(
 private fun NotificationsScreen(
     uiState: NotificationsUiState,
     feed: Flow<PagingData<NotificationUiState>>,
+    mentionFeed: Flow<PagingData<NotificationUiState>>,
+    followsFeed: Flow<PagingData<NotificationUiState>>,
     notificationsInteractions: NotificationsInteractions,
     pollInteractions: PollInteractions,
     htmlContentInteractions: HtmlContentInteractions,
@@ -77,8 +84,26 @@ private fun NotificationsScreen(
                 uiState = uiState,
                 notificationsInteractions = notificationsInteractions
             )
+
+            val all = feed.collectAsLazyPagingItems()
+            val mentions = feed.collectAsLazyPagingItems()
+            val follows = feed.collectAsLazyPagingItems()
+
+            val allListState = rememberLazyListState()
+            val mentionsListState = rememberLazyListState()
+            val followsListState = rememberLazyListState()
+
             NotificationsList(
-                list = feed,
+                lazyPagingItems = when (uiState.selectedTab) {
+                    NotificationsTab.ALL -> all
+                    NotificationsTab.MENTIONS -> mentions
+                    NotificationsTab.REQUESTS -> follows
+                },
+                listState = when (uiState.selectedTab) {
+                    NotificationsTab.ALL -> allListState
+                    NotificationsTab.MENTIONS -> mentionsListState
+                    NotificationsTab.REQUESTS -> followsListState
+                },
                 pollInteractions = pollInteractions,
                 htmlContentInteractions = htmlContentInteractions,
                 notificationInteractions = notificationInteractions,
@@ -112,13 +137,12 @@ private fun Tabs(
 
 @Composable
 private fun NotificationsList(
-    list: Flow<PagingData<NotificationUiState>>,
+    lazyPagingItems: LazyPagingItems<NotificationUiState>,
+    listState: LazyListState,
     pollInteractions: PollInteractions,
     htmlContentInteractions: HtmlContentInteractions,
     notificationInteractions: NotificationInteractions,
 ) {
-    val lazyPagingItems = list.collectAsLazyPagingItems()
-
     val pullRefreshState =
         rememberPullRefreshState(
             refreshing = lazyPagingItems.loadState.refresh == LoadState.Loading,
@@ -126,9 +150,10 @@ private fun NotificationsList(
         )
 
     PullRefreshLazyColumn(
-        lazyPagingItems,
+        lazyPagingItems = lazyPagingItems,
         pullRefreshState = pullRefreshState,
         modifier = Modifier.fillMaxSize(),
+        listState = listState,
     ) {
         when (lazyPagingItems.loadState.refresh) {
             is LoadState.Error -> {} // handle the error outside the lazy column
@@ -163,6 +188,8 @@ private fun NotificationsScreenPreview() {
                 selectedTab = NotificationsTab.ALL,
             ),
             feed = flowOf(),
+            mentionFeed = flowOf(),
+            followsFeed = flowOf(),
             notificationsInteractions = object : NotificationsInteractions {
                 override fun onTabClicked(tab: NotificationsTab) = Unit
             },

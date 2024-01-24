@@ -15,6 +15,8 @@ import org.mozilla.social.common.utils.edit
 import org.mozilla.social.core.analytics.AnalyticsIdentifiers
 import org.mozilla.social.core.repository.mastodon.NotificationsRepository
 import org.mozilla.social.core.repository.paging.notifications.AllNotificationsRemoteMediator
+import org.mozilla.social.core.repository.paging.notifications.FollowNotificationsRemoteMediator
+import org.mozilla.social.core.repository.paging.notifications.MentionNotificationsRemoteMediator
 import org.mozilla.social.core.ui.notifications.NotificationCardDelegate
 import org.mozilla.social.core.ui.notifications.toUiState
 import org.mozilla.social.core.ui.postcard.PostCardDelegate
@@ -23,6 +25,8 @@ import org.mozilla.social.core.usecase.mastodon.account.GetLoggedInUserAccountId
 class NotificationsViewModel(
     notificationsRepository: NotificationsRepository,
     allNotificationsRemoteMediator: AllNotificationsRemoteMediator,
+    mentionNotificationsRemoteMediator: MentionNotificationsRemoteMediator,
+    followNotificationsRemoteMediator: FollowNotificationsRemoteMediator,
     getLoggedInUserAccountId: GetLoggedInUserAccountId,
 ) : ViewModel(), NotificationsInteractions, KoinComponent {
 
@@ -42,6 +46,24 @@ class NotificationsViewModel(
     @OptIn(ExperimentalPagingApi::class)
     val feed = notificationsRepository.getMainNotificationsPager(
         remoteMediator = allNotificationsRemoteMediator,
+    ).map { pagingData ->
+        pagingData.map {
+            it.toUiState(loggedInUserAccountId)
+        }
+    }.cachedIn(viewModelScope)
+
+    @OptIn(ExperimentalPagingApi::class)
+    val mentionsFeed = notificationsRepository.getMentionListNotificationsPager(
+        remoteMediator = mentionNotificationsRemoteMediator,
+    ).map { pagingData ->
+        pagingData.map {
+            it.toUiState(loggedInUserAccountId)
+        }
+    }.cachedIn(viewModelScope)
+
+    @OptIn(ExperimentalPagingApi::class)
+    val followsFeed = notificationsRepository.getFollowListNotificationsPager(
+        remoteMediator = followNotificationsRemoteMediator,
     ).map { pagingData ->
         pagingData.map {
             it.toUiState(loggedInUserAccountId)
