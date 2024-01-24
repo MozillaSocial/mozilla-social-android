@@ -86,8 +86,8 @@ private fun NotificationsScreen(
             )
 
             val all = feed.collectAsLazyPagingItems()
-            val mentions = feed.collectAsLazyPagingItems()
-            val follows = feed.collectAsLazyPagingItems()
+            val mentions = mentionFeed.collectAsLazyPagingItems()
+            val follows = followsFeed.collectAsLazyPagingItems()
 
             val allListState = rememberLazyListState()
             val mentionsListState = rememberLazyListState()
