@@ -12,8 +12,10 @@ import org.mozilla.social.common.annotations.PreferUseCase
 import org.mozilla.social.common.parseMastodonLinkHeader
 import org.mozilla.social.core.database.dao.NotificationsDao
 import org.mozilla.social.core.database.model.entities.DatabaseNotification
+import org.mozilla.social.core.database.model.entities.notificationCollections.FollowListNotificationWrapper
 import org.mozilla.social.core.database.model.entities.notificationCollections.MainNotification
 import org.mozilla.social.core.database.model.entities.notificationCollections.MainNotificationWrapper
+import org.mozilla.social.core.database.model.entities.notificationCollections.MentionListNotificationWrapper
 import org.mozilla.social.core.model.Notification
 import org.mozilla.social.core.model.paging.NotificationsPagingWrapper
 import org.mozilla.social.core.network.mastodon.NotificationsApi
@@ -71,6 +73,48 @@ class NotificationsRepository(
             remoteMediator = remoteMediator,
         ) {
             dao.mainNotificationsPagingSource()
+        }.flow.map { pagingData ->
+            pagingData.map {
+                it.notificationWrapper.toExternal()
+            }
+        }
+
+    @ExperimentalPagingApi
+    fun getMentionListNotificationsPager(
+        remoteMediator: RemoteMediator<Int, MentionListNotificationWrapper>,
+        pageSize: Int = 20,
+        initialLoadSize: Int = 40,
+    ): Flow<PagingData<Notification>> =
+        Pager(
+            config =
+            PagingConfig(
+                pageSize = pageSize,
+                initialLoadSize = initialLoadSize,
+            ),
+            remoteMediator = remoteMediator,
+        ) {
+            dao.mentionListNotificationsPagingSource()
+        }.flow.map { pagingData ->
+            pagingData.map {
+                it.notificationWrapper.toExternal()
+            }
+        }
+
+    @ExperimentalPagingApi
+    fun getFollowListNotificationsPager(
+        remoteMediator: RemoteMediator<Int, FollowListNotificationWrapper>,
+        pageSize: Int = 20,
+        initialLoadSize: Int = 40,
+    ): Flow<PagingData<Notification>> =
+        Pager(
+            config =
+            PagingConfig(
+                pageSize = pageSize,
+                initialLoadSize = initialLoadSize,
+            ),
+            remoteMediator = remoteMediator,
+        ) {
+            dao.followListNotificationsPagingSource()
         }.flow.map { pagingData ->
             pagingData.map {
                 it.notificationWrapper.toExternal()
