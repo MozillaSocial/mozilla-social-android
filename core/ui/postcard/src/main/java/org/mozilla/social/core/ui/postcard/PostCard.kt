@@ -121,9 +121,9 @@ private fun TopRowMetaData(
     ) {
         Icon(
             modifier =
-                Modifier
-                    .size(20.dp)
-                    .align(Alignment.CenterVertically),
+            Modifier
+                .size(20.dp)
+                .align(Alignment.CenterVertically),
             painter =
                 when (topRowMetaDataUiState.iconType) {
                     TopRowIconType.BOOSTED -> MoSoIcons.boost()
@@ -177,11 +177,11 @@ private fun Avatar(
 ) {
     AsyncImage(
         modifier =
-            modifier
-                .size(36.dp)
-                .clip(CircleShape)
-                .background(MoSoTheme.colors.layer2)
-                .clickable { postCardInteractions.onAccountImageClicked(post.accountId) },
+        modifier
+            .size(36.dp)
+            .clip(CircleShape)
+            .background(MoSoTheme.colors.layer2)
+            .clickable { postCardInteractions.onAccountImageClicked(post.accountId) },
         model = post.profilePictureUrl,
         contentDescription = "",
     )
@@ -286,16 +286,16 @@ private fun ContentWarning(
             ) {
                 Row(
                     modifier =
-                        Modifier
-                            .clip(RoundedCornerShape(MoSoRadius.sm_4_dp))
-                            .background(MoSoTheme.colors.layerActionWarning)
-                            .padding(horizontal = MoSoSpacing.sm, vertical = MoSoSpacing.xs),
+                    Modifier
+                        .clip(RoundedCornerShape(MoSoRadius.sm_4_dp))
+                        .background(MoSoTheme.colors.layerActionWarning)
+                        .padding(horizontal = MoSoSpacing.sm, vertical = MoSoSpacing.xs),
                 ) {
                     Icon(
                         modifier =
-                            Modifier
-                                .size(14.dp)
-                                .align(Alignment.CenterVertically),
+                        Modifier
+                            .size(14.dp)
+                            .align(Alignment.CenterVertically),
                         painter = MoSoIcons.warning(),
                         contentDescription = "",
                     )
@@ -312,9 +312,9 @@ private fun ContentWarning(
                 Row {
                     Text(
                         modifier =
-                            Modifier
-                                .align(Alignment.CenterVertically)
-                                .sizeIn(minWidth = 80.dp),
+                        Modifier
+                            .align(Alignment.CenterVertically)
+                            .sizeIn(minWidth = 80.dp),
                         text =
                             if (isShowing) {
                                 stringResource(id = R.string.hide_post)
@@ -333,9 +333,9 @@ private fun ContentWarning(
                     )
                     Icon(
                         modifier =
-                            Modifier
-                                .rotate(rotation)
-                                .align(Alignment.CenterVertically),
+                        Modifier
+                            .rotate(rotation)
+                            .align(Alignment.CenterVertically),
                         painter = MoSoIcons.caretRight(),
                         contentDescription = null,
                     )
@@ -384,6 +384,12 @@ private fun OverflowMenu(
                     expanded = overflowMenuExpanded,
                     onClick = { postCardInteractions.onOverflowDeleteClicked(post.statusId) },
                 )
+                // WILL DO: add in once complete
+//                MoSoDropDownItem(
+//                    text = stringResource(id = R.string.edit_post),
+//                    expanded = overflowMenuExpanded,
+//                    onClick = { postCardInteractions.onOverflowEditClicked(post.statusId) },
+//                )
             } else {
                 MoSoDropDownItem(
                     text = stringResource(id = R.string.mute_user, post.username),
@@ -476,9 +482,9 @@ private fun BottomIconButton(
     ) {
         IconButton(
             modifier =
-                Modifier
-                    .width(IntrinsicSize.Max)
-                    .align(Alignment.CenterVertically),
+            Modifier
+                .width(IntrinsicSize.Max)
+                .align(Alignment.CenterVertically),
             onClick = onClick,
         ) {
             Icon(
@@ -495,9 +501,9 @@ private fun BottomIconButton(
         if (count != null) {
             Text(
                 modifier =
-                    Modifier
-                        .align(Alignment.CenterVertically)
-                        .offset(x = -6.dp),
+                Modifier
+                    .align(Alignment.CenterVertically)
+                    .offset(x = -6.dp),
                 text = count,
             )
         }

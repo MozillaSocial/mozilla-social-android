@@ -26,7 +26,8 @@ val newPostModule = module {
     viewModel { parametersHolder ->
         NewPostViewModel(
             analytics = get(),
-            replyStatusId = parametersHolder.getOrNull(),
+            replyStatusId = parametersHolder[0],
+            isEditingId = parametersHolder[1],
             postStatus = get(),
             popNavBackstack = get(),
             showSnackbar = get(),
@@ -43,6 +44,7 @@ val newPostModule = module {
             statusRepository = get(),
             coroutineScope = parametersHolder[0],
             inReplyToId = parametersHolder[1],
+            isEditingId = parametersHolder[2]
         )
     }
 

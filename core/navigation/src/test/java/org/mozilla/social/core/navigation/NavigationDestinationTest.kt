@@ -121,7 +121,7 @@ class NavigationDestinationTest {
     fun navigateToNewPostReply() {
         val replyId = testUtils.randomIdString()
 
-        with(NavigationDestination.NewPost(replyId)) {
+        with(NavigationDestination.NewPost(replyStatusId = replyId)) {
             navController.navigateToNewPost()
         }
 
