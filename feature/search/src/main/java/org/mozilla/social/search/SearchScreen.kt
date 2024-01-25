@@ -2,7 +2,6 @@ package org.mozilla.social.search
 
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -43,13 +42,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
-import kotlinx.coroutines.flow.Flow
 import org.koin.androidx.compose.koinViewModel
 import org.mozilla.social.common.Resource
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
@@ -57,6 +55,7 @@ import org.mozilla.social.core.designsystem.theme.MoSoRadius
 import org.mozilla.social.core.designsystem.theme.MoSoSpacing
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.designsystem.utils.NoRipple
+import org.mozilla.social.core.navigation.navigationModule
 import org.mozilla.social.core.ui.accountfollower.AccountFollower
 import org.mozilla.social.core.ui.accountfollower.AccountFollowerUiState
 import org.mozilla.social.core.ui.common.MoSoSearchBar
@@ -72,6 +71,8 @@ import org.mozilla.social.core.ui.common.hashtag.quickview.HashTagQuickView
 import org.mozilla.social.core.ui.common.hashtag.quickview.HashTagQuickViewUiState
 import org.mozilla.social.core.ui.common.loading.MaxSizeLoading
 import org.mozilla.social.core.ui.common.paging.PagingLazyColumn
+import org.mozilla.social.core.ui.common.text.MediumTextBody
+import org.mozilla.social.core.ui.common.utils.PreviewTheme
 import org.mozilla.social.core.ui.postcard.PostCard
 import org.mozilla.social.core.ui.postcard.PostCardInteractions
 import org.mozilla.social.core.ui.postcard.PostCardUiState
@@ -156,12 +157,16 @@ private fun SearchScreen(
                                     tint = MoSoTheme.colors.iconSecondary,
                                 )
                             }
+                        },
+                        placeholder = {
+                            MediumTextBody(
+                                text = stringResource(id = R.string.search),
+                                color = MoSoTheme.colors.textSecondary,
+                            )
                         }
                     )
                 }
             )
-
-            Spacer(modifier = Modifier.height(8.dp))
 
             Box {
                 Column {
@@ -509,4 +514,26 @@ private fun Suggestions() {
     Box(
         modifier = Modifier.fillMaxSize()
     )
+}
+
+@Preview
+@Composable
+private fun SearchScreenPreview() {
+    PreviewTheme(
+        modules = listOf(navigationModule)
+    ) {
+        SearchScreen(
+            uiState = SearchUiState(
+                topResource = Resource.Loaded(
+                    SearchResultUiState(
+                        postCardUiStates = listOf(),
+                        accountUiStates = listOf(),
+                    )
+                ),
+                query = "test",
+            ),
+            searchInteractions = object : SearchInteractions {},
+            postCardInteractions = object : PostCardInteractions {},
+        )
+    }
 }
