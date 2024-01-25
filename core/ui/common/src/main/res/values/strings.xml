@@ -5,6 +5,7 @@
 
     <string name="retry">Retry</string>
     <string name="ok">OK</string>
+    <string name="search">Search</string>
 
     <string name="error_oops">Oops, something went wrong</string>
 

@@ -21,7 +21,6 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -57,7 +56,6 @@ import org.mozilla.social.core.designsystem.utils.NoRipple
 import org.mozilla.social.core.navigation.navigationModule
 import org.mozilla.social.core.ui.accountfollower.AccountFollower
 import org.mozilla.social.core.ui.accountfollower.AccountFollowerUiState
-import org.mozilla.social.core.ui.common.search.MoSoSearchBar
 import org.mozilla.social.core.ui.common.MoSoSurface
 import org.mozilla.social.core.ui.common.MoSoTab
 import org.mozilla.social.core.ui.common.MoSoTabRow
@@ -70,6 +68,7 @@ import org.mozilla.social.core.ui.common.hashtag.quickview.HashTagQuickView
 import org.mozilla.social.core.ui.common.hashtag.quickview.HashTagQuickViewUiState
 import org.mozilla.social.core.ui.common.loading.MaxSizeLoading
 import org.mozilla.social.core.ui.common.paging.PagingLazyColumn
+import org.mozilla.social.core.ui.common.search.MoSoSearchBar
 import org.mozilla.social.core.ui.common.text.MediumTextBody
 import org.mozilla.social.core.ui.common.utils.PreviewTheme
 import org.mozilla.social.core.ui.postcard.PostCard
@@ -134,14 +133,6 @@ private fun SearchScreen(
                                 searchInteractions.onSearchClicked()
                             }
                         },
-                        leadingIcon = {
-                            Icon(
-                                modifier = Modifier.size(16.dp),
-                                painter = MoSoIcons.magnifyingGlass(),
-                                contentDescription = stringResource(id = R.string.search),
-                                tint = MoSoTheme.colors.iconSecondary,
-                            )
-                        },
                         trailingIcon = {
                             IconButton(
                                 onClick = {
@@ -157,12 +148,6 @@ private fun SearchScreen(
                                 )
                             }
                         },
-                        placeholder = {
-                            MediumTextBody(
-                                text = stringResource(id = R.string.search),
-                                color = MoSoTheme.colors.textSecondary,
-                            )
-                        }
                     )
                 }
             )
