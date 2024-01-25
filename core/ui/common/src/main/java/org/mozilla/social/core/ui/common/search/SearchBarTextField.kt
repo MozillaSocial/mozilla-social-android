@@ -3,7 +3,6 @@ package org.mozilla.social.core.ui.common.search
 import androidx.compose.foundation.border
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
@@ -23,12 +22,14 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.takeOrElse
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
-import org.mozilla.social.core.designsystem.theme.MoSoRadius
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 
+/**
+ * Search bar text field that is essentially the same as the material 3 text field, but
+ * with some changes to padding and minimum
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun SearchBarTextField(
@@ -54,17 +55,16 @@ internal fun SearchBarTextField(
     minLines: Int = 1,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     shape: Shape = TextFieldDefaults.shape,
-    colors: TextFieldColors = TextFieldDefaults.colors(),
-    searchBarColorsExtra: SearchBarColorsExtra = SearchBarTextFieldDefaults.colorsExtra(),
+    colors: SearchBarColors = SearchBarTextFieldDefaults.colors(),
     borderShape: Shape = RoundedCornerShape(90.dp),
 ) {
     // If color is not provided via the text style, use content color as a default
     val textColor = textStyle.color.takeOrElse {
-        searchBarColorsExtra.textColor
+        colors.textColor
     }
     val mergedTextStyle = textStyle.merge(TextStyle(color = textColor))
 
-    CompositionLocalProvider(LocalTextSelectionColors provides searchBarColorsExtra.selectionColors) {
+    CompositionLocalProvider(LocalTextSelectionColors provides colors.selectionColors) {
         BasicTextField(
             value = value,
             modifier = modifier
@@ -74,7 +74,7 @@ internal fun SearchBarTextField(
                     if (isError) {
                         MoSoTheme.colors.borderWarning
                     } else {
-                        searchBarColorsExtra.borderColor
+                        colors.borderColor
                     },
                     shape = borderShape,
                 ),
@@ -82,7 +82,7 @@ internal fun SearchBarTextField(
             enabled = enabled,
             readOnly = readOnly,
             textStyle = mergedTextStyle,
-            cursorBrush = SolidColor(searchBarColorsExtra.cursorColor),
+            cursorBrush = SolidColor(colors.cursorColor),
             visualTransformation = visualTransformation,
             keyboardOptions = keyboardOptions,
             keyboardActions = keyboardActions,
@@ -108,7 +108,7 @@ internal fun SearchBarTextField(
                     enabled = enabled,
                     isError = isError,
                     interactionSource = interactionSource,
-                    colors = colors,
+                    colors = colors.inputFieldColors,
                     contentPadding = PaddingValues(0.dp)
                 )
             }
@@ -118,18 +118,20 @@ internal fun SearchBarTextField(
 
 internal object SearchBarTextFieldDefaults {
     @Composable
-    fun colorsExtra(): SearchBarColorsExtra =
-        SearchBarColorsExtra(
+    fun colors(): SearchBarColors =
+        SearchBarColors(
             cursorColor = MoSoTheme.colors.textPrimary,
             textColor = MoSoTheme.colors.textPrimary,
             selectionColors = LocalTextSelectionColors.current,
             borderColor = MoSoTheme.colors.borderInputEnabled,
+            inputFieldColors = MoSoSearchBarDefaults.colors().inputFieldColors,
         )
 }
 
-internal data class SearchBarColorsExtra(
+data class SearchBarColors(
     val cursorColor: Color,
     val textColor: Color,
     val selectionColors: TextSelectionColors,
     val borderColor: Color,
+    val inputFieldColors: TextFieldColors,
 )

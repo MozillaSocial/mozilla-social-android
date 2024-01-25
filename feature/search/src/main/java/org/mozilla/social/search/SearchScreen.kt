@@ -8,7 +8,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -58,7 +57,7 @@ import org.mozilla.social.core.designsystem.utils.NoRipple
 import org.mozilla.social.core.navigation.navigationModule
 import org.mozilla.social.core.ui.accountfollower.AccountFollower
 import org.mozilla.social.core.ui.accountfollower.AccountFollowerUiState
-import org.mozilla.social.core.ui.common.MoSoSearchBar
+import org.mozilla.social.core.ui.common.search.MoSoSearchBar
 import org.mozilla.social.core.ui.common.MoSoSurface
 import org.mozilla.social.core.ui.common.MoSoTab
 import org.mozilla.social.core.ui.common.MoSoTabRow
@@ -91,7 +90,7 @@ internal fun SearchScreen(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 private fun SearchScreen(
     uiState: SearchUiState,
