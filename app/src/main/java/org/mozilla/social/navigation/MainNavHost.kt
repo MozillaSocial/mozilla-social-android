@@ -16,7 +16,6 @@ import org.mozilla.social.feature.hashtag.hashTagScreen
 import org.mozilla.social.feature.report.reportFlow
 import org.mozilla.social.feature.settings.settingsFlow
 import org.mozilla.social.feature.thread.threadScreen
-import org.mozilla.social.post.editPostScreen
 import org.mozilla.social.post.newPostScreen
 import org.mozilla.social.search.searchScreen
 import org.mozilla.social.ui.AppState
@@ -42,7 +41,6 @@ fun MainNavHost(
         accountScreen()
         followersScreen()
         newPostScreen()
-        editPostScreen()
         threadScreen()
         reportFlow(navController = appState.mainNavController)
         hashTagScreen()
