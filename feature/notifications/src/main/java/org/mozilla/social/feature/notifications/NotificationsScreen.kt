@@ -121,6 +121,9 @@ private fun Tabs(
 
     MoSoTabRow(selectedTabIndex = uiState.selectedTab.ordinal) {
         NotificationsTab.entries.forEach { tabType ->
+            if (tabType == NotificationsTab.REQUESTS && !uiState.requestsTabIsVisible) {
+                return@forEach
+            }
             MoSoTab(
                 modifier =
                 Modifier
