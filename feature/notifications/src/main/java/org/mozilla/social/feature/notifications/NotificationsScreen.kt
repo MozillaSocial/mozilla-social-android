@@ -7,9 +7,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TopAppBarScrollBehavior
+import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -40,6 +45,7 @@ import org.mozilla.social.core.ui.notifications.NotificationInteractionsNoOp
 import org.mozilla.social.core.ui.notifications.NotificationUiState
 import org.mozilla.social.core.ui.poll.PollInteractions
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun NotificationsScreen(
     viewModel: NotificationsViewModel = koinViewModel()
@@ -57,6 +63,7 @@ internal fun NotificationsScreen(
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun NotificationsScreen(
     uiState: NotificationsUiState,
@@ -67,14 +74,22 @@ private fun NotificationsScreen(
     pollInteractions: PollInteractions,
     htmlContentInteractions: HtmlContentInteractions,
     notificationInteractions: NotificationInteractions,
+    topAppBarScrollBehavior: TopAppBarScrollBehavior =
+        TopAppBarDefaults.enterAlwaysScrollBehavior(
+            rememberTopAppBarState(),
+        ),
 ) {
     MoSoSurface(
         modifier = Modifier
             .fillMaxSize()
             .systemBarsPadding()
     ) {
-        Column {
+        Column(
+            modifier = Modifier
+                .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection)
+        ) {
             MoSoTopBar(
+                scrollBehavior = topAppBarScrollBehavior,
                 title = stringResource(id = R.string.notifications_title),
                 icon = null,
                 onIconClicked = {},
@@ -182,6 +197,7 @@ private fun NotificationsList(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
 private fun NotificationsScreenPreview() {

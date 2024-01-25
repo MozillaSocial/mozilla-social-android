@@ -36,6 +36,7 @@ import org.mozilla.social.core.ui.common.divider.MoSoDivider
  * @param actions
  * @param showDivider
  */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MoSoCloseableTopAppBar(
     title: String = "",
@@ -62,6 +63,7 @@ fun MoSoTopBar(
     onIconClicked: () -> Unit,
     actions: @Composable () -> Unit = {},
     showDivider: Boolean = true,
+    scrollBehavior: TopAppBarScrollBehavior? = null,
 ) {
     Column(
         modifier = Modifier.fillMaxWidth(),
@@ -78,6 +80,7 @@ fun MoSoTopBar(
                 }
             },
             actions = { actions() },
+            scrollBehavior = scrollBehavior,
         )
 
         if (showDivider) {
