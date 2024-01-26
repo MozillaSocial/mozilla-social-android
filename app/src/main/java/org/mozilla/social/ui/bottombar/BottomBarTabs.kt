@@ -40,12 +40,12 @@ enum class BottomBarTabs(
             object : BottomBarTab {
                 @Composable
                 override fun selectedIcon(): Painter {
-                    return MoSoIcons.compassFill()
+                    return MoSoIcons.magnifyingGlassFill()
                 }
 
                 @Composable
                 override fun unselectedIcon(): Painter {
-                    return MoSoIcons.compass()
+                    return MoSoIcons.magnifyingGlass()
                 }
 
                 override val tabText = StringFactory.resource(R.string.discover_tab_text)
