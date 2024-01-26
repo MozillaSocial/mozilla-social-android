@@ -173,8 +173,7 @@ private fun Recommendation(
     }
     NoRipple {
         Column(
-            modifier =
-            Modifier
+            modifier = Modifier
                 .padding(16.dp)
                 .clickable {
                     discoverInteractions.onRecommendationClicked(recommendation.id)
@@ -189,8 +188,7 @@ private fun Recommendation(
         ) {
             Row {
                 Column(
-                    modifier =
-                    Modifier
+                    modifier = Modifier
                         .weight(2f)
                         .semantics { isTraversalGroup = true },
                 ) {
@@ -210,8 +208,7 @@ private fun Recommendation(
                     )
                 }
                 AsyncImage(
-                    modifier =
-                    Modifier
+                    modifier = Modifier
                         .padding(start = 16.dp)
                         .weight(1f)
                         .clip(RoundedCornerShape(MoSoRadius.media)),
