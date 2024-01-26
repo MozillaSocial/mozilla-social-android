@@ -344,7 +344,10 @@ private fun OverflowMenu(
         modifier = Modifier.width(IntrinsicSize.Max),
         onClick = { overflowMenuExpanded.value = true },
     ) {
-        Icon(painter = MoSoIcons.moreVertical(), contentDescription = null)
+        Icon(
+            painter = MoSoIcons.moreVertical(),
+            contentDescription = stringResource(R.string.overflow_button)
+        )
 
         MoSoDropdownMenu(
             expanded = overflowMenuExpanded.value,
