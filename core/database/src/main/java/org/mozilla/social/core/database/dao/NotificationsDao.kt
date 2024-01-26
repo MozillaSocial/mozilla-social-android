@@ -46,7 +46,11 @@ interface NotificationsDao: BaseDao<DatabaseNotification> {
         "DELETE FROM notifications " +
         "WHERE id NOT IN " +
         "(" +
-            "SELECT id FROM mainNotifications" +
+            "SELECT id FROM mainNotifications " +
+            "UNION " +
+            "SELECT id FROM mentionNotifications " +
+            "UNION " +
+            "SELECT id FROM followNotifications" +
         ")"
     )
     suspend fun deleteOldNotifications()

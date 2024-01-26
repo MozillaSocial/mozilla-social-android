@@ -38,7 +38,6 @@ data class AccountTimelineStatus(
     val statusId: String,
     @ColumnInfo(index = true)
     val accountId: String,
-    @ColumnInfo(defaultValue = "POSTS")
     val timelineType: AccountTimelineType,
 )
 

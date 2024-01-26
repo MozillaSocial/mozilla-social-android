@@ -193,6 +193,5 @@ data class DatabaseStatus(
     /**
      * if the status is currently being deleted by the user
      */
-    @ColumnInfo(defaultValue = "false")
     val isBeingDeleted: Boolean = false,
 )
