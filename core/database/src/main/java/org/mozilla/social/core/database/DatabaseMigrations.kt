@@ -4,7 +4,6 @@ import androidx.room.DeleteColumn
 import androidx.room.DeleteTable
 import androidx.room.RenameColumn
 import androidx.room.migration.AutoMigrationSpec
-import androidx.sqlite.db.SupportSQLiteDatabase
 
 object DatabaseMigrations {
     @RenameColumn(
