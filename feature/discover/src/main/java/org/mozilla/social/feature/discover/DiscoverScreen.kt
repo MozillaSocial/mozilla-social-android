@@ -80,7 +80,14 @@ private fun DiscoverScreen(
         Column {
             Box(
                 modifier = Modifier
-                    .padding(MoSoSpacing.md)
+                    .padding(
+                        start = MoSoSpacing.md,
+                        end = MoSoSpacing.md,
+                        // 14 on top should make the search bar align perfectly with the
+                        // search bar on the search screen
+                        top = 14.dp,
+                        bottom = MoSoSpacing.md,
+                    )
                     .fillMaxWidth()
                     .height(IntrinsicSize.Max),
             ) {
