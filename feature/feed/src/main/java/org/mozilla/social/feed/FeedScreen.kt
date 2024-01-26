@@ -4,15 +4,11 @@ package org.mozilla.social.feed
 
 import android.content.res.Configuration
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
@@ -23,7 +19,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -34,13 +29,13 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flowOf
 import org.koin.androidx.compose.koinViewModel
-import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.designsystem.icon.mozillaLogo
+import org.mozilla.social.core.designsystem.icon.mozillaLogoInverse
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.ui.common.MoSoSurface
 import org.mozilla.social.core.ui.common.MoSoTab
 import org.mozilla.social.core.ui.common.MoSoTabRow
-import org.mozilla.social.core.ui.common.appbar.MoSoAppBar
+import org.mozilla.social.core.ui.common.appbar.MoSoTopBar
 import org.mozilla.social.core.ui.common.pullrefresh.PullRefreshLazyColumn
 import org.mozilla.social.core.ui.postcard.PostCardInteractions
 import org.mozilla.social.core.ui.postcard.PostCardUiState
@@ -90,28 +85,17 @@ private fun FeedScreen(
                 Modifier
                     .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
         ) {
-            MoSoAppBar(
+            MoSoTopBar(
                 scrollBehavior = topAppBarScrollBehavior,
                 title = {
                     Image(
-                        painter = mozillaLogo(),
+                        painter = if (isSystemInDarkTheme()) {
+                            mozillaLogoInverse()
+                        } else {
+                            mozillaLogo()
+                        },
                         contentDescription = "mozilla logo",
                     )
-                },
-                actions = {
-                    IconButton(
-                        modifier = Modifier
-                            .size(24.dp),
-                        onClick = { feedInteractions.onSearchClicked() }
-                    ) {
-                        Icon(
-                            modifier = Modifier.size(24.dp),
-                            painter = MoSoIcons.magnifyingGlass(),
-                            contentDescription = stringResource(R.string.search_button),
-                            tint = MoSoTheme.colors.iconPrimary
-                        )
-                    }
-                    Spacer(modifier = Modifier.width(8.dp))
                 },
             )
 
