@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "1a02b0a31486e6cbcdc6e024e1f7501a",
+    "identityHash": "989b4ac9baa718600b97bc55065f2a63",
     "entities": [
       {
         "tableName": "statuses",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`statusId` TEXT NOT NULL, `uri` TEXT NOT NULL, `createdAt` INTEGER NOT NULL, `accountId` TEXT NOT NULL, `content` TEXT NOT NULL, `visibility` TEXT NOT NULL, `isSensitive` INTEGER NOT NULL, `contentWarningText` TEXT NOT NULL, `mediaAttachments` TEXT NOT NULL, `mentions` TEXT NOT NULL, `hashTags` TEXT NOT NULL, `emojis` TEXT NOT NULL, `boostsCount` INTEGER NOT NULL, `favouritesCount` INTEGER NOT NULL, `repliesCount` INTEGER NOT NULL, `url` TEXT, `inReplyToId` TEXT, `inReplyToAccountId` TEXT, `inReplyToAccountName` TEXT, `boostedStatusId` TEXT, `boostedStatusAccountId` TEXT, `boostedPollId` TEXT, `pollId` TEXT, `card` TEXT, `language` TEXT, `plainText` TEXT, `isFavorited` INTEGER, `isBoosted` INTEGER, `isMuted` INTEGER, `isBookmarked` INTEGER, `isPinned` INTEGER, `isBeingDeleted` INTEGER NOT NULL DEFAULT false, `application_name` TEXT, `application_website` TEXT, `application_vapidKey` TEXT, `application_clientId` TEXT, `application_clientSecret` TEXT, PRIMARY KEY(`statusId`), FOREIGN KEY(`accountId`) REFERENCES `accounts`(`accountId`) ON UPDATE CASCADE ON DELETE CASCADE , FOREIGN KEY(`pollId`) REFERENCES `polls`(`pollId`) ON UPDATE CASCADE ON DELETE CASCADE , FOREIGN KEY(`boostedStatusId`) REFERENCES `statuses`(`statusId`) ON UPDATE CASCADE ON DELETE CASCADE , FOREIGN KEY(`boostedStatusAccountId`) REFERENCES `accounts`(`accountId`) ON UPDATE CASCADE ON DELETE CASCADE , FOREIGN KEY(`boostedPollId`) REFERENCES `polls`(`pollId`) ON UPDATE CASCADE ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`statusId` TEXT NOT NULL, `uri` TEXT NOT NULL, `createdAt` INTEGER NOT NULL, `accountId` TEXT NOT NULL, `content` TEXT NOT NULL, `visibility` TEXT NOT NULL, `isSensitive` INTEGER NOT NULL, `contentWarningText` TEXT NOT NULL, `mediaAttachments` TEXT NOT NULL, `mentions` TEXT NOT NULL, `hashTags` TEXT NOT NULL, `emojis` TEXT NOT NULL, `boostsCount` INTEGER NOT NULL, `favouritesCount` INTEGER NOT NULL, `repliesCount` INTEGER NOT NULL, `url` TEXT, `inReplyToId` TEXT, `inReplyToAccountId` TEXT, `inReplyToAccountName` TEXT, `boostedStatusId` TEXT, `boostedStatusAccountId` TEXT, `boostedPollId` TEXT, `pollId` TEXT, `card` TEXT, `language` TEXT, `plainText` TEXT, `isFavorited` INTEGER, `isBoosted` INTEGER, `isMuted` INTEGER, `isBookmarked` INTEGER, `isPinned` INTEGER, `isBeingDeleted` INTEGER NOT NULL, `application_name` TEXT, `application_website` TEXT, `application_vapidKey` TEXT, `application_clientId` TEXT, `application_clientSecret` TEXT, PRIMARY KEY(`statusId`), FOREIGN KEY(`accountId`) REFERENCES `accounts`(`accountId`) ON UPDATE CASCADE ON DELETE CASCADE , FOREIGN KEY(`pollId`) REFERENCES `polls`(`pollId`) ON UPDATE CASCADE ON DELETE CASCADE , FOREIGN KEY(`boostedStatusId`) REFERENCES `statuses`(`statusId`) ON UPDATE CASCADE ON DELETE CASCADE , FOREIGN KEY(`boostedStatusAccountId`) REFERENCES `accounts`(`accountId`) ON UPDATE CASCADE ON DELETE CASCADE , FOREIGN KEY(`boostedPollId`) REFERENCES `polls`(`pollId`) ON UPDATE CASCADE ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "statusId",
@@ -198,8 +198,7 @@
             "fieldPath": "isBeingDeleted",
             "columnName": "isBeingDeleted",
             "affinity": "INTEGER",
-            "notNull": true,
-            "defaultValue": "false"
+            "notNull": true
           },
           {
             "fieldPath": "application.name",
@@ -770,7 +769,7 @@
       },
       {
         "tableName": "accountTimeline",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`statusId` TEXT NOT NULL, `accountId` TEXT NOT NULL, `timelineType` TEXT NOT NULL DEFAULT 'POSTS', PRIMARY KEY(`statusId`, `accountId`, `timelineType`), FOREIGN KEY(`statusId`) REFERENCES `statuses`(`statusId`) ON UPDATE CASCADE ON DELETE CASCADE , FOREIGN KEY(`accountId`) REFERENCES `accounts`(`accountId`) ON UPDATE CASCADE ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`statusId` TEXT NOT NULL, `accountId` TEXT NOT NULL, `timelineType` TEXT NOT NULL, PRIMARY KEY(`statusId`, `accountId`, `timelineType`), FOREIGN KEY(`statusId`) REFERENCES `statuses`(`statusId`) ON UPDATE CASCADE ON DELETE CASCADE , FOREIGN KEY(`accountId`) REFERENCES `accounts`(`accountId`) ON UPDATE CASCADE ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "statusId",
@@ -788,8 +787,7 @@
             "fieldPath": "timelineType",
             "columnName": "timelineType",
             "affinity": "TEXT",
-            "notNull": true,
-            "defaultValue": "'POSTS'"
+            "notNull": true
           }
         ],
         "primaryKey": {
@@ -988,7 +986,7 @@
       },
       {
         "tableName": "followers",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`accountId` TEXT NOT NULL, `followerAccountId` TEXT NOT NULL, `position` INTEGER NOT NULL DEFAULT 0, PRIMARY KEY(`accountId`, `followerAccountId`), FOREIGN KEY(`followerAccountId`) REFERENCES `accounts`(`accountId`) ON UPDATE CASCADE ON DELETE CASCADE , FOREIGN KEY(`followerAccountId`) REFERENCES `relationships`(`accountId`) ON UPDATE CASCADE ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`accountId` TEXT NOT NULL, `followerAccountId` TEXT NOT NULL, `position` INTEGER NOT NULL, PRIMARY KEY(`accountId`, `followerAccountId`), FOREIGN KEY(`followerAccountId`) REFERENCES `accounts`(`accountId`) ON UPDATE CASCADE ON DELETE CASCADE , FOREIGN KEY(`followerAccountId`) REFERENCES `relationships`(`accountId`) ON UPDATE CASCADE ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "accountId",
@@ -1006,8 +1004,7 @@
             "fieldPath": "position",
             "columnName": "position",
             "affinity": "INTEGER",
-            "notNull": true,
-            "defaultValue": "0"
+            "notNull": true
           }
         ],
         "primaryKey": {
@@ -1055,7 +1052,7 @@
       },
       {
         "tableName": "followings",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`accountId` TEXT NOT NULL, `followeeAccountId` TEXT NOT NULL, `position` INTEGER NOT NULL DEFAULT 0, PRIMARY KEY(`accountId`, `followeeAccountId`), FOREIGN KEY(`followeeAccountId`) REFERENCES `accounts`(`accountId`) ON UPDATE CASCADE ON DELETE CASCADE , FOREIGN KEY(`followeeAccountId`) REFERENCES `relationships`(`accountId`) ON UPDATE CASCADE ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`accountId` TEXT NOT NULL, `followeeAccountId` TEXT NOT NULL, `position` INTEGER NOT NULL, PRIMARY KEY(`accountId`, `followeeAccountId`), FOREIGN KEY(`followeeAccountId`) REFERENCES `accounts`(`accountId`) ON UPDATE CASCADE ON DELETE CASCADE , FOREIGN KEY(`followeeAccountId`) REFERENCES `relationships`(`accountId`) ON UPDATE CASCADE ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "accountId",
@@ -1073,8 +1070,7 @@
             "fieldPath": "position",
             "columnName": "position",
             "affinity": "INTEGER",
-            "notNull": true,
-            "defaultValue": "0"
+            "notNull": true
           }
         ],
         "primaryKey": {
@@ -1496,7 +1492,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '1a02b0a31486e6cbcdc6e024e1f7501a')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '989b4ac9baa718600b97bc55065f2a63')"
     ]
   }
 }

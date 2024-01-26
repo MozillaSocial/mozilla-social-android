@@ -40,7 +40,6 @@ data class Followee(
     val accountId: String,
     @ColumnInfo(index = true)
     val followeeAccountId: String,
-    @ColumnInfo(defaultValue = "0")
     val position: Int,
 )
 
