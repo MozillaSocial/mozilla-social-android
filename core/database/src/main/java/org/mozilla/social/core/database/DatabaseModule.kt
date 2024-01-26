@@ -11,7 +11,9 @@ val databaseModule =
                 androidContext(),
                 SocialDatabase::class.java,
                 "database-social",
-            ).build()
+            )
+                .fallbackToDestructiveMigrationOnDowngrade()
+                .build()
         }
 
         single { get<SocialDatabase>().accountsDao() }

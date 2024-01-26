@@ -90,20 +90,42 @@ interface StatusDao : BaseDao<DatabaseStatus> {
     @Query(
         "DELETE FROM statuses " +
         "WHERE statusId NOT IN " +
-        "(" +
-            "SELECT statusId FROM favoritesTimeline " +
+        "( " +
+            "SELECT statusId FROM statuses " +
+            "WHERE statusId IN " +
+            "(" +
+                "SELECT statusId FROM favoritesTimeline " +
+                "UNION " +
+                "SELECT statusId FROM homeTimeline " +
+                "UNION " +
+                "SELECT statusId FROM localTimeline " +
+                "UNION " +
+                "SELECT statusId FROM hashTagTimeline " +
+                "UNION " +
+                "SELECT statusId FROM federatedTimeline " +
+                "UNION " +
+                "SELECT statusId FROM accountTimeline " +
+                "UNION " +
+                "SELECT statusId FROM notifications" +
+            ") " +
             "UNION " +
-            "SELECT statusId FROM homeTimeline " +
-            "UNION " +
-            "SELECT statusId FROM localTimeline " +
-            "UNION " +
-            "SELECT statusId FROM hashTagTimeline " +
-            "UNION " +
-            "SELECT statusId FROM federatedTimeline " +
-            "UNION " +
-            "SELECT statusId FROM accountTimeline " +
-            "UNION " +
-            "SELECT statusId FROM notifications" +
+            "SELECT boostedStatusId FROM statuses " +
+            "WHERE statusId IN " +
+            "(" +
+                "SELECT statusId FROM favoritesTimeline " +
+                "UNION " +
+                "SELECT statusId FROM homeTimeline " +
+                "UNION " +
+                "SELECT statusId FROM localTimeline " +
+                "UNION " +
+                "SELECT statusId FROM hashTagTimeline " +
+                "UNION " +
+                "SELECT statusId FROM federatedTimeline " +
+                "UNION " +
+                "SELECT statusId FROM accountTimeline " +
+                "UNION " +
+                "SELECT statusId FROM notifications" +
+            ") " +
         ")"
     )
     suspend fun deleteOldStatuses()
