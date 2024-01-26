@@ -4,6 +4,7 @@ import androidx.room.DeleteColumn
 import androidx.room.DeleteTable
 import androidx.room.RenameColumn
 import androidx.room.migration.AutoMigrationSpec
+import androidx.sqlite.db.SupportSQLiteDatabase
 
 object DatabaseMigrations {
     @RenameColumn(
@@ -230,4 +231,14 @@ object DatabaseMigrations {
         ),
     )
     class Schema23to24 : AutoMigrationSpec
+
+    class Schema25to26 : AutoMigrationSpec {
+        // added foreign keys to statuses a while back but didn't clear out the statuses
+        // which causes a crash in some situations
+        override fun onPostMigrate(db: SupportSQLiteDatabase) {
+            db.execSQL(
+                "DELETE FROM statuses"
+            )
+        }
+    }
 }

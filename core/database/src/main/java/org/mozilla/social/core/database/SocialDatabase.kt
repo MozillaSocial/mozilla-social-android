@@ -81,7 +81,7 @@ import org.mozilla.social.core.database.model.entities.statusCollections.Searche
         MentionListNotification::class,
         FollowListNotification::class,
     ],
-    version = 25,
+    version = 26,
     autoMigrations = [
         AutoMigration(1, 2, DatabaseMigrations.Schema1to2::class),
         AutoMigration(2, 3),
@@ -107,6 +107,7 @@ import org.mozilla.social.core.database.model.entities.statusCollections.Searche
         AutoMigration(22, 23),
         AutoMigration(23, 24, DatabaseMigrations.Schema23to24::class),
         AutoMigration(24, 25),
+        AutoMigration(25, 26, DatabaseMigrations.Schema25to26::class),
     ],
     exportSchema = true,
 )
