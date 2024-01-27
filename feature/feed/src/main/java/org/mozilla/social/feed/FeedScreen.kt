@@ -76,9 +76,6 @@ private fun FeedScreen(
             rememberTopAppBarState(),
         ),
 ) {
-    val selectedTimelineType by timelineTypeFlow.collectAsStateWithLifecycle()
-    val context = LocalContext.current
-
     MoSoSurface {
         Column(
             modifier =
@@ -100,61 +97,87 @@ private fun FeedScreen(
                 },
             )
 
-            MoSoTabRow(
-                selectedTabIndex = selectedTimelineType.ordinal,
-                divider = {},
-            ) {
-                TimelineType.entries.forEach { timelineType ->
-                    MoSoTab(
-                        modifier =
-                            Modifier
-                                .height(40.dp),
-                        selected = selectedTimelineType == timelineType,
-                        onClick = { feedInteractions.onTabClicked(timelineType) },
-                        content = {
-                            Text(
-                                text = timelineType.tabTitle.build(context),
-                                style = MoSoTheme.typography.labelMedium,
-                            )
-                        },
-                    )
-                }
-            }
-
-            val forYouScrollState = rememberLazyListState()
-            val localScrollState = rememberLazyListState()
-            val federatedScrollState = rememberLazyListState()
-
-            val homeFeedPagingItems = homeFeed.collectAsLazyPagingItems()
-            val localFeedPagingItems = localFeed.collectAsLazyPagingItems()
-            val federatedPagingItems = federatedFeed.collectAsLazyPagingItems()
-
-            PullRefreshLazyColumn(
-                lazyPagingItems = when (selectedTimelineType) {
-                    TimelineType.FOR_YOU -> homeFeedPagingItems
-                    TimelineType.LOCAL -> localFeedPagingItems
-                    TimelineType.FEDERATED -> federatedPagingItems
-                },
-                listState = when (selectedTimelineType) {
-                    TimelineType.FOR_YOU -> forYouScrollState
-                    TimelineType.LOCAL -> localScrollState
-                    TimelineType.FEDERATED -> federatedScrollState
-                },
-            ) {
-                postListContent(
-                    lazyPagingItems = when (selectedTimelineType) {
-                        TimelineType.FOR_YOU -> homeFeedPagingItems
-                        TimelineType.LOCAL -> localFeedPagingItems
-                        TimelineType.FEDERATED -> federatedPagingItems
-                    },
-                    postCardInteractions = when (selectedTimelineType) {
-                        TimelineType.FOR_YOU -> homePostCardInteractions
-                        TimelineType.LOCAL -> localPostCardInteractions
-                        TimelineType.FEDERATED -> federatedPostCardInteractions
-                    },
-                )
-            }
+            MainContent(
+                homeFeed = homeFeed,
+                localFeed = localFeed,
+                federatedFeed = federatedFeed,
+                timelineTypeFlow = timelineTypeFlow,
+                homePostCardInteractions = homePostCardInteractions,
+                localPostCardInteractions = localPostCardInteractions,
+                federatedPostCardInteractions = federatedPostCardInteractions,
+                feedInteractions = feedInteractions,
+            )
         }
+    }
+}
+
+@Composable
+private fun MainContent(
+    homeFeed: Flow<PagingData<PostCardUiState>>,
+    localFeed: Flow<PagingData<PostCardUiState>>,
+    federatedFeed: Flow<PagingData<PostCardUiState>>,
+    timelineTypeFlow: StateFlow<TimelineType>,
+    homePostCardInteractions: PostCardInteractions,
+    localPostCardInteractions: PostCardInteractions,
+    federatedPostCardInteractions: PostCardInteractions,
+    feedInteractions: FeedInteractions,
+) {
+    val selectedTimelineType by timelineTypeFlow.collectAsStateWithLifecycle()
+    val context = LocalContext.current
+
+    MoSoTabRow(
+        selectedTabIndex = selectedTimelineType.ordinal,
+        divider = {},
+    ) {
+        TimelineType.entries.forEach { timelineType ->
+            MoSoTab(
+                modifier =
+                Modifier
+                    .height(40.dp),
+                selected = selectedTimelineType == timelineType,
+                onClick = { feedInteractions.onTabClicked(timelineType) },
+                content = {
+                    Text(
+                        text = timelineType.tabTitle.build(context),
+                        style = MoSoTheme.typography.labelMedium,
+                    )
+                },
+            )
+        }
+    }
+
+    val forYouScrollState = rememberLazyListState()
+    val localScrollState = rememberLazyListState()
+    val federatedScrollState = rememberLazyListState()
+
+    val homeFeedPagingItems = homeFeed.collectAsLazyPagingItems()
+    val localFeedPagingItems = localFeed.collectAsLazyPagingItems()
+    val federatedPagingItems = federatedFeed.collectAsLazyPagingItems()
+
+    PullRefreshLazyColumn(
+        lazyPagingItems = when (selectedTimelineType) {
+            TimelineType.FOR_YOU -> homeFeedPagingItems
+            TimelineType.LOCAL -> localFeedPagingItems
+            TimelineType.FEDERATED -> federatedPagingItems
+        },
+        listState = when (selectedTimelineType) {
+            TimelineType.FOR_YOU -> forYouScrollState
+            TimelineType.LOCAL -> localScrollState
+            TimelineType.FEDERATED -> federatedScrollState
+        },
+    ) {
+        postListContent(
+            lazyPagingItems = when (selectedTimelineType) {
+                TimelineType.FOR_YOU -> homeFeedPagingItems
+                TimelineType.LOCAL -> localFeedPagingItems
+                TimelineType.FEDERATED -> federatedPagingItems
+            },
+            postCardInteractions = when (selectedTimelineType) {
+                TimelineType.FOR_YOU -> homePostCardInteractions
+                TimelineType.LOCAL -> localPostCardInteractions
+                TimelineType.FEDERATED -> federatedPostCardInteractions
+            },
+        )
     }
 }
 
