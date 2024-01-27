@@ -85,15 +85,16 @@ private fun FeedScreen(
                 Modifier
                     .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
         ) {
+            val mozillaLogo = if (isSystemInDarkTheme()) {
+                mozillaLogoInverse()
+            } else {
+                mozillaLogo()
+            }
             MoSoTopBar(
                 scrollBehavior = topAppBarScrollBehavior,
                 title = {
                     Image(
-                        painter = if (isSystemInDarkTheme()) {
-                            mozillaLogoInverse()
-                        } else {
-                            mozillaLogo()
-                        },
+                        painter = mozillaLogo,
                         contentDescription = "mozilla logo",
                     )
                 },
