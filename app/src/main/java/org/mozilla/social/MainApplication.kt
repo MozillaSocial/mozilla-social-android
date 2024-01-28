@@ -34,6 +34,7 @@ import org.mozilla.social.feature.thread.threadModule
 import org.mozilla.social.feed.feedModule
 import org.mozilla.social.post.newPostModule
 import org.mozilla.social.search.searchModule
+import org.mozilla.social.utils.SentryManager
 import timber.log.Timber
 
 class MainApplication : Application(), ImageLoaderFactory {
@@ -44,24 +45,16 @@ class MainApplication : Application(), ImageLoaderFactory {
     override fun onCreate() {
         super.onCreate()
         initializeAppVersion()
-        initializeSentryAndTimber()
+        SentryManager.initialize(this)
+        initializeTimber()
         initializeKoin()
         initializeAnalytics()
         initializeAuthCredentialInterceptor()
     }
 
-    private fun initializeSentryAndTimber() {
-        SentryAndroid.init(this) { options ->
-            if (!BuildConfig.DEBUG) {
-                options.addIntegration(
-                    SentryTimberIntegration(
-                        minEventLevel = SentryLevel.ERROR,
-                        minBreadcrumbLevel = SentryLevel.INFO
-                    )
-                )
-            } else {
-                Timber.plant(Timber.DebugTree())
-            }
+    private fun initializeTimber() {
+        if (BuildConfig.DEBUG) {
+            Timber.plant(Timber.DebugTree())
         }
     }
 
