@@ -3,6 +3,7 @@ package org.mozilla.social.utils
 import android.content.Context
 import io.sentry.SentryLevel
 import io.sentry.android.core.SentryAndroid
+import io.sentry.android.timber.SentryTimberIntegration
 import org.mozilla.social.BuildConfig
 
 object SentryManager {
@@ -21,6 +22,12 @@ object SentryManager {
                 isAttachViewHierarchy = true
                 sampleRate = 1.0
                 profilesSampleRate = 1.0
+                addIntegration(
+                    SentryTimberIntegration(
+                        minEventLevel = SentryLevel.ERROR,
+                        minBreadcrumbLevel = SentryLevel.INFO
+                    )
+                )
             }
         }
     }
