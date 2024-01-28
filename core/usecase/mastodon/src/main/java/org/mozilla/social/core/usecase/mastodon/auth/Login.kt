@@ -2,6 +2,7 @@ package org.mozilla.social.core.usecase.mastodon.auth
 
 import android.content.Intent
 import okhttp3.HttpUrl
+import okhttp3.HttpUrl.Companion.toHttpUrl
 import org.mozilla.social.common.annotations.PreferUseCase
 import org.mozilla.social.core.analytics.Analytics
 import org.mozilla.social.core.datastore.UserPreferencesDatastore
@@ -34,7 +35,8 @@ class Login(
     @OptIn(PreferUseCase::class)
     suspend operator fun invoke(domain: String) {
         try {
-            userPreferencesDatastore.saveDomain(domain)
+            val host = extractHost(domain)
+            userPreferencesDatastore.saveDomain(host)
             val application =
                 appRepository.createApplication(
                     clientName = CLIENT_NAME,
@@ -46,7 +48,7 @@ class Login(
             openLink(
                 HttpUrl.Builder()
                     .scheme(HTTPS)
-                    .host(domain)
+                    .host(host)
                     .addPathSegments(OAUTH_AUTHORIZE)
                     .addQueryParameter(RESPONSE_TYPE_QUERY_PARAM, CODE)
                     .addQueryParameter(REDIRECT_URI_QUERY_PARAM, AUTH_SCHEME)
@@ -102,6 +104,17 @@ class Login(
         analytics.setMastodonAccountHandle(account.username)
         clientId = null
         clientSecret = null
+    }
+
+    private fun extractHost(domain: String): String {
+        return buildString {
+            append("https://")
+            append(
+                domain
+                    .substringAfter("http://")
+                    .substringAfter("https://")
+            )
+        }.toHttpUrl().host
     }
 
     companion object {
