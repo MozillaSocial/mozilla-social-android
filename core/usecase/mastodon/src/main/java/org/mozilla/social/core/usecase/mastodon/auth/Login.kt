@@ -30,12 +30,12 @@ class Login(
     private var clientSecret: String? = null
 
     /**
-     * When a  logging in by registering this client with the given domain
+     * When a logging in by registering this client with the given domain
      */
     @OptIn(PreferUseCase::class)
-    suspend operator fun invoke(domain: String) {
+    suspend operator fun invoke(url: String) {
         try {
-            val host = extractHost(domain)
+            val host = extractHost(url)
             userPreferencesDatastore.saveDomain(host)
             val application =
                 appRepository.createApplication(
