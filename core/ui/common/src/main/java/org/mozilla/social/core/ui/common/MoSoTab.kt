@@ -9,6 +9,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -46,7 +47,6 @@ import kotlinx.coroutines.launch
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.ui.common.TabRowDefaults.tabIndicatorOffset
 import org.mozilla.social.core.ui.common.divider.MoSoDivider
-import org.mozilla.social.core.ui.common.utils.getMaxWidthInt
 
 @Composable
 fun MoSoTabRow(
@@ -80,83 +80,96 @@ fun MoSoTabRow(
                 coroutineScope = coroutineScope
             )
         }
-        val maxWidth = getMaxWidthInt()
 
-        SubcomposeLayout(
-            Modifier
-                .fillMaxWidth()
-                .wrapContentSize(align = Alignment.CenterStart)
-                .horizontalScroll(scrollState)
-                .selectableGroup()
-                .clipToBounds()
-        ) { constraints ->
-            var minTabWidth = ScrollableTabRowMinimumTabWidth.roundToPx()
+        BoxWithConstraints {
+            SubcomposeLayout(
+                Modifier
+                    .fillMaxWidth()
+                    .wrapContentSize(align = Alignment.CenterStart)
+                    .horizontalScroll(scrollState)
+                    .selectableGroup()
+                    .clipToBounds()
+            ) { constraints ->
+                val tabMeasurables = subcompose(TabSlots.Tabs, tabs)
 
-            val tabMeasurables = subcompose(TabSlots.Tabs, tabs)
+                val minTabWidth = calculateTabMinWidth(
+                    tabWidthValuesPx = tabMeasurables
+                        .map { it.maxIntrinsicWidth(Constraints.Infinity) },
+                    containerWidthPx = maxWidth.roundToPx()
+                ) ?: ScrollableTabRowMinimumTabWidth.roundToPx()
 
-            val tabsWidth = tabMeasurables.sumOf { it.maxIntrinsicWidth(Constraints.Infinity) }
-
-            if (tabsWidth < maxWidth) {
-                minTabWidth = maxWidth / tabMeasurables.size
-            }
-
-            val layoutHeight = tabMeasurables.fold(initial = 0) { curr, measurable ->
-                maxOf(curr, measurable.maxIntrinsicHeight(Constraints.Infinity))
-            }
-
-            val tabConstraints = constraints.copy(
-                minWidth = minTabWidth,
-                minHeight = layoutHeight,
-                maxHeight = layoutHeight,
-            )
-            val tabPlaceables = tabMeasurables
-                .map { it.measure(tabConstraints) }
-
-            val layoutWidth = tabPlaceables.fold(initial = 0) { curr, measurable ->
-                curr + measurable.width
-            }
-
-            // Position the children.
-            layout(layoutWidth, layoutHeight) {
-                // Place the tabs
-                val tabPositions = mutableListOf<TabPosition>()
-                var left = 0
-                tabPlaceables.forEach {
-                    it.placeRelative(left, 0)
-                    tabPositions.add(TabPosition(left = left.toDp(), width = it.width.toDp()))
-                    left += it.width
+                val layoutHeight = tabMeasurables.fold(initial = 0) { curr, measurable ->
+                    maxOf(curr, measurable.maxIntrinsicHeight(Constraints.Infinity))
                 }
 
-                // The divider is measured with its own height, and width equal to the total width
-                // of the tab row, and then placed on top of the tabs.
-                subcompose(TabSlots.Divider, divider).forEach {
-                    val placeable = it.measure(
-                        constraints.copy(
-                            minHeight = 0,
-                            minWidth = layoutWidth,
-                            maxWidth = layoutWidth
-                        )
-                    )
-                    placeable.placeRelative(0, layoutHeight - placeable.height)
-                }
-
-                // The indicator container is measured to fill the entire space occupied by the tab
-                // row, and then placed on top of the divider.
-                subcompose(TabSlots.Indicator) {
-                    indicator(tabPositions)
-                }.forEach {
-                    it.measure(Constraints.fixed(layoutWidth, layoutHeight)).placeRelative(0, 0)
-                }
-
-                scrollableTabData.onLaidOut(
-                    density = this@SubcomposeLayout,
-                    edgeOffset = 0,
-                    tabPositions = tabPositions,
-                    selectedTab = selectedTabIndex
+                val tabConstraints = constraints.copy(
+                    minWidth = minTabWidth,
+                    minHeight = layoutHeight,
+                    maxHeight = layoutHeight,
                 )
+                val tabPlaceables = tabMeasurables
+                    .map { it.measure(tabConstraints) }
+
+                val layoutWidth = tabPlaceables.fold(initial = 0) { curr, measurable ->
+                    curr + measurable.width
+                }
+
+                // Position the children.
+                layout(layoutWidth, layoutHeight) {
+                    // Place the tabs
+                    val tabPositions = mutableListOf<TabPosition>()
+                    var left = 0
+                    tabPlaceables.forEach {
+                        it.placeRelative(left, 0)
+                        tabPositions.add(TabPosition(left = left.toDp(), width = it.width.toDp()))
+                        left += it.width
+                    }
+
+                    // The divider is measured with its own height, and width equal to the total width
+                    // of the tab row, and then placed on top of the tabs.
+                    subcompose(TabSlots.Divider, divider).forEach {
+                        val placeable = it.measure(
+                            constraints.copy(
+                                minHeight = 0,
+                                minWidth = layoutWidth,
+                                maxWidth = layoutWidth
+                            )
+                        )
+                        placeable.placeRelative(0, layoutHeight - placeable.height)
+                    }
+
+                    // The indicator container is measured to fill the entire space occupied by the tab
+                    // row, and then placed on top of the divider.
+                    subcompose(TabSlots.Indicator) {
+                        indicator(tabPositions)
+                    }.forEach {
+                        it.measure(Constraints.fixed(layoutWidth, layoutHeight)).placeRelative(0, 0)
+                    }
+
+                    scrollableTabData.onLaidOut(
+                        density = this@SubcomposeLayout,
+                        edgeOffset = 0,
+                        tabPositions = tabPositions,
+                        selectedTab = selectedTabIndex
+                    )
+                }
             }
         }
     }
+}
+
+private fun calculateTabMinWidth(
+    tabWidthValuesPx: List<Int>,
+    containerWidthPx: Int,
+): Int? = if (tabWidthValuesPx.sum() < containerWidthPx) {
+    val equalWidth = containerWidthPx / tabWidthValuesPx.size
+    val valuesOver = tabWidthValuesPx.filter { it >= equalWidth }.sum()
+    val valuesUnder = tabWidthValuesPx.filter { it < equalWidth }
+    val numberOfValuesUnder = valuesUnder.size
+    val remainingWidth = containerWidthPx - valuesOver
+    remainingWidth / numberOfValuesUnder
+} else {
+    null
 }
 
 /**
@@ -364,6 +377,60 @@ private fun TabRowPreview() {
             }
             MoSoTab(selected = false, onClick = { /*TODO*/ }) {
                 Text(text = "test2")
+            }
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun TabRowPreview2() {
+    MoSoTheme {
+        MoSoTabRow(selectedTabIndex = 0) {
+            MoSoTab(selected = true, onClick = { /*TODO*/ }) {
+                Text(text = "test")
+            }
+            MoSoTab(selected = false, onClick = { /*TODO*/ }) {
+                Text(text = "test2")
+            }
+            MoSoTab(selected = false, onClick = { /*TODO*/ }) {
+                Text(text = "test and stuff 2")
+            }
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun TabRowPreview3() {
+    MoSoTheme {
+        MoSoTabRow(selectedTabIndex = 0) {
+            MoSoTab(selected = true, onClick = { /*TODO*/ }) {
+                Text(text = "test")
+            }
+            MoSoTab(selected = false, onClick = { /*TODO*/ }) {
+                Text(text = "test2")
+            }
+            MoSoTab(selected = false, onClick = { /*TODO*/ }) {
+                Text(text = "test and some cool stuff that I like a lot")
+            }
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun TabRowPreview4() {
+    MoSoTheme {
+        MoSoTabRow(selectedTabIndex = 0) {
+            MoSoTab(selected = true, onClick = { /*TODO*/ }) {
+                Text(text = "test")
+            }
+            MoSoTab(selected = false, onClick = { /*TODO*/ }) {
+                Text(text = "test2")
+            }
+            MoSoTab(selected = false, onClick = { /*TODO*/ }) {
+                Text(text = "test and some cool stuff")
             }
         }
     }
