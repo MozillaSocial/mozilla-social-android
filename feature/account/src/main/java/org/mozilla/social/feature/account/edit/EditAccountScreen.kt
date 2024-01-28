@@ -46,6 +46,7 @@ import org.mozilla.social.core.ui.common.MoSoSurface
 import org.mozilla.social.core.ui.common.TransparentNoTouchOverlay
 import org.mozilla.social.core.ui.common.appbar.MoSoCloseableTopAppBar
 import org.mozilla.social.core.ui.common.button.MoSoButton
+import org.mozilla.social.core.ui.common.button.MoSoButtonHeight
 import org.mozilla.social.core.ui.common.divider.MoSoDivider
 import org.mozilla.social.core.ui.common.error.GenericError
 import org.mozilla.social.core.ui.common.loading.MaxSizeLoading
@@ -90,9 +91,9 @@ fun EditAccountScreen(
                 actions = {
                     if (uiState is Resource.Loaded) {
                         MoSoButton(
-                            modifier =
-                                Modifier
-                                    .padding(8.dp),
+                            modifier = Modifier
+                                .padding(8.dp)
+                                .height(MoSoButtonHeight.xs),
                             onClick = { editAccountInteractions.onSaveClicked() },
                         ) {
                             Text(text = stringResource(id = R.string.edit_account_save_button))

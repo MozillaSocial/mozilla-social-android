@@ -190,10 +190,16 @@ interface MoSoButtonTheme {
     fun elevation(): ButtonElevation? = MoSoButtonDefaults.buttonElevation()
 }
 
+object MoSoButtonHeight {
+    val default = 48.dp
+    val sm = 40.dp
+    val xs = 34.dp
+}
+
 object MoSoButtonDefaults {
 
     private val ButtonHorizontalPadding = 24.dp
-    private val ButtonVerticalPadding = 14.dp
+    private val ButtonVerticalPadding = 0.dp
 
     val ContentPadding =
         PaddingValues(
