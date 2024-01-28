@@ -51,6 +51,7 @@ import org.mozilla.social.core.ui.common.divider.MoSoDivider
 import org.mozilla.social.core.ui.common.error.GenericError
 import org.mozilla.social.core.ui.common.loading.MaxSizeLoading
 import org.mozilla.social.core.ui.common.text.MoSoTextField
+import org.mozilla.social.core.ui.common.text.SmallTextLabel
 import org.mozilla.social.feature.account.Header
 import org.mozilla.social.feature.account.R
 
@@ -96,7 +97,7 @@ fun EditAccountScreen(
                                 .height(MoSoButtonHeight.xs),
                             onClick = { editAccountInteractions.onSaveClicked() },
                         ) {
-                            Text(text = stringResource(id = R.string.edit_account_save_button))
+                            SmallTextLabel(text = stringResource(id = R.string.edit_account_save_button))
                         }
                     }
                 },

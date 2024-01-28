@@ -68,6 +68,7 @@ import org.mozilla.social.core.ui.common.button.MoSoButtonHeight
 import org.mozilla.social.core.ui.common.dropdown.VisibilityDropDownButton
 import org.mozilla.social.core.ui.common.media.MediaUpload
 import org.mozilla.social.core.ui.common.text.MoSoTextField
+import org.mozilla.social.core.ui.common.text.SmallTextLabel
 import org.mozilla.social.core.ui.common.transparentTextFieldColors
 import org.mozilla.social.core.ui.common.utils.getWindowHeightClass
 import org.mozilla.social.feature.post.R
@@ -324,10 +325,7 @@ private fun PostButton(
         onClick = onPostClicked,
         enabled = sendButtonEnabled
     ) {
-        Text(
-            text = stringResource(id = R.string.post),
-            style = MoSoTheme.typography.labelSmall,
-        )
+        SmallTextLabel(text = stringResource(id = R.string.post))
     }
 }
 
