@@ -13,63 +13,63 @@ class TextFieldValueExtensionsTest {
                 text = "@test",
                 selection = TextRange(3),
             )
-        assertEquals("test", textFieldValue.accountText())
+        assertEquals("test", textFieldValue.findAccountAtCursor())
 
         textFieldValue =
             TextFieldValue(
                 text = "@test",
                 selection = TextRange(0),
             )
-        assertEquals("test", textFieldValue.accountText())
+        assertEquals("test", textFieldValue.findAccountAtCursor())
 
         textFieldValue =
             TextFieldValue(
                 text = "@test",
                 selection = TextRange(5),
             )
-        assertEquals("test", textFieldValue.accountText())
+        assertEquals("test", textFieldValue.findAccountAtCursor())
 
         textFieldValue =
             TextFieldValue(
                 text = "@test ",
                 selection = TextRange(6),
             )
-        assertEquals(null, textFieldValue.accountText())
+        assertEquals(null, textFieldValue.findAccountAtCursor())
 
         textFieldValue =
             TextFieldValue(
                 text = " @test",
                 selection = TextRange(0),
             )
-        assertEquals(null, textFieldValue.accountText())
+        assertEquals(null, textFieldValue.findAccountAtCursor())
 
         textFieldValue =
             TextFieldValue(
                 text = "foo @test",
                 selection = TextRange(0),
             )
-        assertEquals(null, textFieldValue.accountText())
+        assertEquals(null, textFieldValue.findAccountAtCursor())
 
         textFieldValue =
             TextFieldValue(
                 text = "foo @test",
                 selection = TextRange(3),
             )
-        assertEquals(null, textFieldValue.accountText())
+        assertEquals(null, textFieldValue.findAccountAtCursor())
 
         textFieldValue =
             TextFieldValue(
                 text = "foo @test",
                 selection = TextRange(4),
             )
-        assertEquals("test", textFieldValue.accountText())
+        assertEquals("test", textFieldValue.findAccountAtCursor())
 
         textFieldValue =
             TextFieldValue(
                 text = "@test bar",
                 selection = TextRange(6),
             )
-        assertEquals(null, textFieldValue.accountText())
+        assertEquals(null, textFieldValue.findAccountAtCursor())
 
         textFieldValue =
             TextFieldValue(
@@ -78,7 +78,7 @@ class TextFieldValueExtensionsTest {
                         "lala",
                 selection = TextRange(3),
             )
-        assertEquals("test", textFieldValue.accountText())
+        assertEquals("test", textFieldValue.findAccountAtCursor())
 
         textFieldValue =
             TextFieldValue(
@@ -87,7 +87,7 @@ class TextFieldValueExtensionsTest {
                         "lala",
                 selection = TextRange(2),
             )
-        assertEquals("test", textFieldValue.accountText())
+        assertEquals("test", textFieldValue.findAccountAtCursor())
 
         textFieldValue =
             TextFieldValue(
@@ -96,7 +96,7 @@ class TextFieldValueExtensionsTest {
                         "@test",
                 selection = TextRange(9),
             )
-        assertEquals("test", textFieldValue.accountText())
+        assertEquals("test", textFieldValue.findAccountAtCursor())
     }
 
     @Test

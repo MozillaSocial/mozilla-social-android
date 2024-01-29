@@ -11,12 +11,12 @@ import kotlin.math.min
 /**
  * @return the account string a user is typing if they are typing one, otherwise null
  */
-fun TextFieldValue.accountText(): String? = findSymbolTextAtCursor('@')
+fun TextFieldValue.findAccountAtCursor(): String? = findSymbolTextAtCursor('@')
 
 /**
  * @return the hashtag string a user is typing if they are typing one, otherwise null
  */
-fun TextFieldValue.hashtagText(): String? = findSymbolTextAtCursor('#')
+fun TextFieldValue.findHashtagAtCursor(): String? = findSymbolTextAtCursor('#')
 
 /**
  * @return the string between a symbol and the cursor a user is typing if they are typing one, otherwise null
@@ -43,11 +43,23 @@ fun TextFieldValue.findSymbolTextAtCursor(symbol: Char): String? {
     }
 }
 
-fun TextFieldValue.replaceAccount(newText: String): TextFieldValue = replaceSymbolText('@', newText)
+fun TextFieldValue.replaceAccount(newText: String): TextFieldValue = replaceTextAfterSymbolAtCursor('@', newText)
 
-fun TextFieldValue.replaceHashtag(newText: String): TextFieldValue = replaceSymbolText('#', newText)
+fun TextFieldValue.replaceHashtag(newText: String): TextFieldValue = replaceTextAfterSymbolAtCursor('#', newText)
 
-fun TextFieldValue.replaceSymbolText(
+/**
+ * Copies the [TextFieldValue] and replaces the text after the symbol with the new text.
+ * For example, if your text field value looks like this:
+ * "I like #appl"
+ * And your cursor is right after the '#' character, and your new text is "apples", then the
+ * new text value of [TextFieldValue] will be:
+ * "I like #apples"
+ *
+ * @param symbol the symbol that acts as a starting position for replacing text
+ * @param newText the text that will replace the current text that is directly after the symbol
+ * @return a copy of the [TextFieldValue] with the replaced text
+ */
+fun TextFieldValue.replaceTextAfterSymbolAtCursor(
     symbol: Char,
     newText: String,
 ): TextFieldValue {
@@ -97,6 +109,20 @@ fun buildAnnotatedStringForAccountsAndHashtags(
     style: SpanStyle,
 ): AnnotatedString = buildAnnotatedStringWithSymbols(listOf('@', '#'), baseText, style)
 
+/**
+ * Styles a string based on a list of symbols.  The style will be applied to the symbols and
+ * the text directly following the symbols.
+ *
+ * For example, if you want to style hashtags, you include '#' in your symbols list.
+ * Then, if you text is:
+ * "I like #apples"
+ * The style will be applied to "#apples"
+ *
+ * @param symbols list of symbols you want your styled text to start with
+ * @param text the text you are styling
+ * @param style the style to be applied to the symbolized text
+ * @return an [AnnotatedString] with the applied style
+ */
 fun buildAnnotatedStringWithSymbols(
     symbols: List<Char>,
     text: String,
@@ -127,6 +153,9 @@ fun buildAnnotatedStringWithSymbols(
     }
 }
 
+/**
+ * @return the index of the first space or new line in the string that comes after the cursorIndex
+ */
 private fun getFirstSpaceOrNewLineIndexAfterCursor(
     text: String,
     cursorIndex: Int,
