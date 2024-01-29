@@ -22,12 +22,14 @@ object SentryManager {
                 isAttachViewHierarchy = true
                 sampleRate = 1.0
                 profilesSampleRate = 1.0
-                addIntegration(
-                    SentryTimberIntegration(
-                        minEventLevel = SentryLevel.ERROR,
-                        minBreadcrumbLevel = SentryLevel.INFO
+                if (!BuildConfig.DEBUG) {
+                    addIntegration(
+                        SentryTimberIntegration(
+                            minEventLevel = SentryLevel.ERROR,
+                            minBreadcrumbLevel = SentryLevel.INFO
+                        )
                     )
-                )
+                }
             }
         }
     }
