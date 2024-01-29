@@ -4,7 +4,6 @@ package org.mozilla.social.feed
 
 import android.content.res.Configuration
 import androidx.compose.foundation.background
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -31,7 +30,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flowOf
 import org.koin.androidx.compose.koinViewModel
 import org.mozilla.social.core.designsystem.icon.mozillaLogo
-import org.mozilla.social.core.designsystem.theme.FirefoxColor
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.ui.common.MoSoSurface
 import org.mozilla.social.core.ui.common.MoSoTab
@@ -87,20 +85,10 @@ private fun FeedScreen(
                 title = {
                     Icon(
                         modifier = Modifier
-                            .background(
-                                if (isSystemInDarkTheme()) {
-                                    FirefoxColor.White
-                                } else {
-                                    FirefoxColor.Black
-                                }
-                            ),
+                            .background(MoSoTheme.colors.logoBackground),
                         painter = mozillaLogo(),
                         contentDescription = "mozilla logo",
-                        tint = if (isSystemInDarkTheme()) {
-                            FirefoxColor.Black
-                        } else {
-                            FirefoxColor.White
-                        }
+                        tint = MoSoTheme.colors.logoForeground,
                     )
                 },
             )
