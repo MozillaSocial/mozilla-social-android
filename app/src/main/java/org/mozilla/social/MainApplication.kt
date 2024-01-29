@@ -34,7 +34,6 @@ import org.mozilla.social.feature.thread.threadModule
 import org.mozilla.social.feed.feedModule
 import org.mozilla.social.post.newPostModule
 import org.mozilla.social.search.searchModule
-import org.mozilla.social.utils.SentryManager
 import timber.log.Timber
 
 class MainApplication : Application(), ImageLoaderFactory {
@@ -45,14 +44,35 @@ class MainApplication : Application(), ImageLoaderFactory {
     override fun onCreate() {
         super.onCreate()
         initializeAppVersion()
-        SentryManager.initialize(this)
-        initializeTimber()
+        initializeTimberAndSentry()
         initializeKoin()
         initializeAnalytics()
         initializeAuthCredentialInterceptor()
     }
 
-    private fun initializeTimber() {
+    private fun initializeTimberAndSentry() {
+        SentryAndroid.init(this) { options ->
+            options.apply {
+                setDiagnosticLevel(SentryLevel.ERROR)
+                dsn = BuildConfig.sentryDsn
+                isDebug = BuildConfig.DEBUG
+                environment = BuildConfig.BUILD_TYPE
+                isEnableUserInteractionTracing = true
+                isAttachScreenshot = false
+                isAttachViewHierarchy = true
+                sampleRate = 1.0
+                profilesSampleRate = 1.0
+                if (!BuildConfig.DEBUG) {
+                    addIntegration(
+                        SentryTimberIntegration(
+                            minEventLevel = SentryLevel.ERROR,
+                            minBreadcrumbLevel = SentryLevel.INFO
+                        )
+                    )
+                }
+            }
+        }
+        // Timber is initialized in release builds via the Timber / Sentry integrations above ^
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
         }
