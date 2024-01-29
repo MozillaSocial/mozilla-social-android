@@ -146,7 +146,7 @@ private fun SearchScreen(
                             }
                         ) {
                             Icon(
-                                modifier = Modifier.size(16.dp),
+                                modifier = Modifier.size(MoSoIcons.Sizes.small),
                                 painter = MoSoIcons.x(),
                                 contentDescription = stringResource(id = R.string.clear_search),
                                 tint = MoSoTheme.colors.iconSecondary,
