@@ -163,11 +163,12 @@ private fun calculateTabMinWidth(
     containerWidthPx: Int,
 ): Int? = if (tabWidthValuesPx.sum() < containerWidthPx) {
     val equalWidth = containerWidthPx / tabWidthValuesPx.size
-    val valuesOver = tabWidthValuesPx.filter { it >= equalWidth }.sum()
+    val totalOfValuesOver = tabWidthValuesPx.filter { it >= equalWidth }.sum()
     val valuesUnder = tabWidthValuesPx.filter { it < equalWidth }
     val numberOfValuesUnder = valuesUnder.size
-    val remainingWidth = containerWidthPx - valuesOver
-    remainingWidth / numberOfValuesUnder
+    val remainingWidth = containerWidthPx - totalOfValuesOver
+    val averageRemainingWidth = remainingWidth / numberOfValuesUnder
+    averageRemainingWidth
 } else {
     null
 }
@@ -431,6 +432,39 @@ private fun TabRowPreview4() {
             }
             MoSoTab(selected = false, onClick = { /*TODO*/ }) {
                 Text(text = "test and some cool stuff")
+            }
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun TabRowPreview5() {
+    MoSoTheme {
+        MoSoTabRow(selectedTabIndex = 0) {
+            MoSoTab(selected = true, onClick = { /*TODO*/ }) {
+                Text(text = "test")
+            }
+            MoSoTab(selected = false, onClick = { /*TODO*/ }) {
+                Text(text = "test and stuff 2")
+            }
+            MoSoTab(selected = false, onClick = { /*TODO*/ }) {
+                Text(text = "test and some cool stuff")
+            }
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun TabRowPreview6() {
+    MoSoTheme {
+        MoSoTabRow(selectedTabIndex = 0) {
+            MoSoTab(selected = true, onClick = { /*TODO*/ }) {
+                Text(text = "test")
+            }
+            MoSoTab(selected = false, onClick = { /*TODO*/ }) {
+                Text(text = "test and some cool stuff its neat")
             }
         }
     }
