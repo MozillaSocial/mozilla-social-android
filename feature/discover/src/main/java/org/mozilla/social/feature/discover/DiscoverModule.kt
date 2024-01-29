@@ -1,6 +1,6 @@
 package org.mozilla.social.feature.discover
 
-import org.koin.androidx.viewmodel.dsl.viewModel
+import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.dsl.module
 import org.mozilla.social.common.commonModule
 import org.mozilla.social.core.analytics.analyticsModule
@@ -16,10 +16,5 @@ val discoverModule =
             analyticsModule,
         )
 
-        viewModel {
-            DiscoverViewModel(
-                get(),
-                get(),
-            )
-        }
+        viewModelOf(::DiscoverViewModel)
     }

@@ -125,6 +125,9 @@ object MoSoIcons {
     fun magnifyingGlass() = painterResource(id = R.drawable.magnifying_glass)
 
     @Composable
+    fun magnifyingGlassFill() = painterResource(id = R.drawable.magnifying_glass_fill)
+
+    @Composable
     fun monitorPlay() = painterResource(id = R.drawable.monitor_play)
 
     @Composable

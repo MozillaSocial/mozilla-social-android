@@ -69,13 +69,13 @@ fun MoSoSearchBar(
     val textColor = textStyle.color.takeOrElse {
         colors.textColor
     }
-    val mergedTextStyle = textStyle.merge(TextStyle(color = textColor))
+    val mergedTextStyle = textStyle.merge(MoSoTheme.typography.bodyMedium.merge(color = textColor))
 
     CompositionLocalProvider(LocalTextSelectionColors provides colors.selectionColors) {
         BasicTextField(
             value = query,
             modifier = modifier
-                .height(32.dp)
+                .height(36.dp)
                 .border(
                     width = 1.dp,
                     color =
@@ -168,6 +168,26 @@ private fun MoSoSearchBarPreview() {
     PreviewTheme {
         MoSoSearchBar(
             query = "",
+            onQueryChange = {},
+            onSearch = {},
+            trailingIcon = {
+                Icon(
+                    modifier = Modifier.size(16.dp),
+                    painter = MoSoIcons.x(),
+                    contentDescription = null,
+                    tint = MoSoTheme.colors.iconSecondary,
+                )
+            },
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun MoSoSearchBarPreview2() {
+    PreviewTheme {
+        MoSoSearchBar(
+            query = "test",
             onQueryChange = {},
             onSearch = {},
             trailingIcon = {
