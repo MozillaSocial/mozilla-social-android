@@ -8,11 +8,10 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import org.mozilla.social.common.utils.accountText
+import org.mozilla.social.common.utils.findAccountAtCursor
 import org.mozilla.social.common.utils.edit
-import org.mozilla.social.common.utils.hashtagText
+import org.mozilla.social.common.utils.findHashtagAtCursor
 import org.mozilla.social.common.utils.replaceAccount
 import org.mozilla.social.common.utils.replaceHashtag
 import org.mozilla.social.core.analytics.Analytics
@@ -79,14 +78,14 @@ class StatusDelegate(
     private fun searchForAccountsAndHashtags(textFieldValue: TextFieldValue) {
         searchJob?.cancel()
 
-        val accountText = textFieldValue.accountText()
+        val accountText = textFieldValue.findAccountAtCursor()
         if (accountText.isNullOrBlank()) {
             _uiState.edit { copy(
                 accountList = null
             ) }
         }
 
-        val hashtagText = textFieldValue.hashtagText()
+        val hashtagText = textFieldValue.findHashtagAtCursor()
         if (hashtagText.isNullOrBlank()) {
             _uiState.edit { copy(
                 hashtagList = null

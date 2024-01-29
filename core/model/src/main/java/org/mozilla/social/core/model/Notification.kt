@@ -15,7 +15,12 @@ sealed class Notification {
         override val createdAt: Instant,
         override val account: Account,
         val status: Status,
-    ): Notification()
+    ): Notification() {
+        companion object {
+            // used for api requests
+            const val VALUE = "mention"
+        }
+    }
 
     /**
      * Someone you enabled notifications for has posted a status
@@ -44,7 +49,12 @@ sealed class Notification {
         override val id: Int,
         override val createdAt: Instant,
         override val account: Account,
-    ): Notification()
+    ): Notification() {
+        companion object {
+            // used for api requests
+            const val VALUE = "follow"
+        }
+    }
 
     /**
      * Someone requested to follow you
@@ -53,7 +63,12 @@ sealed class Notification {
         override val id: Int,
         override val createdAt: Instant,
         override val account: Account,
-    ): Notification()
+    ): Notification() {
+        companion object {
+            // used for api requests
+            const val VALUE = "follow_request"
+        }
+    }
 
     /**
      * Someone favourited one of your statuses

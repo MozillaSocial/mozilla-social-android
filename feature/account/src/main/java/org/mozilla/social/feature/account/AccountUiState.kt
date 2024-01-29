@@ -33,5 +33,7 @@ data class AccountFieldUiState(
 
 data class Timeline(
     val type: AccountTimelineType,
-    val feed: Flow<PagingData<PostCardUiState>>,
+    val postsFeed: Flow<PagingData<PostCardUiState>>,
+    val postsAndRepliesFeed: Flow<PagingData<PostCardUiState>>,
+    val mediaFeed: Flow<PagingData<PostCardUiState>>,
 )

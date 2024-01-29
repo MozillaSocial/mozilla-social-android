@@ -205,10 +205,20 @@ private fun MainContent(
             Modifier
                 .fillMaxSize(),
     ) {
-        val feedPagingItems = timeline.feed.collectAsLazyPagingItems()
+        val postsFeed = timeline.postsFeed.collectAsLazyPagingItems()
+        val postsAndRepliesFeed = timeline.postsAndRepliesFeed.collectAsLazyPagingItems()
+        val mediaFeed = timeline.mediaFeed.collectAsLazyPagingItems()
+
+        val currentFeed = when (timeline.type) {
+            AccountTimelineType.POSTS -> postsFeed
+            AccountTimelineType.POSTS_AND_REPLIES -> postsAndRepliesFeed
+            AccountTimelineType.MEDIA -> mediaFeed
+        }
+
         val listState = rememberLazyListState()
+
         PagingLazyColumn(
-            lazyPagingItems = feedPagingItems,
+            lazyPagingItems = currentFeed,
             headerContent = {
                 item {
                     MainAccount(
@@ -224,7 +234,7 @@ private fun MainContent(
             emptyListState = listState,
         ) {
             postListContent(
-                lazyPagingItems = feedPagingItems,
+                lazyPagingItems = currentFeed,
                 postCardInteractions = postCardInteractions,
             )
         }
@@ -334,7 +344,10 @@ private fun OverflowMenu(
         modifier = Modifier.width(IntrinsicSize.Max),
         onClick = { overflowMenuExpanded.value = true },
     ) {
-        Icon(painter = MoSoIcons.moreVertical(), contentDescription = null)
+        Icon(
+            painter = MoSoIcons.moreVertical(),
+            contentDescription = stringResource(R.string.overflow_button)
+        )
 
         MoSoDropdownMenu(
             expanded = overflowMenuExpanded.value,
@@ -672,7 +685,9 @@ fun AccountScreenPreview() {
                 isUsersProfile = false,
                 timeline = Timeline(
                     type = AccountTimelineType.POSTS,
-                    feed = flowOf()
+                    postsFeed = flowOf(),
+                    postsAndRepliesFeed = flowOf(),
+                    mediaFeed = flowOf(),
                 ),
                 htmlContentInteractions = object : HtmlContentInteractions {},
                 postCardInteractions = object : PostCardInteractions {},

@@ -44,23 +44,34 @@ class MainApplication : Application(), ImageLoaderFactory {
     override fun onCreate() {
         super.onCreate()
         initializeAppVersion()
-        initializeSentryAndTimber()
+        initializeTimberAndSentry()
         initializeKoin()
         initializeAnalytics()
         initializeAuthCredentialInterceptor()
     }
 
-    private fun initializeSentryAndTimber() {
+    private fun initializeTimberAndSentry() {
         SentryAndroid.init(this) { options ->
-            if (!BuildConfig.DEBUG) {
-                options.addIntegration(
-                    SentryTimberIntegration(
-                        minEventLevel = SentryLevel.ERROR,
-                        minBreadcrumbLevel = SentryLevel.INFO
+            options.apply {
+                setDiagnosticLevel(SentryLevel.ERROR)
+                dsn = BuildConfig.sentryDsn
+                isDebug = BuildConfig.DEBUG
+                environment = BuildConfig.BUILD_TYPE
+                isEnableUserInteractionTracing = true
+                isAttachScreenshot = false
+                isAttachViewHierarchy = true
+                sampleRate = 1.0
+                profilesSampleRate = 1.0
+                if (!BuildConfig.DEBUG) {
+                    addIntegration(
+                        SentryTimberIntegration(
+                            minEventLevel = SentryLevel.ERROR,
+                            minBreadcrumbLevel = SentryLevel.INFO
+                        )
                     )
-                )
-            } else {
-                Timber.plant(Timber.DebugTree())
+                } else {
+                    Timber.plant(Timber.DebugTree())
+                }
             }
         }
     }

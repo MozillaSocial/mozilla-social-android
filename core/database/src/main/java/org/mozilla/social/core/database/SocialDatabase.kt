@@ -50,7 +50,9 @@ import org.mozilla.social.core.database.model.entities.accountCollections.Databa
 import org.mozilla.social.core.database.model.entities.accountCollections.DatabaseMute
 import org.mozilla.social.core.database.model.entities.accountCollections.SearchedAccount
 import org.mozilla.social.core.database.model.entities.hashtagCollections.SearchedHashTag
+import org.mozilla.social.core.database.model.entities.notificationCollections.FollowListNotification
 import org.mozilla.social.core.database.model.entities.notificationCollections.MainNotification
+import org.mozilla.social.core.database.model.entities.notificationCollections.MentionListNotification
 import org.mozilla.social.core.database.model.entities.statusCollections.SearchedStatus
 
 @Suppress("MagicNumber")
@@ -76,33 +78,11 @@ import org.mozilla.social.core.database.model.entities.statusCollections.Searche
         SearchedHashTag::class,
         DatabaseNotification::class,
         MainNotification::class,
+        MentionListNotification::class,
+        FollowListNotification::class,
     ],
-    version = 24,
-    autoMigrations = [
-        AutoMigration(1, 2, DatabaseMigrations.Schema1to2::class),
-        AutoMigration(2, 3),
-        AutoMigration(3, 4),
-        AutoMigration(4, 5),
-        AutoMigration(5, 6),
-        AutoMigration(6, 7),
-        AutoMigration(7, 8, DatabaseMigrations.Schema7to8::class),
-        AutoMigration(8, 9),
-        AutoMigration(9, 10),
-        AutoMigration(10, 11, DatabaseMigrations.Schema10to11::class),
-        AutoMigration(11, 12),
-        AutoMigration(12, 13),
-        AutoMigration(13, 14),
-        AutoMigration(14, 15, DatabaseMigrations.Schema14to15::class),
-        AutoMigration(15, 16),
-        AutoMigration(16, 17),
-        AutoMigration(17, 18, DatabaseMigrations.Schema17to18::class),
-        AutoMigration(18, 19, DatabaseMigrations.Schema18to19::class),
-        AutoMigration(19, 20),
-        AutoMigration(20, 21),
-        AutoMigration(21, 22),
-        AutoMigration(22, 23),
-        AutoMigration(23, 24, DatabaseMigrations.Schema23to24::class),
-    ],
+    version = 1,
+    autoMigrations = [],
     exportSchema = true,
 )
 @TypeConverters(
