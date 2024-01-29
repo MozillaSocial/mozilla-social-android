@@ -29,7 +29,7 @@ class StatusDelegate(
     private val statusRepository: StatusRepository,
     private val coroutineScope: CoroutineScope,
     private val inReplyToId: String ?= null,
-    private val isEditingId: String ?= null,
+    private val editStatusId: String ?= null,
 ) : StatusInteractions, ContentWarningInteractions {
 
     private val _uiState = MutableStateFlow(StatusUiState())
@@ -50,8 +50,8 @@ class StatusDelegate(
                         ) }
                     }
                 }
-            isEditingId?.let {
-                statusRepository.getStatusLocal(isEditingId)?.let { status ->
+            editStatusId?.let {
+                statusRepository.getStatusLocal(editStatusId)?.let { status ->
                     _uiState.edit { copy(
                         statusText = TextFieldValue(
                             text = HtmlCompat.fromHtml(status.content, 0).toString()

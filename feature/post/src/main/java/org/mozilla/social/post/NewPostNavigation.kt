@@ -24,8 +24,8 @@ fun NavGraphBuilder.newPostScreen() {
     ) {
         val replyStatusId: String? =
             it.arguments?.getString(NavigationDestination.NewPost.NAV_PARAM_REPLY_STATUS_ID)
-        val isEditingId: String? =
+        val editStatusId: String? =
             it.arguments?.getString(NavigationDestination.NewPost.NAV_PARAM_EDIT_STATUS_ID)
-        NewPostScreen(replyStatusId = replyStatusId, isEditingId = isEditingId)
+        NewPostScreen(replyStatusId = replyStatusId, editStatusId = editStatusId)
     }
 }

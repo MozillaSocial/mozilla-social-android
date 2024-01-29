@@ -112,11 +112,11 @@ sealed class NavigationDestination(
         }
     }
 
-    data class NewPost(val replyStatusId: String? = null, val isEditingId: String? = null) : NavigationDestination(
+    data class NewPost(val replyStatusId: String? = null, val editStatusId: String? = null) : NavigationDestination(
         route = ROUTE,
     ) {
         fun NavController.navigateToNewPost(navOptions: NavOptions? = null) {
-            navigate(route(replyStatusId, isEditingId), navOptions)
+            navigate(route(replyStatusId, editStatusId), navOptions)
         }
 
         companion object {

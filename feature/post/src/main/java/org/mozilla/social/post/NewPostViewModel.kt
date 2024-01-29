@@ -36,7 +36,7 @@ import timber.log.Timber
 class NewPostViewModel(
     private val analytics: Analytics,
     private val replyStatusId: String?,
-    private val isEditingId: String?,
+    private val editStatusId: String?,
     getLoggedInUserAccountId: GetLoggedInUserAccountId,
     accountRepository: AccountRepository,
     private val postStatus: PostStatus,
@@ -49,7 +49,7 @@ class NewPostViewModel(
         parametersOf(
             viewModelScope,
             replyStatusId,
-            isEditingId,
+            editStatusId,
         )
     }
 

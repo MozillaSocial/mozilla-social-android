@@ -194,7 +194,7 @@ class PostCardDelegate(
     }
 
     override fun onOverflowEditClicked(statusId: String) {
-        navigateTo(NavigationDestination.NewPost(isEditingId = statusId))
+        navigateTo(NavigationDestination.NewPost(editStatusId = statusId))
     }
 
     override fun onAccountImageClicked(accountId: String) {
