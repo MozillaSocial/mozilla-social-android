@@ -2,6 +2,7 @@ package org.mozilla.social.post.status
 
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.core.text.HtmlCompat
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -27,7 +28,8 @@ class StatusDelegate(
     private val searchRepository: SearchRepository,
     private val statusRepository: StatusRepository,
     private val coroutineScope: CoroutineScope,
-    private val inReplyToId: String?,
+    private val inReplyToId: String ?= null,
+    private val editStatusId: String ?= null,
 ) : StatusInteractions, ContentWarningInteractions {
 
     private val _uiState = MutableStateFlow(StatusUiState())
@@ -38,13 +40,23 @@ class StatusDelegate(
     init {
         coroutineScope.launch {
             inReplyToId?.let {
-                statusRepository.getStatusLocal(inReplyToId)?.account?.let { account ->
+                    statusRepository.getStatusLocal(inReplyToId)?.account?.let { account ->
+                        _uiState.edit { copy(
+                            statusText = TextFieldValue(
+                                text = "@${account.acct} ",
+                                selection = TextRange(account.acct.length + 2),
+                            ),
+                            inReplyToAccountName = account.username
+                        ) }
+                    }
+                }
+            editStatusId?.let {
+                statusRepository.getStatusLocal(editStatusId)?.let { status ->
                     _uiState.edit { copy(
                         statusText = TextFieldValue(
-                            text = "@${account.acct} ",
-                            selection = TextRange(account.acct.length + 2),
+                            text = HtmlCompat.fromHtml(status.content, 0).toString()
                         ),
-                        inReplyToAccountName = account.username
+                        contentWarningText = status.contentWarningText.ifBlank { null },
                     ) }
                 }
             }
