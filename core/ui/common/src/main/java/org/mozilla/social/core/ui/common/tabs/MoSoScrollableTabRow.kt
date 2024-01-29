@@ -1,4 +1,20 @@
-package org.mozilla.social.core.ui.common
+/*
+ * Copyright 2022 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.mozilla.social.core.ui.common.tabs
 
 import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.animation.core.FastOutSlowInEasing
@@ -7,24 +23,18 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.getValue
@@ -37,7 +47,6 @@ import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.SubcomposeLayout
 import androidx.compose.ui.platform.debugInspectorInfo
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
@@ -45,9 +54,14 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
-import org.mozilla.social.core.ui.common.TabRowDefaults.tabIndicatorOffset
 import org.mozilla.social.core.ui.common.divider.MoSoDivider
+import org.mozilla.social.core.ui.common.tabs.TabRowDefaults.tabIndicatorOffset
 
+/**
+ * Based on [ScrollableTabRow]
+ * Modified it to dynamically calculate the minimum tab width so that if all tabs
+ * can fit inside the parent's width, they will take up the entire space.
+ */
 @Composable
 fun MoSoTabRow(
     selectedTabIndex: Int,
@@ -211,7 +225,8 @@ class TabPosition internal constructor(val left: Dp, val width: Dp) {
  */
 object TabRowDefaults {
     /** Default content color of a tab row. */
-    val contentColor: Color @Composable get() =
+    val contentColor: Color
+        @Composable get() =
         MoSoTheme.colors.layer1
 
     /**
@@ -339,133 +354,3 @@ private val ScrollableTabRowScrollSpec: AnimationSpec<Float> = tween(
     durationMillis = 250,
     easing = FastOutSlowInEasing
 )
-
-@Composable
-fun MoSoTab(
-    selected: Boolean,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-    enabled: Boolean = true,
-    selectedContentColor: Color = MoSoTheme.colors.textLink,
-    unselectedContentColor: Color = MoSoTheme.colors.textPrimary,
-    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
-    contentPadding: Dp = 16.dp,
-    content: @Composable ColumnScope.() -> Unit,
-) {
-    Tab(
-        selected = selected,
-        onClick = onClick,
-        modifier = modifier,
-        enabled = enabled,
-        selectedContentColor = selectedContentColor,
-        unselectedContentColor = unselectedContentColor,
-        interactionSource = interactionSource,
-        content = {
-            Column(modifier = Modifier.padding(horizontal = contentPadding)) {
-                content()
-            }
-        },
-    )
-}
-
-@Preview
-@Composable
-private fun TabRowPreview() {
-    MoSoTheme {
-        MoSoTabRow(selectedTabIndex = 0) {
-            MoSoTab(selected = true, onClick = { /*TODO*/ }) {
-                Text(text = "test")
-            }
-            MoSoTab(selected = false, onClick = { /*TODO*/ }) {
-                Text(text = "test2")
-            }
-        }
-    }
-}
-
-@Preview
-@Composable
-private fun TabRowPreview2() {
-    MoSoTheme {
-        MoSoTabRow(selectedTabIndex = 0) {
-            MoSoTab(selected = true, onClick = { /*TODO*/ }) {
-                Text(text = "test")
-            }
-            MoSoTab(selected = false, onClick = { /*TODO*/ }) {
-                Text(text = "test2")
-            }
-            MoSoTab(selected = false, onClick = { /*TODO*/ }) {
-                Text(text = "test and stuff 2")
-            }
-        }
-    }
-}
-
-@Preview
-@Composable
-private fun TabRowPreview3() {
-    MoSoTheme {
-        MoSoTabRow(selectedTabIndex = 0) {
-            MoSoTab(selected = true, onClick = { /*TODO*/ }) {
-                Text(text = "test")
-            }
-            MoSoTab(selected = false, onClick = { /*TODO*/ }) {
-                Text(text = "test2")
-            }
-            MoSoTab(selected = false, onClick = { /*TODO*/ }) {
-                Text(text = "test and some cool stuff that I like a lot")
-            }
-        }
-    }
-}
-
-@Preview
-@Composable
-private fun TabRowPreview4() {
-    MoSoTheme {
-        MoSoTabRow(selectedTabIndex = 0) {
-            MoSoTab(selected = true, onClick = { /*TODO*/ }) {
-                Text(text = "test")
-            }
-            MoSoTab(selected = false, onClick = { /*TODO*/ }) {
-                Text(text = "test2")
-            }
-            MoSoTab(selected = false, onClick = { /*TODO*/ }) {
-                Text(text = "test and some cool stuff")
-            }
-        }
-    }
-}
-
-@Preview
-@Composable
-private fun TabRowPreview5() {
-    MoSoTheme {
-        MoSoTabRow(selectedTabIndex = 0) {
-            MoSoTab(selected = true, onClick = { /*TODO*/ }) {
-                Text(text = "test")
-            }
-            MoSoTab(selected = false, onClick = { /*TODO*/ }) {
-                Text(text = "test and stuff 2")
-            }
-            MoSoTab(selected = false, onClick = { /*TODO*/ }) {
-                Text(text = "test and some cool stuff")
-            }
-        }
-    }
-}
-
-@Preview
-@Composable
-private fun TabRowPreview6() {
-    MoSoTheme {
-        MoSoTabRow(selectedTabIndex = 0) {
-            MoSoTab(selected = true, onClick = { /*TODO*/ }) {
-                Text(text = "test")
-            }
-            MoSoTab(selected = false, onClick = { /*TODO*/ }) {
-                Text(text = "test and some cool stuff its neat")
-            }
-        }
-    }
-}
