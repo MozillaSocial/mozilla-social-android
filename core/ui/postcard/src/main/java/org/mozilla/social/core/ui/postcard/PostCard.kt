@@ -385,11 +385,11 @@ private fun OverflowMenu(
                     onClick = { postCardInteractions.onOverflowDeleteClicked(post.statusId) },
                 )
                 // WILL DO: add in once complete
-//                MoSoDropDownItem(
-//                    text = stringResource(id = R.string.edit_post),
-//                    expanded = overflowMenuExpanded,
-//                    onClick = { postCardInteractions.onOverflowEditClicked(post.statusId) },
-//                )
+                MoSoDropDownItem(
+                    text = stringResource(id = R.string.edit_post),
+                    expanded = overflowMenuExpanded,
+                    onClick = { postCardInteractions.onOverflowEditClicked(post.statusId) },
+                )
             } else {
                 MoSoDropDownItem(
                     text = stringResource(id = R.string.mute_user, post.username),

@@ -28,8 +28,8 @@ class StatusDelegate(
     private val searchRepository: SearchRepository,
     private val statusRepository: StatusRepository,
     private val coroutineScope: CoroutineScope,
-    private val inReplyToId: String ?= null,
-    private val editStatusId: String ?= null,
+    private val inReplyToId: String? = null,
+    private val editStatusId: String? = null,
 ) : StatusInteractions, ContentWarningInteractions {
 
     private val _uiState = MutableStateFlow(StatusUiState())
@@ -57,6 +57,7 @@ class StatusDelegate(
                             text = HtmlCompat.fromHtml(status.content, 0).toString()
                         ),
                         contentWarningText = status.contentWarningText.ifBlank { null },
+                        editStatusId = status.statusId,
                     ) }
                 }
             }

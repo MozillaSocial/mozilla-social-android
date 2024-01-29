@@ -29,6 +29,7 @@ val newPostModule = module {
             replyStatusId = parametersHolder[0],
             editStatusId = parametersHolder[1],
             postStatus = get(),
+            editStatus = get(),
             popNavBackstack = get(),
             showSnackbar = get(),
             getLoggedInUserAccountId = get(),

@@ -8,4 +8,5 @@ data class StatusUiState(
     val hashtagList: List<String>? = null,
     val contentWarningText: String? = null,
     val inReplyToAccountName: String? = null,
+    val editStatusId: String? = null,
 )

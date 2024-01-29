@@ -14,6 +14,7 @@
     <string name="error_deleting_post">Error deleting post</string>
     <string name="error_sending_report_toast">Error sending report</string>
     <string name="error_sending_post_toast">Error sending post</string>
+    <string name="error_editing_post_toast">Error editing post</string>
     <string name="error_following_hashtag">Error following hashtag</string>
     <string name="error_unfollowing_hashtag">Error unfollowing hashtag</string>
     <string name="error_accepting_follow_request">Error accepting request</string>
