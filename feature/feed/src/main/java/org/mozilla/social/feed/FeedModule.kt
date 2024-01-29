@@ -13,32 +13,31 @@ import org.mozilla.social.core.repository.paging.pagingModule
 import org.mozilla.social.core.ui.postcard.postCardModule
 import org.mozilla.social.core.usecase.mastodon.mastodonUsecaseModule
 
-val feedModule =
-    module {
-        includes(
-            commonModule,
-            mastodonUsecaseModule,
-            dataStoreModule,
-            pagingModule,
-            postCardModule,
-            navigationModule,
-            analyticsModule,
-        )
+val feedModule = module {
+    includes(
+        commonModule,
+        mastodonUsecaseModule,
+        dataStoreModule,
+        pagingModule,
+        postCardModule,
+        navigationModule,
+        analyticsModule,
+    )
 
-        single {
-            HomeTimelineRemoteMediator(
-                get(),
-            )
-        }
-        single {
-            LocalTimelineRemoteMediator(
-                get(),
-            )
-        }
-        single {
-            FederatedTimelineRemoteMediator(
-                get(),
-            )
-        }
-        viewModelOf(::FeedViewModel)
+    single {
+        HomeTimelineRemoteMediator(
+            get(),
+        )
     }
+    single {
+        LocalTimelineRemoteMediator(
+            get(),
+        )
+    }
+    single {
+        FederatedTimelineRemoteMediator(
+            get(),
+        )
+    }
+    viewModelOf(::FeedViewModel)
+}

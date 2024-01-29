@@ -14,8 +14,6 @@ import org.koin.java.KoinJavaComponent
 import org.mozilla.social.core.analytics.Analytics
 import org.mozilla.social.core.analytics.AnalyticsIdentifiers
 import org.mozilla.social.core.analytics.EngagementType
-import org.mozilla.social.core.navigation.NavigationDestination
-import org.mozilla.social.core.navigation.usecases.NavigateTo
 import org.mozilla.social.core.repository.mastodon.TimelineRepository
 import org.mozilla.social.core.ui.postcard.PostCardDelegate
 import org.mozilla.social.core.ui.postcard.toPostCardUiState
@@ -29,7 +27,6 @@ import org.mozilla.social.core.repository.paging.LocalTimelineRemoteMediator
  */
 class FeedViewModel(
     private val analytics: Analytics,
-    private val navigateTo: NavigateTo,
     homeTimelineRemoteMediator: HomeTimelineRemoteMediator,
     localTimelineRemoteMediator: LocalTimelineRemoteMediator,
     federatedTimelineRemoteMediator: FederatedTimelineRemoteMediator,
@@ -95,9 +92,5 @@ class FeedViewModel(
         analytics.uiImpression(
             uiIdentifier = AnalyticsIdentifiers.FEED_SCREEN_IMPRESSION,
         )
-    }
-
-    override fun onSearchClicked() {
-        navigateTo(NavigationDestination.Search)
     }
 }
