@@ -3,16 +3,12 @@
 package org.mozilla.social.feed
 
 import android.content.res.Configuration
-import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
@@ -23,7 +19,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -34,18 +29,16 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flowOf
 import org.koin.androidx.compose.koinViewModel
-import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.designsystem.icon.mozillaLogo
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.ui.common.MoSoSurface
 import org.mozilla.social.core.ui.common.tabs.MoSoTab
 import org.mozilla.social.core.ui.common.tabs.MoSoTabRow
-import org.mozilla.social.core.ui.common.appbar.MoSoAppBar
+import org.mozilla.social.core.ui.common.appbar.MoSoTopBar
 import org.mozilla.social.core.ui.common.pullrefresh.PullRefreshLazyColumn
 import org.mozilla.social.core.ui.postcard.PostCardInteractions
 import org.mozilla.social.core.ui.postcard.PostCardUiState
 import org.mozilla.social.core.ui.postcard.postListContent
-import org.mozilla.social.feature.feed.R
 
 @Composable
 internal fun FeedScreen(viewModel: FeedViewModel = koinViewModel()) {
@@ -81,95 +74,106 @@ private fun FeedScreen(
             rememberTopAppBarState(),
         ),
 ) {
-    val selectedTimelineType by timelineTypeFlow.collectAsStateWithLifecycle()
-    val context = LocalContext.current
-
     MoSoSurface {
         Column(
             modifier =
                 Modifier
                     .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
         ) {
-            MoSoAppBar(
+            MoSoTopBar(
                 scrollBehavior = topAppBarScrollBehavior,
                 title = {
-                    Image(
+                    Icon(
+                        modifier = Modifier
+                            .background(MoSoTheme.colors.logoBackground),
                         painter = mozillaLogo(),
                         contentDescription = "mozilla logo",
+                        tint = MoSoTheme.colors.logoForeground,
                     )
-                },
-                actions = {
-                    IconButton(
-                        modifier = Modifier
-                            .size(24.dp),
-                        onClick = { feedInteractions.onSearchClicked() }
-                    ) {
-                        Icon(
-                            modifier = Modifier.size(24.dp),
-                            painter = MoSoIcons.magnifyingGlass(),
-                            contentDescription = stringResource(R.string.search_button),
-                            tint = MoSoTheme.colors.iconPrimary
-                        )
-                    }
-                    Spacer(modifier = Modifier.width(8.dp))
                 },
             )
 
-            MoSoTabRow(
-                selectedTabIndex = selectedTimelineType.ordinal,
-                divider = {},
-            ) {
-                TimelineType.entries.forEach { timelineType ->
-                    MoSoTab(
-                        modifier =
-                            Modifier
-                                .height(40.dp),
-                        selected = selectedTimelineType == timelineType,
-                        onClick = { feedInteractions.onTabClicked(timelineType) },
-                        content = {
-                            Text(
-                                text = timelineType.tabTitle.build(context),
-                                style = MoSoTheme.typography.labelMedium,
-                            )
-                        },
-                    )
-                }
-            }
-
-            val forYouScrollState = rememberLazyListState()
-            val localScrollState = rememberLazyListState()
-            val federatedScrollState = rememberLazyListState()
-
-            val homeFeedPagingItems = homeFeed.collectAsLazyPagingItems()
-            val localFeedPagingItems = localFeed.collectAsLazyPagingItems()
-            val federatedPagingItems = federatedFeed.collectAsLazyPagingItems()
-
-            PullRefreshLazyColumn(
-                lazyPagingItems = when (selectedTimelineType) {
-                    TimelineType.FOR_YOU -> homeFeedPagingItems
-                    TimelineType.LOCAL -> localFeedPagingItems
-                    TimelineType.FEDERATED -> federatedPagingItems
-                },
-                listState = when (selectedTimelineType) {
-                    TimelineType.FOR_YOU -> forYouScrollState
-                    TimelineType.LOCAL -> localScrollState
-                    TimelineType.FEDERATED -> federatedScrollState
-                },
-            ) {
-                postListContent(
-                    lazyPagingItems = when (selectedTimelineType) {
-                        TimelineType.FOR_YOU -> homeFeedPagingItems
-                        TimelineType.LOCAL -> localFeedPagingItems
-                        TimelineType.FEDERATED -> federatedPagingItems
-                    },
-                    postCardInteractions = when (selectedTimelineType) {
-                        TimelineType.FOR_YOU -> homePostCardInteractions
-                        TimelineType.LOCAL -> localPostCardInteractions
-                        TimelineType.FEDERATED -> federatedPostCardInteractions
-                    },
-                )
-            }
+            MainContent(
+                homeFeed = homeFeed,
+                localFeed = localFeed,
+                federatedFeed = federatedFeed,
+                timelineTypeFlow = timelineTypeFlow,
+                homePostCardInteractions = homePostCardInteractions,
+                localPostCardInteractions = localPostCardInteractions,
+                federatedPostCardInteractions = federatedPostCardInteractions,
+                feedInteractions = feedInteractions,
+            )
         }
+    }
+}
+
+@Composable
+private fun MainContent(
+    homeFeed: Flow<PagingData<PostCardUiState>>,
+    localFeed: Flow<PagingData<PostCardUiState>>,
+    federatedFeed: Flow<PagingData<PostCardUiState>>,
+    timelineTypeFlow: StateFlow<TimelineType>,
+    homePostCardInteractions: PostCardInteractions,
+    localPostCardInteractions: PostCardInteractions,
+    federatedPostCardInteractions: PostCardInteractions,
+    feedInteractions: FeedInteractions,
+) {
+    val selectedTimelineType by timelineTypeFlow.collectAsStateWithLifecycle()
+    val context = LocalContext.current
+
+    MoSoTabRow(
+        selectedTabIndex = selectedTimelineType.ordinal,
+        divider = {},
+    ) {
+        TimelineType.entries.forEach { timelineType ->
+            MoSoTab(
+                modifier =
+                Modifier
+                    .height(40.dp),
+                selected = selectedTimelineType == timelineType,
+                onClick = { feedInteractions.onTabClicked(timelineType) },
+                content = {
+                    Text(
+                        text = timelineType.tabTitle.build(context),
+                        style = MoSoTheme.typography.labelMedium,
+                    )
+                },
+            )
+        }
+    }
+
+    val forYouScrollState = rememberLazyListState()
+    val localScrollState = rememberLazyListState()
+    val federatedScrollState = rememberLazyListState()
+
+    val homeFeedPagingItems = homeFeed.collectAsLazyPagingItems()
+    val localFeedPagingItems = localFeed.collectAsLazyPagingItems()
+    val federatedPagingItems = federatedFeed.collectAsLazyPagingItems()
+
+    PullRefreshLazyColumn(
+        lazyPagingItems = when (selectedTimelineType) {
+            TimelineType.FOR_YOU -> homeFeedPagingItems
+            TimelineType.LOCAL -> localFeedPagingItems
+            TimelineType.FEDERATED -> federatedPagingItems
+        },
+        listState = when (selectedTimelineType) {
+            TimelineType.FOR_YOU -> forYouScrollState
+            TimelineType.LOCAL -> localScrollState
+            TimelineType.FEDERATED -> federatedScrollState
+        },
+    ) {
+        postListContent(
+            lazyPagingItems = when (selectedTimelineType) {
+                TimelineType.FOR_YOU -> homeFeedPagingItems
+                TimelineType.LOCAL -> localFeedPagingItems
+                TimelineType.FEDERATED -> federatedPagingItems
+            },
+            postCardInteractions = when (selectedTimelineType) {
+                TimelineType.FOR_YOU -> homePostCardInteractions
+                TimelineType.LOCAL -> localPostCardInteractions
+                TimelineType.FEDERATED -> federatedPostCardInteractions
+            },
+        )
     }
 }
 

@@ -95,8 +95,12 @@ private fun SearchScreen(
     searchInteractions: SearchInteractions,
     postCardInteractions: PostCardInteractions,
 ) {
-    MoSoSurface {
-        Column(Modifier.systemBarsPadding()) {
+    MoSoSurface(
+        modifier = Modifier
+            .fillMaxSize()
+            .systemBarsPadding()
+    ) {
+        Column {
             val searchFocusRequester = remember { FocusRequester() }
             val keyboardController = LocalSoftwareKeyboardController.current
             val focusManager = LocalFocusManager.current
@@ -110,46 +114,47 @@ private fun SearchScreen(
                 }
             }
 
-            MoSoCloseableTopAppBar(
-                actions = {
-                    MoSoSearchBar(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .onFocusChanged {
-                                searchHasFocus = it.hasFocus
+            Box {
+                MoSoCloseableTopAppBar()
+                MoSoSearchBar(
+                    modifier = Modifier
+                        .align(Alignment.CenterEnd)
+                        .fillMaxWidth()
+                        .onFocusChanged {
+                            searchHasFocus = it.hasFocus
+                        }
+                        .focusRequester(searchFocusRequester)
+                        .padding(
+                            end = MoSoSpacing.md,
+                            start = 60.dp,
+                        ),
+                    query = uiState.query,
+                    onQueryChange = { searchInteractions.onQueryTextChanged(it) },
+                    onSearch = {
+                        if (uiState.query.isNotBlank()) {
+                            keyboardController?.hide()
+                            focusManager.clearFocus()
+                            searchInteractions.onSearchClicked()
+                        }
+                    },
+                    trailingIcon = {
+                        IconButton(
+                            onClick = {
+                                searchInteractions.onQueryTextChanged("")
+                                searchFocusRequester.requestFocus()
                             }
-                            .focusRequester(searchFocusRequester)
-                            .padding(
-                                end = MoSoSpacing.md,
-                                start = 60.dp,
-                            ),
-                        query = uiState.query,
-                        onQueryChange = { searchInteractions.onQueryTextChanged(it) },
-                        onSearch = {
-                            if (uiState.query.isNotBlank()) {
-                                keyboardController?.hide()
-                                focusManager.clearFocus()
-                                searchInteractions.onSearchClicked()
-                            }
-                        },
-                        trailingIcon = {
-                            IconButton(
-                                onClick = {
-                                    searchInteractions.onQueryTextChanged("")
-                                    searchFocusRequester.requestFocus()
-                                }
-                            ) {
-                                Icon(
-                                    modifier = Modifier.size(16.dp),
-                                    painter = MoSoIcons.x(),
-                                    contentDescription = stringResource(id = R.string.clear_search),
-                                    tint = MoSoTheme.colors.iconSecondary,
-                                )
-                            }
-                        },
-                    )
-                }
-            )
+                        ) {
+                            Icon(
+                                modifier = Modifier.size(MoSoIcons.Sizes.small),
+                                painter = MoSoIcons.x(),
+                                contentDescription = stringResource(id = R.string.clear_search),
+                                tint = MoSoTheme.colors.iconSecondary,
+                            )
+                        }
+                    },
+                )
+            }
+
 
             Box {
                 Column {
