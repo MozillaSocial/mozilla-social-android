@@ -69,12 +69,10 @@ class MainApplication : Application(), ImageLoaderFactory {
                             minBreadcrumbLevel = SentryLevel.INFO
                         )
                     )
+                } else {
+                    Timber.plant(Timber.DebugTree())
                 }
             }
-        }
-        // Timber is initialized in release builds via the Timber / Sentry integrations above ^
-        if (BuildConfig.DEBUG) {
-            Timber.plant(Timber.DebugTree())
         }
     }
 
