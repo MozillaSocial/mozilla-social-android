@@ -127,6 +127,7 @@ class DatabasePurgeWorker(
             activity: Activity,
             lifecycleCoroutineScope: LifecycleCoroutineScope,
             delay: Duration = Duration.ofSeconds(0),
+            restartActivity: Boolean = true,
         ) {
             val workRequest = OneTimeWorkRequestBuilder<DatabasePurgeWorker>()
                 .setInitialDelay(delay)
@@ -141,7 +142,8 @@ class DatabasePurgeWorker(
             observeWork(
                 activity,
                 lifecycleCoroutineScope,
-                TEST_WORKER_NAME
+                TEST_WORKER_NAME,
+                restartActivity,
             )
         }
 
@@ -154,6 +156,7 @@ class DatabasePurgeWorker(
             activity: Activity,
             lifecycleCoroutineScope: LifecycleCoroutineScope,
             workName: String,
+            restartActivity: Boolean = true,
         ) {
             lifecycleCoroutineScope.launch {
                 WorkManager.getInstance(activity)
@@ -161,7 +164,11 @@ class DatabasePurgeWorker(
                     .collect {
                         val workInfo = it.first()
                         if (workInfo.state == WorkInfo.State.SUCCEEDED || workInfo.state == WorkInfo.State.CANCELLED) {
-                            activity.startActivity(Intent.makeRestartActivityTask(activity.intent.component))
+                            if (restartActivity) {
+                                activity.startActivity(Intent.makeRestartActivityTask(activity.intent.component))
+                            } else {
+                                activity.finish()
+                            }
                         }
                     }
             }
