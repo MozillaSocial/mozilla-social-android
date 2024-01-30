@@ -70,7 +70,7 @@ import org.mozilla.social.core.ui.common.MoSoTab
 import org.mozilla.social.core.ui.common.MoSoTabRow
 import org.mozilla.social.core.ui.common.appbar.MoSoCloseableTopAppBar
 import org.mozilla.social.core.ui.common.button.MoSoButton
-import org.mozilla.social.core.ui.common.button.MoSoButtonHeight
+import org.mozilla.social.core.ui.common.button.MoSoButtonContentPadding
 import org.mozilla.social.core.ui.common.button.MoSoButtonSecondary
 import org.mozilla.social.core.ui.common.dropdown.MoSoDropDownItem
 import org.mozilla.social.core.ui.common.dropdown.MoSoDropdownMenu
@@ -259,13 +259,13 @@ private fun MainAccount(
         rightSideContent = {
             val buttonModifier = Modifier
                 .padding(end = 8.dp)
-                .height(MoSoButtonHeight.xs)
             Row {
                 if (isUsersProfile) {
                     MoSoButtonSecondary(
                         modifier = buttonModifier
                             .align(Alignment.CenterVertically),
                         onClick = { accountInteractions.onEditAccountClicked() },
+                        contentPadding = MoSoButtonContentPadding.small,
                     ) {
                         SmallTextLabel(text = stringResource(id = R.string.edit_button))
                     }
@@ -280,6 +280,7 @@ private fun MainAccount(
                                 accountInteractions.onFollowClicked()
                             }
                         },
+                        contentPadding = MoSoButtonContentPadding.small,
                     ) {
                         SmallTextLabel(
                             text =

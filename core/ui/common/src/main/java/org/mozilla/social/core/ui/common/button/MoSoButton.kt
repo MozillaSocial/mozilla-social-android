@@ -27,7 +27,7 @@ fun MoSoButton(
     enabled: Boolean = true,
     shape: Shape = MoSoButtonDefaults.shape,
     theme: MoSoButtonTheme = MoSoButtonPrimaryDefaults,
-    contentPadding: PaddingValues = MoSoButtonDefaults.ContentPadding,
+    contentPadding: PaddingValues = MoSoButtonContentPadding.default,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     content: @Composable RowScope.() -> Unit,
 ) {
@@ -54,7 +54,7 @@ fun MoSoButton(
     colors: ButtonColors = MoSoButtonPrimaryDefaults.colors(),
     elevation: ButtonElevation? = MoSoButtonDefaults.buttonElevation(),
     border: BorderStroke? = MoSoButtonPrimaryDefaults.border(),
-    contentPadding: PaddingValues = MoSoButtonDefaults.ContentPadding,
+    contentPadding: PaddingValues = MoSoButtonContentPadding.default,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     content: @Composable RowScope.() -> Unit,
 ) {
@@ -81,7 +81,7 @@ fun MoSoButtonSecondary(
     colors: ButtonColors = MoSoButtonSecondaryDefaults.colors(),
     elevation: ButtonElevation? = MoSoButtonDefaults.buttonElevation(),
     border: BorderStroke? = MoSoButtonSecondaryDefaults.border(),
-    contentPadding: PaddingValues = MoSoButtonDefaults.ContentPadding,
+    contentPadding: PaddingValues = MoSoButtonContentPadding.default,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     content: @Composable RowScope.() -> Unit,
 ) {
@@ -96,6 +96,79 @@ fun MoSoButtonSecondary(
         contentPadding = contentPadding,
         interactionSource = interactionSource,
         content = content,
+    )
+}
+
+object MoSoButtonPrimaryDefaults : MoSoButtonTheme {
+    @Composable
+    override fun colors(): ButtonColors =
+        MoSoButtonDefaults.buttonColors(
+            containerColor = MoSoTheme.colors.layerActionPrimaryEnabled,
+            contentColor = MoSoTheme.colors.textActionPrimary,
+            disabledContainerColor = MoSoTheme.colors.layerActionDisabled,
+            disabledContentColor = MoSoTheme.colors.textActionPrimary,
+        )
+
+    @Composable
+    override fun border(): BorderStroke? = null
+}
+
+object MoSoButtonSecondaryDefaults : MoSoButtonTheme {
+    @Composable
+    override fun colors(): ButtonColors =
+        MoSoButtonDefaults.buttonColors(
+            containerColor = MoSoTheme.colors.layer1,
+            contentColor = MoSoTheme.colors.textActionSecondary,
+            disabledContainerColor = MoSoTheme.colors.layer2,
+            disabledContentColor = MoSoTheme.colors.textActionDisabled,
+        )
+
+    @Composable
+    override fun border(): BorderStroke = BorderStroke(
+        width = 1.dp,
+        brush = SolidColor(MoSoTheme.colors.borderPrimary),
+    )
+}
+
+interface MoSoButtonTheme {
+    @Composable
+    fun colors(): ButtonColors
+    @Composable
+    fun border(): BorderStroke?
+
+    @Composable
+    fun elevation(): ButtonElevation? = MoSoButtonDefaults.buttonElevation()
+}
+
+object MoSoButtonContentPadding {
+    val default = PaddingValues(
+        horizontal = 24.dp,
+        vertical = 14.dp,
+    )
+    val small = PaddingValues(
+        horizontal = 20.dp,
+        vertical = 10.dp,
+    )
+}
+
+object MoSoButtonDefaults {
+
+    val shape: Shape @Composable get() = ButtonDefaults.shape
+
+    @Composable
+    fun buttonElevation() = ButtonDefaults.buttonElevation()
+
+    @Composable
+    fun buttonColors(
+        containerColor: Color,
+        contentColor: Color,
+        disabledContainerColor: Color,
+        disabledContentColor: Color,
+    ) = ButtonDefaults.buttonColors(
+        containerColor = containerColor,
+        contentColor = contentColor,
+        disabledContainerColor = disabledContainerColor,
+        disabledContentColor = disabledContentColor
     )
 }
 
@@ -147,83 +220,4 @@ private fun ButtonPreview() {
             }
         }
     }
-}
-
-object MoSoButtonPrimaryDefaults : MoSoButtonTheme {
-    @Composable
-    override fun colors(): ButtonColors =
-        MoSoButtonDefaults.buttonColors(
-            containerColor = MoSoTheme.colors.layerActionPrimaryEnabled,
-            contentColor = MoSoTheme.colors.textActionPrimary,
-            disabledContainerColor = MoSoTheme.colors.layerActionDisabled,
-            disabledContentColor = MoSoTheme.colors.textActionPrimary,
-        )
-
-    @Composable
-    override fun border(): BorderStroke? = null
-}
-
-object MoSoButtonSecondaryDefaults : MoSoButtonTheme {
-    @Composable
-    override fun colors(): ButtonColors =
-        MoSoButtonDefaults.buttonColors(
-            containerColor = MoSoTheme.colors.layer1,
-            contentColor = MoSoTheme.colors.textActionSecondary,
-            disabledContainerColor = MoSoTheme.colors.layer2,
-            disabledContentColor = MoSoTheme.colors.textActionDisabled,
-        )
-
-    @Composable
-    override fun border(): BorderStroke = BorderStroke(
-        width = 1.dp,
-        brush = SolidColor(MoSoTheme.colors.borderPrimary),
-    )
-}
-
-interface MoSoButtonTheme {
-    @Composable
-    fun colors(): ButtonColors
-    @Composable
-    fun border(): BorderStroke?
-
-    @Composable
-    fun elevation(): ButtonElevation? = MoSoButtonDefaults.buttonElevation()
-}
-
-object MoSoButtonHeight {
-    val default = 48.dp
-    val sm = 40.dp
-    val xs = 34.dp
-}
-
-object MoSoButtonDefaults {
-
-    private val ButtonHorizontalPadding = 24.dp
-    private val ButtonVerticalPadding = 0.dp
-
-    val ContentPadding =
-        PaddingValues(
-            start = ButtonHorizontalPadding,
-            top = ButtonVerticalPadding,
-            end = ButtonHorizontalPadding,
-            bottom = ButtonVerticalPadding
-        )
-
-    val shape: Shape @Composable get() = ButtonDefaults.shape
-
-    @Composable
-    fun buttonElevation() = ButtonDefaults.buttonElevation()
-
-    @Composable
-    fun buttonColors(
-        containerColor: Color,
-        contentColor: Color,
-        disabledContainerColor: Color,
-        disabledContentColor: Color,
-    ) = ButtonDefaults.buttonColors(
-        containerColor = containerColor,
-        contentColor = contentColor,
-        disabledContainerColor = disabledContainerColor,
-        disabledContentColor = disabledContentColor
-    )
 }

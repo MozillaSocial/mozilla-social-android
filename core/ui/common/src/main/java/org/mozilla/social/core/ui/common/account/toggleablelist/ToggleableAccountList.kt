@@ -32,7 +32,7 @@ import org.mozilla.social.core.designsystem.theme.MoSoSpacing
 import org.mozilla.social.core.ui.common.account.quickview.AccountQuickView
 import org.mozilla.social.core.ui.common.account.quickview.AccountQuickViewUiState
 import org.mozilla.social.core.ui.common.button.MoSoButton
-import org.mozilla.social.core.ui.common.button.MoSoButtonHeight
+import org.mozilla.social.core.ui.common.button.MoSoButtonContentPadding
 import org.mozilla.social.core.ui.common.button.MoSoButtonSecondary
 import org.mozilla.social.core.ui.common.button.MoSoButtonTheme
 import org.mozilla.social.core.ui.common.error.GenericError
@@ -127,8 +127,6 @@ private fun <B : ToggleableButtonState> UserRow(
                 .padding(vertical = MoSoSpacing.md),
             buttonSlot = {
                 MoSoButton(
-                    modifier = Modifier
-                        .height(MoSoButtonHeight.xs),
                     onClick = {
                         buttonState.confirmationText?.let {
                             openConfirmationDialog = it.build(
@@ -137,6 +135,7 @@ private fun <B : ToggleableButtonState> UserRow(
                         } ?: onButtonClicked(account.accountId, buttonState)
                     },
                     theme = buttonState.theme,
+                    contentPadding = MoSoButtonContentPadding.small,
                 ) {
                     SmallTextLabel(text = stringResource(id = buttonState.text))
                 }

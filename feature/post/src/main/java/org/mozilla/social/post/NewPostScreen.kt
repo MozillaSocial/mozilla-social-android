@@ -64,7 +64,7 @@ import org.mozilla.social.core.ui.common.MoSoSurface
 import org.mozilla.social.core.ui.common.TransparentNoTouchOverlay
 import org.mozilla.social.core.ui.common.appbar.MoSoCloseableTopAppBar
 import org.mozilla.social.core.ui.common.button.MoSoButton
-import org.mozilla.social.core.ui.common.button.MoSoButtonHeight
+import org.mozilla.social.core.ui.common.button.MoSoButtonContentPadding
 import org.mozilla.social.core.ui.common.dropdown.VisibilityDropDownButton
 import org.mozilla.social.core.ui.common.media.MediaUpload
 import org.mozilla.social.core.ui.common.text.MoSoTextField
@@ -321,10 +321,10 @@ private fun PostButton(
     modifier: Modifier = Modifier,
 ) {
     MoSoButton(
-        modifier = modifier
-            .height(MoSoButtonHeight.xs),
+        modifier = modifier,
         onClick = onPostClicked,
-        enabled = sendButtonEnabled
+        enabled = sendButtonEnabled,
+        contentPadding = MoSoButtonContentPadding.small,
     ) {
         SmallTextLabel(text = stringResource(id = R.string.post))
     }
