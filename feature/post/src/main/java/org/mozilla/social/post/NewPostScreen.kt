@@ -90,7 +90,8 @@ import org.mozilla.social.post.status.StatusUiState
 @Composable
 internal fun NewPostScreen(
     replyStatusId: String?,
-    viewModel: NewPostViewModel = koinViewModel(parameters = { parametersOf(replyStatusId) }),
+    editStatusId: String?,
+    viewModel: NewPostViewModel = koinViewModel(parameters = { parametersOf(replyStatusId, editStatusId) }),
 ) {
     val statusUiState by viewModel.statusDelegate.uiState.collectAsStateWithLifecycle()
     val mediaStates by viewModel.mediaDelegate.imageStates.collectAsStateWithLifecycle()

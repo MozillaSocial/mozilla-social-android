@@ -12,6 +12,7 @@ import org.mozilla.social.core.navigation.usecases.OpenLink
 import org.mozilla.social.core.usecase.mastodon.account.BlockAccount
 import org.mozilla.social.core.usecase.mastodon.account.MuteAccount
 import org.mozilla.social.core.usecase.mastodon.status.DeleteStatus
+import org.mozilla.social.core.usecase.mastodon.status.EditStatus
 import org.mozilla.social.core.usecase.mastodon.status.FavoriteStatus
 import org.mozilla.social.core.usecase.mastodon.status.UndoBoostStatus
 import org.mozilla.social.core.usecase.mastodon.status.UndoFavoriteStatus
@@ -190,6 +191,10 @@ class PostCardDelegate(
                 Timber.e(e)
             }
         }
+    }
+
+    override fun onOverflowEditClicked(statusId: String) {
+        navigateTo(NavigationDestination.NewPost(editStatusId = statusId))
     }
 
     override fun onAccountImageClicked(accountId: String) {

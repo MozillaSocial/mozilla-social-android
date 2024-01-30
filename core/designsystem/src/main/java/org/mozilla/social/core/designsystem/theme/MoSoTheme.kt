@@ -109,6 +109,8 @@ private val darkColorPalette =
         snackbarBkgError = FirefoxColor.Red05,
         snackbarBorderError = FirefoxColor.Red70,
         snackbarTextError = FirefoxColor.Red80,
+        logoForeground = FirefoxColor.Black,
+        logoBackground = FirefoxColor.White,
     )
 
 private val lightColorPalette =
@@ -147,6 +149,8 @@ private val lightColorPalette =
         snackbarBkgError = FirefoxColor.Red05,
         snackbarBorderError = FirefoxColor.Red70,
         snackbarTextError = FirefoxColor.Red80,
+        logoForeground = FirefoxColor.White,
+        logoBackground = FirefoxColor.Black,
     )
 
 /**
@@ -194,6 +198,9 @@ data class MoSoColors(
     val snackbarBkgError: Color,
     val snackbarBorderError: Color,
     val snackbarTextError: Color,
+    // logo
+    val logoForeground: Color,
+    val logoBackground: Color,
 )
 
 @Composable

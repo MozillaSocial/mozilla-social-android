@@ -112,27 +112,27 @@ sealed class NavigationDestination(
         }
     }
 
-    data class NewPost(val replyStatusId: String? = null) : NavigationDestination(
+    data class NewPost(val replyStatusId: String? = null, val editStatusId: String? = null) : NavigationDestination(
         route = ROUTE,
     ) {
         fun NavController.navigateToNewPost(navOptions: NavOptions? = null) {
-            navigate(route(replyStatusId), navOptions)
+            navigate(route(replyStatusId, editStatusId), navOptions)
         }
 
         companion object {
             private const val ROUTE = "newPost"
             const val NAV_PARAM_REPLY_STATUS_ID = "replyStatusId"
-            val fullRoute = route("{$NAV_PARAM_REPLY_STATUS_ID}")
+            const val NAV_PARAM_EDIT_STATUS_ID = "editStatusId"
+            val fullRoute = "${ROUTE}?" +
+                    "${NAV_PARAM_REPLY_STATUS_ID}={${NAV_PARAM_REPLY_STATUS_ID}}" +
+                    "&${NAV_PARAM_EDIT_STATUS_ID}={${NAV_PARAM_EDIT_STATUS_ID}}"
 
-            fun route(replyStatusId: String?): String {
-                val a =
-                    when {
-                        replyStatusId != null -> "$ROUTE?$NAV_PARAM_REPLY_STATUS_ID=$replyStatusId"
-                        else -> ROUTE
-                    }
-
-                println(a)
-                return a
+            fun route(replyStatusId: String? = null, editStatusId: String? = null): String {
+                return when {
+                    replyStatusId != null -> "$ROUTE?$NAV_PARAM_REPLY_STATUS_ID=$replyStatusId"
+                    editStatusId != null -> "$ROUTE?$NAV_PARAM_EDIT_STATUS_ID=$editStatusId"
+                    else -> ROUTE
+                }
             }
         }
     }

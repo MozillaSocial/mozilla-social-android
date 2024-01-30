@@ -6,6 +6,7 @@ import org.mozilla.social.post.bottombar.BottomBarState
 data class NewPostUiState(
     val visibility: StatusVisibility = StatusVisibility.Public,
     val isSendingPost: Boolean = false,
+    val isEditPost: Boolean = false,
     val sendButtonEnabled: Boolean = false,
     val bottomBarState: BottomBarState = BottomBarState(),
     val userHeaderState: UserHeaderState? = null,

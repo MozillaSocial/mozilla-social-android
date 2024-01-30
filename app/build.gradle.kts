@@ -18,7 +18,6 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
-        manifestPlaceholders["debug"] = false
     }
 
     buildTypes {
@@ -27,24 +26,19 @@ android {
             isShrinkResources = true
             proguardFile("proguard-rules.pro")
             matchingFallbacks += "release"
-            manifestPlaceholders["environment"] = "release"
         }
         debug {
             isDefault = true
             applicationIdSuffix = ".debug"
-            manifestPlaceholders["environment"] = "debug"
-            manifestPlaceholders["debug"] = true
         }
         create("nightly") {
             initWith(getByName("release"))
             applicationIdSuffix = ".nightly"
-            manifestPlaceholders["environment"] = "nightly"
         }
 
         create("unsignedRelease") {
             initWith(getByName("release"))
             signingConfig = signingConfigs.getByName("debug")
-            manifestPlaceholders["environment"] = "unsignedRelease"
         }
     }
 
