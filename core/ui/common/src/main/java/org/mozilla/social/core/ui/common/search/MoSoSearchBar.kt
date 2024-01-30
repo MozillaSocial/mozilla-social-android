@@ -76,7 +76,7 @@ fun MoSoSearchBar(
         BasicTextField(
             value = query,
             modifier = modifier
-                .defaultMinSize(minHeight = 40.dp)
+                .height(42.dp)
                 .border(
                     width = 1.dp,
                     color =

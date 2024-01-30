@@ -19,12 +19,14 @@ import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
@@ -46,6 +48,7 @@ import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.designsystem.utils.NoRipple
 import org.mozilla.social.core.model.Recommendation
 import org.mozilla.social.core.ui.common.MoSoSurface
+import org.mozilla.social.core.ui.common.appbar.MoSoTopBar
 import org.mozilla.social.core.ui.common.divider.MoSoDivider
 import org.mozilla.social.core.ui.common.error.GenericError
 import org.mozilla.social.core.ui.common.loading.MaxSizeLoading
@@ -67,6 +70,7 @@ internal fun DiscoverScreen(viewModel: DiscoverViewModel = koinViewModel()) {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun DiscoverScreen(
     recommendations: Resource<List<Recommendation>>,
@@ -80,20 +84,20 @@ private fun DiscoverScreen(
         Column {
             Box(
                 modifier = Modifier
-                    .padding(
-                        start = MoSoSpacing.md,
-                        end = MoSoSpacing.md,
-                        // 14 on top should make the search bar align perfectly with the
-                        // search bar on the search screen
-                        top = 14.dp,
-                        bottom = MoSoSpacing.md,
-                    )
                     .fillMaxWidth()
                     .height(IntrinsicSize.Max),
             ) {
+                // Adding an empty top bar ensure the search bar will align with the
+                // search bar on the search screen
+                MoSoTopBar(title = { })
                 MoSoSearchBar(
                     modifier = Modifier
-                        .fillMaxWidth(),
+                        .fillMaxWidth()
+                        .align(Alignment.CenterEnd)
+                        .padding(
+                            end = MoSoSpacing.md,
+                            start = MoSoSpacing.md,
+                        ),
                     query = "",
                     onQueryChange = {},
                     onSearch = {},
