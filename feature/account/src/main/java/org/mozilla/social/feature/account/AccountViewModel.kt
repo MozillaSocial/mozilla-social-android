@@ -181,7 +181,6 @@ class AccountViewModel(
         analytics.uiEngagement(
             uiIdentifier = AnalyticsIdentifiers.PROFILE_OVERFLOW_SHARE,
             mastodonAccountId = accountId,
-            mastodonAccountHandle = usersAccountId
         )
     }
 
@@ -190,7 +189,6 @@ class AccountViewModel(
             engagementType = EngagementType.GENERAL,
             uiIdentifier = AnalyticsIdentifiers.PROFILE_OVERFLOW_MUTE,
             mastodonAccountId = accountId,
-            mastodonAccountHandle = usersAccountId,
         )
         viewModelScope.launch {
             try {
@@ -206,7 +204,6 @@ class AccountViewModel(
             engagementType = EngagementType.GENERAL,
             uiIdentifier = AnalyticsIdentifiers.PROFILE_OVERFLOW_UNMUTE,
             mastodonAccountId = accountId,
-            mastodonAccountHandle = usersAccountId,
         )
         viewModelScope.launch {
             try {
@@ -222,7 +219,6 @@ class AccountViewModel(
             engagementType = EngagementType.GENERAL,
             uiIdentifier = AnalyticsIdentifiers.PROFILE_OVERFLOW_BLOCK,
             mastodonAccountId = accountId,
-            mastodonAccountHandle = usersAccountId,
         )
         viewModelScope.launch {
             try {
@@ -238,7 +234,6 @@ class AccountViewModel(
             engagementType = EngagementType.GENERAL,
             uiIdentifier = AnalyticsIdentifiers.PROFILE_OVERFLOW_UNBLOCK,
             mastodonAccountId = accountId,
-            mastodonAccountHandle = usersAccountId,
         )
         viewModelScope.launch {
             try {
@@ -254,7 +249,6 @@ class AccountViewModel(
             engagementType = EngagementType.GENERAL,
             uiIdentifier = AnalyticsIdentifiers.PROFILE_OVERFLOW_REPORT,
             mastodonAccountId = accountId,
-            mastodonAccountHandle = usersAccountId,
         )
         (uiState.value as? Resource.Loaded)?.data?.webFinger?.let { webFinger ->
             navigateTo(
@@ -294,7 +288,6 @@ class AccountViewModel(
         analytics.uiEngagement(
             uiIdentifier = AnalyticsIdentifiers.ACCOUNTS_SCREEN_FOLLOW,
             mastodonAccountId = accountId,
-            mastodonAccountHandle = usersAccountId
         )
         viewModelScope.launch {
             try {
@@ -312,7 +305,6 @@ class AccountViewModel(
         analytics.uiEngagement(
             uiIdentifier = AnalyticsIdentifiers.ACCOUNTS_SCREEN_UNFOLLOW,
             mastodonAccountId = accountId,
-            mastodonAccountHandle = usersAccountId
         )
         viewModelScope.launch {
             try {
@@ -352,7 +344,6 @@ class AccountViewModel(
         analytics.uiEngagement(
             uiIdentifier = AnalyticsIdentifiers.PROFILE_EDIT_PROFILE,
             mastodonAccountId = accountId,
-            mastodonAccountHandle = usersAccountId,
         )
         navigateTo(NavigationDestination.EditAccount)
     }

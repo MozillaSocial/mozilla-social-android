@@ -46,7 +46,6 @@ class GleanAnalytics(
     override fun uiEngagement(
         engagementType: EngagementType?,
         engagementValue: String?,
-        mastodonAccountHandle: String?,
         mastodonAccountId: String?,
         mastodonStatusId: String?,
         recommendationId: String?,
@@ -58,7 +57,6 @@ class GleanAnalytics(
                 Ui.EngagementExtra(
                     engagementType = engagementType?.value,
                     engagementValue = engagementValue,
-                    mastodonAccountHandle = mastodonAccountHandle,
                     mastodonAccountId = mastodonAccountId,
                     mastodonStatusId = mastodonStatusId,
                     recommendationId = recommendationId,
@@ -69,7 +67,6 @@ class GleanAnalytics(
     }
 
     override fun uiImpression(
-        mastodonAccountHandle: String?,
         mastodonAccountId: String?,
         mastodonStatusId: String?,
         recommendationId: String?,
@@ -79,7 +76,6 @@ class GleanAnalytics(
         Ui.impression.record(
             extra =
                 Ui.ImpressionExtra(
-                    mastodonAccountHandle = mastodonAccountHandle,
                     mastodonAccountId = mastodonAccountId,
                     mastodonStatusId = mastodonStatusId,
                     recommendationId = recommendationId,
@@ -97,10 +93,6 @@ class GleanAnalytics(
         Identifiers.fxaAccountId.set(fxaAccountId)
     }
 
-    override fun setMastodonAccountHandle(mastodonAccountHandle: String) {
-        Identifiers.mastodonAccountHandle.set(mastodonAccountHandle)
-    }
-
     override fun setMastodonAccountId(mastodonAccountId: String) {
         Identifiers.mastodonAccountId.set(mastodonAccountId)
     }
@@ -110,7 +102,6 @@ class GleanAnalytics(
     }
 
     override fun clearLoggedInIdentifiers() {
-        Identifiers.mastodonAccountHandle.set("")
         Identifiers.mastodonAccountId.set("")
     }
 }
