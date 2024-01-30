@@ -45,6 +45,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.draw.clipToBounds
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.SubcomposeLayout
 import androidx.compose.ui.platform.debugInspectorInfo
@@ -58,6 +59,7 @@ import kotlinx.coroutines.launch
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.ui.common.divider.MoSoDivider
 import org.mozilla.social.core.ui.common.tabs.TabRowDefaults.tabIndicatorOffset
+import kotlin.math.min
 
 /**
  * Based on [ScrollableTabRow]
@@ -80,6 +82,19 @@ fun MoSoTabRow(
     },
     divider: @Composable () -> Unit = @Composable {
         MoSoDivider()
+    },
+    scrollIndicator: @Composable () -> Unit = @Composable {
+        Box(
+            modifier = Modifier
+                .background(
+                    brush = Brush.horizontalGradient(
+                        colors = listOf(
+                            Color.Transparent,
+                            MoSoTheme.colors.layer1,
+                        )
+                    )
+                )
+        )
     },
     tabs: @Composable () -> Unit,
 ) {
@@ -164,6 +179,20 @@ fun MoSoTabRow(
                         indicator(tabPositions)
                     }.forEach {
                         it.measure(Constraints.fixed(layoutWidth, layoutHeight)).placeRelative(0, 0)
+                    }
+
+                    // Add a scroll indicator to the end of the visible end of the tab row
+                    // if the tab row is scrollable
+                    if (isScrollEnabled) {
+                        subcompose(TabSlots.Fade, scrollIndicator).forEach {
+                            val scrollRemaining = scrollState.maxValue - scrollState.value
+                            val fadeStart = min(FadeWidth.roundToPx(), scrollRemaining)
+                            val placeable = it.measure(Constraints.fixed(fadeStart, layoutHeight))
+                            placeable.placeRelative(
+                                maxWidth.roundToPx() + scrollState.value - fadeStart,
+                                0,
+                            )
+                        }
                     }
 
                     scrollableTabData.onLaidOut(
@@ -305,7 +334,8 @@ object TabRowDefaults {
 private enum class TabSlots {
     Tabs,
     Divider,
-    Indicator
+    Indicator,
+    Fade,
 }
 
 /**
@@ -366,7 +396,9 @@ private class ScrollableTabData(
     }
 }
 
-private val ScrollableTabRowMinimumTabWidth = 90.dp
+private val ScrollableTabRowMinimumTabWidth = 0.dp
+
+private val FadeWidth = 120.dp
 
 /**
  * [AnimationSpec] used when scrolling to a tab that is not fully visible.
@@ -486,14 +518,35 @@ private fun TabRowPreview7() {
             MoSoTab(selected = true, onClick = { /*TODO*/ }) {
                 Text(text = "test")
             }
-            MoSoTab(selected = true, onClick = { /*TODO*/ }) {
+            MoSoTab(selected = false, onClick = { /*TODO*/ }) {
                 Text(text = "test")
             }
-            MoSoTab(selected = true, onClick = { /*TODO*/ }) {
+            MoSoTab(selected = false, onClick = { /*TODO*/ }) {
                 Text(text = "test 2333")
             }
             MoSoTab(selected = false, onClick = { /*TODO*/ }) {
                 Text(text = "test and some cool")
+            }
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun TabRowPreview8() {
+    MoSoTheme {
+        MoSoTabRow(selectedTabIndex = 0) {
+            MoSoTab(selected = true, onClick = { /*TODO*/ }) {
+                Text(text = "test is super cool")
+            }
+            MoSoTab(selected = false, onClick = { /*TODO*/ }) {
+                Text(text = "full gradient!")
+            }
+            MoSoTab(selected = false, onClick = { /*TODO*/ }) {
+                Text(text = "test 2333")
+            }
+            MoSoTab(selected = false, onClick = { /*TODO*/ }) {
+                Text(text = "test and some cool fun")
             }
         }
     }

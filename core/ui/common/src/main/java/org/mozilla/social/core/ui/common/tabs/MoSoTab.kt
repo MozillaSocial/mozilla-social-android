@@ -3,6 +3,7 @@ package org.mozilla.social.core.ui.common.tabs
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
@@ -30,7 +31,8 @@ fun MoSoTab(
     Tab(
         selected = selected,
         onClick = onClick,
-        modifier = modifier,
+        modifier = modifier
+            .defaultMinSize(minHeight = 40.dp),
         enabled = enabled,
         selectedContentColor = selectedContentColor,
         unselectedContentColor = unselectedContentColor,
