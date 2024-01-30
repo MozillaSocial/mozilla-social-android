@@ -25,11 +25,6 @@ interface Analytics {
      * @param engagementValue If the UI element is a toggle or setting, the value of the
      * toggle/setting after user interaction has taken place.
      *
-     * @param mastodonAccountHandle The Mastodon account handle of the UI element that was seen/interacted
-     * with by the user, if any.
-     * For example, the account handle of the user who created a post that was
-     * seen/interacted with. Or, the account handle of the user that was followed.
-     *
      * @param mastodonAccountId The Mastodon account ID of the UI element that was seen/interacted
      * with by the user, if any.
      * For example, the account ID of the user who created a post that was
@@ -55,7 +50,6 @@ interface Analytics {
     fun uiEngagement(
         engagementType: EngagementType? = null,
         engagementValue: String? = null,
-        mastodonAccountHandle: String? = null,
         mastodonAccountId: String? = null,
         mastodonStatusId: String? = null,
         recommendationId: String? = null,
@@ -68,11 +62,6 @@ interface Analytics {
      * Triggered once per page load, as soon as any pixel of that UI
      * element is visible in the foreground for any length of time.
      * UI elements may include: content, pages, CTAs, etc.
-     *
-     * @param mastodonAccountHandle The Mastodon account handle of the UI element that was seen/interacted
-     * with by the user, if any.
-     * For example, the account handle of the user who created a post that was
-     * seen/interacted with. Or, the account handle of the user that was followed.
      *
      * @param mastodonAccountId The Mastodon account ID of the UI element that was seen/interacted
      * with by the user, if any.
@@ -97,7 +86,6 @@ interface Analytics {
      * https://docs.google.com/spreadsheets/d/1KX6TiyXXg2fE0a1IDKsy5O97ZrHYvjKohmIX_m8ECXY/edit?usp=sharing
      */
     fun uiImpression(
-        mastodonAccountHandle: String? = null,
         mastodonAccountId: String? = null,
         mastodonStatusId: String? = null,
         recommendationId: String? = null,
@@ -114,12 +102,6 @@ interface Analytics {
      * @param fxaAccountId The user's FxA account ID, if available.
      */
     fun setFxaAccountId(fxaAccountId: String) = Unit
-
-    /**
-     * @param mastodonAccountHandle The user's full account handle, with domain.
-     * For example: account_name@mozilla.social
-     */
-    fun setMastodonAccountHandle(mastodonAccountHandle: String) = Unit
 
     /**
      * @param mastodonAccountId The user's numeric account ID from Mastodon.

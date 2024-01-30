@@ -64,9 +64,11 @@ import org.mozilla.social.core.ui.common.MoSoSurface
 import org.mozilla.social.core.ui.common.TransparentNoTouchOverlay
 import org.mozilla.social.core.ui.common.appbar.MoSoCloseableTopAppBar
 import org.mozilla.social.core.ui.common.button.MoSoButton
+import org.mozilla.social.core.ui.common.button.MoSoButtonContentPadding
 import org.mozilla.social.core.ui.common.dropdown.VisibilityDropDownButton
 import org.mozilla.social.core.ui.common.media.MediaUpload
 import org.mozilla.social.core.ui.common.text.MoSoTextField
+import org.mozilla.social.core.ui.common.text.SmallTextLabel
 import org.mozilla.social.core.ui.common.transparentTextFieldColors
 import org.mozilla.social.core.ui.common.utils.getWindowHeightClass
 import org.mozilla.social.feature.post.R
@@ -88,7 +90,8 @@ import org.mozilla.social.post.status.StatusUiState
 @Composable
 internal fun NewPostScreen(
     replyStatusId: String?,
-    viewModel: NewPostViewModel = koinViewModel(parameters = { parametersOf(replyStatusId) }),
+    editStatusId: String?,
+    viewModel: NewPostViewModel = koinViewModel(parameters = { parametersOf(replyStatusId, editStatusId) }),
 ) {
     val statusUiState by viewModel.statusDelegate.uiState.collectAsStateWithLifecycle()
     val mediaStates by viewModel.mediaDelegate.imageStates.collectAsStateWithLifecycle()
@@ -197,10 +200,13 @@ private fun CompactNewPostScreenContent(
             )
         }
 
-        PostButton(
+        SubmitButton(
             modifier = Modifier.padding(end = 16.dp),
-            onPostClicked = newPostInteractions::onPostClicked,
+            onPostClicked = if (!statusUiState.editStatusId.isNullOrBlank())
+                newPostInteractions::onEditClicked else newPostInteractions::onPostClicked,
             sendButtonEnabled = newPostUiState.sendButtonEnabled,
+            buttonText = if (!statusUiState.editStatusId.isNullOrBlank())
+                R.string.edit else R.string.post
         )
     }
 }
@@ -219,7 +225,9 @@ private fun NewPostScreenContent(
 ) {
     Column {
         TopBar(
+            statusUiState = statusUiState,
             onPostClicked = newPostInteractions::onPostClicked,
+            onEditClicked = newPostInteractions::onEditClicked,
             sendButtonEnabled = newPostUiState.sendButtonEnabled,
         )
         newPostUiState.userHeaderState?.let { userHeaderState ->
@@ -301,31 +309,39 @@ fun UserHeader(
 
 @Composable
 private fun TopBar(
+    statusUiState: StatusUiState,
     onPostClicked: () -> Unit,
+    onEditClicked: () -> Unit,
     sendButtonEnabled: Boolean,
 ) {
     MoSoCloseableTopAppBar(
         actions = {
-            PostButton(onPostClicked = onPostClicked, sendButtonEnabled = sendButtonEnabled)
+            SubmitButton(
+                modifier = Modifier.padding(end = 16.dp),
+                onPostClicked = if (!statusUiState.editStatusId.isNullOrBlank())
+                    onEditClicked else onPostClicked,
+                sendButtonEnabled = sendButtonEnabled,
+                buttonText = if (!statusUiState.editStatusId.isNullOrBlank())
+                    R.string.edit else R.string.post
+            )
         },
     )
 }
 
 @Composable
-private fun PostButton(
+private fun SubmitButton(
     onPostClicked: () -> Unit,
     sendButtonEnabled: Boolean,
     modifier: Modifier = Modifier,
+    buttonText: Int = R.string.post
 ) {
     MoSoButton(
         modifier = modifier,
         onClick = onPostClicked,
-        enabled = sendButtonEnabled
+        enabled = sendButtonEnabled,
+        contentPadding = MoSoButtonContentPadding.small,
     ) {
-        Text(
-            text = stringResource(id = R.string.post),
-            style = MoSoTheme.typography.labelSmall,
-        )
+        SmallTextLabel(text = stringResource(id = buttonText))
     }
 }
 
@@ -613,6 +629,39 @@ private fun NewPostScreenWithContentWarningPreview() {
                 accountList = null,
                 hashtagList = null,
                 inReplyToAccountName = null,
+            ),
+            newPostUiState = NewPostUiState(
+                sendButtonEnabled = true,
+                isSendingPost = false,
+                visibility = StatusVisibility.Private,
+                userHeaderState = UserHeaderState("", "Barack Obama"),
+                bottomBarState = BottomBarState(),
+            ),
+            statusInteractions = object : StatusInteractions {},
+            imageStates = listOf(),
+            mediaInteractions = object : MediaInteractions {},
+            pollUiState = null,
+            pollInteractions = object : PollInteractions {},
+            contentWarningInteractions = object : ContentWarningInteractions {},
+            newPostInteractions = NewPostInteractionsNoOp,
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun EditPostScreenPreview() {
+    MoSoTheme(
+        false,
+    ) {
+        NewPostScreen(
+            statusUiState = StatusUiState(
+                statusText = TextFieldValue(),
+                contentWarningText = null,
+                accountList = null,
+                hashtagList = null,
+                inReplyToAccountName = null,
+                editStatusId = "statusId"
             ),
             newPostUiState = NewPostUiState(
                 sendButtonEnabled = true,

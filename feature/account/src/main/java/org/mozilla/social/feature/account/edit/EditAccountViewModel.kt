@@ -65,7 +65,6 @@ class EditAccountViewModel(
                     analytics.uiEngagement(
                         uiIdentifier = AnalyticsIdentifiers.PROFILE_EDIT_PROFILE_SAVE,
                         mastodonAccountId = accountId,
-                        mastodonAccountHandle = data.displayName.trim(),
                     )
                     updateMyAccount(
                         displayName = data.displayName.trim(),

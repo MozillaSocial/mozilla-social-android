@@ -24,6 +24,7 @@ import org.mozilla.social.core.navigation.usecases.PopNavBackstack
 import org.mozilla.social.core.navigation.usecases.ShowSnackbar
 import org.mozilla.social.core.repository.mastodon.AccountRepository
 import org.mozilla.social.core.usecase.mastodon.account.GetLoggedInUserAccountId
+import org.mozilla.social.core.usecase.mastodon.status.EditStatus
 import org.mozilla.social.core.usecase.mastodon.status.PostStatus
 import org.mozilla.social.feature.post.R
 import org.mozilla.social.post.bottombar.BottomBarState
@@ -36,9 +37,11 @@ import timber.log.Timber
 class NewPostViewModel(
     private val analytics: Analytics,
     private val replyStatusId: String?,
+    private val editStatusId: String?,
     getLoggedInUserAccountId: GetLoggedInUserAccountId,
     accountRepository: AccountRepository,
     private val postStatus: PostStatus,
+    private val editStatus: EditStatus,
     private val popNavBackstack: PopNavBackstack,
     private val showSnackbar: ShowSnackbar,
     val pollDelegate: PollDelegate,
@@ -48,6 +51,7 @@ class NewPostViewModel(
         parametersOf(
             viewModelScope,
             replyStatusId,
+            editStatusId,
         )
     }
 
@@ -161,9 +165,52 @@ class NewPostViewModel(
         }
     }
 
+    override fun onEditClicked() {
+        viewModelScope.launch {
+            _newPostUiState.edit { copy(
+                isSendingPost = true
+            ) }
+            try {
+                if (editStatusId != null) {
+                    editStatus(
+                        statusId = editStatusId,
+                        statusText = statusDelegate.uiState.value.statusText.text,
+                        imageStates = mediaDelegate.imageStates.value.toList(),
+                        visibility = newPostUiState.value.visibility,
+                        pollCreate = pollDelegate.uiState.value?.let { poll ->
+                            PollCreate(
+                                options = poll.options,
+                                expiresInSec = poll.pollDuration.inSeconds,
+                                allowMultipleChoices = poll.style == PollStyle.MULTIPLE_CHOICE,
+                                hideTotals = poll.hideTotals,
+                            )
+                        },
+                        contentWarningText = statusDelegate.uiState.value.contentWarningText,
+                        inReplyToId = replyStatusId,
+                    )
+                }
+
+                onStatusEdited()
+            } catch (e: Exception) {
+                Timber.e(e)
+                _newPostUiState.edit { copy(
+                    isSendingPost = false
+                ) }
+            }
+        }
+    }
+
     private fun onStatusPosted() {
         showSnackbar(
             text = StringFactory.resource(R.string.your_post_was_published),
+            isError = false,
+        )
+        popNavBackstack()
+    }
+
+    private fun onStatusEdited() {
+        showSnackbar(
+            text = StringFactory.resource(R.string.your_edit_was_published),
             isError = false,
         )
         popNavBackstack()

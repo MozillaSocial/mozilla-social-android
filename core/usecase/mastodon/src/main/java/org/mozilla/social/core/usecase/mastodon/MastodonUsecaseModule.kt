@@ -29,6 +29,7 @@ import org.mozilla.social.core.usecase.mastodon.report.Report
 import org.mozilla.social.core.usecase.mastodon.search.SearchAll
 import org.mozilla.social.core.usecase.mastodon.status.BoostStatus
 import org.mozilla.social.core.usecase.mastodon.status.DeleteStatus
+import org.mozilla.social.core.usecase.mastodon.status.EditStatus
 import org.mozilla.social.core.usecase.mastodon.status.FavoriteStatus
 import org.mozilla.social.core.usecase.mastodon.status.GetInReplyToAccountNames
 import org.mozilla.social.core.usecase.mastodon.status.PostStatus
@@ -129,6 +130,16 @@ val mastodonUsecaseModule =
         }
         single {
             PostStatus(
+                externalScope = get<AppScope>(),
+                mediaApi = get(),
+                statusRepository = get(),
+                saveStatusToDatabase = get(),
+                timelineRepository = get(),
+                showSnackbar = get(),
+            )
+        }
+        single {
+            EditStatus(
                 externalScope = get<AppScope>(),
                 mediaApi = get(),
                 statusRepository = get(),

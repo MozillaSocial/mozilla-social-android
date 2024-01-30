@@ -9,11 +9,18 @@ import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Path
 
 interface StatusApi {
     @POST("api/v1/statuses")
     suspend fun postStatus(
+        @Body status: NetworkStatusCreate,
+    ): NetworkStatus
+
+    @PUT("api/v1/statuses/{statusId}")
+    suspend fun editStatus(
+        @Path("statusId") statusId: String,
         @Body status: NetworkStatusCreate,
     ): NetworkStatus
 

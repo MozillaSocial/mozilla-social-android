@@ -7,6 +7,7 @@ interface NewPostInteractions {
     fun onUploadImageClicked()
     fun onUploadMediaClicked()
     fun onPostClicked()
+    fun onEditClicked()
     fun onVisibilitySelected(statusVisibility: StatusVisibility)
 }
 
@@ -15,5 +16,6 @@ object NewPostInteractionsNoOp : NewPostInteractions {
     override fun onUploadImageClicked() = Unit
     override fun onUploadMediaClicked() = Unit
     override fun onPostClicked() = Unit
+    override fun onEditClicked() = Unit
     override fun onVisibilitySelected(statusVisibility: StatusVisibility) = Unit
 }
