@@ -76,6 +76,7 @@ import org.mozilla.social.core.ui.common.dropdown.MoSoDropdownMenu
 import org.mozilla.social.core.ui.common.error.GenericError
 import org.mozilla.social.core.ui.common.loading.MoSoCircularProgressIndicator
 import org.mozilla.social.core.ui.common.paging.PagingLazyColumn
+import org.mozilla.social.core.ui.common.utils.PreviewTheme
 import org.mozilla.social.core.ui.htmlcontent.HtmlContent
 import org.mozilla.social.core.ui.htmlcontent.HtmlContentInteractions
 import org.mozilla.social.core.ui.postcard.PostCardInteractions
@@ -312,8 +313,7 @@ private fun MainAccount(
         AccountTimelineType.entries.forEach { timelineType ->
             MoSoTab(
                 modifier =
-                Modifier
-                    .height(40.dp),
+                Modifier,
                 selected = timeline.type == timelineType,
                 onClick = { accountInteractions.onTabClicked(timelineType) },
                 content = {
@@ -649,52 +649,48 @@ private const val BIO_MAX_LINES_NOT_EXPANDED = 3
 @Preview
 @Composable
 fun AccountScreenPreview() {
-    KoinApplication(application = {
-        modules(navigationModule)
-    }) {
-        MoSoTheme {
-            AccountScreen(
-                uiState =
-                    Resource.Loaded(
-                        data =
-                            AccountUiState(
-                                accountId = "",
-                                username = "Coolguy",
-                                webFinger = "coolguy",
-                                displayName = "Cool Guy",
-                                accountUrl = "",
-                                bio = "I'm pretty cool",
-                                avatarUrl = "",
-                                headerUrl = "",
-                                followersCount = 1,
-                                followingCount = 500,
-                                statusesCount = 4000,
-                                fields = listOf(),
-                                isBot = false,
-                                isFollowing = false,
-                                isMuted = false,
-                                isBlocked = false,
-                                joinDate =
-                                    LocalDateTime(
-                                        LocalDate(2023, 7, 3),
-                                        LocalTime(0, 0, 0),
-                                    ),
-                            ),
+    PreviewTheme(modules = listOf(navigationModule)) {
+        AccountScreen(
+            uiState =
+            Resource.Loaded(
+                data =
+                AccountUiState(
+                    accountId = "",
+                    username = "Coolguy",
+                    webFinger = "coolguy",
+                    displayName = "Cool Guy",
+                    accountUrl = "",
+                    bio = "I'm pretty cool",
+                    avatarUrl = "",
+                    headerUrl = "",
+                    followersCount = 1,
+                    followingCount = 500,
+                    statusesCount = 4000,
+                    fields = listOf(),
+                    isBot = false,
+                    isFollowing = false,
+                    isMuted = false,
+                    isBlocked = false,
+                    joinDate =
+                    LocalDateTime(
+                        LocalDate(2023, 7, 3),
+                        LocalTime(0, 0, 0),
                     ),
-                closeButtonVisible = true,
-                isUsersProfile = false,
-                timeline = Timeline(
-                    type = AccountTimelineType.POSTS,
-                    postsFeed = flowOf(),
-                    postsAndRepliesFeed = flowOf(),
-                    mediaFeed = flowOf(),
                 ),
-                htmlContentInteractions = object : HtmlContentInteractions {},
-                postCardInteractions = object : PostCardInteractions {},
-                accountInteractions = object : AccountInteractions {},
-                windowInsets = WindowInsets.systemBars,
-                navigateToSettings = {},
-            )
-        }
+            ),
+            closeButtonVisible = true,
+            isUsersProfile = false,
+            timeline = Timeline(
+                type = AccountTimelineType.POSTS,
+                postsFeed = flowOf(),
+                postsAndRepliesFeed = flowOf(),
+                mediaFeed = flowOf(),
+            ),
+            htmlContentInteractions = object : HtmlContentInteractions {},
+            postCardInteractions = object : PostCardInteractions {},
+            accountInteractions = object : AccountInteractions {},
+            windowInsets = WindowInsets.systemBars,
+            navigateToSettings = {},
+        )
     }
 }
