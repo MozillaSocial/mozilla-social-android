@@ -27,7 +27,6 @@ class ContentPreferencesSettingsViewModel(
     override fun onScreenViewed() {
         analytics.uiImpression(
             uiIdentifier = AnalyticsIdentifiers.SETTINGS_CONTENT_PREFERENCES_IMPRESSION,
-            mastodonAccountId = userAccountId,
         )
     }
 }

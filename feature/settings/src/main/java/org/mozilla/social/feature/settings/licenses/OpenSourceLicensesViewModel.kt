@@ -15,7 +15,6 @@ class OpenSourceLicensesViewModel(
     override fun onScreenViewed() {
         analytics.uiImpression(
             uiIdentifier = AnalyticsIdentifiers.SETTINGS_CONTENT_OPEN_SOURCE_LICENSE,
-            mastodonAccountId = userAccountId
         )
     }
 }

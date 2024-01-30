@@ -12,7 +12,6 @@ import org.mozilla.social.core.navigation.usecases.OpenLink
 import org.mozilla.social.core.usecase.mastodon.account.BlockAccount
 import org.mozilla.social.core.usecase.mastodon.account.MuteAccount
 import org.mozilla.social.core.usecase.mastodon.status.DeleteStatus
-import org.mozilla.social.core.usecase.mastodon.status.EditStatus
 import org.mozilla.social.core.usecase.mastodon.status.FavoriteStatus
 import org.mozilla.social.core.usecase.mastodon.status.UndoBoostStatus
 import org.mozilla.social.core.usecase.mastodon.status.UndoFavoriteStatus
@@ -56,7 +55,6 @@ class PostCardDelegate(
         analytics.uiEngagement(
             engagementType = EngagementType.GENERAL,
             uiIdentifier = "$baseAnalyticsIdentifier.${AnalyticsIdentifiers.FEED_POST_REPLY}",
-            mastodonStatusId = statusId
         )
         navigateTo(NavigationDestination.NewPost(replyStatusId = statusId))
     }
@@ -71,7 +69,6 @@ class PostCardDelegate(
                     analytics.uiEngagement(
                         engagementType = EngagementType.GENERAL,
                         uiIdentifier = "$baseAnalyticsIdentifier.${AnalyticsIdentifiers.FEED_POST_BOOST}",
-                        mastodonStatusId = statusId
                     )
                     boostStatus(statusId)
                 } catch (e: BoostStatus.BoostStatusFailedException) {
@@ -82,7 +79,6 @@ class PostCardDelegate(
                     analytics.uiEngagement(
                         engagementType = EngagementType.GENERAL,
                         uiIdentifier = "$baseAnalyticsIdentifier.${AnalyticsIdentifiers.FEED_POST_UNBOOST}",
-                        mastodonStatusId = statusId
                     )
                     undoBoostStatus(statusId)
                 } catch (e: UndoBoostStatus.UndoBoostStatusFailedException) {
@@ -102,7 +98,6 @@ class PostCardDelegate(
                     analytics.uiEngagement(
                         engagementType = EngagementType.FAVORITE,
                         uiIdentifier = "$baseAnalyticsIdentifier.${AnalyticsIdentifiers.FEED_POST_FAVORITE}",
-                        mastodonStatusId = statusId
                     )
                     favoriteStatus(statusId)
                 } catch (e: FavoriteStatus.FavoriteStatusFailedException) {
@@ -113,7 +108,6 @@ class PostCardDelegate(
                     analytics.uiEngagement(
                         engagementType = EngagementType.FAVORITE,
                         uiIdentifier = "$baseAnalyticsIdentifier.${AnalyticsIdentifiers.FEED_POST_UNFAVORITE}",
-                        mastodonStatusId = statusId
                     )
                     undoFavoriteStatus(statusId)
                 } catch (e: UndoFavoriteStatus.UndoFavoriteStatusFailedException) {
@@ -134,7 +128,6 @@ class PostCardDelegate(
         analytics.uiEngagement(
             engagementType = EngagementType.GENERAL,
             uiIdentifier = "$baseAnalyticsIdentifier.${AnalyticsIdentifiers.FEED_POST_MUTE}",
-            mastodonStatusId = statusId
         )
         coroutineScope.launch {
             try {
@@ -152,7 +145,6 @@ class PostCardDelegate(
         analytics.uiEngagement(
             engagementType = EngagementType.GENERAL,
             uiIdentifier = "$baseAnalyticsIdentifier.${AnalyticsIdentifiers.FEED_POST_BLOCK}",
-            mastodonStatusId = statusId
         )
         coroutineScope.launch {
             try {
@@ -172,7 +164,6 @@ class PostCardDelegate(
         analytics.uiEngagement(
             engagementType = EngagementType.GENERAL,
             uiIdentifier = "$baseAnalyticsIdentifier.${AnalyticsIdentifiers.FEED_POST_REPORT}",
-            mastodonStatusId = statusId
         )
         navigateTo(
             NavigationDestination.Report(
@@ -201,7 +192,6 @@ class PostCardDelegate(
         analytics.uiEngagement(
             engagementType = EngagementType.GENERAL,
             uiIdentifier = AnalyticsIdentifiers.FEED_POST_ACCOUNT_IMAGE_TAPPED,
-            mastodonAccountId = accountId
         )
         navigateTo(NavigationDestination.Account(accountId))
     }
@@ -219,7 +209,6 @@ class PostCardDelegate(
         analytics.uiEngagement(
             engagementType = EngagementType.GENERAL,
             uiIdentifier = AnalyticsIdentifiers.FEED_POST_ACCOUNT_TAPPED,
-            mastodonAccountId = accountId
         )
         navigateTo(NavigationDestination.Account(accountId))
     }

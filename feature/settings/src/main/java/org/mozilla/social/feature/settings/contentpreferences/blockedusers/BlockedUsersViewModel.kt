@@ -71,7 +71,6 @@ class BlockedUsersViewModel(
     override fun onScreenViewed() {
         analytics.uiImpression(
             uiIdentifier = AnalyticsIdentifiers.BLOCKED_USERS_SCREEN_IMPRESSION,
-            mastodonAccountId = userAccountId,
         )
     }
 }

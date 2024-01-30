@@ -51,7 +51,6 @@ class AccountSettingsViewModel(
     private fun logoutClickedAnalytics() {
         analytics.uiEngagement(
             uiIdentifier = AnalyticsIdentifiers.SETTINGS_ACCOUNT_SIGNOUT,
-            mastodonAccountId = userAccountId
         )
     }
 
@@ -63,7 +62,6 @@ class AccountSettingsViewModel(
     override fun onScreenViewed() {
         analytics.uiImpression(
             uiIdentifier = AnalyticsIdentifiers.SETTINGS_ACCOUNT_IMPRESSION,
-            mastodonAccountId = userAccountId,
         )
     }
 }

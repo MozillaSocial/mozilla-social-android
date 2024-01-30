@@ -38,7 +38,6 @@ class PrivacySettingsViewModel(
     override fun onScreenViewed() {
         analytics.uiImpression(
             uiIdentifier = AnalyticsIdentifiers.SETTINGS_PRIVACY_IMPRESSION,
-            mastodonAccountId = userAccountId
         )
     }
 }

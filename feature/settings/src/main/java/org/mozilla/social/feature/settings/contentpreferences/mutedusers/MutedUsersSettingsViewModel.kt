@@ -71,7 +71,6 @@ class MutedUsersSettingsViewModel(
     override fun onScreenViewed() {
         analytics.uiImpression(
             uiIdentifier = AnalyticsIdentifiers.MUTED_USERS_SCREEN_IMPRESSION,
-            mastodonAccountId = userAccountId,
         )
     }
 }

@@ -19,7 +19,6 @@ import org.mozilla.social.core.ui.common.account.quickview.toQuickViewUiState
 import org.mozilla.social.core.ui.htmlcontent.HtmlContentInteractions
 import org.mozilla.social.core.usecase.mastodon.account.GetLoggedInUserAccountId
 import org.mozilla.social.core.usecase.mastodon.htmlcontent.DefaultHtmlInteractions
-import org.mozilla.social.feature.settings.SettingsInteractions
 import timber.log.Timber
 
 class AboutSettingsViewModel(
@@ -65,7 +64,6 @@ class AboutSettingsViewModel(
     override fun onScreenViewed() {
         analytics.uiImpression(
             uiIdentifier = AnalyticsIdentifiers.SETTINGS_ABOUT_IMPRESSION,
-            mastodonAccountId = userAccountId
         )
     }
 
