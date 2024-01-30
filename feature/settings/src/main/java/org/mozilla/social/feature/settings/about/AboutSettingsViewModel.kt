@@ -17,12 +17,10 @@ import org.mozilla.social.core.navigation.usecases.NavigateTo
 import org.mozilla.social.core.repository.mastodon.InstanceRepository
 import org.mozilla.social.core.ui.common.account.quickview.toQuickViewUiState
 import org.mozilla.social.core.ui.htmlcontent.HtmlContentInteractions
-import org.mozilla.social.core.usecase.mastodon.account.GetLoggedInUserAccountId
 import org.mozilla.social.core.usecase.mastodon.htmlcontent.DefaultHtmlInteractions
 import timber.log.Timber
 
 class AboutSettingsViewModel(
-    getLoggedInUserAccountId: GetLoggedInUserAccountId,
     private val analytics: Analytics,
     private val navigateTo: NavigateTo,
     private val instanceRepository: InstanceRepository,
@@ -30,8 +28,6 @@ class AboutSettingsViewModel(
 ) : ViewModel(),
     AboutInteractions,
     HtmlContentInteractions by defaultHtmlInteractions {
-
-    private val userAccountId: String = getLoggedInUserAccountId()
 
     private val _aboutSettings = MutableStateFlow<Resource<AboutSettings>>(Resource.Loading())
     val aboutSettings = _aboutSettings.asStateFlow()

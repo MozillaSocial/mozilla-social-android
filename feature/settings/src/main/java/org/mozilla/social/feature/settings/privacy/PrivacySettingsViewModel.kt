@@ -9,16 +9,11 @@ import org.mozilla.social.core.analytics.Analytics
 import org.mozilla.social.core.analytics.AnalyticsIdentifiers
 import org.mozilla.social.core.analytics.EngagementType
 import org.mozilla.social.core.datastore.AppPreferencesDatastore
-import org.mozilla.social.core.usecase.mastodon.account.GetLoggedInUserAccountId
-import org.mozilla.social.feature.settings.SettingsInteractions
 
 class PrivacySettingsViewModel(
     private val appPreferencesDatastore: AppPreferencesDatastore,
     private val analytics: Analytics,
-    getLoggedInUserAccountId: GetLoggedInUserAccountId,
 ) : ViewModel(), PrivacySettingsInteractions {
-
-    private val userAccountId: String = getLoggedInUserAccountId()
 
     val allowAnalytics =
         appPreferencesDatastore.allowAnalytics.stateIn(viewModelScope, SharingStarted.Eagerly, true)

@@ -19,23 +19,18 @@ import org.mozilla.social.core.repository.paging.BlocksListRemoteMediator
 import org.mozilla.social.core.ui.common.account.quickview.toQuickViewUiState
 import org.mozilla.social.core.ui.common.account.toggleablelist.ToggleableAccountListItemState
 import org.mozilla.social.core.usecase.mastodon.account.BlockAccount
-import org.mozilla.social.core.usecase.mastodon.account.GetLoggedInUserAccountId
 import org.mozilla.social.core.usecase.mastodon.account.UnblockAccount
 import org.mozilla.social.feature.settings.R
-import org.mozilla.social.feature.settings.SettingsInteractions
 import timber.log.Timber
 
 class BlockedUsersViewModel(
     repository: BlocksRepository,
     remoteMediator: BlocksListRemoteMediator,
-    getLoggedInUserAccountId: GetLoggedInUserAccountId,
     private val analytics: Analytics,
     private val blockAccount: BlockAccount,
     private val unblockAccount: UnblockAccount,
     private val navigateToAccount: NavigateToAccount,
 ) : ViewModel(), BlockedUsersInteractions {
-
-    private val userAccountId: String = getLoggedInUserAccountId()
 
     @OptIn(ExperimentalPagingApi::class)
     val blocks: Flow<PagingData<ToggleableAccountListItemState<BlockedButtonState>>> =

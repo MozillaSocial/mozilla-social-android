@@ -18,24 +18,19 @@ import org.mozilla.social.core.repository.mastodon.MutesRepository
 import org.mozilla.social.core.repository.paging.MutesListRemoteMediator
 import org.mozilla.social.core.ui.common.account.quickview.toQuickViewUiState
 import org.mozilla.social.core.ui.common.account.toggleablelist.ToggleableAccountListItemState
-import org.mozilla.social.core.usecase.mastodon.account.GetLoggedInUserAccountId
 import org.mozilla.social.core.usecase.mastodon.account.MuteAccount
 import org.mozilla.social.core.usecase.mastodon.account.UnmuteAccount
 import org.mozilla.social.feature.settings.R
-import org.mozilla.social.feature.settings.SettingsInteractions
 import timber.log.Timber
 
 class MutedUsersSettingsViewModel(
     repository: MutesRepository,
-    getLoggedInUserAccountId: GetLoggedInUserAccountId,
     remoteMediator: MutesListRemoteMediator,
     private val analytics: Analytics,
     private val muteAccount: MuteAccount,
     private val unmuteAccount: UnmuteAccount,
     private val navigateToAccount: NavigateToAccount,
 ) : ViewModel(), MutedUsersInteractions {
-
-    private val userAccountId: String = getLoggedInUserAccountId()
 
     @OptIn(ExperimentalPagingApi::class)
     val mutes: Flow<PagingData<ToggleableAccountListItemState<MutedButtonState>>> =
