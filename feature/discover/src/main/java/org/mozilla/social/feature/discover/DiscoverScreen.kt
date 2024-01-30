@@ -30,6 +30,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.isTraversalGroup
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
@@ -72,6 +73,7 @@ private fun DiscoverScreen(
     recommendations: Resource<List<Recommendation>>,
     discoverInteractions: DiscoverInteractions,
 ) {
+    val searchField = stringResource(id = R.string.search_field)
     MoSoSurface(
         modifier = Modifier
             .fillMaxSize()
@@ -105,6 +107,9 @@ private fun DiscoverScreen(
                         modifier = Modifier
                             .fillMaxSize()
                             .clickable { discoverInteractions.onSearchBarClicked() }
+                            .semantics {
+                                contentDescription = searchField
+                            }
                     )
                 }
             }
