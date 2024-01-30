@@ -200,10 +200,13 @@ private fun CompactNewPostScreenContent(
             )
         }
 
-        PostButton(
+        SubmitButton(
             modifier = Modifier.padding(end = 16.dp),
-            onPostClicked = newPostInteractions::onPostClicked,
+            onPostClicked = if (!statusUiState.editStatusId.isNullOrBlank())
+                newPostInteractions::onEditClicked else newPostInteractions::onPostClicked,
             sendButtonEnabled = newPostUiState.sendButtonEnabled,
+            buttonText = if (!statusUiState.editStatusId.isNullOrBlank())
+                R.string.edit else R.string.post
         )
     }
 }
@@ -222,7 +225,9 @@ private fun NewPostScreenContent(
 ) {
     Column {
         TopBar(
+            statusUiState = statusUiState,
             onPostClicked = newPostInteractions::onPostClicked,
+            onEditClicked = newPostInteractions::onEditClicked,
             sendButtonEnabled = newPostUiState.sendButtonEnabled,
         )
         newPostUiState.userHeaderState?.let { userHeaderState ->
@@ -304,21 +309,31 @@ fun UserHeader(
 
 @Composable
 private fun TopBar(
+    statusUiState: StatusUiState,
     onPostClicked: () -> Unit,
+    onEditClicked: () -> Unit,
     sendButtonEnabled: Boolean,
 ) {
     MoSoCloseableTopAppBar(
         actions = {
-            PostButton(onPostClicked = onPostClicked, sendButtonEnabled = sendButtonEnabled)
+            SubmitButton(
+                modifier = Modifier.padding(end = 16.dp),
+                onPostClicked = if (!statusUiState.editStatusId.isNullOrBlank())
+                    onEditClicked else onPostClicked,
+                sendButtonEnabled = sendButtonEnabled,
+                buttonText = if (!statusUiState.editStatusId.isNullOrBlank())
+                    R.string.edit else R.string.post
+            )
         },
     )
 }
 
 @Composable
-private fun PostButton(
+private fun SubmitButton(
     onPostClicked: () -> Unit,
     sendButtonEnabled: Boolean,
     modifier: Modifier = Modifier,
+    buttonText: Int = R.string.post
 ) {
     MoSoButton(
         modifier = modifier,
@@ -326,7 +341,7 @@ private fun PostButton(
         enabled = sendButtonEnabled,
         contentPadding = MoSoButtonContentPadding.small,
     ) {
-        SmallTextLabel(text = stringResource(id = R.string.post))
+        SmallTextLabel(text = stringResource(id = buttonText))
     }
 }
 
@@ -614,6 +629,39 @@ private fun NewPostScreenWithContentWarningPreview() {
                 accountList = null,
                 hashtagList = null,
                 inReplyToAccountName = null,
+            ),
+            newPostUiState = NewPostUiState(
+                sendButtonEnabled = true,
+                isSendingPost = false,
+                visibility = StatusVisibility.Private,
+                userHeaderState = UserHeaderState("", "Barack Obama"),
+                bottomBarState = BottomBarState(),
+            ),
+            statusInteractions = object : StatusInteractions {},
+            imageStates = listOf(),
+            mediaInteractions = object : MediaInteractions {},
+            pollUiState = null,
+            pollInteractions = object : PollInteractions {},
+            contentWarningInteractions = object : ContentWarningInteractions {},
+            newPostInteractions = NewPostInteractionsNoOp,
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun EditPostScreenPreview() {
+    MoSoTheme(
+        false,
+    ) {
+        NewPostScreen(
+            statusUiState = StatusUiState(
+                statusText = TextFieldValue(),
+                contentWarningText = null,
+                accountList = null,
+                hashtagList = null,
+                inReplyToAccountName = null,
+                editStatusId = "statusId"
             ),
             newPostUiState = NewPostUiState(
                 sendButtonEnabled = true,

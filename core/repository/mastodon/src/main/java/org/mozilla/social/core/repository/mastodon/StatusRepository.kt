@@ -25,6 +25,10 @@ class StatusRepository(
         api.postStatus(statusCreate.toNetworkModel()).toExternalModel()
 
     @PreferUseCase
+    suspend fun editStatus(statusId: String, statusCreate: StatusCreate): Status =
+        api.editStatus(statusId,statusCreate.toNetworkModel()).toExternalModel()
+
+    @PreferUseCase
     suspend fun voteOnPoll(
         pollId: String,
         pollVote: PollVote,
