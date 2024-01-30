@@ -10,6 +10,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.core.ui.common.button.MoSoButton
+import org.mozilla.social.core.ui.common.button.MoSoButtonContentPadding
 import org.mozilla.social.core.ui.common.button.MoSoButtonSecondary
 import org.mozilla.social.core.ui.common.text.SmallTextLabel
 import org.mozilla.social.core.ui.common.utils.PreviewTheme
@@ -28,13 +29,15 @@ internal fun FollowRequestNotificationContent(
 ) {
     Row {
         MoSoButtonSecondary(
-            modifier = Modifier.weight(1f),
+            modifier = Modifier
+                .weight(1f),
             onClick = {
                 notificationInteractions.onDenyFollowRequestClicked(
                     accountId = uiState.accountId,
                     notificationId = uiState.id,
                 )
-            }
+            },
+            contentPadding = MoSoButtonContentPadding.small,
         ) {
             SmallTextLabel(text = stringResource(id = R.string.deny_follow_request))
         }
@@ -42,13 +45,15 @@ internal fun FollowRequestNotificationContent(
         Spacer(modifier = Modifier.width(16.dp))
 
         MoSoButton(
-            modifier = Modifier.weight(1f),
+            modifier = Modifier
+                .weight(1f),
             onClick = {
                 notificationInteractions.onAcceptFollowRequestClicked(
                     accountId = uiState.accountId,
                     notificationId = uiState.id,
                 )
-            }
+            },
+            contentPadding = MoSoButtonContentPadding.small,
         ) {
             SmallTextLabel(text = stringResource(id = R.string.accept_follow_request))
         }

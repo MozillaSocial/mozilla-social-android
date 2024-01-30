@@ -4,6 +4,7 @@ import androidx.annotation.StringRes
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
@@ -31,6 +32,7 @@ import org.mozilla.social.core.designsystem.theme.MoSoSpacing
 import org.mozilla.social.core.ui.common.account.quickview.AccountQuickView
 import org.mozilla.social.core.ui.common.account.quickview.AccountQuickViewUiState
 import org.mozilla.social.core.ui.common.button.MoSoButton
+import org.mozilla.social.core.ui.common.button.MoSoButtonContentPadding
 import org.mozilla.social.core.ui.common.button.MoSoButtonSecondary
 import org.mozilla.social.core.ui.common.button.MoSoButtonTheme
 import org.mozilla.social.core.ui.common.error.GenericError
@@ -133,6 +135,7 @@ private fun <B : ToggleableButtonState> UserRow(
                         } ?: onButtonClicked(account.accountId, buttonState)
                     },
                     theme = buttonState.theme,
+                    contentPadding = MoSoButtonContentPadding.small,
                 ) {
                     SmallTextLabel(text = stringResource(id = buttonState.text))
                 }
