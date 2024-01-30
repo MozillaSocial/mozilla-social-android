@@ -4,7 +4,7 @@
     <string name="title_activity_main">MainActivity</string>
 
     <string name="feed_tab_text">Feed</string>
-    <string name="discover_tab_text">Discover</string>
+    <string name="discover_tab_text">Explore</string>
     <string name="new_post_tab_text">New Post</string>
     <string name="notifications_tab_text">Notifications</string>
     <string name="account_tab_text">Account</string>
