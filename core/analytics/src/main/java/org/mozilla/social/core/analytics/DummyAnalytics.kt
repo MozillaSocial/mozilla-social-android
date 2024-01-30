@@ -13,7 +13,6 @@ class DummyAnalytics : Analytics {
     override fun uiEngagement(
         engagementType: EngagementType?,
         engagementValue: String?,
-        mastodonAccountHandle: String?,
         mastodonAccountId: String?,
         mastodonStatusId: String?,
         recommendationId: String?,
@@ -23,7 +22,6 @@ class DummyAnalytics : Analytics {
         Timber.tag(tag).d("==========")
         Timber.tag(tag).d("engagementType: ${engagementType?.value}")
         Timber.tag(tag).d("engagementValue: $engagementValue")
-        Timber.tag(tag).d("mastodonAccountHandle: $mastodonAccountHandle")
         Timber.tag(tag).d("mastodonAccountId: $mastodonAccountId")
         Timber.tag(tag).d("mastodonStatusId: $mastodonStatusId")
         Timber.tag(tag).d("recommendationId: $recommendationId")
@@ -32,7 +30,6 @@ class DummyAnalytics : Analytics {
     }
 
     override fun uiImpression(
-        mastodonAccountHandle: String?,
         mastodonAccountId: String?,
         mastodonStatusId: String?,
         recommendationId: String?,
@@ -40,7 +37,6 @@ class DummyAnalytics : Analytics {
         uiIdentifier: String?,
     ) {
         Timber.tag(tag).d("==========")
-        Timber.tag(tag).d("mastodonAccountHandle: $mastodonAccountHandle")
         Timber.tag(tag).d("mastodonAccountId: $mastodonAccountId")
         Timber.tag(tag).d("mastodonStatusId: $mastodonStatusId")
         Timber.tag(tag).d("recommendationId: $recommendationId")
@@ -54,10 +50,6 @@ class DummyAnalytics : Analytics {
 
     override fun setFxaAccountId(fxaAccountId: String) {
         Timber.tag(tag).d("fxaAccountId: $fxaAccountId")
-    }
-
-    override fun setMastodonAccountHandle(mastodonAccountHandle: String) {
-        Timber.tag(tag).d("mastodonAccountHandle: $mastodonAccountHandle")
     }
 
     override fun setMastodonAccountId(mastodonAccountId: String) {

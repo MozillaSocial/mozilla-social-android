@@ -101,7 +101,6 @@ class Login(
         val account: Account = accountRepository.verifyUserCredentials()
         userPreferencesDatastore.saveAccountId(accountId = account.accountId)
         analytics.setMastodonAccountId(account.accountId)
-        analytics.setMastodonAccountHandle(account.username)
         clientId = null
         clientSecret = null
     }
