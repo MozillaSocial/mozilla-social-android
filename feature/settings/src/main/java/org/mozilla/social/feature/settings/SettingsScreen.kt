@@ -1,11 +1,17 @@
 package org.mozilla.social.feature.settings
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableIntState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -67,7 +73,8 @@ fun SettingsScreen(
                     onClick = settingsInteractions::onOpenSourceLicensesClicked,
                 )
 
-                if (BuildConfig.DEBUG) {
+                var clickCount by remember { mutableIntStateOf(0) }
+                if (BuildConfig.DEBUG || clickCount > DEV_UNLOCK_CLICK_COUNT) {
                     SettingsSection(
                         title = stringResource(id = R.string.developer_options_title),
                         iconPainter = MoSoIcons.robot(),
@@ -78,13 +85,16 @@ fun SettingsScreen(
                 Spacer(modifier = Modifier.weight(1f))
                 Text(
                     modifier = Modifier
-                        .align(Alignment.CenterHorizontally),
+                        .align(Alignment.CenterHorizontally)
+                        .clickable { clickCount++ },
                     text = "v${Version.name}.${Version.code}",
                 )
             }
         }
     }
 }
+
+private const val DEV_UNLOCK_CLICK_COUNT = 6
 
 @Preview
 @Composable
