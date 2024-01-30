@@ -32,8 +32,8 @@ import org.koin.androidx.compose.koinViewModel
 import org.mozilla.social.core.designsystem.icon.mozillaLogo
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.ui.common.MoSoSurface
-import org.mozilla.social.core.ui.common.MoSoTab
-import org.mozilla.social.core.ui.common.MoSoTabRow
+import org.mozilla.social.core.ui.common.tabs.MoSoTab
+import org.mozilla.social.core.ui.common.tabs.MoSoTabRow
 import org.mozilla.social.core.ui.common.appbar.MoSoTopBar
 import org.mozilla.social.core.ui.common.pullrefresh.PullRefreshLazyColumn
 import org.mozilla.social.core.ui.postcard.PostCardInteractions

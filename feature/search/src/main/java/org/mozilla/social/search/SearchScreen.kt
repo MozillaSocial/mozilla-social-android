@@ -57,8 +57,8 @@ import org.mozilla.social.core.navigation.navigationModule
 import org.mozilla.social.core.ui.accountfollower.AccountFollower
 import org.mozilla.social.core.ui.accountfollower.AccountFollowerUiState
 import org.mozilla.social.core.ui.common.MoSoSurface
-import org.mozilla.social.core.ui.common.MoSoTab
-import org.mozilla.social.core.ui.common.MoSoTabRow
+import org.mozilla.social.core.ui.common.tabs.MoSoTab
+import org.mozilla.social.core.ui.common.tabs.MoSoTabRow
 import org.mozilla.social.core.ui.common.account.quickview.AccountQuickViewBox
 import org.mozilla.social.core.ui.common.appbar.MoSoCloseableTopAppBar
 import org.mozilla.social.core.ui.common.divider.MoSoDivider
@@ -69,7 +69,6 @@ import org.mozilla.social.core.ui.common.hashtag.quickview.HashTagQuickViewUiSta
 import org.mozilla.social.core.ui.common.loading.MaxSizeLoading
 import org.mozilla.social.core.ui.common.paging.PagingLazyColumn
 import org.mozilla.social.core.ui.common.search.MoSoSearchBar
-import org.mozilla.social.core.ui.common.text.MediumTextBody
 import org.mozilla.social.core.ui.common.utils.PreviewTheme
 import org.mozilla.social.core.ui.postcard.PostCard
 import org.mozilla.social.core.ui.postcard.PostCardInteractions

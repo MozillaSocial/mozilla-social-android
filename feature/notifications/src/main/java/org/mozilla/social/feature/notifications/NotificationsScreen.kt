@@ -30,8 +30,8 @@ import kotlinx.coroutines.flow.flowOf
 import org.koin.androidx.compose.koinViewModel
 import org.mozilla.social.core.designsystem.theme.MoSoSpacing
 import org.mozilla.social.core.ui.common.MoSoSurface
-import org.mozilla.social.core.ui.common.MoSoTab
-import org.mozilla.social.core.ui.common.MoSoTabRow
+import org.mozilla.social.core.ui.common.tabs.MoSoTab
+import org.mozilla.social.core.ui.common.tabs.MoSoTabRow
 import org.mozilla.social.core.ui.common.appbar.MoSoTopBar
 import org.mozilla.social.core.ui.common.divider.MoSoDivider
 import org.mozilla.social.core.ui.common.pullrefresh.PullRefreshLazyColumn
