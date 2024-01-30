@@ -46,10 +46,12 @@ import org.mozilla.social.core.ui.common.MoSoSurface
 import org.mozilla.social.core.ui.common.TransparentNoTouchOverlay
 import org.mozilla.social.core.ui.common.appbar.MoSoCloseableTopAppBar
 import org.mozilla.social.core.ui.common.button.MoSoButton
+import org.mozilla.social.core.ui.common.button.MoSoButtonContentPadding
 import org.mozilla.social.core.ui.common.divider.MoSoDivider
 import org.mozilla.social.core.ui.common.error.GenericError
 import org.mozilla.social.core.ui.common.loading.MaxSizeLoading
 import org.mozilla.social.core.ui.common.text.MoSoTextField
+import org.mozilla.social.core.ui.common.text.SmallTextLabel
 import org.mozilla.social.feature.account.Header
 import org.mozilla.social.feature.account.R
 
@@ -90,12 +92,12 @@ fun EditAccountScreen(
                 actions = {
                     if (uiState is Resource.Loaded) {
                         MoSoButton(
-                            modifier =
-                                Modifier
-                                    .padding(8.dp),
+                            modifier = Modifier
+                                .padding(8.dp),
                             onClick = { editAccountInteractions.onSaveClicked() },
+                            contentPadding = MoSoButtonContentPadding.small,
                         ) {
-                            Text(text = stringResource(id = R.string.edit_account_save_button))
+                            SmallTextLabel(text = stringResource(id = R.string.edit_account_save_button))
                         }
                     }
                 },

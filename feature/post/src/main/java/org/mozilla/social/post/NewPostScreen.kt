@@ -64,9 +64,11 @@ import org.mozilla.social.core.ui.common.MoSoSurface
 import org.mozilla.social.core.ui.common.TransparentNoTouchOverlay
 import org.mozilla.social.core.ui.common.appbar.MoSoCloseableTopAppBar
 import org.mozilla.social.core.ui.common.button.MoSoButton
+import org.mozilla.social.core.ui.common.button.MoSoButtonContentPadding
 import org.mozilla.social.core.ui.common.dropdown.VisibilityDropDownButton
 import org.mozilla.social.core.ui.common.media.MediaUpload
 import org.mozilla.social.core.ui.common.text.MoSoTextField
+import org.mozilla.social.core.ui.common.text.SmallTextLabel
 import org.mozilla.social.core.ui.common.transparentTextFieldColors
 import org.mozilla.social.core.ui.common.utils.getWindowHeightClass
 import org.mozilla.social.feature.post.R
@@ -336,12 +338,10 @@ private fun SubmitButton(
     MoSoButton(
         modifier = modifier,
         onClick = onPostClicked,
-        enabled = sendButtonEnabled
+        enabled = sendButtonEnabled,
+        contentPadding = MoSoButtonContentPadding.small,
     ) {
-        Text(
-            text = stringResource(id = buttonText),
-            style = MoSoTheme.typography.labelSmall,
-        )
+        SmallTextLabel(text = stringResource(id = buttonText))
     }
 }
 

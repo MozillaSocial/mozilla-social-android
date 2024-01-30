@@ -70,12 +70,14 @@ import org.mozilla.social.core.ui.common.MoSoTab
 import org.mozilla.social.core.ui.common.MoSoTabRow
 import org.mozilla.social.core.ui.common.appbar.MoSoCloseableTopAppBar
 import org.mozilla.social.core.ui.common.button.MoSoButton
+import org.mozilla.social.core.ui.common.button.MoSoButtonContentPadding
 import org.mozilla.social.core.ui.common.button.MoSoButtonSecondary
 import org.mozilla.social.core.ui.common.dropdown.MoSoDropDownItem
 import org.mozilla.social.core.ui.common.dropdown.MoSoDropdownMenu
 import org.mozilla.social.core.ui.common.error.GenericError
 import org.mozilla.social.core.ui.common.loading.MoSoCircularProgressIndicator
 import org.mozilla.social.core.ui.common.paging.PagingLazyColumn
+import org.mozilla.social.core.ui.common.text.SmallTextLabel
 import org.mozilla.social.core.ui.htmlcontent.HtmlContent
 import org.mozilla.social.core.ui.htmlcontent.HtmlContentInteractions
 import org.mozilla.social.core.ui.postcard.PostCardInteractions
@@ -255,18 +257,22 @@ private fun MainAccount(
         displayName = account.displayName,
         handle = "@${account.webFinger}",
         rightSideContent = {
-            val buttonModifier = Modifier.padding(end = 8.dp)
+            val buttonModifier = Modifier
+                .padding(end = 8.dp)
             Row {
                 if (isUsersProfile) {
                     MoSoButtonSecondary(
-                        modifier = buttonModifier,
+                        modifier = buttonModifier
+                            .align(Alignment.CenterVertically),
                         onClick = { accountInteractions.onEditAccountClicked() },
+                        contentPadding = MoSoButtonContentPadding.small,
                     ) {
-                        Text(text = stringResource(id = R.string.edit_button))
+                        SmallTextLabel(text = stringResource(id = R.string.edit_button))
                     }
                 } else {
                     MoSoButton(
-                        modifier = buttonModifier,
+                        modifier = buttonModifier
+                            .align(Alignment.CenterVertically),
                         onClick = {
                             if (account.isFollowing) {
                                 accountInteractions.onUnfollowClicked()
@@ -274,8 +280,9 @@ private fun MainAccount(
                                 accountInteractions.onFollowClicked()
                             }
                         },
+                        contentPadding = MoSoButtonContentPadding.small,
                     ) {
-                        Text(
+                        SmallTextLabel(
                             text =
                             if (account.isFollowing) {
                                 stringResource(id = R.string.unfollow_button)
