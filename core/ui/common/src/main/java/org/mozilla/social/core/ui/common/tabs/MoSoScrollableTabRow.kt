@@ -35,6 +35,7 @@ import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.material3.Surface
 import androidx.compose.material3.TabRow
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.getValue
@@ -47,6 +48,7 @@ import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.SubcomposeLayout
 import androidx.compose.ui.platform.debugInspectorInfo
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
@@ -106,11 +108,15 @@ fun MoSoTabRow(
             ) { constraints ->
                 val tabMeasurables = subcompose(TabSlots.Tabs, tabs)
 
-                val minTabWidth = calculateTabMinWidth(
+                val calculatedTabMinWidth = calculateTabMinWidth(
                     tabWidthValuesPx = tabMeasurables
                         .map { it.maxIntrinsicWidth(Constraints.Infinity) },
                     containerWidthPx = maxWidth.roundToPx()
-                ) ?: ScrollableTabRowMinimumTabWidth.roundToPx()
+                )
+
+                val isScrollEnabled = calculatedTabMinWidth == null
+
+                val minTabWidth = calculatedTabMinWidth ?: ScrollableTabRowMinimumTabWidth.roundToPx()
 
                 val layoutHeight = tabMeasurables.fold(initial = 0) { curr, measurable ->
                     maxOf(curr, measurable.maxIntrinsicHeight(Constraints.Infinity))
@@ -172,6 +178,14 @@ fun MoSoTabRow(
     }
 }
 
+/**
+ * Finds the ideal minimum tab width.
+ *
+ * @param tabWidthValuesPx a list of the widths of all the tabs
+ * @param containerWidthPx the width of the container
+ * @return the ideal minimum tab width. If all tabs cannot fit into the container,
+ * null will be returned
+ */
 private fun calculateTabMinWidth(
     tabWidthValuesPx: List<Int>,
     containerWidthPx: Int,
@@ -182,7 +196,14 @@ private fun calculateTabMinWidth(
     val numberOfValuesUnder = valuesUnder.size
     val remainingWidth = containerWidthPx - totalOfValuesOver
     val averageRemainingWidth = remainingWidth / numberOfValuesUnder
-    averageRemainingWidth
+    if (valuesUnder.max() > averageRemainingWidth) {
+        calculateTabMinWidth(
+            tabWidthValuesPx = valuesUnder,
+            containerWidthPx = remainingWidth,
+        )
+    } else {
+        averageRemainingWidth
+    }
 } else {
     null
 }
@@ -354,3 +375,126 @@ private val ScrollableTabRowScrollSpec: AnimationSpec<Float> = tween(
     durationMillis = 250,
     easing = FastOutSlowInEasing
 )
+
+@Preview
+@Composable
+private fun TabRowPreview() {
+    MoSoTheme {
+        MoSoTabRow(selectedTabIndex = 0) {
+            MoSoTab(selected = true, onClick = { /*TODO*/ }) {
+                Text(text = "test")
+            }
+            MoSoTab(selected = false, onClick = { /*TODO*/ }) {
+                Text(text = "test2")
+            }
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun TabRowPreview2() {
+    MoSoTheme {
+        MoSoTabRow(selectedTabIndex = 0) {
+            MoSoTab(selected = true, onClick = { /*TODO*/ }) {
+                Text(text = "test")
+            }
+            MoSoTab(selected = false, onClick = { /*TODO*/ }) {
+                Text(text = "test2")
+            }
+            MoSoTab(selected = false, onClick = { /*TODO*/ }) {
+                Text(text = "test and stuff 2")
+            }
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun TabRowPreview3() {
+    MoSoTheme {
+        MoSoTabRow(selectedTabIndex = 0) {
+            MoSoTab(selected = true, onClick = { /*TODO*/ }) {
+                Text(text = "test")
+            }
+            MoSoTab(selected = false, onClick = { /*TODO*/ }) {
+                Text(text = "test2")
+            }
+            MoSoTab(selected = false, onClick = { /*TODO*/ }) {
+                Text(text = "test and some cool stuff that I like a lot")
+            }
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun TabRowPreview4() {
+    MoSoTheme {
+        MoSoTabRow(selectedTabIndex = 0) {
+            MoSoTab(selected = true, onClick = { /*TODO*/ }) {
+                Text(text = "test")
+            }
+            MoSoTab(selected = false, onClick = { /*TODO*/ }) {
+                Text(text = "test2")
+            }
+            MoSoTab(selected = false, onClick = { /*TODO*/ }) {
+                Text(text = "test and some cool stuff")
+            }
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun TabRowPreview5() {
+    MoSoTheme {
+        MoSoTabRow(selectedTabIndex = 0) {
+            MoSoTab(selected = true, onClick = { /*TODO*/ }) {
+                Text(text = "test")
+            }
+            MoSoTab(selected = false, onClick = { /*TODO*/ }) {
+                Text(text = "test and stuff 2")
+            }
+            MoSoTab(selected = false, onClick = { /*TODO*/ }) {
+                Text(text = "test and some cool stuff")
+            }
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun TabRowPreview6() {
+    MoSoTheme {
+        MoSoTabRow(selectedTabIndex = 0) {
+            MoSoTab(selected = true, onClick = { /*TODO*/ }) {
+                Text(text = "test")
+            }
+            MoSoTab(selected = false, onClick = { /*TODO*/ }) {
+                Text(text = "test and some cool stuff its neat")
+            }
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun TabRowPreview7() {
+    MoSoTheme {
+        MoSoTabRow(selectedTabIndex = 0) {
+            MoSoTab(selected = true, onClick = { /*TODO*/ }) {
+                Text(text = "test")
+            }
+            MoSoTab(selected = true, onClick = { /*TODO*/ }) {
+                Text(text = "test")
+            }
+            MoSoTab(selected = true, onClick = { /*TODO*/ }) {
+                Text(text = "test 2333")
+            }
+            MoSoTab(selected = false, onClick = { /*TODO*/ }) {
+                Text(text = "test and some cool")
+            }
+        }
+    }
+}
