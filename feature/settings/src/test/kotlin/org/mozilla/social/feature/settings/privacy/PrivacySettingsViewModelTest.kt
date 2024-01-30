@@ -21,7 +21,6 @@ class PrivacySettingsViewModelTest {
     private val appPreferencesDataStore: AppPreferencesDatastore = mockk(relaxed = true)
     private val allowAnalytics = MutableSharedFlow<Boolean>(replay = 1)
     private val analytics: Analytics = mockk(relaxed = true)
-    private val getLoggedInUserAccountId: GetLoggedInUserAccountId = mockk(relaxed = true)
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @Before
@@ -31,7 +30,6 @@ class PrivacySettingsViewModelTest {
         objUnderTest = PrivacySettingsViewModel(
             appPreferencesDataStore,
             analytics,
-            getLoggedInUserAccountId
         )
     }
 
