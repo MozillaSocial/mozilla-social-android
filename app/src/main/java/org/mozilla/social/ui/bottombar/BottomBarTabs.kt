@@ -33,6 +33,7 @@ enum class BottomBarTabs(
                 override val tabText = StringFactory.resource(R.string.feed_tab_text)
                 override val navigationDestination: Destination =
                     Destination.BottomBar(BottomBarNavigationDestination.Feed)
+                override val doubleTapDestination: Destination? = null
             },
     ),
     DISCOVER(
@@ -51,6 +52,8 @@ enum class BottomBarTabs(
                 override val tabText = StringFactory.resource(R.string.discover_tab_text)
                 override val navigationDestination: Destination =
                     Destination.BottomBar(BottomBarNavigationDestination.Discover)
+                override val doubleTapDestination: Destination =
+                    Destination.Main(NavigationDestination.Search)
             },
     ),
     NEW_POST(
@@ -69,6 +72,7 @@ enum class BottomBarTabs(
                 override val tabText = StringFactory.resource(R.string.new_post_tab_text)
                 override val navigationDestination: Destination =
                     Destination.Main(NavigationDestination.NewPost())
+                override val doubleTapDestination: Destination? = null
             },
     ),
     NOTIFICATIONS(
@@ -87,6 +91,7 @@ enum class BottomBarTabs(
                 override val tabText = StringFactory.resource(R.string.notifications_tab_text)
                 override val navigationDestination: Destination =
                     Destination.BottomBar(BottomBarNavigationDestination.Notifications)
+                override val doubleTapDestination: Destination? = null
             },
     ),
     ACCOUNT(
@@ -105,6 +110,7 @@ enum class BottomBarTabs(
                 override val tabText = StringFactory.resource(R.string.account_tab_text)
                 override val navigationDestination: Destination =
                     Destination.BottomBar(BottomBarNavigationDestination.MyAccount)
+                override val doubleTapDestination: Destination? = null
             },
     ),
 }
