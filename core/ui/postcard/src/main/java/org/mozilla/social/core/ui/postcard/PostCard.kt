@@ -56,7 +56,7 @@ import org.mozilla.social.core.ui.common.TransparentNoTouchOverlay
 import org.mozilla.social.core.ui.common.dropdown.MoSoDropDownItem
 import org.mozilla.social.core.ui.common.dropdown.MoSoDropdownMenu
 import org.mozilla.social.core.ui.common.loading.MoSoCircularProgressIndicator
-import org.mozilla.social.core.ui.common.media.MediaDisplay
+import org.mozilla.social.core.ui.media.MediaDisplay
 import org.mozilla.social.core.ui.common.utils.PreviewTheme
 import org.mozilla.social.core.ui.common.utils.getMaxWidth
 import org.mozilla.social.core.ui.common.utils.shareUrl

@@ -1,5 +1,6 @@
-package org.mozilla.social.core.ui.common.media
+package org.mozilla.social.core.ui.media
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -8,7 +9,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
@@ -17,7 +20,9 @@ import androidx.core.net.toUri
 import coil.compose.AsyncImage
 import org.mozilla.social.core.designsystem.theme.MoSoRadius
 import org.mozilla.social.core.model.Attachment
+import org.mozilla.social.core.ui.common.media.VideoPlayer
 import org.mozilla.social.core.ui.common.utils.media
+import org.mozilla.social.core.ui.zoom.ImageZoom
 
 @Suppress("MagicNumber")
 @Composable
@@ -58,9 +63,9 @@ private fun SingleAttachment(attachment: Attachment) {
         is Attachment.Image -> {
             Attachment(
                 modifier =
-                    Modifier
-                        .fillMaxWidth()
-                        .aspectRatio(attachment.meta?.calculateAspectRatio() ?: 1f),
+                Modifier
+                    .fillMaxWidth()
+                    .aspectRatio(attachment.meta?.calculateAspectRatio() ?: 1f),
                 attachment = attachment,
             )
         }
@@ -122,15 +127,21 @@ private fun Attachment(
     modifier: Modifier = Modifier,
     attachment: Attachment,
 ) {
+    var dialogShowing by remember { mutableStateOf(false) }
     AsyncImage(
-        modifier =
-            modifier
-                .padding(2.dp)
-                .clip(RoundedCornerShape(MoSoRadius.media)),
+        modifier = modifier
+            .padding(2.dp)
+            .clip(RoundedCornerShape(MoSoRadius.media))
+            .clickable { dialogShowing = true },
         model = attachment.previewUrl,
         contentDescription = attachment.description,
         contentScale = ContentScale.Crop,
     )
+    if (dialogShowing) {
+        ImageZoom {
+            dialogShowing = false
+        }
+    }
 }
 
 @Composable
@@ -141,16 +152,16 @@ private fun AttachmentRow(
     Row {
         Attachment(
             modifier =
-                Modifier
-                    .weight(1f)
-                    .aspectRatio(1f),
+            Modifier
+                .weight(1f)
+                .aspectRatio(1f),
             attachment = attachment1,
         )
         Attachment(
             modifier =
-                Modifier
-                    .weight(1f)
-                    .aspectRatio(1f),
+            Modifier
+                .weight(1f)
+                .aspectRatio(1f),
             attachment = attachment2,
         )
     }

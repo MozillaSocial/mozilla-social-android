@@ -16,6 +16,8 @@ dependencies {
     implementation(project(":core:navigation"))
     implementation(project(":core:usecase:mastodon"))
     implementation(project(":core:ui:common"))
+    implementation(project(":core:ui:zoom"))
+    implementation(project(":core:ui:media"))
     api(project(":core:ui:htmlcontent"))
     api(project(":core:ui:poll"))
 
