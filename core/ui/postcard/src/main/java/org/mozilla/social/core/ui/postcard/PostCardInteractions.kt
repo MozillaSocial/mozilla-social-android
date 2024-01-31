@@ -39,4 +39,6 @@ interface PostCardInteractions : PollInteractions, HtmlContentInteractions {
     fun onOverflowEditClicked(statusId: String) = Unit
 
     fun onAccountImageClicked(accountId: String) = Unit
+
+    fun onImageClicked(url: String) = Unit
 }

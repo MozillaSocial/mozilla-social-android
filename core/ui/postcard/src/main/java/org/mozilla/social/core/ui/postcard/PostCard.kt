@@ -156,8 +156,7 @@ private fun Post(
 
             PostContent(
                 uiState = post.postContentUiState,
-                htmlContentInteractions = postCardInteractions,
-                pollInteractions = postCardInteractions,
+                postCardInteractions = postCardInteractions,
             )
 
             BottomRow(
@@ -221,8 +220,7 @@ private fun MetaData(
 @Composable
 fun PostContent(
     uiState: PostContentUiState,
-    htmlContentInteractions: HtmlContentInteractions,
-    pollInteractions: PollInteractions,
+    postCardInteractions: PostCardInteractions,
     modifier: Modifier = Modifier,
 ) {
     ContentWarning(
@@ -233,7 +231,7 @@ fun PostContent(
             HtmlContent(
                 mentions = uiState.mentions,
                 htmlText = uiState.statusTextHtml,
-                htmlContentInteractions = htmlContentInteractions,
+                htmlContentInteractions = postCardInteractions,
                 maximumLineCount = if (uiState.onlyShowPreviewOfText) {
                     1
                 } else {
@@ -247,15 +245,22 @@ fun PostContent(
             )
             Spacer(modifier = Modifier.padding(top = 8.dp))
 
-            MediaDisplay(attachments = uiState.mediaAttachments)
+            MediaDisplay(
+                attachments = uiState.mediaAttachments,
+                onAttachmentClicked = {
+                    postCardInteractions.onImageClicked(
+                        it.url!!
+                    )
+                }
+            )
 
-            uiState.pollUiState?.let { Poll(it, pollInteractions) }
+            uiState.pollUiState?.let { Poll(it, postCardInteractions) }
 
             // only display preview card if there are no other media attachments
             if (uiState.previewCard != null && uiState.mediaAttachments.isEmpty()) {
                 PreviewCard(
                     previewCard = uiState.previewCard,
-                    htmlContentInteractions = htmlContentInteractions,
+                    htmlContentInteractions = postCardInteractions,
                 )
             }
         }

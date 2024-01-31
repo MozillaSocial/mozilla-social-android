@@ -9,19 +9,18 @@ import org.mozilla.social.core.ui.notifications.NotificationCard
 import org.mozilla.social.core.ui.notifications.NotificationInteractionsNoOp
 import org.mozilla.social.core.ui.notifications.NotificationUiState
 import org.mozilla.social.core.ui.poll.PollInteractions
+import org.mozilla.social.core.ui.postcard.PostCardInteractions
 import org.mozilla.social.core.ui.postcard.PostContent
 import org.mozilla.social.core.ui.postcard.PostContentUiState
 
 @Composable
 internal fun NewStatusNotificationContent(
     uiState: NotificationUiState.NewStatus,
-    htmlContentInteractions: HtmlContentInteractions,
-    pollInteractions: PollInteractions,
+    postCardInteractions: PostCardInteractions,
 ) {
     PostContent(
         uiState = uiState.postContentUiState,
-        htmlContentInteractions = htmlContentInteractions,
-        pollInteractions = pollInteractions,
+        postCardInteractions = postCardInteractions,
     )
 }
 
@@ -47,8 +46,7 @@ private fun NewStatusNotificationPreview() {
                 statusId = "",
                 accountName = "",
             ),
-            htmlContentInteractions = object : HtmlContentInteractions {},
-            pollInteractions = object : PollInteractions {},
+            postCardInteractions = object : PostCardInteractions {},
             notificationInteractions = NotificationInteractionsNoOp,
         )
     }

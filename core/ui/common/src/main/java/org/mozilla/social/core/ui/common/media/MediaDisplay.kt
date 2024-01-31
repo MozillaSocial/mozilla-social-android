@@ -1,5 +1,6 @@
 package org.mozilla.social.core.ui.common.media
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -21,39 +22,55 @@ import org.mozilla.social.core.ui.common.utils.media
 
 @Suppress("MagicNumber")
 @Composable
-fun MediaDisplay(attachments: List<Attachment>) {
+fun MediaDisplay(
+    attachments: List<Attachment>,
+    onAttachmentClicked: (attachment: Attachment) -> Unit = {},
+) {
     when (attachments.size) {
         1 -> {
-            SingleAttachment(attachment = attachments.first())
+            SingleAttachment(
+                attachment = attachments.first(),
+                onAttachmentClicked = onAttachmentClicked,
+            )
         }
         2 -> {
             AttachmentRow(
                 attachment1 = attachments.first(),
                 attachment2 = attachments[1],
+                onAttachmentClicked = onAttachmentClicked,
             )
         }
         3 -> {
-            SingleAttachment(attachment = attachments.first())
+            SingleAttachment(
+                attachment = attachments.first(),
+                onAttachmentClicked = onAttachmentClicked,
+            )
             AttachmentRow(
                 attachment1 = attachments[1],
                 attachment2 = attachments[2],
+                onAttachmentClicked = onAttachmentClicked,
             )
         }
         4 -> {
             AttachmentRow(
                 attachment1 = attachments.first(),
                 attachment2 = attachments[1],
+                onAttachmentClicked = onAttachmentClicked,
             )
             AttachmentRow(
                 attachment1 = attachments[2],
                 attachment2 = attachments[3],
+                onAttachmentClicked = onAttachmentClicked,
             )
         }
     }
 }
 
 @Composable
-private fun SingleAttachment(attachment: Attachment) {
+private fun SingleAttachment(
+    attachment: Attachment,
+    onAttachmentClicked: (attachment: Attachment) -> Unit
+) {
     when (attachment) {
         is Attachment.Image -> {
             Attachment(
@@ -62,6 +79,7 @@ private fun SingleAttachment(attachment: Attachment) {
                         .fillMaxWidth()
                         .aspectRatio(attachment.meta?.calculateAspectRatio() ?: 1f),
                 attachment = attachment,
+                onAttachmentClicked = onAttachmentClicked,
             )
         }
         is Attachment.Gifv -> {
@@ -121,12 +139,13 @@ private fun Attachment.Video.Meta.calculateAspectRatio(): Float =
 private fun Attachment(
     modifier: Modifier = Modifier,
     attachment: Attachment,
+    onAttachmentClicked: (attachment: Attachment) -> Unit,
 ) {
     AsyncImage(
-        modifier =
-            modifier
-                .padding(2.dp)
-                .clip(RoundedCornerShape(MoSoRadius.media)),
+        modifier = modifier
+            .padding(2.dp)
+            .clip(RoundedCornerShape(MoSoRadius.media))
+            .clickable { onAttachmentClicked(attachment) },
         model = attachment.previewUrl,
         contentDescription = attachment.description,
         contentScale = ContentScale.Crop,
@@ -137,6 +156,7 @@ private fun Attachment(
 private fun AttachmentRow(
     attachment1: Attachment,
     attachment2: Attachment,
+    onAttachmentClicked: (attachment: Attachment) -> Unit
 ) {
     Row {
         Attachment(
@@ -145,6 +165,7 @@ private fun AttachmentRow(
                     .weight(1f)
                     .aspectRatio(1f),
             attachment = attachment1,
+            onAttachmentClicked = onAttachmentClicked,
         )
         Attachment(
             modifier =
@@ -152,6 +173,7 @@ private fun AttachmentRow(
                     .weight(1f)
                     .aspectRatio(1f),
             attachment = attachment2,
+            onAttachmentClicked = onAttachmentClicked,
         )
     }
 }

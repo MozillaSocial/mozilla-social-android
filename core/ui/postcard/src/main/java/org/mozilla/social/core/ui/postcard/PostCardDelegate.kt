@@ -221,4 +221,14 @@ class PostCardDelegate(
         )
         navigateTo(NavigationDestination.HashTag(hashTag))
     }
+
+    override fun onImageClicked(url: String) {
+        navigateTo(
+            NavigationDestination.Media(
+                NavigationDestination.Media.MediaBundle.Images(
+                    listOf(url)
+                )
+            )
+        )
+    }
 }

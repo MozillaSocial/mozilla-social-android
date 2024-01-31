@@ -38,12 +38,11 @@ import org.mozilla.social.core.ui.common.pullrefresh.PullRefreshLazyColumn
 import org.mozilla.social.core.ui.common.pullrefresh.rememberPullRefreshState
 import org.mozilla.social.core.ui.common.text.MediumTextLabel
 import org.mozilla.social.core.ui.common.utils.PreviewTheme
-import org.mozilla.social.core.ui.htmlcontent.HtmlContentInteractions
 import org.mozilla.social.core.ui.notifications.NotificationCard
 import org.mozilla.social.core.ui.notifications.NotificationInteractions
 import org.mozilla.social.core.ui.notifications.NotificationInteractionsNoOp
 import org.mozilla.social.core.ui.notifications.NotificationUiState
-import org.mozilla.social.core.ui.poll.PollInteractions
+import org.mozilla.social.core.ui.postcard.PostCardInteractions
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -57,8 +56,7 @@ internal fun NotificationsScreen(
         mentionFeed = viewModel.mentionsFeed,
         followsFeed = viewModel.followsFeed,
         notificationsInteractions = viewModel,
-        pollInteractions = viewModel.postCardDelegate,
-        htmlContentInteractions = viewModel.postCardDelegate,
+        postCardInteractions = viewModel.postCardDelegate,
         notificationInteractions = viewModel.notificationCardDelegate,
     )
 }
@@ -71,8 +69,7 @@ private fun NotificationsScreen(
     mentionFeed: Flow<PagingData<NotificationUiState>>,
     followsFeed: Flow<PagingData<NotificationUiState>>,
     notificationsInteractions: NotificationsInteractions,
-    pollInteractions: PollInteractions,
-    htmlContentInteractions: HtmlContentInteractions,
+    postCardInteractions: PostCardInteractions,
     notificationInteractions: NotificationInteractions,
     topAppBarScrollBehavior: TopAppBarScrollBehavior =
         TopAppBarDefaults.enterAlwaysScrollBehavior(
@@ -119,8 +116,7 @@ private fun NotificationsScreen(
                     NotificationsTab.MENTIONS -> mentionsListState
                     NotificationsTab.REQUESTS -> followsListState
                 },
-                pollInteractions = pollInteractions,
-                htmlContentInteractions = htmlContentInteractions,
+                postCardInteractions = postCardInteractions,
                 notificationInteractions = notificationInteractions,
             )
         }
@@ -157,8 +153,7 @@ private fun Tabs(
 private fun NotificationsList(
     lazyPagingItems: LazyPagingItems<NotificationUiState>,
     listState: LazyListState,
-    pollInteractions: PollInteractions,
-    htmlContentInteractions: HtmlContentInteractions,
+    postCardInteractions: PostCardInteractions,
     notificationInteractions: NotificationInteractions,
 ) {
     val pullRefreshState =
@@ -185,8 +180,7 @@ private fun NotificationsList(
                             NotificationCard(
                                 modifier = Modifier.padding(MoSoSpacing.md),
                                 uiState = uiState,
-                                pollInteractions = pollInteractions,
-                                htmlContentInteractions = htmlContentInteractions,
+                                postCardInteractions = postCardInteractions,
                                 notificationInteractions = notificationInteractions,
                             )
                             MoSoDivider()
@@ -212,8 +206,7 @@ private fun NotificationsScreenPreview() {
             notificationsInteractions = object : NotificationsInteractions {
                 override fun onTabClicked(tab: NotificationsTab) = Unit
             },
-            pollInteractions = object : PollInteractions {},
-            htmlContentInteractions = object : HtmlContentInteractions {},
+            postCardInteractions = object : PostCardInteractions {},
             notificationInteractions = NotificationInteractionsNoOp,
         )
     }
