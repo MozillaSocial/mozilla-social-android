@@ -184,6 +184,7 @@ interface BottomBarTab {
 
     val tabText: StringFactory
     val navigationDestination: Destination
+    // Destination for when the user taps the icon a second time
     val doubleTapDestination: Destination?
 }
 
