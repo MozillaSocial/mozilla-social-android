@@ -24,20 +24,14 @@ internal fun MediaScreen(
             .fillMaxSize()
             .systemBarsPadding()
     ) {
-        when (mediaBundle) {
-            is NavigationDestination.Media.MediaBundle.Images -> {
-                AsyncImage(
-                    modifier = Modifier
-                        .padding(2.dp)
-                        .clip(RoundedCornerShape(MoSoRadius.media)),
-                    model = mediaBundle.urls.first(),
-                    contentDescription = null,
-                    contentScale = ContentScale.Fit,
-                )
-            }
-            is NavigationDestination.Media.MediaBundle.Video -> {
-
-            }
-        }
+        val attachment = mediaBundle.attachments.first()
+        AsyncImage(
+            modifier = Modifier
+                .padding(2.dp)
+                .clip(RoundedCornerShape(MoSoRadius.media)),
+            model = attachment.url,
+            contentDescription = null,
+            contentScale = ContentScale.Fit,
+        )
     }
 }

@@ -5,6 +5,7 @@ import androidx.navigation.NavOptions
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import org.mozilla.social.core.model.Attachment
 
 /**
  * Represents a top-level Navigation destination
@@ -124,17 +125,11 @@ sealed class NavigationDestination(
             navigate(route(Json.encodeToString(mediaBundle)), navOptions)
         }
 
-        sealed class MediaBundle {
-            @Serializable
-            data class Images(
-                val urls: List<String>
-            ) : MediaBundle()
-
-            @Serializable
-            data class Video(
-                val url: String
-            ) : MediaBundle()
-        }
+        @Serializable
+        data class MediaBundle(
+            val attachments: List<Attachment>,
+            val startIndex: Int = 0,
+        )
 
         companion object {
             private const val ROUTE = "media"

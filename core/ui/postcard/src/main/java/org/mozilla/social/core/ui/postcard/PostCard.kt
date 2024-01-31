@@ -248,8 +248,9 @@ fun PostContent(
             MediaDisplay(
                 attachments = uiState.mediaAttachments,
                 onAttachmentClicked = {
-                    postCardInteractions.onImageClicked(
-                        it.url!!
+                    postCardInteractions.onMediaClicked(
+                        uiState.mediaAttachments,
+                        0,
                     )
                 }
             )
