@@ -1,5 +1,6 @@
 plugins {
     id("org.mozilla.social.android.library")
+    alias(libs.plugins.kotlinx.serialization)
 }
 
 android {
@@ -13,4 +14,5 @@ dependencies {
     implementation(libs.jakewharton.timber)
     implementation(libs.koin.core)
     implementation(libs.koin.androidx.compose)
+    implementation(libs.kotlinx.serialization.json)
 }

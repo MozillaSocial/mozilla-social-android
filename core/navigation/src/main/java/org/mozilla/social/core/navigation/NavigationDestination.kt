@@ -2,6 +2,9 @@ package org.mozilla.social.core.navigation
 
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
 /**
  * Represents a top-level Navigation destination
@@ -109,6 +112,36 @@ sealed class NavigationDestination(
             val fullRoute = route("{${NAV_PARAM_HASH_TAG}}")
 
             private fun route(paramValue: String) = "$ROUTE?$NAV_PARAM_HASH_TAG=$paramValue"
+        }
+    }
+
+    data class Media(
+        val mediaBundle: MediaBundle,
+    ) : NavigationDestination(
+        route = ROUTE,
+    ) {
+        fun NavController.navigateToMedia(navOptions: NavOptions? = null) {
+            navigate(route(Json.encodeToString(mediaBundle)), navOptions)
+        }
+
+        sealed class MediaBundle {
+            @Serializable
+            data class Images(
+                val urls: List<String>
+            ) : MediaBundle()
+
+            @Serializable
+            data class Video(
+                val url: String
+            ) : MediaBundle()
+        }
+
+        companion object {
+            private const val ROUTE = "media"
+            const val NAV_PARAM_BUNDLE = "bundle"
+            val fullRoute = route("{${NAV_PARAM_BUNDLE}}")
+
+            private fun route(paramValue: String) = "$ROUTE?$NAV_PARAM_BUNDLE=$paramValue"
         }
     }
 

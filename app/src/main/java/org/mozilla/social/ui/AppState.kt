@@ -229,6 +229,10 @@ class AppState(
                     mainNavController.navigateToHashTag()
                 }
 
+                is NavigationDestination.Media -> {
+                    mainNavController.navigateToMedia()
+                }
+
                 is NavigationDestination.NewPost -> {
                     mainNavController.navigateToNewPost()
                 }

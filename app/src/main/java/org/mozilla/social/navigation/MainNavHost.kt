@@ -13,6 +13,7 @@ import org.mozilla.social.feature.auth.authFlow
 import org.mozilla.social.feature.favorites.favoritesScreen
 import org.mozilla.social.feature.followers.followersScreen
 import org.mozilla.social.feature.hashtag.hashTagScreen
+import org.mozilla.social.feature.media.mediaScreen
 import org.mozilla.social.feature.report.reportFlow
 import org.mozilla.social.feature.settings.settingsFlow
 import org.mozilla.social.feature.thread.threadScreen
@@ -49,6 +50,7 @@ fun MainNavHost(
         settingsFlow()
         favoritesScreen()
         searchScreen()
+        mediaScreen()
     }
 }
 
