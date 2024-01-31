@@ -64,7 +64,6 @@ class EditAccountViewModel(
                 try {
                     analytics.uiEngagement(
                         uiIdentifier = AnalyticsIdentifiers.PROFILE_EDIT_PROFILE_SAVE,
-                        mastodonAccountId = accountId,
                     )
                     updateMyAccount(
                         displayName = data.displayName.trim(),
@@ -225,7 +224,6 @@ class EditAccountViewModel(
     override fun onScreenViewed() {
         analytics.uiImpression(
             uiIdentifier = AnalyticsIdentifiers.PROFILE_EDIT_PROFILE_SCREEN_IMPRESSION,
-            mastodonAccountId = accountId,
         )
     }
 

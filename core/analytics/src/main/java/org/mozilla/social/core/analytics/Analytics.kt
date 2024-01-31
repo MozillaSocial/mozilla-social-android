@@ -50,8 +50,6 @@ interface Analytics {
     fun uiEngagement(
         engagementType: EngagementType? = null,
         engagementValue: String? = null,
-        mastodonAccountId: String? = null,
-        mastodonStatusId: String? = null,
         recommendationId: String? = null,
         uiAdditionalDetail: String? = null,
         uiIdentifier: String? = null,
@@ -86,8 +84,6 @@ interface Analytics {
      * https://docs.google.com/spreadsheets/d/1KX6TiyXXg2fE0a1IDKsy5O97ZrHYvjKohmIX_m8ECXY/edit?usp=sharing
      */
     fun uiImpression(
-        mastodonAccountId: String? = null,
-        mastodonStatusId: String? = null,
         recommendationId: String? = null,
         uiAdditionalDetail: String? = null,
         uiIdentifier: String? = null,

@@ -166,7 +166,6 @@ class AccountViewModel(
 
     override fun onScreenViewed() {
         analytics.uiImpression(
-            mastodonAccountId = accountId,
             uiIdentifier = AnalyticsIdentifiers.ACCOUNTS_SCREEN_IMPRESSION,
         )
     }
@@ -180,7 +179,6 @@ class AccountViewModel(
     override fun onOverflowShareClicked() {
         analytics.uiEngagement(
             uiIdentifier = AnalyticsIdentifiers.PROFILE_OVERFLOW_SHARE,
-            mastodonAccountId = accountId,
         )
     }
 
@@ -188,7 +186,6 @@ class AccountViewModel(
         analytics.uiEngagement(
             engagementType = EngagementType.GENERAL,
             uiIdentifier = AnalyticsIdentifiers.PROFILE_OVERFLOW_MUTE,
-            mastodonAccountId = accountId,
         )
         viewModelScope.launch {
             try {
@@ -203,7 +200,6 @@ class AccountViewModel(
         analytics.uiEngagement(
             engagementType = EngagementType.GENERAL,
             uiIdentifier = AnalyticsIdentifiers.PROFILE_OVERFLOW_UNMUTE,
-            mastodonAccountId = accountId,
         )
         viewModelScope.launch {
             try {
@@ -218,7 +214,6 @@ class AccountViewModel(
         analytics.uiEngagement(
             engagementType = EngagementType.GENERAL,
             uiIdentifier = AnalyticsIdentifiers.PROFILE_OVERFLOW_BLOCK,
-            mastodonAccountId = accountId,
         )
         viewModelScope.launch {
             try {
@@ -233,7 +228,6 @@ class AccountViewModel(
         analytics.uiEngagement(
             engagementType = EngagementType.GENERAL,
             uiIdentifier = AnalyticsIdentifiers.PROFILE_OVERFLOW_UNBLOCK,
-            mastodonAccountId = accountId,
         )
         viewModelScope.launch {
             try {
@@ -248,7 +242,6 @@ class AccountViewModel(
         analytics.uiEngagement(
             engagementType = EngagementType.GENERAL,
             uiIdentifier = AnalyticsIdentifiers.PROFILE_OVERFLOW_REPORT,
-            mastodonAccountId = accountId,
         )
         (uiState.value as? Resource.Loaded)?.data?.webFinger?.let { webFinger ->
             navigateTo(
@@ -287,7 +280,6 @@ class AccountViewModel(
     override fun onFollowClicked() {
         analytics.uiEngagement(
             uiIdentifier = AnalyticsIdentifiers.ACCOUNTS_SCREEN_FOLLOW,
-            mastodonAccountId = accountId,
         )
         viewModelScope.launch {
             try {
@@ -304,7 +296,6 @@ class AccountViewModel(
     override fun onUnfollowClicked() {
         analytics.uiEngagement(
             uiIdentifier = AnalyticsIdentifiers.ACCOUNTS_SCREEN_UNFOLLOW,
-            mastodonAccountId = accountId,
         )
         viewModelScope.launch {
             try {
@@ -343,7 +334,6 @@ class AccountViewModel(
     override fun onEditAccountClicked() {
         analytics.uiEngagement(
             uiIdentifier = AnalyticsIdentifiers.PROFILE_EDIT_PROFILE,
-            mastodonAccountId = accountId,
         )
         navigateTo(NavigationDestination.EditAccount)
     }

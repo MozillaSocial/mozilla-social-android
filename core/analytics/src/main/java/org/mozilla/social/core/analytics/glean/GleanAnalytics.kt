@@ -46,8 +46,6 @@ class GleanAnalytics(
     override fun uiEngagement(
         engagementType: EngagementType?,
         engagementValue: String?,
-        mastodonAccountId: String?,
-        mastodonStatusId: String?,
         recommendationId: String?,
         uiAdditionalDetail: String?,
         uiIdentifier: String?,
@@ -57,8 +55,6 @@ class GleanAnalytics(
                 Ui.EngagementExtra(
                     engagementType = engagementType?.value,
                     engagementValue = engagementValue,
-                    mastodonAccountId = mastodonAccountId,
-                    mastodonStatusId = mastodonStatusId,
                     recommendationId = recommendationId,
                     uiAdditionalDetail = uiAdditionalDetail,
                     uiIdentifier = uiIdentifier,
@@ -67,8 +63,6 @@ class GleanAnalytics(
     }
 
     override fun uiImpression(
-        mastodonAccountId: String?,
-        mastodonStatusId: String?,
         recommendationId: String?,
         uiAdditionalDetail: String?,
         uiIdentifier: String?,
@@ -76,8 +70,6 @@ class GleanAnalytics(
         Ui.impression.record(
             extra =
                 Ui.ImpressionExtra(
-                    mastodonAccountId = mastodonAccountId,
-                    mastodonStatusId = mastodonStatusId,
                     recommendationId = recommendationId,
                     uiAdditionalDetail = uiAdditionalDetail,
                     uiIdentifier = uiIdentifier,

@@ -77,7 +77,6 @@ class FollowersViewModel(
                     analytics.uiEngagement(
                         engagementType = EngagementType.GENERAL,
                         uiIdentifier = AnalyticsIdentifiers.FOLLOWS_SCREEN_UNFOLLOW,
-                        mastodonAccountId = accountId,
                     )
                     unfollowAccount(accountId, loggedInUserAccountId)
                 } catch (e: UnfollowAccount.UnfollowFailedException) {
@@ -88,7 +87,6 @@ class FollowersViewModel(
                     analytics.uiEngagement(
                         engagementType = EngagementType.GENERAL,
                         uiIdentifier = AnalyticsIdentifiers.FOLLOWS_SCREEN_FOLLOW,
-                        mastodonAccountId = accountId,
                     )
                     followAccount(accountId, loggedInUserAccountId)
                 } catch (e: FollowAccount.FollowFailedException) {
