@@ -3,6 +3,7 @@ package org.mozilla.social.core.ui.common.search
 import androidx.compose.foundation.border
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -75,7 +76,7 @@ fun MoSoSearchBar(
         BasicTextField(
             value = query,
             modifier = modifier
-                .height(36.dp)
+                .height(42.dp)
                 .border(
                     width = 1.dp,
                     color =
