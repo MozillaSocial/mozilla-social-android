@@ -1,13 +1,9 @@
 package org.mozilla.social.feature.media
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTransformGestures
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.runtime.Composable
@@ -17,16 +13,11 @@ import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.layout.onSizeChanged
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.IntOffset
-import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import org.mozilla.social.common.utils.toPx
 import org.mozilla.social.core.model.Attachment
 import org.mozilla.social.core.navigation.NavigationDestination
 import org.mozilla.social.core.ui.common.MoSoSurface
@@ -68,11 +59,11 @@ private fun ZoomableImage(
 
         val maxScale by remember(attachment, width, height) {
             derivedStateOf {
-                val maxScaleHeight = ((attachment.meta?.original?.height ?: 0) / height).coerceAtLeast(1F)
-                val maxScaleWidth = ((attachment.meta?.original?.width ?: 0) / width).coerceAtLeast(1F)
+                val maxScaleHeight = ((attachment.meta?.original?.height ?: 0) / height).coerceAtLeast(1f)
+                val maxScaleWidth = ((attachment.meta?.original?.width ?: 0) / width).coerceAtLeast(1f)
                 max(maxScaleHeight, maxScaleWidth)
             }
-        } 
+        }
 
         AsyncImage(
             modifier = Modifier
@@ -83,17 +74,17 @@ private fun ZoomableImage(
                 )
                 .pointerInput(Unit) {
                     detectTransformGestures { _, pan, zoom, _ ->
-                        scale = (scale * zoom).coerceIn(1F..maxScale)
+                        scale = (scale * zoom).coerceIn(1f..maxScale)
                         val x = (pan.x * scale)
                         val y = (pan.y * scale)
 
-                        val adjustedOffsetX: Float = width * (scale - 1).coerceAtLeast(0F)
-                        val adjustedOffsetY = height * (scale - 1).coerceAtLeast(0F)
+                        val offsetLimitX: Float = width * (scale - 1).coerceAtLeast(0F)
+                        val offsetLimitY = height * (scale - 1).coerceAtLeast(0F)
 
                         offsetX = (offsetX + x)
-                            .coerceIn(-adjustedOffsetX..adjustedOffsetX)
+                            .coerceIn(-offsetLimitX..offsetLimitX)
                         offsetY = (offsetY + y)
-                            .coerceIn(-adjustedOffsetY..adjustedOffsetY)
+                            .coerceIn(-offsetLimitY..offsetLimitY)
                     }
                 }
                 .fillMaxSize(),
