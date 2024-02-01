@@ -14,13 +14,12 @@ import org.mozilla.social.core.ui.common.button.MoSoButtonContentPadding
 import org.mozilla.social.core.ui.common.button.MoSoButtonSecondary
 import org.mozilla.social.core.ui.common.text.SmallTextLabel
 import org.mozilla.social.core.ui.common.utils.PreviewTheme
-import org.mozilla.social.core.ui.htmlcontent.HtmlContentInteractions
 import org.mozilla.social.core.ui.notifications.NotificationCard
 import org.mozilla.social.core.ui.notifications.NotificationInteractions
 import org.mozilla.social.core.ui.notifications.NotificationInteractionsNoOp
 import org.mozilla.social.core.ui.notifications.NotificationUiState
 import org.mozilla.social.core.ui.notifications.R
-import org.mozilla.social.core.ui.poll.PollInteractions
+import org.mozilla.social.core.ui.postcard.PostCardInteractions
 
 @Composable
 internal fun FollowRequestNotificationContent(
@@ -75,8 +74,7 @@ private fun FollowRequestNotificationPreview() {
                 accountId = "",
                 accountName = "",
             ),
-            htmlContentInteractions = object : HtmlContentInteractions {},
-            pollInteractions = object : PollInteractions {},
+            postCardInteractions = object : PostCardInteractions {},
             notificationInteractions = NotificationInteractionsNoOp,
         )
     }

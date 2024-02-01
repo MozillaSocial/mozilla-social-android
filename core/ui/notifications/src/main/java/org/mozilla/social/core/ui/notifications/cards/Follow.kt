@@ -9,6 +9,7 @@ import org.mozilla.social.core.ui.notifications.NotificationCard
 import org.mozilla.social.core.ui.notifications.NotificationInteractionsNoOp
 import org.mozilla.social.core.ui.notifications.NotificationUiState
 import org.mozilla.social.core.ui.poll.PollInteractions
+import org.mozilla.social.core.ui.postcard.PostCardInteractions
 
 @Preview
 @Composable
@@ -23,8 +24,7 @@ private fun FollowNotificationPreview() {
                 accountId = "",
                 accountName = "",
             ),
-            htmlContentInteractions = object : HtmlContentInteractions {},
-            pollInteractions = object : PollInteractions {},
+            postCardInteractions = object : PostCardInteractions {},
             notificationInteractions = NotificationInteractionsNoOp,
         )
     }

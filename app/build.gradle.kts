@@ -82,6 +82,7 @@ dependencies {
     implementation(project(":feature:favorites"))
     implementation(project(":core:workmanager"))
     implementation(project(":feature:notifications"))
+    implementation(project(":feature:media"))
 
     implementation(kotlin("reflect"))
 

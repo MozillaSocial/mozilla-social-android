@@ -5,6 +5,7 @@ import kotlinx.coroutines.launch
 import org.mozilla.social.core.analytics.Analytics
 import org.mozilla.social.core.analytics.AnalyticsIdentifiers
 import org.mozilla.social.core.analytics.EngagementType
+import org.mozilla.social.core.model.Attachment
 import org.mozilla.social.core.usecase.mastodon.status.BoostStatus
 import org.mozilla.social.core.navigation.NavigationDestination
 import org.mozilla.social.core.navigation.usecases.NavigateTo
@@ -220,5 +221,14 @@ class PostCardDelegate(
             engagementValue = "hashtag: $hashTag"
         )
         navigateTo(NavigationDestination.HashTag(hashTag))
+    }
+
+    override fun onMediaClicked(attachments: List<Attachment>, index: Int) {
+        navigateTo(
+            NavigationDestination.Media(
+                attachments = attachments,
+                startIndex = index,
+            )
+        )
     }
 }

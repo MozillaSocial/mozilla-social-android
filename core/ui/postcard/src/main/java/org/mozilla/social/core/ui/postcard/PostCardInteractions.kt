@@ -1,5 +1,6 @@
 package org.mozilla.social.core.ui.postcard
 
+import org.mozilla.social.core.model.Attachment
 import org.mozilla.social.core.ui.htmlcontent.HtmlContentInteractions
 import org.mozilla.social.core.ui.poll.PollInteractions
 
@@ -39,4 +40,9 @@ interface PostCardInteractions : PollInteractions, HtmlContentInteractions {
     fun onOverflowEditClicked(statusId: String) = Unit
 
     fun onAccountImageClicked(accountId: String) = Unit
+
+    fun onMediaClicked(
+        attachments: List<Attachment>,
+        index: Int,
+    ) = Unit
 }

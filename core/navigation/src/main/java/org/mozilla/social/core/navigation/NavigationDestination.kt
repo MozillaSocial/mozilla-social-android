@@ -2,6 +2,10 @@ package org.mozilla.social.core.navigation
 
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
+import org.mozilla.social.core.model.Attachment
 
 /**
  * Represents a top-level Navigation destination
@@ -109,6 +113,44 @@ sealed class NavigationDestination(
             val fullRoute = route("{${NAV_PARAM_HASH_TAG}}")
 
             private fun route(paramValue: String) = "$ROUTE?$NAV_PARAM_HASH_TAG=$paramValue"
+        }
+    }
+
+    data class Media(
+        val attachments: List<Attachment>,
+        val startIndex: Int = 0,
+    ) : NavigationDestination(
+        route = ROUTE,
+    ) {
+        fun NavController.navigateToMedia(navOptions: NavOptions? = null) {
+            val mediaBundle = MediaBundle(
+                // remove blur hashes because the characters in the hash can mess up serialization
+                attachments = attachments.map {
+                    when (it) {
+                        is Attachment.Image -> it.copy(blurHash = null)
+                        is Attachment.Audio -> it.copy(blurHash = null)
+                        is Attachment.Gifv -> it.copy(blurHash = null)
+                        is Attachment.Video -> it.copy(blurHash = null)
+                        is Attachment.Unknown -> it.copy(blurHash = null)
+                    }
+                },
+                startIndex = startIndex,
+            )
+            navigate(route(Json.encodeToString(mediaBundle)), navOptions)
+        }
+
+        @Serializable
+        data class MediaBundle(
+            val attachments: List<Attachment>,
+            val startIndex: Int = 0,
+        )
+
+        companion object {
+            private const val ROUTE = "media"
+            const val NAV_PARAM_BUNDLE = "bundle"
+            val fullRoute = route("{${NAV_PARAM_BUNDLE}}")
+
+            private fun route(paramValue: String) = "$ROUTE?$NAV_PARAM_BUNDLE=$paramValue"
         }
     }
 
