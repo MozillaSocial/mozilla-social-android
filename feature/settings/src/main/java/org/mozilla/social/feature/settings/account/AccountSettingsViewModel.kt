@@ -9,8 +9,6 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import org.mozilla.social.common.loadResource
 import org.mozilla.social.common.utils.StringFactory
-import org.mozilla.social.core.analytics.Analytics
-import org.mozilla.social.core.analytics.AnalyticsIdentifiers
 import org.mozilla.social.core.model.Account
 import org.mozilla.social.core.navigation.usecases.OpenLink
 import org.mozilla.social.core.repository.mastodon.AccountRepository
@@ -18,12 +16,12 @@ import org.mozilla.social.core.usecase.mastodon.account.GetDomain
 import org.mozilla.social.core.usecase.mastodon.account.GetLoggedInUserAccountId
 import org.mozilla.social.core.usecase.mastodon.auth.Logout
 import org.mozilla.social.feature.settings.R
-import org.mozilla.social.feature.settings.SettingsInteractions
+import org.mozilla.social.feature.settings.SettingsAnalytics
 
 class AccountSettingsViewModel(
     private val logout: Logout,
     private val openLink: OpenLink,
-    private val analytics: Analytics,
+    private val analytics: SettingsAnalytics,
     private val getDomain: GetDomain,
     getLoggedInUserAccountId: GetLoggedInUserAccountId,
     accountRepository: AccountRepository,
@@ -42,16 +40,10 @@ class AccountSettingsViewModel(
 
 
     override fun onLogoutClicked() {
-        logoutClickedAnalytics()
+        analytics.logoutEngagement()
         viewModelScope.launch {
             logout()
         }
-    }
-
-    private fun logoutClickedAnalytics() {
-        analytics.uiEngagement(
-            uiIdentifier = AnalyticsIdentifiers.SETTINGS_ACCOUNT_SIGNOUT,
-        )
     }
 
     override fun onManageAccountClicked() {
@@ -60,9 +52,7 @@ class AccountSettingsViewModel(
 
 
     override fun onScreenViewed() {
-        analytics.uiImpression(
-            uiIdentifier = AnalyticsIdentifiers.SETTINGS_ACCOUNT_IMPRESSION,
-        )
+        analytics.accountSettingsImpression()
     }
 }
 

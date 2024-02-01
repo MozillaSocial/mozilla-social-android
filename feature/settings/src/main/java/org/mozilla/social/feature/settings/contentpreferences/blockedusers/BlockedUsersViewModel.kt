@@ -21,12 +21,13 @@ import org.mozilla.social.core.ui.common.account.toggleablelist.ToggleableAccoun
 import org.mozilla.social.core.usecase.mastodon.account.BlockAccount
 import org.mozilla.social.core.usecase.mastodon.account.UnblockAccount
 import org.mozilla.social.feature.settings.R
+import org.mozilla.social.feature.settings.SettingsAnalytics
 import timber.log.Timber
 
 class BlockedUsersViewModel(
     repository: BlocksRepository,
     remoteMediator: BlocksListRemoteMediator,
-    private val analytics: Analytics,
+    private val analytics: SettingsAnalytics,
     private val blockAccount: BlockAccount,
     private val unblockAccount: UnblockAccount,
     private val navigateToAccount: NavigateToAccount,
@@ -64,9 +65,7 @@ class BlockedUsersViewModel(
     }
 
     override fun onScreenViewed() {
-        analytics.uiImpression(
-            uiIdentifier = AnalyticsIdentifiers.BLOCKED_USERS_SCREEN_IMPRESSION,
-        )
+        analytics.blockedUsersSettingsImpression()
     }
 }
 

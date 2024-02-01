@@ -5,14 +5,12 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import org.mozilla.social.core.analytics.Analytics
-import org.mozilla.social.core.analytics.AnalyticsIdentifiers
-import org.mozilla.social.core.analytics.EngagementType
 import org.mozilla.social.core.datastore.AppPreferencesDatastore
+import org.mozilla.social.feature.settings.SettingsAnalytics
 
 class PrivacySettingsViewModel(
     private val appPreferencesDatastore: AppPreferencesDatastore,
-    private val analytics: Analytics,
+    private val analytics: SettingsAnalytics,
 ) : ViewModel(), PrivacySettingsInteractions {
 
     val allowAnalytics =
@@ -20,19 +18,13 @@ class PrivacySettingsViewModel(
 
     fun toggleAllowAnalytics() {
         val toggleAnalyticsValue = allowAnalytics.value.not()
-        analytics.uiEngagement(
-            engagementType = EngagementType.GENERAL,
-            uiIdentifier = AnalyticsIdentifiers.PRIVACY_COLLECT_DATA_TOGGLE,
-            engagementValue = toggleAnalyticsValue.toString(),
-        )
+        analytics.collectDataEngagement(toggleAnalyticsValue)
         viewModelScope.launch {
             appPreferencesDatastore.allowAnalytics(toggleAnalyticsValue)
         }
     }
 
     override fun onScreenViewed() {
-        analytics.uiImpression(
-            uiIdentifier = AnalyticsIdentifiers.SETTINGS_PRIVACY_IMPRESSION,
-        )
+        analytics.privacySettingsImpression()
     }
 }
