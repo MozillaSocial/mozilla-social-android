@@ -226,10 +226,8 @@ class PostCardDelegate(
     override fun onMediaClicked(attachments: List<Attachment>, index: Int) {
         navigateTo(
             NavigationDestination.Media(
-                NavigationDestination.Media.MediaBundle(
-                    attachments = attachments,
-                    startIndex = index,
-                )
+                attachments = attachments,
+                startIndex = index,
             )
         )
     }

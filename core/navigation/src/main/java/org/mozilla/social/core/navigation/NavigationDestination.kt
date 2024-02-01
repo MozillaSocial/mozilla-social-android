@@ -117,11 +117,25 @@ sealed class NavigationDestination(
     }
 
     data class Media(
-        val mediaBundle: MediaBundle,
+        val attachments: List<Attachment>,
+        val startIndex: Int = 0,
     ) : NavigationDestination(
         route = ROUTE,
     ) {
         fun NavController.navigateToMedia(navOptions: NavOptions? = null) {
+            val mediaBundle = MediaBundle(
+                // remove blur hashes because the characters in the hash can mess up serialization
+                attachments = attachments.map {
+                    when (it) {
+                        is Attachment.Image -> it.copy(blurHash = null)
+                        is Attachment.Audio -> it.copy(blurHash = null)
+                        is Attachment.Gifv -> it.copy(blurHash = null)
+                        is Attachment.Video -> it.copy(blurHash = null)
+                        is Attachment.Unknown -> it.copy(blurHash = null)
+                    }
+                },
+                startIndex = startIndex,
+            )
             navigate(route(Json.encodeToString(mediaBundle)), navOptions)
         }
 
