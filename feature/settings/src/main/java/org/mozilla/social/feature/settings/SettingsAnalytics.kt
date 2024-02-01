@@ -4,25 +4,25 @@ import org.mozilla.social.core.analytics.Analytics
 import org.mozilla.social.core.analytics.EngagementType
 
 class SettingsAnalytics(private val analytics: Analytics) {
-    fun settingsImpression() {
+    fun settingsScreenViewed() {
         analytics.uiImpression(
             uiIdentifier = SETTINGS_SCREEN_IMPRESSION,
         )
     }
 
-    fun accountSettingsImpression() {
+    fun accountSettingsViewed() {
         analytics.uiImpression(
             uiIdentifier = SETTINGS_ACCOUNT_IMPRESSION,
         )
     }
 
-    fun logoutEngagement() {
+    fun logoutClicked() {
         analytics.uiEngagement(
             uiIdentifier = SETTINGS_ACCOUNT_SIGNOUT,
         )
     }
 
-    fun collectDataEngagement(value: Boolean) {
+    fun collectDataToggled(value: Boolean) {
         analytics.uiEngagement(
             engagementType = EngagementType.GENERAL,
             uiIdentifier = PRIVACY_COLLECT_DATA_TOGGLE,
@@ -30,37 +30,37 @@ class SettingsAnalytics(private val analytics: Analytics) {
         )
     }
 
-    fun privacySettingsImpression() {
+    fun privacySettingsViewed() {
         analytics.uiImpression(
             uiIdentifier = SETTINGS_PRIVACY_IMPRESSION,
         )
     }
 
-    fun contentPreferencesSettingsImpression() {
+    fun contentPreferencesSettingsViewed() {
         analytics.uiImpression(
             uiIdentifier = SETTINGS_CONTENT_PREFERENCES_IMPRESSION,
         )
     }
 
-    fun openSourceLicencesImpression() {
+    fun openSourceLicencesViewed() {
         analytics.uiImpression(
             uiIdentifier = SETTINGS_CONTENT_OPEN_SOURCE_LICENSE,
         )
     }
 
-    fun aboutSettingsImpression() {
+    fun aboutSettingsViewed() {
         analytics.uiImpression(
             uiIdentifier = SETTINGS_ABOUT_IMPRESSION,
         )
     }
 
-    fun mutedUsersSettingsImpression() {
+    fun mutedUsersSettingsViewed() {
         analytics.uiImpression(
             uiIdentifier = MUTED_USERS_SCREEN_IMPRESSION,
         )
     }
 
-    fun blockedUsersSettingsImpression() {
+    fun blockedUsersSettingsViewed() {
         analytics.uiImpression(
             uiIdentifier = BLOCKED_USERS_SCREEN_IMPRESSION,
         )

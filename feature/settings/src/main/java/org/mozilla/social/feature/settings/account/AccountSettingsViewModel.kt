@@ -40,7 +40,7 @@ class AccountSettingsViewModel(
 
 
     override fun onLogoutClicked() {
-        analytics.logoutEngagement()
+        analytics.logoutClicked()
         viewModelScope.launch {
             logout()
         }
@@ -52,7 +52,7 @@ class AccountSettingsViewModel(
 
 
     override fun onScreenViewed() {
-        analytics.accountSettingsImpression()
+        analytics.accountSettingsViewed()
     }
 }
 

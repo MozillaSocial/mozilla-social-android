@@ -57,7 +57,7 @@ class AboutSettingsViewModel(
     }
 
     override fun onScreenViewed() {
-        analytics.aboutSettingsImpression()
+        analytics.aboutSettingsViewed()
     }
 
     override fun onOpenSourceLicensesClicked() {

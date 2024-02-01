@@ -7,6 +7,6 @@ class OpenSourceLicensesViewModel(
     private val analytics: SettingsAnalytics,
 ) : ViewModel(), OpenSourceLicensesSettingsInteractions {
     override fun onScreenViewed() {
-        analytics.openSourceLicencesImpression()
+        analytics.openSourceLicencesViewed()
     }
 }

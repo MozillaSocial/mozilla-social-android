@@ -18,6 +18,6 @@ class ContentPreferencesSettingsViewModel(
     }
 
     override fun onScreenViewed() {
-        analytics.contentPreferencesSettingsImpression()
+        analytics.contentPreferencesSettingsViewed()
     }
 }

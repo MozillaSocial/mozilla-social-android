@@ -34,6 +34,6 @@ class SettingsViewModel(
     }
 
     override fun onScreenViewed() {
-        analytics.settingsImpression()
+        analytics.settingsScreenViewed()
     }
 }

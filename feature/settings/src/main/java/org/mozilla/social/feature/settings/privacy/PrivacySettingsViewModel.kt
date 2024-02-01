@@ -18,13 +18,13 @@ class PrivacySettingsViewModel(
 
     fun toggleAllowAnalytics() {
         val toggleAnalyticsValue = allowAnalytics.value.not()
-        analytics.collectDataEngagement(toggleAnalyticsValue)
+        analytics.collectDataToggled(toggleAnalyticsValue)
         viewModelScope.launch {
             appPreferencesDatastore.allowAnalytics(toggleAnalyticsValue)
         }
     }
 
     override fun onScreenViewed() {
-        analytics.privacySettingsImpression()
+        analytics.privacySettingsViewed()
     }
 }

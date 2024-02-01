@@ -10,8 +10,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import org.mozilla.social.common.utils.StringFactory
-import org.mozilla.social.core.analytics.Analytics
-import org.mozilla.social.core.analytics.AnalyticsIdentifiers
 import org.mozilla.social.core.model.MutedUser
 import org.mozilla.social.core.navigation.usecases.NavigateToAccount
 import org.mozilla.social.core.repository.mastodon.MutesRepository
@@ -65,7 +63,7 @@ class MutedUsersSettingsViewModel(
     }
 
     override fun onScreenViewed() {
-        analytics.mutedUsersSettingsImpression()
+        analytics.mutedUsersSettingsViewed()
     }
 }
 
