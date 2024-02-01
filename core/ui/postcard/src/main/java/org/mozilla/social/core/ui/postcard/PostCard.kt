@@ -250,7 +250,7 @@ fun PostContent(
                 onAttachmentClicked = {
                     postCardInteractions.onMediaClicked(
                         uiState.mediaAttachments,
-                        0,
+                        uiState.mediaAttachments.indexOf(it),
                     )
                 }
             )
