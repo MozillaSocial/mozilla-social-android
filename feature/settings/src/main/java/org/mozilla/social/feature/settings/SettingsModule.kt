@@ -42,4 +42,5 @@ val settingsModule =
         viewModelOf(::MutedUsersSettingsViewModel)
         viewModelOf(::OpenSourceLicensesViewModel)
         singleOf(::DefaultHtmlInteractions)
+        singleOf(::SettingsAnalytics)
     }

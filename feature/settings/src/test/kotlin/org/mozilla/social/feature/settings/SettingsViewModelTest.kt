@@ -7,7 +7,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.setMain
 import org.junit.Test
-import org.mozilla.social.core.analytics.Analytics
 import org.mozilla.social.core.navigation.SettingsNavigationDestination
 import org.mozilla.social.core.navigation.usecases.NavigateTo
 import kotlin.test.BeforeTest
@@ -16,7 +15,7 @@ class SettingsViewModelTest {
     private lateinit var objUnderTest: SettingsViewModel
 
     private val navigateTo: NavigateTo = mockk(relaxed = true)
-    private val analytics: Analytics = mockk(relaxed = true)
+    private val analytics: SettingsAnalytics = mockk(relaxed = true)
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @BeforeTest

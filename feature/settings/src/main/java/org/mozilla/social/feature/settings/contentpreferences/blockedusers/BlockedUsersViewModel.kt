@@ -10,8 +10,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import org.mozilla.social.common.utils.StringFactory
-import org.mozilla.social.core.analytics.Analytics
-import org.mozilla.social.core.analytics.AnalyticsIdentifiers
 import org.mozilla.social.core.model.BlockedUser
 import org.mozilla.social.core.navigation.usecases.NavigateToAccount
 import org.mozilla.social.core.repository.mastodon.BlocksRepository
@@ -21,12 +19,13 @@ import org.mozilla.social.core.ui.common.account.toggleablelist.ToggleableAccoun
 import org.mozilla.social.core.usecase.mastodon.account.BlockAccount
 import org.mozilla.social.core.usecase.mastodon.account.UnblockAccount
 import org.mozilla.social.feature.settings.R
+import org.mozilla.social.feature.settings.SettingsAnalytics
 import timber.log.Timber
 
 class BlockedUsersViewModel(
     repository: BlocksRepository,
     remoteMediator: BlocksListRemoteMediator,
-    private val analytics: Analytics,
+    private val analytics: SettingsAnalytics,
     private val blockAccount: BlockAccount,
     private val unblockAccount: UnblockAccount,
     private val navigateToAccount: NavigateToAccount,
@@ -64,9 +63,7 @@ class BlockedUsersViewModel(
     }
 
     override fun onScreenViewed() {
-        analytics.uiImpression(
-            uiIdentifier = AnalyticsIdentifiers.BLOCKED_USERS_SCREEN_IMPRESSION,
-        )
+        analytics.blockedUsersSettingsViewed()
     }
 }
 

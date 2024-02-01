@@ -1,15 +1,12 @@
 package org.mozilla.social.feature.settings.licenses
 
 import androidx.lifecycle.ViewModel
-import org.mozilla.social.core.analytics.Analytics
-import org.mozilla.social.core.analytics.AnalyticsIdentifiers
+import org.mozilla.social.feature.settings.SettingsAnalytics
 
 class OpenSourceLicensesViewModel(
-    private val analytics: Analytics,
+    private val analytics: SettingsAnalytics,
 ) : ViewModel(), OpenSourceLicensesSettingsInteractions {
     override fun onScreenViewed() {
-        analytics.uiImpression(
-            uiIdentifier = AnalyticsIdentifiers.SETTINGS_CONTENT_OPEN_SOURCE_LICENSE,
-        )
+        analytics.openSourceLicencesViewed()
     }
 }
