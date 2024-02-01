@@ -1,12 +1,6 @@
 package org.mozilla.social.core.analytics
 
 object AnalyticsIdentifiers {
-    const val DISCOVER_RECOMMENDATION_IMPRESSION = "discover.recommendation.impression"
-    const val DISCOVER_SCREEN_IMPRESSION = "discover.screen.impression"
-    const val DISCOVER_RECOMMENDATION_OPEN = "discover.recommendation.open"
-    const val DISCOVER_RECOMMENDATION_SHARE = "discover.recommendation.share"
-    const val DISCOVER_RECOMMENDATION_BOOKMARK = "discover.recommendation.bookmark"
-    const val DISCOVER_RECOMMENDATION_REPOST = "discover.recommendation.repost"
 
     const val ACCOUNTS_SCREEN_IMPRESSION = "account.screen.impression"
     const val ACCOUNTS_SCREEN_FOLLOW = "profile.follow_btn.follow"

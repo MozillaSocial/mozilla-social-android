@@ -77,6 +77,5 @@ class SettingsAnalytics(private val analytics: Analytics) {
         private const val SETTINGS_ABOUT_IMPRESSION = "settings.about.impression"
         private const val PRIVACY_COLLECT_DATA_TOGGLE = "privacy.collect-data.toggle"
         private const val SETTINGS_ACCOUNT_SIGNOUT = "account.signout"
-
     }
 }
