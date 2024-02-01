@@ -1,5 +1,6 @@
 package org.mozilla.social.core.ui.postcard
 
+import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 import org.mozilla.social.common.commonModule
 import org.mozilla.social.core.navigation.navigationModule
@@ -32,4 +33,6 @@ val postCardModule =
                 analytics = get(),
             )
         }
+
+        singleOf(::PostCardAnalytics)
     }
