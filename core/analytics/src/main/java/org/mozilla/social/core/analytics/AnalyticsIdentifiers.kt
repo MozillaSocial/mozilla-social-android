@@ -2,12 +2,7 @@ package org.mozilla.social.core.analytics
 
 object AnalyticsIdentifiers {
 
-    const val ACCOUNTS_SCREEN_IMPRESSION = "account.screen.impression"
-    const val ACCOUNTS_SCREEN_FOLLOW = "profile.follow_btn.follow"
-    const val ACCOUNTS_SCREEN_UNFOLLOW = "profile.follow_btn.unfollow"
-    const val PROFILE_EDIT_PROFILE = "profile.edit.profile"
-    const val PROFILE_EDIT_PROFILE_SCREEN_IMPRESSION = "profile.edit.profile.screen.impression"
-    const val PROFILE_EDIT_PROFILE_SAVE = "profile.edit.profile.save"
+
 
     const val NEW_POST_SCREEN_IMPRESSION = "new.post.screen.impression"
 
@@ -20,8 +15,6 @@ object AnalyticsIdentifiers {
     const val FEED_PREFIX_FAVORITES = "favorites"
     const val FEED_PREFIX_SEARCH = "search"
     const val FEED_PREFIX_NOTIFICATIONS = "notifications"
-
-
 
     const val REPORT_SCREEN_IMPRESSION = "report.screen.impression"
 
@@ -38,15 +31,7 @@ object AnalyticsIdentifiers {
     const val CHOOSE_A_SERVER_SCREEN_IMPRESSION = "choose.a.server.screen.impression"
     const val CHOOSE_A_SERVER_SCREEN_SUBMIT_SERVER = "choose.a.server.screen.submit-server"
 
-    const val PROFILE_OVERFLOW_SHARE = "profile.more.share-account"
-    const val PROFILE_OVERFLOW_MUTE = "profile.more.mute"
-    const val PROFILE_OVERFLOW_UNMUTE = "profile.more.unmute"
-    const val PROFILE_OVERFLOW_BLOCK = "profile.more.block"
-    const val PROFILE_OVERFLOW_UNBLOCK = "profile.more.unblock"
-    const val PROFILE_OVERFLOW_REPORT = "profile.more.report.open"
-    const val PROFILE_FEED_POSTS = "profile.tabs.posts"
-    const val PROFILE_FEED_POSTS_AND_REPLIES = "profile.tabs.posts-and-replies"
-    const val PROFILE_FEED_MEDIA = "profile.tabs.media"
+
 
     const val NEW_POST_POST = "new.post.post"
     const val NEW_POST_IMAGE = "new.post.image"

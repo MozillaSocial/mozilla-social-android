@@ -15,6 +15,7 @@ import org.mozilla.social.core.navigation.usecases.PopNavBackstack
 import org.mozilla.social.core.repository.mastodon.AccountRepository
 import org.mozilla.social.core.usecase.mastodon.account.GetLoggedInUserAccountId
 import org.mozilla.social.core.usecase.mastodon.account.UpdateMyAccount
+import org.mozilla.social.feature.account.AccountAnalytics
 import timber.log.Timber
 import java.io.File
 
@@ -23,7 +24,7 @@ class EditAccountViewModel(
     getLoggedInUserAccountId: GetLoggedInUserAccountId,
     private val popNavBackstack: PopNavBackstack,
     private val updateMyAccount: UpdateMyAccount,
-    private val analytics: Analytics,
+    private val analytics: AccountAnalytics,
 ) : ViewModel(), EditAccountInteractions {
     private val accountId = getLoggedInUserAccountId()
 
@@ -62,9 +63,7 @@ class EditAccountViewModel(
         with(_editAccountUiState.value as? Resource.Loaded ?: return) {
             viewModelScope.launch {
                 try {
-                    analytics.uiEngagement(
-                        uiIdentifier = AnalyticsIdentifiers.PROFILE_EDIT_PROFILE_SAVE,
-                    )
+                    analytics.editAccountSaved()
                     updateMyAccount(
                         displayName = data.displayName.trim(),
                         bio = data.bio.trim(),
@@ -222,9 +221,7 @@ class EditAccountViewModel(
     }
 
     override fun onScreenViewed() {
-        analytics.uiImpression(
-            uiIdentifier = AnalyticsIdentifiers.PROFILE_EDIT_PROFILE_SCREEN_IMPRESSION,
-        )
+        analytics.editAccountScreenViewed()
     }
 
     private fun MutableList<EditAccountUiStateField>.modifyFieldCount() {
