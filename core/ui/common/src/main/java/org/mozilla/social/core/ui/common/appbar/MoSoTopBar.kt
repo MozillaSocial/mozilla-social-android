@@ -39,6 +39,7 @@ import org.mozilla.social.core.ui.common.divider.MoSoDivider
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MoSoCloseableTopAppBar(
+    modifier: Modifier = Modifier,
     title: String = "",
     showCloseButton: Boolean = true,
     popBackstack: PopNavBackstack = koinInject(),
@@ -46,6 +47,7 @@ fun MoSoCloseableTopAppBar(
     showDivider: Boolean = false,
 ) {
     MoSoTopBar(
+        modifier = modifier,
         title = title,
         icon = if (showCloseButton) MoSoIcons.backArrow() else null,
         onIconClicked = { popBackstack() },
@@ -66,11 +68,10 @@ fun MoSoTopBar(
     scrollBehavior: TopAppBarScrollBehavior? = null,
 ) {
     Column(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
     ) {
         MoSoTopBar(
             title = { TopBarTitle(title = title) },
-            modifier = modifier,
             navigationIcon = {
                 icon?.let {
                     TopBarIconButton(

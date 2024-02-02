@@ -74,6 +74,9 @@ object MoSoIcons {
     fun connect() = painterResource(id = R.drawable.connect)
 
     @Composable
+    fun downloadSimple() = painterResource(id = R.drawable.download_simple)
+
+    @Composable
     fun following() = painterResource(id = R.drawable.following)
 
     @Composable
