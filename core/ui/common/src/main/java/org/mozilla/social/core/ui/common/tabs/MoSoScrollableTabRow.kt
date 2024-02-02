@@ -114,7 +114,12 @@ fun MoSoTabRow(
             )
         }
 
-        var maxWidth by remember { mutableIntStateOf(0) }
+        var maxWidth by remember {
+            mutableIntStateOf(0)
+        }
+
+        // trigger recomposition here because values used in SubcomposeLayout do not
+        maxWidth.dp
 
         Box(
             modifier = Modifier
