@@ -7,6 +7,9 @@ import coil.ImageLoaderFactory
 import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
 import coil.decode.VideoFrameDecoder
+import coil.disk.DiskCache
+import coil.memory.MemoryCache
+import coil.request.CachePolicy
 import io.sentry.SentryLevel
 import io.sentry.android.core.SentryAndroid
 import io.sentry.android.timber.SentryTimberIntegration
@@ -27,6 +30,7 @@ import org.mozilla.social.feature.discover.discoverModule
 import org.mozilla.social.feature.favorites.favoritesModule
 import org.mozilla.social.feature.followers.followersModule
 import org.mozilla.social.feature.hashtag.hashTagModule
+import org.mozilla.social.feature.media.mediaModule
 import org.mozilla.social.feature.notifications.notificationsModule
 import org.mozilla.social.feature.report.reportModule
 import org.mozilla.social.feature.settings.settingsModule
@@ -110,6 +114,11 @@ class MainApplication : Application(), ImageLoaderFactory {
                 }
                 add(VideoFrameDecoder.Factory())
             }
+            .memoryCache {
+                MemoryCache.Builder(this)
+                    .maxSizePercent(1.0)
+                    .build()
+            }
             .build()
 }
 
@@ -123,6 +132,7 @@ val featureModules =
             feedModule,
             followersModule,
             hashTagModule,
+            mediaModule,
             newPostModule,
             notificationsModule,
             reportModule,
