@@ -94,8 +94,6 @@ class PostCardAnalytics(private val analytics: Analytics) {
     }
 
     companion object {
-        private const val FEED_SCREEN_IMPRESSION = "feed.screen.impression"
-        private const val FEED_POST_VOTE = "feed.post.vote"
         private const val FEED_POST_REPLY = "feed.post.open-reply"
         private const val FEED_POST_BOOST = "feed.post.reblog"
         private const val FEED_POST_UNBOOST = "feed.post.unreblog"
