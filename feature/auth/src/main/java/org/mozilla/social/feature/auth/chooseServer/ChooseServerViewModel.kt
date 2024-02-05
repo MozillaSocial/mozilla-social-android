@@ -14,7 +14,7 @@ import timber.log.Timber
 
 class ChooseServerViewModel(
     private val login: Login,
-    private val analytics: Analytics,
+    private val analytics: ChooseServerAnalytics,
 ) : ViewModel(), ChooseServerInteractions {
     private val _uiState = MutableStateFlow(ChooseServerUiState())
     val uiState = _uiState.asStateFlow()
@@ -36,11 +36,7 @@ class ChooseServerViewModel(
                 loginFailed = false,
             )
         }
-        analytics.uiEngagement(
-            engagementType = EngagementType.GENERAL,
-            uiIdentifier = AnalyticsIdentifiers.CHOOSE_A_SERVER_SCREEN_SUBMIT_SERVER,
-            engagementValue = uiState.value.serverText
-        )
+        analytics.chooseServerSubmitted(uiState.value.serverText)
         viewModelScope.launch {
             try {
                 login(uiState.value.serverText)
@@ -62,9 +58,7 @@ class ChooseServerViewModel(
     }
 
     override fun onScreenViewed() {
-        analytics.uiImpression(
-            uiIdentifier = AnalyticsIdentifiers.CHOOSE_A_SERVER_SCREEN_IMPRESSION
-        )
+        analytics.chooseServerScreenViewed()
     }
 
     companion object {
