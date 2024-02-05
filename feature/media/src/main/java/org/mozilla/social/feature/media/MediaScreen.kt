@@ -18,6 +18,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
@@ -113,7 +114,6 @@ private fun MediaScreen(
 private fun ZoomableImage(
     attachment: Attachment.Image,
 ) {
-    val density = LocalDensity.current
     var width by remember { mutableFloatStateOf(0f) }
     var height by remember { mutableFloatStateOf(0f) }
 
@@ -121,10 +121,8 @@ private fun ZoomableImage(
         modifier = Modifier
             .fillMaxSize()
             .onSizeChanged {
-                with (density) {
-                    width = it.width.toDp().value
-                    height = it.height.toDp().value
-                }
+                width = it.width.toFloat()
+                height = it.height.toFloat()
             }
     ) {
         if (width == 0f) return@Box
@@ -132,16 +130,18 @@ private fun ZoomableImage(
         var translationX by remember { mutableFloatStateOf(0f) }
         var translationY by remember { mutableFloatStateOf(0f) }
 
+        // 2x 100% zoom
         val maxScale by remember(attachment, width, height) {
             derivedStateOf {
                 val maxScaleHeight = ((attachment.meta?.original?.height ?: 0) / height).coerceAtLeast(1f)
                 val maxScaleWidth = ((attachment.meta?.original?.width ?: 0) / width).coerceAtLeast(1f)
-                max(maxScaleHeight, maxScaleWidth)
+                max(maxScaleHeight, maxScaleWidth) * 2
             }
         }
 
         AsyncImage(
             modifier = Modifier
+                .align(Alignment.Center)
                 .graphicsLayer(
                     scaleX = scale,
                     scaleY = scale,
@@ -149,23 +149,30 @@ private fun ZoomableImage(
                     translationY = translationY
                 )
                 .pointerInput(Unit) {
-                    detectTransformGestures { _, pan, zoom, _ ->
-                        with (density) {
-                            scale = (scale * zoom).coerceIn(1f..maxScale)
-                            val x = (pan.x * scale)
-                            val y = (pan.y * scale)
+                    detectTransformGestures { centroid, pan, zoom, _ ->
+                        println("johnny ================================")
+                        println("johnny centroid $centroid")
+                        println("johnny zoom $zoom")
+                        println("johnny translationX $translationX")
+                        println("johnny translationY $translationY")
+                        scale = (scale * zoom).coerceIn(1f..maxScale)
+                        val x = (pan.x * scale)
+                        val y = (pan.y * scale)
 
-                            val offsetLimitX: Float = width * (scale - 1).coerceAtLeast(0F)
-                            val offsetLimitY = height * (scale - 1).coerceAtLeast(0F)
+                        val offsetLimitX: Float = (width / 2) * (scale - 1).coerceAtLeast(0F)
+                        val offsetLimitY = (height / 2) * (scale - 1).coerceAtLeast(0F)
 
-                            translationX = (translationX + x)
-                                .coerceIn(-offsetLimitX..offsetLimitX)
-                            translationY = (translationY + y)
-                                .coerceIn(-offsetLimitY..offsetLimitY)
-                        }
+                        val centroidTranslationX = (translationX + centroid.x - (width / 2)) * (scale - 1)
+                        println("johnny centroidTranslationX $centroidTranslationX")
+                        val centroidTranslationY = (translationY + centroid.y - (height / 2)) * (scale - 1)
+                        println("johnny centroidTranslationY $centroidTranslationY")
+
+                        translationX = (translationX + x - centroidTranslationX)
+                            .coerceIn(-offsetLimitX..offsetLimitX)
+                        translationY = (translationY + y - centroidTranslationY)
+                            .coerceIn(-offsetLimitY..offsetLimitY)
                     }
-                }
-                .fillMaxSize(),
+                },
             model = attachment.url,
             contentDescription = null,
             contentScale = ContentScale.Fit,
