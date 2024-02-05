@@ -17,6 +17,7 @@ class CheckModulesTest : KoinTest {
                 Context::class,
                 CoroutineDispatcher::class,
                 CoroutineScope::class,
+                FeedLocation::class,
             ),
         )
     }
