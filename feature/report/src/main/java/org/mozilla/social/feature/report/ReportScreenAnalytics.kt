@@ -11,6 +11,6 @@ class ReportScreenAnalytics(private val analytics: Analytics) {
     }
 
     companion object {
-        const val REPORT_SCREEN_IMPRESSION = "report.screen.impression"
+        private const val REPORT_SCREEN_IMPRESSION = "report.screen.impression"
     }
 }

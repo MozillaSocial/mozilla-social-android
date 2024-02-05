@@ -49,23 +49,23 @@ class SearchAnalytics(private val analytics: Analytics) {
     }
 
     companion object {
-        const val SEARCH_QUERY = "search.query"
-        const val SEARCH_TAB_ACCOUNTS = "search.tab.accounts"
-        const val SEARCH_TAB_POSTS = "search.tab.posts"
-        const val SEARCH_TAB_HASHTAGS = "search.tab.hashtags"
-        const val SEARCH_TAB_TOP = "search.tab.top"
-        const val SEARCH_ACCOUNT_CLICKED = "search.account.clicked"
-        const val SEARCH_HASHTAG_CLICKED = "search.hashtag.clicked"
-        const val SEARCH_ACCOUNT_FOLLOW = "search.account.follow"
-        const val SEARCH_HASHTAG_FOLLOW = "search.hashtag.follow"
+        private const val SEARCH_QUERY = "search.query"
+        private const val SEARCH_TAB_ACCOUNTS = "search.tab.accounts"
+        private const val SEARCH_TAB_POSTS = "search.tab.posts"
+        private const val SEARCH_TAB_HASHTAGS = "search.tab.hashtags"
+        private const val SEARCH_TAB_TOP = "search.tab.top"
+        private const val SEARCH_ACCOUNT_CLICKED = "search.account.clicked"
+        private const val SEARCH_HASHTAG_CLICKED = "search.hashtag.clicked"
+        private const val SEARCH_ACCOUNT_FOLLOW = "search.account.follow"
+        private const val SEARCH_HASHTAG_FOLLOW = "search.hashtag.follow"
     }
-}
 
-private fun SearchTab.toIdentifier(): String {
-    return when (this) {
-        SearchTab.POSTS -> SearchAnalytics.SEARCH_TAB_POSTS
-        SearchTab.ACCOUNTS -> SearchAnalytics.SEARCH_TAB_ACCOUNTS
-        SearchTab.HASHTAGS -> SearchAnalytics.SEARCH_TAB_HASHTAGS
-        SearchTab.TOP -> SearchAnalytics.SEARCH_TAB_TOP
+    private fun SearchTab.toIdentifier(): String {
+        return when (this) {
+            SearchTab.POSTS -> SEARCH_TAB_POSTS
+            SearchTab.ACCOUNTS -> SEARCH_TAB_ACCOUNTS
+            SearchTab.HASHTAGS -> SEARCH_TAB_HASHTAGS
+            SearchTab.TOP -> SEARCH_TAB_TOP
+        }
     }
 }

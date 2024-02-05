@@ -47,11 +47,11 @@ class NewPostAnalytics(private val analytics: Analytics) {
     }
 
     companion object {
-        const val NEW_POST_SCREEN_IMPRESSION = "new.post.screen.impression"
-        const val NEW_POST_POST = "new.post.post"
-        const val NEW_POST_IMAGE = "new.post.image"
-        const val NEW_POST_MEDIA = "new.post.media"
-        const val NEW_POST_POLL = "new.post.poll"
-        const val NEW_POST_CONTENT_WARNING = "new.post.content.warning"
+        private const val NEW_POST_SCREEN_IMPRESSION = "new.post.screen.impression"
+        private const val NEW_POST_POST = "new.post.post"
+        private const val NEW_POST_IMAGE = "new.post.image"
+        private const val NEW_POST_MEDIA = "new.post.media"
+        private const val NEW_POST_POLL = "new.post.poll"
+        private const val NEW_POST_CONTENT_WARNING = "new.post.content.warning"
     }
 }
