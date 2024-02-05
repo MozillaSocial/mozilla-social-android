@@ -25,6 +25,7 @@ import org.mozilla.social.core.repository.paging.SearchStatusesRemoteMediator
 import org.mozilla.social.core.repository.paging.SearchedHashTagsRemoteMediator
 import org.mozilla.social.core.ui.accountfollower.toAccountFollowerUiState
 import org.mozilla.social.core.ui.common.hashtag.quickview.toHashTagQuickViewUiState
+import org.mozilla.social.core.ui.postcard.FeedLocation
 import org.mozilla.social.core.ui.postcard.PostCardDelegate
 import org.mozilla.social.core.ui.postcard.toPostCardUiState
 import org.mozilla.social.core.usecase.mastodon.account.FollowAccount
@@ -58,7 +59,7 @@ class SearchViewModel(
     val postCardDelegate: PostCardDelegate by inject {
         parametersOf(
             viewModelScope,
-            AnalyticsIdentifiers.FEED_PREFIX_SEARCH,
+            FeedLocation.SEARCH,
         )
     }
 

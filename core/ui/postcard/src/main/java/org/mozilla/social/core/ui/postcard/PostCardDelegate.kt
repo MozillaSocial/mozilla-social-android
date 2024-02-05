@@ -18,7 +18,7 @@ import timber.log.Timber
 
 class PostCardDelegate(
     private val coroutineScope: CoroutineScope,
-    private val baseAnalyticsIdentifier: String,
+    feedLocation: FeedLocation,
     private val navigateTo: NavigateTo,
     private val openLink: OpenLink,
     private val blockAccount: BlockAccount,
@@ -31,6 +31,8 @@ class PostCardDelegate(
     private val deleteStatus: DeleteStatus,
     private val analytics: PostCardAnalytics,
 ) : PostCardInteractions {
+
+    private val baseAnalyticsIdentifier: String = feedLocation.baseAnalyticsIdentifier
     override fun onVoteClicked(
         pollId: String,
         choices: List<Int>,

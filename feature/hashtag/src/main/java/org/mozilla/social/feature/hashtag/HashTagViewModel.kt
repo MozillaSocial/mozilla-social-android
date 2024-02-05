@@ -22,6 +22,7 @@ import org.mozilla.social.core.analytics.EngagementType
 import org.mozilla.social.core.model.HashTag
 import org.mozilla.social.core.repository.mastodon.TimelineRepository
 import org.mozilla.social.core.repository.paging.HashTagTimelineRemoteMediator
+import org.mozilla.social.core.ui.postcard.FeedLocation
 import org.mozilla.social.core.ui.postcard.PostCardDelegate
 import org.mozilla.social.core.ui.postcard.toPostCardUiState
 import org.mozilla.social.core.usecase.mastodon.account.GetLoggedInUserAccountId
@@ -45,7 +46,7 @@ class HashTagViewModel(
     }
 
     val postCardDelegate: PostCardDelegate by inject {
-        parametersOf(viewModelScope, AnalyticsIdentifiers.FEED_PREFIX_HASHTAG)
+        parametersOf(viewModelScope, FeedLocation.HASHTAG)
     }
 
     private var getHashTagJob: Job? = null

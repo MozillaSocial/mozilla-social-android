@@ -20,6 +20,7 @@ import org.mozilla.social.core.usecase.mastodon.account.GetLoggedInUserAccountId
 import org.mozilla.social.core.repository.paging.FederatedTimelineRemoteMediator
 import org.mozilla.social.core.repository.paging.HomeTimelineRemoteMediator
 import org.mozilla.social.core.repository.paging.LocalTimelineRemoteMediator
+import org.mozilla.social.core.ui.postcard.FeedLocation
 
 /**
  * Produces a flow of pages of statuses for a feed
@@ -66,13 +67,13 @@ class FeedViewModel(
 
     val homePostCardDelegate: PostCardDelegate by KoinJavaComponent.inject(
         PostCardDelegate::class.java,
-    ) { parametersOf(viewModelScope, AnalyticsIdentifiers.FEED_PREFIX_HOME) }
+    ) { parametersOf(viewModelScope, FeedLocation.HOME) }
     val localPostCardDelegate: PostCardDelegate by KoinJavaComponent.inject(
         PostCardDelegate::class.java,
-    ) { parametersOf(viewModelScope, AnalyticsIdentifiers.FEED_PREFIX_LOCAL) }
+    ) { parametersOf(viewModelScope, FeedLocation.LOCAL) }
     val federatedPostCardDelegate: PostCardDelegate by KoinJavaComponent.inject(
         PostCardDelegate::class.java,
-    ) { parametersOf(viewModelScope, AnalyticsIdentifiers.FEED_PREFIX_FEDERATED) }
+    ) { parametersOf(viewModelScope, FeedLocation.FEDERATED) }
 
     override fun onTabClicked(timelineType: TimelineType) {
         analytics.feedScreenClicked(timelineType)

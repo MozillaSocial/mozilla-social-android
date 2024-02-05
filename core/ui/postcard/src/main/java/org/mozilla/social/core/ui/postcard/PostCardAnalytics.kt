@@ -108,3 +108,15 @@ class PostCardAnalytics(private val analytics: Analytics) {
         private const val FEED_POST_REPORT = "feed.post.block"
     }
 }
+
+enum class FeedLocation(val baseAnalyticsIdentifier: String) {
+    PROFILE("profile"),
+    HOME("home"),
+    LOCAL("local"),
+    FEDERATED("federated"),
+    HASHTAG("hashtag"),
+    THREAD("thread"),
+    FAVORITES("favorites"),
+    SEARCH("search"),
+    NOTIFICATIONS("notifications"),
+}

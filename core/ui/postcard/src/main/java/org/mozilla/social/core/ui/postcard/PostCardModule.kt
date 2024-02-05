@@ -19,7 +19,7 @@ val postCardModule =
         factory { parametersHolder ->
             PostCardDelegate(
                 coroutineScope = parametersHolder[0],
-                baseAnalyticsIdentifier = parametersHolder[1],
+                feedLocation = parametersHolder[1],
                 navigateTo = get(),
                 openLink = get(),
                 blockAccount = get(),
