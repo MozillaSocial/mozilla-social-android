@@ -15,10 +15,6 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.koin.core.parameter.parametersOf
 import org.mozilla.social.common.Resource
-import org.mozilla.social.common.utils.edit
-import org.mozilla.social.core.analytics.Analytics
-import org.mozilla.social.core.analytics.AnalyticsIdentifiers
-import org.mozilla.social.core.analytics.EngagementType
 import org.mozilla.social.core.model.HashTag
 import org.mozilla.social.core.repository.mastodon.TimelineRepository
 import org.mozilla.social.core.repository.paging.HashTagTimelineRemoteMediator
@@ -32,7 +28,7 @@ import org.mozilla.social.core.usecase.mastodon.hashtag.UnfollowHashTag
 import timber.log.Timber
 
 class HashTagViewModel(
-    private val analytics: Analytics,
+    private val analytics: HashtagAnalytics,
     timelineRepository: TimelineRepository,
     private val hashTag: String,
     userAccountId: GetLoggedInUserAccountId,
@@ -81,9 +77,7 @@ class HashTagViewModel(
     }
 
     override fun onScreenViewed() {
-        analytics.uiImpression(
-            uiIdentifier = AnalyticsIdentifiers.HASHTAG_SCREEN_IMPRESSION,
-        )
+        analytics.hashtagScreenViewed()
     }
 
     override fun onFollowClicked(name: String, isFollowing: Boolean) {
@@ -102,10 +96,7 @@ class HashTagViewModel(
                 }
             }
         }
-        analytics.uiEngagement(
-            engagementType = EngagementType.GENERAL,
-            uiIdentifier = AnalyticsIdentifiers.HASHTAG_FOLLOW,
-        )
+        analytics.followClicked()
     }
 
     override fun onRetryClicked() {

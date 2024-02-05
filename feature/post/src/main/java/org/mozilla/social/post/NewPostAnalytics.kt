@@ -1,7 +1,6 @@
 package org.mozilla.social.post
 
 import org.mozilla.social.core.analytics.Analytics
-import org.mozilla.social.core.analytics.AnalyticsIdentifiers
 import org.mozilla.social.core.analytics.EngagementType
 
 class NewPostAnalytics(private val analytics: Analytics) {

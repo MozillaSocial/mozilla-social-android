@@ -7,9 +7,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.common.utils.edit
-import org.mozilla.social.core.analytics.Analytics
-import org.mozilla.social.core.analytics.AnalyticsIdentifiers
-import org.mozilla.social.core.analytics.EngagementType
 import org.mozilla.social.core.navigation.AuthNavigationDestination
 import org.mozilla.social.core.navigation.usecases.NavigateTo
 import org.mozilla.social.core.navigation.usecases.ShowSnackbar
@@ -19,7 +16,7 @@ import org.mozilla.social.feature.auth.R
 import timber.log.Timber
 
 class LoginViewModel(
-    private val analytics: Analytics,
+    private val analytics: LoginAnalytics,
     private val login: Login,
     private val navigateTo: NavigateTo,
     private val showSnackbar: ShowSnackbar,
@@ -33,10 +30,7 @@ class LoginViewModel(
                 isLoading = true,
             )
         }
-        analytics.uiEngagement(
-            engagementType = EngagementType.GENERAL,
-            uiIdentifier = AnalyticsIdentifiers.AUTH_SCREEN_SIGN_IN_SIGN_UP,
-        )
+        analytics.signInSignUpClicked()
         viewModelScope.launch {
             try {
                 login(if (BuildConfig.DEBUG) BuildConfig.stagingUrl else PROD)
@@ -57,17 +51,12 @@ class LoginViewModel(
     }
 
     override fun onChooseServerClicked() {
-        analytics.uiEngagement(
-            engagementType = EngagementType.GENERAL,
-            uiIdentifier = AnalyticsIdentifiers.AUTH_SCREEN_CHOOSE_A_SERVER,
-        )
+        analytics.chooseAServerClicked()
         navigateTo(AuthNavigationDestination.ChooseServer)
     }
 
     override fun onScreenViewed() {
-        analytics.uiImpression(
-            uiIdentifier = AnalyticsIdentifiers.AUTH_SCREEN_IMPRESSION,
-        )
+        analytics.loginScreenViewed()
     }
 
     companion object {

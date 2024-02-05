@@ -9,7 +9,6 @@ import kotlinx.coroutines.flow.map
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.koin.core.parameter.parametersOf
-import org.mozilla.social.core.analytics.AnalyticsIdentifiers
 import org.mozilla.social.core.repository.mastodon.FavoritesRepository
 import org.mozilla.social.core.repository.paging.FavoritesRemoteMediator
 import org.mozilla.social.core.ui.postcard.FeedLocation

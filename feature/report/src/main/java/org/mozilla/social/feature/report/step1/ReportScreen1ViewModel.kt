@@ -7,8 +7,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.mozilla.social.common.utils.edit
-import org.mozilla.social.core.analytics.Analytics
-import org.mozilla.social.core.analytics.AnalyticsIdentifiers
 import org.mozilla.social.core.model.InstanceRule
 import org.mozilla.social.core.repository.mastodon.InstanceRepository
 import org.mozilla.social.feature.report.ReportDataBundle

@@ -1,6 +1,7 @@
 package org.mozilla.social.feature.hashtag
 
 import org.koin.androidx.viewmodel.dsl.viewModel
+import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 import org.mozilla.social.common.commonModule
 import org.mozilla.social.core.analytics.analyticsModule
@@ -33,4 +34,6 @@ val hashTagModule =
                 getHashTag = get(),
             )
         }
+
+        singleOf(::HashtagAnalytics)
     }

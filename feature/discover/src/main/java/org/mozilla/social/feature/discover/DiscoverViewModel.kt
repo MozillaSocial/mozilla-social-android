@@ -7,8 +7,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.mozilla.social.common.Resource
-import org.mozilla.social.core.analytics.AnalyticsIdentifiers
-import org.mozilla.social.core.analytics.EngagementType
 import org.mozilla.social.core.analytics.utils.ImpressionTracker
 import org.mozilla.social.core.model.Recommendation
 import org.mozilla.social.core.navigation.NavigationDestination
