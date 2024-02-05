@@ -7,6 +7,7 @@ import org.koin.core.annotation.KoinExperimentalAPI
 import org.koin.test.KoinTest
 import org.koin.test.verify.verify
 import org.mozilla.social.core.model.AccountTimelineType
+import org.mozilla.social.core.ui.postcard.FeedLocation
 import kotlin.test.Test
 
 class CheckModulesTest : KoinTest {
@@ -19,6 +20,7 @@ class CheckModulesTest : KoinTest {
                 CoroutineDispatcher::class,
                 CoroutineScope::class,
                 AccountTimelineType::class,
+                FeedLocation::class,
             ),
         )
     }

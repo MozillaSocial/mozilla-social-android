@@ -15,14 +15,12 @@ import org.koin.core.component.inject
 import org.koin.core.parameter.parametersOf
 import org.mozilla.social.common.Resource
 import org.mozilla.social.common.utils.edit
-import org.mozilla.social.core.analytics.Analytics
-import org.mozilla.social.core.analytics.AnalyticsIdentifiers
-import org.mozilla.social.core.analytics.EngagementType
 import org.mozilla.social.core.model.AccountTimelineType
 import org.mozilla.social.core.navigation.NavigationDestination
 import org.mozilla.social.core.navigation.usecases.NavigateTo
 import org.mozilla.social.core.repository.mastodon.TimelineRepository
 import org.mozilla.social.core.repository.paging.AccountTimelineRemoteMediator
+import org.mozilla.social.core.ui.postcard.FeedLocation
 import org.mozilla.social.core.ui.postcard.PostCardDelegate
 import org.mozilla.social.core.ui.postcard.toPostCardUiState
 import org.mozilla.social.core.usecase.mastodon.account.BlockAccount
@@ -53,7 +51,7 @@ class AccountViewModel(
     val postCardDelegate: PostCardDelegate by inject {
         parametersOf(
             viewModelScope,
-            AnalyticsIdentifiers.FEED_PREFIX_PROFILE
+            FeedLocation.PROFILE,
         )
     }
 

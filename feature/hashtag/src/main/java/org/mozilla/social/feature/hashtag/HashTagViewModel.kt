@@ -15,13 +15,10 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.koin.core.parameter.parametersOf
 import org.mozilla.social.common.Resource
-import org.mozilla.social.common.utils.edit
-import org.mozilla.social.core.analytics.Analytics
-import org.mozilla.social.core.analytics.AnalyticsIdentifiers
-import org.mozilla.social.core.analytics.EngagementType
 import org.mozilla.social.core.model.HashTag
 import org.mozilla.social.core.repository.mastodon.TimelineRepository
 import org.mozilla.social.core.repository.paging.HashTagTimelineRemoteMediator
+import org.mozilla.social.core.ui.postcard.FeedLocation
 import org.mozilla.social.core.ui.postcard.PostCardDelegate
 import org.mozilla.social.core.ui.postcard.toPostCardUiState
 import org.mozilla.social.core.usecase.mastodon.account.GetLoggedInUserAccountId
@@ -45,7 +42,7 @@ class HashTagViewModel(
     }
 
     val postCardDelegate: PostCardDelegate by inject {
-        parametersOf(viewModelScope, AnalyticsIdentifiers.FEED_PREFIX_HASHTAG)
+        parametersOf(viewModelScope, FeedLocation.HASHTAG)
     }
 
     private var getHashTagJob: Job? = null

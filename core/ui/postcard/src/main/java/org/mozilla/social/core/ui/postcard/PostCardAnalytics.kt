@@ -1,7 +1,6 @@
 package org.mozilla.social.core.ui.postcard
 
 import org.mozilla.social.core.analytics.Analytics
-import org.mozilla.social.core.analytics.AnalyticsIdentifiers
 import org.mozilla.social.core.analytics.EngagementType
 
 class PostCardAnalytics(private val analytics: Analytics) {
@@ -107,4 +106,16 @@ class PostCardAnalytics(private val analytics: Analytics) {
         private const val FEED_POST_BLOCK = "feed.post.block"
         private const val FEED_POST_REPORT = "feed.post.block"
     }
+}
+
+enum class FeedLocation(val baseAnalyticsIdentifier: String) {
+    PROFILE("profile"),
+    HOME("home"),
+    LOCAL("local"),
+    FEDERATED("federated"),
+    HASHTAG("hashtag"),
+    THREAD("thread"),
+    FAVORITES("favorites"),
+    SEARCH("search"),
+    NOTIFICATIONS("notifications"),
 }

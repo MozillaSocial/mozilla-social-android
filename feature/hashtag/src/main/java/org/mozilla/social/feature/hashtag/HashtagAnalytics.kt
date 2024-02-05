@@ -1,7 +1,6 @@
 package org.mozilla.social.feature.hashtag
 
 import org.mozilla.social.core.analytics.Analytics
-import org.mozilla.social.core.analytics.AnalyticsIdentifiers
 import org.mozilla.social.core.analytics.EngagementType
 
 class HashtagAnalytics(private val analytics: Analytics) {

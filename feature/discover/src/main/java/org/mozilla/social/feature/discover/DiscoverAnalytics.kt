@@ -1,7 +1,6 @@
 package org.mozilla.social.feature.discover
 
 import org.mozilla.social.core.analytics.Analytics
-import org.mozilla.social.core.analytics.AnalyticsIdentifiers
 import org.mozilla.social.core.analytics.EngagementType
 
 class DiscoverAnalytics(private val analytics: Analytics) {

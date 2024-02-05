@@ -6,6 +6,7 @@ import kotlinx.coroutines.CoroutineScope
 import org.koin.core.annotation.KoinExperimentalAPI
 import org.koin.test.KoinTest
 import org.koin.test.verify.verify
+import org.mozilla.social.core.ui.postcard.FeedLocation
 import org.mozilla.social.feed.feedModule
 import kotlin.test.Test
 
@@ -18,6 +19,7 @@ class CheckModulesTest : KoinTest {
                 Context::class,
                 CoroutineDispatcher::class,
                 CoroutineScope::class,
+                FeedLocation::class,
             ),
         )
     }

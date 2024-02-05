@@ -14,9 +14,6 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.koin.core.parameter.parametersOf
 import org.mozilla.social.common.utils.edit
-import org.mozilla.social.core.analytics.Analytics
-import org.mozilla.social.core.analytics.AnalyticsIdentifiers
-import org.mozilla.social.core.analytics.EngagementType
 import org.mozilla.social.core.navigation.NavigationDestination
 import org.mozilla.social.core.navigation.usecases.NavigateTo
 import org.mozilla.social.core.repository.mastodon.SearchRepository
@@ -25,6 +22,7 @@ import org.mozilla.social.core.repository.paging.SearchStatusesRemoteMediator
 import org.mozilla.social.core.repository.paging.SearchedHashTagsRemoteMediator
 import org.mozilla.social.core.ui.accountfollower.toAccountFollowerUiState
 import org.mozilla.social.core.ui.common.hashtag.quickview.toHashTagQuickViewUiState
+import org.mozilla.social.core.ui.postcard.FeedLocation
 import org.mozilla.social.core.ui.postcard.PostCardDelegate
 import org.mozilla.social.core.ui.postcard.toPostCardUiState
 import org.mozilla.social.core.usecase.mastodon.account.FollowAccount
@@ -58,7 +56,7 @@ class SearchViewModel(
     val postCardDelegate: PostCardDelegate by inject {
         parametersOf(
             viewModelScope,
-            AnalyticsIdentifiers.FEED_PREFIX_SEARCH,
+            FeedLocation.SEARCH,
         )
     }
 

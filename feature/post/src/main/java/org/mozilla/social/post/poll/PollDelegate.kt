@@ -3,9 +3,6 @@ package org.mozilla.social.post.poll
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import org.mozilla.social.common.utils.edit
-import org.mozilla.social.core.analytics.Analytics
-import org.mozilla.social.core.analytics.AnalyticsIdentifiers
-import org.mozilla.social.core.analytics.EngagementType
 import org.mozilla.social.post.NewPostAnalytics
 
 class PollDelegate(
