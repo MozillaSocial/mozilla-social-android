@@ -6,19 +6,17 @@ import org.mozilla.social.common.utils.edit
 import org.mozilla.social.core.analytics.Analytics
 import org.mozilla.social.core.analytics.AnalyticsIdentifiers
 import org.mozilla.social.core.analytics.EngagementType
+import org.mozilla.social.post.NewPostAnalytics
 
 class PollDelegate(
-    private val analytics: Analytics,
+    private val analytics: NewPostAnalytics,
 ) : PollInteractions {
 
     private val _uiState = MutableStateFlow<PollUiState?>(null)
     val uiState = _uiState.asStateFlow()
 
     override fun onNewPollClicked() {
-        analytics.uiEngagement(
-            engagementType = EngagementType.POST,
-            uiIdentifier = AnalyticsIdentifiers.NEW_POST_POLL
-        )
+        analytics.newPollClicked()
         if (uiState.value == null) {
             _uiState.value = newPoll()
         } else {

@@ -15,9 +15,6 @@ import org.mozilla.social.common.loadResource
 import org.mozilla.social.common.utils.FileType
 import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.common.utils.edit
-import org.mozilla.social.core.analytics.Analytics
-import org.mozilla.social.core.analytics.AnalyticsIdentifiers
-import org.mozilla.social.core.analytics.EngagementType
 import org.mozilla.social.core.model.StatusVisibility
 import org.mozilla.social.core.model.request.PollCreate
 import org.mozilla.social.core.navigation.usecases.PopNavBackstack
@@ -35,7 +32,7 @@ import org.mozilla.social.post.status.StatusDelegate
 import timber.log.Timber
 
 class NewPostViewModel(
-    private val analytics: Analytics,
+    private val analytics: NewPostAnalytics,
     private val replyStatusId: String?,
     private val editStatusId: String?,
     getLoggedInUserAccountId: GetLoggedInUserAccountId,
@@ -130,10 +127,7 @@ class NewPostViewModel(
     }
 
     override fun onPostClicked() {
-        analytics.uiEngagement(
-            engagementType = EngagementType.POST,
-            uiIdentifier = AnalyticsIdentifiers.NEW_POST_POST,
-        )
+        analytics.postClicked()
         viewModelScope.launch {
             _newPostUiState.edit { copy(
                 isSendingPost = true
@@ -217,23 +211,15 @@ class NewPostViewModel(
     }
 
     override fun onScreenViewed() {
-        analytics.uiImpression(
-            uiIdentifier = AnalyticsIdentifiers.NEW_POST_SCREEN_IMPRESSION,
-        )
+        analytics.newPostScreenViewed()
     }
 
     override fun onUploadImageClicked() {
-        analytics.uiEngagement(
-            engagementType = EngagementType.POST,
-            uiIdentifier = AnalyticsIdentifiers.NEW_POST_IMAGE
-        )
+        analytics.uploadImageClicked()
     }
 
     override fun onUploadMediaClicked() {
-        analytics.uiEngagement(
-            engagementType = EngagementType.POST,
-            uiIdentifier = AnalyticsIdentifiers.NEW_POST_MEDIA
-        )
+        analytics.uploadMediaClicked()
     }
 
     companion object {

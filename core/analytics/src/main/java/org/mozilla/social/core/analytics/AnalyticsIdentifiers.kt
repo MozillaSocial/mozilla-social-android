@@ -3,9 +3,6 @@ package org.mozilla.social.core.analytics
 object AnalyticsIdentifiers {
 
 
-
-    const val NEW_POST_SCREEN_IMPRESSION = "new.post.screen.impression"
-
     const val FEED_PREFIX_PROFILE = "profile"
     const val FEED_PREFIX_HOME = "home"
     const val FEED_PREFIX_LOCAL = "local"
@@ -15,8 +12,6 @@ object AnalyticsIdentifiers {
     const val FEED_PREFIX_FAVORITES = "favorites"
     const val FEED_PREFIX_SEARCH = "search"
     const val FEED_PREFIX_NOTIFICATIONS = "notifications"
-
-    const val REPORT_SCREEN_IMPRESSION = "report.screen.impression"
 
     const val THREAD_SCREEN_IMPRESSION = "thread.screen.impression"
 
@@ -30,14 +25,6 @@ object AnalyticsIdentifiers {
 
     const val CHOOSE_A_SERVER_SCREEN_IMPRESSION = "choose.a.server.screen.impression"
     const val CHOOSE_A_SERVER_SCREEN_SUBMIT_SERVER = "choose.a.server.screen.submit-server"
-
-
-
-    const val NEW_POST_POST = "new.post.post"
-    const val NEW_POST_IMAGE = "new.post.image"
-    const val NEW_POST_MEDIA = "new.post.media"
-    const val NEW_POST_POLL = "new.post.poll"
-    const val NEW_POST_CONTENT_WARNING = "new.post.content.warning"
 
     const val FOLLOWS_SCREEN_FOLLOW = "follows.screen.follow"
     const val FOLLOWS_SCREEN_UNFOLLOW = "follows.screen.unfollow"

@@ -19,11 +19,12 @@ import org.mozilla.social.core.analytics.AnalyticsIdentifiers
 import org.mozilla.social.core.analytics.EngagementType
 import org.mozilla.social.core.repository.mastodon.SearchRepository
 import org.mozilla.social.core.repository.mastodon.StatusRepository
+import org.mozilla.social.post.NewPostAnalytics
 import org.mozilla.social.post.NewPostViewModel
 import timber.log.Timber
 
 class StatusDelegate(
-    private val analytics: Analytics,
+    private val analytics: NewPostAnalytics,
     private val searchRepository: SearchRepository,
     private val statusRepository: StatusRepository,
     private val coroutineScope: CoroutineScope,
@@ -141,10 +142,7 @@ class StatusDelegate(
     }
 
     override fun onContentWarningClicked() {
-        analytics.uiEngagement(
-            engagementType = EngagementType.POST,
-            uiIdentifier = AnalyticsIdentifiers.NEW_POST_CONTENT_WARNING
-        )
+        analytics.contentWarningClicked()
         if (uiState.value.contentWarningText == null) {
             _uiState.edit { copy(
                 contentWarningText = ""
