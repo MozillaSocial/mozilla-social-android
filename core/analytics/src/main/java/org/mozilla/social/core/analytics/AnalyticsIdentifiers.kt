@@ -15,8 +15,6 @@ object AnalyticsIdentifiers {
 
     const val THREAD_SCREEN_IMPRESSION = "thread.screen.impression"
 
-    const val FOLLOWERS_SCREEN_IMPRESSION = "followers.screen.impression"
-
     const val HASHTAG_SCREEN_IMPRESSION = "hashtag.screen.impression"
 
     const val AUTH_SCREEN_IMPRESSION = "auth.screen.impression"
@@ -25,9 +23,6 @@ object AnalyticsIdentifiers {
 
     const val CHOOSE_A_SERVER_SCREEN_IMPRESSION = "choose.a.server.screen.impression"
     const val CHOOSE_A_SERVER_SCREEN_SUBMIT_SERVER = "choose.a.server.screen.submit-server"
-
-    const val FOLLOWS_SCREEN_FOLLOW = "follows.screen.follow"
-    const val FOLLOWS_SCREEN_UNFOLLOW = "follows.screen.unfollow"
 
     const val SEARCH_QUERY = "search.query"
     const val SEARCH_TAB_ACCOUNTS = "search.tab.accounts"
