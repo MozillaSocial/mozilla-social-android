@@ -18,13 +18,6 @@ object AnalyticsIdentifiers {
 
     const val FOLLOWERS_SCREEN_IMPRESSION = "followers.screen.impression"
 
-    const val AUTH_SCREEN_IMPRESSION = "auth.screen.impression"
-    const val AUTH_SCREEN_SIGN_IN_SIGN_UP = "auth.screen.sign-in-sign-up"
-    const val AUTH_SCREEN_CHOOSE_A_SERVER = "auth.screen.choose-a-server"
-
-    const val CHOOSE_A_SERVER_SCREEN_IMPRESSION = "choose.a.server.screen.impression"
-    const val CHOOSE_A_SERVER_SCREEN_SUBMIT_SERVER = "choose.a.server.screen.submit-server"
-
     const val NEW_POST_POST = "new.post.post"
     const val NEW_POST_IMAGE = "new.post.image"
     const val NEW_POST_MEDIA = "new.post.media"
