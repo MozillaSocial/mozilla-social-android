@@ -25,15 +25,6 @@ interface Analytics {
      * @param engagementValue If the UI element is a toggle or setting, the value of the
      * toggle/setting after user interaction has taken place.
      *
-     * @param mastodonAccountId The Mastodon account ID of the UI element that was seen/interacted
-     * with by the user, if any.
-     * For example, the account ID of the user who created a post that was
-     * seen/interacted with. Or, the account ID of the user that was followed.
-     *
-     * @param mastodonStatusId The Mastodon status ID of the post that was seen/interacted
-     * with by the user, if any.
-     * The Mastodon API calls statuses "posts", but they are one and the same.
-     *
      * @param recommendationId Recommendation identifier of the content
      * that was seen/interacted with by the user, if any.
      *
@@ -60,15 +51,6 @@ interface Analytics {
      * Triggered once per page load, as soon as any pixel of that UI
      * element is visible in the foreground for any length of time.
      * UI elements may include: content, pages, CTAs, etc.
-     *
-     * @param mastodonAccountId The Mastodon account ID of the UI element that was seen/interacted
-     * with by the user, if any.
-     * For example, the account ID of the user who created a post that was
-     * seen/interacted with. Or, the account ID of the user that was followed.
-     *
-     * @param mastodonStatusId The Mastodon status ID of the post that was seen/interacted
-     * with by the user, if any.
-     * The Mastodon API calls statuses "posts", but they are one and the same.
      *
      * @param recommendationId Recommendation identifier of the content
      * that was seen/interacted with by the user, if any.
