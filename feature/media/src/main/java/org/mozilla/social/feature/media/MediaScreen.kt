@@ -4,7 +4,6 @@ import android.app.DownloadManager
 import android.content.Context
 import android.net.Uri
 import android.os.Environment
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.gestures.detectTransformGestures
 import androidx.compose.foundation.layout.Box
@@ -38,7 +37,6 @@ import org.mozilla.social.core.model.Attachment
 import org.mozilla.social.core.navigation.NavigationDestination
 import org.mozilla.social.core.ui.common.MoSoSurface
 import org.mozilla.social.core.ui.common.appbar.MoSoCloseableTopAppBar
-import kotlin.math.abs
 import kotlin.math.max
 
 @Composable
@@ -124,7 +122,6 @@ private fun ZoomableImage(
         var translationX by remember { mutableFloatStateOf(0f) }
         var translationY by remember { mutableFloatStateOf(0f) }
 
-        // 2x 100% zoom
         val maxScale by remember(attachment, width, height) {
             derivedStateOf {
                 val maxScaleHeight = ((attachment.meta?.original?.height ?: 0) / height).coerceAtLeast(1f)
