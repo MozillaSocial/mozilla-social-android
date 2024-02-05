@@ -25,15 +25,12 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
-import org.mozilla.social.common.utils.toPx
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.model.Attachment
 import org.mozilla.social.core.navigation.NavigationDestination
@@ -118,8 +115,8 @@ private fun ZoomableImage(
         modifier = Modifier
             .fillMaxSize()
     ) {
-        var width by remember { mutableFloatStateOf(0f) }
-        var height by remember { mutableFloatStateOf(0f) }
+        var width by remember { mutableFloatStateOf(1f) }
+        var height by remember { mutableFloatStateOf(1f) }
         var scale by remember { mutableFloatStateOf(1f) }
         var translationX by remember { mutableFloatStateOf(0f) }
         var translationY by remember { mutableFloatStateOf(0f) }
@@ -129,7 +126,7 @@ private fun ZoomableImage(
             derivedStateOf {
                 val maxScaleHeight = ((attachment.meta?.original?.height ?: 0) / height).coerceAtLeast(1f)
                 val maxScaleWidth = ((attachment.meta?.original?.width ?: 0) / width).coerceAtLeast(1f)
-                max(maxScaleHeight, maxScaleWidth) * 2
+                max(maxScaleHeight, maxScaleWidth) * 3
             }
         }
 
@@ -156,21 +153,21 @@ private fun ZoomableImage(
                         println("johnny width $width")
                         println("johnny height $height")
                         scale = (scale * zoom).coerceIn(1f..maxScale)
-                        val x = (pan.x * scale)
-                        val y = (pan.y * scale)
+                        val panX = (pan.x * scale)
+                        val panY = (pan.y * scale)
 
-                        val offsetLimitX: Float = (width / 2) * (scale - 1).coerceAtLeast(0F)
-                        val offsetLimitY = (height / 2) * (scale - 1).coerceAtLeast(0F)
+                        val translationLimitX = (width / 2) * (scale - 1).coerceAtLeast(0F)
+                        val translationLimitY = (height / 2) * (scale - 1).coerceAtLeast(0F)
 
                         val centroidTranslationX = (translationX + centroid.x - (width / 2)) * scale * (zoom - 1)
                         println("johnny centroidTranslationX $centroidTranslationX")
                         val centroidTranslationY = (translationY + centroid.y - (height / 2)) * scale * (zoom - 1)
                         println("johnny centroidTranslationY $centroidTranslationY")
 
-                        translationX = (translationX + x - centroidTranslationX)
-                            .coerceIn(-offsetLimitX..offsetLimitX)
-                        translationY = (translationY + y - centroidTranslationY)
-                            .coerceIn(-offsetLimitY..offsetLimitY)
+                        translationX = (translationX + panX - centroidTranslationX)
+                            .coerceIn(-translationLimitX..translationLimitX)
+                        translationY = (translationY + panY - centroidTranslationY)
+                            .coerceIn(-translationLimitY..translationLimitY)
                     }
                 },
             model = attachment.url,
