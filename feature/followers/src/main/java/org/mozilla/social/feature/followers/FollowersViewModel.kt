@@ -30,7 +30,7 @@ class FollowersViewModel(
     followersRepository: FollowersRepository,
     followingsRepository: FollowingsRepository,
     private val navigateTo: NavigateTo,
-    private val analytics: Analytics,
+    private val analytics: FollowersAnalytics,
     private val followAccount: FollowAccount,
     private val unfollowAccount: UnfollowAccount,
     getLoggedInUserAccountId: GetLoggedInUserAccountId,
@@ -74,20 +74,14 @@ class FollowersViewModel(
         viewModelScope.launch {
             if (isFollowing) {
                 try {
-                    analytics.uiEngagement(
-                        engagementType = EngagementType.GENERAL,
-                        uiIdentifier = AnalyticsIdentifiers.FOLLOWS_SCREEN_UNFOLLOW,
-                    )
+                    analytics.unfollowClicked()
                     unfollowAccount(accountId, loggedInUserAccountId)
                 } catch (e: UnfollowAccount.UnfollowFailedException) {
                     Timber.e(e)
                 }
             } else {
                 try {
-                    analytics.uiEngagement(
-                        engagementType = EngagementType.GENERAL,
-                        uiIdentifier = AnalyticsIdentifiers.FOLLOWS_SCREEN_FOLLOW,
-                    )
+                    analytics.followClicked()
                     followAccount(accountId, loggedInUserAccountId)
                 } catch (e: FollowAccount.FollowFailedException) {
                     Timber.e(e)
@@ -97,8 +91,6 @@ class FollowersViewModel(
     }
 
     override fun onScreenViewed() {
-        analytics.uiImpression(
-            uiIdentifier = AnalyticsIdentifiers.FOLLOWERS_SCREEN_IMPRESSION,
-        )
+        analytics.followsScreenViewed()
     }
 }
