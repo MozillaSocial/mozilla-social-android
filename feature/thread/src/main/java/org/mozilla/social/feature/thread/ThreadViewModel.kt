@@ -17,7 +17,7 @@ import org.mozilla.social.core.usecase.mastodon.thread.GetThread
 import timber.log.Timber
 
 class ThreadViewModel(
-    private val analytics: Analytics,
+    private val analytics: ThreadAnalytics,
     getThread: GetThread,
     mainStatusId: String,
     getLoggedInUserAccountId: GetLoggedInUserAccountId,
@@ -30,9 +30,7 @@ class ThreadViewModel(
         }
 
     override fun onsScreenViewed() {
-        analytics.uiImpression(
-            uiIdentifier = AnalyticsIdentifiers.THREAD_SCREEN_IMPRESSION,
-        )
+        analytics.threadScreenViewed()
     }
 
     val postCardDelegate: PostCardDelegate by KoinJavaComponent.inject(

@@ -2,8 +2,6 @@ package org.mozilla.social.core.analytics
 
 object AnalyticsIdentifiers {
 
-
-
     const val NEW_POST_SCREEN_IMPRESSION = "new.post.screen.impression"
 
     const val FEED_PREFIX_PROFILE = "profile"
@@ -18,11 +16,7 @@ object AnalyticsIdentifiers {
 
     const val REPORT_SCREEN_IMPRESSION = "report.screen.impression"
 
-    const val THREAD_SCREEN_IMPRESSION = "thread.screen.impression"
-
     const val FOLLOWERS_SCREEN_IMPRESSION = "followers.screen.impression"
-
-    const val HASHTAG_SCREEN_IMPRESSION = "hashtag.screen.impression"
 
     const val AUTH_SCREEN_IMPRESSION = "auth.screen.impression"
     const val AUTH_SCREEN_SIGN_IN_SIGN_UP = "auth.screen.sign-in-sign-up"
@@ -30,8 +24,6 @@ object AnalyticsIdentifiers {
 
     const val CHOOSE_A_SERVER_SCREEN_IMPRESSION = "choose.a.server.screen.impression"
     const val CHOOSE_A_SERVER_SCREEN_SUBMIT_SERVER = "choose.a.server.screen.submit-server"
-
-
 
     const val NEW_POST_POST = "new.post.post"
     const val NEW_POST_IMAGE = "new.post.image"
@@ -51,6 +43,4 @@ object AnalyticsIdentifiers {
     const val SEARCH_HASHTAG_CLICKED = "search.hashtag.clicked"
     const val SEARCH_ACCOUNT_FOLLOW = "search.account.follow"
     const val SEARCH_HASHTAG_FOLLOW = "search.hashtag.follow"
-
-    const val HASHTAG_FOLLOW = "hashtag.follow"
 }

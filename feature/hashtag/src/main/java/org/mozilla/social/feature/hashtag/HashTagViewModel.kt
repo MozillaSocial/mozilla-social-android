@@ -31,7 +31,7 @@ import org.mozilla.social.core.usecase.mastodon.hashtag.UnfollowHashTag
 import timber.log.Timber
 
 class HashTagViewModel(
-    private val analytics: Analytics,
+    private val analytics: HashtagAnalytics,
     timelineRepository: TimelineRepository,
     private val hashTag: String,
     userAccountId: GetLoggedInUserAccountId,
@@ -80,9 +80,7 @@ class HashTagViewModel(
     }
 
     override fun onScreenViewed() {
-        analytics.uiImpression(
-            uiIdentifier = AnalyticsIdentifiers.HASHTAG_SCREEN_IMPRESSION,
-        )
+        analytics.hashtagScreenViewed()
     }
 
     override fun onFollowClicked(name: String, isFollowing: Boolean) {
@@ -101,10 +99,7 @@ class HashTagViewModel(
                 }
             }
         }
-        analytics.uiEngagement(
-            engagementType = EngagementType.GENERAL,
-            uiIdentifier = AnalyticsIdentifiers.HASHTAG_FOLLOW,
-        )
+        analytics.followClicked()
     }
 
     override fun onRetryClicked() {
