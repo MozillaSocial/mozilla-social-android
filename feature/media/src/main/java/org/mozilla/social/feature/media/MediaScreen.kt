@@ -114,18 +114,12 @@ private fun MediaScreen(
 private fun ZoomableImage(
     attachment: Attachment.Image,
 ) {
-    var width by remember { mutableFloatStateOf(0f) }
-    var height by remember { mutableFloatStateOf(0f) }
-
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .onSizeChanged {
-                width = it.width.toFloat()
-                height = it.height.toFloat()
-            }
     ) {
-        if (width == 0f) return@Box
+        var width by remember { mutableFloatStateOf(0f) }
+        var height by remember { mutableFloatStateOf(0f) }
         var scale by remember { mutableFloatStateOf(1f) }
         var translationX by remember { mutableFloatStateOf(0f) }
         var translationY by remember { mutableFloatStateOf(0f) }
@@ -142,6 +136,10 @@ private fun ZoomableImage(
         AsyncImage(
             modifier = Modifier
                 .align(Alignment.Center)
+                .onSizeChanged {
+                    width = it.width.toFloat()
+                    height = it.height.toFloat()
+                }
                 .graphicsLayer(
                     scaleX = scale,
                     scaleY = scale,
@@ -155,6 +153,8 @@ private fun ZoomableImage(
                         println("johnny zoom $zoom")
                         println("johnny translationX $translationX")
                         println("johnny translationY $translationY")
+                        println("johnny width $width")
+                        println("johnny height $height")
                         scale = (scale * zoom).coerceIn(1f..maxScale)
                         val x = (pan.x * scale)
                         val y = (pan.y * scale)
@@ -162,9 +162,9 @@ private fun ZoomableImage(
                         val offsetLimitX: Float = (width / 2) * (scale - 1).coerceAtLeast(0F)
                         val offsetLimitY = (height / 2) * (scale - 1).coerceAtLeast(0F)
 
-                        val centroidTranslationX = (translationX + centroid.x - (width / 2)) * (scale - 1)
+                        val centroidTranslationX = (translationX + centroid.x - (width / 2)) * scale * (zoom - 1)
                         println("johnny centroidTranslationX $centroidTranslationX")
-                        val centroidTranslationY = (translationY + centroid.y - (height / 2)) * (scale - 1)
+                        val centroidTranslationY = (translationY + centroid.y - (height / 2)) * scale * (zoom - 1)
                         println("johnny centroidTranslationY $centroidTranslationY")
 
                         translationX = (translationX + x - centroidTranslationX)
