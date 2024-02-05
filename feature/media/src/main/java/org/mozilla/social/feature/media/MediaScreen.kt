@@ -5,10 +5,9 @@ import android.content.Context
 import android.net.Uri
 import android.os.Environment
 import androidx.compose.foundation.gestures.detectTransformGestures
-import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material3.Icon
@@ -23,21 +22,23 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
+import org.mozilla.social.common.utils.toPx
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.model.Attachment
 import org.mozilla.social.core.navigation.NavigationDestination
 import org.mozilla.social.core.ui.common.MoSoSurface
 import org.mozilla.social.core.ui.common.appbar.MoSoCloseableTopAppBar
 import kotlin.math.max
-import kotlin.math.roundToInt
 
 @Composable
 internal fun MediaScreen(
@@ -112,13 +113,24 @@ private fun MediaScreen(
 private fun ZoomableImage(
     attachment: Attachment.Image,
 ) {
-    BoxWithConstraints {
-        var scale by remember { mutableFloatStateOf(1f) }
-        var offsetX by remember { mutableFloatStateOf(0f) }
-        var offsetY by remember { mutableFloatStateOf(0f) }
+    val density = LocalDensity.current
+    var width by remember { mutableFloatStateOf(0f) }
+    var height by remember { mutableFloatStateOf(0f) }
 
-        val width = maxWidth.value
-        val height = maxHeight.value
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .onSizeChanged {
+                with (density) {
+                    width = it.width.toDp().value
+                    height = it.height.toDp().value
+                }
+            }
+    ) {
+        if (width == 0f) return@Box
+        var scale by remember { mutableFloatStateOf(1f) }
+        var translationX by remember { mutableFloatStateOf(0f) }
+        var translationY by remember { mutableFloatStateOf(0f) }
 
         val maxScale by remember(attachment, width, height) {
             derivedStateOf {
@@ -130,24 +142,27 @@ private fun ZoomableImage(
 
         AsyncImage(
             modifier = Modifier
-                .offset { IntOffset(offsetX.roundToInt(), offsetY.roundToInt()) }
                 .graphicsLayer(
                     scaleX = scale,
                     scaleY = scale,
+                    translationX = translationX,
+                    translationY = translationY
                 )
                 .pointerInput(Unit) {
                     detectTransformGestures { _, pan, zoom, _ ->
-                        scale = (scale * zoom).coerceIn(1f..maxScale)
-                        val x = (pan.x * scale)
-                        val y = (pan.y * scale)
+                        with (density) {
+                            scale = (scale * zoom).coerceIn(1f..maxScale)
+                            val x = (pan.x * scale)
+                            val y = (pan.y * scale)
 
-                        val offsetLimitX: Float = width * (scale - 1).coerceAtLeast(0F)
-                        val offsetLimitY = height * (scale - 1).coerceAtLeast(0F)
+                            val offsetLimitX: Float = width * (scale - 1).coerceAtLeast(0F)
+                            val offsetLimitY = height * (scale - 1).coerceAtLeast(0F)
 
-                        offsetX = (offsetX + x)
-                            .coerceIn(-offsetLimitX..offsetLimitX)
-                        offsetY = (offsetY + y)
-                            .coerceIn(-offsetLimitY..offsetLimitY)
+                            translationX = (translationX + x)
+                                .coerceIn(-offsetLimitX..offsetLimitX)
+                            translationY = (translationY + y)
+                                .coerceIn(-offsetLimitY..offsetLimitY)
+                        }
                     }
                 }
                 .fillMaxSize(),
