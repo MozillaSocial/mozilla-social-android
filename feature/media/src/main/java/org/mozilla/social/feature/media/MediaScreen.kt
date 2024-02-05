@@ -4,6 +4,8 @@ import android.app.DownloadManager
 import android.content.Context
 import android.net.Uri
 import android.os.Environment
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.gestures.detectTransformGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -164,6 +166,25 @@ private fun ZoomableImage(
                         translationY = (translationY + panY - centroidTranslationY)
                             .coerceIn(-translationLimitY..translationLimitY)
                     }
+                }
+                .pointerInput(Unit) {
+                    detectTapGestures(
+                        onDoubleTap = { offset ->
+                            scale = if (scale >= 2f) {
+                                1f
+                            } else {
+                                (scale * 2).coerceAtMost(maxScale)
+                            }
+
+                            val translationLimitX = (width / 2) * (scale - 1).coerceAtLeast(0F)
+                            val translationLimitY = (height / 2) * (scale - 1).coerceAtLeast(0F)
+
+                            translationX = (translationX - (offset.x - (width / 2)) * scale)
+                                .coerceIn(-translationLimitX..translationLimitX)
+                            translationY = (translationY - (offset.y - (height / 2)) * scale)
+                                .coerceIn(-translationLimitY..translationLimitY)
+                        }
+                    )
                 },
             model = attachment.url,
             contentDescription = null,
