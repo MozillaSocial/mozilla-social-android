@@ -36,6 +36,7 @@ import org.mozilla.social.core.model.Attachment
 import org.mozilla.social.core.navigation.NavigationDestination
 import org.mozilla.social.core.ui.common.MoSoSurface
 import org.mozilla.social.core.ui.common.appbar.MoSoCloseableTopAppBar
+import kotlin.math.abs
 import kotlin.math.max
 
 @Composable
@@ -145,13 +146,6 @@ private fun ZoomableImage(
                 )
                 .pointerInput(Unit) {
                     detectTransformGestures { centroid, pan, zoom, _ ->
-                        println("johnny ================================")
-                        println("johnny centroid $centroid")
-                        println("johnny zoom $zoom")
-                        println("johnny translationX $translationX")
-                        println("johnny translationY $translationY")
-                        println("johnny width $width")
-                        println("johnny height $height")
                         scale = (scale * zoom).coerceIn(1f..maxScale)
                         val panX = (pan.x * scale)
                         val panY = (pan.y * scale)
@@ -159,10 +153,11 @@ private fun ZoomableImage(
                         val translationLimitX = (width / 2) * (scale - 1).coerceAtLeast(0F)
                         val translationLimitY = (height / 2) * (scale - 1).coerceAtLeast(0F)
 
-                        val centroidTranslationX = (translationX + centroid.x - (width / 2)) * scale * (zoom - 1)
-                        println("johnny centroidTranslationX $centroidTranslationX")
-                        val centroidTranslationY = (translationY + centroid.y - (height / 2)) * scale * (zoom - 1)
-                        println("johnny centroidTranslationY $centroidTranslationY")
+                        val centroidDistX = (translationX + (centroid.x - (width / 2)) * scale)
+                        val centroidTranslationX = centroidDistX * (zoom - 1) * 2
+
+                        val centroidDistY = (translationY + (centroid.y - (height / 2)) * scale)
+                        val centroidTranslationY = centroidDistY * (zoom - 1) * 2
 
                         translationX = (translationX + panX - centroidTranslationX)
                             .coerceIn(-translationLimitX..translationLimitX)
