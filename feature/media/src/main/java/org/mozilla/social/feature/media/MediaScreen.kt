@@ -57,6 +57,7 @@ internal fun MediaScreen(
     )
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun MediaScreen(
     attachments: List<Attachment>,
@@ -72,13 +73,17 @@ private fun MediaScreen(
         val context = LocalContext.current
 
         Column {
+            val pagerState = rememberPagerState(
+                initialPage = selectedIndex
+            ) { attachments.size }
+
             MoSoCloseableTopAppBar(
                 modifier = Modifier
                     .zIndex(1f),
                 actions = {
                     IconButton(
                         onClick = {
-                            val uri = Uri.parse(attachment.url)
+                            val uri = Uri.parse(attachments[pagerState.currentPage].url)
                             val fileName = uri.lastPathSegment
 
                             DownloadManager.Request(uri).apply {
@@ -104,7 +109,7 @@ private fun MediaScreen(
             when (attachment) {
                 is Attachment.Image -> ImagePager(
                     attachments = attachments,
-                    selectedIndex = selectedIndex,
+                    pagerState = pagerState,
                 )
                 else -> {}
             }
@@ -117,12 +122,8 @@ private fun MediaScreen(
 @Composable
 private fun ImagePager(
     attachments: List<Attachment>,
-    selectedIndex: Int,
+    pagerState: PagerState,
 ) {
-    val pagerState = rememberPagerState(
-        initialPage = selectedIndex
-    ) { attachments.size }
-
     val scale = remember { mutableFloatStateOf(1f) }
 
     HorizontalPager(
