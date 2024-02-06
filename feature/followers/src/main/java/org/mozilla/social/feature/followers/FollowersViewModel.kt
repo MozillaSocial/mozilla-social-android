@@ -9,9 +9,6 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import org.koin.core.parameter.parametersOf
 import org.koin.java.KoinJavaComponent
-import org.mozilla.social.core.analytics.Analytics
-import org.mozilla.social.core.analytics.AnalyticsIdentifiers
-import org.mozilla.social.core.analytics.EngagementType
 import org.mozilla.social.core.navigation.NavigationDestination
 import org.mozilla.social.core.navigation.usecases.NavigateTo
 import org.mozilla.social.core.repository.mastodon.FollowersRepository
@@ -30,7 +27,7 @@ class FollowersViewModel(
     followersRepository: FollowersRepository,
     followingsRepository: FollowingsRepository,
     private val navigateTo: NavigateTo,
-    private val analytics: Analytics,
+    private val analytics: FollowersAnalytics,
     private val followAccount: FollowAccount,
     private val unfollowAccount: UnfollowAccount,
     getLoggedInUserAccountId: GetLoggedInUserAccountId,
@@ -74,22 +71,14 @@ class FollowersViewModel(
         viewModelScope.launch {
             if (isFollowing) {
                 try {
-                    analytics.uiEngagement(
-                        engagementType = EngagementType.GENERAL,
-                        uiIdentifier = AnalyticsIdentifiers.FOLLOWS_SCREEN_UNFOLLOW,
-                        mastodonAccountId = accountId,
-                    )
+                    analytics.unfollowClicked()
                     unfollowAccount(accountId, loggedInUserAccountId)
                 } catch (e: UnfollowAccount.UnfollowFailedException) {
                     Timber.e(e)
                 }
             } else {
                 try {
-                    analytics.uiEngagement(
-                        engagementType = EngagementType.GENERAL,
-                        uiIdentifier = AnalyticsIdentifiers.FOLLOWS_SCREEN_FOLLOW,
-                        mastodonAccountId = accountId,
-                    )
+                    analytics.followClicked()
                     followAccount(accountId, loggedInUserAccountId)
                 } catch (e: FollowAccount.FollowFailedException) {
                     Timber.e(e)
@@ -99,8 +88,6 @@ class FollowersViewModel(
     }
 
     override fun onScreenViewed() {
-        analytics.uiImpression(
-            uiIdentifier = AnalyticsIdentifiers.FOLLOWERS_SCREEN_IMPRESSION,
-        )
+        analytics.followsScreenViewed()
     }
 }

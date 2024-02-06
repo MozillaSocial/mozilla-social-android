@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="download_content_description">Download</string>
+    <string name="downloading_file">Downloading %s</string>
+</resources>

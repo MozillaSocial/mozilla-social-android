@@ -20,7 +20,6 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
-        manifestPlaceholders["debug"] = false
     }
 
     testBuildType = "releaseTest"
@@ -31,24 +30,19 @@ android {
             isShrinkResources = true
             proguardFile("proguard-rules.pro")
             matchingFallbacks += "release"
-            manifestPlaceholders["environment"] = "release"
         }
         debug {
             isDefault = true
             applicationIdSuffix = ".debug"
-            manifestPlaceholders["environment"] = "debug"
-            manifestPlaceholders["debug"] = true
         }
         create("nightly") {
             initWith(getByName("release"))
             applicationIdSuffix = ".nightly"
-            manifestPlaceholders["environment"] = "nightly"
         }
 
         create("unsignedRelease") {
             initWith(getByName("release"))
             signingConfig = signingConfigs.getByName("debug")
-            manifestPlaceholders["environment"] = "unsignedRelease"
         }
         create("releaseTest") {
             initWith(getByName("release"))
@@ -108,6 +102,7 @@ dependencies {
     implementation(project(":feature:favorites"))
     implementation(project(":core:workmanager"))
     implementation(project(":feature:notifications"))
+    implementation(project(":feature:media"))
 
     implementation(kotlin("reflect"))
 

@@ -7,8 +7,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import org.koin.core.parameter.parametersOf
 import org.koin.java.KoinJavaComponent
-import org.mozilla.social.core.analytics.Analytics
-import org.mozilla.social.core.analytics.AnalyticsIdentifiers
+import org.mozilla.social.core.ui.postcard.FeedLocation
 import org.mozilla.social.core.ui.postcard.PostCardDelegate
 import org.mozilla.social.core.ui.postcard.PostCardUiState
 import org.mozilla.social.core.ui.postcard.toPostCardUiState
@@ -17,7 +16,7 @@ import org.mozilla.social.core.usecase.mastodon.thread.GetThread
 import timber.log.Timber
 
 class ThreadViewModel(
-    private val analytics: Analytics,
+    private val analytics: ThreadAnalytics,
     getThread: GetThread,
     mainStatusId: String,
     getLoggedInUserAccountId: GetLoggedInUserAccountId,
@@ -30,12 +29,10 @@ class ThreadViewModel(
         }
 
     override fun onsScreenViewed() {
-        analytics.uiImpression(
-            uiIdentifier = AnalyticsIdentifiers.THREAD_SCREEN_IMPRESSION,
-        )
+        analytics.threadScreenViewed()
     }
 
     val postCardDelegate: PostCardDelegate by KoinJavaComponent.inject(
         PostCardDelegate::class.java,
-    ) { parametersOf(viewModelScope, AnalyticsIdentifiers.FEED_PREFIX_THREAD) }
+    ) { parametersOf(viewModelScope, FeedLocation.THREAD) }
 }

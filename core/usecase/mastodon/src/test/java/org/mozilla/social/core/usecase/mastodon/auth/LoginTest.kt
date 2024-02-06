@@ -38,7 +38,7 @@ class LoginTest {
     private val logout: Logout = mockk(relaxed = true)
 
     private val userCode: String = testUtils.randomIdString()
-    private val domain = testUtils.randomWordString()
+    private val domain = "mozilla.social"
     private val clientId = testUtils.randomWordString()
     private val clientSecret = testUtils.randomWordString()
     private val application = fakeApplication(clientId = clientId, clientSecret = clientSecret)

@@ -48,7 +48,7 @@ class FavoritesRemoteMediator(
                                 ?: return MediatorResult.Success(endOfPaginationReached = true)
                         favoritesRepository.getFavorites(
                             olderThanId = null,
-                            immediatelyNewerThanId = firstItem.status.statusId,
+                            immediatelyNewerThanId = firstItem.favoritesTimelineStatus.statusId,
                             loadSize = pageSize,
                         )
                     }
@@ -58,7 +58,7 @@ class FavoritesRemoteMediator(
                             state.lastItemOrNull()
                                 ?: return MediatorResult.Success(endOfPaginationReached = true)
                         favoritesRepository.getFavorites(
-                            olderThanId = lastItem.status.statusId,
+                            olderThanId = lastItem.favoritesTimelineStatus.statusId,
                             immediatelyNewerThanId = null,
                             loadSize = pageSize,
                         )
@@ -79,11 +79,6 @@ class FavoritesRemoteMediator(
                     FavoritesTimelineStatus(
                         statusId = status.statusId,
                         position = nextPositionIndex + index,
-                        accountId = status.account.accountId,
-                        pollId = status.poll?.pollId,
-                        boostedStatusId = status.boostedStatus?.statusId,
-                        boostedStatusAccountId = status.boostedStatus?.account?.accountId,
-                        boostedPollId = status.boostedStatus?.poll?.pollId,
                     )
                 })
             }

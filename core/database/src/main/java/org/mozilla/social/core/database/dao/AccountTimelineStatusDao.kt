@@ -39,11 +39,4 @@ interface AccountTimelineStatusDao : BaseDao<AccountTimelineStatus> {
     suspend fun deleteAllAccountTimelines(
         accountsToKeep: List<String> = emptyList()
     )
-
-    @Query(
-        "DELETE FROM accountTimeline " +
-        "WHERE statusId = :statusId " +
-        "OR boostedStatusId = :statusId",
-    )
-    suspend fun deletePost(statusId: String)
 }

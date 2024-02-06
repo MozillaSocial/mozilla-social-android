@@ -111,11 +111,11 @@ private fun MoSoNavigationBar(
     ) {
         Row(
             modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .windowInsetsPadding(windowInsets)
-                    .height(height)
-                    .selectableGroup(),
+            Modifier
+                .fillMaxWidth()
+                .windowInsetsPadding(windowInsets)
+                .height(height)
+                .selectableGroup(),
             horizontalArrangement = Arrangement.SpaceEvenly,
             content = content,
         )
@@ -133,7 +133,13 @@ private fun RowScope.MoSoNavigationBarItem(
         modifier = modifier
             .height(48.dp),
         selected = isSelected,
-        onClick = { navigateTo(destination.navigationDestination) },
+        onClick = {
+            if (isSelected) {
+                destination.doubleTapDestination?.let { destination -> navigateTo(destination) }
+            } else {
+                navigateTo(destination.navigationDestination)
+            }
+        },
         colors = MoSoNavigationBarItemDefaults.colors(),
         icon = {
             BottomBarIcon(
@@ -178,6 +184,8 @@ interface BottomBarTab {
 
     val tabText: StringFactory
     val navigationDestination: Destination
+    // Destination for when the user taps the icon a second time
+    val doubleTapDestination: Destination?
 }
 
 /**

@@ -1,5 +1,8 @@
 package org.mozilla.social.core.analytics.utils
 
+/**
+ * Used to avoid duplicate impressions
+ */
 class ImpressionTracker<T>(
     private val onTrack: (key: T) -> Unit,
 ) {

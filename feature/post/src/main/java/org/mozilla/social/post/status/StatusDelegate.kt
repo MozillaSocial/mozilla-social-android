@@ -2,32 +2,31 @@ package org.mozilla.social.post.status
 
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.core.text.HtmlCompat
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import org.mozilla.social.common.utils.accountText
+import org.mozilla.social.common.utils.findAccountAtCursor
 import org.mozilla.social.common.utils.edit
-import org.mozilla.social.common.utils.hashtagText
+import org.mozilla.social.common.utils.findHashtagAtCursor
 import org.mozilla.social.common.utils.replaceAccount
 import org.mozilla.social.common.utils.replaceHashtag
-import org.mozilla.social.core.analytics.Analytics
-import org.mozilla.social.core.analytics.AnalyticsIdentifiers
-import org.mozilla.social.core.analytics.EngagementType
 import org.mozilla.social.core.repository.mastodon.SearchRepository
 import org.mozilla.social.core.repository.mastodon.StatusRepository
+import org.mozilla.social.post.NewPostAnalytics
 import org.mozilla.social.post.NewPostViewModel
 import timber.log.Timber
 
 class StatusDelegate(
-    private val analytics: Analytics,
+    private val analytics: NewPostAnalytics,
     private val searchRepository: SearchRepository,
     private val statusRepository: StatusRepository,
     private val coroutineScope: CoroutineScope,
-    private val inReplyToId: String?,
+    private val inReplyToId: String? = null,
+    private val editStatusId: String? = null,
 ) : StatusInteractions, ContentWarningInteractions {
 
     private val _uiState = MutableStateFlow(StatusUiState())
@@ -38,13 +37,24 @@ class StatusDelegate(
     init {
         coroutineScope.launch {
             inReplyToId?.let {
-                statusRepository.getStatusLocal(inReplyToId)?.account?.let { account ->
+                    statusRepository.getStatusLocal(inReplyToId)?.account?.let { account ->
+                        _uiState.edit { copy(
+                            statusText = TextFieldValue(
+                                text = "@${account.acct} ",
+                                selection = TextRange(account.acct.length + 2),
+                            ),
+                            inReplyToAccountName = account.username
+                        ) }
+                    }
+                }
+            editStatusId?.let {
+                statusRepository.getStatusLocal(editStatusId)?.let { status ->
                     _uiState.edit { copy(
                         statusText = TextFieldValue(
-                            text = "@${account.acct} ",
-                            selection = TextRange(account.acct.length + 2),
+                            text = HtmlCompat.fromHtml(status.content, 0).toString()
                         ),
-                        inReplyToAccountName = account.username
+                        contentWarningText = status.contentWarningText.ifBlank { null },
+                        editStatusId = status.statusId,
                     ) }
                 }
             }
@@ -66,14 +76,14 @@ class StatusDelegate(
     private fun searchForAccountsAndHashtags(textFieldValue: TextFieldValue) {
         searchJob?.cancel()
 
-        val accountText = textFieldValue.accountText()
+        val accountText = textFieldValue.findAccountAtCursor()
         if (accountText.isNullOrBlank()) {
             _uiState.edit { copy(
                 accountList = null
             ) }
         }
 
-        val hashtagText = textFieldValue.hashtagText()
+        val hashtagText = textFieldValue.findHashtagAtCursor()
         if (hashtagText.isNullOrBlank()) {
             _uiState.edit { copy(
                 hashtagList = null
@@ -129,10 +139,7 @@ class StatusDelegate(
     }
 
     override fun onContentWarningClicked() {
-        analytics.uiEngagement(
-            engagementType = EngagementType.POST,
-            uiIdentifier = AnalyticsIdentifiers.NEW_POST_CONTENT_WARNING
-        )
+        analytics.contentWarningClicked()
         if (uiState.value.contentWarningText == null) {
             _uiState.edit { copy(
                 contentWarningText = ""

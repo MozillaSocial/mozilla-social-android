@@ -17,6 +17,7 @@ android {
 
 dependencies {
     implementation(project(":core:datastore"))
+    implementation(project(":core:common"))
     implementation(libs.glean)
     implementation(libs.mozilla.components.service.glean)
 

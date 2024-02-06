@@ -74,6 +74,9 @@ object MoSoIcons {
     fun connect() = painterResource(id = R.drawable.connect)
 
     @Composable
+    fun downloadSimple() = painterResource(id = R.drawable.download_simple)
+
+    @Composable
     fun following() = painterResource(id = R.drawable.following)
 
     @Composable
@@ -125,6 +128,9 @@ object MoSoIcons {
     fun magnifyingGlass() = painterResource(id = R.drawable.magnifying_glass)
 
     @Composable
+    fun magnifyingGlassFill() = painterResource(id = R.drawable.magnifying_glass_fill)
+
+    @Composable
     fun monitorPlay() = painterResource(id = R.drawable.monitor_play)
 
     @Composable
@@ -147,6 +153,9 @@ object MoSoIcons {
 
     @Composable
     fun speakerX() = painterResource(id = R.drawable.speaker_x)
+
+    @Composable
+    fun trash() = painterResource(id = R.drawable.trash)
 
     @Composable
     fun userCircle() = painterResource(id = R.drawable.user_circle)

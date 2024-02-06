@@ -200,6 +200,7 @@ class AppState(
         if (!mainNavController.popBackStack()) tabbedNavController?.popBackStack()
     }
 
+    @Suppress("CyclomaticComplexMethod")
     private fun navigate(navDestination: NavigationDestination) {
         Timber.d("NAVIGATION consuming $navDestination")
         with(navDestination) {
@@ -227,6 +228,10 @@ class AppState(
 
                 is NavigationDestination.HashTag -> {
                     mainNavController.navigateToHashTag()
+                }
+
+                is NavigationDestination.Media -> {
+                    mainNavController.navigateToMedia()
                 }
 
                 is NavigationDestination.NewPost -> {

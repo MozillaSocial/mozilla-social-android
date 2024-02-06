@@ -8,7 +8,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -18,9 +17,10 @@ import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -40,12 +40,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.paging.PagingData
+import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
-import kotlinx.coroutines.flow.Flow
 import org.koin.androidx.compose.koinViewModel
 import org.mozilla.social.common.Resource
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
@@ -53,12 +53,12 @@ import org.mozilla.social.core.designsystem.theme.MoSoRadius
 import org.mozilla.social.core.designsystem.theme.MoSoSpacing
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.designsystem.utils.NoRipple
+import org.mozilla.social.core.navigation.navigationModule
 import org.mozilla.social.core.ui.accountfollower.AccountFollower
 import org.mozilla.social.core.ui.accountfollower.AccountFollowerUiState
-import org.mozilla.social.core.ui.common.MoSoSearchBar
 import org.mozilla.social.core.ui.common.MoSoSurface
-import org.mozilla.social.core.ui.common.MoSoTab
-import org.mozilla.social.core.ui.common.MoSoTabRow
+import org.mozilla.social.core.ui.common.tabs.MoSoTab
+import org.mozilla.social.core.ui.common.tabs.MoSoTabRow
 import org.mozilla.social.core.ui.common.account.quickview.AccountQuickViewBox
 import org.mozilla.social.core.ui.common.appbar.MoSoCloseableTopAppBar
 import org.mozilla.social.core.ui.common.divider.MoSoDivider
@@ -68,6 +68,8 @@ import org.mozilla.social.core.ui.common.hashtag.quickview.HashTagQuickView
 import org.mozilla.social.core.ui.common.hashtag.quickview.HashTagQuickViewUiState
 import org.mozilla.social.core.ui.common.loading.MaxSizeLoading
 import org.mozilla.social.core.ui.common.paging.PagingLazyColumn
+import org.mozilla.social.core.ui.common.search.MoSoSearchBar
+import org.mozilla.social.core.ui.common.utils.PreviewTheme
 import org.mozilla.social.core.ui.postcard.PostCard
 import org.mozilla.social.core.ui.postcard.PostCardInteractions
 import org.mozilla.social.core.ui.postcard.PostCardUiState
@@ -86,15 +88,19 @@ internal fun SearchScreen(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 private fun SearchScreen(
     uiState: SearchUiState,
     searchInteractions: SearchInteractions,
     postCardInteractions: PostCardInteractions,
 ) {
-    MoSoSurface {
-        Column(Modifier.systemBarsPadding()) {
+    MoSoSurface(
+        modifier = Modifier
+            .fillMaxSize()
+            .systemBarsPadding()
+    ) {
+        Column {
             val searchFocusRequester = remember { FocusRequester() }
             val keyboardController = LocalSoftwareKeyboardController.current
             val focusManager = LocalFocusManager.current
@@ -108,56 +114,47 @@ private fun SearchScreen(
                 }
             }
 
-            MoSoCloseableTopAppBar(
-                actions = {
-                    MoSoSearchBar(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .onFocusChanged {
-                                searchHasFocus = it.hasFocus
+            Box {
+                MoSoCloseableTopAppBar()
+                MoSoSearchBar(
+                    modifier = Modifier
+                        .align(Alignment.CenterEnd)
+                        .fillMaxWidth()
+                        .onFocusChanged {
+                            searchHasFocus = it.hasFocus
+                        }
+                        .focusRequester(searchFocusRequester)
+                        .padding(
+                            end = MoSoSpacing.md,
+                            start = 60.dp,
+                        ),
+                    query = uiState.query,
+                    onQueryChange = { searchInteractions.onQueryTextChanged(it) },
+                    onSearch = {
+                        if (uiState.query.isNotBlank()) {
+                            keyboardController?.hide()
+                            focusManager.clearFocus()
+                            searchInteractions.onSearchClicked()
+                        }
+                    },
+                    trailingIcon = {
+                        IconButton(
+                            onClick = {
+                                searchInteractions.onQueryTextChanged("")
+                                searchFocusRequester.requestFocus()
                             }
-                            .focusRequester(searchFocusRequester)
-                            .padding(
-                                end = MoSoSpacing.md,
-                                start = 60.dp,
-                            ),
-                        query = uiState.query,
-                        onQueryChange = { searchInteractions.onQueryTextChanged(it) },
-                        onSearch = {
-                            if (uiState.query.isNotBlank()) {
-                                keyboardController?.hide()
-                                focusManager.clearFocus()
-                                searchInteractions.onSearchClicked()
-                            }
-                        },
-                        leadingIcon = {
+                        ) {
                             Icon(
-                                modifier = Modifier.size(16.dp),
-                                painter = MoSoIcons.magnifyingGlass(),
-                                contentDescription = stringResource(id = R.string.search),
+                                modifier = Modifier.size(MoSoIcons.Sizes.small),
+                                painter = MoSoIcons.x(),
+                                contentDescription = stringResource(id = R.string.clear_search),
                                 tint = MoSoTheme.colors.iconSecondary,
                             )
-                        },
-                        trailingIcon = {
-                            IconButton(
-                                onClick = {
-                                    searchInteractions.onQueryTextChanged("")
-                                    searchFocusRequester.requestFocus()
-                                }
-                            ) {
-                                Icon(
-                                    modifier = Modifier.size(16.dp),
-                                    painter = MoSoIcons.x(),
-                                    contentDescription = stringResource(id = R.string.clear_search),
-                                    tint = MoSoTheme.colors.iconSecondary,
-                                )
-                            }
                         }
-                    )
-                }
-            )
+                    },
+                )
+            }
 
-            Spacer(modifier = Modifier.height(8.dp))
 
             Box {
                 Column {
@@ -226,29 +223,44 @@ private fun ListContent(
             )
         }
         is Resource.Loaded -> {
+            val accountFeed = uiState.accountsFeed?.collectAsLazyPagingItems()
+            val hashTagFeed = uiState.hashTagFeed?.collectAsLazyPagingItems()
+            val statusFeed = uiState.statusFeed?.collectAsLazyPagingItems()
+
+            val topScrollState = rememberLazyListState()
+            val topAccountsScrollState = rememberLazyListState()
+            val accountScrollState = rememberLazyListState()
+            val hashTagScrollState = rememberLazyListState()
+            val statusScrollState = rememberLazyListState()
+
             when (uiState.selectedTab) {
                 SearchTab.TOP -> {
                     TopList(
                         searchResultUiState = uiState.topResource.data,
+                        scrollState = topScrollState,
+                        topAccountsScrollState = topAccountsScrollState,
                         searchInteractions = searchInteractions,
                         postCardInteractions = postCardInteractions,
                     )
                 }
                 SearchTab.ACCOUNTS -> {
                     AccountsList(
-                        accountFeed = uiState.accountsFeed,
+                        accountFeed = accountFeed,
+                        scrollState = accountScrollState,
                         searchInteractions = searchInteractions,
                     )
                 }
                 SearchTab.HASHTAGS -> {
                     HashTagsList(
-                        hashTagsFeed = uiState.hashTagFeed,
+                        hashTagsFeed = hashTagFeed,
+                        scrollState = hashTagScrollState,
                         searchInteractions = searchInteractions,
                     )
                 }
                 SearchTab.POSTS -> {
                     StatusesList(
-                        statusFeed = uiState.statusFeed,
+                        statusFeed = statusFeed,
+                        scrollState = statusScrollState,
                         postCardInteractions = postCardInteractions,
                     )
                 }
@@ -260,17 +272,21 @@ private fun ListContent(
 @Composable
 private fun TopList(
     searchResultUiState: SearchResultUiState,
+    scrollState: LazyListState,
+    topAccountsScrollState: LazyListState,
     searchInteractions: SearchInteractions,
     postCardInteractions: PostCardInteractions,
 ) {
     LazyColumn(
         Modifier
             .fillMaxSize(),
+        state = scrollState,
     ) {
         if (searchResultUiState.accountUiStates.isNotEmpty()) {
             item {
                 TopAccounts(
                     searchResultUiState = searchResultUiState,
+                    scrollState = topAccountsScrollState,
                     searchInteractions = searchInteractions,
                 )
             }
@@ -326,6 +342,7 @@ private fun TopList(
 @Composable
 private fun TopAccounts(
     searchResultUiState: SearchResultUiState,
+    scrollState: LazyListState,
     searchInteractions: SearchInteractions,
 ) {
     Row(
@@ -341,7 +358,9 @@ private fun TopAccounts(
         )
         Icon(painter = MoSoIcons.caretRight(), contentDescription = "")
     }
-    LazyRow {
+    LazyRow(
+        state = scrollState,
+    ) {
         items(
             count = searchResultUiState.accountUiStates.count(),
             key = { searchResultUiState.accountUiStates[it].quickViewUiState.accountId },
@@ -385,13 +404,15 @@ private fun TopAccounts(
 
 @Composable
 private fun AccountsList(
-    accountFeed: Flow<PagingData<AccountFollowerUiState>>?,
+    accountFeed: LazyPagingItems<AccountFollowerUiState>?,
+    scrollState: LazyListState,
     searchInteractions: SearchInteractions,
 ) {
-    accountFeed?.collectAsLazyPagingItems()?.let { lazyPagingItems ->
+    accountFeed?.let { lazyPagingItems ->
         PagingLazyColumn(
             lazyPagingItems = lazyPagingItems,
-            noResultText = stringResource(id = R.string.search_empty)
+            noResultText = stringResource(id = R.string.search_empty),
+            listState = scrollState,
         ) {
             items(
                 count = lazyPagingItems.itemCount,
@@ -422,13 +443,15 @@ private fun AccountsList(
 
 @Composable
 private fun StatusesList(
-    statusFeed: Flow<PagingData<PostCardUiState>>?,
+    statusFeed: LazyPagingItems<PostCardUiState>?,
+    scrollState: LazyListState,
     postCardInteractions: PostCardInteractions,
 ) {
-    statusFeed?.collectAsLazyPagingItems()?.let { lazyPagingItems ->
+    statusFeed?.let { lazyPagingItems ->
         PagingLazyColumn(
             lazyPagingItems = lazyPagingItems,
-            noResultText = stringResource(id = R.string.search_empty)
+            noResultText = stringResource(id = R.string.search_empty),
+            listState = scrollState,
         ) {
             postListContent(
                 lazyPagingItems = lazyPagingItems,
@@ -440,13 +463,15 @@ private fun StatusesList(
 
 @Composable
 private fun HashTagsList(
-    hashTagsFeed: Flow<PagingData<HashTagQuickViewUiState>>?,
+    hashTagsFeed: LazyPagingItems<HashTagQuickViewUiState>?,
+    scrollState: LazyListState,
     searchInteractions: SearchInteractions,
 ) {
-    hashTagsFeed?.collectAsLazyPagingItems()?.let { lazyPagingItems ->
+    hashTagsFeed?.let { lazyPagingItems ->
         PagingLazyColumn(
             lazyPagingItems = lazyPagingItems,
-            noResultText = stringResource(id = R.string.search_empty)
+            noResultText = stringResource(id = R.string.search_empty),
+            listState = scrollState,
         ) {
             items(
                 count = lazyPagingItems.itemCount,
@@ -477,4 +502,26 @@ private fun Suggestions() {
     Box(
         modifier = Modifier.fillMaxSize()
     )
+}
+
+@Preview
+@Composable
+private fun SearchScreenPreview() {
+    PreviewTheme(
+        modules = listOf(navigationModule)
+    ) {
+        SearchScreen(
+            uiState = SearchUiState(
+                topResource = Resource.Loaded(
+                    SearchResultUiState(
+                        postCardUiStates = listOf(),
+                        accountUiStates = listOf(),
+                    )
+                ),
+                query = "test",
+            ),
+            searchInteractions = object : SearchInteractions {},
+            postCardInteractions = object : PostCardInteractions {},
+        )
+    }
 }

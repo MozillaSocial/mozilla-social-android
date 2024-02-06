@@ -46,7 +46,7 @@ class RefreshFederatedTimeline internal constructor(
                         timelineRepository.getPublicTimeline(
                             federatedOnly = true,
                             olderThanId = null,
-                            immediatelyNewerThanId = firstItem.status.statusId,
+                            immediatelyNewerThanId = firstItem.federatedTimelineStatus.statusId,
                             loadSize = pageSize,
                         )
                     }
@@ -57,7 +57,7 @@ class RefreshFederatedTimeline internal constructor(
                                 ?: return RemoteMediator.MediatorResult.Success(endOfPaginationReached = true)
                         timelineRepository.getPublicTimeline(
                             federatedOnly = true,
-                            olderThanId = lastItem.status.statusId,
+                            olderThanId = lastItem.federatedTimelineStatus.statusId,
                             immediatelyNewerThanId = null,
                             loadSize = pageSize,
                         )

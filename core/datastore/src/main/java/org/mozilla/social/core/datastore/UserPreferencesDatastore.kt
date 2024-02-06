@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.mapLatest
 import timber.log.Timber
 import java.io.IOException
+import java.lang.IllegalArgumentException
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class UserPreferencesDatastore(context: Context) {
@@ -60,7 +61,11 @@ class UserPreferencesDatastore(context: Context) {
         }
     }
 
+    /**
+     * @throws [IllegalArgumentException] if the domain is bad
+     */
     suspend fun saveDomain(domain: String) {
+        require(HOST_NAME_REGEX.toRegex().matches(domain))
         dataStore.updateData {
             it.toBuilder().setDomain(domain).build()
         }
@@ -74,5 +79,10 @@ class UserPreferencesDatastore(context: Context) {
                 .clearAccountId()
                 .build()
         }
+    }
+
+    companion object {
+        @Suppress("MaxLineLength")
+        const val HOST_NAME_REGEX = "[a-zA-Z0-9]+(\\.[a-zA-Z0-9]+)+"
     }
 }

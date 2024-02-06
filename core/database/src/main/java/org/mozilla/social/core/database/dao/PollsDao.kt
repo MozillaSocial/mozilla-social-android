@@ -2,7 +2,6 @@ package org.mozilla.social.core.database.dao
 
 import androidx.room.Dao
 import androidx.room.Query
-import androidx.room.Transaction
 import org.mozilla.social.core.database.model.entities.DatabasePoll
 
 @Dao
@@ -12,26 +11,13 @@ interface PollsDao : BaseDao<DatabasePoll> {
      */
     @Query(
         "UPDATE polls " +
-            "SET ownVotes = :choices " +
-            "WHERE pollId = :pollId",
+        "SET ownVotes = :choices " +
+        "WHERE pollId = :pollId",
     )
-    fun updateOwnVotes(
+    suspend fun updateOwnVotes(
         pollId: String,
         choices: List<Int>?,
     )
-
-    @Query(
-        "DELETE FROM polls " +
-            "WHERE pollId = :pollId",
-    )
-    suspend fun deletePoll(pollId: String)
-
-    @Transaction
-    @Query(
-        "SELECT * FROM polls " +
-            "WHERE pollId = :pollId",
-    )
-    suspend fun getPoll(pollId: String): DatabasePoll
 
     @Query(
         "DELETE FROM polls " +

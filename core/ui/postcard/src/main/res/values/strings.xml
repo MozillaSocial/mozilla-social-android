@@ -4,6 +4,7 @@
     <string name="hide_post">Hide post</string>
 
     <string name="delete_post">Delete</string>
+    <string name="edit_post">Edit this post</string>
     <string name="mute_user">Mute %s</string>
     <string name="block_user">Block %s</string>
     <string name="report_user">Report %s</string>

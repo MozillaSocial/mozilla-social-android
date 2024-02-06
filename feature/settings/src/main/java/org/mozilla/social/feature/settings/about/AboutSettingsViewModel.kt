@@ -9,30 +9,24 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.mozilla.social.common.Resource
-import org.mozilla.social.core.analytics.Analytics
-import org.mozilla.social.core.analytics.AnalyticsIdentifiers
 import org.mozilla.social.core.model.Instance
 import org.mozilla.social.core.navigation.SettingsNavigationDestination
 import org.mozilla.social.core.navigation.usecases.NavigateTo
 import org.mozilla.social.core.repository.mastodon.InstanceRepository
 import org.mozilla.social.core.ui.common.account.quickview.toQuickViewUiState
 import org.mozilla.social.core.ui.htmlcontent.HtmlContentInteractions
-import org.mozilla.social.core.usecase.mastodon.account.GetLoggedInUserAccountId
 import org.mozilla.social.core.usecase.mastodon.htmlcontent.DefaultHtmlInteractions
-import org.mozilla.social.feature.settings.SettingsInteractions
+import org.mozilla.social.feature.settings.SettingsAnalytics
 import timber.log.Timber
 
 class AboutSettingsViewModel(
-    getLoggedInUserAccountId: GetLoggedInUserAccountId,
-    private val analytics: Analytics,
+    private val analytics: SettingsAnalytics,
     private val navigateTo: NavigateTo,
     private val instanceRepository: InstanceRepository,
     private val defaultHtmlInteractions: DefaultHtmlInteractions,
 ) : ViewModel(),
     AboutInteractions,
     HtmlContentInteractions by defaultHtmlInteractions {
-
-    private val userAccountId: String = getLoggedInUserAccountId()
 
     private val _aboutSettings = MutableStateFlow<Resource<AboutSettings>>(Resource.Loading())
     val aboutSettings = _aboutSettings.asStateFlow()
@@ -63,10 +57,7 @@ class AboutSettingsViewModel(
     }
 
     override fun onScreenViewed() {
-        analytics.uiImpression(
-            uiIdentifier = AnalyticsIdentifiers.SETTINGS_ABOUT_IMPRESSION,
-            mastodonAccountId = userAccountId
-        )
+        analytics.aboutSettingsViewed()
     }
 
     override fun onOpenSourceLicensesClicked() {

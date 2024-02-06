@@ -34,4 +34,5 @@ val mastodonRepositoryModule =
         singleOf(::FavoritesRepository)
         singleOf(::HashtagRepository)
         singleOf(::NotificationsRepository)
+        singleOf(::FollowRequestRepository)
     }

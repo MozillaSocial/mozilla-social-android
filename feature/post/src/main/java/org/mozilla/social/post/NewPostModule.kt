@@ -2,6 +2,7 @@ package org.mozilla.social.post
 
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.module.dsl.factoryOf
+import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 import org.mozilla.social.common.commonModule
 import org.mozilla.social.core.analytics.analyticsModule
@@ -26,8 +27,10 @@ val newPostModule = module {
     viewModel { parametersHolder ->
         NewPostViewModel(
             analytics = get(),
-            replyStatusId = parametersHolder.getOrNull(),
+            replyStatusId = parametersHolder[0],
+            editStatusId = parametersHolder[1],
             postStatus = get(),
+            editStatus = get(),
             popNavBackstack = get(),
             showSnackbar = get(),
             getLoggedInUserAccountId = get(),
@@ -43,6 +46,7 @@ val newPostModule = module {
             statusRepository = get(),
             coroutineScope = parametersHolder[0],
             inReplyToId = parametersHolder[1],
+            editStatusId = parametersHolder[2]
         )
     }
 
@@ -54,4 +58,6 @@ val newPostModule = module {
             mediaRepository = get(),
         )
     }
+
+    singleOf(::NewPostAnalytics)
 }

@@ -10,11 +10,6 @@ fun Notification.toDatabase(): DatabaseNotification = when (this) {
         createdAt = createdAt,
         accountId = account.accountId,
         statusId = status.statusId,
-        statusAccountId = status.account.accountId,
-        statusPollId = status.poll?.pollId,
-        boostedStatusId = status.boostedStatus?.statusId,
-        boostedStatusAccountId = status.boostedStatus?.account?.accountId,
-        boostedPollId = status.boostedStatus?.poll?.pollId,
     )
     is Notification.NewStatus -> DatabaseNotification(
         id = id,
@@ -22,11 +17,6 @@ fun Notification.toDatabase(): DatabaseNotification = when (this) {
         createdAt = createdAt,
         accountId = account.accountId,
         statusId = status.statusId,
-        statusAccountId = status.account.accountId,
-        statusPollId = status.poll?.pollId,
-        boostedStatusId = status.boostedStatus?.statusId,
-        boostedStatusAccountId = status.boostedStatus?.account?.accountId,
-        boostedPollId = status.boostedStatus?.poll?.pollId,
     )
     is Notification.Repost -> DatabaseNotification(
         id = id,
@@ -34,11 +24,6 @@ fun Notification.toDatabase(): DatabaseNotification = when (this) {
         createdAt = createdAt,
         accountId = account.accountId,
         statusId = status.statusId,
-        statusAccountId = status.account.accountId,
-        statusPollId = status.poll?.pollId,
-        boostedStatusId = status.boostedStatus?.statusId,
-        boostedStatusAccountId = status.boostedStatus?.account?.accountId,
-        boostedPollId = status.boostedStatus?.poll?.pollId,
     )
     is Notification.Favorite -> DatabaseNotification(
         id = id,
@@ -46,11 +31,6 @@ fun Notification.toDatabase(): DatabaseNotification = when (this) {
         createdAt = createdAt,
         accountId = account.accountId,
         statusId = status.statusId,
-        statusAccountId = status.account.accountId,
-        statusPollId = status.poll?.pollId,
-        boostedStatusId = status.boostedStatus?.statusId,
-        boostedStatusAccountId = status.boostedStatus?.account?.accountId,
-        boostedPollId = status.boostedStatus?.poll?.pollId,
     )
     is Notification.PollEnded -> DatabaseNotification(
         id = id,
@@ -58,11 +38,6 @@ fun Notification.toDatabase(): DatabaseNotification = when (this) {
         createdAt = createdAt,
         accountId = account.accountId,
         statusId = status.statusId,
-        statusAccountId = status.account.accountId,
-        statusPollId = status.poll?.pollId,
-        boostedStatusId = status.boostedStatus?.statusId,
-        boostedStatusAccountId = status.boostedStatus?.account?.accountId,
-        boostedPollId = status.boostedStatus?.poll?.pollId,
     )
     is Notification.StatusUpdated -> DatabaseNotification(
         id = id,
@@ -70,11 +45,6 @@ fun Notification.toDatabase(): DatabaseNotification = when (this) {
         createdAt = createdAt,
         accountId = account.accountId,
         statusId = status.statusId,
-        statusAccountId = status.account.accountId,
-        statusPollId = status.poll?.pollId,
-        boostedStatusId = status.boostedStatus?.statusId,
-        boostedStatusAccountId = status.boostedStatus?.account?.accountId,
-        boostedPollId = status.boostedStatus?.poll?.pollId,
     )
     is Notification.FollowRequest -> DatabaseNotification(
         id = id,
@@ -82,11 +52,6 @@ fun Notification.toDatabase(): DatabaseNotification = when (this) {
         createdAt = createdAt,
         accountId = account.accountId,
         statusId = null,
-        statusAccountId = null,
-        statusPollId = null,
-        boostedStatusId = null,
-        boostedStatusAccountId = null,
-        boostedPollId = null,
     )
     is Notification.Follow -> DatabaseNotification(
         id = id,
@@ -94,10 +59,5 @@ fun Notification.toDatabase(): DatabaseNotification = when (this) {
         createdAt = createdAt,
         accountId = account.accountId,
         statusId = null,
-        statusAccountId = null,
-        statusPollId = null,
-        boostedStatusId = null,
-        boostedStatusAccountId = null,
-        boostedPollId = null,
     )
 }

@@ -1,5 +1,6 @@
 package org.mozilla.social.core.ui.postcard
 
+import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 import org.mozilla.social.common.commonModule
 import org.mozilla.social.core.navigation.navigationModule
@@ -18,7 +19,7 @@ val postCardModule =
         factory { parametersHolder ->
             PostCardDelegate(
                 coroutineScope = parametersHolder[0],
-                baseAnalyticsIdentifier = parametersHolder[1],
+                feedLocation = parametersHolder[1],
                 navigateTo = get(),
                 openLink = get(),
                 blockAccount = get(),
@@ -32,4 +33,6 @@ val postCardModule =
                 analytics = get(),
             )
         }
+
+        singleOf(::PostCardAnalytics)
     }

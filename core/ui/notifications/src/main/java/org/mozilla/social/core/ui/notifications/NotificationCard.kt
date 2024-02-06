@@ -28,22 +28,20 @@ import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.designsystem.utils.NoRipple
 import org.mozilla.social.core.ui.common.text.MediumTextLabel
 import org.mozilla.social.core.ui.common.text.SmallTextLabel
-import org.mozilla.social.core.ui.htmlcontent.HtmlContentInteractions
 import org.mozilla.social.core.ui.notifications.cards.FavoriteNotificationContent
-import org.mozilla.social.core.ui.notifications.cards.FollowNotification
-import org.mozilla.social.core.ui.notifications.cards.FollowRequestNotification
+import org.mozilla.social.core.ui.notifications.cards.FollowRequestNotificationContent
 import org.mozilla.social.core.ui.notifications.cards.MentionNotificationContent
 import org.mozilla.social.core.ui.notifications.cards.NewStatusNotificationContent
 import org.mozilla.social.core.ui.notifications.cards.PollEndedNotificationContent
 import org.mozilla.social.core.ui.notifications.cards.RepostNotificationContent
 import org.mozilla.social.core.ui.notifications.cards.StatusUpdatedNotificationContent
-import org.mozilla.social.core.ui.poll.PollInteractions
+import org.mozilla.social.core.ui.postcard.PostCardInteractions
 
+@Suppress("LongMethod")
 @Composable
 fun NotificationCard(
     uiState: NotificationUiState,
-    htmlContentInteractions: HtmlContentInteractions,
-    pollInteractions: PollInteractions,
+    postCardInteractions: PostCardInteractions,
     notificationInteractions: NotificationInteractions,
     modifier: Modifier = Modifier,
 ) {
@@ -59,12 +57,30 @@ fun NotificationCard(
             ) {
                 FavoriteNotificationContent(
                     uiState = uiState,
-                    htmlContentInteractions = htmlContentInteractions,
-                    pollInteractions = pollInteractions,
+                    postCardInteractions = postCardInteractions,
                 )
             }
-            is NotificationUiState.Follow -> FollowNotification(uiState = uiState)
-            is NotificationUiState.FollowRequest -> FollowRequestNotification(uiState = uiState)
+            is NotificationUiState.Follow -> NotificationCard(
+                modifier = Modifier.clickable {
+                    notificationInteractions.onFollowCardClicked(uiState.accountId)
+                },
+                uiState = uiState,
+                notificationInteractions = notificationInteractions,
+                notificationTypeIcon = MoSoIcons.following(),
+            ) {}
+            is NotificationUiState.FollowRequest -> NotificationCard(
+                modifier = Modifier.clickable {
+                    notificationInteractions.onFollowRequestCardClicked(uiState.accountId)
+                },
+                uiState = uiState,
+                notificationInteractions = notificationInteractions,
+                notificationTypeIcon = MoSoIcons.users(),
+            ) {
+                FollowRequestNotificationContent(
+                    uiState = uiState,
+                    notificationInteractions = notificationInteractions,
+                )
+            }
             is NotificationUiState.Mention -> NotificationCard(
                 modifier = Modifier.clickable {
                     notificationInteractions.onMentionClicked(uiState.statusId)
@@ -75,8 +91,7 @@ fun NotificationCard(
             ) {
                 MentionNotificationContent(
                     uiState = uiState,
-                    htmlContentInteractions = htmlContentInteractions,
-                    pollInteractions = pollInteractions,
+                    postCardInteractions = postCardInteractions,
                 )
             }
 
@@ -90,8 +105,7 @@ fun NotificationCard(
             ) {
                 NewStatusNotificationContent(
                     uiState = uiState,
-                    htmlContentInteractions = htmlContentInteractions,
-                    pollInteractions = pollInteractions,
+                    postCardInteractions = postCardInteractions,
                 )
             }
             is NotificationUiState.PollEnded -> NotificationCard(
@@ -104,8 +118,7 @@ fun NotificationCard(
             ) {
                 PollEndedNotificationContent(
                     uiState = uiState,
-                    htmlContentInteractions = htmlContentInteractions,
-                    pollInteractions = pollInteractions,
+                    postCardInteractions = postCardInteractions,
                 )
             }
 
@@ -119,8 +132,7 @@ fun NotificationCard(
             ) {
                 RepostNotificationContent(
                     uiState = uiState,
-                    htmlContentInteractions = htmlContentInteractions,
-                    pollInteractions = pollInteractions,
+                    postCardInteractions = postCardInteractions,
                 )
             }
             is NotificationUiState.StatusUpdated -> NotificationCard(
@@ -133,8 +145,7 @@ fun NotificationCard(
             ) {
                 StatusUpdatedNotificationContent(
                     uiState = uiState,
-                    htmlContentInteractions = htmlContentInteractions,
-                    pollInteractions = pollInteractions,
+                    postCardInteractions = postCardInteractions,
                 )
             }
         }

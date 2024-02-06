@@ -1,21 +1,14 @@
 package org.mozilla.social.feature.settings.contentpreferences
 
 import androidx.lifecycle.ViewModel
-import org.mozilla.social.core.analytics.Analytics
-import org.mozilla.social.core.analytics.AnalyticsIdentifiers
 import org.mozilla.social.core.navigation.SettingsNavigationDestination
 import org.mozilla.social.core.navigation.usecases.NavigateTo
-import org.mozilla.social.core.usecase.mastodon.account.GetLoggedInUserAccountId
-import org.mozilla.social.feature.settings.SettingsInteractions
+import org.mozilla.social.feature.settings.SettingsAnalytics
 
 class ContentPreferencesSettingsViewModel(
     private val navigateTo: NavigateTo,
-    private val analytics: Analytics,
-    getLoggedInUserAccountId: GetLoggedInUserAccountId,
+    private val analytics: SettingsAnalytics,
 ) : ViewModel(), ContentPreferencesSettingsInteractions {
-
-    private val userAccountId: String = getLoggedInUserAccountId()
-
     fun onMutedUsersClicked() {
         navigateTo(SettingsNavigationDestination.MutedUsersSettings)
     }
@@ -25,9 +18,6 @@ class ContentPreferencesSettingsViewModel(
     }
 
     override fun onScreenViewed() {
-        analytics.uiImpression(
-            uiIdentifier = AnalyticsIdentifiers.SETTINGS_CONTENT_PREFERENCES_IMPRESSION,
-            mastodonAccountId = userAccountId,
-        )
+        analytics.contentPreferencesSettingsViewed()
     }
 }

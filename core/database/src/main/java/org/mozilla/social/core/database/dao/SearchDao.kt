@@ -52,26 +52,29 @@ interface SearchDao {
     suspend fun deleteAllSearchedHashTags()
 
     @Upsert
-    fun upsertAccounts(accounts: List<SearchedAccount>)
+    suspend fun upsertAccounts(accounts: List<SearchedAccount>)
 
     @Upsert
-    fun upsertStatuses(statuses: List<SearchedStatus>)
+    suspend fun upsertStatuses(statuses: List<SearchedStatus>)
 
     @Upsert
-    fun upsertHashTags(hashTags: List<SearchedHashTag>)
+    suspend fun upsertHashTags(hashTags: List<SearchedHashTag>)
 
+    @Transaction
     @Query(
         "SELECT * FROM searchedAccounts " +
         "LIMIT :count"
     )
     fun getTopAccountsFlow(count: Int): Flow<List<SearchedAccountWrapper>>
 
+    @Transaction
     @Query(
         "SELECT * FROM searchedStatuses " +
         "LIMIT :count"
     )
     fun getTopStatusesFlow(count: Int): Flow<List<SearchedStatusWrapper>>
 
+    @Transaction
     @Query(
         "SELECT * FROM searchedHashTags " +
         "LIMIT :count"

@@ -17,6 +17,7 @@
     <string name="follow_button">Follow</string>
     <string name="unfollow_button">Unfollow</string>
     <string name="edit_button">Edit profile</string>
+    <string name="overflow_button">More Options</string>
 
     <string name="tab_posts">Posts</string>
     <string name="tab_posts_and_replies">Posts and Replies</string>

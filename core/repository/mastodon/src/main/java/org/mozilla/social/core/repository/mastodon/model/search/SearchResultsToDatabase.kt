@@ -22,11 +22,6 @@ fun List<Status>.toSearchedStatus(
     SearchedStatus(
         statusId = status.statusId,
         position = startIndex + index,
-        accountId = status.account.accountId,
-        pollId = status.poll?.pollId,
-        boostedStatusId = status.boostedStatus?.statusId,
-        boostedStatusAccountId = status.boostedStatus?.account?.accountId,
-        boostedPollId = status.boostedStatus?.poll?.pollId,
     )
 }
 

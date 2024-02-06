@@ -1,7 +1,9 @@
 package org.mozilla.social.feed
 
 import org.koin.androidx.viewmodel.dsl.viewModelOf
+import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
+import org.mozilla.social.FeedAnalytics
 import org.mozilla.social.common.commonModule
 import org.mozilla.social.core.analytics.analyticsModule
 import org.mozilla.social.core.datastore.dataStoreModule
@@ -13,32 +15,32 @@ import org.mozilla.social.core.repository.paging.pagingModule
 import org.mozilla.social.core.ui.postcard.postCardModule
 import org.mozilla.social.core.usecase.mastodon.mastodonUsecaseModule
 
-val feedModule =
-    module {
-        includes(
-            commonModule,
-            mastodonUsecaseModule,
-            dataStoreModule,
-            pagingModule,
-            postCardModule,
-            navigationModule,
-            analyticsModule,
-        )
+val feedModule = module {
+    includes(
+        commonModule,
+        mastodonUsecaseModule,
+        dataStoreModule,
+        pagingModule,
+        postCardModule,
+        navigationModule,
+        analyticsModule,
+    )
 
-        single {
-            HomeTimelineRemoteMediator(
-                get(),
-            )
-        }
-        single {
-            LocalTimelineRemoteMediator(
-                get(),
-            )
-        }
-        single {
-            FederatedTimelineRemoteMediator(
-                get(),
-            )
-        }
-        viewModelOf(::FeedViewModel)
+    single {
+        HomeTimelineRemoteMediator(
+            get(),
+        )
     }
+    single {
+        LocalTimelineRemoteMediator(
+            get(),
+        )
+    }
+    single {
+        FederatedTimelineRemoteMediator(
+            get(),
+        )
+    }
+    viewModelOf(::FeedViewModel)
+    singleOf(::FeedAnalytics)
+}

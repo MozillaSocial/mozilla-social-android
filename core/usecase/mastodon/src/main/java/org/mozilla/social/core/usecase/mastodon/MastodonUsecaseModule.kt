@@ -19,6 +19,8 @@ import org.mozilla.social.core.usecase.mastodon.account.UpdateMyAccount
 import org.mozilla.social.core.usecase.mastodon.auth.IsSignedInFlow
 import org.mozilla.social.core.usecase.mastodon.auth.Login
 import org.mozilla.social.core.usecase.mastodon.auth.Logout
+import org.mozilla.social.core.usecase.mastodon.followRequest.AcceptFollowRequest
+import org.mozilla.social.core.usecase.mastodon.followRequest.DenyFollowRequest
 import org.mozilla.social.core.usecase.mastodon.hashtag.FollowHashTag
 import org.mozilla.social.core.usecase.mastodon.hashtag.GetHashTag
 import org.mozilla.social.core.usecase.mastodon.hashtag.UnfollowHashTag
@@ -27,6 +29,7 @@ import org.mozilla.social.core.usecase.mastodon.report.Report
 import org.mozilla.social.core.usecase.mastodon.search.SearchAll
 import org.mozilla.social.core.usecase.mastodon.status.BoostStatus
 import org.mozilla.social.core.usecase.mastodon.status.DeleteStatus
+import org.mozilla.social.core.usecase.mastodon.status.EditStatus
 import org.mozilla.social.core.usecase.mastodon.status.FavoriteStatus
 import org.mozilla.social.core.usecase.mastodon.status.GetInReplyToAccountNames
 import org.mozilla.social.core.usecase.mastodon.status.PostStatus
@@ -136,6 +139,16 @@ val mastodonUsecaseModule =
             )
         }
         single {
+            EditStatus(
+                externalScope = get<AppScope>(),
+                mediaApi = get(),
+                statusRepository = get(),
+                saveStatusToDatabase = get(),
+                timelineRepository = get(),
+                showSnackbar = get(),
+            )
+        }
+        single {
             BoostStatus(
                 externalScope = get<AppScope>(),
                 statusRepository = get(),
@@ -185,8 +198,6 @@ val mastodonUsecaseModule =
                 externalScope = get<AppScope>(),
                 statusRepository = get(),
                 showSnackbar = get(),
-                timelineRepository = get(),
-                databaseDelegate = get(),
             )
         }
 
@@ -203,6 +214,28 @@ val mastodonUsecaseModule =
                 externalScope = get<AppScope>(),
                 showSnackbar = get(),
                 hashtagRepository = get(),
+            )
+        }
+
+        single {
+            AcceptFollowRequest(
+                externalScope = get<AppScope>(),
+                showSnackbar = get(),
+                followRequestRepository = get(),
+                notificationsRepository = get(),
+                relationshipRepository = get(),
+            )
+        }
+
+        single {
+            DenyFollowRequest(
+                externalScope = get<AppScope>(),
+                showSnackbar = get(),
+                followRequestRepository = get(),
+                notificationsRepository = get(),
+                relationshipRepository = get(),
+                saveNotificationsToDatabase = get(),
+                databaseDelegate = get(),
             )
         }
 

@@ -11,19 +11,18 @@ import org.mozilla.social.core.ui.notifications.NotificationUiState
 import org.mozilla.social.core.ui.poll.PollInteractions
 import org.mozilla.social.core.ui.poll.PollOptionUiState
 import org.mozilla.social.core.ui.poll.PollUiState
+import org.mozilla.social.core.ui.postcard.PostCardInteractions
 import org.mozilla.social.core.ui.postcard.PostContent
 import org.mozilla.social.core.ui.postcard.PostContentUiState
 
 @Composable
 internal fun PollEndedNotificationContent(
     uiState: NotificationUiState.PollEnded,
-    htmlContentInteractions: HtmlContentInteractions,
-    pollInteractions: PollInteractions,
+    postCardInteractions: PostCardInteractions,
 ) {
     PostContent(
         uiState = uiState.postContentUiState,
-        htmlContentInteractions = htmlContentInteractions,
-        pollInteractions = pollInteractions,
+        postCardInteractions = postCardInteractions,
     )
 }
 
@@ -76,8 +75,7 @@ private fun PollEndedNotificationPreview() {
                 statusId = "",
                 accountName = "",
             ),
-            htmlContentInteractions = object : HtmlContentInteractions {},
-            pollInteractions = object : PollInteractions {},
+            postCardInteractions = object : PostCardInteractions {},
             notificationInteractions = NotificationInteractionsNoOp,
         )
     }

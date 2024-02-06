@@ -2,6 +2,7 @@ package org.mozilla.social.feature.account
 
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.androidx.viewmodel.dsl.viewModelOf
+import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 import org.mozilla.social.common.commonModule
 import org.mozilla.social.core.analytics.analyticsModule
@@ -48,4 +49,5 @@ val accountModule =
             )
         }
         viewModelOf(::EditAccountViewModel)
+        singleOf(::AccountAnalytics)
     }

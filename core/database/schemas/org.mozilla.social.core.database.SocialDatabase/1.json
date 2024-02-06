@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "c8c54df0f1b9c2c7c5ca4e668af817a9",
+    "identityHash": "989b4ac9baa718600b97bc55065f2a63",
     "entities": [
       {
         "tableName": "statuses",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`statusId` TEXT NOT NULL, `uri` TEXT NOT NULL, `createdAt` INTEGER NOT NULL, `accountId` TEXT NOT NULL, `content` TEXT NOT NULL, `visibility` TEXT NOT NULL, `isSensitive` INTEGER NOT NULL, `contentWarningText` TEXT NOT NULL, `mediaAttachments` TEXT NOT NULL, `mentions` TEXT NOT NULL, `hashTags` TEXT NOT NULL, `emojis` TEXT NOT NULL, `boostsCount` INTEGER NOT NULL, `favouritesCount` INTEGER NOT NULL, `repliesCount` INTEGER NOT NULL, `url` TEXT, `inReplyToId` TEXT, `inReplyToAccountId` TEXT, `inReplyToAccountName` TEXT, `boostedStatusId` TEXT, `boostedStatusAccountId` TEXT, `boostedPollId` TEXT, `pollId` TEXT, `language` TEXT, `plainText` TEXT, `isFavourited` INTEGER, `isBoosted` INTEGER, `isMuted` INTEGER, `isBookmarked` INTEGER, `isPinned` INTEGER, `application_name` TEXT, `application_website` TEXT, `application_vapidKey` TEXT, `application_clientId` TEXT, `application_clientSecret` TEXT, PRIMARY KEY(`statusId`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`statusId` TEXT NOT NULL, `uri` TEXT NOT NULL, `createdAt` INTEGER NOT NULL, `accountId` TEXT NOT NULL, `content` TEXT NOT NULL, `visibility` TEXT NOT NULL, `isSensitive` INTEGER NOT NULL, `contentWarningText` TEXT NOT NULL, `mediaAttachments` TEXT NOT NULL, `mentions` TEXT NOT NULL, `hashTags` TEXT NOT NULL, `emojis` TEXT NOT NULL, `boostsCount` INTEGER NOT NULL, `favouritesCount` INTEGER NOT NULL, `repliesCount` INTEGER NOT NULL, `url` TEXT, `inReplyToId` TEXT, `inReplyToAccountId` TEXT, `inReplyToAccountName` TEXT, `boostedStatusId` TEXT, `boostedStatusAccountId` TEXT, `boostedPollId` TEXT, `pollId` TEXT, `card` TEXT, `language` TEXT, `plainText` TEXT, `isFavorited` INTEGER, `isBoosted` INTEGER, `isMuted` INTEGER, `isBookmarked` INTEGER, `isPinned` INTEGER, `isBeingDeleted` INTEGER NOT NULL, `application_name` TEXT, `application_website` TEXT, `application_vapidKey` TEXT, `application_clientId` TEXT, `application_clientSecret` TEXT, PRIMARY KEY(`statusId`), FOREIGN KEY(`accountId`) REFERENCES `accounts`(`accountId`) ON UPDATE CASCADE ON DELETE CASCADE , FOREIGN KEY(`pollId`) REFERENCES `polls`(`pollId`) ON UPDATE CASCADE ON DELETE CASCADE , FOREIGN KEY(`boostedStatusId`) REFERENCES `statuses`(`statusId`) ON UPDATE CASCADE ON DELETE CASCADE , FOREIGN KEY(`boostedStatusAccountId`) REFERENCES `accounts`(`accountId`) ON UPDATE CASCADE ON DELETE CASCADE , FOREIGN KEY(`boostedPollId`) REFERENCES `polls`(`pollId`) ON UPDATE CASCADE ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "statusId",
@@ -147,6 +147,12 @@
             "notNull": false
           },
           {
+            "fieldPath": "card",
+            "columnName": "card",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
             "fieldPath": "language",
             "columnName": "language",
             "affinity": "TEXT",
@@ -159,8 +165,8 @@
             "notNull": false
           },
           {
-            "fieldPath": "isFavourited",
-            "columnName": "isFavourited",
+            "fieldPath": "isFavorited",
+            "columnName": "isFavorited",
             "affinity": "INTEGER",
             "notNull": false
           },
@@ -187,6 +193,12 @@
             "columnName": "isPinned",
             "affinity": "INTEGER",
             "notNull": false
+          },
+          {
+            "fieldPath": "isBeingDeleted",
+            "columnName": "isBeingDeleted",
+            "affinity": "INTEGER",
+            "notNull": true
           },
           {
             "fieldPath": "application.name",
@@ -225,12 +237,212 @@
             "statusId"
           ]
         },
+        "indices": [
+          {
+            "name": "index_statuses_accountId",
+            "unique": false,
+            "columnNames": [
+              "accountId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_statuses_accountId` ON `${TABLE_NAME}` (`accountId`)"
+          },
+          {
+            "name": "index_statuses_boostedStatusId",
+            "unique": false,
+            "columnNames": [
+              "boostedStatusId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_statuses_boostedStatusId` ON `${TABLE_NAME}` (`boostedStatusId`)"
+          },
+          {
+            "name": "index_statuses_boostedStatusAccountId",
+            "unique": false,
+            "columnNames": [
+              "boostedStatusAccountId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_statuses_boostedStatusAccountId` ON `${TABLE_NAME}` (`boostedStatusAccountId`)"
+          },
+          {
+            "name": "index_statuses_boostedPollId",
+            "unique": false,
+            "columnNames": [
+              "boostedPollId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_statuses_boostedPollId` ON `${TABLE_NAME}` (`boostedPollId`)"
+          },
+          {
+            "name": "index_statuses_pollId",
+            "unique": false,
+            "columnNames": [
+              "pollId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_statuses_pollId` ON `${TABLE_NAME}` (`pollId`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "accounts",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "accountId"
+            ],
+            "referencedColumns": [
+              "accountId"
+            ]
+          },
+          {
+            "table": "polls",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "pollId"
+            ],
+            "referencedColumns": [
+              "pollId"
+            ]
+          },
+          {
+            "table": "statuses",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "boostedStatusId"
+            ],
+            "referencedColumns": [
+              "statusId"
+            ]
+          },
+          {
+            "table": "accounts",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "boostedStatusAccountId"
+            ],
+            "referencedColumns": [
+              "accountId"
+            ]
+          },
+          {
+            "table": "polls",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "boostedPollId"
+            ],
+            "referencedColumns": [
+              "pollId"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "blocks",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`accountId` TEXT NOT NULL, `position` INTEGER NOT NULL, PRIMARY KEY(`accountId`), FOREIGN KEY(`accountId`) REFERENCES `accounts`(`accountId`) ON UPDATE CASCADE ON DELETE CASCADE , FOREIGN KEY(`accountId`) REFERENCES `relationships`(`accountId`) ON UPDATE CASCADE ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "accountId",
+            "columnName": "accountId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "position",
+            "columnName": "position",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "accountId"
+          ]
+        },
         "indices": [],
-        "foreignKeys": []
+        "foreignKeys": [
+          {
+            "table": "accounts",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "accountId"
+            ],
+            "referencedColumns": [
+              "accountId"
+            ]
+          },
+          {
+            "table": "relationships",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "accountId"
+            ],
+            "referencedColumns": [
+              "accountId"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "mutes",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`accountId` TEXT NOT NULL, `position` INTEGER NOT NULL, PRIMARY KEY(`accountId`), FOREIGN KEY(`accountId`) REFERENCES `accounts`(`accountId`) ON UPDATE CASCADE ON DELETE CASCADE , FOREIGN KEY(`accountId`) REFERENCES `relationships`(`accountId`) ON UPDATE CASCADE ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "accountId",
+            "columnName": "accountId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "position",
+            "columnName": "position",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "accountId"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": [
+          {
+            "table": "accounts",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "accountId"
+            ],
+            "referencedColumns": [
+              "accountId"
+            ]
+          },
+          {
+            "table": "relationships",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "accountId"
+            ],
+            "referencedColumns": [
+              "accountId"
+            ]
+          }
+        ]
       },
       {
         "tableName": "accounts",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`accountId` TEXT NOT NULL, `username` TEXT NOT NULL, `acct` TEXT NOT NULL, `url` TEXT NOT NULL, `displayName` TEXT NOT NULL, `bio` TEXT NOT NULL, `avatarUrl` TEXT NOT NULL, `avatarStaticUrl` TEXT NOT NULL, `headerUrl` TEXT NOT NULL, `headerStaticUrl` TEXT NOT NULL, `isLocked` INTEGER NOT NULL, `emojis` TEXT NOT NULL, `createdAt` INTEGER NOT NULL, `lastStatusAt` TEXT, `statusesCount` INTEGER NOT NULL, `followersCount` INTEGER NOT NULL, `followingCount` INTEGER NOT NULL, `isDiscoverable` INTEGER, `isGroup` INTEGER NOT NULL, `fields` TEXT, `isBot` INTEGER, `isSuspended` INTEGER, `muteExpiresAt` INTEGER, `source_bio` TEXT, `source_fields` TEXT, `source_defaultPrivacy` TEXT, `source_defaultSensitivity` INTEGER, `source_defaultLanguage` TEXT, `source_followRequestsCount` INTEGER, PRIMARY KEY(`accountId`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`accountId` TEXT NOT NULL, `username` TEXT NOT NULL, `acct` TEXT NOT NULL, `url` TEXT NOT NULL, `displayName` TEXT NOT NULL, `bio` TEXT NOT NULL, `avatarUrl` TEXT NOT NULL, `avatarStaticUrl` TEXT NOT NULL, `headerUrl` TEXT NOT NULL, `headerStaticUrl` TEXT NOT NULL, `isLocked` INTEGER NOT NULL, `emojis` TEXT NOT NULL, `createdAt` INTEGER NOT NULL, `statusesCount` INTEGER NOT NULL, `followersCount` INTEGER NOT NULL, `followingCount` INTEGER NOT NULL, `isDiscoverable` INTEGER, `isGroup` INTEGER NOT NULL, `fields` TEXT, `isBot` INTEGER, `isSuspended` INTEGER, `muteExpiresAt` INTEGER, `source_bio` TEXT, `source_fields` TEXT, `source_defaultPrivacy` TEXT, `source_defaultSensitivity` INTEGER, `source_defaultLanguage` TEXT, `source_followRequestsCount` INTEGER, PRIMARY KEY(`accountId`))",
         "fields": [
           {
             "fieldPath": "accountId",
@@ -309,12 +521,6 @@
             "columnName": "createdAt",
             "affinity": "INTEGER",
             "notNull": true
-          },
-          {
-            "fieldPath": "lastStatusAt",
-            "columnName": "lastStatusAt",
-            "affinity": "TEXT",
-            "notNull": false
           },
           {
             "fieldPath": "statusesCount",
@@ -417,82 +623,14 @@
         "foreignKeys": []
       },
       {
-        "tableName": "hashTags",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`name` TEXT NOT NULL, `url` TEXT NOT NULL, `history` TEXT, PRIMARY KEY(`name`))",
-        "fields": [
-          {
-            "fieldPath": "name",
-            "columnName": "name",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "url",
-            "columnName": "url",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "history",
-            "columnName": "history",
-            "affinity": "TEXT",
-            "notNull": false
-          }
-        ],
-        "primaryKey": {
-          "autoGenerate": false,
-          "columnNames": [
-            "name"
-          ]
-        },
-        "indices": [],
-        "foreignKeys": []
-      },
-      {
         "tableName": "homeTimeline",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`statusId` TEXT NOT NULL, `createdAt` INTEGER NOT NULL, `accountId` TEXT NOT NULL, `pollId` TEXT, `boostedStatusId` TEXT, `boostedStatusAccountId` TEXT, `boostedPollId` TEXT, PRIMARY KEY(`statusId`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`statusId` TEXT NOT NULL, PRIMARY KEY(`statusId`), FOREIGN KEY(`statusId`) REFERENCES `statuses`(`statusId`) ON UPDATE CASCADE ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "statusId",
             "columnName": "statusId",
             "affinity": "TEXT",
             "notNull": true
-          },
-          {
-            "fieldPath": "createdAt",
-            "columnName": "createdAt",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "accountId",
-            "columnName": "accountId",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "pollId",
-            "columnName": "pollId",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "boostedStatusId",
-            "columnName": "boostedStatusId",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "boostedStatusAccountId",
-            "columnName": "boostedStatusAccountId",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "boostedPollId",
-            "columnName": "boostedPollId",
-            "affinity": "TEXT",
-            "notNull": false
           }
         ],
         "primaryKey": {
@@ -502,7 +640,19 @@
           ]
         },
         "indices": [],
-        "foreignKeys": []
+        "foreignKeys": [
+          {
+            "table": "statuses",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "statusId"
+            ],
+            "referencedColumns": [
+              "statusId"
+            ]
+          }
+        ]
       },
       {
         "tableName": "polls",
@@ -577,12 +727,772 @@
         },
         "indices": [],
         "foreignKeys": []
+      },
+      {
+        "tableName": "hashTagTimeline",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`statusId` TEXT NOT NULL, `hashTag` TEXT NOT NULL, PRIMARY KEY(`statusId`, `hashTag`), FOREIGN KEY(`statusId`) REFERENCES `statuses`(`statusId`) ON UPDATE CASCADE ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "statusId",
+            "columnName": "statusId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "hashTag",
+            "columnName": "hashTag",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "statusId",
+            "hashTag"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": [
+          {
+            "table": "statuses",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "statusId"
+            ],
+            "referencedColumns": [
+              "statusId"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "accountTimeline",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`statusId` TEXT NOT NULL, `accountId` TEXT NOT NULL, `timelineType` TEXT NOT NULL, PRIMARY KEY(`statusId`, `accountId`, `timelineType`), FOREIGN KEY(`statusId`) REFERENCES `statuses`(`statusId`) ON UPDATE CASCADE ON DELETE CASCADE , FOREIGN KEY(`accountId`) REFERENCES `accounts`(`accountId`) ON UPDATE CASCADE ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "statusId",
+            "columnName": "statusId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "accountId",
+            "columnName": "accountId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "timelineType",
+            "columnName": "timelineType",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "statusId",
+            "accountId",
+            "timelineType"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_accountTimeline_accountId",
+            "unique": false,
+            "columnNames": [
+              "accountId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_accountTimeline_accountId` ON `${TABLE_NAME}` (`accountId`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "statuses",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "statusId"
+            ],
+            "referencedColumns": [
+              "statusId"
+            ]
+          },
+          {
+            "table": "accounts",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "accountId"
+            ],
+            "referencedColumns": [
+              "accountId"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "relationships",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`accountId` TEXT NOT NULL, `isFollowing` INTEGER NOT NULL, `hasPendingFollowRequest` INTEGER NOT NULL, `isFollowedBy` INTEGER NOT NULL, `isMuting` INTEGER NOT NULL, `isMutingNotifications` INTEGER NOT NULL, `isShowingBoosts` INTEGER NOT NULL, `isNotifying` INTEGER NOT NULL, `isBlocking` INTEGER NOT NULL, `isDomainBlocking` INTEGER NOT NULL, `isBlockedBy` INTEGER NOT NULL, `endorsed` INTEGER NOT NULL, PRIMARY KEY(`accountId`))",
+        "fields": [
+          {
+            "fieldPath": "accountId",
+            "columnName": "accountId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isFollowing",
+            "columnName": "isFollowing",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "hasPendingFollowRequest",
+            "columnName": "hasPendingFollowRequest",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isFollowedBy",
+            "columnName": "isFollowedBy",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isMuting",
+            "columnName": "isMuting",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isMutingNotifications",
+            "columnName": "isMutingNotifications",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isShowingBoosts",
+            "columnName": "isShowingBoosts",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isNotifying",
+            "columnName": "isNotifying",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isBlocking",
+            "columnName": "isBlocking",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isDomainBlocking",
+            "columnName": "isDomainBlocking",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isBlockedBy",
+            "columnName": "isBlockedBy",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "endorsed",
+            "columnName": "endorsed",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "accountId"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "localTimeline",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`statusId` TEXT NOT NULL, PRIMARY KEY(`statusId`), FOREIGN KEY(`statusId`) REFERENCES `statuses`(`statusId`) ON UPDATE CASCADE ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "statusId",
+            "columnName": "statusId",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "statusId"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": [
+          {
+            "table": "statuses",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "statusId"
+            ],
+            "referencedColumns": [
+              "statusId"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "federatedTimeline",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`statusId` TEXT NOT NULL, PRIMARY KEY(`statusId`), FOREIGN KEY(`statusId`) REFERENCES `statuses`(`statusId`) ON UPDATE CASCADE ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "statusId",
+            "columnName": "statusId",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "statusId"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": [
+          {
+            "table": "statuses",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "statusId"
+            ],
+            "referencedColumns": [
+              "statusId"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "followers",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`accountId` TEXT NOT NULL, `followerAccountId` TEXT NOT NULL, `position` INTEGER NOT NULL, PRIMARY KEY(`accountId`, `followerAccountId`), FOREIGN KEY(`followerAccountId`) REFERENCES `accounts`(`accountId`) ON UPDATE CASCADE ON DELETE CASCADE , FOREIGN KEY(`followerAccountId`) REFERENCES `relationships`(`accountId`) ON UPDATE CASCADE ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "accountId",
+            "columnName": "accountId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "followerAccountId",
+            "columnName": "followerAccountId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "position",
+            "columnName": "position",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "accountId",
+            "followerAccountId"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_followers_followerAccountId",
+            "unique": false,
+            "columnNames": [
+              "followerAccountId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_followers_followerAccountId` ON `${TABLE_NAME}` (`followerAccountId`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "accounts",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "followerAccountId"
+            ],
+            "referencedColumns": [
+              "accountId"
+            ]
+          },
+          {
+            "table": "relationships",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "followerAccountId"
+            ],
+            "referencedColumns": [
+              "accountId"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "followings",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`accountId` TEXT NOT NULL, `followeeAccountId` TEXT NOT NULL, `position` INTEGER NOT NULL, PRIMARY KEY(`accountId`, `followeeAccountId`), FOREIGN KEY(`followeeAccountId`) REFERENCES `accounts`(`accountId`) ON UPDATE CASCADE ON DELETE CASCADE , FOREIGN KEY(`followeeAccountId`) REFERENCES `relationships`(`accountId`) ON UPDATE CASCADE ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "accountId",
+            "columnName": "accountId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "followeeAccountId",
+            "columnName": "followeeAccountId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "position",
+            "columnName": "position",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "accountId",
+            "followeeAccountId"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_followings_followeeAccountId",
+            "unique": false,
+            "columnNames": [
+              "followeeAccountId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_followings_followeeAccountId` ON `${TABLE_NAME}` (`followeeAccountId`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "accounts",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "followeeAccountId"
+            ],
+            "referencedColumns": [
+              "accountId"
+            ]
+          },
+          {
+            "table": "relationships",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "followeeAccountId"
+            ],
+            "referencedColumns": [
+              "accountId"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "favoritesTimeline",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`statusId` TEXT NOT NULL, `position` INTEGER NOT NULL, PRIMARY KEY(`statusId`), FOREIGN KEY(`statusId`) REFERENCES `statuses`(`statusId`) ON UPDATE CASCADE ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "statusId",
+            "columnName": "statusId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "position",
+            "columnName": "position",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "statusId"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": [
+          {
+            "table": "statuses",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "statusId"
+            ],
+            "referencedColumns": [
+              "statusId"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "hashtags",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`name` TEXT NOT NULL, `url` TEXT NOT NULL, `following` INTEGER NOT NULL, `history` TEXT, PRIMARY KEY(`name`))",
+        "fields": [
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "url",
+            "columnName": "url",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "following",
+            "columnName": "following",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "history",
+            "columnName": "history",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "name"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "searchedAccounts",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`accountId` TEXT NOT NULL, `position` INTEGER NOT NULL, PRIMARY KEY(`accountId`), FOREIGN KEY(`accountId`) REFERENCES `accounts`(`accountId`) ON UPDATE CASCADE ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "accountId",
+            "columnName": "accountId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "position",
+            "columnName": "position",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "accountId"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": [
+          {
+            "table": "accounts",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "accountId"
+            ],
+            "referencedColumns": [
+              "accountId"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "searchedStatuses",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`statusId` TEXT NOT NULL, `position` INTEGER NOT NULL, PRIMARY KEY(`statusId`), FOREIGN KEY(`statusId`) REFERENCES `statuses`(`statusId`) ON UPDATE CASCADE ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "statusId",
+            "columnName": "statusId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "position",
+            "columnName": "position",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "statusId"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": [
+          {
+            "table": "statuses",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "statusId"
+            ],
+            "referencedColumns": [
+              "statusId"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "searchedHashTags",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`hashTagName` TEXT NOT NULL, `position` INTEGER NOT NULL, PRIMARY KEY(`hashTagName`), FOREIGN KEY(`hashTagName`) REFERENCES `hashtags`(`name`) ON UPDATE CASCADE ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "hashTagName",
+            "columnName": "hashTagName",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "position",
+            "columnName": "position",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "hashTagName"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": [
+          {
+            "table": "hashtags",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "hashTagName"
+            ],
+            "referencedColumns": [
+              "name"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "notifications",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `type` TEXT NOT NULL, `createdAt` INTEGER NOT NULL, `accountId` TEXT NOT NULL, `statusId` TEXT, PRIMARY KEY(`id`), FOREIGN KEY(`accountId`) REFERENCES `accounts`(`accountId`) ON UPDATE CASCADE ON DELETE CASCADE , FOREIGN KEY(`statusId`) REFERENCES `statuses`(`statusId`) ON UPDATE CASCADE ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "type",
+            "columnName": "type",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "createdAt",
+            "columnName": "createdAt",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "accountId",
+            "columnName": "accountId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "statusId",
+            "columnName": "statusId",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_notifications_accountId",
+            "unique": false,
+            "columnNames": [
+              "accountId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_notifications_accountId` ON `${TABLE_NAME}` (`accountId`)"
+          },
+          {
+            "name": "index_notifications_statusId",
+            "unique": false,
+            "columnNames": [
+              "statusId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_notifications_statusId` ON `${TABLE_NAME}` (`statusId`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "accounts",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "accountId"
+            ],
+            "referencedColumns": [
+              "accountId"
+            ]
+          },
+          {
+            "table": "statuses",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "statusId"
+            ],
+            "referencedColumns": [
+              "statusId"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "mainNotifications",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`id`) REFERENCES `notifications`(`id`) ON UPDATE CASCADE ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": [
+          {
+            "table": "notifications",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "mentionNotifications",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`id`) REFERENCES `notifications`(`id`) ON UPDATE CASCADE ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": [
+          {
+            "table": "notifications",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "followNotifications",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`id`) REFERENCES `notifications`(`id`) ON UPDATE CASCADE ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": [
+          {
+            "table": "notifications",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
       }
     ],
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'c8c54df0f1b9c2c7c5ca4e668af817a9')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '989b4ac9baa718600b97bc55065f2a63')"
     ]
   }
 }

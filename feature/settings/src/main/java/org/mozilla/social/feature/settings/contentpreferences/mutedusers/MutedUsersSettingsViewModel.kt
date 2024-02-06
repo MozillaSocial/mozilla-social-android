@@ -10,32 +10,26 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import org.mozilla.social.common.utils.StringFactory
-import org.mozilla.social.core.analytics.Analytics
-import org.mozilla.social.core.analytics.AnalyticsIdentifiers
 import org.mozilla.social.core.model.MutedUser
 import org.mozilla.social.core.navigation.usecases.NavigateToAccount
 import org.mozilla.social.core.repository.mastodon.MutesRepository
 import org.mozilla.social.core.repository.paging.MutesListRemoteMediator
 import org.mozilla.social.core.ui.common.account.quickview.toQuickViewUiState
 import org.mozilla.social.core.ui.common.account.toggleablelist.ToggleableAccountListItemState
-import org.mozilla.social.core.usecase.mastodon.account.GetLoggedInUserAccountId
 import org.mozilla.social.core.usecase.mastodon.account.MuteAccount
 import org.mozilla.social.core.usecase.mastodon.account.UnmuteAccount
 import org.mozilla.social.feature.settings.R
-import org.mozilla.social.feature.settings.SettingsInteractions
+import org.mozilla.social.feature.settings.SettingsAnalytics
 import timber.log.Timber
 
 class MutedUsersSettingsViewModel(
     repository: MutesRepository,
-    getLoggedInUserAccountId: GetLoggedInUserAccountId,
     remoteMediator: MutesListRemoteMediator,
-    private val analytics: Analytics,
+    private val analytics: SettingsAnalytics,
     private val muteAccount: MuteAccount,
     private val unmuteAccount: UnmuteAccount,
     private val navigateToAccount: NavigateToAccount,
 ) : ViewModel(), MutedUsersInteractions {
-
-    private val userAccountId: String = getLoggedInUserAccountId()
 
     @OptIn(ExperimentalPagingApi::class)
     val mutes: Flow<PagingData<ToggleableAccountListItemState<MutedButtonState>>> =
@@ -69,10 +63,7 @@ class MutedUsersSettingsViewModel(
     }
 
     override fun onScreenViewed() {
-        analytics.uiImpression(
-            uiIdentifier = AnalyticsIdentifiers.MUTED_USERS_SCREEN_IMPRESSION,
-            mastodonAccountId = userAccountId,
-        )
+        analytics.mutedUsersSettingsViewed()
     }
 }
 

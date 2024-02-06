@@ -1,19 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="five_minutes">5 minutes</string>
-    <string name="thirty_minutes">30 minutes</string>
-    <string name="one_hour">1 hour</string>
-    <string name="six_hours">6 hours</string>
-    <string name="one_day">1 day</string>
-    <string name="three_days">3 days</string>
-    <string name="one_week">1 week</string>
+    <string name="five_minutes">Run for 5 minutes</string>
+    <string name="thirty_minutes">Run for 30 minutes</string>
+    <string name="one_hour">Run for 1 hour</string>
+    <string name="six_hours">Run for 6 hours</string>
+    <string name="one_day">Run for 1 day</string>
+    <string name="three_days">Run for 3 days</string>
+    <string name="one_week">Run for 1 week</string>
 
     <string name="poll_duration">Poll duration</string>
     <string name="poll_style_single_choice">Single choice</string>
     <string name="poll_style_multiple_choice">Multiple choice</string>
     <string name="poll_style">Poll style</string>
-    <string name="poll_choice_label">Choice %d</string>
+    <string name="poll_choice_label">Poll choice %d</string>
     <string name="poll_option_hide_results">Hide results until complete</string>
+    <string name="poll_add_choice_button">Add choice</string>
+    <string name="close_poll_content_description">Close poll</string>
 
     <string name="send_post_button_content_description">post</string>
     <string name="attach_image_button_content_description">attach image</string>
@@ -31,7 +33,9 @@
     <string name="media_alt_text_label">Add a description</string>
 
     <string name="error_sending_post_toast">Error sending post</string>
+    <string name="error_editing_post_toast">Error editing post</string>
     <string name="post">Post</string>
+    <string name="edit">Edit</string>
 
     <string name="add_video_content_description">Add video</string>
     <string name="add_photos_content_description">Add photos</string>
@@ -39,4 +43,5 @@
     <string name="video">Video</string>
 
     <string name="your_post_was_published">Your post was published</string>
+    <string name="your_edit_was_published">Your edit was published</string>
 </resources>

@@ -25,6 +25,10 @@ class StatusRepository(
         api.postStatus(statusCreate.toNetworkModel()).toExternalModel()
 
     @PreferUseCase
+    suspend fun editStatus(statusId: String, statusCreate: StatusCreate): Status =
+        api.editStatus(statusId,statusCreate.toNetworkModel()).toExternalModel()
+
+    @PreferUseCase
     suspend fun voteOnPoll(
         pollId: String,
         pollVote: PollVote,
@@ -76,10 +80,6 @@ class StatusRepository(
         dao.deleteStatus(statusId)
     }
 
-    suspend fun deleteAllLocal(
-        statusIdsToKeep: List<String> = emptyList()
-    ) = dao.deleteAll(statusIdsToKeep)
-
     suspend fun deleteOldStatusesFromDatabase() = dao.deleteOldStatuses()
 
     suspend fun getStatusLocal(statusId: String): Status? {
@@ -121,7 +121,7 @@ class StatusRepository(
      * in the statuses table
      */
     @PreferUseCase
-    fun insertAll(statuses: List<Status>) {
+    suspend fun insertAll(statuses: List<Status>) {
         dao.upsertAll(statuses.map { it.toDatabaseModel() })
     }
 }

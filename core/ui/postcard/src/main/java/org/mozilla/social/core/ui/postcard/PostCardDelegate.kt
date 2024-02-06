@@ -2,15 +2,13 @@ package org.mozilla.social.core.ui.postcard
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import org.mozilla.social.core.analytics.Analytics
-import org.mozilla.social.core.analytics.AnalyticsIdentifiers
-import org.mozilla.social.core.analytics.EngagementType
-import org.mozilla.social.core.usecase.mastodon.status.BoostStatus
+import org.mozilla.social.core.model.Attachment
 import org.mozilla.social.core.navigation.NavigationDestination
 import org.mozilla.social.core.navigation.usecases.NavigateTo
 import org.mozilla.social.core.navigation.usecases.OpenLink
 import org.mozilla.social.core.usecase.mastodon.account.BlockAccount
 import org.mozilla.social.core.usecase.mastodon.account.MuteAccount
+import org.mozilla.social.core.usecase.mastodon.status.BoostStatus
 import org.mozilla.social.core.usecase.mastodon.status.DeleteStatus
 import org.mozilla.social.core.usecase.mastodon.status.FavoriteStatus
 import org.mozilla.social.core.usecase.mastodon.status.UndoBoostStatus
@@ -20,7 +18,7 @@ import timber.log.Timber
 
 class PostCardDelegate(
     private val coroutineScope: CoroutineScope,
-    private val baseAnalyticsIdentifier: String,
+    feedLocation: FeedLocation,
     private val navigateTo: NavigateTo,
     private val openLink: OpenLink,
     private val blockAccount: BlockAccount,
@@ -31,19 +29,17 @@ class PostCardDelegate(
     private val favoriteStatus: FavoriteStatus,
     private val undoFavoriteStatus: UndoFavoriteStatus,
     private val deleteStatus: DeleteStatus,
-    private val analytics: Analytics,
+    private val analytics: PostCardAnalytics,
 ) : PostCardInteractions {
+
+    private val baseAnalyticsIdentifier: String = feedLocation.baseAnalyticsIdentifier
     override fun onVoteClicked(
         pollId: String,
         choices: List<Int>,
     ) {
         coroutineScope.launch {
             try {
-                analytics.uiEngagement(
-                    engagementType = EngagementType.GENERAL,
-                    uiIdentifier = "$baseAnalyticsIdentifier.${AnalyticsIdentifiers.FEED_POST_VOTE}",
-                    uiAdditionalDetail = pollId
-                )
+                analytics
                 voteOnPoll(pollId, choices)
             } catch (e: VoteOnPoll.VoteOnPollFailedException) {
                 Timber.e(e)
@@ -52,11 +48,7 @@ class PostCardDelegate(
     }
 
     override fun onReplyClicked(statusId: String) {
-        analytics.uiEngagement(
-            engagementType = EngagementType.GENERAL,
-            uiIdentifier = "$baseAnalyticsIdentifier.${AnalyticsIdentifiers.FEED_POST_REPLY}",
-            mastodonStatusId = statusId
-        )
+        analytics.replyClicked(baseAnalyticsIdentifier)
         navigateTo(NavigationDestination.NewPost(replyStatusId = statusId))
     }
 
@@ -67,22 +59,14 @@ class PostCardDelegate(
         coroutineScope.launch {
             if (isBoosting) {
                 try {
-                    analytics.uiEngagement(
-                        engagementType = EngagementType.GENERAL,
-                        uiIdentifier = "$baseAnalyticsIdentifier.${AnalyticsIdentifiers.FEED_POST_BOOST}",
-                        mastodonStatusId = statusId
-                    )
+                    analytics.boostClicked(baseAnalyticsIdentifier)
                     boostStatus(statusId)
                 } catch (e: BoostStatus.BoostStatusFailedException) {
                     Timber.e(e)
                 }
             } else {
                 try {
-                    analytics.uiEngagement(
-                        engagementType = EngagementType.GENERAL,
-                        uiIdentifier = "$baseAnalyticsIdentifier.${AnalyticsIdentifiers.FEED_POST_UNBOOST}",
-                        mastodonStatusId = statusId
-                    )
+                    analytics.unboostClicked(baseAnalyticsIdentifier)
                     undoBoostStatus(statusId)
                 } catch (e: UndoBoostStatus.UndoBoostStatusFailedException) {
                     Timber.e(e)
@@ -98,22 +82,14 @@ class PostCardDelegate(
         coroutineScope.launch {
             if (isFavoriting) {
                 try {
-                    analytics.uiEngagement(
-                        engagementType = EngagementType.FAVORITE,
-                        uiIdentifier = "$baseAnalyticsIdentifier.${AnalyticsIdentifiers.FEED_POST_FAVORITE}",
-                        mastodonStatusId = statusId
-                    )
+                    analytics.favoriteClicked(baseAnalyticsIdentifier)
                     favoriteStatus(statusId)
                 } catch (e: FavoriteStatus.FavoriteStatusFailedException) {
                     Timber.e(e)
                 }
             } else {
                 try {
-                    analytics.uiEngagement(
-                        engagementType = EngagementType.FAVORITE,
-                        uiIdentifier = "$baseAnalyticsIdentifier.${AnalyticsIdentifiers.FEED_POST_UNFAVORITE}",
-                        mastodonStatusId = statusId
-                    )
+                    analytics.unfavoriteClicked(baseAnalyticsIdentifier)
                     undoFavoriteStatus(statusId)
                 } catch (e: UndoFavoriteStatus.UndoFavoriteStatusFailedException) {
                     Timber.e(e)
@@ -130,11 +106,8 @@ class PostCardDelegate(
         accountId: String,
         statusId: String,
     ) {
-        analytics.uiEngagement(
-            engagementType = EngagementType.GENERAL,
-            uiIdentifier = "$baseAnalyticsIdentifier.${AnalyticsIdentifiers.FEED_POST_MUTE}",
-            mastodonStatusId = statusId
-        )
+        analytics.muteClicked(baseAnalyticsIdentifier)
+
         coroutineScope.launch {
             try {
                 muteAccount(accountId)
@@ -148,11 +121,7 @@ class PostCardDelegate(
         accountId: String,
         statusId: String,
     ) {
-        analytics.uiEngagement(
-            engagementType = EngagementType.GENERAL,
-            uiIdentifier = "$baseAnalyticsIdentifier.${AnalyticsIdentifiers.FEED_POST_BLOCK}",
-            mastodonStatusId = statusId
-        )
+        analytics.blockClicked(baseAnalyticsIdentifier)
         coroutineScope.launch {
             try {
                 blockAccount(accountId)
@@ -168,11 +137,8 @@ class PostCardDelegate(
         statusId: String,
     ) {
 
-        analytics.uiEngagement(
-            engagementType = EngagementType.GENERAL,
-            uiIdentifier = "$baseAnalyticsIdentifier.${AnalyticsIdentifiers.FEED_POST_REPORT}",
-            mastodonStatusId = statusId
-        )
+        analytics.reportClicked(baseAnalyticsIdentifier)
+
         navigateTo(
             NavigationDestination.Report(
                 reportAccountId = accountId,
@@ -192,39 +158,37 @@ class PostCardDelegate(
         }
     }
 
+    override fun onOverflowEditClicked(statusId: String) {
+        navigateTo(NavigationDestination.NewPost(editStatusId = statusId))
+    }
+
     override fun onAccountImageClicked(accountId: String) {
-        analytics.uiEngagement(
-            engagementType = EngagementType.GENERAL,
-            uiIdentifier = AnalyticsIdentifiers.FEED_POST_ACCOUNT_IMAGE_TAPPED,
-            mastodonAccountId = accountId
-        )
+        analytics.accountImageClicked(baseAnalyticsIdentifier)
         navigateTo(NavigationDestination.Account(accountId))
     }
 
     override fun onLinkClicked(url: String) {
-        analytics.uiEngagement(
-            engagementType = EngagementType.GENERAL,
-            uiIdentifier = AnalyticsIdentifiers.FEED_POST_LINK_TAPPED,
-            uiAdditionalDetail = url
-        )
+        analytics.onLinkClicked()
         openLink(url)
     }
 
     override fun onAccountClicked(accountId: String) {
-        analytics.uiEngagement(
-            engagementType = EngagementType.GENERAL,
-            uiIdentifier = AnalyticsIdentifiers.FEED_POST_ACCOUNT_TAPPED,
-            mastodonAccountId = accountId
-        )
+        analytics.accountClicked()
         navigateTo(NavigationDestination.Account(accountId))
     }
 
     override fun onHashTagClicked(hashTag: String) {
-        analytics.uiEngagement(
-            engagementType = EngagementType.GENERAL,
-            uiIdentifier = AnalyticsIdentifiers.FEED_POST_HASHTAG_TAPPED,
-            engagementValue = "hashtag: $hashTag"
-        )
+        analytics.hashtagClicked()
+
         navigateTo(NavigationDestination.HashTag(hashTag))
+    }
+
+    override fun onMediaClicked(attachments: List<Attachment>, index: Int) {
+        navigateTo(
+            NavigationDestination.Media(
+                attachments = attachments,
+                startIndex = index,
+            )
+        )
     }
 }

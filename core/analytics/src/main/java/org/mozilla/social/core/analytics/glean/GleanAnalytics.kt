@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import mozilla.telemetry.glean.BuildInfo
 import mozilla.telemetry.glean.Glean
+import org.mozilla.social.common.Version
 import org.mozilla.social.core.analytics.Analytics
 import org.mozilla.social.core.analytics.EngagementType
 import org.mozilla.social.core.analytics.GleanMetrics.Identifiers
@@ -21,7 +22,7 @@ class GleanAnalytics(
 ) : Analytics {
     @OptIn(DelicateCoroutinesApi::class)
     override fun initialize(context: Context) {
-        val buildInfo = BuildInfo("1", "1", Calendar.getInstance())
+        val buildInfo = BuildInfo(Version.name, Version.code.toString(), Calendar.getInstance())
 
         Glean.setLogPings(true)
         Glean.setDebugViewTag("moso-android-debug")
@@ -46,9 +47,6 @@ class GleanAnalytics(
     override fun uiEngagement(
         engagementType: EngagementType?,
         engagementValue: String?,
-        mastodonAccountHandle: String?,
-        mastodonAccountId: String?,
-        mastodonStatusId: String?,
         recommendationId: String?,
         uiAdditionalDetail: String?,
         uiIdentifier: String?,
@@ -58,9 +56,6 @@ class GleanAnalytics(
                 Ui.EngagementExtra(
                     engagementType = engagementType?.value,
                     engagementValue = engagementValue,
-                    mastodonAccountHandle = mastodonAccountHandle,
-                    mastodonAccountId = mastodonAccountId,
-                    mastodonStatusId = mastodonStatusId,
                     recommendationId = recommendationId,
                     uiAdditionalDetail = uiAdditionalDetail,
                     uiIdentifier = uiIdentifier,
@@ -69,9 +64,6 @@ class GleanAnalytics(
     }
 
     override fun uiImpression(
-        mastodonAccountHandle: String?,
-        mastodonAccountId: String?,
-        mastodonStatusId: String?,
         recommendationId: String?,
         uiAdditionalDetail: String?,
         uiIdentifier: String?,
@@ -79,9 +71,6 @@ class GleanAnalytics(
         Ui.impression.record(
             extra =
                 Ui.ImpressionExtra(
-                    mastodonAccountHandle = mastodonAccountHandle,
-                    mastodonAccountId = mastodonAccountId,
-                    mastodonStatusId = mastodonStatusId,
                     recommendationId = recommendationId,
                     uiAdditionalDetail = uiAdditionalDetail,
                     uiIdentifier = uiIdentifier,
@@ -97,10 +86,6 @@ class GleanAnalytics(
         Identifiers.fxaAccountId.set(fxaAccountId)
     }
 
-    override fun setMastodonAccountHandle(mastodonAccountHandle: String) {
-        Identifiers.mastodonAccountHandle.set(mastodonAccountHandle)
-    }
-
     override fun setMastodonAccountId(mastodonAccountId: String) {
         Identifiers.mastodonAccountId.set(mastodonAccountId)
     }
@@ -110,7 +95,6 @@ class GleanAnalytics(
     }
 
     override fun clearLoggedInIdentifiers() {
-        Identifiers.mastodonAccountHandle.set("")
         Identifiers.mastodonAccountId.set("")
     }
 }

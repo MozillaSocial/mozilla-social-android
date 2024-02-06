@@ -1,8 +1,11 @@
 package org.mozilla.social.core.model
 
+import kotlinx.serialization.Serializable
+
 /**
  * Represents a file or media attachment that can be added to a status.
  */
+@Serializable
 sealed class Attachment {
     abstract val attachmentId: String
 
@@ -44,6 +47,7 @@ sealed class Attachment {
      */
     abstract val blurHash: String?
 
+    @Serializable
     data class Image(
         override val attachmentId: String,
         override val url: String? = null,
@@ -55,11 +59,13 @@ sealed class Attachment {
         override val blurHash: String? = null,
         val meta: Meta? = null,
     ) : Attachment() {
+        @Serializable
         data class Meta(
             val focalPoint: FocalPoint? = null,
             val original: ImageInfo? = null,
             val small: ImageInfo? = null,
         ) {
+            @Serializable
             data class ImageInfo(
                 val width: Int? = null,
                 val height: Int? = null,
@@ -69,6 +75,7 @@ sealed class Attachment {
         }
     }
 
+    @Serializable
     data class Video(
         override val attachmentId: String,
         override val url: String? = null,
@@ -80,6 +87,7 @@ sealed class Attachment {
         override val blurHash: String? = null,
         val meta: Meta? = null,
     ) : Attachment() {
+        @Serializable
         data class Meta(
             val aspectRatio: Float? = null,
             val durationSeconds: Double? = null,
@@ -90,6 +98,7 @@ sealed class Attachment {
             val original: VideoInfo? = null,
             val small: VideoInfo? = null,
         ) {
+            @Serializable
             data class VideoInfo(
                 val width: Long? = null,
                 val height: Long? = null,
@@ -98,6 +107,7 @@ sealed class Attachment {
         }
     }
 
+    @Serializable
     data class Gifv(
         override val attachmentId: String,
         override val url: String? = null,
@@ -109,6 +119,7 @@ sealed class Attachment {
         override val blurHash: String? = null,
         val meta: Meta? = null,
     ) : Attachment() {
+        @Serializable
         data class Meta(
             val aspectRatio: Float? = null,
             val durationSeconds: Double? = null,
@@ -117,6 +128,7 @@ sealed class Attachment {
             val original: GifvInfo? = null,
             val small: GifvInfo? = null,
         ) {
+            @Serializable
             data class GifvInfo(
                 val width: Long? = null,
                 val height: Long? = null,
@@ -125,6 +137,7 @@ sealed class Attachment {
         }
     }
 
+    @Serializable
     data class Audio(
         override val attachmentId: String,
         override val url: String? = null,
@@ -136,6 +149,7 @@ sealed class Attachment {
         override val blurHash: String? = null,
         val meta: Meta? = null,
     ) : Attachment() {
+        @Serializable
         data class Meta(
             val durationSeconds: Double? = null,
             val audioCodec: String? = null,
@@ -143,12 +157,14 @@ sealed class Attachment {
             val audioChannels: String? = null,
             val original: AudioInfo? = null,
         ) {
+            @Serializable
             data class AudioInfo(
                 val bitrate: Long? = null,
             )
         }
     }
 
+    @Serializable
     data class Unknown(
         override val attachmentId: String,
         override val url: String? = null,

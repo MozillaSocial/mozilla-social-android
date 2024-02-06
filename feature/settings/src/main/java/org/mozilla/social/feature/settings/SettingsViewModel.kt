@@ -1,13 +1,11 @@
 package org.mozilla.social.feature.settings
 
 import androidx.lifecycle.ViewModel
-import org.mozilla.social.core.analytics.Analytics
-import org.mozilla.social.core.analytics.AnalyticsIdentifiers
 import org.mozilla.social.core.navigation.SettingsNavigationDestination
 import org.mozilla.social.core.navigation.usecases.NavigateTo
 
 class SettingsViewModel(
-    private val analytics: Analytics,
+    private val analytics: SettingsAnalytics,
     private val navigateTo: NavigateTo,
 ) : ViewModel(), SettingsInteractions {
 
@@ -36,8 +34,6 @@ class SettingsViewModel(
     }
 
     override fun onScreenViewed() {
-        analytics.uiImpression(
-            uiIdentifier = AnalyticsIdentifiers.SETTINGS_SCREEN_IMPRESSION,
-        )
+        analytics.settingsScreenViewed()
     }
 }

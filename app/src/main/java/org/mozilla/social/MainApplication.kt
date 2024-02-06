@@ -7,6 +7,7 @@ import coil.ImageLoaderFactory
 import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
 import coil.decode.VideoFrameDecoder
+import coil.memory.MemoryCache
 import io.sentry.SentryLevel
 import io.sentry.android.core.SentryAndroid
 import io.sentry.android.timber.SentryTimberIntegration
@@ -27,6 +28,7 @@ import org.mozilla.social.feature.discover.discoverModule
 import org.mozilla.social.feature.favorites.favoritesModule
 import org.mozilla.social.feature.followers.followersModule
 import org.mozilla.social.feature.hashtag.hashTagModule
+import org.mozilla.social.feature.media.mediaModule
 import org.mozilla.social.feature.notifications.notificationsModule
 import org.mozilla.social.feature.report.reportModule
 import org.mozilla.social.feature.settings.settingsModule
@@ -44,23 +46,34 @@ class MainApplication : Application(), ImageLoaderFactory {
     override fun onCreate() {
         super.onCreate()
         initializeAppVersion()
-        initializeSentryAndTimber()
+        initializeTimberAndSentry()
         initializeKoin()
         initializeAnalytics()
         initializeAuthCredentialInterceptor()
     }
 
-    private fun initializeSentryAndTimber() {
+    private fun initializeTimberAndSentry() {
         SentryAndroid.init(this) { options ->
-            if (!BuildConfig.DEBUG) {
-                options.addIntegration(
-                    SentryTimberIntegration(
-                        minEventLevel = SentryLevel.ERROR,
-                        minBreadcrumbLevel = SentryLevel.INFO
+            options.apply {
+                setDiagnosticLevel(SentryLevel.ERROR)
+                dsn = BuildConfig.sentryDsn
+                isDebug = BuildConfig.DEBUG
+                environment = BuildConfig.BUILD_TYPE
+                isEnableUserInteractionTracing = true
+                isAttachScreenshot = false
+                isAttachViewHierarchy = true
+                sampleRate = 1.0
+                profilesSampleRate = 1.0
+                if (!BuildConfig.DEBUG) {
+                    addIntegration(
+                        SentryTimberIntegration(
+                            minEventLevel = SentryLevel.ERROR,
+                            minBreadcrumbLevel = SentryLevel.INFO
+                        )
                     )
-                )
-            } else {
-                Timber.plant(Timber.DebugTree())
+                } else {
+                    Timber.plant(Timber.DebugTree())
+                }
             }
         }
     }
@@ -99,6 +112,11 @@ class MainApplication : Application(), ImageLoaderFactory {
                 }
                 add(VideoFrameDecoder.Factory())
             }
+            .memoryCache {
+                MemoryCache.Builder(this)
+                    .maxSizePercent(1.0)
+                    .build()
+            }
             .build()
 }
 
@@ -112,6 +130,7 @@ val featureModules =
             feedModule,
             followersModule,
             hashTagModule,
+            mediaModule,
             newPostModule,
             notificationsModule,
             reportModule,

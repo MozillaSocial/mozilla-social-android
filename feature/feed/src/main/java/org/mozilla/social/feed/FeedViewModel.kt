@@ -11,11 +11,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import org.koin.core.parameter.parametersOf
 import org.koin.java.KoinJavaComponent
-import org.mozilla.social.core.analytics.Analytics
-import org.mozilla.social.core.analytics.AnalyticsIdentifiers
-import org.mozilla.social.core.analytics.EngagementType
-import org.mozilla.social.core.navigation.NavigationDestination
-import org.mozilla.social.core.navigation.usecases.NavigateTo
+import org.mozilla.social.FeedAnalytics
 import org.mozilla.social.core.repository.mastodon.TimelineRepository
 import org.mozilla.social.core.ui.postcard.PostCardDelegate
 import org.mozilla.social.core.ui.postcard.toPostCardUiState
@@ -23,13 +19,13 @@ import org.mozilla.social.core.usecase.mastodon.account.GetLoggedInUserAccountId
 import org.mozilla.social.core.repository.paging.FederatedTimelineRemoteMediator
 import org.mozilla.social.core.repository.paging.HomeTimelineRemoteMediator
 import org.mozilla.social.core.repository.paging.LocalTimelineRemoteMediator
+import org.mozilla.social.core.ui.postcard.FeedLocation
 
 /**
  * Produces a flow of pages of statuses for a feed
  */
 class FeedViewModel(
-    private val analytics: Analytics,
-    private val navigateTo: NavigateTo,
+    private val analytics: FeedAnalytics,
     homeTimelineRemoteMediator: HomeTimelineRemoteMediator,
     localTimelineRemoteMediator: LocalTimelineRemoteMediator,
     federatedTimelineRemoteMediator: FederatedTimelineRemoteMediator,
@@ -70,34 +66,20 @@ class FeedViewModel(
 
     val homePostCardDelegate: PostCardDelegate by KoinJavaComponent.inject(
         PostCardDelegate::class.java,
-    ) { parametersOf(viewModelScope, AnalyticsIdentifiers.FEED_PREFIX_HOME) }
+    ) { parametersOf(viewModelScope, FeedLocation.HOME) }
     val localPostCardDelegate: PostCardDelegate by KoinJavaComponent.inject(
         PostCardDelegate::class.java,
-    ) { parametersOf(viewModelScope, AnalyticsIdentifiers.FEED_PREFIX_LOCAL) }
+    ) { parametersOf(viewModelScope, FeedLocation.LOCAL) }
     val federatedPostCardDelegate: PostCardDelegate by KoinJavaComponent.inject(
         PostCardDelegate::class.java,
-    ) { parametersOf(viewModelScope, AnalyticsIdentifiers.FEED_PREFIX_FEDERATED) }
+    ) { parametersOf(viewModelScope, FeedLocation.FEDERATED) }
 
     override fun onTabClicked(timelineType: TimelineType) {
-        analytics.uiEngagement(
-            engagementType = EngagementType.GENERAL,
-            uiIdentifier =
-                when (timelineType) {
-                    TimelineType.FOR_YOU -> AnalyticsIdentifiers.FEED_HOME_SCREEN_HOME
-                    TimelineType.LOCAL -> AnalyticsIdentifiers.FEED_LOCAL_SCREEN_HOME
-                    TimelineType.FEDERATED -> AnalyticsIdentifiers.FEED_FEDERATED_SCREEN_HOME
-                },
-        )
+        analytics.feedScreenClicked(timelineType)
         _timelineType.update { timelineType }
     }
 
     override fun onScreenViewed() {
-        analytics.uiImpression(
-            uiIdentifier = AnalyticsIdentifiers.FEED_SCREEN_IMPRESSION,
-        )
-    }
-
-    override fun onSearchClicked() {
-        navigateTo(NavigationDestination.Search)
+        analytics.feedScreenViewed()
     }
 }
