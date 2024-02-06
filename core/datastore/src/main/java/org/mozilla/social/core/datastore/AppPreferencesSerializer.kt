@@ -8,7 +8,9 @@ import java.io.InputStream
 import java.io.OutputStream
 
 internal object AppPreferencesSerializer : Serializer<AppPreferences> {
-    override val defaultValue: AppPreferences = AppPreferences.getDefaultInstance()
+    override val defaultValue: AppPreferences =
+        AppPreferences.getDefaultInstance().toBuilder().setTrackAnalytics(true).build()
+
 
     override suspend fun readFrom(input: InputStream): AppPreferences = AppPreferences.parseFrom(input)
 
