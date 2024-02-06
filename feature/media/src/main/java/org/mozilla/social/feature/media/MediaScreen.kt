@@ -4,16 +4,20 @@ import android.app.DownloadManager
 import android.content.Context
 import android.net.Uri
 import android.os.Environment
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.gestures.detectTransformGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PagerState
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableFloatState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
@@ -98,8 +102,9 @@ private fun MediaScreen(
                 }
             )
             when (attachment) {
-                is Attachment.Image -> ZoomableImage(
-                    attachment = attachment,
+                is Attachment.Image -> ImagePager(
+                    attachments = attachments,
+                    selectedIndex = selectedIndex,
                 )
                 else -> {}
             }
@@ -108,9 +113,39 @@ private fun MediaScreen(
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+private fun ImagePager(
+    attachments: List<Attachment>,
+    selectedIndex: Int,
+) {
+    val pagerState = rememberPagerState(
+        initialPage = selectedIndex
+    ) { attachments.size }
+
+    val scale = remember { mutableFloatStateOf(1f) }
+
+    HorizontalPager(
+        state = pagerState,
+        userScrollEnabled = scale.floatValue == 1f,
+    ) {
+        when (val attachment = attachments[it]) {
+            is Attachment.Image -> ZoomableImage(
+                attachment = attachment,
+                pagerState,
+                scale
+            )
+            else -> {}
+        }
+    }
+}
+
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun ZoomableImage(
     attachment: Attachment.Image,
+    pagerState: PagerState,
+    scale: MutableFloatState = remember { mutableFloatStateOf(1f) }
 ) {
     Box(
         modifier = Modifier
@@ -118,7 +153,7 @@ private fun ZoomableImage(
     ) {
         var width by remember { mutableFloatStateOf(1f) }
         var height by remember { mutableFloatStateOf(1f) }
-        var scale by remember { mutableFloatStateOf(1f) }
+        var innerScale by scale
         var translationX by remember { mutableFloatStateOf(0f) }
         var translationY by remember { mutableFloatStateOf(0f) }
 
@@ -138,47 +173,53 @@ private fun ZoomableImage(
                     height = it.height.toFloat()
                 }
                 .graphicsLayer(
-                    scaleX = scale,
-                    scaleY = scale,
+                    scaleX = innerScale,
+                    scaleY = innerScale,
                     translationX = translationX,
                     translationY = translationY
                 )
                 .pointerInput(Unit) {
-                    detectTransformGestures { centroid, pan, zoom, _ ->
-                        scale = (scale * zoom).coerceIn(1f..maxScale)
-                        val panX = (pan.x * scale)
-                        val panY = (pan.y * scale)
+                    detectTransformGesturesInsidePager(
+                        currentScale = scale,
+                    ) { centroid, pan, zoom, _ ->
+                        innerScale = (innerScale * zoom).coerceIn(1f..maxScale)
+                        val panX = (pan.x * innerScale)
+                        val panY = (pan.y * innerScale)
 
-                        val translationLimitX = (width / 2) * (scale - 1).coerceAtLeast(0F)
-                        val translationLimitY = (height / 2) * (scale - 1).coerceAtLeast(0F)
+                        val translationLimitX = (width / 2) * (innerScale - 1).coerceAtLeast(0F)
+                        val translationLimitY = (height / 2) * (innerScale - 1).coerceAtLeast(0F)
 
-                        val centroidDistX = (translationX + (centroid.x - (width / 2)) * scale)
+                        val centroidDistX = (translationX + (centroid.x - (width / 2)) * innerScale)
                         val centroidTranslationX = centroidDistX * (zoom - 1) * 2
 
-                        val centroidDistY = (translationY + (centroid.y - (height / 2)) * scale)
+                        val centroidDistY = (translationY + (centroid.y - (height / 2)) * innerScale)
                         val centroidTranslationY = centroidDistY * (zoom - 1) * 2
 
                         translationX = (translationX + panX - centroidTranslationX)
                             .coerceIn(-translationLimitX..translationLimitX)
                         translationY = (translationY + panY - centroidTranslationY)
                             .coerceIn(-translationLimitY..translationLimitY)
+
+                        if (innerScale == 1f) {
+                            pagerState.dispatchRawDelta(-panX)
+                        }
                     }
                 }
                 .pointerInput(Unit) {
                     detectTapGestures(
                         onDoubleTap = { offset ->
-                            scale = if (scale >= 2f) {
+                            innerScale = if (innerScale >= 2f) {
                                 1f
                             } else {
-                                (scale * 2).coerceAtMost(maxScale)
+                                (innerScale * 2).coerceAtMost(maxScale)
                             }
 
-                            val translationLimitX = (width / 2) * (scale - 1).coerceAtLeast(0F)
-                            val translationLimitY = (height / 2) * (scale - 1).coerceAtLeast(0F)
+                            val translationLimitX = (width / 2) * (innerScale - 1).coerceAtLeast(0F)
+                            val translationLimitY = (height / 2) * (innerScale - 1).coerceAtLeast(0F)
 
-                            translationX = (translationX - (offset.x - (width / 2)) * scale)
+                            translationX = (translationX - (offset.x - (width / 2)) * innerScale)
                                 .coerceIn(-translationLimitX..translationLimitX)
-                            translationY = (translationY - (offset.y - (height / 2)) * scale)
+                            translationY = (translationY - (offset.y - (height / 2)) * innerScale)
                                 .coerceIn(-translationLimitY..translationLimitY)
                         }
                     )
