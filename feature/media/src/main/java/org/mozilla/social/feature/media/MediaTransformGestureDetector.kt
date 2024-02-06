@@ -16,6 +16,7 @@
 
 package org.mozilla.social.feature.media
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.gestures.calculateCentroid
@@ -23,6 +24,7 @@ import androidx.compose.foundation.gestures.calculateCentroidSize
 import androidx.compose.foundation.gestures.calculatePan
 import androidx.compose.foundation.gestures.calculateRotation
 import androidx.compose.foundation.gestures.calculateZoom
+import androidx.compose.foundation.pager.PagerState
 import androidx.compose.runtime.MutableFloatState
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.pointer.PointerInputScope
@@ -33,13 +35,13 @@ import kotlin.math.abs
 /**
  * A copy of [androidx.compose.foundation.gestures.detectTransformGestures]
  *
- * This function takes one extra value for the current scale.  If the current scale is not 1 or
- * the user is zooming, then the gesture will be consumed.  Otherwise it will not.
- * This allows the horizontal pager to consume the pan gesture instead.
+ * Differs from the original by not consuming touches in certain situations.
  */
-@Suppress("CyclomaticComplexMethod")
+@OptIn(ExperimentalFoundationApi::class)
+@Suppress("CyclomaticComplexMethod", "LoopWithTooManyJumpStatements")
 suspend fun PointerInputScope.detectTransformGesturesInsidePager(
     currentScale: MutableFloatState,
+    pagerState: PagerState,
     panZoomLock: Boolean = false,
     onGesture: (centroid: Offset, pan: Offset, zoom: Float, rotation: Float) -> Unit
 ) {
@@ -53,12 +55,17 @@ suspend fun PointerInputScope.detectTransformGesturesInsidePager(
 
         awaitFirstDown(requireUnconsumed = false)
         do {
+            if (pagerState.currentPageOffsetFraction > 0f) break
+
             val event = awaitPointerEvent()
             val canceled = event.changes.any { it.isConsumed }
+
             if (!canceled) {
                 val zoomChange = event.calculateZoom()
                 val rotationChange = event.calculateRotation()
                 val panChange = event.calculatePan()
+
+                if (currentScale.floatValue == 1f && zoom == 1f && zoomChange == 1f) continue
 
                 if (!pastTouchSlop) {
                     zoom *= zoomChange
@@ -79,7 +86,7 @@ suspend fun PointerInputScope.detectTransformGesturesInsidePager(
                     }
                 }
 
-                if (pastTouchSlop && (currentScale.floatValue != 1f || zoom != 1f)) {
+                if (pastTouchSlop) {
                     val centroid = event.calculateCentroid(useCurrent = false)
                     val effectiveRotation = if (lockedToPanZoom) 0f else rotationChange
                     if (effectiveRotation != 0f ||

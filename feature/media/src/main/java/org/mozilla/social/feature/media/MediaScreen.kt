@@ -181,6 +181,7 @@ private fun ZoomableImage(
                 .pointerInput(Unit) {
                     detectTransformGesturesInsidePager(
                         currentScale = scale,
+                        pagerState = pagerState,
                     ) { centroid, pan, zoom, _ ->
                         innerScale = (innerScale * zoom).coerceIn(1f..maxScale)
                         val panX = (pan.x * innerScale)
@@ -200,9 +201,9 @@ private fun ZoomableImage(
                         translationY = (translationY + panY - centroidTranslationY)
                             .coerceIn(-translationLimitY..translationLimitY)
 
-                        if (innerScale == 1f) {
-                            pagerState.dispatchRawDelta(-panX)
-                        }
+//                        if (innerScale == 1f) {
+//                            pagerState.dispatchRawDelta(-panX)
+//                        }
                     }
                 }
                 .pointerInput(Unit) {
