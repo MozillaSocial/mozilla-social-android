@@ -4,11 +4,11 @@ import android.app.DownloadManager
 import android.content.Context
 import android.net.Uri
 import android.os.Environment
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.gestures.detectTransformGestures
-import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material3.Icon
@@ -19,13 +19,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
@@ -37,7 +38,6 @@ import org.mozilla.social.core.navigation.NavigationDestination
 import org.mozilla.social.core.ui.common.MoSoSurface
 import org.mozilla.social.core.ui.common.appbar.MoSoCloseableTopAppBar
 import kotlin.math.max
-import kotlin.math.roundToInt
 
 @Composable
 internal fun MediaScreen(
@@ -112,45 +112,77 @@ private fun MediaScreen(
 private fun ZoomableImage(
     attachment: Attachment.Image,
 ) {
-    BoxWithConstraints {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
+        var width by remember { mutableFloatStateOf(1f) }
+        var height by remember { mutableFloatStateOf(1f) }
         var scale by remember { mutableFloatStateOf(1f) }
-        var offsetX by remember { mutableFloatStateOf(0f) }
-        var offsetY by remember { mutableFloatStateOf(0f) }
-
-        val width = maxWidth.value
-        val height = maxHeight.value
+        var translationX by remember { mutableFloatStateOf(0f) }
+        var translationY by remember { mutableFloatStateOf(0f) }
 
         val maxScale by remember(attachment, width, height) {
             derivedStateOf {
                 val maxScaleHeight = ((attachment.meta?.original?.height ?: 0) / height).coerceAtLeast(1f)
                 val maxScaleWidth = ((attachment.meta?.original?.width ?: 0) / width).coerceAtLeast(1f)
-                max(maxScaleHeight, maxScaleWidth)
+                max(maxScaleHeight, maxScaleWidth) * 3
             }
         }
 
         AsyncImage(
             modifier = Modifier
-                .offset { IntOffset(offsetX.roundToInt(), offsetY.roundToInt()) }
+                .align(Alignment.Center)
+                .onSizeChanged {
+                    width = it.width.toFloat()
+                    height = it.height.toFloat()
+                }
                 .graphicsLayer(
                     scaleX = scale,
                     scaleY = scale,
+                    translationX = translationX,
+                    translationY = translationY
                 )
                 .pointerInput(Unit) {
-                    detectTransformGestures { _, pan, zoom, _ ->
+                    detectTransformGestures { centroid, pan, zoom, _ ->
                         scale = (scale * zoom).coerceIn(1f..maxScale)
-                        val x = (pan.x * scale)
-                        val y = (pan.y * scale)
+                        val panX = (pan.x * scale)
+                        val panY = (pan.y * scale)
 
-                        val offsetLimitX: Float = width * (scale - 1).coerceAtLeast(0F)
-                        val offsetLimitY = height * (scale - 1).coerceAtLeast(0F)
+                        val translationLimitX = (width / 2) * (scale - 1).coerceAtLeast(0F)
+                        val translationLimitY = (height / 2) * (scale - 1).coerceAtLeast(0F)
 
-                        offsetX = (offsetX + x)
-                            .coerceIn(-offsetLimitX..offsetLimitX)
-                        offsetY = (offsetY + y)
-                            .coerceIn(-offsetLimitY..offsetLimitY)
+                        val centroidDistX = (translationX + (centroid.x - (width / 2)) * scale)
+                        val centroidTranslationX = centroidDistX * (zoom - 1) * 2
+
+                        val centroidDistY = (translationY + (centroid.y - (height / 2)) * scale)
+                        val centroidTranslationY = centroidDistY * (zoom - 1) * 2
+
+                        translationX = (translationX + panX - centroidTranslationX)
+                            .coerceIn(-translationLimitX..translationLimitX)
+                        translationY = (translationY + panY - centroidTranslationY)
+                            .coerceIn(-translationLimitY..translationLimitY)
                     }
                 }
-                .fillMaxSize(),
+                .pointerInput(Unit) {
+                    detectTapGestures(
+                        onDoubleTap = { offset ->
+                            scale = if (scale >= 2f) {
+                                1f
+                            } else {
+                                (scale * 2).coerceAtMost(maxScale)
+                            }
+
+                            val translationLimitX = (width / 2) * (scale - 1).coerceAtLeast(0F)
+                            val translationLimitY = (height / 2) * (scale - 1).coerceAtLeast(0F)
+
+                            translationX = (translationX - (offset.x - (width / 2)) * scale)
+                                .coerceIn(-translationLimitX..translationLimitX)
+                            translationY = (translationY - (offset.y - (height / 2)) * scale)
+                                .coerceIn(-translationLimitY..translationLimitY)
+                        }
+                    )
+                },
             model = attachment.url,
             contentDescription = null,
             contentScale = ContentScale.Fit,
