@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import mozilla.telemetry.glean.BuildInfo
 import mozilla.telemetry.glean.Glean
+import org.mozilla.social.common.Version
 import org.mozilla.social.core.analytics.Analytics
 import org.mozilla.social.core.analytics.EngagementType
 import org.mozilla.social.core.analytics.GleanMetrics.Identifiers
@@ -21,7 +22,7 @@ class GleanAnalytics(
 ) : Analytics {
     @OptIn(DelicateCoroutinesApi::class)
     override fun initialize(context: Context) {
-        val buildInfo = BuildInfo("1", "1", Calendar.getInstance())
+        val buildInfo = BuildInfo(Version.name, Version.code.toString(), Calendar.getInstance())
 
         Glean.setLogPings(true)
         Glean.setDebugViewTag("moso-android-debug")
