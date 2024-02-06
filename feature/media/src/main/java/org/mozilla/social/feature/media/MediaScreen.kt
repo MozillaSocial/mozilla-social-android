@@ -200,10 +200,6 @@ private fun ZoomableImage(
                             .coerceIn(-translationLimitX..translationLimitX)
                         translationY = (translationY + panY - centroidTranslationY)
                             .coerceIn(-translationLimitY..translationLimitY)
-
-//                        if (innerScale == 1f) {
-//                            pagerState.dispatchRawDelta(-panX)
-//                        }
                     }
                 }
                 .pointerInput(Unit) {
