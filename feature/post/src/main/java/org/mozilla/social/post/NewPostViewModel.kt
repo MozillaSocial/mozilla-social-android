@@ -88,6 +88,7 @@ class NewPostViewModel(
                     bottomBarState = it
                 ) }
             }
+
         }
 
         viewModelScope.launch {

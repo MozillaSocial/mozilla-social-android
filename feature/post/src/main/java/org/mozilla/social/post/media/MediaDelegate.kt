@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.mozilla.social.common.LoadState
 import org.mozilla.social.common.utils.FileType
+import org.mozilla.social.core.model.Attachment
 import org.mozilla.social.core.model.ImageState
 import org.mozilla.social.core.repository.mastodon.MediaRepository
 import org.mozilla.social.post.NewPostViewModel
@@ -87,6 +88,10 @@ class MediaDelegate(
             Timber.d("removed")
             uploadJobs.remove(uri)
         }
+    }
+
+    override fun showEditImageStates(attachments: List<Attachment>) {
+        return
     }
 
     /**

@@ -2,6 +2,8 @@ package org.mozilla.social.post.media
 
 import android.net.Uri
 import org.mozilla.social.common.utils.FileType
+import org.mozilla.social.core.model.Attachment
+import org.mozilla.social.core.model.ImageState
 import java.io.File
 
 interface MediaInteractions {
@@ -17,4 +19,6 @@ interface MediaInteractions {
         file: File,
         fileType: FileType,
     ) = Unit
+
+    fun showEditImageStates(attachments: List<Attachment>) = Unit
 }
