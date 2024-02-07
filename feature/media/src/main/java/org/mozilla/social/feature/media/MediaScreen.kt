@@ -8,12 +8,14 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
@@ -25,6 +27,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
@@ -37,10 +40,14 @@ import coil.compose.AsyncImage
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
+import org.mozilla.social.core.designsystem.theme.MoSoRadius
 import org.mozilla.social.core.model.Attachment
 import org.mozilla.social.core.navigation.NavigationDestination
 import org.mozilla.social.core.ui.common.MoSoSurface
 import org.mozilla.social.core.ui.common.appbar.MoSoCloseableTopAppBar
+import org.mozilla.social.core.ui.common.media.VideoPlayer
+import org.mozilla.social.core.ui.common.media.calculateAspectRatio
+import org.mozilla.social.core.ui.common.utils.media
 import kotlin.math.max
 
 @Composable
@@ -110,6 +117,9 @@ private fun MediaScreen(
                 is Attachment.Image -> ImagePager(
                     attachments = attachments,
                     pagerState = pagerState,
+                )
+                is Attachment.Video -> VideoContent(
+                    attachment = attachment,
                 )
                 else -> {}
             }
@@ -188,14 +198,18 @@ private fun ZoomableImage(
                         val panX = (pan.x * innerScale)
                         val panY = (pan.y * innerScale)
 
-                        val translationLimitX = (width / 2) * (innerScale - 1).coerceAtLeast(0F)
-                        val translationLimitY = (height / 2) * (innerScale - 1).coerceAtLeast(0F)
+                        val translationLimitX =
+                            (width / 2) * (innerScale - 1).coerceAtLeast(0F)
+                        val translationLimitY =
+                            (height / 2) * (innerScale - 1).coerceAtLeast(0F)
 
                         val centroidDistX = (translationX + (centroid.x - (width / 2)) * innerScale)
                         val centroidTranslationX = centroidDistX * (zoom - 1) * 2
 
-                        val centroidDistY = (translationY + (centroid.y - (height / 2)) * innerScale)
-                        val centroidTranslationY = centroidDistY * (zoom - 1) * 2
+                        val centroidDistY =
+                            (translationY + (centroid.y - (height / 2)) * innerScale)
+                        val centroidTranslationY =
+                            centroidDistY * (zoom - 1) * 2
 
                         translationX = (translationX + panX - centroidTranslationX)
                             .coerceIn(-translationLimitX..translationLimitX)
@@ -212,8 +226,10 @@ private fun ZoomableImage(
                                 (innerScale * 2).coerceAtMost(maxScale)
                             }
 
-                            val translationLimitX = (width / 2) * (innerScale - 1).coerceAtLeast(0F)
-                            val translationLimitY = (height / 2) * (innerScale - 1).coerceAtLeast(0F)
+                            val translationLimitX =
+                                (width / 2) * (innerScale - 1).coerceAtLeast(0F)
+                            val translationLimitY =
+                                (height / 2) * (innerScale - 1).coerceAtLeast(0F)
 
                             translationX = (translationX - (offset.x - (width / 2)) * innerScale)
                                 .coerceIn(-translationLimitX..translationLimitX)
@@ -225,6 +241,22 @@ private fun ZoomableImage(
             model = attachment.url,
             contentDescription = null,
             contentScale = ContentScale.Fit,
+        )
+    }
+}
+
+@Composable
+private fun VideoContent(
+    attachment: Attachment.Video,
+) {
+    Box(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        VideoPlayer(
+            modifier = Modifier
+                .align(Alignment.Center)
+                .aspectRatio(attachment.meta?.calculateAspectRatio() ?: 1f),
+            uri = Uri.parse(attachment.url),
         )
     }
 }

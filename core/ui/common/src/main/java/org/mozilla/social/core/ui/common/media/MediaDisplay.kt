@@ -90,6 +90,7 @@ private fun SingleAttachment(
                 VideoPlayer(
                     uri = it,
                     aspectRatio = aspectRatio,
+                    onVideoClicked = { onAttachmentClicked(attachment) },
                 )
             }
         }
@@ -101,6 +102,7 @@ private fun SingleAttachment(
                 VideoPlayer(
                     uri = it,
                     aspectRatio = aspectRatio,
+                    onVideoClicked = { onAttachmentClicked(attachment) },
                 )
             }
         }
@@ -111,7 +113,7 @@ private fun SingleAttachment(
 /**
  * For some reason the server might not return an aspect ratio
  */
-private fun Attachment.Gifv.Meta.calculateAspectRatio(): Float =
+fun Attachment.Gifv.Meta.calculateAspectRatio(): Float =
     when {
         aspectRatio != null -> aspectRatio!!
         original?.width != null && original?.height != null ->
@@ -119,7 +121,7 @@ private fun Attachment.Gifv.Meta.calculateAspectRatio(): Float =
         else -> 1f
     }
 
-private fun Attachment.Image.Meta.calculateAspectRatio(): Float =
+fun Attachment.Image.Meta.calculateAspectRatio(): Float =
     when {
         original?.aspectRatio != null -> original!!.aspectRatio!!
         original?.width != null && original?.height != null ->
@@ -127,7 +129,7 @@ private fun Attachment.Image.Meta.calculateAspectRatio(): Float =
         else -> 1f
     }
 
-private fun Attachment.Video.Meta.calculateAspectRatio(): Float =
+fun Attachment.Video.Meta.calculateAspectRatio(): Float =
     when {
         aspectRatio != null -> aspectRatio!!
         original?.width != null && original?.height != null ->
