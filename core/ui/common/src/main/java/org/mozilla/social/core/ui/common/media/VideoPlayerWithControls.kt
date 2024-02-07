@@ -1,24 +1,49 @@
 package org.mozilla.social.core.ui.common.media
 
+import android.media.MediaFormat
 import android.net.Uri
 import androidx.annotation.OptIn
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.media3.common.Format
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.exoplayer.video.VideoFrameMetadataListener
 import androidx.media3.ui.AspectRatioFrameLayout
 import androidx.media3.ui.PlayerView
+import kotlinx.coroutines.delay
+import org.mozilla.social.core.designsystem.icon.MoSoIcons
+import org.mozilla.social.core.designsystem.theme.FirefoxColor
+import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.ui.common.NoTouchOverlay
+import org.mozilla.social.core.ui.common.loading.MoSoLinearProgressIndicator
+import org.mozilla.social.core.ui.common.text.SmallTextLabel
 import timber.log.Timber
+import kotlin.math.roundToLong
 
 private const val TAG = "VideoPlayer"
 
@@ -69,7 +94,63 @@ fun VideoPlayer(
         }
         NoTouchOverlay()
 
-        // Mute button
+        VideoControls(
+            modifier = Modifier.align(Alignment.BottomCenter),
+            exoPlayer = exoPlayer,
+        )
+    }
+}
 
+@OptIn(UnstableApi::class) @Composable
+private fun VideoControls(
+    exoPlayer: ExoPlayer,
+    modifier: Modifier = Modifier,
+) {
+    var progress by remember { mutableFloatStateOf(0f) }
+
+    LaunchedEffect(exoPlayer) {
+        while (true) {
+            progress = exoPlayer.contentPosition / exoPlayer.duration.toFloat()
+            delay(100)
+        }
+    }
+
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .background(FirefoxColor.DarkGrey90A80),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        IconButton(onClick = {
+            if (exoPlayer.isPlaying) {
+                exoPlayer.pause()
+            } else {
+                exoPlayer.play()
+            }
+        }) {
+            Icon(
+                painter = MoSoIcons.plus(),
+                contentDescription = ""
+            )
+        }
+
+        MoSoLinearProgressIndicator(
+            modifier = Modifier.weight(1f),
+            progress = progress,
+            onTouch = {
+                exoPlayer.seekTo((exoPlayer.duration * it).roundToLong())
+            },
+        )
+
+        Spacer(modifier = Modifier.width(8.dp))
+
+        SmallTextLabel(text = "0:00/0:00")
+
+        IconButton(onClick = { /*TODO*/ }) {
+            Icon(
+                painter = MoSoIcons.volumeMute(),
+                contentDescription = ""
+            )
+        }
     }
 }
