@@ -135,7 +135,7 @@ private fun Attachment.toImageState(): ImageState {
 }
 
 private fun Attachment.toFileType() = when (this) {
-    is Attachment.Image -> FileType.IMAGE
+    is Attachment.Image, is Attachment.Gifv -> FileType.IMAGE
     is Attachment.Video -> FileType.VIDEO
     else -> FileType.UNKNOWN
 }
