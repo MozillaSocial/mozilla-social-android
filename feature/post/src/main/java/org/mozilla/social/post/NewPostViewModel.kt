@@ -55,6 +55,7 @@ class NewPostViewModel(
     val mediaDelegate: MediaDelegate by inject {
         parametersOf(
             viewModelScope,
+            editStatusId,
         )
     }
 

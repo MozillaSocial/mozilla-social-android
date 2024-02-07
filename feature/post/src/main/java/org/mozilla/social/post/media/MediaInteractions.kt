@@ -12,7 +12,7 @@ interface MediaInteractions {
 
     fun onDeleteMediaClicked(uri: Uri) = Unit
 
-    fun onMediaInserted(
+    fun uploadMedia(
         uri: Uri,
         file: File,
         fileType: FileType,

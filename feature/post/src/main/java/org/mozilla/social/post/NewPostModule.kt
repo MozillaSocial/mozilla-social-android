@@ -55,7 +55,9 @@ val newPostModule = module {
     factory { parametersHolder ->
         MediaDelegate(
             coroutineScope = parametersHolder[0],
+            editStatusId = parametersHolder[1],
             mediaRepository = get(),
+            statusRepository = get(),
         )
     }
 
