@@ -137,6 +137,12 @@ object MoSoIcons {
     fun moreVertical() = painterResource(id = R.drawable.more_vertical)
 
     @Composable
+    fun pause() = painterResource(id = R.drawable.pause)
+
+    @Composable
+    fun play() = painterResource(id = R.drawable.play)
+
+    @Composable
     fun plus() = painterResource(id = R.drawable.plus)
 
     @Composable

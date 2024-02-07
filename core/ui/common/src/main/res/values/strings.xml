@@ -40,4 +40,8 @@
         <item quantity="other">%d in the past %d days</item>
     </plurals>
 
+    <string name="pause">pause</string>
+    <string name="play">play</string>
+    <string name="mute">mute</string>
+
 </resources>

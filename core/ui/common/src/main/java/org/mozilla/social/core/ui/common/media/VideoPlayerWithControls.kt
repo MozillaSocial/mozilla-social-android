@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -19,12 +20,14 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.media3.common.Format
@@ -40,6 +43,7 @@ import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.designsystem.theme.FirefoxColor
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.ui.common.NoTouchOverlay
+import org.mozilla.social.core.ui.common.R
 import org.mozilla.social.core.ui.common.loading.MoSoLinearProgressIndicator
 import org.mozilla.social.core.ui.common.text.SmallTextLabel
 import timber.log.Timber
@@ -63,7 +67,7 @@ fun VideoPlayer(
                 Timber.tag(TAG).d("Exoplayer created")
                 ExoPlayer.Builder(context).build().apply {
                     repeatMode = Player.REPEAT_MODE_ALL
-                    volume = 0f
+                    volume = 1f
                     setMediaItem(MediaItem.fromUri(uri))
                     prepare()
                 }
@@ -101,12 +105,15 @@ fun VideoPlayer(
     }
 }
 
-@OptIn(UnstableApi::class) @Composable
+@OptIn(UnstableApi::class)
+@Composable
 private fun VideoControls(
     exoPlayer: ExoPlayer,
     modifier: Modifier = Modifier,
 ) {
     var progress by remember { mutableFloatStateOf(0f) }
+    val muted = remember { mutableStateOf(exoPlayer.volume == 0f) }
+    var isPlaying by remember { mutableStateOf(true) }
 
     LaunchedEffect(exoPlayer) {
         while (true) {
@@ -127,10 +134,21 @@ private fun VideoControls(
             } else {
                 exoPlayer.play()
             }
+            isPlaying = exoPlayer.isPlaying
         }) {
             Icon(
-                painter = MoSoIcons.plus(),
-                contentDescription = ""
+                modifier = Modifier
+                    .size(MoSoIcons.Sizes.small),
+                painter = if (isPlaying) {
+                    MoSoIcons.pause()
+                } else {
+                    MoSoIcons.play()
+                },
+                contentDescription = if (isPlaying) {
+                    stringResource(id = R.string.pause)
+                } else {
+                    stringResource(id = R.string.play)
+                }
             )
         }
 
@@ -146,10 +164,27 @@ private fun VideoControls(
 
         SmallTextLabel(text = "0:00/0:00")
 
-        IconButton(onClick = { /*TODO*/ }) {
+        IconButton(
+            onClick = {
+                if (muted.value) {
+                    muted.value = false
+                    exoPlayer.volume = 1f
+                } else {
+                    muted.value = true
+                    exoPlayer.volume = 0f
+                }
+            },
+        ) {
             Icon(
-                painter = MoSoIcons.volumeMute(),
-                contentDescription = ""
+                modifier = Modifier
+                    .size(MoSoIcons.Sizes.small),
+                painter = if (muted.value) {
+                    MoSoIcons.volumeMute()
+                } else {
+                    MoSoIcons.volumeUp()
+                },
+                contentDescription = stringResource(id = R.string.mute),
+                tint = FirefoxColor.White,
             )
         }
     }
