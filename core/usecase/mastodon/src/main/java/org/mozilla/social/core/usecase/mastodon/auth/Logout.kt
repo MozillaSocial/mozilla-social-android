@@ -5,7 +5,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.mozilla.social.common.appscope.AppScope
-import org.mozilla.social.core.analytics.Analytics
+import org.mozilla.social.core.analytics.AppAnalytics
 import org.mozilla.social.core.datastore.UserPreferencesDatastore
 import org.mozilla.social.core.repository.mastodon.DatabaseDelegate
 
@@ -15,7 +15,7 @@ import org.mozilla.social.core.repository.mastodon.DatabaseDelegate
 class Logout(
     private val userPreferencesDatastore: UserPreferencesDatastore,
     private val databaseDelegate: DatabaseDelegate,
-    private val analytics: Analytics,
+    private val analytics: AppAnalytics,
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
     private val appScope: AppScope,
 ) {

@@ -95,4 +95,16 @@ interface Analytics {
      * Clear the set identifiers.  Call this on logout.
      */
     fun clearLoggedInIdentifiers() = Unit
+
+    /**
+     * Event triggered when a user moves the mobile app to foreground by starting the app or
+     * returning from the home screen/another app.
+     */
+    fun appOpened()
+
+    /**
+     * Event triggered when a user moves the mobile app to background by opening another app,
+     * returning to the home screen, or quitting the app.
+     */
+    fun appBackgrounded()
 }
