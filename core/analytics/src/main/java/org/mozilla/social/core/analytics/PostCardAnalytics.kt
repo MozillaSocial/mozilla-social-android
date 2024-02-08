@@ -104,7 +104,7 @@ class PostCardAnalytics internal constructor(private val analytics: Analytics) {
         private const val FEED_POST_HASHTAG_TAPPED = "post.hashtag.tap"
         private const val FEED_POST_MUTE = "feed.post.mute"
         private const val FEED_POST_BLOCK = "feed.post.block"
-        private const val FEED_POST_REPORT = "feed.post.block"
+        private const val FEED_POST_REPORT = "feed.post.report"
     }
 }
 
