@@ -19,7 +19,6 @@ import org.koin.androidx.workmanager.koin.workManagerFactory
 import org.koin.core.context.startKoin
 import org.koin.dsl.module
 import org.mozilla.social.common.Version
-import org.mozilla.social.core.analytics.Analytics
 import org.mozilla.social.core.repository.mastodon.AuthCredentialObserver
 import org.mozilla.social.core.workmanager.workManagerModule
 import org.mozilla.social.feature.account.accountModule
@@ -41,7 +40,7 @@ import timber.log.Timber
 class MainApplication : Application(), ImageLoaderFactory {
 
     private lateinit var authCredentialObserver: AuthCredentialObserver
-    private val analytics: Analytics by inject()
+    private val analytics: AppAnalytics by inject()
 
     override fun onCreate() {
         super.onCreate()

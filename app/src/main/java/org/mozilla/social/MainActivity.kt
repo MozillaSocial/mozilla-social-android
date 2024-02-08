@@ -9,6 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
 import org.koin.androidx.compose.KoinAndroidContext
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.annotation.KoinExperimentalAPI
@@ -20,6 +21,7 @@ import timber.log.Timber
 
 class MainActivity : ComponentActivity() {
     private val viewModel: MainViewModel by viewModel()
+    private val analytics: AppAnalytics by inject()
 
     @OptIn(KoinExperimentalAPI::class)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,6 +42,16 @@ class MainActivity : ComponentActivity() {
         }
 
         DatabasePurgeWorker.setupPurgeWork(this, lifecycleScope)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        analytics.appOpened()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        analytics.appBackgrounded()
     }
 
     override fun onNewIntent(intent: Intent) {

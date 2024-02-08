@@ -55,4 +55,12 @@ class DummyAnalytics : Analytics {
     override fun clearLoggedInIdentifiers() {
         Timber.tag(tag).d("clear")
     }
+
+    override fun appOpened() {
+        Timber.tag(tag).d("app opened")
+    }
+
+    override fun appBackgrounded() {
+        Timber.tag(tag).d("app backgrounded")
+    }
 }
