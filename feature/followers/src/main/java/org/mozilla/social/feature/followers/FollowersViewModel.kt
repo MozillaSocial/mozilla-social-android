@@ -89,6 +89,13 @@ class FollowersViewModel(
     }
 
     override fun onScreenViewed() {
-        analytics.followsScreenViewed()
+        analytics.followersScreenViewed()
+    }
+
+    override fun onTabClicked(tabType: FollowType) {
+        when (tabType) {
+            FollowType.FOLLOWERS -> analytics.followersScreenViewed()
+            FollowType.FOLLOWING -> analytics.followingScreenViewed()
+        }
     }
 }
