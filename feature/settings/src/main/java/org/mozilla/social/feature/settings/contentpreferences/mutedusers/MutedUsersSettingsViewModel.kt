@@ -42,6 +42,7 @@ class MutedUsersSettingsViewModel(
                 is MutedButtonState.Muted -> {
                     try {
                         unmuteAccount(accountId)
+                        analytics.accountUnmuted()
                     } catch (e: UnmuteAccount.UnmuteFailedException) {
                         Timber.e(e)
                     }
@@ -50,6 +51,7 @@ class MutedUsersSettingsViewModel(
                 is MutedButtonState.Unmuted -> {
                     try {
                         muteAccount(accountId)
+                        analytics.accountMuted()
                     } catch (e: MuteAccount.MuteFailedException) {
                         Timber.e(e)
                     }
