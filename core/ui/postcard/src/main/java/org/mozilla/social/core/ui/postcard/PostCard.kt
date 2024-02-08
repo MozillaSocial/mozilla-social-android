@@ -384,45 +384,11 @@ private fun OverflowMenu(
                 overflowMenuExpanded.value = false
             },
         ) {
-            if (post.isUsersPost) {
+            for (dropDownOption in post.dropDownOptions) {
                 MoSoDropDownItem(
-                    text = stringResource(id = R.string.delete_post),
+                    text = dropDownOption.text.build(context),
                     expanded = overflowMenuExpanded,
-                    onClick = { postCardInteractions.onOverflowDeleteClicked(post.statusId) },
-                )
-                // WILL DO: add in once complete
-//                MoSoDropDownItem(
-//                    text = stringResource(id = R.string.edit_post),
-//                    expanded = overflowMenuExpanded,
-//                    onClick = { postCardInteractions.onOverflowEditClicked(post.statusId) },
-//                )
-            } else {
-                MoSoDropDownItem(
-                    text = stringResource(id = R.string.mute_user, post.username),
-                    expanded = overflowMenuExpanded,
-                    onClick = { postCardInteractions.onOverflowMuteClicked(
-                        accountId = post.accountId,
-                        statusId = post.statusId,
-                    ) },
-                )
-                MoSoDropDownItem(
-                    text = stringResource(id = R.string.block_user, post.username),
-                    expanded = overflowMenuExpanded,
-                    onClick = { postCardInteractions.onOverflowBlockClicked(
-                        accountId = post.accountId,
-                        statusId =  post.statusId,
-                    ) },
-                )
-                MoSoDropDownItem(
-                    text = stringResource(id = R.string.report_user, post.username),
-                    expanded = overflowMenuExpanded,
-                    onClick = {
-                        postCardInteractions.onOverflowReportClicked(
-                            post.accountId,
-                            post.accountName.build(context),
-                            post.statusId,
-                        )
-                    },
+                    onClick = dropDownOption.onOptionClicked,
                 )
             }
         }
@@ -544,7 +510,6 @@ private fun PostCardPreview() {
                             userBoosted = false,
                             isFavorited = false,
                             accountId = "",
-                            isUsersPost = false,
                             isBeingDeleted = false,
                             postContentUiState = PostContentUiState(
                                 pollUiState = null,
@@ -553,7 +518,8 @@ private fun PostCardPreview() {
                                 mentions = emptyList(),
                                 previewCard = null,
                                 contentWarning = "",
-                            )
+                            ),
+                            dropDownOptions = listOf(),
                         ),
                 ),
             postCardInteractions = object : PostCardInteractions {},
@@ -589,7 +555,6 @@ private fun PostCardWithContentWarningPreview() {
                             userBoosted = false,
                             isFavorited = false,
                             accountId = "",
-                            isUsersPost = false,
                             isBeingDeleted = false,
                             postContentUiState = PostContentUiState(
                                 pollUiState = null,
@@ -598,7 +563,8 @@ private fun PostCardWithContentWarningPreview() {
                                 mentions = emptyList(),
                                 previewCard = null,
                                 contentWarning = "Micky mouse spoilers!",
-                            )
+                            ),
+                            dropDownOptions = listOf(),
                         ),
                 ),
             postCardInteractions = object : PostCardInteractions {},

@@ -42,7 +42,7 @@ class FeedViewModel(
         remoteMediator = homeTimelineRemoteMediator,
     ).map { pagingData ->
         pagingData.map {
-            it.toPostCardUiState(userAccountId)
+            it.toPostCardUiState(userAccountId, homePostCardDelegate)
         }
     }.cachedIn(viewModelScope)
 
@@ -51,7 +51,7 @@ class FeedViewModel(
         remoteMediator = localTimelineRemoteMediator,
     ).map { pagingData ->
         pagingData.map {
-            it.toPostCardUiState(userAccountId)
+            it.toPostCardUiState(userAccountId, localPostCardDelegate)
         }
     }.cachedIn(viewModelScope)
 
@@ -60,7 +60,7 @@ class FeedViewModel(
         remoteMediator = federatedTimelineRemoteMediator,
     ).map { pagingData ->
         pagingData.map {
-            it.toPostCardUiState(userAccountId)
+            it.toPostCardUiState(userAccountId, federatedPostCardDelegate)
         }
     }.cachedIn(viewModelScope)
 

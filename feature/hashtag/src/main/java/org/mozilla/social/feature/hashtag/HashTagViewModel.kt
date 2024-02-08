@@ -56,7 +56,7 @@ class HashTagViewModel(
         remoteMediator = hashTagTimelineRemoteMediator,
     ).map { pagingData ->
         pagingData.map {
-            it.toPostCardUiState(userAccountId())
+            it.toPostCardUiState(userAccountId(), postCardDelegate)
         }
     }.cachedIn(viewModelScope)
 
