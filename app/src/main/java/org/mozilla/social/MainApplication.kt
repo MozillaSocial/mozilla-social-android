@@ -19,6 +19,7 @@ import org.koin.androidx.workmanager.koin.workManagerFactory
 import org.koin.core.context.startKoin
 import org.koin.dsl.module
 import org.mozilla.social.common.Version
+import org.mozilla.social.core.analytics.AppAnalytics
 import org.mozilla.social.core.repository.mastodon.AuthCredentialObserver
 import org.mozilla.social.core.workmanager.workManagerModule
 import org.mozilla.social.feature.account.accountModule

@@ -13,6 +13,7 @@ import org.koin.android.ext.android.inject
 import org.koin.androidx.compose.KoinAndroidContext
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.annotation.KoinExperimentalAPI
+import org.mozilla.social.core.analytics.AppAnalytics
 import org.mozilla.social.core.designsystem.theme.MoSoTheme
 import org.mozilla.social.core.ui.common.MoSoSurface
 import org.mozilla.social.core.workmanager.DatabasePurgeWorker
