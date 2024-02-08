@@ -22,7 +22,8 @@ import org.mozilla.social.core.repository.paging.SearchStatusesRemoteMediator
 import org.mozilla.social.core.repository.paging.SearchedHashTagsRemoteMediator
 import org.mozilla.social.core.ui.accountfollower.toAccountFollowerUiState
 import org.mozilla.social.core.ui.common.hashtag.quickview.toHashTagQuickViewUiState
-import org.mozilla.social.core.ui.postcard.FeedLocation
+import org.mozilla.social.core.analytics.FeedLocation
+import org.mozilla.social.core.analytics.SearchAnalytics
 import org.mozilla.social.core.ui.postcard.PostCardDelegate
 import org.mozilla.social.core.ui.postcard.toPostCardUiState
 import org.mozilla.social.core.usecase.mastodon.account.FollowAccount
@@ -151,7 +152,7 @@ class SearchViewModel(
         _uiState.edit { copy(
             selectedTab = tab
         ) }
-        analytics.searchTabClicked(tab)
+        analytics.searchTabClicked(tab.toAnalyticsSearchTab())
     }
 
     override fun onFollowClicked(accountId: String, isFollowing: Boolean) {
@@ -200,5 +201,14 @@ class SearchViewModel(
             }
         }
         analytics.hashtagFollowClicked()
+    }
+}
+
+private fun SearchTab.toAnalyticsSearchTab(): SearchAnalytics.SearchTab {
+    return when (this) {
+        SearchTab.TOP -> SearchAnalytics.SearchTab.TOP
+        SearchTab.ACCOUNTS -> SearchAnalytics.SearchTab.ACCOUNTS
+        SearchTab.POSTS -> SearchAnalytics.SearchTab.POSTS
+        SearchTab.HASHTAGS -> SearchAnalytics.SearchTab.HASHTAGS
     }
 }

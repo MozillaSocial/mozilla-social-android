@@ -12,7 +12,7 @@ import kotlinx.coroutines.test.setMain
 import org.junit.Before
 import org.junit.Test
 import org.mozilla.social.core.datastore.AppPreferencesDatastore
-import org.mozilla.social.feature.settings.SettingsAnalytics
+import org.mozilla.social.core.analytics.SettingsAnalytics
 
 class PrivacySettingsViewModelTest {
     private lateinit var objUnderTest: PrivacySettingsViewModel

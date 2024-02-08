@@ -1,8 +1,8 @@
-package org.mozilla.social.feature.thread
+package org.mozilla.social.core.analytics
 
-import org.mozilla.social.core.analytics.Analytics
+import org.mozilla.social.core.analytics.core.Analytics
 
-class ThreadAnalytics(private val analytics: Analytics) {
+class ThreadAnalytics internal constructor(private val analytics: Analytics) {
     fun threadScreenViewed() {
         analytics.uiImpression(
             uiIdentifier = THREAD_SCREEN_IMPRESSION,

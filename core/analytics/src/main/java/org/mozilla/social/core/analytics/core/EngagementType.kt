@@ -1,4 +1,4 @@
-package org.mozilla.social.core.analytics
+package org.mozilla.social.core.analytics.core
 
 internal enum class EngagementType(
     val value: String,

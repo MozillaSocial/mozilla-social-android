@@ -9,7 +9,7 @@ import org.koin.core.annotation.KoinExperimentalAPI
 import org.koin.test.KoinTest
 import org.koin.test.verify.verify
 import org.mozilla.social.core.model.AccountTimelineType
-import org.mozilla.social.core.ui.postcard.FeedLocation
+import org.mozilla.social.core.analytics.FeedLocation
 import org.mozilla.social.feature.followers.FollowType
 import org.mozilla.social.feature.report.ReportType
 import kotlin.test.Test

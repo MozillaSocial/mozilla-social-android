@@ -11,9 +11,8 @@ import org.mozilla.social.core.navigation.navigationModule
 import org.mozilla.social.core.repository.mastodon.mastodonRepositoryModule
 import org.mozilla.social.core.usecase.mastodon.mastodonUsecaseModule
 import org.mozilla.social.feature.auth.chooseServer.ChooseServerViewModel
-import org.mozilla.social.feature.auth.chooseServer.ChooseServerAnalytics
 import org.mozilla.social.feature.auth.login.LoginViewModel
-import org.mozilla.social.feature.auth.login.LoginAnalytics
+import org.mozilla.social.core.analytics.LoginAnalytics
 
 val authModule =
     module {
@@ -28,6 +27,4 @@ val authModule =
 
         viewModel { LoginViewModel(get(), get(), get(), get()) }
         viewModelOf(::ChooseServerViewModel)
-        singleOf(::ChooseServerAnalytics)
-        singleOf(::LoginAnalytics)
     }

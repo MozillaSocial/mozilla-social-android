@@ -1,9 +1,9 @@
-package org.mozilla.social.feature.auth.chooseServer
+package org.mozilla.social.core.analytics
 
-import org.mozilla.social.core.analytics.Analytics
-import org.mozilla.social.core.analytics.EngagementType
+import org.mozilla.social.core.analytics.core.Analytics
+import org.mozilla.social.core.analytics.core.EngagementType
 
-class ChooseServerAnalytics(private val analytics: Analytics) {
+class ChooseServerAnalytics internal constructor(private val analytics: Analytics) {
 
     fun chooseServerScreenViewed() {
         analytics.uiImpression(

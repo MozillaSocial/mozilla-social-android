@@ -1,9 +1,9 @@
-package org.mozilla.social.feature.hashtag
+package org.mozilla.social.core.analytics
 
-import org.mozilla.social.core.analytics.Analytics
-import org.mozilla.social.core.analytics.EngagementType
+import org.mozilla.social.core.analytics.core.Analytics
+import org.mozilla.social.core.analytics.core.EngagementType
 
-class HashtagAnalytics(private val analytics: Analytics) {
+class HashtagAnalytics internal constructor(private val analytics: Analytics) {
     fun hashtagScreenViewed() {
         analytics.uiImpression(
             uiIdentifier = HASHTAG_SCREEN_IMPRESSION,

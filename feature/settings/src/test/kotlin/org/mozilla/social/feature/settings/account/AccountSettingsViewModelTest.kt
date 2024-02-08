@@ -21,7 +21,7 @@ import org.mozilla.social.core.repository.mastodon.AccountRepository
 import org.mozilla.social.core.usecase.mastodon.account.GetDomain
 import org.mozilla.social.core.usecase.mastodon.account.GetLoggedInUserAccountId
 import org.mozilla.social.core.usecase.mastodon.auth.Logout
-import org.mozilla.social.feature.settings.SettingsAnalytics
+import org.mozilla.social.core.analytics.SettingsAnalytics
 import kotlin.test.BeforeTest
 
 class AccountSettingsViewModelTest {

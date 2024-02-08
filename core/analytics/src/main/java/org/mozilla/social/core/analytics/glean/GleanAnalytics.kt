@@ -10,8 +10,8 @@ import kotlinx.coroutines.launch
 import mozilla.telemetry.glean.BuildInfo
 import mozilla.telemetry.glean.Glean
 import org.mozilla.social.common.Version
-import org.mozilla.social.core.analytics.Analytics
-import org.mozilla.social.core.analytics.EngagementType
+import org.mozilla.social.core.analytics.core.Analytics
+import org.mozilla.social.core.analytics.core.EngagementType
 import org.mozilla.social.core.analytics.GleanMetrics.Identifiers
 import org.mozilla.social.core.analytics.GleanMetrics.Mobile
 import org.mozilla.social.core.analytics.GleanMetrics.Ui

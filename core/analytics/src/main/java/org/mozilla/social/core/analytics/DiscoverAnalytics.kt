@@ -1,5 +1,8 @@
 package org.mozilla.social.core.analytics
 
+import org.mozilla.social.core.analytics.core.Analytics
+import org.mozilla.social.core.analytics.core.EngagementType
+
 class DiscoverAnalytics internal constructor(private val analytics: Analytics) {
 
     fun discoverScreenViewed() {

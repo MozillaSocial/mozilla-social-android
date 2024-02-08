@@ -15,6 +15,7 @@ import org.mozilla.social.common.loadResource
 import org.mozilla.social.common.utils.FileType
 import org.mozilla.social.common.utils.StringFactory
 import org.mozilla.social.common.utils.edit
+import org.mozilla.social.core.analytics.NewPostAnalytics
 import org.mozilla.social.core.model.StatusVisibility
 import org.mozilla.social.core.model.request.PollCreate
 import org.mozilla.social.core.navigation.usecases.PopNavBackstack

@@ -1,4 +1,4 @@
-package org.mozilla.social.core.analytics
+package org.mozilla.social.core.analytics.core
 
 import android.content.Context
 import timber.log.Timber

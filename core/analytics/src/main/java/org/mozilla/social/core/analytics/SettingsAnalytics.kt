@@ -1,9 +1,9 @@
-package org.mozilla.social.feature.settings
+package org.mozilla.social.core.analytics
 
-import org.mozilla.social.core.analytics.Analytics
-import org.mozilla.social.core.analytics.EngagementType
+import org.mozilla.social.core.analytics.core.Analytics
+import org.mozilla.social.core.analytics.core.EngagementType
 
-class SettingsAnalytics(private val analytics: Analytics) {
+class SettingsAnalytics internal constructor(private val analytics: Analytics) {
     fun settingsScreenViewed() {
         analytics.uiImpression(
             uiIdentifier = SETTINGS_SCREEN_IMPRESSION,
