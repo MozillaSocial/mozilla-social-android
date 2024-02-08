@@ -3,7 +3,7 @@ package org.mozilla.social.core.analytics
 import android.content.Context
 import timber.log.Timber
 
-class DummyAnalytics : Analytics {
+internal class DummyAnalytics : Analytics {
     private val tag: String = DummyAnalytics::class.simpleName ?: ""
 
     override fun initialize(context: Context) {

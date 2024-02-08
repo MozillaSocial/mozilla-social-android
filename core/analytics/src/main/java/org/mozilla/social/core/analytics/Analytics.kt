@@ -2,7 +2,7 @@ package org.mozilla.social.core.analytics
 
 import android.content.Context
 
-interface Analytics {
+internal interface Analytics {
     /**
      * Initialize the analytics SDK
      */

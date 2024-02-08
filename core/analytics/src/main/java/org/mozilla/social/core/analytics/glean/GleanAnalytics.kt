@@ -18,7 +18,7 @@ import org.mozilla.social.core.analytics.GleanMetrics.Ui
 import org.mozilla.social.core.datastore.AppPreferencesDatastore
 import java.util.Calendar
 
-class GleanAnalytics(
+internal class GleanAnalytics(
     private val appPreferencesDatastore: AppPreferencesDatastore,
 ) : Analytics {
     @OptIn(DelicateCoroutinesApi::class)

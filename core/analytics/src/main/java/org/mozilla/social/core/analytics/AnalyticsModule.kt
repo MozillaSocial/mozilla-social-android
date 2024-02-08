@@ -12,4 +12,5 @@ val analyticsModule =
         )
         single<Analytics> { GleanAnalytics(get()) }
         singleOf(::AppAnalytics)
+        singleOf(::DiscoverAnalytics)
     }

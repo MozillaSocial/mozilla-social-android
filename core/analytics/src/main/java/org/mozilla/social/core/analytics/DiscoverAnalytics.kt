@@ -1,9 +1,6 @@
-package org.mozilla.social.feature.discover
+package org.mozilla.social.core.analytics
 
-import org.mozilla.social.core.analytics.Analytics
-import org.mozilla.social.core.analytics.EngagementType
-
-class DiscoverAnalytics(private val analytics: Analytics) {
+class DiscoverAnalytics internal constructor(private val analytics: Analytics) {
 
     fun discoverScreenViewed() {
         analytics.uiImpression(

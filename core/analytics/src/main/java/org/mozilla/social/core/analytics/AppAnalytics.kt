@@ -1,8 +1,6 @@
 package org.mozilla.social.core.analytics
 
 import android.content.Context
-import org.mozilla.social.core.analytics.Analytics
-
 
 class AppAnalytics internal constructor(private val analytics: Analytics) {
 
