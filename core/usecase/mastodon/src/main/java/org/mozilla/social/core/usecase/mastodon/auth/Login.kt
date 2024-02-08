@@ -4,7 +4,7 @@ import android.content.Intent
 import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import org.mozilla.social.common.annotations.PreferUseCase
-import org.mozilla.social.core.analytics.Analytics
+import org.mozilla.social.core.analytics.AppAnalytics
 import org.mozilla.social.core.datastore.UserPreferencesDatastore
 import org.mozilla.social.core.model.Account
 import org.mozilla.social.core.navigation.usecases.OpenLink
@@ -22,7 +22,7 @@ class Login(
     private val accountRepository: AccountRepository,
     private val userPreferencesDatastore: UserPreferencesDatastore,
     private val appRepository: AppRepository,
-    private val analytics: Analytics,
+    private val analytics: AppAnalytics,
     private val openLink: OpenLink,
     private val logout: Logout,
 ) {

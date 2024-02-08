@@ -4,7 +4,7 @@ import android.content.Context
 import org.mozilla.social.core.analytics.Analytics
 
 
-class AppAnalytics(private val analytics: Analytics) {
+class AppAnalytics internal constructor(private val analytics: Analytics) {
 
     fun appOpened() = analytics.appOpened()
 
@@ -13,4 +13,6 @@ class AppAnalytics(private val analytics: Analytics) {
     fun initialize(context: Context) = analytics.initialize(context)
 
     fun clearLoggedInIdentifiers() = analytics.clearLoggedInIdentifiers()
+
+    fun setMastodonAccountId(mastodonAccountId: String) = analytics.setMastodonAccountId(mastodonAccountId)
 }
