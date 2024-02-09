@@ -3,6 +3,7 @@ package org.mozilla.social.core.analytics
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 import org.mozilla.social.core.analytics.core.Analytics
+import org.mozilla.social.core.analytics.core.DummyAnalytics
 import org.mozilla.social.core.analytics.glean.GleanAnalytics
 import org.mozilla.social.core.datastore.dataStoreModule
 
@@ -11,7 +12,14 @@ val analyticsModule =
         includes(
             dataStoreModule,
         )
-        single<Analytics> { GleanAnalytics(get()) }
+        single<Analytics> {
+            if (BuildConfig.DEBUG) {
+                DummyAnalytics()
+            } else {
+                GleanAnalytics(get())
+            }
+        }
+
         singleOf(::AppAnalytics)
         singleOf(::DiscoverAnalytics)
         singleOf(::PostCardAnalytics)

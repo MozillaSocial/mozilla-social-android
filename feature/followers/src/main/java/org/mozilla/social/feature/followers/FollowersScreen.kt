@@ -100,7 +100,10 @@ private fun FollowersScreen(
                         Modifier
                             .height(40.dp),
                         selected = selectedTab == tabType,
-                        onClick = { selectedTab = tabType },
+                        onClick = {
+                            followersInteractions.onTabClicked(tabType)
+                            selectedTab = tabType
+                        },
                         content = {
                             Text(
                                 text =
