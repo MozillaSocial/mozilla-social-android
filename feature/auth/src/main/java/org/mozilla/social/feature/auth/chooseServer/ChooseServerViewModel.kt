@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import org.mozilla.social.common.utils.edit
+import org.mozilla.social.core.analytics.ChooseServerAnalytics
 import org.mozilla.social.core.usecase.mastodon.auth.Login
 import timber.log.Timber
 

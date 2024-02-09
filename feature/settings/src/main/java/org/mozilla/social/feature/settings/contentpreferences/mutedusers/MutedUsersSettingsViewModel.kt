@@ -19,7 +19,7 @@ import org.mozilla.social.core.ui.common.account.toggleablelist.ToggleableAccoun
 import org.mozilla.social.core.usecase.mastodon.account.MuteAccount
 import org.mozilla.social.core.usecase.mastodon.account.UnmuteAccount
 import org.mozilla.social.feature.settings.R
-import org.mozilla.social.feature.settings.SettingsAnalytics
+import org.mozilla.social.core.analytics.SettingsAnalytics
 import timber.log.Timber
 
 class MutedUsersSettingsViewModel(

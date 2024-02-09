@@ -1,9 +1,9 @@
-package org.mozilla.social.feature.followers
+package org.mozilla.social.core.analytics
 
-import org.mozilla.social.core.analytics.Analytics
-import org.mozilla.social.core.analytics.EngagementType
+import org.mozilla.social.core.analytics.core.Analytics
+import org.mozilla.social.core.analytics.core.EngagementType
 
-class FollowersAnalytics(private val analytics: Analytics) {
+class FollowersAnalytics internal constructor(private val analytics: Analytics) {
 
     fun followsScreenViewed() {
         analytics.uiImpression(

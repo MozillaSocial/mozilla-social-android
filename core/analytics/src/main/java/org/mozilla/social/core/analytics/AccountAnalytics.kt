@@ -1,10 +1,9 @@
-package org.mozilla.social.feature.account
+package org.mozilla.social.core.analytics
 
-import org.mozilla.social.core.analytics.Analytics
-import org.mozilla.social.core.analytics.EngagementType
-import org.mozilla.social.core.model.AccountTimelineType
+import org.mozilla.social.core.analytics.core.Analytics
+import org.mozilla.social.core.analytics.core.EngagementType
 
-class AccountAnalytics(private val analytics: Analytics) {
+class AccountAnalytics internal constructor(private val analytics: Analytics) {
 
     fun accountScreenViewed() {
         analytics.uiImpression(
@@ -65,17 +64,8 @@ class AccountAnalytics(private val analytics: Analytics) {
         )
     }
 
-    fun tabClicked(timelineType: AccountTimelineType) {
-        when (timelineType) {
-            AccountTimelineType.POSTS ->
-                analytics.uiEngagement(uiIdentifier = PROFILE_FEED_POSTS)
-
-            AccountTimelineType.POSTS_AND_REPLIES ->
-                analytics.uiEngagement(uiIdentifier = PROFILE_FEED_POSTS_AND_REPLIES)
-
-            AccountTimelineType.MEDIA ->
-                analytics.uiEngagement(uiIdentifier = PROFILE_FEED_MEDIA)
-        }
+    fun tabClicked(timelineType: TimelineType) {
+        analytics.uiEngagement(uiIdentifier = timelineType.identifier)
     }
 
     fun editAccountClicked() {
@@ -96,6 +86,12 @@ class AccountAnalytics(private val analytics: Analytics) {
         )
     }
 
+    enum class TimelineType(val identifier: String) {
+        POSTS(PROFILE_FEED_POSTS), POSTS_AND_REPLIES(PROFILE_FEED_POSTS_AND_REPLIES), MEDIA(
+            PROFILE_FEED_MEDIA
+        )
+    }
+
     companion object {
         private const val ACCOUNTS_SCREEN_IMPRESSION = "account.screen.impression"
         private const val ACCOUNTS_SCREEN_FOLLOW = "profile.follow_btn.follow"
@@ -113,7 +109,5 @@ class AccountAnalytics(private val analytics: Analytics) {
         private const val PROFILE_FEED_POSTS = "profile.tabs.posts"
         private const val PROFILE_FEED_POSTS_AND_REPLIES = "profile.tabs.posts-and-replies"
         private const val PROFILE_FEED_MEDIA = "profile.tabs.media"
-
-
     }
 }

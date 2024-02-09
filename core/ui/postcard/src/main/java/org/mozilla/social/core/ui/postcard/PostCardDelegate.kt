@@ -2,6 +2,8 @@ package org.mozilla.social.core.ui.postcard
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import org.mozilla.social.core.analytics.FeedLocation
+import org.mozilla.social.core.analytics.PostCardAnalytics
 import org.mozilla.social.core.model.Attachment
 import org.mozilla.social.core.navigation.NavigationDestination
 import org.mozilla.social.core.navigation.usecases.NavigateTo

@@ -1,9 +1,9 @@
-package org.mozilla.social.feature.auth.login
+package org.mozilla.social.core.analytics
 
-import org.mozilla.social.core.analytics.Analytics
-import org.mozilla.social.core.analytics.EngagementType
+import org.mozilla.social.core.analytics.core.Analytics
+import org.mozilla.social.core.analytics.core.EngagementType
 
-class LoginAnalytics(private val analytics: Analytics) {
+class LoginAnalytics internal constructor(private val analytics: Analytics) {
 
     fun loginScreenViewed() {
         analytics.uiImpression(
@@ -26,9 +26,8 @@ class LoginAnalytics(private val analytics: Analytics) {
     }
 
     companion object {
-
-        const val AUTH_SCREEN_IMPRESSION = "auth.screen.impression"
-        const val AUTH_SCREEN_SIGN_IN_SIGN_UP = "auth.screen.sign-in-sign-up"
-        const val AUTH_SCREEN_CHOOSE_A_SERVER = "auth.screen.choose-a-server"
+        private const val AUTH_SCREEN_IMPRESSION = "auth.screen.impression"
+        private const val AUTH_SCREEN_SIGN_IN_SIGN_UP = "auth.screen.sign-in-sign-up"
+        private const val AUTH_SCREEN_CHOOSE_A_SERVER = "auth.screen.choose-a-server"
     }
 }

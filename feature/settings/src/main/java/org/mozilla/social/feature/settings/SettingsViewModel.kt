@@ -1,6 +1,7 @@
 package org.mozilla.social.feature.settings
 
 import androidx.lifecycle.ViewModel
+import org.mozilla.social.core.analytics.SettingsAnalytics
 import org.mozilla.social.core.navigation.SettingsNavigationDestination
 import org.mozilla.social.core.navigation.usecases.NavigateTo
 

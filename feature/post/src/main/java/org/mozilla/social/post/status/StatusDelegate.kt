@@ -14,10 +14,9 @@ import org.mozilla.social.common.utils.edit
 import org.mozilla.social.common.utils.findHashtagAtCursor
 import org.mozilla.social.common.utils.replaceAccount
 import org.mozilla.social.common.utils.replaceHashtag
-import org.mozilla.social.core.model.Status
 import org.mozilla.social.core.repository.mastodon.SearchRepository
 import org.mozilla.social.core.repository.mastodon.StatusRepository
-import org.mozilla.social.post.NewPostAnalytics
+import org.mozilla.social.core.analytics.NewPostAnalytics
 import org.mozilla.social.post.NewPostViewModel
 import timber.log.Timber
 
