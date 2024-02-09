@@ -1,8 +1,8 @@
-package org.mozilla.social.feature.report
+package org.mozilla.social.core.analytics
 
-import org.mozilla.social.core.analytics.Analytics
+import org.mozilla.social.core.analytics.core.Analytics
 
-class ReportScreenAnalytics(private val analytics: Analytics) {
+class ReportScreenAnalytics internal constructor(private val analytics: Analytics) {
 
     fun reportScreenViewed() {
         analytics.uiImpression(

@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import org.koin.core.parameter.parametersOf
 import org.koin.java.KoinJavaComponent
-import org.mozilla.social.FeedAnalytics
+import org.mozilla.social.core.analytics.FeedAnalytics
 import org.mozilla.social.core.repository.mastodon.TimelineRepository
 import org.mozilla.social.core.ui.postcard.PostCardDelegate
 import org.mozilla.social.core.ui.postcard.toPostCardUiState
@@ -19,7 +19,7 @@ import org.mozilla.social.core.usecase.mastodon.account.GetLoggedInUserAccountId
 import org.mozilla.social.core.repository.paging.FederatedTimelineRemoteMediator
 import org.mozilla.social.core.repository.paging.HomeTimelineRemoteMediator
 import org.mozilla.social.core.repository.paging.LocalTimelineRemoteMediator
-import org.mozilla.social.core.ui.postcard.FeedLocation
+import org.mozilla.social.core.analytics.FeedLocation
 
 /**
  * Produces a flow of pages of statuses for a feed
@@ -75,11 +75,19 @@ class FeedViewModel(
     ) { parametersOf(viewModelScope, FeedLocation.FEDERATED) }
 
     override fun onTabClicked(timelineType: TimelineType) {
-        analytics.feedScreenClicked(timelineType)
+        analytics.feedScreenClicked(timelineType.toAnalyticsTimelineType())
         _timelineType.update { timelineType }
     }
 
     override fun onScreenViewed() {
         analytics.feedScreenViewed()
+    }
+}
+
+private fun TimelineType.toAnalyticsTimelineType(): FeedAnalytics.TimelineType {
+    return when (this) {
+        TimelineType.FOR_YOU -> FeedAnalytics.TimelineType.FOR_YOU
+        TimelineType.LOCAL -> FeedAnalytics.TimelineType.LOCAL
+        TimelineType.FEDERATED -> FeedAnalytics.TimelineType.FEDERATED
     }
 }

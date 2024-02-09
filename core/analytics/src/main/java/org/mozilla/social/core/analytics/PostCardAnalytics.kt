@@ -1,42 +1,42 @@
-package org.mozilla.social.core.ui.postcard
+package org.mozilla.social.core.analytics
 
-import org.mozilla.social.core.analytics.Analytics
-import org.mozilla.social.core.analytics.EngagementType
+import org.mozilla.social.core.analytics.core.Analytics
+import org.mozilla.social.core.analytics.core.EngagementType
 
-class PostCardAnalytics(private val analytics: Analytics) {
+class PostCardAnalytics internal constructor(private val analytics: Analytics) {
 
     fun replyClicked(baseAnalyticsIdentifier: String) {
         analytics.uiEngagement(
             engagementType = EngagementType.GENERAL,
-            uiIdentifier = "$baseAnalyticsIdentifier.${FEED_POST_REPLY}",
+            uiIdentifier = "$baseAnalyticsIdentifier.$FEED_POST_REPLY",
         )
     }
 
     fun boostClicked(baseAnalyticsIdentifier: String) {
         analytics.uiEngagement(
             engagementType = EngagementType.GENERAL,
-            uiIdentifier = "$baseAnalyticsIdentifier.${FEED_POST_BOOST}",
+            uiIdentifier = "$baseAnalyticsIdentifier.$FEED_POST_BOOST",
         )
     }
 
     fun unboostClicked(baseAnalyticsIdentifier: String) {
         analytics.uiEngagement(
             engagementType = EngagementType.GENERAL,
-            uiIdentifier = "$baseAnalyticsIdentifier.${FEED_POST_UNBOOST}",
+            uiIdentifier = "$baseAnalyticsIdentifier.$FEED_POST_UNBOOST",
         )
     }
 
     fun favoriteClicked(baseAnalyticsIdentifier: String) {
         analytics.uiEngagement(
             engagementType = EngagementType.FAVORITE,
-            uiIdentifier = "$baseAnalyticsIdentifier.${FEED_POST_FAVORITE}",
+            uiIdentifier = "$baseAnalyticsIdentifier.$FEED_POST_FAVORITE",
         )
     }
 
     fun unfavoriteClicked(baseAnalyticsIdentifier: String) {
         analytics.uiEngagement(
             engagementType = EngagementType.FAVORITE,
-            uiIdentifier = "$baseAnalyticsIdentifier.${FEED_POST_UNFAVORITE}",
+            uiIdentifier = "$baseAnalyticsIdentifier.$FEED_POST_UNFAVORITE",
         )
 
     }
@@ -51,14 +51,14 @@ class PostCardAnalytics(private val analytics: Analytics) {
     fun blockClicked(baseAnalyticsIdentifier: String) {
         analytics.uiEngagement(
             engagementType = EngagementType.GENERAL,
-            uiIdentifier = "$baseAnalyticsIdentifier.${FEED_POST_BLOCK}",
+            uiIdentifier = "$baseAnalyticsIdentifier.$FEED_POST_BLOCK",
         )
     }
 
     fun reportClicked(baseAnalyticsIdentifier: String) {
         analytics.uiEngagement(
             engagementType = EngagementType.GENERAL,
-            uiIdentifier = "$baseAnalyticsIdentifier.${FEED_POST_REPORT}",
+            uiIdentifier = "$baseAnalyticsIdentifier.$FEED_POST_REPORT",
         )
 
     }

@@ -11,7 +11,7 @@ import org.koin.core.component.inject
 import org.koin.core.parameter.parametersOf
 import org.mozilla.social.core.repository.mastodon.FavoritesRepository
 import org.mozilla.social.core.repository.paging.FavoritesRemoteMediator
-import org.mozilla.social.core.ui.postcard.FeedLocation
+import org.mozilla.social.core.analytics.FeedLocation
 import org.mozilla.social.core.ui.postcard.PostCardDelegate
 import org.mozilla.social.core.ui.postcard.toPostCardUiState
 import org.mozilla.social.core.usecase.mastodon.account.GetLoggedInUserAccountId

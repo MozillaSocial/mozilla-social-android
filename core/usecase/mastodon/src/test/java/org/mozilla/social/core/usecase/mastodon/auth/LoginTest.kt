@@ -8,7 +8,6 @@ import io.mockk.mockk
 import io.mockk.verify
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
-import org.mozilla.social.core.analytics.Analytics
 import org.mozilla.social.core.analytics.AppAnalytics
 import org.mozilla.social.core.datastore.UserPreferencesDatastore
 import org.mozilla.social.core.navigation.usecases.OpenLink

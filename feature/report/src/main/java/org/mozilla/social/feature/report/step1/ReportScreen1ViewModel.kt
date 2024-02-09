@@ -10,7 +10,7 @@ import org.mozilla.social.common.utils.edit
 import org.mozilla.social.core.model.InstanceRule
 import org.mozilla.social.core.repository.mastodon.InstanceRepository
 import org.mozilla.social.feature.report.ReportDataBundle
-import org.mozilla.social.feature.report.ReportScreenAnalytics
+import org.mozilla.social.core.analytics.ReportScreenAnalytics
 import org.mozilla.social.feature.report.ReportType
 import timber.log.Timber
 

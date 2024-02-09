@@ -16,7 +16,7 @@ import org.mozilla.social.feature.auth.R
 import timber.log.Timber
 
 class LoginViewModel(
-    private val analytics: LoginAnalytics,
+    private val analytics: org.mozilla.social.core.analytics.LoginAnalytics,
     private val login: Login,
     private val navigateTo: NavigateTo,
     private val showSnackbar: ShowSnackbar,

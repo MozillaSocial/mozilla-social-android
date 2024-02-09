@@ -4,7 +4,6 @@ import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import org.mozilla.social.common.appscope.AppScope
-import org.mozilla.social.core.analytics.Analytics
 import org.mozilla.social.core.analytics.AppAnalytics
 import org.mozilla.social.core.datastore.UserPreferencesDatastore
 import org.mozilla.social.core.repository.mastodon.DatabaseDelegate

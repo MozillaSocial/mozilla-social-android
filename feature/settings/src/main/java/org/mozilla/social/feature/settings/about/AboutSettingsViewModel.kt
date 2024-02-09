@@ -16,7 +16,7 @@ import org.mozilla.social.core.repository.mastodon.InstanceRepository
 import org.mozilla.social.core.ui.common.account.quickview.toQuickViewUiState
 import org.mozilla.social.core.ui.htmlcontent.HtmlContentInteractions
 import org.mozilla.social.core.usecase.mastodon.htmlcontent.DefaultHtmlInteractions
-import org.mozilla.social.feature.settings.SettingsAnalytics
+import org.mozilla.social.core.analytics.SettingsAnalytics
 import timber.log.Timber
 
 class AboutSettingsViewModel(

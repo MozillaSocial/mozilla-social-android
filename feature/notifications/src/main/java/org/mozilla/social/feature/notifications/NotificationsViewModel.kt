@@ -20,7 +20,7 @@ import org.mozilla.social.core.repository.paging.notifications.FollowNotificatio
 import org.mozilla.social.core.repository.paging.notifications.MentionNotificationsRemoteMediator
 import org.mozilla.social.core.ui.notifications.NotificationCardDelegate
 import org.mozilla.social.core.ui.notifications.toUiState
-import org.mozilla.social.core.ui.postcard.FeedLocation
+import org.mozilla.social.core.analytics.FeedLocation
 import org.mozilla.social.core.ui.postcard.PostCardDelegate
 import org.mozilla.social.core.usecase.mastodon.account.GetLoggedInUserAccountId
 import timber.log.Timber
