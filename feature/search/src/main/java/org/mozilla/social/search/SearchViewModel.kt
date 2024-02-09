@@ -131,8 +131,17 @@ class SearchViewModel(
                 viewModelScope,
             ) { searchResult ->
                 SearchResultUiState(
-                    postCardUiStates = searchResult.statuses.map { it.toPostCardUiState(usersAccountId, postCardDelegate) },
-                    accountUiStates = searchResult.accounts.map { it.toSearchedAccountUiState(usersAccountId) },
+                    postCardUiStates = searchResult.statuses.map {
+                        it.toPostCardUiState(
+                            usersAccountId,
+                            postCardDelegate
+                        )
+                    },
+                    accountUiStates = searchResult.accounts.map {
+                        it.toSearchedAccountUiState(
+                            usersAccountId
+                        )
+                    },
                 )
             }.collect {
                 _uiState.edit { copy(

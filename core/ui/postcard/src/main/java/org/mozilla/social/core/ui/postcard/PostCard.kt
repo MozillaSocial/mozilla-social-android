@@ -61,9 +61,7 @@ import org.mozilla.social.core.ui.common.utils.PreviewTheme
 import org.mozilla.social.core.ui.common.utils.getMaxWidth
 import org.mozilla.social.core.ui.common.utils.shareUrl
 import org.mozilla.social.core.ui.htmlcontent.HtmlContent
-import org.mozilla.social.core.ui.htmlcontent.HtmlContentInteractions
 import org.mozilla.social.core.ui.poll.Poll
-import org.mozilla.social.core.ui.poll.PollInteractions
 
 /**
  * @param threadId if viewing this post from a thread, pass the threadId in to prevent
@@ -151,7 +149,6 @@ private fun Post(
         Column {
             MetaData(
                 post = post,
-                postCardInteractions = postCardInteractions,
             )
 
             PostContent(
@@ -190,7 +187,6 @@ private fun Avatar(
 private fun MetaData(
     modifier: Modifier = Modifier,
     post: MainPostCardUiState,
-    postCardInteractions: PostCardInteractions,
 ) {
     val context = LocalContext.current
 
@@ -212,7 +208,6 @@ private fun MetaData(
         }
         OverflowMenu(
             post = post,
-            postCardInteractions = postCardInteractions,
         )
     }
 }
@@ -359,7 +354,6 @@ private fun ContentWarning(
 @Composable
 private fun OverflowMenu(
     post: MainPostCardUiState,
-    postCardInteractions: PostCardInteractions,
 ) {
     val overflowMenuExpanded = remember { mutableStateOf(false) }
     val context = LocalContext.current
