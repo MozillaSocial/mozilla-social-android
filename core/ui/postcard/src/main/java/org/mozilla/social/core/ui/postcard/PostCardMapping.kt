@@ -11,16 +11,22 @@ import org.mozilla.social.core.ui.poll.toPollUiState
 /**
  * @param currentUserAccountId refers to the current user, not necessarily the creator of the Status.
  */
-fun Status.toPostCardUiState(currentUserAccountId: String): PostCardUiState =
+fun Status.toPostCardUiState(
+    currentUserAccountId: String,
+    postCardInteractions: PostCardInteractions
+): PostCardUiState =
     PostCardUiState(
         statusId = statusId,
         topRowMetaDataUiState = toTopRowMetaDataUiState(),
         mainPostCardUiState =
-            boostedStatus?.toMainPostCardUiState(currentUserAccountId)
-                ?: toMainPostCardUiState(currentUserAccountId),
+        boostedStatus?.toMainPostCardUiState(currentUserAccountId, postCardInteractions)
+            ?: toMainPostCardUiState(currentUserAccountId, postCardInteractions),
     )
 
-private fun Status.toMainPostCardUiState(currentUserAccountId: String): MainPostCardUiState =
+private fun Status.toMainPostCardUiState(
+    currentUserAccountId: String,
+    postCardInteractions: PostCardInteractions
+): MainPostCardUiState =
     MainPostCardUiState(
         url = url,
         profilePictureUrl = account.avatarStaticUrl,
@@ -34,10 +40,65 @@ private fun Status.toMainPostCardUiState(currentUserAccountId: String): MainPost
         userBoosted = isBoosted ?: false,
         isFavorited = isFavourited ?: false,
         accountId = account.accountId,
-        isUsersPost = currentUserAccountId == account.accountId,
         isBeingDeleted = isBeingDeleted,
-        postContentUiState = toPostContentUiState(currentUserAccountId)
+        postContentUiState = toPostContentUiState(currentUserAccountId),
+        dropDownOptions = toDropDownOptions(
+            isUsersPost = currentUserAccountId == account.accountId,
+            postCardInteractions = postCardInteractions
+        )
     )
+
+fun Status.toDropDownOptions(
+    isUsersPost: Boolean,
+    postCardInteractions: PostCardInteractions
+): List<DropDownOption> {
+    return buildList {
+        if (isUsersPost) {
+            add(
+                DropDownOption(
+                    text = StringFactory.resource(resId = R.string.delete_post),
+                    onOptionClicked = { postCardInteractions.onOverflowDeleteClicked(statusId) }
+                )
+            )
+//            add(
+//                DropDownOption(
+//                    text = StringFactory.resource(resId = org.mozilla.social.core.ui.postcard.R.string.edit_post),
+//                    onOptionClicked = { postCardInteractions.onOverflowEditClicked(statusId) },
+//                )
+//            )
+        } else {
+            add(
+                DropDownOption(
+                    text = StringFactory.resource(
+                        R.string.mute_user,
+                        account.displayName
+                    ),
+                    onOptionClicked = {
+                        postCardInteractions.onOverflowMuteClicked(
+                            accountId = account.accountId,
+                            statusId = statusId,
+                        )
+                    },
+                )
+            )
+
+            add(
+                DropDownOption(
+                    text = StringFactory.resource(
+                        R.string.block_user,
+                        account.displayName
+                    ),
+                    onOptionClicked = {
+                        postCardInteractions.onOverflowBlockClicked(
+                            accountId = account.accountId,
+                            statusId = statusId,
+                        )
+                    },
+                )
+            )
+        }
+    }
+}
 
 fun Status.toPostContentUiState(
     currentUserAccountId: String,
@@ -63,7 +124,10 @@ private fun Status.toTopRowMetaDataUiState(): TopRowMetaDataUiState? =
         )
     } else if (inReplyToAccountName != null) {
         TopRowMetaDataUiState(
-            text = StringFactory.resource(R.string.post_is_in_reply_to_user, inReplyToAccountName!!),
+            text = StringFactory.resource(
+                R.string.post_is_in_reply_to_user,
+                inReplyToAccountName!!
+            ),
             iconType = TopRowIconType.REPLY,
         )
     } else {

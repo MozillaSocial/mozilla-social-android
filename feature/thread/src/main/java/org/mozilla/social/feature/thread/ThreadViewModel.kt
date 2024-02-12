@@ -24,7 +24,7 @@ class ThreadViewModel(
 ) : ViewModel(), ThreadInteractions {
     var statuses: Flow<List<PostCardUiState>> =
         getThread.invoke(mainStatusId).map { statuses ->
-            statuses.map { it.toPostCardUiState(getLoggedInUserAccountId()) }
+            statuses.map { it.toPostCardUiState(getLoggedInUserAccountId(), postCardDelegate) }
         }.catch {
             Timber.e(it)
         }
