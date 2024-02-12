@@ -191,6 +191,7 @@ private fun VideoControls(
 }
 
 private fun Long.toTimeString(): String {
+    if (this < 0) return "0:00"
     val seconds = this / 1_000
     val minutes = (seconds / 60).toInt()
     val remainingSeconds = seconds.mod(60)
