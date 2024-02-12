@@ -60,12 +60,14 @@ fun Status.toDropDownOptions(
                     onOptionClicked = { postCardInteractions.onOverflowDeleteClicked(statusId) }
                 )
             )
-//            add(
-//                DropDownOption(
-//                    text = StringFactory.resource(resId = org.mozilla.social.core.ui.postcard.R.string.edit_post),
-//                    onOptionClicked = { postCardInteractions.onOverflowEditClicked(statusId) },
-//                )
-//            )
+            if (this@toDropDownOptions.poll == null) {
+                add(
+                    DropDownOption(
+                        text = StringFactory.resource(resId = org.mozilla.social.core.ui.postcard.R.string.edit_post),
+                        onOptionClicked = { postCardInteractions.onOverflowEditClicked(statusId) },
+                    )
+                )
+            }
         } else {
             add(
                 DropDownOption(
