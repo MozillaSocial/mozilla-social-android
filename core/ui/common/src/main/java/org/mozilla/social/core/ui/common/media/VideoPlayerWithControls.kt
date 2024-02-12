@@ -162,7 +162,7 @@ private fun VideoControls(
 
         Spacer(modifier = Modifier.width(8.dp))
 
-        SmallTextLabel(text = "0:00/0:00")
+        SmallTextLabel(text = "${exoPlayer.contentPosition.toTimeString()}/${exoPlayer.duration.toTimeString()}")
 
         IconButton(
             onClick = {
@@ -188,4 +188,16 @@ private fun VideoControls(
             )
         }
     }
+}
+
+private fun Long.toTimeString(): String {
+    val seconds = this / 1_000
+    val minutes = (seconds / 60).toInt()
+    val remainingSeconds = seconds.mod(60)
+    val remainingSecondsString: String = if (remainingSeconds < 10) {
+        "0$remainingSeconds"
+    } else {
+        remainingSeconds.toString()
+    }
+    return "$minutes:$remainingSecondsString"
 }
