@@ -3,6 +3,7 @@ package org.mozilla.social.post.status
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.core.text.HtmlCompat
+import androidx.core.text.trimmedLength
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -55,9 +56,11 @@ class StatusDelegate(
 
     private suspend fun populateEditStatus(editStatusId: String) {
         statusRepository.getStatusLocal(editStatusId)?.let { status ->
+            val content = HtmlCompat.fromHtml(status.content, 0)
             _uiState.edit { copy(
                 statusText = TextFieldValue(
-                    text = HtmlCompat.fromHtml(status.content, 0).toString()
+                    text = content.toString(),
+                    selection = TextRange(content.trimmedLength())
                 ),
                 contentWarningText = status.contentWarningText.ifBlank { null },
                 editStatusId = status.statusId,
