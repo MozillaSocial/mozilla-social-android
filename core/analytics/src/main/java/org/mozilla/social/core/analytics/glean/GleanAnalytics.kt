@@ -10,14 +10,15 @@ import kotlinx.coroutines.launch
 import mozilla.telemetry.glean.BuildInfo
 import mozilla.telemetry.glean.Glean
 import org.mozilla.social.common.Version
-import org.mozilla.social.core.analytics.Analytics
-import org.mozilla.social.core.analytics.EngagementType
+import org.mozilla.social.core.analytics.core.Analytics
+import org.mozilla.social.core.analytics.core.EngagementType
 import org.mozilla.social.core.analytics.GleanMetrics.Identifiers
+import org.mozilla.social.core.analytics.GleanMetrics.Mobile
 import org.mozilla.social.core.analytics.GleanMetrics.Ui
 import org.mozilla.social.core.datastore.AppPreferencesDatastore
 import java.util.Calendar
 
-class GleanAnalytics(
+internal class GleanAnalytics(
     private val appPreferencesDatastore: AppPreferencesDatastore,
 ) : Analytics {
     @OptIn(DelicateCoroutinesApi::class)
@@ -25,7 +26,6 @@ class GleanAnalytics(
         val buildInfo = BuildInfo(Version.name, Version.code.toString(), Calendar.getInstance())
 
         Glean.setLogPings(true)
-        Glean.setDebugViewTag("moso-android-debug")
 
         CoroutineScope(Main).launch {
             appPreferencesDatastore.allowAnalytics.collectLatest {
@@ -96,5 +96,14 @@ class GleanAnalytics(
 
     override fun clearLoggedInIdentifiers() {
         Identifiers.mastodonAccountId.set("")
+    }
+
+
+    override fun appOpened() {
+        Mobile.appOpen.record()
+    }
+
+    override fun appBackgrounded() {
+        Mobile.appBackground.record()
     }
 }

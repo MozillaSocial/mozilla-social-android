@@ -1,9 +1,9 @@
-package org.mozilla.social.search
+package org.mozilla.social.core.analytics
 
-import org.mozilla.social.core.analytics.Analytics
-import org.mozilla.social.core.analytics.EngagementType
+import org.mozilla.social.core.analytics.core.Analytics
+import org.mozilla.social.core.analytics.core.EngagementType
 
-class SearchAnalytics(private val analytics: Analytics) {
+class SearchAnalytics internal constructor(private val analytics: Analytics) {
 
     fun searchClicked(query: String) {
         analytics.uiEngagement(
@@ -16,7 +16,7 @@ class SearchAnalytics(private val analytics: Analytics) {
     fun searchTabClicked(tab: SearchTab) {
         analytics.uiEngagement(
             engagementType = EngagementType.GENERAL,
-            uiIdentifier = tab.toIdentifier(),
+            uiIdentifier = tab.identifier,
         )
     }
 
@@ -60,12 +60,7 @@ class SearchAnalytics(private val analytics: Analytics) {
         private const val SEARCH_HASHTAG_FOLLOW = "search.hashtag.follow"
     }
 
-    private fun SearchTab.toIdentifier(): String {
-        return when (this) {
-            SearchTab.POSTS -> SEARCH_TAB_POSTS
-            SearchTab.ACCOUNTS -> SEARCH_TAB_ACCOUNTS
-            SearchTab.HASHTAGS -> SEARCH_TAB_HASHTAGS
-            SearchTab.TOP -> SEARCH_TAB_TOP
-        }
+    enum class SearchTab(val identifier: String) {
+        TOP(SEARCH_TAB_TOP), ACCOUNTS(SEARCH_TAB_ACCOUNTS), HASHTAGS(SEARCH_TAB_HASHTAGS), POSTS(SEARCH_TAB_POSTS)
     }
 }

@@ -8,7 +8,7 @@ import io.mockk.mockk
 import io.mockk.verify
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
-import org.mozilla.social.core.analytics.Analytics
+import org.mozilla.social.core.analytics.AppAnalytics
 import org.mozilla.social.core.datastore.UserPreferencesDatastore
 import org.mozilla.social.core.navigation.usecases.OpenLink
 import org.mozilla.social.core.repository.mastodon.AccountRepository
@@ -33,7 +33,7 @@ class LoginTest {
     private val accountRepository: AccountRepository = mockk(relaxed = true)
     private val userPreferencesDatastore: UserPreferencesDatastore = mockk(relaxed = true)
     private val appRepository: AppRepository = mockk(relaxed = true)
-    private val analytics: Analytics = mockk(relaxed = true)
+    private val analytics: AppAnalytics = mockk(relaxed = true)
     private val openLink: OpenLink = mockk(relaxed = true)
     private val logout: Logout = mockk(relaxed = true)
 

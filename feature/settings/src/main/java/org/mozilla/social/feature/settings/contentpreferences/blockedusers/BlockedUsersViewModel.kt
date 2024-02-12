@@ -19,7 +19,7 @@ import org.mozilla.social.core.ui.common.account.toggleablelist.ToggleableAccoun
 import org.mozilla.social.core.usecase.mastodon.account.BlockAccount
 import org.mozilla.social.core.usecase.mastodon.account.UnblockAccount
 import org.mozilla.social.feature.settings.R
-import org.mozilla.social.feature.settings.SettingsAnalytics
+import org.mozilla.social.core.analytics.SettingsAnalytics
 import timber.log.Timber
 
 class BlockedUsersViewModel(
@@ -42,6 +42,7 @@ class BlockedUsersViewModel(
                 is BlockedButtonState.Blocked -> {
                     try {
                         unblockAccount(accountId)
+                        analytics.accountUnblocked()
                     } catch (e: UnblockAccount.UnblockFailedException) {
                         Timber.e(e)
                     }
@@ -50,6 +51,7 @@ class BlockedUsersViewModel(
                 is BlockedButtonState.Unblocked -> {
                     try {
                         blockAccount(accountId)
+                        analytics.accountBlocked()
                     } catch (e: BlockAccount.BlockFailedException) {
                         Timber.e(e)
                     }

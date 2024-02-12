@@ -1,9 +1,9 @@
-package org.mozilla.social.core.analytics
+package org.mozilla.social.core.analytics.core
 
 import android.content.Context
 import timber.log.Timber
 
-class DummyAnalytics : Analytics {
+internal class DummyAnalytics : Analytics {
     private val tag: String = DummyAnalytics::class.simpleName ?: ""
 
     override fun initialize(context: Context) {
@@ -54,5 +54,13 @@ class DummyAnalytics : Analytics {
 
     override fun clearLoggedInIdentifiers() {
         Timber.tag(tag).d("clear")
+    }
+
+    override fun appOpened() {
+        Timber.tag(tag).d("app opened")
+    }
+
+    override fun appBackgrounded() {
+        Timber.tag(tag).d("app backgrounded")
     }
 }

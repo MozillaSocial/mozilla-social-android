@@ -16,7 +16,7 @@ import org.mozilla.social.common.utils.replaceAccount
 import org.mozilla.social.common.utils.replaceHashtag
 import org.mozilla.social.core.repository.mastodon.SearchRepository
 import org.mozilla.social.core.repository.mastodon.StatusRepository
-import org.mozilla.social.post.NewPostAnalytics
+import org.mozilla.social.core.analytics.NewPostAnalytics
 import org.mozilla.social.post.NewPostViewModel
 import timber.log.Timber
 
@@ -36,28 +36,32 @@ class StatusDelegate(
 
     init {
         coroutineScope.launch {
-            inReplyToId?.let {
-                    statusRepository.getStatusLocal(inReplyToId)?.account?.let { account ->
-                        _uiState.edit { copy(
-                            statusText = TextFieldValue(
-                                text = "@${account.acct} ",
-                                selection = TextRange(account.acct.length + 2),
-                            ),
-                            inReplyToAccountName = account.username
-                        ) }
-                    }
-                }
-            editStatusId?.let {
-                statusRepository.getStatusLocal(editStatusId)?.let { status ->
-                    _uiState.edit { copy(
-                        statusText = TextFieldValue(
-                            text = HtmlCompat.fromHtml(status.content, 0).toString()
-                        ),
-                        contentWarningText = status.contentWarningText.ifBlank { null },
-                        editStatusId = status.statusId,
-                    ) }
-                }
-            }
+            inReplyToId?.let { populateReply(it) }
+            editStatusId?.let { populateEditStatus(it) }
+        }
+    }
+
+    private suspend fun populateReply(inReplyToId: String) {
+        statusRepository.getStatusLocal(inReplyToId)?.account?.let { account ->
+            _uiState.edit { copy(
+                statusText = TextFieldValue(
+                    text = "@${account.acct} ",
+                    selection = TextRange(account.acct.length + 2),
+                ),
+                inReplyToAccountName = account.username
+            ) }
+        }
+    }
+
+    private suspend fun populateEditStatus(editStatusId: String) {
+        statusRepository.getStatusLocal(editStatusId)?.let { status ->
+            _uiState.edit { copy(
+                statusText = TextFieldValue(
+                    text = HtmlCompat.fromHtml(status.content, 0).toString()
+                ),
+                contentWarningText = status.contentWarningText.ifBlank { null },
+                editStatusId = status.statusId,
+            ) }
         }
     }
 

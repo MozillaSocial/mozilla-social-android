@@ -3,7 +3,7 @@ package org.mozilla.social.feed
 import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
-import org.mozilla.social.FeedAnalytics
+import org.mozilla.social.core.analytics.FeedAnalytics
 import org.mozilla.social.common.commonModule
 import org.mozilla.social.core.analytics.analyticsModule
 import org.mozilla.social.core.datastore.dataStoreModule
@@ -42,5 +42,4 @@ val feedModule = module {
         )
     }
     viewModelOf(::FeedViewModel)
-    singleOf(::FeedAnalytics)
 }

@@ -66,7 +66,7 @@ import org.mozilla.social.core.ui.common.appbar.MoSoCloseableTopAppBar
 import org.mozilla.social.core.ui.common.button.MoSoButton
 import org.mozilla.social.core.ui.common.button.MoSoButtonContentPadding
 import org.mozilla.social.core.ui.common.dropdown.VisibilityDropDownButton
-import org.mozilla.social.core.ui.common.media.MediaUpload
+import org.mozilla.social.core.ui.common.media.AttachmentMedia
 import org.mozilla.social.core.ui.common.text.MoSoTextField
 import org.mozilla.social.core.ui.common.text.SmallTextLabel
 import org.mozilla.social.core.ui.common.transparentTextFieldColors
@@ -263,7 +263,7 @@ private fun NewPostScreenContent(
         }
         BottomBar(
             bottomBarState = newPostUiState.bottomBarState,
-            onMediaInserted = mediaInteractions::onMediaInserted,
+            onMediaInserted = mediaInteractions::uploadMedia,
             pollInteractions = pollInteractions,
             contentWarningInteractions = contentWarningInteractions,
             onUploadImageClicked = newPostInteractions::onUploadImageClicked,
@@ -428,7 +428,7 @@ private fun MainBox(
                     }
 
                     items(imageStates.size) { index ->
-                        ImageUploadBox(
+                        AttachmentMediaBox(
                             imageState = imageStates[index],
                             mediaInteractions = mediaInteractions,
                         )
@@ -484,7 +484,7 @@ private fun ContentWarningEntry(
 }
 
 @Composable
-private fun ImageUploadBox(
+private fun AttachmentMediaBox(
     imageState: ImageState,
     mediaInteractions: MediaInteractions,
 ) {
@@ -503,10 +503,11 @@ private fun ImageUploadBox(
             )
             .fillMaxWidth(),
     ) {
-        MediaUpload(
+        AttachmentMedia(
             uri = imageState.uri,
             loadState = imageState.loadState,
-            onRetryClicked = mediaInteractions::onMediaInserted,
+            fileType = imageState.fileType,
+            onRetryClicked = mediaInteractions::uploadMedia,
         )
         Row(
             modifier = Modifier.fillMaxWidth(),

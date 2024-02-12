@@ -61,9 +61,7 @@ import org.mozilla.social.core.ui.common.utils.PreviewTheme
 import org.mozilla.social.core.ui.common.utils.getMaxWidth
 import org.mozilla.social.core.ui.common.utils.shareUrl
 import org.mozilla.social.core.ui.htmlcontent.HtmlContent
-import org.mozilla.social.core.ui.htmlcontent.HtmlContentInteractions
 import org.mozilla.social.core.ui.poll.Poll
-import org.mozilla.social.core.ui.poll.PollInteractions
 
 /**
  * @param threadId if viewing this post from a thread, pass the threadId in to prevent
@@ -151,7 +149,6 @@ private fun Post(
         Column {
             MetaData(
                 post = post,
-                postCardInteractions = postCardInteractions,
             )
 
             PostContent(
@@ -190,7 +187,6 @@ private fun Avatar(
 private fun MetaData(
     modifier: Modifier = Modifier,
     post: MainPostCardUiState,
-    postCardInteractions: PostCardInteractions,
 ) {
     val context = LocalContext.current
 
@@ -212,7 +208,6 @@ private fun MetaData(
         }
         OverflowMenu(
             post = post,
-            postCardInteractions = postCardInteractions,
         )
     }
 }
@@ -359,7 +354,6 @@ private fun ContentWarning(
 @Composable
 private fun OverflowMenu(
     post: MainPostCardUiState,
-    postCardInteractions: PostCardInteractions,
 ) {
     val overflowMenuExpanded = remember { mutableStateOf(false) }
     val context = LocalContext.current
@@ -384,45 +378,11 @@ private fun OverflowMenu(
                 overflowMenuExpanded.value = false
             },
         ) {
-            if (post.isUsersPost) {
+            for (dropDownOption in post.dropDownOptions) {
                 MoSoDropDownItem(
-                    text = stringResource(id = R.string.delete_post),
+                    text = dropDownOption.text.build(context),
                     expanded = overflowMenuExpanded,
-                    onClick = { postCardInteractions.onOverflowDeleteClicked(post.statusId) },
-                )
-                // WILL DO: add in once complete
-//                MoSoDropDownItem(
-//                    text = stringResource(id = R.string.edit_post),
-//                    expanded = overflowMenuExpanded,
-//                    onClick = { postCardInteractions.onOverflowEditClicked(post.statusId) },
-//                )
-            } else {
-                MoSoDropDownItem(
-                    text = stringResource(id = R.string.mute_user, post.username),
-                    expanded = overflowMenuExpanded,
-                    onClick = { postCardInteractions.onOverflowMuteClicked(
-                        accountId = post.accountId,
-                        statusId = post.statusId,
-                    ) },
-                )
-                MoSoDropDownItem(
-                    text = stringResource(id = R.string.block_user, post.username),
-                    expanded = overflowMenuExpanded,
-                    onClick = { postCardInteractions.onOverflowBlockClicked(
-                        accountId = post.accountId,
-                        statusId =  post.statusId,
-                    ) },
-                )
-                MoSoDropDownItem(
-                    text = stringResource(id = R.string.report_user, post.username),
-                    expanded = overflowMenuExpanded,
-                    onClick = {
-                        postCardInteractions.onOverflowReportClicked(
-                            post.accountId,
-                            post.accountName.build(context),
-                            post.statusId,
-                        )
-                    },
+                    onClick = dropDownOption.onOptionClicked,
                 )
             }
         }
@@ -544,7 +504,6 @@ private fun PostCardPreview() {
                             userBoosted = false,
                             isFavorited = false,
                             accountId = "",
-                            isUsersPost = false,
                             isBeingDeleted = false,
                             postContentUiState = PostContentUiState(
                                 pollUiState = null,
@@ -553,7 +512,8 @@ private fun PostCardPreview() {
                                 mentions = emptyList(),
                                 previewCard = null,
                                 contentWarning = "",
-                            )
+                            ),
+                            dropDownOptions = listOf(),
                         ),
                 ),
             postCardInteractions = object : PostCardInteractions {},
@@ -589,7 +549,6 @@ private fun PostCardWithContentWarningPreview() {
                             userBoosted = false,
                             isFavorited = false,
                             accountId = "",
-                            isUsersPost = false,
                             isBeingDeleted = false,
                             postContentUiState = PostContentUiState(
                                 pollUiState = null,
@@ -598,7 +557,8 @@ private fun PostCardWithContentWarningPreview() {
                                 mentions = emptyList(),
                                 previewCard = null,
                                 contentWarning = "Micky mouse spoilers!",
-                            )
+                            ),
+                            dropDownOptions = listOf(),
                         ),
                 ),
             postCardInteractions = object : PostCardInteractions {},

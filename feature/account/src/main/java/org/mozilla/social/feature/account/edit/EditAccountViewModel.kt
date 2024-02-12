@@ -13,7 +13,7 @@ import org.mozilla.social.core.navigation.usecases.PopNavBackstack
 import org.mozilla.social.core.repository.mastodon.AccountRepository
 import org.mozilla.social.core.usecase.mastodon.account.GetLoggedInUserAccountId
 import org.mozilla.social.core.usecase.mastodon.account.UpdateMyAccount
-import org.mozilla.social.feature.account.AccountAnalytics
+import org.mozilla.social.core.analytics.AccountAnalytics
 import timber.log.Timber
 import java.io.File
 

@@ -15,12 +15,13 @@ import org.koin.core.component.inject
 import org.koin.core.parameter.parametersOf
 import org.mozilla.social.common.Resource
 import org.mozilla.social.common.utils.edit
+import org.mozilla.social.core.analytics.AccountAnalytics
 import org.mozilla.social.core.model.AccountTimelineType
 import org.mozilla.social.core.navigation.NavigationDestination
 import org.mozilla.social.core.navigation.usecases.NavigateTo
 import org.mozilla.social.core.repository.mastodon.TimelineRepository
 import org.mozilla.social.core.repository.paging.AccountTimelineRemoteMediator
-import org.mozilla.social.core.ui.postcard.FeedLocation
+import org.mozilla.social.core.analytics.FeedLocation
 import org.mozilla.social.core.ui.postcard.PostCardDelegate
 import org.mozilla.social.core.ui.postcard.toPostCardUiState
 import org.mozilla.social.core.usecase.mastodon.account.BlockAccount
@@ -106,7 +107,7 @@ class AccountViewModel(
         remoteMediator = postsRemoteMediator,
     ).map { pagingData ->
         pagingData.map {
-            it.toPostCardUiState(usersAccountId)
+            it.toPostCardUiState(usersAccountId, postCardDelegate)
         }
     }.cachedIn(viewModelScope)
 
@@ -117,7 +118,7 @@ class AccountViewModel(
         remoteMediator = postsAndRepliesRemoteMediator,
     ).map { pagingData ->
         pagingData.map {
-            it.toPostCardUiState(usersAccountId)
+            it.toPostCardUiState(usersAccountId, postCardDelegate)
         }
     }.cachedIn(viewModelScope)
 
@@ -128,7 +129,7 @@ class AccountViewModel(
         remoteMediator = mediaRemoteMediator,
     ).map { pagingData ->
         pagingData.map {
-            it.toPostCardUiState(usersAccountId)
+            it.toPostCardUiState(usersAccountId, postCardDelegate)
         }
     }.cachedIn(viewModelScope)
 
@@ -292,7 +293,7 @@ class AccountViewModel(
         _timeline.edit { copy(
             type = timelineType
         ) }
-        analytics.tabClicked(timelineType)
+        analytics.tabClicked(timelineType.toAnalyticsTimelineType())
     }
 
     override fun onSettingsClicked() {
@@ -303,4 +304,10 @@ class AccountViewModel(
         analytics.editAccountClicked()
         navigateTo(NavigationDestination.EditAccount)
     }
+}
+
+private fun AccountTimelineType.toAnalyticsTimelineType(): AccountAnalytics.TimelineType = when (this) {
+    AccountTimelineType.POSTS -> AccountAnalytics.TimelineType.POSTS
+    AccountTimelineType.POSTS_AND_REPLIES -> AccountAnalytics.TimelineType.POSTS_AND_REPLIES
+    AccountTimelineType.MEDIA -> AccountAnalytics.TimelineType.MEDIA
 }

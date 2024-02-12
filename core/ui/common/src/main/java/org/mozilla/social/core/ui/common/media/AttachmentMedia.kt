@@ -9,7 +9,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -19,7 +18,6 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import org.mozilla.social.common.LoadState
 import org.mozilla.social.common.utils.FileType
-import org.mozilla.social.common.utils.getFileType
 import org.mozilla.social.common.utils.toFile
 import org.mozilla.social.core.designsystem.theme.FirefoxColor
 import org.mozilla.social.core.ui.common.R
@@ -27,18 +25,15 @@ import org.mozilla.social.core.ui.common.TransparentOverlay
 import java.io.File
 
 @Composable
-fun MediaUpload(
+fun AttachmentMedia(
     uri: Uri,
     loadState: LoadState,
+    fileType: FileType,
     onRetryClicked: (Uri, File, FileType) -> Unit,
 ) {
     Box {
         val context = LocalContext.current
 
-        val fileType =
-            remember(uri) {
-                uri.getFileType(context)
-            }
         when (fileType) {
             FileType.VIDEO -> {
                 VideoPlayer(uri = uri, loadState = loadState)

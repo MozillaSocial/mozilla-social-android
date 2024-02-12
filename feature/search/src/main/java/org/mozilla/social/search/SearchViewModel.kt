@@ -22,7 +22,8 @@ import org.mozilla.social.core.repository.paging.SearchStatusesRemoteMediator
 import org.mozilla.social.core.repository.paging.SearchedHashTagsRemoteMediator
 import org.mozilla.social.core.ui.accountfollower.toAccountFollowerUiState
 import org.mozilla.social.core.ui.common.hashtag.quickview.toHashTagQuickViewUiState
-import org.mozilla.social.core.ui.postcard.FeedLocation
+import org.mozilla.social.core.analytics.FeedLocation
+import org.mozilla.social.core.analytics.SearchAnalytics
 import org.mozilla.social.core.ui.postcard.PostCardDelegate
 import org.mozilla.social.core.ui.postcard.toPostCardUiState
 import org.mozilla.social.core.usecase.mastodon.account.FollowAccount
@@ -90,7 +91,7 @@ class SearchViewModel(
                 remoteMediator = statusesRemoteMediator,
             ).map { pagingData ->
                 pagingData.map {
-                    it.toPostCardUiState(usersAccountId)
+                    it.toPostCardUiState(usersAccountId, postCardDelegate)
                 }
             }.cachedIn(viewModelScope)
         ) }
@@ -131,8 +132,17 @@ class SearchViewModel(
                 viewModelScope,
             ) { searchResult ->
                 SearchResultUiState(
-                    postCardUiStates = searchResult.statuses.map { it.toPostCardUiState(usersAccountId) },
-                    accountUiStates = searchResult.accounts.map { it.toSearchedAccountUiState(usersAccountId) },
+                    postCardUiStates = searchResult.statuses.map {
+                        it.toPostCardUiState(
+                            usersAccountId,
+                            postCardDelegate
+                        )
+                    },
+                    accountUiStates = searchResult.accounts.map {
+                        it.toSearchedAccountUiState(
+                            usersAccountId
+                        )
+                    },
                 )
             }.collect {
                 _uiState.edit { copy(
@@ -151,7 +161,7 @@ class SearchViewModel(
         _uiState.edit { copy(
             selectedTab = tab
         ) }
-        analytics.searchTabClicked(tab)
+        analytics.searchTabClicked(tab.toAnalyticsSearchTab())
     }
 
     override fun onFollowClicked(accountId: String, isFollowing: Boolean) {
@@ -200,5 +210,14 @@ class SearchViewModel(
             }
         }
         analytics.hashtagFollowClicked()
+    }
+}
+
+private fun SearchTab.toAnalyticsSearchTab(): SearchAnalytics.SearchTab {
+    return when (this) {
+        SearchTab.TOP -> SearchAnalytics.SearchTab.TOP
+        SearchTab.ACCOUNTS -> SearchAnalytics.SearchTab.ACCOUNTS
+        SearchTab.POSTS -> SearchAnalytics.SearchTab.POSTS
+        SearchTab.HASHTAGS -> SearchAnalytics.SearchTab.HASHTAGS
     }
 }

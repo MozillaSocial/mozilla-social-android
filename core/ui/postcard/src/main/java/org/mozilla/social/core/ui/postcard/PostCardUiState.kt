@@ -27,9 +27,14 @@ data class MainPostCardUiState(
     val userBoosted: Boolean,
     val isFavorited: Boolean,
     val accountId: String,
-    val isUsersPost: Boolean,
     val isBeingDeleted: Boolean,
     val postContentUiState: PostContentUiState,
+    val dropDownOptions: List<DropDownOption>
+)
+
+data class DropDownOption(
+    val text: StringFactory,
+    val onOptionClicked: () -> Unit,
 )
 
 data class PostContentUiState(

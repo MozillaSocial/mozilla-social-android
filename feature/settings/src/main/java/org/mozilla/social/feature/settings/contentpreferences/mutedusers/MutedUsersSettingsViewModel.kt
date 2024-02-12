@@ -19,7 +19,7 @@ import org.mozilla.social.core.ui.common.account.toggleablelist.ToggleableAccoun
 import org.mozilla.social.core.usecase.mastodon.account.MuteAccount
 import org.mozilla.social.core.usecase.mastodon.account.UnmuteAccount
 import org.mozilla.social.feature.settings.R
-import org.mozilla.social.feature.settings.SettingsAnalytics
+import org.mozilla.social.core.analytics.SettingsAnalytics
 import timber.log.Timber
 
 class MutedUsersSettingsViewModel(
@@ -42,6 +42,7 @@ class MutedUsersSettingsViewModel(
                 is MutedButtonState.Muted -> {
                     try {
                         unmuteAccount(accountId)
+                        analytics.accountUnmuted()
                     } catch (e: UnmuteAccount.UnmuteFailedException) {
                         Timber.e(e)
                     }
@@ -50,6 +51,7 @@ class MutedUsersSettingsViewModel(
                 is MutedButtonState.Unmuted -> {
                     try {
                         muteAccount(accountId)
+                        analytics.accountMuted()
                     } catch (e: MuteAccount.MuteFailedException) {
                         Timber.e(e)
                     }

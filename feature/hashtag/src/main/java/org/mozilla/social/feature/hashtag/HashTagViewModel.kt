@@ -18,7 +18,8 @@ import org.mozilla.social.common.Resource
 import org.mozilla.social.core.model.HashTag
 import org.mozilla.social.core.repository.mastodon.TimelineRepository
 import org.mozilla.social.core.repository.paging.HashTagTimelineRemoteMediator
-import org.mozilla.social.core.ui.postcard.FeedLocation
+import org.mozilla.social.core.analytics.FeedLocation
+import org.mozilla.social.core.analytics.HashtagAnalytics
 import org.mozilla.social.core.ui.postcard.PostCardDelegate
 import org.mozilla.social.core.ui.postcard.toPostCardUiState
 import org.mozilla.social.core.usecase.mastodon.account.GetLoggedInUserAccountId
@@ -56,7 +57,7 @@ class HashTagViewModel(
         remoteMediator = hashTagTimelineRemoteMediator,
     ).map { pagingData ->
         pagingData.map {
-            it.toPostCardUiState(userAccountId())
+            it.toPostCardUiState(userAccountId(), postCardDelegate)
         }
     }.cachedIn(viewModelScope)
 

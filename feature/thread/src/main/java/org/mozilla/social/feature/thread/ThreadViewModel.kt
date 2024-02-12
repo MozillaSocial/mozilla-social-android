@@ -7,7 +7,8 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import org.koin.core.parameter.parametersOf
 import org.koin.java.KoinJavaComponent
-import org.mozilla.social.core.ui.postcard.FeedLocation
+import org.mozilla.social.core.analytics.FeedLocation
+import org.mozilla.social.core.analytics.ThreadAnalytics
 import org.mozilla.social.core.ui.postcard.PostCardDelegate
 import org.mozilla.social.core.ui.postcard.PostCardUiState
 import org.mozilla.social.core.ui.postcard.toPostCardUiState
@@ -23,7 +24,7 @@ class ThreadViewModel(
 ) : ViewModel(), ThreadInteractions {
     var statuses: Flow<List<PostCardUiState>> =
         getThread.invoke(mainStatusId).map { statuses ->
-            statuses.map { it.toPostCardUiState(getLoggedInUserAccountId()) }
+            statuses.map { it.toPostCardUiState(getLoggedInUserAccountId(), postCardDelegate) }
         }.catch {
             Timber.e(it)
         }
