@@ -148,7 +148,8 @@ private fun VideoControls(
                     stringResource(id = R.string.pause)
                 } else {
                     stringResource(id = R.string.play)
-                }
+                },
+                tint = FirefoxColor.White,
             )
         }
 
@@ -162,7 +163,10 @@ private fun VideoControls(
 
         Spacer(modifier = Modifier.width(8.dp))
 
-        SmallTextLabel(text = "${exoPlayer.contentPosition.toTimeString()}/${exoPlayer.duration.toTimeString()}")
+        SmallTextLabel(
+            text = "${exoPlayer.contentPosition.toTimeString()}/${exoPlayer.duration.toTimeString()}",
+            color = FirefoxColor.White,
+        )
 
         IconButton(
             onClick = {
