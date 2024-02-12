@@ -96,6 +96,21 @@ fun Status.toDropDownOptions(
                     },
                 )
             )
+            add(
+                DropDownOption(
+                    text = StringFactory.resource(
+                        R.string.report_user,
+                        account.displayName
+                    ),
+                    onOptionClicked = {
+                        postCardInteractions.onOverflowReportClicked(
+                            accountId = account.accountId,
+                            accountHandle = account.acct,
+                            statusId = statusId,
+                        )
+                    }
+                ),
+            )
         }
     }
 }
