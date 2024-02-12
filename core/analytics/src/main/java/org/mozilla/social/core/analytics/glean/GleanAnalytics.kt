@@ -26,7 +26,6 @@ internal class GleanAnalytics(
         val buildInfo = BuildInfo(Version.name, Version.code.toString(), Calendar.getInstance())
 
         Glean.setLogPings(true)
-        Glean.setDebugViewTag("moso-android-debug")
 
         CoroutineScope(Main).launch {
             appPreferencesDatastore.allowAnalytics.collectLatest {
