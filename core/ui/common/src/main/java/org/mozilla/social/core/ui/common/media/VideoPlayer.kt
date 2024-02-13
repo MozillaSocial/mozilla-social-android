@@ -2,6 +2,7 @@ package org.mozilla.social.core.ui.common.media
 
 import android.annotation.SuppressLint
 import android.net.Uri
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.aspectRatio
@@ -28,6 +29,7 @@ import org.mozilla.social.common.LoadState
 import org.mozilla.social.core.designsystem.icon.MoSoIcons
 import org.mozilla.social.core.designsystem.theme.FirefoxColor
 import org.mozilla.social.core.designsystem.theme.MoSoRadius
+import org.mozilla.social.core.model.Attachment
 import org.mozilla.social.core.ui.common.NoTouchOverlay
 import org.mozilla.social.core.ui.common.utils.media
 import timber.log.Timber
@@ -40,12 +42,18 @@ fun VideoPlayer(
     uri: Uri,
     loadState: LoadState = LoadState.LOADED,
     aspectRatio: Float = 1f,
+    onVideoClicked: (() -> Unit)? = null,
 ) {
     Box(
         modifier =
             Modifier
                 .aspectRatio(aspectRatio)
-                .clip(RoundedCornerShape(MoSoRadius.media)),
+                .clip(RoundedCornerShape(MoSoRadius.media))
+                .clickable(
+                    enabled = onVideoClicked != null,
+                ) {
+                    onVideoClicked?.let { it() }
+                },
     ) {
         val context = LocalContext.current
 
@@ -75,6 +83,7 @@ fun VideoPlayer(
                     controllerAutoShow = false
                     hideController()
                     player = exoPlayer
+                    isClickable = false
                 }
             },
         )
@@ -85,7 +94,9 @@ fun VideoPlayer(
                 exoPlayer.release()
             }
         }
-        NoTouchOverlay()
+        if (onVideoClicked == null) {
+            NoTouchOverlay()
+        }
 
         // Mute button
         if (loadState == LoadState.LOADED) {
