@@ -1,2 +1,2 @@
-json_key_file("secrets/boxwood-axon-825-ed7aa5764ee6.json")
-package_name("org.mozilla.social")
+# json_key_file("secrets/boxwood-axon-825-ed7aa5764ee6.json")
+package_name("social.firefly")
