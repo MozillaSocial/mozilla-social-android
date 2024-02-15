@@ -1,3 +1,1 @@
-# MozillaSocialAndroid
-
-Android client for [mozilla.social](https://mozilla.social) in early stages of development.
+This repository is no longer being maintained.  Work will continue at [Firefly](https://github.com/Firefly-Social/Firefly) 
