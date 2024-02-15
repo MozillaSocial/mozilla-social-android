@@ -3,7 +3,6 @@ plugins {
     id("org.mozilla.social.android.application.compose")
     alias(libs.plugins.about.libraries.plugin)
     id("org.mozilla.social.android.application.secrets")
-    alias(libs.plugins.sentry)
 }
 
 android {
@@ -120,14 +119,4 @@ dependencies {
 
     debugImplementation(libs.androidx.compose.ui.test.manifest)
     debugImplementation(libs.androidx.compose.ui.tooling)
-}
-
-
-sentry {
-    org.set("mozilla")
-    projectName.set("moso-android")
-
-    // this will upload your source code to Sentry to show it as part of the stack traces
-    // disable if you don't want to expose your sources
-    includeSourceContext.set(true)
 }

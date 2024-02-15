@@ -8,9 +8,6 @@ import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
 import coil.decode.VideoFrameDecoder
 import coil.memory.MemoryCache
-import io.sentry.SentryLevel
-import io.sentry.android.core.SentryAndroid
-import io.sentry.android.timber.SentryTimberIntegration
 import org.koin.android.ext.android.get
 import org.koin.android.ext.android.inject
 import org.koin.android.ext.koin.androidContext
@@ -46,36 +43,14 @@ class MainApplication : Application(), ImageLoaderFactory {
     override fun onCreate() {
         super.onCreate()
         initializeAppVersion()
-        initializeTimberAndSentry()
+        initializeTimber()
         initializeKoin()
         initializeAnalytics()
         initializeAuthCredentialInterceptor()
     }
 
-    private fun initializeTimberAndSentry() {
-        SentryAndroid.init(this) { options ->
-            options.apply {
-                setDiagnosticLevel(SentryLevel.ERROR)
-                dsn = BuildConfig.sentryDsn
-                isDebug = BuildConfig.DEBUG
-                environment = BuildConfig.BUILD_TYPE
-                isEnableUserInteractionTracing = true
-                isAttachScreenshot = false
-                isAttachViewHierarchy = true
-                sampleRate = 1.0
-                profilesSampleRate = 1.0
-                if (!BuildConfig.DEBUG) {
-                    addIntegration(
-                        SentryTimberIntegration(
-                            minEventLevel = SentryLevel.ERROR,
-                            minBreadcrumbLevel = SentryLevel.INFO
-                        )
-                    )
-                } else {
-                    Timber.plant(Timber.DebugTree())
-                }
-            }
-        }
+    private fun initializeTimber() {
+        Timber.plant(Timber.DebugTree())
     }
 
     private fun initializeKoin() {
