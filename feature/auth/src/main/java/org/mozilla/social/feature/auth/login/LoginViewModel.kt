@@ -33,7 +33,7 @@ class LoginViewModel(
         analytics.signInSignUpClicked()
         viewModelScope.launch {
             try {
-                login(if (BuildConfig.DEBUG) BuildConfig.stagingUrl else PROD)
+                login(PROD)
             } catch (e: Login.LoginFailedException) {
                 showSnackbar(
                     text = StringFactory.resource(R.string.error_connecting),
@@ -60,6 +60,6 @@ class LoginViewModel(
     }
 
     companion object {
-        private const val PROD = "mozilla.social"
+        private const val PROD = "mastodon.social"
     }
 }
