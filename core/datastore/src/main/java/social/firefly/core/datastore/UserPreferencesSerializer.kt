@@ -10,7 +10,8 @@ import java.io.OutputStream
 internal object UserPreferencesSerializer : Serializer<UserPreferences> {
     override val defaultValue: UserPreferences = UserPreferences.getDefaultInstance()
 
-    override suspend fun readFrom(input: InputStream): UserPreferences = UserPreferences.parseFrom(input)
+    override suspend fun readFrom(input: InputStream): UserPreferences =
+        UserPreferences.parseFrom(input)
 
     override suspend fun writeTo(
         t: UserPreferences,

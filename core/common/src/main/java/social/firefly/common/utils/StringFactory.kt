@@ -44,12 +44,14 @@ sealed interface StringFactory {
                     resId,
                     *formatArgs,
                 )
+
             is QuantityResource ->
                 context.resources.getQuantityString(
                     resId,
                     quantity,
                     *formatArgs,
                 )
+
             is FactoryCollection ->
                 buildString {
                     factories.forEach {
@@ -76,6 +78,7 @@ sealed interface StringFactory {
             vararg formatArgs: Any,
         ): StringFactory = QuantityResource(resId, quantity, *formatArgs)
 
-        fun collection(vararg factories: StringFactory): StringFactory = FactoryCollection(*factories)
+        fun collection(vararg factories: StringFactory): StringFactory =
+            FactoryCollection(*factories)
     }
 }

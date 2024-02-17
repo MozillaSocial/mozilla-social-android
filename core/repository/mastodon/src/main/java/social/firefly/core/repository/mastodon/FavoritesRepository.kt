@@ -8,6 +8,7 @@ import androidx.paging.RemoteMediator
 import androidx.paging.map
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import retrofit2.HttpException
 import social.firefly.common.parseMastodonLinkHeader
 import social.firefly.core.database.dao.FavoritesTimelineStatusDao
 import social.firefly.core.database.model.entities.statusCollections.FavoritesTimelineStatus
@@ -16,7 +17,6 @@ import social.firefly.core.model.Status
 import social.firefly.core.model.paging.StatusPagingWrapper
 import social.firefly.core.network.mastodon.FavoritesApi
 import social.firefly.core.repository.mastodon.model.status.toExternalModel
-import retrofit2.HttpException
 
 class FavoritesRepository(
     private val api: FavoritesApi,

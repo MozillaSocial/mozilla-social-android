@@ -21,7 +21,7 @@ class FavoritesRemoteMediator(
     private val saveStatusToDatabase: SaveStatusToDatabase,
     private val databaseDelegate: DatabaseDelegate,
     private val getInReplyToAccountNames: GetInReplyToAccountNames,
-)  : RemoteMediator<Int, FavoritesTimelineStatusWrapper>() {
+) : RemoteMediator<Int, FavoritesTimelineStatusWrapper>() {
     private var nextKey: String? = null
     private var nextPositionIndex = 0
 

@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
@@ -27,7 +26,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
@@ -40,14 +38,12 @@ import coil.compose.AsyncImage
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 import social.firefly.core.designsystem.icon.MoSoIcons
-import social.firefly.core.designsystem.theme.MoSoRadius
 import social.firefly.core.model.Attachment
 import social.firefly.core.navigation.NavigationDestination
 import social.firefly.core.ui.common.MoSoSurface
 import social.firefly.core.ui.common.appbar.MoSoCloseableTopAppBar
 import social.firefly.core.ui.common.media.VideoPlayer
 import social.firefly.core.ui.common.media.calculateAspectRatio
-import social.firefly.core.ui.common.utils.media
 import kotlin.math.max
 
 @Composable
@@ -118,9 +114,11 @@ private fun MediaScreen(
                     attachments = attachments,
                     pagerState = pagerState,
                 )
+
                 is Attachment.Video -> VideoContent(
                     attachment = attachment,
                 )
+
                 else -> {}
             }
         }
@@ -146,6 +144,7 @@ private fun ImagePager(
                 pagerState,
                 scale
             )
+
             else -> {}
         }
     }
@@ -170,8 +169,10 @@ private fun ZoomableImage(
 
         val maxScale by remember(attachment, width, height) {
             derivedStateOf {
-                val maxScaleHeight = ((attachment.meta?.original?.height ?: 0) / height).coerceAtLeast(1f)
-                val maxScaleWidth = ((attachment.meta?.original?.width ?: 0) / width).coerceAtLeast(1f)
+                val maxScaleHeight =
+                    ((attachment.meta?.original?.height ?: 0) / height).coerceAtLeast(1f)
+                val maxScaleWidth =
+                    ((attachment.meta?.original?.width ?: 0) / width).coerceAtLeast(1f)
                 max(maxScaleHeight, maxScaleWidth) * 3
             }
         }

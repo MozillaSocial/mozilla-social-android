@@ -1,9 +1,9 @@
 package social.firefly.core.network.mastodon
 
-import social.firefly.core.network.mastodon.model.NetworkStatus
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
+import social.firefly.core.network.mastodon.model.NetworkStatus
 
 interface FavoritesApi {
     @GET("/api/v1/favourites")

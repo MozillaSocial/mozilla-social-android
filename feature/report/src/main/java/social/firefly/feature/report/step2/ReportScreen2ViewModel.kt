@@ -27,7 +27,8 @@ class ReportScreen2ViewModel(
     private val additionalText: String,
     private val sendToExternalServer: Boolean,
 ) : ViewModel(), ReportScreen2Interactions {
-    private val _statuses = MutableStateFlow<Resource<List<ReportStatusUiState>>>(Resource.Loading())
+    private val _statuses =
+        MutableStateFlow<Resource<List<ReportStatusUiState>>>(Resource.Loading())
     val statuses = _statuses.asStateFlow()
 
     private val _reportIsSending = MutableStateFlow(false)
@@ -68,12 +69,12 @@ class ReportScreen2ViewModel(
                 report(
                     accountId = reportAccountId,
                     statusIds =
-                        buildList {
-                            reportStatusId?.let { add(it) }
-                            (statuses.value as? Resource.Loaded)?.data?.forEach {
-                                if (it.checked) add(it.statusId)
-                            }
-                        },
+                    buildList {
+                        reportStatusId?.let { add(it) }
+                        (statuses.value as? Resource.Loaded)?.data?.forEach {
+                            if (it.checked) add(it.statusId)
+                        }
+                    },
                     comment = additionalText,
                     category = reportType.stringValue,
                     ruleViolations = checkedInstanceRules.map { it.id },
@@ -101,15 +102,15 @@ class ReportScreen2ViewModel(
         _statuses.update {
             Resource.Loaded(
                 data =
-                    (statuses.value as Resource.Loaded).data.map {
-                        if (it.statusId == statusId) {
-                            it.copy(
-                                checked = !it.checked,
-                            )
-                        } else {
-                            it
-                        }
-                    },
+                (statuses.value as Resource.Loaded).data.map {
+                    if (it.statusId == statusId) {
+                        it.copy(
+                            checked = !it.checked,
+                        )
+                    } else {
+                        it
+                    }
+                },
             )
         }
     }

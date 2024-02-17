@@ -10,8 +10,8 @@ interface HashTagsDao : BaseDao<DatabaseHashTagEntity> {
 
     @Query(
         "UPDATE hashtags " +
-        "SET following = :isFollowing " +
-        "WHERE name = :hashTag",
+                "SET following = :isFollowing " +
+                "WHERE name = :hashTag",
     )
     suspend fun updateFollowing(
         hashTag: String,
@@ -20,7 +20,7 @@ interface HashTagsDao : BaseDao<DatabaseHashTagEntity> {
 
     @Query(
         "SELECT * FROM hashtags " +
-        "WHERE name = :name",
+                "WHERE name = :name",
     )
     fun getHashTagFlow(name: String): Flow<DatabaseHashTagEntity>
 

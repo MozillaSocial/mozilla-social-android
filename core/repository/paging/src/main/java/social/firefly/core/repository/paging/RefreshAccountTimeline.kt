@@ -48,7 +48,9 @@ class RefreshAccountTimeline internal constructor(
                     LoadType.PREPEND -> {
                         val firstItem =
                             state.firstItemOrNull()
-                                ?: return RemoteMediator.MediatorResult.Success(endOfPaginationReached = true)
+                                ?: return RemoteMediator.MediatorResult.Success(
+                                    endOfPaginationReached = true
+                                )
                         accountRepository.getAccountStatuses(
                             accountId = accountId,
                             olderThanId = null,
@@ -62,7 +64,9 @@ class RefreshAccountTimeline internal constructor(
                     LoadType.APPEND -> {
                         val lastItem =
                             state.lastItemOrNull()
-                                ?: return RemoteMediator.MediatorResult.Success(endOfPaginationReached = true)
+                                ?: return RemoteMediator.MediatorResult.Success(
+                                    endOfPaginationReached = true
+                                )
                         accountRepository.getAccountStatuses(
                             accountId = accountId,
                             olderThanId = lastItem.accountTimelineStatus.statusId,
@@ -98,12 +102,12 @@ class RefreshAccountTimeline internal constructor(
 
             RemoteMediator.MediatorResult.Success(
                 endOfPaginationReached =
-                    when (loadType) {
-                        LoadType.PREPEND -> response.pagingLinks?.find { it.rel == Rel.PREV } == null
-                        LoadType.REFRESH,
-                        LoadType.APPEND,
-                        -> response.pagingLinks?.find { it.rel == Rel.NEXT } == null
-                    },
+                when (loadType) {
+                    LoadType.PREPEND -> response.pagingLinks?.find { it.rel == Rel.PREV } == null
+                    LoadType.REFRESH,
+                    LoadType.APPEND,
+                    -> response.pagingLinks?.find { it.rel == Rel.NEXT } == null
+                },
             )
         } catch (e: Exception) {
             Timber.e(e)

@@ -31,8 +31,8 @@ internal fun SettingsSwitch(
     MoSoSurface(
         color = Color.Transparent,
         modifier =
-            Modifier
-                .fillMaxWidth(),
+        Modifier
+            .fillMaxWidth(),
         onClick = onCheckedChanged,
     ) {
         Column {
@@ -43,9 +43,9 @@ internal fun SettingsSwitch(
                 Row {
                     Column(
                         modifier =
-                            Modifier
-                                .weight(9f)
-                                .padding(bottom = 8.dp),
+                        Modifier
+                            .weight(9f)
+                            .padding(bottom = 8.dp),
                     ) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Text(
@@ -69,8 +69,8 @@ internal fun SettingsSwitch(
                         checked = checked,
                         onCheckChanged = { onCheckedChanged() },
                         modifier =
-                            Modifier
-                                .padding(end = 16.dp),
+                        Modifier
+                            .padding(end = 16.dp),
                     )
                 }
             }

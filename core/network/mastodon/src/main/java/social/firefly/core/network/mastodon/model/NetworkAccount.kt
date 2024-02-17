@@ -1,7 +1,6 @@
 package social.firefly.core.network.mastodon.model
 
 import kotlinx.datetime.Instant
-import kotlinx.datetime.LocalDate
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 

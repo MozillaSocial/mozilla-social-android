@@ -1,10 +1,8 @@
 package social.firefly.feature.followers
 
 import org.koin.androidx.viewmodel.dsl.viewModel
-import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 import social.firefly.common.commonModule
-import social.firefly.core.analytics.FollowersAnalytics
 import social.firefly.core.analytics.analyticsModule
 import social.firefly.core.navigation.navigationModule
 import social.firefly.core.repository.mastodon.mastodonRepositoryModule

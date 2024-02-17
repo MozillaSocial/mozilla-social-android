@@ -4,11 +4,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import social.firefly.common.utils.StringFactory
 import social.firefly.core.ui.common.utils.PreviewTheme
-import social.firefly.core.ui.htmlcontent.HtmlContentInteractions
 import social.firefly.core.ui.notifications.NotificationCard
 import social.firefly.core.ui.notifications.NotificationInteractionsNoOp
 import social.firefly.core.ui.notifications.NotificationUiState
-import social.firefly.core.ui.poll.PollInteractions
 import social.firefly.core.ui.postcard.PostCardInteractions
 
 @Preview

@@ -11,6 +11,7 @@ fun Notification.toDatabase(): DatabaseNotification = when (this) {
         accountId = account.accountId,
         statusId = status.statusId,
     )
+
     is Notification.NewStatus -> DatabaseNotification(
         id = id,
         type = DatabaseNotification.Type.NEW_STATUS,
@@ -18,6 +19,7 @@ fun Notification.toDatabase(): DatabaseNotification = when (this) {
         accountId = account.accountId,
         statusId = status.statusId,
     )
+
     is Notification.Repost -> DatabaseNotification(
         id = id,
         type = DatabaseNotification.Type.REPOST,
@@ -25,6 +27,7 @@ fun Notification.toDatabase(): DatabaseNotification = when (this) {
         accountId = account.accountId,
         statusId = status.statusId,
     )
+
     is Notification.Favorite -> DatabaseNotification(
         id = id,
         type = DatabaseNotification.Type.FAVORITE,
@@ -32,6 +35,7 @@ fun Notification.toDatabase(): DatabaseNotification = when (this) {
         accountId = account.accountId,
         statusId = status.statusId,
     )
+
     is Notification.PollEnded -> DatabaseNotification(
         id = id,
         type = DatabaseNotification.Type.POLL_ENDED,
@@ -39,6 +43,7 @@ fun Notification.toDatabase(): DatabaseNotification = when (this) {
         accountId = account.accountId,
         statusId = status.statusId,
     )
+
     is Notification.StatusUpdated -> DatabaseNotification(
         id = id,
         type = DatabaseNotification.Type.STATUS_UPDATED,
@@ -46,6 +51,7 @@ fun Notification.toDatabase(): DatabaseNotification = when (this) {
         accountId = account.accountId,
         statusId = status.statusId,
     )
+
     is Notification.FollowRequest -> DatabaseNotification(
         id = id,
         type = DatabaseNotification.Type.FOLLOW_REQUEST,
@@ -53,6 +59,7 @@ fun Notification.toDatabase(): DatabaseNotification = when (this) {
         accountId = account.accountId,
         statusId = null,
     )
+
     is Notification.Follow -> DatabaseNotification(
         id = id,
         type = DatabaseNotification.Type.FOLLOW,

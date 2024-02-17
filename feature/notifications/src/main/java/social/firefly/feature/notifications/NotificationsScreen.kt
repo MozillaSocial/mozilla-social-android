@@ -30,12 +30,12 @@ import kotlinx.coroutines.flow.flowOf
 import org.koin.androidx.compose.koinViewModel
 import social.firefly.core.designsystem.theme.MoSoSpacing
 import social.firefly.core.ui.common.MoSoSurface
-import social.firefly.core.ui.common.tabs.MoSoTab
-import social.firefly.core.ui.common.tabs.MoSoTabRow
 import social.firefly.core.ui.common.appbar.MoSoTopBar
 import social.firefly.core.ui.common.divider.MoSoDivider
 import social.firefly.core.ui.common.pullrefresh.PullRefreshLazyColumn
 import social.firefly.core.ui.common.pullrefresh.rememberPullRefreshState
+import social.firefly.core.ui.common.tabs.MoSoTab
+import social.firefly.core.ui.common.tabs.MoSoTabRow
 import social.firefly.core.ui.common.text.MediumTextLabel
 import social.firefly.core.ui.common.utils.PreviewTheme
 import social.firefly.core.ui.notifications.NotificationCard

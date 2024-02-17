@@ -29,10 +29,10 @@ class PollDelegate(
         _uiState.edit {
             this?.copy(
                 options =
-                    options.toMutableList().apply {
-                        removeAt(optionIndex)
-                        add(optionIndex, text)
-                    },
+                options.toMutableList().apply {
+                    removeAt(optionIndex)
+                    add(optionIndex, text)
+                },
             )
         }
     }
@@ -41,9 +41,9 @@ class PollDelegate(
         _uiState.edit {
             this?.copy(
                 options =
-                    options.toMutableList().apply {
-                        removeAt(optionIndex)
-                    },
+                options.toMutableList().apply {
+                    removeAt(optionIndex)
+                },
             )
         }
     }
@@ -52,9 +52,9 @@ class PollDelegate(
         _uiState.edit {
             this?.copy(
                 options =
-                    options.toMutableList().apply {
-                        add("")
-                    },
+                options.toMutableList().apply {
+                    add("")
+                },
             )
         }
     }
@@ -86,10 +86,10 @@ class PollDelegate(
     private fun newPoll(): PollUiState =
         PollUiState(
             options =
-                listOf(
-                    "",
-                    "",
-                ),
+            listOf(
+                "",
+                "",
+            ),
             pollDuration = PollDuration.ONE_DAY,
             style = PollStyle.SINGLE_CHOICE,
             hideTotals = false,

@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import social.firefly.common.Resource
+import social.firefly.core.analytics.SettingsAnalytics
 import social.firefly.core.model.Instance
 import social.firefly.core.navigation.SettingsNavigationDestination
 import social.firefly.core.navigation.usecases.NavigateTo
@@ -16,7 +17,6 @@ import social.firefly.core.repository.mastodon.InstanceRepository
 import social.firefly.core.ui.common.account.quickview.toQuickViewUiState
 import social.firefly.core.ui.htmlcontent.HtmlContentInteractions
 import social.firefly.core.usecase.mastodon.htmlcontent.DefaultHtmlInteractions
-import social.firefly.core.analytics.SettingsAnalytics
 import timber.log.Timber
 
 class AboutSettingsViewModel(

@@ -13,9 +13,9 @@ import androidx.compose.ui.graphics.drawscope.ContentDrawScope
  * This is for removing the ripple effect.
  * Can be applied like so:
  *
- CompositionLocalProvider(
- LocalIndication provides NoIndication
- ) {}
+CompositionLocalProvider(
+LocalIndication provides NoIndication
+) {}
  */
 object NoIndication : Indication {
     private object NoIndicationInstance : IndicationInstance {

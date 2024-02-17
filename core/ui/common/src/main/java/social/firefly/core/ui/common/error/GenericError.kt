@@ -20,10 +20,10 @@ fun GenericError(
 ) {
     Column(
         modifier =
-            modifier
-                .padding(8.dp)
-                .fillMaxWidth()
-                .wrapContentSize(align = Alignment.Center),
+        modifier
+            .padding(8.dp)
+            .fillMaxWidth()
+            .wrapContentSize(align = Alignment.Center),
     ) {
         Text(
             modifier = Modifier.align(Alignment.CenterHorizontally),
@@ -31,9 +31,9 @@ fun GenericError(
         )
         Button(
             modifier =
-                Modifier
-                    .padding(8.dp)
-                    .align(Alignment.CenterHorizontally),
+            Modifier
+                .padding(8.dp)
+                .align(Alignment.CenterHorizontally),
             onClick = { onRetryClicked() },
         ) {
             Text(text = stringResource(id = R.string.retry))

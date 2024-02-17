@@ -8,11 +8,11 @@ import social.firefly.core.database.model.entities.statusCollections.FavoritesTi
 import social.firefly.core.database.model.entities.statusCollections.FavoritesTimelineStatusWrapper
 
 @Dao
-interface FavoritesTimelineStatusDao: BaseDao<FavoritesTimelineStatus> {
+interface FavoritesTimelineStatusDao : BaseDao<FavoritesTimelineStatus> {
     @Transaction
     @Query(
         "SELECT * FROM favoritesTimeline " +
-        "ORDER BY position ASC",
+                "ORDER BY position ASC",
     )
     fun favoritesTimelinePagingSource(): PagingSource<Int, FavoritesTimelineStatusWrapper>
 
@@ -21,13 +21,13 @@ interface FavoritesTimelineStatusDao: BaseDao<FavoritesTimelineStatus> {
 
     @Query(
         "DELETE FROM favoritesTimeline " +
-        "WHERE statusId = :statusId"
+                "WHERE statusId = :statusId"
     )
     suspend fun deletePost(statusId: String)
 
     @Query(
         "SELECT * FROM favoritesTimeline " +
-        "WHERE statusId = :statusId"
+                "WHERE statusId = :statusId"
     )
     suspend fun getStatus(statusId: String): FavoritesTimelineStatus
 }

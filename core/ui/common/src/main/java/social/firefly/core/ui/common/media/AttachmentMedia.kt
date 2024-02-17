@@ -38,6 +38,7 @@ fun AttachmentMedia(
             FileType.VIDEO -> {
                 VideoPlayer(uri = uri, loadState = loadState)
             }
+
             FileType.IMAGE -> Image(imageUri = uri)
             FileType.UNKNOWN -> {}
         }
@@ -47,8 +48,8 @@ fun AttachmentMedia(
                 TransparentOverlay()
                 Column(
                     modifier =
-                        Modifier
-                            .align(Alignment.Center),
+                    Modifier
+                        .align(Alignment.Center),
                 ) {
                     Text(
                         text = stringResource(id = R.string.media_uploading),
@@ -56,12 +57,13 @@ fun AttachmentMedia(
                     )
                     CircularProgressIndicator(
                         modifier =
-                            Modifier
-                                .align(Alignment.CenterHorizontally)
-                                .padding(16.dp),
+                        Modifier
+                            .align(Alignment.CenterHorizontally)
+                            .padding(16.dp),
                     )
                 }
             }
+
             LoadState.ERROR -> {
                 TransparentOverlay()
                 Column(
@@ -73,9 +75,9 @@ fun AttachmentMedia(
                     )
                     Button(
                         modifier =
-                            Modifier
-                                .align(Alignment.CenterHorizontally)
-                                .padding(16.dp),
+                        Modifier
+                            .align(Alignment.CenterHorizontally)
+                            .padding(16.dp),
                         onClick = {
                             onRetryClicked(uri, uri.toFile(context), fileType)
                         },
@@ -87,6 +89,7 @@ fun AttachmentMedia(
                     }
                 }
             }
+
             else -> {}
         }
     }
@@ -96,8 +99,8 @@ fun AttachmentMedia(
 private fun Image(imageUri: Uri) {
     AsyncImage(
         modifier =
-            Modifier
-                .fillMaxWidth(),
+        Modifier
+            .fillMaxWidth(),
         model = imageUri,
         contentDescription = "",
         contentScale = ContentScale.FillWidth,

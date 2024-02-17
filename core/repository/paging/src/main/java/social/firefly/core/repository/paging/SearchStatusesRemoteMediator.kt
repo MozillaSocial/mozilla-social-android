@@ -87,6 +87,7 @@ class SearchStatusesRemoteMediator(
                 endOfPaginationReached = when (loadType) {
                     LoadType.REFRESH,
                     LoadType.APPEND -> response.statuses.isEmpty()
+
                     else -> true
                 },
             )

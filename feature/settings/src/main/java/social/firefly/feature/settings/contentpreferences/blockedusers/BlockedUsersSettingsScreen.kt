@@ -56,7 +56,9 @@ private fun BlockedUsersSettingsScreenPreview() {
             pagingData = emptyFlow(),
             blockedUsersInteractions = object : BlockedUsersInteractions {
                 override fun onScreenViewed() = Unit
-                override fun onButtonClicked(accountId: String, buttonState: BlockedButtonState) = Unit
+                override fun onButtonClicked(accountId: String, buttonState: BlockedButtonState) =
+                    Unit
+
                 override fun onAccountClicked(accountId: String) = Unit
             }
         )

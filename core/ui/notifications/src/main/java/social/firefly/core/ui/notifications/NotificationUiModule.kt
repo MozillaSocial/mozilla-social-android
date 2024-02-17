@@ -10,7 +10,7 @@ val notificationUiModule = module {
         mastodonUsecaseModule,
     )
 
-    factory {parametersHolder ->
+    factory { parametersHolder ->
         NotificationCardDelegate(
             coroutineScope = parametersHolder[0],
             navigateTo = get(),

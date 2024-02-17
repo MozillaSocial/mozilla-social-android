@@ -8,7 +8,6 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.mapLatest
 import timber.log.Timber
 import java.io.IOException
-import java.lang.IllegalArgumentException
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class UserPreferencesDatastore(context: Context) {

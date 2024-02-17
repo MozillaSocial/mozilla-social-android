@@ -143,7 +143,8 @@ fun MoSoTabRow(
 
                 val isScrollEnabled = calculatedTabMinWidth == null
 
-                val minTabWidth = calculatedTabMinWidth ?: ScrollableTabRowMinimumTabWidth.roundToPx()
+                val minTabWidth =
+                    calculatedTabMinWidth ?: ScrollableTabRowMinimumTabWidth.roundToPx()
 
                 val layoutHeight = tabMeasurables.fold(initial = 0) { curr, measurable ->
                     maxOf(curr, measurable.maxIntrinsicHeight(Constraints.Infinity))
@@ -289,7 +290,7 @@ object TabRowDefaults {
     /** Default content color of a tab row. */
     val contentColor: Color
         @Composable get() =
-        MoSoTheme.colors.layer1
+            MoSoTheme.colors.layer1
 
     /**
      * Default indicator, which will be positioned at the bottom of the [TabRow], on top of the

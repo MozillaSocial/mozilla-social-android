@@ -20,7 +20,8 @@ fun NavGraphBuilder.mediaScreen() {
                 NavigationDestination.Media.NAV_PARAM_BUNDLE,
             )!!
 
-        val deserializedBundle: NavigationDestination.Media.MediaBundle = Json.decodeFromString(bundle)
+        val deserializedBundle: NavigationDestination.Media.MediaBundle =
+            Json.decodeFromString(bundle)
 
         MediaScreen(mediaBundle = deserializedBundle)
     }

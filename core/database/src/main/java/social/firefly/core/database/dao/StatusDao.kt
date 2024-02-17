@@ -12,21 +12,21 @@ interface StatusDao : BaseDao<DatabaseStatus> {
     @Transaction
     @Query(
         "SELECT * FROM statuses " +
-            "WHERE statusId = :statusId",
+                "WHERE statusId = :statusId",
     )
     suspend fun getStatus(statusId: String): StatusWrapper?
 
     @Transaction
     @Query(
         "SELECT * FROM statuses " +
-            "WHERE statusId IN (:statusIds)",
+                "WHERE statusId IN (:statusIds)",
     )
     fun getStatuses(statusIds: List<String>): Flow<List<StatusWrapper>>
 
     @Query(
         "UPDATE statuses " +
-            "SET isBoosted = :isBoosted " +
-            "WHERE statusId = :statusId",
+                "SET isBoosted = :isBoosted " +
+                "WHERE statusId = :statusId",
     )
     suspend fun updateBoosted(
         statusId: String,
@@ -35,8 +35,8 @@ interface StatusDao : BaseDao<DatabaseStatus> {
 
     @Query(
         "UPDATE statuses " +
-            "SET boostsCount = boostsCount + :valueChange " +
-            "WHERE statusId = :statusId",
+                "SET boostsCount = boostsCount + :valueChange " +
+                "WHERE statusId = :statusId",
     )
     suspend fun updateBoostCount(
         statusId: String,
@@ -45,8 +45,8 @@ interface StatusDao : BaseDao<DatabaseStatus> {
 
     @Query(
         "UPDATE statuses " +
-            "SET isFavorited = :isFavorited " +
-            "WHERE statusId = :statusId",
+                "SET isFavorited = :isFavorited " +
+                "WHERE statusId = :statusId",
     )
     suspend fun updateFavorited(
         statusId: String,
@@ -55,8 +55,8 @@ interface StatusDao : BaseDao<DatabaseStatus> {
 
     @Query(
         "UPDATE statuses " +
-            "SET favouritesCount = favouritesCount + :valueChange " +
-            "WHERE statusId = :statusId",
+                "SET favouritesCount = favouritesCount + :valueChange " +
+                "WHERE statusId = :statusId",
     )
     suspend fun updateFavoriteCount(
         statusId: String,
@@ -65,7 +65,7 @@ interface StatusDao : BaseDao<DatabaseStatus> {
 
     @Query(
         "DELETE FROM statuses " +
-        "WHERE statusId NOT IN (:statusIdsToKeep)"
+                "WHERE statusId NOT IN (:statusIdsToKeep)"
     )
     suspend fun deleteAll(
         statusIdsToKeep: List<String> = emptyList()
@@ -73,14 +73,14 @@ interface StatusDao : BaseDao<DatabaseStatus> {
 
     @Query(
         "DELETE FROM statuses " +
-            "WHERE statusId = :statusId",
+                "WHERE statusId = :statusId",
     )
     suspend fun deleteStatus(statusId: String)
 
     @Query(
         "UPDATE statuses " +
-            "SET isBeingDeleted = :isBeingDeleted " +
-            "WHERE statusId = :statusId",
+                "SET isBeingDeleted = :isBeingDeleted " +
+                "WHERE statusId = :statusId",
     )
     suspend fun updateIsBeingDeleted(
         statusId: String,
@@ -89,11 +89,11 @@ interface StatusDao : BaseDao<DatabaseStatus> {
 
     @Query(
         "DELETE FROM statuses " +
-        "WHERE statusId NOT IN " +
-        "( " +
-            "SELECT statusId FROM statuses " +
-            "WHERE statusId IN " +
-            "(" +
+                "WHERE statusId NOT IN " +
+                "( " +
+                "SELECT statusId FROM statuses " +
+                "WHERE statusId IN " +
+                "(" +
                 "SELECT statusId FROM favoritesTimeline " +
                 "UNION " +
                 "SELECT statusId FROM homeTimeline " +
@@ -107,11 +107,11 @@ interface StatusDao : BaseDao<DatabaseStatus> {
                 "SELECT statusId FROM accountTimeline " +
                 "UNION " +
                 "SELECT statusId FROM notifications" +
-            ") " +
-            "UNION " +
-            "SELECT boostedStatusId FROM statuses " +
-            "WHERE statusId IN " +
-            "(" +
+                ") " +
+                "UNION " +
+                "SELECT boostedStatusId FROM statuses " +
+                "WHERE statusId IN " +
+                "(" +
                 "SELECT statusId FROM favoritesTimeline " +
                 "UNION " +
                 "SELECT statusId FROM homeTimeline " +
@@ -125,8 +125,8 @@ interface StatusDao : BaseDao<DatabaseStatus> {
                 "SELECT statusId FROM accountTimeline " +
                 "UNION " +
                 "SELECT statusId FROM notifications" +
-            ") " +
-        ")"
+                ") " +
+                ")"
     )
     suspend fun deleteOldStatuses()
 }

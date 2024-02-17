@@ -20,14 +20,14 @@ fun NavGraphBuilder.reportFlow(navController: NavController) {
         startDestination = ReportNavigationDestination.ReportScreen1.route,
         route = NavigationDestination.Report.fullRoute,
         arguments =
-            listOf(
-                navArgument(NavigationDestination.Report.NAV_PARAM_REPORT_STATUS_ID) {
-                    nullable = true
-                },
-                navArgument(NavigationDestination.Report.NAV_PARAM_REPORT_ACCOUNT_ID) {
-                    nullable = true
-                },
-            ),
+        listOf(
+            navArgument(NavigationDestination.Report.NAV_PARAM_REPORT_STATUS_ID) {
+                nullable = true
+            },
+            navArgument(NavigationDestination.Report.NAV_PARAM_REPORT_ACCOUNT_ID) {
+                nullable = true
+            },
+        ),
     ) {
         reportScreen1(
             onCloseClicked = navController::popBackStack,
@@ -36,6 +36,7 @@ fun NavGraphBuilder.reportFlow(navController: NavController) {
                     is ReportDataBundle.ReportDataBundleForScreen2 -> {
                         navController.navigateToReportScreen2(Json.encodeToString(bundle))
                     }
+
                     is ReportDataBundle.ReportDataBundleForScreen3 -> {
                         navController.navigateToReportScreen3(Json.encodeToString(bundle))
                     }

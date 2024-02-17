@@ -89,9 +89,9 @@ fun PullRefreshIndicator(
 
     PullRefreshSurface(
         modifier =
-            modifier
-                .size(IndicatorSize)
-                .pullRefreshIndicatorTransform(state, scale),
+        modifier
+            .size(IndicatorSize)
+            .pullRefreshIndicatorTransform(state, scale),
         shape = SpinnerShape,
         color = backgroundColor,
         contentColor = contentColor,
@@ -144,16 +144,16 @@ private fun PullRefreshSurface(
     ) {
         Box(
             modifier =
-                modifier
-                    .surface(
-                        shape = shape,
-                        backgroundColor = color,
-                        border = border,
-                        shadowElevation = shadowElevation,
-                    )
-                    .semantics(mergeDescendants = false) {
-                        isTraversalGroup = true
-                    },
+            modifier
+                .surface(
+                    shape = shape,
+                    backgroundColor = color,
+                    border = border,
+                    shadowElevation = shadowElevation,
+                )
+                .semantics(mergeDescendants = false) {
+                    isTraversalGroup = true
+                },
             propagateMinConstraints = true,
         ) {
             content()
@@ -166,7 +166,8 @@ private fun Modifier.surface(
     backgroundColor: Color,
     border: BorderStroke?,
     shadowElevation: Dp,
-) = this.shadow(shadowElevation, shape, clip = false)
+) = this
+    .shadow(shadowElevation, shape, clip = false)
     .then(if (border != null) Modifier.border(border, shape) else Modifier)
     .background(color = backgroundColor, shape = shape)
     .clip(shape)
@@ -213,10 +214,10 @@ private fun CircularArrowIndicator(
                 topLeft = arcBounds.topLeft,
                 size = arcBounds.size,
                 style =
-                    Stroke(
-                        width = StrokeWidth.toPx(),
-                        cap = StrokeCap.Square,
-                    ),
+                Stroke(
+                    width = StrokeWidth.toPx(),
+                    cap = StrokeCap.Square,
+                ),
             )
             drawArrow(path, arcBounds, color, alpha, values)
         }

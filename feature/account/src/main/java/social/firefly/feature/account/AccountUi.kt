@@ -38,15 +38,15 @@ internal fun Header(
             headerImage = {
                 Box(
                     modifier =
-                        Modifier
-                            .fillMaxWidth()
-                            .height(120.dp),
+                    Modifier
+                        .fillMaxWidth()
+                        .height(120.dp),
                 ) {
                     AsyncImage(
                         modifier =
-                            Modifier
-                                .fillMaxSize()
-                                .background(MoSoTheme.colors.layer2),
+                        Modifier
+                            .fillMaxSize()
+                            .background(MoSoTheme.colors.layer2),
                         model = headerUrl,
                         contentDescription = null,
                         contentScale = ContentScale.Crop,
@@ -61,19 +61,19 @@ internal fun Header(
                     // Don't use a border on the AsyncImage.  Some pixels of the image leak through
                     // the edges.
                     modifier =
-                        Modifier
-                            .padding(start = 8.dp)
-                            .size(92.dp)
-                            .clip(CircleShape)
-                            .background(MoSoTheme.colors.layer1),
+                    Modifier
+                        .padding(start = 8.dp)
+                        .size(92.dp)
+                        .clip(CircleShape)
+                        .background(MoSoTheme.colors.layer1),
                 ) {
                     AsyncImage(
                         modifier =
-                            Modifier
-                                .align(Alignment.Center)
-                                .size(86.dp)
-                                .clip(CircleShape)
-                                .background(MoSoTheme.colors.layer2),
+                        Modifier
+                            .align(Alignment.Center)
+                            .size(86.dp)
+                            .clip(CircleShape)
+                            .background(MoSoTheme.colors.layer2),
                         model = avatarUrl,
                         contentDescription = null,
                         contentScale = ContentScale.Crop,
@@ -97,9 +97,9 @@ private fun UserInfo(
 ) {
     Column(
         modifier =
-            Modifier
-                .padding(start = 8.dp, top = 8.dp)
-                .fillMaxWidth(),
+        Modifier
+            .padding(start = 8.dp, top = 8.dp)
+            .fillMaxWidth(),
     ) {
         Text(
             text = displayName,
@@ -148,7 +148,7 @@ private fun HeaderLayout(
         layout(
             width = constraints.maxWidth,
             height =
-                headerImagePlaceable.height +
+            headerImagePlaceable.height +
                     max(avatarImagePlaceable.height / 2, rightSideContentPlaceable.height),
         ) {
             headerImagePlaceable.placeRelative(

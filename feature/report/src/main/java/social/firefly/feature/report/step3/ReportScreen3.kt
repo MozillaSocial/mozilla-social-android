@@ -70,9 +70,9 @@ private fun ReportScreen3(
     MoSoSurface {
         Column(
             modifier =
-                Modifier
-                    .fillMaxHeight()
-                    .systemBarsPadding(),
+            Modifier
+                .fillMaxHeight()
+                .systemBarsPadding(),
         ) {
             MoSoCloseableTopAppBar(title = stringResource(id = R.string.report_screen_title))
 
@@ -112,15 +112,15 @@ private fun TopContent(
     ) {
         Text(
             text =
-                stringResource(
-                    id =
-                        if (didUserReportAccount) {
-                            R.string.reported_user_title
-                        } else {
-                            R.string.limiting_user_title
-                        },
-                    "@$reportAccountHandle",
-                ),
+            stringResource(
+                id =
+                if (didUserReportAccount) {
+                    R.string.reported_user_title
+                } else {
+                    R.string.limiting_user_title
+                },
+                "@$reportAccountHandle",
+            ),
             style = MoSoTheme.typography.bodyMedium,
         )
 
@@ -128,14 +128,14 @@ private fun TopContent(
 
         Text(
             text =
-                stringResource(
-                    id =
-                        if (didUserReportAccount) {
-                            R.string.reported_user_description
-                        } else {
-                            R.string.limiting_user_description
-                        },
-                ),
+            stringResource(
+                id =
+                if (didUserReportAccount) {
+                    R.string.reported_user_description
+                } else {
+                    R.string.limiting_user_description
+                },
+            ),
             style = MoSoTheme.typography.titleMedium,
         )
     }
@@ -153,19 +153,19 @@ private fun MiddleContent(
 ) {
     Column(
         modifier =
-            modifier
-                .padding(16.dp),
+        modifier
+            .padding(16.dp),
     ) {
         Text(
             text =
-                stringResource(
-                    id =
-                        if (didUserReportAccount) {
-                            R.string.reported_user_options
-                        } else {
-                            R.string.limiting_user_options
-                        },
-                ),
+            stringResource(
+                id =
+                if (didUserReportAccount) {
+                    R.string.reported_user_options
+                } else {
+                    R.string.limiting_user_options
+                },
+            ),
             style = MoSoTheme.typography.titleSmall,
             fontWeight = W600,
         )
@@ -178,10 +178,10 @@ private fun MiddleContent(
                     ActionableOption(
                         onClick = { reportInteractions.onUnfollowClicked() },
                         buttonText =
-                            stringResource(
-                                id = R.string.unfollow_user,
-                                "@$reportAccountHandle",
-                            ),
+                        stringResource(
+                            id = R.string.unfollow_user,
+                            "@$reportAccountHandle",
+                        ),
                         description = stringResource(id = R.string.unfollow_user_description),
                     )
 
@@ -194,10 +194,10 @@ private fun MiddleContent(
                     ActionableOption(
                         onClick = { reportInteractions.onMuteClicked() },
                         buttonText =
-                            stringResource(
-                                id = R.string.mute_user,
-                                "@$reportAccountHandle",
-                            ),
+                        stringResource(
+                            id = R.string.mute_user,
+                            "@$reportAccountHandle",
+                        ),
                         description = stringResource(id = R.string.mute_user_description),
                     )
 
@@ -209,10 +209,10 @@ private fun MiddleContent(
                 ActionableOption(
                     onClick = { reportInteractions.onBlockClicked() },
                     buttonText =
-                        stringResource(
-                            id = R.string.block_user,
-                            "@$reportAccountHandle",
-                        ),
+                    stringResource(
+                        id = R.string.block_user,
+                        "@$reportAccountHandle",
+                    ),
                     description = stringResource(id = R.string.block_user_description),
                 )
             }
@@ -224,9 +224,9 @@ private fun MiddleContent(
 private fun BottomContent(reportInteractions: ReportScreen3Interactions) {
     MoSoButton(
         modifier =
-            Modifier
-                .padding(16.dp)
-                .fillMaxWidth(),
+        Modifier
+            .padding(16.dp)
+            .fillMaxWidth(),
         onClick = { reportInteractions.onDoneClicked() },
     ) {
         Text(text = stringResource(id = R.string.done_button))
@@ -242,13 +242,13 @@ private fun ActionableOption(
 ) {
     Column(
         modifier =
-            modifier
-                .border(
-                    width = 1.dp,
-                    color = MoSoTheme.colors.borderPrimary,
-                    shape = RoundedCornerShape(MoSoRadius.md_8_dp),
-                )
-                .padding(16.dp),
+        modifier
+            .border(
+                width = 1.dp,
+                color = MoSoTheme.colors.borderPrimary,
+                shape = RoundedCornerShape(MoSoRadius.md_8_dp),
+            )
+            .padding(16.dp),
     ) {
         MoSoButtonSecondary(
             modifier = Modifier.fillMaxWidth(),

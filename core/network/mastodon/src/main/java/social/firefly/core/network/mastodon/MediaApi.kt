@@ -1,14 +1,14 @@
 package social.firefly.core.network.mastodon
 
 import okhttp3.MultipartBody
-import social.firefly.core.network.mastodon.model.NetworkAttachment
-import social.firefly.core.network.mastodon.model.request.NetworkMediaUpdate
 import retrofit2.http.Body
 import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Part
 import retrofit2.http.Path
+import social.firefly.core.network.mastodon.model.NetworkAttachment
+import social.firefly.core.network.mastodon.model.request.NetworkMediaUpdate
 
 interface MediaApi {
     @Multipart

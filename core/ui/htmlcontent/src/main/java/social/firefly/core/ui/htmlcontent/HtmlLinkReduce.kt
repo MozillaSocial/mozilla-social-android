@@ -12,7 +12,10 @@ fun String.reduceHtmlLinks(): String {
         val spanStartIndex = reducedHtml.indexOf(INVISIBLE_SPAN)
         if (spanStartIndex == -1) break
         val endIndex = reducedHtml.indexOf(SPAN_END, spanStartIndex)
-        reducedHtml = reducedHtml.replace(reducedHtml.substring(spanStartIndex, endIndex + SPAN_END.length), "")
+        reducedHtml = reducedHtml.replace(
+            reducedHtml.substring(spanStartIndex, endIndex + SPAN_END.length),
+            ""
+        )
     } while (true)
 
     var loopStartIndex = 0

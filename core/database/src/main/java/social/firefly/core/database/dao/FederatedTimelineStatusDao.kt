@@ -12,7 +12,7 @@ interface FederatedTimelineStatusDao : BaseDao<FederatedTimelineStatus> {
     @Transaction
     @Query(
         "SELECT * FROM federatedTimeline " +
-        "ORDER BY statusId DESC",
+                "ORDER BY statusId DESC",
     )
     fun federatedTimelinePagingSource(): PagingSource<Int, FederatedTimelineStatusWrapper>
 
@@ -21,12 +21,12 @@ interface FederatedTimelineStatusDao : BaseDao<FederatedTimelineStatus> {
 
     @Query(
         "DELETE FROM federatedTimeline " +
-        "WHERE statusId IN " +
-        "(" +
-            "SELECT statusId FROM statuses " +
-            "WHERE accountId = :accountId " +
-            "OR boostedStatusAccountId = :accountId" +
-        ")",
+                "WHERE statusId IN " +
+                "(" +
+                "SELECT statusId FROM statuses " +
+                "WHERE accountId = :accountId " +
+                "OR boostedStatusAccountId = :accountId" +
+                ")",
     )
     suspend fun removePostsFromAccount(accountId: String)
 }

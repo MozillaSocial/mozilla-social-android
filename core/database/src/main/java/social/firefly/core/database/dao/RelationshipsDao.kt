@@ -9,14 +9,14 @@ import social.firefly.core.database.model.entities.DatabaseRelationship
 interface RelationshipsDao : BaseDao<DatabaseRelationship> {
     @Query(
         "SELECT * FROM relationships " +
-            "WHERE accountId = :accountId",
+                "WHERE accountId = :accountId",
     )
     fun getRelationshipFlow(accountId: String): Flow<DatabaseRelationship>
 
     @Query(
         "UPDATE relationships " +
-            "SET isMuting = :isMuted " +
-            "WHERE accountId = :accountId",
+                "SET isMuting = :isMuted " +
+                "WHERE accountId = :accountId",
     )
     suspend fun updateMuted(
         accountId: String,
@@ -25,8 +25,8 @@ interface RelationshipsDao : BaseDao<DatabaseRelationship> {
 
     @Query(
         "UPDATE relationships " +
-            "SET isBlocking = :isBlocked " +
-            "WHERE accountId = :accountId",
+                "SET isBlocking = :isBlocked " +
+                "WHERE accountId = :accountId",
     )
     suspend fun updateBlocked(
         accountId: String,
@@ -35,8 +35,8 @@ interface RelationshipsDao : BaseDao<DatabaseRelationship> {
 
     @Query(
         "UPDATE relationships " +
-            "SET isFollowing = :isFollowing " +
-            "WHERE accountId = :accountId",
+                "SET isFollowing = :isFollowing " +
+                "WHERE accountId = :accountId",
     )
     suspend fun updateFollowing(
         accountId: String,
@@ -50,7 +50,7 @@ interface RelationshipsDao : BaseDao<DatabaseRelationship> {
 
     @Query(
         "DELETE FROM accounts " +
-        "WHERE accountId NOT IN (SELECT accountId FROM accounts)"
+                "WHERE accountId NOT IN (SELECT accountId FROM accounts)"
     )
     suspend fun deleteOldRelationships()
 }

@@ -41,11 +41,11 @@ fun Modifier.pullRefresh(
     enabled: Boolean = true,
 ) = inspectable(
     inspectorInfo =
-        debugInspectorInfo {
-            name = "pullRefresh"
-            properties["state"] = state
-            properties["enabled"] = enabled
-        },
+    debugInspectorInfo {
+        name = "pullRefresh"
+        properties["state"] = state
+        properties["enabled"] = enabled
+    },
 ) {
     Modifier.pullRefresh(state::onPull, state::onRelease, enabled)
 }
@@ -78,12 +78,12 @@ fun Modifier.pullRefresh(
     enabled: Boolean = true,
 ) = inspectable(
     inspectorInfo =
-        debugInspectorInfo {
-            name = "pullRefresh"
-            properties["onPull"] = onPull
-            properties["onRelease"] = onRelease
-            properties["enabled"] = enabled
-        },
+    debugInspectorInfo {
+        name = "pullRefresh"
+        properties["onPull"] = onPull
+        properties["onRelease"] = onRelease
+        properties["enabled"] = enabled
+    },
 ) {
     Modifier.nestedScroll(PullRefreshNestedScrollConnection(onPull, onRelease, enabled))
 }

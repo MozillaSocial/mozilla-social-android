@@ -18,21 +18,21 @@ interface SearchDao {
     @Transaction
     @Query(
         "SELECT * FROM searchedAccounts " +
-        "ORDER BY position ASC",
+                "ORDER BY position ASC",
     )
     fun accountsPagingSource(): PagingSource<Int, SearchedAccountWrapper>
 
     @Transaction
     @Query(
         "SELECT * FROM searchedStatuses " +
-        "ORDER BY position ASC",
+                "ORDER BY position ASC",
     )
     fun statusesPagingSource(): PagingSource<Int, SearchedStatusWrapper>
 
     @Transaction
     @Query(
         "SELECT * FROM searchedHashTags " +
-        "ORDER BY position ASC",
+                "ORDER BY position ASC",
     )
     fun hashTagsPagingSource(): PagingSource<Int, SearchedHashTagWrapper>
 
@@ -63,21 +63,21 @@ interface SearchDao {
     @Transaction
     @Query(
         "SELECT * FROM searchedAccounts " +
-        "LIMIT :count"
+                "LIMIT :count"
     )
     fun getTopAccountsFlow(count: Int): Flow<List<SearchedAccountWrapper>>
 
     @Transaction
     @Query(
         "SELECT * FROM searchedStatuses " +
-        "LIMIT :count"
+                "LIMIT :count"
     )
     fun getTopStatusesFlow(count: Int): Flow<List<SearchedStatusWrapper>>
 
     @Transaction
     @Query(
         "SELECT * FROM searchedHashTags " +
-        "LIMIT :count"
+                "LIMIT :count"
     )
     fun getTopHashTagsFlow(count: Int): Flow<List<SearchedHashTagWrapper>>
 }

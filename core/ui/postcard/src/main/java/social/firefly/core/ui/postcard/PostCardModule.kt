@@ -1,9 +1,7 @@
 package social.firefly.core.ui.postcard
 
-import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 import social.firefly.common.commonModule
-import social.firefly.core.analytics.PostCardAnalytics
 import social.firefly.core.analytics.analyticsModule
 import social.firefly.core.navigation.navigationModule
 import social.firefly.core.repository.mastodon.mastodonRepositoryModule

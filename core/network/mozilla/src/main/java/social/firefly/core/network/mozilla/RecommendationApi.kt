@@ -1,8 +1,8 @@
 package social.firefly.core.network.mozilla
 
-import social.firefly.core.network.mozilla.model.NetworkRecommendations
 import retrofit2.http.GET
 import retrofit2.http.Query
+import social.firefly.core.network.mozilla.model.NetworkRecommendations
 
 interface RecommendationApi {
     @GET("/content-feed/moso/v1/discover/")

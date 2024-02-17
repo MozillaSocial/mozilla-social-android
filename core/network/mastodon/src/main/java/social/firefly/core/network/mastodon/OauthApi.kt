@@ -1,9 +1,9 @@
 package social.firefly.core.network.mastodon
 
-import social.firefly.core.network.mastodon.model.NetworkAccessToken
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.POST
+import social.firefly.core.network.mastodon.model.NetworkAccessToken
 
 interface OauthApi {
     @FormUrlEncoded

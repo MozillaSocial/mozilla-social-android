@@ -37,7 +37,7 @@ fun PollStyleDropDown(
             }
         }
     ) {
-        SmallTextLabel(text = pollUiState.style.label.build(LocalContext.current),)
+        SmallTextLabel(text = pollUiState.style.label.build(LocalContext.current))
     }
 }
 
@@ -47,12 +47,12 @@ private fun PollStyleDropDownPreview() {
     MoSoTheme {
         PollStyleDropDown(
             pollUiState =
-                PollUiState(
-                    options = listOf("option 1", "option 2"),
-                    style = PollStyle.SINGLE_CHOICE,
-                    pollDuration = PollDuration.ONE_DAY,
-                    hideTotals = false,
-                ),
+            PollUiState(
+                options = listOf("option 1", "option 2"),
+                style = PollStyle.SINGLE_CHOICE,
+                pollDuration = PollDuration.ONE_DAY,
+                hideTotals = false,
+            ),
             pollInteractions = object : PollInteractions {},
         )
     }

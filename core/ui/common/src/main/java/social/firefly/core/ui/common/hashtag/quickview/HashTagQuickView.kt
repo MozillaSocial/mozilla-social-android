@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -22,7 +21,6 @@ import social.firefly.common.utils.StringFactory
 import social.firefly.core.designsystem.icon.MoSoIcons
 import social.firefly.core.designsystem.theme.MoSoSpacing
 import social.firefly.core.designsystem.theme.MoSoTheme
-import social.firefly.core.ui.common.button.MoSoButton
 import social.firefly.core.ui.common.following.FollowingButton
 import social.firefly.core.ui.common.text.LargeTextBody
 import social.firefly.core.ui.common.text.MediumTextBody
@@ -40,7 +38,7 @@ fun HashTagQuickView(
                 .size(48.dp)
                 .clip(CircleShape)
                 .background(MoSoTheme.colors.layer2),
-            ) {
+        ) {
             Icon(
                 modifier = Modifier
                     .size(24.dp)

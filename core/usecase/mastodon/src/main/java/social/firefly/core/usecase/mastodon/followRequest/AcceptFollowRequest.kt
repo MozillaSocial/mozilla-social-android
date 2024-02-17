@@ -6,7 +6,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import social.firefly.common.annotations.PreferUseCase
 import social.firefly.common.utils.StringFactory
-import social.firefly.core.model.Notification
 import social.firefly.core.navigation.usecases.ShowSnackbar
 import social.firefly.core.repository.mastodon.FollowRequestRepository
 import social.firefly.core.repository.mastodon.NotificationsRepository

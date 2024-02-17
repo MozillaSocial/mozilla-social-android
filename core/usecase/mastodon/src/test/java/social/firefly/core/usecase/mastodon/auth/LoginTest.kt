@@ -46,10 +46,10 @@ class LoginTest {
     private val intent: Intent =
         mockk {
             every { data } returns
-                mockk {
-                    every { this@mockk.toString() } returns "$AUTH_SCHEME?CODE=asdf"
-                    every { getQueryParameter(CODE) } returns userCode
-                }
+                    mockk {
+                        every { this@mockk.toString() } returns "$AUTH_SCHEME?CODE=asdf"
+                        every { getQueryParameter(CODE) } returns userCode
+                    }
         }
 
     @BeforeTest

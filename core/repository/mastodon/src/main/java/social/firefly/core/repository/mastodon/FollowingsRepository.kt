@@ -26,10 +26,10 @@ class FollowingsRepository(
     ): Flow<PagingData<DetailedAccountWrapper>> =
         Pager(
             config =
-                PagingConfig(
-                    pageSize = pageSize,
-                    initialLoadSize = initialLoadSize,
-                ),
+            PagingConfig(
+                pageSize = pageSize,
+                initialLoadSize = initialLoadSize,
+            ),
             remoteMediator = remoteMediator,
         ) {
             dao.followingsPagingSource(accountId)

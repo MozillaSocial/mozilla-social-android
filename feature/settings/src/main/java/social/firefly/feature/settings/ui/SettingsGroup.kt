@@ -21,8 +21,8 @@ fun SettingsGroup(
 ) {
     Column(
         modifier =
-            Modifier
-                .padding(start = 16.dp, top = 16.dp, bottom = 8.dp, end = 16.dp),
+        Modifier
+            .padding(start = 16.dp, top = 16.dp, bottom = 8.dp, end = 16.dp),
     ) {
         Text(text = stringResource(id = name), style = MoSoTheme.typography.titleSmall)
         Spacer(modifier = Modifier.height(8.dp))

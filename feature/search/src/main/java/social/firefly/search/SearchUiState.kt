@@ -3,8 +3,6 @@ package social.firefly.search
 import androidx.paging.PagingData
 import kotlinx.coroutines.flow.Flow
 import social.firefly.common.Resource
-import social.firefly.core.model.Account
-import social.firefly.core.model.HashTag
 import social.firefly.core.model.wrappers.DetailedAccountWrapper
 import social.firefly.core.ui.accountfollower.AccountFollowerUiState
 import social.firefly.core.ui.common.account.quickview.AccountQuickViewUiState

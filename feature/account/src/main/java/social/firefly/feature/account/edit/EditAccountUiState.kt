@@ -34,17 +34,17 @@ fun Account.toUiState(): EditAccountUiState {
         lockChecked = isLocked,
         botChecked = isBot ?: false,
         fields =
-            fields?.map {
-                EditAccountUiStateField(
-                    label = it.name,
-                    content = HtmlCompat.fromHtml(it.value, 0).toString(),
-                )
-            }?.toMutableList()?.apply {
-                if (size < EditAccountViewModel.MAX_FIELDS) {
-                    add(EditAccountUiStateField("", ""))
-                }
-            } ?: listOf(
-                EditAccountUiStateField("", ""),
-            ),
+        fields?.map {
+            EditAccountUiStateField(
+                label = it.name,
+                content = HtmlCompat.fromHtml(it.value, 0).toString(),
+            )
+        }?.toMutableList()?.apply {
+            if (size < EditAccountViewModel.MAX_FIELDS) {
+                add(EditAccountUiStateField("", ""))
+            }
+        } ?: listOf(
+            EditAccountUiStateField("", ""),
+        ),
     )
 }

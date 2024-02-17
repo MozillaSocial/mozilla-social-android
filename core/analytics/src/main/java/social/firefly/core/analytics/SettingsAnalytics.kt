@@ -93,8 +93,10 @@ class SettingsAnalytics internal constructor(private val analytics: Analytics) {
     companion object {
         private const val SETTINGS_SCREEN_IMPRESSION = "settings.screen.impression"
         private const val SETTINGS_ACCOUNT_IMPRESSION = "settings.account.impression"
-        private const val SETTINGS_CONTENT_PREFERENCES_IMPRESSION = "settings.content-preferences.impression"
-        private const val SETTINGS_CONTENT_OPEN_SOURCE_LICENSE = "settings.open-source-licenses.impression"
+        private const val SETTINGS_CONTENT_PREFERENCES_IMPRESSION =
+            "settings.content-preferences.impression"
+        private const val SETTINGS_CONTENT_OPEN_SOURCE_LICENSE =
+            "settings.open-source-licenses.impression"
         private const val MUTED_USERS_SCREEN_IMPRESSION = "muted.users.screen.impression"
         private const val MUTED_USERS_SCREEN_UNMUTE = "muted.users.screen.unmute"
         private const val MUTED_USERS_SCREEN_MUTE = "muted.users.screen.mute"

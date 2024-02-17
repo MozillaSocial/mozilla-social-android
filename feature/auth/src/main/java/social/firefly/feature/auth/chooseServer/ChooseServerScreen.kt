@@ -62,10 +62,10 @@ private fun ChooseServerScreen(
     ) {
         Column(
             modifier =
-                Modifier
-                    .systemBarsPadding()
-                    .imePadding()
-                    .verticalScroll(rememberScrollState()),
+            Modifier
+                .systemBarsPadding()
+                .imePadding()
+                .verticalScroll(rememberScrollState()),
         ) {
             MoSoCloseableTopAppBar(
                 title = stringResource(id = R.string.choose_a_server_screen_title),
@@ -73,8 +73,8 @@ private fun ChooseServerScreen(
 
             Column(
                 modifier =
-                    Modifier
-                        .padding(MoSoSpacing.md),
+                Modifier
+                    .padding(MoSoSpacing.md),
             ) {
                 Text(
                     text = stringResource(id = R.string.choose_a_server_message),
@@ -98,11 +98,11 @@ private fun ChooseServerScreen(
                     isError = uiState.loginFailed,
                     singleLine = true,
                     keyboardActions =
-                        KeyboardActions(
-                            onDone = {
-                                chooseServerInteractions.onNextClicked()
-                            },
-                        ),
+                    KeyboardActions(
+                        onDone = {
+                            chooseServerInteractions.onNextClicked()
+                        },
+                    ),
                 )
                 if (uiState.loginFailed) {
                     Spacer(modifier = Modifier.height(MoSoSpacing.sm))
@@ -131,20 +131,20 @@ private fun ChooseServerScreen(
 private fun NoServerError(modifier: Modifier = Modifier) {
     Box(
         modifier =
-            modifier
-                .fillMaxWidth()
-                .background(
-                    color = MoSoTheme.colors.snackbarBkgError,
-                    shape = RoundedCornerShape(MoSoRadius.md_8_dp),
-                ),
+        modifier
+            .fillMaxWidth()
+            .background(
+                color = MoSoTheme.colors.snackbarBkgError,
+                shape = RoundedCornerShape(MoSoRadius.md_8_dp),
+            ),
     ) {
         Text(
             modifier =
-                Modifier
-                    .padding(
-                        vertical = MoSoSpacing.sm,
-                        horizontal = MoSoSpacing.md,
-                    ),
+            Modifier
+                .padding(
+                    vertical = MoSoSpacing.sm,
+                    horizontal = MoSoSpacing.md,
+                ),
             text = stringResource(id = R.string.choose_server_error_message),
             style = MoSoTheme.typography.labelSmall,
             color = MoSoTheme.colors.snackbarTextError,
@@ -161,10 +161,10 @@ private fun ChooseServerScreenPreview() {
         MoSoTheme {
             ChooseServerScreen(
                 uiState =
-                    ChooseServerUiState(
-                        serverText = "firefly.firefly",
-                        nextButtonEnabled = true,
-                    ),
+                ChooseServerUiState(
+                    serverText = "firefly.firefly",
+                    nextButtonEnabled = true,
+                ),
                 chooseServerInteractions = object : ChooseServerInteractions {},
             )
         }
@@ -180,11 +180,11 @@ private fun ChooseServerScreenLoadingPreview() {
         MoSoTheme {
             ChooseServerScreen(
                 uiState =
-                    ChooseServerUiState(
-                        serverText = "firefly.firefly",
-                        nextButtonEnabled = true,
-                        isLoading = true,
-                    ),
+                ChooseServerUiState(
+                    serverText = "firefly.firefly",
+                    nextButtonEnabled = true,
+                    isLoading = true,
+                ),
                 chooseServerInteractions = object : ChooseServerInteractions {},
             )
         }
@@ -200,11 +200,11 @@ private fun ChooseServerScreenErrorPreview() {
         MoSoTheme {
             ChooseServerScreen(
                 uiState =
-                    ChooseServerUiState(
-                        serverText = "firefly.firefly",
-                        nextButtonEnabled = true,
-                        loginFailed = true,
-                    ),
+                ChooseServerUiState(
+                    serverText = "firefly.firefly",
+                    nextButtonEnabled = true,
+                    loginFailed = true,
+                ),
                 chooseServerInteractions = object : ChooseServerInteractions {},
             )
         }

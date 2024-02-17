@@ -2,9 +2,6 @@ package social.firefly.core.network.mastodon
 
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
-import social.firefly.core.network.mastodon.model.NetworkAccount
-import social.firefly.core.network.mastodon.model.NetworkRelationship
-import social.firefly.core.network.mastodon.model.NetworkStatus
 import retrofit2.Response
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
@@ -15,6 +12,9 @@ import retrofit2.http.POST
 import retrofit2.http.Part
 import retrofit2.http.Path
 import retrofit2.http.Query
+import social.firefly.core.network.mastodon.model.NetworkAccount
+import social.firefly.core.network.mastodon.model.NetworkRelationship
+import social.firefly.core.network.mastodon.model.NetworkStatus
 
 interface AccountApi {
     @GET("/api/v1/accounts/{id}")

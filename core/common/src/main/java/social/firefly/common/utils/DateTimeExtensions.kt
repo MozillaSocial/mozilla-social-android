@@ -13,18 +13,21 @@ fun Instant.timeSinceNow(): StringFactory {
     return when {
         durationSince.inWholeSeconds < 60 ->
             StringFactory.resource(R.string.just_now)
+
         durationSince.inWholeMinutes < 60 ->
             StringFactory.quantityResource(
                 R.plurals.minutes_ago,
                 durationSince.inWholeMinutes.toInt(),
                 durationSince.inWholeMinutes.toInt(),
             )
+
         durationSince.inWholeHours < 24 ->
             StringFactory.quantityResource(
                 R.plurals.hour_ago,
                 durationSince.inWholeHours.toInt(),
                 durationSince.inWholeHours.toInt(),
             )
+
         else ->
             StringFactory.quantityResource(
                 R.plurals.days_ago,
@@ -46,18 +49,21 @@ fun Instant.timeLeft(): StringFactory? {
                 durationUntil.inWholeSeconds.toInt(),
                 durationUntil.inWholeSeconds.toInt(),
             )
+
         durationUntil.inWholeMinutes < 60 ->
             StringFactory.quantityResource(
                 R.plurals.minutes_left,
                 durationUntil.inWholeMinutes.toInt(),
                 durationUntil.inWholeMinutes.toInt(),
             )
+
         durationUntil.inWholeHours < 24 ->
             StringFactory.quantityResource(
                 R.plurals.hour_left,
                 durationUntil.inWholeHours.toInt(),
                 durationUntil.inWholeHours.toInt(),
             )
+
         else ->
             StringFactory.quantityResource(
                 R.plurals.days_left,

@@ -11,9 +11,9 @@ import androidx.compose.ui.Modifier
 fun MaxSizeLoading() {
     Box(
         modifier =
-            Modifier
-                .fillMaxSize()
-                .wrapContentSize(Alignment.Center),
+        Modifier
+            .fillMaxSize()
+            .wrapContentSize(Alignment.Center),
     ) {
         MoSoCircularProgressIndicator()
     }

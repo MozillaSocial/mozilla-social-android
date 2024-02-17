@@ -12,7 +12,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -70,7 +69,10 @@ private fun AccountSettingsScreen(
                 is Resource.Loaded -> {
                     UserHeader(userHeader = userHeader.data)
 
-                    ManageAccount(subtitle = subtitle, onClick = accountSettingsInteractions::onManageAccountClicked)
+                    ManageAccount(
+                        subtitle = subtitle,
+                        onClick = accountSettingsInteractions::onManageAccountClicked
+                    )
 
                     SignoutButton(onLogoutClicked = accountSettingsInteractions::onLogoutClicked)
                 }

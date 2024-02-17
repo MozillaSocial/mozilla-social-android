@@ -3,7 +3,7 @@ package social.firefly.common.utils
 import java.math.RoundingMode
 
 @Suppress("MagicNumber")
-fun Long.toShortenedStringValue() : String? {
+fun Long.toShortenedStringValue(): String? {
     return when {
         this == 0L -> null
         this < 1_000 -> this.toString()

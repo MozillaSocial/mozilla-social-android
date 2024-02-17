@@ -15,7 +15,7 @@ sealed class Notification {
         override val createdAt: Instant,
         override val account: social.firefly.core.model.Account,
         val status: Status,
-    ): Notification() {
+    ) : Notification() {
         companion object {
             // used for api requests
             const val VALUE = "mention"
@@ -30,7 +30,7 @@ sealed class Notification {
         override val createdAt: Instant,
         override val account: social.firefly.core.model.Account,
         val status: Status,
-    ): Notification()
+    ) : Notification()
 
     /**
      * Someone boosted one of your statuses
@@ -40,7 +40,7 @@ sealed class Notification {
         override val createdAt: Instant,
         override val account: social.firefly.core.model.Account,
         val status: Status,
-    ): Notification()
+    ) : Notification()
 
     /**
      * Someone followed you
@@ -49,7 +49,7 @@ sealed class Notification {
         override val id: Int,
         override val createdAt: Instant,
         override val account: social.firefly.core.model.Account,
-    ): Notification() {
+    ) : Notification() {
         companion object {
             // used for api requests
             const val VALUE = "follow"
@@ -63,7 +63,7 @@ sealed class Notification {
         override val id: Int,
         override val createdAt: Instant,
         override val account: social.firefly.core.model.Account,
-    ): Notification() {
+    ) : Notification() {
         companion object {
             // used for api requests
             const val VALUE = "follow_request"
@@ -78,7 +78,7 @@ sealed class Notification {
         override val createdAt: Instant,
         override val account: social.firefly.core.model.Account,
         val status: Status,
-    ): Notification()
+    ) : Notification()
 
     /**
      * A poll you have voted in or created has ended
@@ -88,7 +88,7 @@ sealed class Notification {
         override val createdAt: Instant,
         override val account: social.firefly.core.model.Account,
         val status: Status,
-    ): Notification()
+    ) : Notification()
 
     /**
      * A status you interacted with has been edited
@@ -98,5 +98,5 @@ sealed class Notification {
         override val createdAt: Instant,
         override val account: social.firefly.core.model.Account,
         val status: Status,
-    ): Notification()
+    ) : Notification()
 }

@@ -7,7 +7,6 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
-import social.firefly.core.network.mozilla.BuildConfig
 import retrofit2.Retrofit
 import java.util.concurrent.TimeUnit
 

@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import social.firefly.common.loadResource
 import social.firefly.common.utils.StringFactory
+import social.firefly.core.analytics.SettingsAnalytics
 import social.firefly.core.model.Account
 import social.firefly.core.navigation.usecases.OpenLink
 import social.firefly.core.repository.mastodon.AccountRepository
@@ -16,7 +17,6 @@ import social.firefly.core.usecase.mastodon.account.GetDomain
 import social.firefly.core.usecase.mastodon.account.GetLoggedInUserAccountId
 import social.firefly.core.usecase.mastodon.auth.Logout
 import social.firefly.feature.settings.R
-import social.firefly.core.analytics.SettingsAnalytics
 
 class AccountSettingsViewModel(
     private val logout: Logout,

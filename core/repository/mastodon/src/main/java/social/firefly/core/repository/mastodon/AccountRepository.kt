@@ -6,6 +6,7 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
+import retrofit2.HttpException
 import social.firefly.common.annotations.PreferUseCase
 import social.firefly.common.parseMastodonLinkHeader
 import social.firefly.core.database.dao.AccountsDao
@@ -19,7 +20,6 @@ import social.firefly.core.repository.mastodon.exceptions.AccountNotFoundExcepti
 import social.firefly.core.repository.mastodon.model.account.toExternal
 import social.firefly.core.repository.mastodon.model.status.toDatabaseModel
 import social.firefly.core.repository.mastodon.model.status.toExternalModel
-import retrofit2.HttpException
 import java.io.File
 
 class AccountRepository internal constructor(
@@ -120,9 +120,11 @@ class AccountRepository internal constructor(
         )
     }
 
-    suspend fun getAccountBookmarks(): List<Status> = api.getAccountBookmarks().map { it.toExternalModel() }
+    suspend fun getAccountBookmarks(): List<Status> =
+        api.getAccountBookmarks().map { it.toExternalModel() }
 
-    suspend fun getAccountFavourites(): List<Status> = api.getAccountFavourites().map { it.toExternalModel() }
+    suspend fun getAccountFavourites(): List<Status> =
+        api.getAccountFavourites().map { it.toExternalModel() }
 
     @PreferUseCase
     suspend fun followAccount(accountId: String): Relationship =
@@ -178,21 +180,21 @@ class AccountRepository internal constructor(
         locked = locked?.toString()?.toRequestBody(MultipartBody.FORM),
         bot = bot?.toString()?.toRequestBody(MultipartBody.FORM),
         avatar =
-            avatar?.let {
-                MultipartBody.Part.createFormData(
-                    "avatar",
-                    avatar.name,
-                    avatar.asRequestBody("image/*".toMediaTypeOrNull()),
-                )
-            },
+        avatar?.let {
+            MultipartBody.Part.createFormData(
+                "avatar",
+                avatar.name,
+                avatar.asRequestBody("image/*".toMediaTypeOrNull()),
+            )
+        },
         header =
-            header?.let {
-                MultipartBody.Part.createFormData(
-                    "header",
-                    header.name,
-                    header.asRequestBody("image/*".toMediaTypeOrNull()),
-                )
-            },
+        header?.let {
+            MultipartBody.Part.createFormData(
+                "header",
+                header.name,
+                header.asRequestBody("image/*".toMediaTypeOrNull()),
+            )
+        },
         fieldLabel0 = fields?.getOrNull(0)?.first?.toRequestBody(MultipartBody.FORM),
         fieldContent0 = fields?.getOrNull(0)?.second?.toRequestBody(MultipartBody.FORM),
         fieldLabel1 = fields?.getOrNull(1)?.first?.toRequestBody(MultipartBody.FORM),
@@ -203,7 +205,8 @@ class AccountRepository internal constructor(
         fieldContent3 = fields?.getOrNull(3)?.second?.toRequestBody(MultipartBody.FORM),
     ).toExternalModel()
 
-    suspend fun insertAll(accounts: List<Account>) = dao.upsertAll(accounts.map { it.toDatabaseModel() })
+    suspend fun insertAll(accounts: List<Account>) =
+        dao.upsertAll(accounts.map { it.toDatabaseModel() })
 
     suspend fun insert(account: Account) = dao.upsert(account.toDatabaseModel())
 

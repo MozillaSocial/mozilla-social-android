@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import social.firefly.common.utils.StringFactory
+import social.firefly.core.analytics.SettingsAnalytics
 import social.firefly.core.model.MutedUser
 import social.firefly.core.navigation.usecases.NavigateToAccount
 import social.firefly.core.repository.mastodon.MutesRepository
@@ -19,7 +20,6 @@ import social.firefly.core.ui.common.account.toggleablelist.ToggleableAccountLis
 import social.firefly.core.usecase.mastodon.account.MuteAccount
 import social.firefly.core.usecase.mastodon.account.UnmuteAccount
 import social.firefly.feature.settings.R
-import social.firefly.core.analytics.SettingsAnalytics
 import timber.log.Timber
 
 class MutedUsersSettingsViewModel(

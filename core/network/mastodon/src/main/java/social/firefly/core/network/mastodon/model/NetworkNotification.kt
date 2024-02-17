@@ -24,7 +24,7 @@ sealed class NetworkNotification {
         override val account: NetworkAccount,
         @SerialName("status")
         val status: NetworkStatus,
-    ): NetworkNotification()
+    ) : NetworkNotification()
 
     /**
      * Someone you enabled notifications for has posted a status
@@ -40,7 +40,7 @@ sealed class NetworkNotification {
         override val account: NetworkAccount,
         @SerialName("status")
         val status: NetworkStatus,
-    ): NetworkNotification()
+    ) : NetworkNotification()
 
     /**
      * Someone boosted one of your statuses
@@ -56,7 +56,7 @@ sealed class NetworkNotification {
         override val account: NetworkAccount,
         @SerialName("status")
         val status: NetworkStatus,
-    ): NetworkNotification()
+    ) : NetworkNotification()
 
     /**
      * Someone followed you
@@ -70,7 +70,7 @@ sealed class NetworkNotification {
         override val createdAt: Instant,
         @SerialName("account")
         override val account: NetworkAccount,
-    ): NetworkNotification()
+    ) : NetworkNotification()
 
     /**
      * Someone requested to follow you
@@ -84,7 +84,7 @@ sealed class NetworkNotification {
         override val createdAt: Instant,
         @SerialName("account")
         override val account: NetworkAccount,
-    ): NetworkNotification()
+    ) : NetworkNotification()
 
     /**
      * Someone favourited one of your statuses
@@ -100,7 +100,7 @@ sealed class NetworkNotification {
         override val account: NetworkAccount,
         @SerialName("status")
         val status: NetworkStatus,
-    ): NetworkNotification()
+    ) : NetworkNotification()
 
     /**
      * A poll you have voted in or created has ended
@@ -116,7 +116,7 @@ sealed class NetworkNotification {
         override val account: NetworkAccount,
         @SerialName("status")
         val status: NetworkStatus,
-    ): NetworkNotification()
+    ) : NetworkNotification()
 
     /**
      * A status you interacted with has been edited
@@ -132,5 +132,5 @@ sealed class NetworkNotification {
         override val account: NetworkAccount,
         @SerialName("status")
         val status: NetworkStatus,
-    ): NetworkNotification()
+    ) : NetworkNotification()
 }

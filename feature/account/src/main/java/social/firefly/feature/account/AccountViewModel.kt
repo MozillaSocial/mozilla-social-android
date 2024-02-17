@@ -16,12 +16,12 @@ import org.koin.core.parameter.parametersOf
 import social.firefly.common.Resource
 import social.firefly.common.utils.edit
 import social.firefly.core.analytics.AccountAnalytics
+import social.firefly.core.analytics.FeedLocation
 import social.firefly.core.model.AccountTimelineType
 import social.firefly.core.navigation.NavigationDestination
 import social.firefly.core.navigation.usecases.NavigateTo
 import social.firefly.core.repository.mastodon.TimelineRepository
 import social.firefly.core.repository.paging.AccountTimelineRemoteMediator
-import social.firefly.core.analytics.FeedLocation
 import social.firefly.core.ui.postcard.PostCardDelegate
 import social.firefly.core.ui.postcard.toPostCardUiState
 import social.firefly.core.usecase.mastodon.account.BlockAccount
@@ -290,9 +290,11 @@ class AccountViewModel(
     }
 
     override fun onTabClicked(timelineType: AccountTimelineType) {
-        _timeline.edit { copy(
-            type = timelineType
-        ) }
+        _timeline.edit {
+            copy(
+                type = timelineType
+            )
+        }
         analytics.tabClicked(timelineType.toAnalyticsTimelineType())
     }
 
@@ -306,8 +308,9 @@ class AccountViewModel(
     }
 }
 
-private fun AccountTimelineType.toAnalyticsTimelineType(): AccountAnalytics.TimelineType = when (this) {
-    AccountTimelineType.POSTS -> AccountAnalytics.TimelineType.POSTS
-    AccountTimelineType.POSTS_AND_REPLIES -> AccountAnalytics.TimelineType.POSTS_AND_REPLIES
-    AccountTimelineType.MEDIA -> AccountAnalytics.TimelineType.MEDIA
-}
+private fun AccountTimelineType.toAnalyticsTimelineType(): AccountAnalytics.TimelineType =
+    when (this) {
+        AccountTimelineType.POSTS -> AccountAnalytics.TimelineType.POSTS
+        AccountTimelineType.POSTS_AND_REPLIES -> AccountAnalytics.TimelineType.POSTS_AND_REPLIES
+        AccountTimelineType.MEDIA -> AccountAnalytics.TimelineType.MEDIA
+    }

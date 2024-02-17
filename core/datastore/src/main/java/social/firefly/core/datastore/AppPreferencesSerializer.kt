@@ -12,7 +12,8 @@ internal object AppPreferencesSerializer : Serializer<AppPreferences> {
         AppPreferences.getDefaultInstance().toBuilder().setTrackAnalytics(true).build()
 
 
-    override suspend fun readFrom(input: InputStream): AppPreferences = AppPreferences.parseFrom(input)
+    override suspend fun readFrom(input: InputStream): AppPreferences =
+        AppPreferences.parseFrom(input)
 
     override suspend fun writeTo(
         t: AppPreferences,

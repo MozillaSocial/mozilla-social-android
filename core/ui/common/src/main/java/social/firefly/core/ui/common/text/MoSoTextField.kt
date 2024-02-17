@@ -58,17 +58,17 @@ fun MoSoTextField(
         value = value,
         onValueChange = onValueChange,
         modifier =
-            modifier
-                .border(
-                    width = 1.dp,
-                    color =
-                        if (isError) {
-                            MoSoTheme.colors.borderWarning
-                        } else {
-                            borderColor
-                        },
-                    shape = borderShape,
-                ),
+        modifier
+            .border(
+                width = 1.dp,
+                color =
+                if (isError) {
+                    MoSoTheme.colors.borderWarning
+                } else {
+                    borderColor
+                },
+                shape = borderShape,
+            ),
         enabled = enabled,
         readOnly = readOnly,
         textStyle = textStyle,

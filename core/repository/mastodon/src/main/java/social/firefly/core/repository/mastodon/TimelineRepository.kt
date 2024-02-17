@@ -11,6 +11,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
+import retrofit2.HttpException
 import social.firefly.common.parseMastodonLinkHeader
 import social.firefly.core.database.dao.AccountTimelineStatusDao
 import social.firefly.core.database.dao.FederatedTimelineStatusDao
@@ -22,9 +23,9 @@ import social.firefly.core.database.model.entities.statusCollections.FederatedTi
 import social.firefly.core.database.model.entities.statusCollections.HashTagTimelineStatusWrapper
 import social.firefly.core.database.model.entities.statusCollections.HomeTimelineStatusWrapper
 import social.firefly.core.database.model.entities.statusCollections.LocalTimelineStatusWrapper
+import social.firefly.core.model.AccountTimelineType
 import social.firefly.core.model.Status
 import social.firefly.core.model.StatusVisibility
-import social.firefly.core.model.AccountTimelineType
 import social.firefly.core.model.paging.StatusPagingWrapper
 import social.firefly.core.network.mastodon.TimelineApi
 import social.firefly.core.repository.mastodon.model.status.toAccountTimelineStatus
@@ -33,7 +34,6 @@ import social.firefly.core.repository.mastodon.model.status.toFederatedTimelineS
 import social.firefly.core.repository.mastodon.model.status.toHashTagTimelineStatus
 import social.firefly.core.repository.mastodon.model.status.toHomeTimelineStatus
 import social.firefly.core.repository.mastodon.model.status.toLocalTimelineStatus
-import retrofit2.HttpException
 
 class TimelineRepository internal constructor(
     private val timelineApi: TimelineApi,
@@ -262,7 +262,8 @@ class TimelineRepository internal constructor(
     suspend fun insertAllIntoAccountTimeline(
         statuses: List<Status>,
         timelineType: AccountTimelineType,
-    ) = accountTimelineStatusDao.upsertAll(statuses.map { it.toAccountTimelineStatus(timelineType) })
+    ) =
+        accountTimelineStatusDao.upsertAll(statuses.map { it.toAccountTimelineStatus(timelineType) })
 
     @ExperimentalPagingApi
     fun getAccountTimelinePager(

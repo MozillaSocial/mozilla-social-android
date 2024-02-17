@@ -77,15 +77,19 @@ class NewPostViewModel(
                     videoButtonEnabled = images.isEmpty() && pollUiState == null,
                     pollButtonEnabled = images.isEmpty() && videos.isEmpty(),
                     contentWarningText = statusUiState.contentWarningText,
-                    characterCountText = "${MAX_POST_LENGTH -
-                            statusUiState.statusText.text.length -
-                            (statusUiState.contentWarningText?.length ?: 0)}",
+                    characterCountText = "${
+                        MAX_POST_LENGTH -
+                                statusUiState.statusText.text.length -
+                                (statusUiState.contentWarningText?.length ?: 0)
+                    }",
                     maxImages = MAX_IMAGES - images.size,
                 )
             }.collect {
-                _newPostUiState.edit { copy(
-                    bottomBarState = it
-                ) }
+                _newPostUiState.edit {
+                    copy(
+                        bottomBarState = it
+                    )
+                }
             }
         }
 
@@ -101,9 +105,11 @@ class NewPostViewModel(
                         // poll options have text if they exist
                         poll?.options?.find { it.isBlank() } == null
             }.collect {
-                _newPostUiState.edit { copy(
-                    sendButtonEnabled = it
-                ) }
+                _newPostUiState.edit {
+                    copy(
+                        sendButtonEnabled = it
+                    )
+                }
             }
         }
 
@@ -112,28 +118,37 @@ class NewPostViewModel(
                 accountRepository.getAccount(getLoggedInUserAccountId())
             }.mapNotNull { resource ->
                 resource.data?.let { account ->
-                    UserHeaderState(avatarUrl = account.avatarUrl, displayName = account.displayName)
+                    UserHeaderState(
+                        avatarUrl = account.avatarUrl,
+                        displayName = account.displayName
+                    )
                 }
             }.collect {
-                _newPostUiState.edit { copy(
-                    userHeaderState = it
-                ) }
+                _newPostUiState.edit {
+                    copy(
+                        userHeaderState = it
+                    )
+                }
             }
         }
     }
 
     override fun onVisibilitySelected(statusVisibility: StatusVisibility) {
-        _newPostUiState.edit { copy(
-            visibility = statusVisibility
-        ) }
+        _newPostUiState.edit {
+            copy(
+                visibility = statusVisibility
+            )
+        }
     }
 
     override fun onPostClicked() {
         analytics.postClicked()
         viewModelScope.launch {
-            _newPostUiState.edit { copy(
-                isSendingPost = true
-            ) }
+            _newPostUiState.edit {
+                copy(
+                    isSendingPost = true
+                )
+            }
             try {
                 postStatus(
                     statusText = statusDelegate.uiState.value.statusText.text,
@@ -154,18 +169,22 @@ class NewPostViewModel(
                 onStatusPosted()
             } catch (e: Exception) {
                 Timber.e(e)
-                _newPostUiState.edit { copy(
-                    isSendingPost = false
-                ) }
+                _newPostUiState.edit {
+                    copy(
+                        isSendingPost = false
+                    )
+                }
             }
         }
     }
 
     override fun onEditClicked() {
         viewModelScope.launch {
-            _newPostUiState.edit { copy(
-                isSendingPost = true
-            ) }
+            _newPostUiState.edit {
+                copy(
+                    isSendingPost = true
+                )
+            }
             try {
                 if (editStatusId != null) {
                     editStatus(
@@ -189,9 +208,11 @@ class NewPostViewModel(
                 onStatusEdited()
             } catch (e: Exception) {
                 Timber.e(e)
-                _newPostUiState.edit { copy(
-                    isSendingPost = false
-                ) }
+                _newPostUiState.edit {
+                    copy(
+                        isSendingPost = false
+                    )
+                }
             }
         }
     }

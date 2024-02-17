@@ -2,10 +2,8 @@ package social.firefly.post
 
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.module.dsl.factoryOf
-import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 import social.firefly.common.commonModule
-import social.firefly.core.analytics.NewPostAnalytics
 import social.firefly.core.analytics.analyticsModule
 import social.firefly.core.datastore.dataStoreModule
 import social.firefly.core.navigation.navigationModule

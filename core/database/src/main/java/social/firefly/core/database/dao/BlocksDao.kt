@@ -8,7 +8,7 @@ import social.firefly.core.database.model.entities.accountCollections.BlockWrapp
 import social.firefly.core.database.model.entities.accountCollections.DatabaseBlock
 
 @Dao
-interface BlocksDao: BaseDao<DatabaseBlock> {
+interface BlocksDao : BaseDao<DatabaseBlock> {
     @Transaction
     @Query(
         "SELECT * FROM blocks " +

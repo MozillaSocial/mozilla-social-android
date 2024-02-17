@@ -83,6 +83,7 @@ private fun HashTagScreen(
                 is Resource.Loading -> {
                     MaxSizeLoading()
                 }
+
                 is Resource.Loaded -> {
                     val feedListState = feed.collectAsLazyPagingItems()
 
@@ -95,6 +96,7 @@ private fun HashTagScreen(
                         )
                     }
                 }
+
                 is Resource.Error -> {
                     GenericError(
                         modifier = Modifier.fillMaxSize(),

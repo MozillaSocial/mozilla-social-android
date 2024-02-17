@@ -47,12 +47,12 @@ private fun PollDurationDropDownPreview() {
     MoSoTheme {
         PollDurationDropDown(
             pollUiState =
-                PollUiState(
-                    options = listOf("option 1", "option 2"),
-                    style = PollStyle.SINGLE_CHOICE,
-                    pollDuration = PollDuration.ONE_DAY,
-                    hideTotals = false,
-                ),
+            PollUiState(
+                options = listOf("option 1", "option 2"),
+                style = PollStyle.SINGLE_CHOICE,
+                pollDuration = PollDuration.ONE_DAY,
+                hideTotals = false,
+            ),
             pollInteractions = object : PollInteractions {},
         )
     }

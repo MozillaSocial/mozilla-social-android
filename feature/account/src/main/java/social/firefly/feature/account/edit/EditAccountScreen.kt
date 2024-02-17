@@ -78,14 +78,14 @@ fun EditAccountScreen(
 ) {
     MoSoSurface(
         modifier =
-            Modifier
-                .fillMaxSize(),
+        Modifier
+            .fillMaxSize(),
     ) {
         Column(
             modifier =
-                Modifier
-                    .systemBarsPadding()
-                    .imePadding(),
+            Modifier
+                .systemBarsPadding()
+                .imePadding(),
         ) {
             MoSoCloseableTopAppBar(
                 title = (uiState as? Resource.Loaded)?.data?.topBarTitle ?: "",
@@ -108,6 +108,7 @@ fun EditAccountScreen(
                 is Resource.Loading -> {
                     MaxSizeLoading()
                 }
+
                 is Resource.Loaded -> {
                     LoadedState(
                         editAccountInteractions = editAccountInteractions,
@@ -139,8 +140,8 @@ private fun LoadedState(
 
     Column(
         modifier =
-            Modifier
-                .verticalScroll(rememberScrollState()),
+        Modifier
+            .verticalScroll(rememberScrollState()),
     ) {
         val avatarSelectionLauncher =
             rememberLauncherForActivityResult(
@@ -194,8 +195,8 @@ private fun LoadedState(
         ) {
             MoSoTextField(
                 modifier =
-                    Modifier
-                        .fillMaxWidth(),
+                Modifier
+                    .fillMaxWidth(),
                 value = uiState.displayName,
                 onValueChange = editAccountInteractions::onDisplayNameTextChanged,
                 label = {
@@ -207,8 +208,8 @@ private fun LoadedState(
 
             MoSoTextField(
                 modifier =
-                    Modifier
-                        .fillMaxWidth(),
+                Modifier
+                    .fillMaxWidth(),
                 value = uiState.bio,
                 onValueChange = editAccountInteractions::onBioTextChanged,
                 label = {
@@ -237,16 +238,16 @@ private fun LoadedState(
 private fun EditImageOverlay(onClick: () -> Unit) {
     Box(
         modifier =
-            Modifier
-                .size(48.dp)
-                .clip(CircleShape)
-                .background(MoSoTheme.colors.actionOverlay)
-                .clickable { onClick() },
+        Modifier
+            .size(48.dp)
+            .clip(CircleShape)
+            .background(MoSoTheme.colors.actionOverlay)
+            .clickable { onClick() },
     ) {
         Icon(
             modifier =
-                Modifier
-                    .align(Alignment.Center),
+            Modifier
+                .align(Alignment.Center),
             painter = MoSoIcons.image(),
             contentDescription = "",
             tint = MoSoTheme.colors.actionSecondary,
@@ -350,21 +351,21 @@ private fun PreviewEditAccountScreen() {
         MoSoTheme {
             EditAccountScreen(
                 uiState =
-                    Resource.Loaded(
-                        data =
-                            EditAccountUiState(
-                                topBarTitle = "John",
-                                headerUrl = "",
-                                avatarUrl = "",
-                                handle = "@john",
-                                displayName = "John New",
-                                bio = "I'm super cool",
-                                bioCharacterCount = 20,
-                                lockChecked = false,
-                                botChecked = false,
-                                fields = listOf(),
-                            ),
+                Resource.Loaded(
+                    data =
+                    EditAccountUiState(
+                        topBarTitle = "John",
+                        headerUrl = "",
+                        avatarUrl = "",
+                        handle = "@john",
+                        displayName = "John New",
+                        bio = "I'm super cool",
+                        bioCharacterCount = 20,
+                        lockChecked = false,
+                        botChecked = false,
+                        fields = listOf(),
                     ),
+                ),
                 editAccountInteractions = object : EditAccountInteractions {},
                 isUploading = false,
             )

@@ -2,8 +2,8 @@ package social.firefly.core.repository.mastodon
 
 import social.firefly.core.database.dao.PollsDao
 import social.firefly.core.database.model.DatabaseEmoji
-import social.firefly.core.database.model.entities.DatabasePoll
 import social.firefly.core.database.model.DatabasePollOption
+import social.firefly.core.database.model.entities.DatabasePoll
 import social.firefly.core.model.Emoji
 import social.firefly.core.model.Poll
 import social.firefly.core.model.PollOption

@@ -56,7 +56,7 @@ class SearchRepository internal constructor(
         excludeUnreviewed: Boolean = false,
         limit: Int? = null,
         offset: Int? = null,
-    ) : SearchResult = searchApi.search(
+    ): SearchResult = searchApi.search(
         query = query,
         type = type?.value,
         resolve = resolve,

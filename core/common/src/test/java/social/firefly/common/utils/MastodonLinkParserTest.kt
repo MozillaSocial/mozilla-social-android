@@ -28,7 +28,8 @@ class MastodonLinkParserTest {
 
     @Test
     fun `Since ID parsing works when there is next and previous values`() {
-        val linkHeader = "<https://mozilla.social/following?limit=40&max_id=46274>; rel=\"next\", <https://mozilla.social/following?limit=40&since_id=60171>; rel=\"prev\""
+        val linkHeader =
+            "<https://mozilla.social/following?limit=40&max_id=46274>; rel=\"next\", <https://mozilla.social/following?limit=40&since_id=60171>; rel=\"prev\""
         val pagingLink = linkHeader.parseMastodonLinkHeader()
         val sinceIdValue = pagingLink.getSinceIdValue()
 
@@ -37,7 +38,8 @@ class MastodonLinkParserTest {
 
     @Test
     fun `Max ID parsing works`() {
-        val linkHeader = "<https://mozilla.social/following?limit=40&max_id=46274>; rel=\"next\", <https://mozilla.social/following?limit=40&since_id=60171>; rel=\"prev\""
+        val linkHeader =
+            "<https://mozilla.social/following?limit=40&max_id=46274>; rel=\"next\", <https://mozilla.social/following?limit=40&since_id=60171>; rel=\"prev\""
         val pagingLink = linkHeader.parseMastodonLinkHeader()
         val maxIdValue = pagingLink.getMaxIdValue()
 

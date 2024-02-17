@@ -59,19 +59,19 @@ class PostStatus internal constructor(
                     StatusCreate(
                         status = statusText,
                         mediaIds =
-                            if (imageStates.isEmpty()) {
-                                null
-                            } else {
-                                imageStates.mapNotNull { it.attachmentId }
-                            },
+                        if (imageStates.isEmpty()) {
+                            null
+                        } else {
+                            imageStates.mapNotNull { it.attachmentId }
+                        },
                         visibility = visibility,
                         poll = pollCreate,
                         contentWarningText =
-                            if (contentWarningText.isNullOrBlank()) {
-                                null
-                            } else {
-                                contentWarningText
-                            },
+                        if (contentWarningText.isNullOrBlank()) {
+                            null
+                        } else {
+                            contentWarningText
+                        },
                         inReplyToId = inReplyToId,
                     ),
                 )

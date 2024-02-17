@@ -112,17 +112,17 @@ private fun MoSoSnackbar(
 ) {
     Surface(
         modifier =
-            Modifier
-                .defaultMinSize(minHeight = 32.dp),
+        Modifier
+            .defaultMinSize(minHeight = 32.dp),
         color = backgroundColor,
         border = BorderStroke(width = 1.dp, brush = SolidColor(borderColor)),
         shape = RoundedCornerShape(MoSoRadius.md_8_dp),
     ) {
         Box(
             modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .padding(MoSoSpacing.sm),
+            Modifier
+                .fillMaxWidth()
+                .padding(MoSoSpacing.sm),
             contentAlignment = Alignment.Center,
         ) {
             Text(
@@ -157,9 +157,9 @@ private fun SnackbarPreview() {
         Surface {
             Column(
                 modifier =
-                    Modifier
-                        .fillMaxSize()
-                        .padding(MoSoSpacing.lg),
+                Modifier
+                    .fillMaxSize()
+                    .padding(MoSoSpacing.lg),
                 verticalArrangement = Arrangement.Bottom,
             ) {
                 MoSoSnackbarHost(snackbarHostState) { snackbarData, snackbarType ->
@@ -195,7 +195,7 @@ private fun SnackbarPreview() {
                         snackbarHostState.showSnackbar(
                             snackbarType = SnackbarType.ERROR,
                             message =
-                                "Here's an error snackbar with a really long message that " +
+                            "Here's an error snackbar with a really long message that " +
                                     "will show on multiple lines because it's so long",
                             duration = SnackbarDuration.Short,
                         )

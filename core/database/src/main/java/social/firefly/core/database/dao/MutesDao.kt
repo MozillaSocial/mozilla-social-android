@@ -4,12 +4,11 @@ import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
-import social.firefly.core.database.model.entities.DatabaseAccount
 import social.firefly.core.database.model.entities.accountCollections.DatabaseMute
 import social.firefly.core.database.model.entities.accountCollections.MuteWrapper
 
 @Dao
-interface MutesDao: BaseDao<DatabaseMute> {
+interface MutesDao : BaseDao<DatabaseMute> {
     @Transaction
     @Query(
         "SELECT * FROM mutes " +

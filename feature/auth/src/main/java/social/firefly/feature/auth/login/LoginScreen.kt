@@ -2,7 +2,6 @@ package social.firefly.feature.auth.login
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -30,7 +29,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight.Companion.W700
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -75,12 +73,13 @@ private fun LoginScreen(
         val widthClass = getWindowWidthClass()
         when {
             heightClass == WindowHeightSizeClass.Compact && widthClass != WindowWidthSizeClass.Compact ||
-                heightClass == WindowHeightSizeClass.Medium && widthClass == WindowWidthSizeClass.Expanded -> {
+                    heightClass == WindowHeightSizeClass.Medium && widthClass == WindowWidthSizeClass.Expanded -> {
                 HorizontalLoginScreen(
                     uiState = uiState,
                     loginInteractions = loginInteractions,
                 )
             }
+
             else -> {
                 VerticalLoginScreen(
                     uiState = uiState,
@@ -98,22 +97,22 @@ private fun HorizontalLoginScreen(
 ) {
     Row(
         modifier =
-            Modifier
-                .fillMaxSize(),
+        Modifier
+            .fillMaxSize(),
     ) {
         ImageBox(
             modifier =
-                Modifier
-                    .weight(1f)
-                    .systemBarsPadding(),
+            Modifier
+                .weight(1f)
+                .systemBarsPadding(),
         )
         Box(
             modifier =
-                Modifier
-                    .weight(1f)
-                    .align(Alignment.CenterVertically)
-                    .fillMaxHeight()
-                    .background(MoSoTheme.colors.layer1),
+            Modifier
+                .weight(1f)
+                .align(Alignment.CenterVertically)
+                .fillMaxHeight()
+                .background(MoSoTheme.colors.layer1),
         ) {
             LoginBox(
                 modifier = Modifier.align(Alignment.Center),
@@ -131,9 +130,9 @@ private fun VerticalLoginScreen(
 ) {
     Column(
         modifier =
-            Modifier
-                .fillMaxSize()
-                .systemBarsPadding(),
+        Modifier
+            .fillMaxSize()
+            .systemBarsPadding(),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
@@ -141,9 +140,9 @@ private fun VerticalLoginScreen(
     }
     Column(
         modifier =
-            Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState()),
+        Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState()),
     ) {
         Spacer(modifier = Modifier.weight(1f))
         LoginBox(
@@ -161,9 +160,9 @@ private fun ImageBox(modifier: Modifier = Modifier) {
     ) {
         Text(
             modifier =
-                Modifier
-                    .align(Alignment.TopCenter)
-                    .padding(top = 12.dp),
+            Modifier
+                .align(Alignment.TopCenter)
+                .padding(top = 12.dp),
             text = stringResource(id = R.string.title_text),
             fontSize = 24.sp,
             fontWeight = W700,
@@ -171,8 +170,8 @@ private fun ImageBox(modifier: Modifier = Modifier) {
         )
         Image(
             modifier =
-                Modifier
-                    .fillMaxWidth(),
+            Modifier
+                .fillMaxWidth(),
             painter = painterResource(id = R.drawable.login_art),
             contentDescription = "",
             contentScale = ContentScale.FillWidth,
@@ -189,11 +188,11 @@ private fun LoginBox(
 ) {
     Column(
         modifier =
-            modifier
-                .fillMaxWidth()
-                .background(MoSoTheme.colors.layer1)
-                .padding(MoSoSpacing.lg)
-                .semantics(mergeDescendants = true) {},
+        modifier
+            .fillMaxWidth()
+            .background(MoSoTheme.colors.layer1)
+            .padding(MoSoSpacing.lg)
+            .semantics(mergeDescendants = true) {},
     ) {
         MoSoBadge {
             Text(
@@ -266,9 +265,9 @@ internal fun AuthScreenLoadingPreview() {
     MoSoTheme {
         LoginScreen(
             uiState =
-                LoginUiState(
-                    isLoading = true,
-                ),
+            LoginUiState(
+                isLoading = true,
+            ),
             loginInteractions = object : LoginInteractions {},
         )
     }

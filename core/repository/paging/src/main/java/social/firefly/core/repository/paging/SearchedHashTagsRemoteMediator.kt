@@ -10,7 +10,6 @@ import social.firefly.core.model.SearchType
 import social.firefly.core.repository.mastodon.DatabaseDelegate
 import social.firefly.core.repository.mastodon.HashtagRepository
 import social.firefly.core.repository.mastodon.SearchRepository
-import social.firefly.core.repository.mastodon.model.search.toSearchedAccount
 import social.firefly.core.repository.mastodon.model.search.toSearchedHashTags
 import timber.log.Timber
 
@@ -84,6 +83,7 @@ class SearchedHashTagsRemoteMediator(
                 endOfPaginationReached = when (loadType) {
                     LoadType.REFRESH,
                     LoadType.APPEND -> response.hashtags.isEmpty()
+
                     else -> true
                 },
             )

@@ -12,7 +12,7 @@ interface HomeTimelineStatusDao : BaseDao<HomeTimelineStatus> {
     @Transaction
     @Query(
         "SELECT * FROM homeTimeline " +
-        "ORDER BY statusId DESC",
+                "ORDER BY statusId DESC",
     )
     fun homeTimelinePagingSource(): PagingSource<Int, HomeTimelineStatusWrapper>
 
@@ -21,24 +21,24 @@ interface HomeTimelineStatusDao : BaseDao<HomeTimelineStatus> {
 
     @Query(
         "DELETE FROM homeTimeline " +
-        "WHERE statusId IN " +
-        "(" +
-            "SELECT statusId FROM statuses " +
-            "WHERE accountId = :accountId " +
-            "OR boostedStatusAccountId = :accountId" +
-        ")",
+                "WHERE statusId IN " +
+                "(" +
+                "SELECT statusId FROM statuses " +
+                "WHERE accountId = :accountId " +
+                "OR boostedStatusAccountId = :accountId" +
+                ")",
     )
     suspend fun removePostsFromAccount(accountId: String)
 
     @Transaction
     @Query(
         "SELECT * FROM homeTimeline " +
-        "WHERE statusId IN " +
-        "(" +
-            "SELECT statusId FROM statuses " +
-            "WHERE accountId = :accountId " +
-            "OR boostedStatusAccountId = :accountId" +
-        ")",
+                "WHERE statusId IN " +
+                "(" +
+                "SELECT statusId FROM statuses " +
+                "WHERE accountId = :accountId " +
+                "OR boostedStatusAccountId = :accountId" +
+                ")",
     )
     suspend fun getPostsFromAccount(accountId: String): List<HomeTimelineStatusWrapper>
 }

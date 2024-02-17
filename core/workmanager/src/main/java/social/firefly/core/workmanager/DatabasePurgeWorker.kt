@@ -46,7 +46,7 @@ class DatabasePurgeWorker(
     private val statusRepository: StatusRepository,
     private val timelineRepository: TimelineRepository,
     private val notificationsRepository: NotificationsRepository,
-): CoroutineWorker(
+) : CoroutineWorker(
     context,
     workerParams,
 ) {

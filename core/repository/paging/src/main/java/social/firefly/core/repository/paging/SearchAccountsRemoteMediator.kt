@@ -88,6 +88,7 @@ class SearchAccountsRemoteMediator(
                 endOfPaginationReached = when (loadType) {
                     LoadType.REFRESH,
                     LoadType.APPEND -> response.accounts.isEmpty()
+
                     else -> true
                 },
             )

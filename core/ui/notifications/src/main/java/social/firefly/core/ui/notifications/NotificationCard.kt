@@ -60,6 +60,7 @@ fun NotificationCard(
                     postCardInteractions = postCardInteractions,
                 )
             }
+
             is NotificationUiState.Follow -> NotificationCard(
                 modifier = Modifier.clickable {
                     notificationInteractions.onFollowCardClicked(uiState.accountId)
@@ -68,6 +69,7 @@ fun NotificationCard(
                 notificationInteractions = notificationInteractions,
                 notificationTypeIcon = MoSoIcons.following(),
             ) {}
+
             is NotificationUiState.FollowRequest -> NotificationCard(
                 modifier = Modifier.clickable {
                     notificationInteractions.onFollowRequestCardClicked(uiState.accountId)
@@ -81,6 +83,7 @@ fun NotificationCard(
                     notificationInteractions = notificationInteractions,
                 )
             }
+
             is NotificationUiState.Mention -> NotificationCard(
                 modifier = Modifier.clickable {
                     notificationInteractions.onMentionClicked(uiState.statusId)
@@ -108,6 +111,7 @@ fun NotificationCard(
                     postCardInteractions = postCardInteractions,
                 )
             }
+
             is NotificationUiState.PollEnded -> NotificationCard(
                 modifier = Modifier.clickable {
                     notificationInteractions.onPollEndedClicked(uiState.statusId)
@@ -135,6 +139,7 @@ fun NotificationCard(
                     postCardInteractions = postCardInteractions,
                 )
             }
+
             is NotificationUiState.StatusUpdated -> NotificationCard(
                 modifier = Modifier.clickable {
                     notificationInteractions.onStatusUpdatedCardClicked(uiState.statusId)

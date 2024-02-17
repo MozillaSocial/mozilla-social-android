@@ -31,7 +31,8 @@ fun NetworkInstance.toExternalModel(): Instance =
         rules = rules.toExternalModel(),
     )
 
-fun NetworkInstanceUrls.toExternalModel(): InstanceUrls = InstanceUrls(streamingApiUrl = streamingApiUrl)
+fun NetworkInstanceUrls.toExternalModel(): InstanceUrls =
+    InstanceUrls(streamingApiUrl = streamingApiUrl)
 
 fun NetworkInstanceStats.toExternalModel() =
     InstanceStats(

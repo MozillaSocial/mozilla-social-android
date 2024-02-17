@@ -32,10 +32,10 @@ import org.koin.androidx.compose.koinViewModel
 import social.firefly.core.designsystem.icon.mozillaLogo
 import social.firefly.core.designsystem.theme.MoSoTheme
 import social.firefly.core.ui.common.MoSoSurface
-import social.firefly.core.ui.common.tabs.MoSoTab
-import social.firefly.core.ui.common.tabs.MoSoTabRow
 import social.firefly.core.ui.common.appbar.MoSoTopBar
 import social.firefly.core.ui.common.pullrefresh.PullRefreshLazyColumn
+import social.firefly.core.ui.common.tabs.MoSoTab
+import social.firefly.core.ui.common.tabs.MoSoTabRow
 import social.firefly.core.ui.postcard.PostCardInteractions
 import social.firefly.core.ui.postcard.PostCardUiState
 import social.firefly.core.ui.postcard.postListContent
@@ -77,8 +77,8 @@ private fun FeedScreen(
     MoSoSurface {
         Column(
             modifier =
-                Modifier
-                    .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
+            Modifier
+                .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
         ) {
             MoSoTopBar(
                 scrollBehavior = topAppBarScrollBehavior,

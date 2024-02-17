@@ -1,16 +1,16 @@
 package social.firefly.core.network.mastodon
 
-import social.firefly.core.network.mastodon.model.NetworkContext
-import social.firefly.core.network.mastodon.model.NetworkPoll
-import social.firefly.core.network.mastodon.model.NetworkStatus
-import social.firefly.core.network.mastodon.model.request.NetworkPollVote
-import social.firefly.core.network.mastodon.model.request.NetworkStatusCreate
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
+import social.firefly.core.network.mastodon.model.NetworkContext
+import social.firefly.core.network.mastodon.model.NetworkPoll
+import social.firefly.core.network.mastodon.model.NetworkStatus
+import social.firefly.core.network.mastodon.model.request.NetworkPollVote
+import social.firefly.core.network.mastodon.model.request.NetworkStatusCreate
 
 interface StatusApi {
     @POST("api/v1/statuses")

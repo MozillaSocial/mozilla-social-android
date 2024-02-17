@@ -8,8 +8,8 @@ import androidx.paging.RemoteMediator
 import androidx.paging.map
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.mapLatest
-import social.firefly.common.HeaderLink
-import social.firefly.common.MastodonPagingLink
+import retrofit2.HttpException
+import retrofit2.Response
 import social.firefly.common.getNext
 import social.firefly.common.getPrev
 import social.firefly.common.parseMastodonLinkHeader
@@ -22,8 +22,6 @@ import social.firefly.core.model.paging.AccountPagingWrapper
 import social.firefly.core.network.mastodon.BlocksApi
 import social.firefly.core.network.mastodon.model.NetworkAccount
 import social.firefly.core.repository.mastodon.model.status.toExternalModel
-import retrofit2.HttpException
-import retrofit2.Response
 
 class BlocksRepository(private val api: BlocksApi, private val dao: BlocksDao) {
 

@@ -23,7 +23,7 @@ class MediaDelegate(
     private val editStatusId: String?,
     private val mediaRepository: MediaRepository,
     private val statusRepository: StatusRepository,
-    ) : MediaInteractions {
+) : MediaInteractions {
     private val _imageStates = MutableStateFlow<List<ImageState>>(emptyList())
     val imageStates: StateFlow<List<ImageState>> = _imageStates.asStateFlow()
 
@@ -37,7 +37,8 @@ class MediaDelegate(
         statusRepository.getStatusLocal(editStatusId)?.let { status ->
             _imageStates.update { imageStates ->
                 imageStates.toMutableList().apply {
-                    addAll(status.mediaAttachments.map { it.toImageState() }) }
+                    addAll(status.mediaAttachments.map { it.toImageState() })
+                }
             }
         }
     }
@@ -86,8 +87,8 @@ class MediaDelegate(
                         mediaRepository.uploadMedia(
                             file = file,
                             description =
-                                imageStates.value.firstOrNull { it.uri == uri }
-                                    ?.description?.ifBlank { null },
+                            imageStates.value.firstOrNull { it.uri == uri }
+                                ?.description?.ifBlank { null },
                         ).attachmentId
                     updateImageState(uri) {
                         copy(

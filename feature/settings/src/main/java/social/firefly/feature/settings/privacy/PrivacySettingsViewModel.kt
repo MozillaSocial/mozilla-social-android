@@ -5,8 +5,8 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import social.firefly.core.datastore.AppPreferencesDatastore
 import social.firefly.core.analytics.SettingsAnalytics
+import social.firefly.core.datastore.AppPreferencesDatastore
 
 class PrivacySettingsViewModel(
     private val appPreferencesDatastore: AppPreferencesDatastore,

@@ -32,14 +32,14 @@ class Report(
         try {
             reportRepository.report(
                 body =
-                    ReportCreate(
-                        accountId = accountId,
-                        statusIds = statusIds,
-                        comment = comment,
-                        forward = forward,
-                        category = category,
-                        ruleViolations = ruleViolations,
-                    ),
+                ReportCreate(
+                    accountId = accountId,
+                    statusIds = statusIds,
+                    comment = comment,
+                    forward = forward,
+                    category = category,
+                    ruleViolations = ruleViolations,
+                ),
             )
         } catch (e: Exception) {
             showSnackbar(

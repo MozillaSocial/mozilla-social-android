@@ -57,8 +57,6 @@ import social.firefly.core.navigation.navigationModule
 import social.firefly.core.ui.accountfollower.AccountFollower
 import social.firefly.core.ui.accountfollower.AccountFollowerUiState
 import social.firefly.core.ui.common.MoSoSurface
-import social.firefly.core.ui.common.tabs.MoSoTab
-import social.firefly.core.ui.common.tabs.MoSoTabRow
 import social.firefly.core.ui.common.account.quickview.AccountQuickViewBox
 import social.firefly.core.ui.common.appbar.MoSoCloseableTopAppBar
 import social.firefly.core.ui.common.divider.MoSoDivider
@@ -69,6 +67,8 @@ import social.firefly.core.ui.common.hashtag.quickview.HashTagQuickViewUiState
 import social.firefly.core.ui.common.loading.MaxSizeLoading
 import social.firefly.core.ui.common.paging.PagingLazyColumn
 import social.firefly.core.ui.common.search.MoSoSearchBar
+import social.firefly.core.ui.common.tabs.MoSoTab
+import social.firefly.core.ui.common.tabs.MoSoTabRow
 import social.firefly.core.ui.common.utils.PreviewTheme
 import social.firefly.core.ui.postcard.PostCard
 import social.firefly.core.ui.postcard.PostCardInteractions
@@ -217,11 +217,13 @@ private fun ListContent(
         is Resource.Loading -> {
             MaxSizeLoading()
         }
+
         is Resource.Error -> {
             GenericError(
                 onRetryClicked = { searchInteractions.onRetryClicked() }
             )
         }
+
         is Resource.Loaded -> {
             val accountFeed = uiState.accountsFeed?.collectAsLazyPagingItems()
             val hashTagFeed = uiState.hashTagFeed?.collectAsLazyPagingItems()
@@ -243,6 +245,7 @@ private fun ListContent(
                         postCardInteractions = postCardInteractions,
                     )
                 }
+
                 SearchTab.ACCOUNTS -> {
                     AccountsList(
                         accountFeed = accountFeed,
@@ -250,6 +253,7 @@ private fun ListContent(
                         searchInteractions = searchInteractions,
                     )
                 }
+
                 SearchTab.HASHTAGS -> {
                     HashTagsList(
                         hashTagsFeed = hashTagFeed,
@@ -257,6 +261,7 @@ private fun ListContent(
                         searchInteractions = searchInteractions,
                     )
                 }
+
                 SearchTab.POSTS -> {
                     StatusesList(
                         statusFeed = statusFeed,
@@ -325,7 +330,8 @@ private fun TopList(
         }
 
         if (searchResultUiState.accountUiStates.isEmpty() &&
-            searchResultUiState.postCardUiStates.isEmpty()) {
+            searchResultUiState.postCardUiStates.isEmpty()
+        ) {
             item {
                 Text(
                     modifier = Modifier

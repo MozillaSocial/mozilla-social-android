@@ -73,11 +73,11 @@ internal fun ReportScreen1(
     val sendToExternalServer by viewModel.sendToExternalServerChecked.collectAsStateWithLifecycle()
     ReportScreen1(
         reportTarget =
-            if (reportStatusId != null) {
-                ReportTarget.POST
-            } else {
-                ReportTarget.ACCOUNT
-            },
+        if (reportStatusId != null) {
+            ReportTarget.POST
+        } else {
+            ReportTarget.ACCOUNT
+        },
         instanceRules = instanceRules,
         selectedReportType = selectedReportType,
         checkedRules = checkedRules,
@@ -106,10 +106,10 @@ private fun ReportScreen1(
     MoSoSurface {
         Column(
             modifier =
-                Modifier
-                    .fillMaxHeight()
-                    .systemBarsPadding()
-                    .imePadding(),
+            Modifier
+                .fillMaxHeight()
+                .systemBarsPadding()
+                .imePadding(),
         ) {
             MoSoCloseableTopAppBar(
                 title = stringResource(id = R.string.report_screen_title),
@@ -142,9 +142,9 @@ private fun MainContent(
 ) {
     Column(
         modifier =
-            Modifier
-                .padding(horizontal = 16.dp)
-                .verticalScroll(rememberScrollState()),
+        Modifier
+            .padding(horizontal = 16.dp)
+            .verticalScroll(rememberScrollState()),
     ) {
         Spacer(modifier = Modifier.height(16.dp))
         Text(
@@ -154,14 +154,14 @@ private fun MainContent(
         Spacer(modifier = Modifier.height(4.dp))
         Text(
             text =
-                stringResource(
-                    id =
-                        if (reportTarget == ReportTarget.POST) {
-                            R.string.report_instructions_for_post
-                        } else {
-                            R.string.report_instructions_for_account
-                        },
-                ),
+            stringResource(
+                id =
+                if (reportTarget == ReportTarget.POST) {
+                    R.string.report_instructions_for_post
+                } else {
+                    R.string.report_instructions_for_account
+                },
+            ),
             style = MoSoTheme.typography.titleMedium,
         )
         Spacer(modifier = Modifier.height(16.dp))
@@ -188,8 +188,8 @@ private fun MainContent(
 
         MoSoButton(
             modifier =
-                Modifier
-                    .fillMaxWidth(),
+            Modifier
+                .fillMaxWidth(),
             enabled = selectedReportType != null,
             onClick = { reportInteractions.onNextClicked() },
         ) {
@@ -276,14 +276,14 @@ private fun SelectableReportType(
     NoRipple {
         Row(
             modifier =
-                Modifier
-                    .padding(4.dp)
-                    .clickable { reportInteractions.onReportTypeSelected(reportType) },
+            Modifier
+                .padding(4.dp)
+                .clickable { reportInteractions.onReportTypeSelected(reportType) },
         ) {
             MoSoRadioButton(
                 modifier =
-                    Modifier
-                        .size(20.dp),
+                Modifier
+                    .size(20.dp),
                 selected = selectedReportType == reportType,
                 onClick = { reportInteractions.onReportTypeSelected(reportType) },
             )
@@ -316,8 +316,8 @@ private fun CheckableInstanceRule(
     ) {
         MoSoCheckBox(
             modifier =
-                Modifier
-                    .size(20.dp),
+            Modifier
+                .size(20.dp),
             checked = checked,
             onCheckedChange = { reportInteractions.onServerRuleClicked(instanceRule) },
         )
@@ -353,7 +353,7 @@ private fun AdditionalReportFields(
         remember(selectedReportType) {
             mutableStateOf(
                 selectedReportType != null &&
-                    selectedReportType != ReportType.DO_NOT_LIKE,
+                        selectedReportType != ReportType.DO_NOT_LIKE,
             )
         }
 
@@ -392,9 +392,9 @@ private fun AdditionalComments(
     Spacer(modifier = Modifier.height(16.dp))
     MoSoTextField(
         modifier =
-            Modifier
-                .fillMaxWidth()
-                .defaultMinSize(minHeight = 150.dp),
+        Modifier
+            .fillMaxWidth()
+            .defaultMinSize(minHeight = 150.dp),
         value = additionalCommentText,
         label = {
             Text(text = stringResource(id = R.string.extra_info_text_field_label))
@@ -429,8 +429,8 @@ private fun SendToOtherServerOption(
         ) {
             MoSoCheckBox(
                 modifier =
-                    Modifier
-                        .size(20.dp),
+                Modifier
+                    .size(20.dp),
                 checked = checked,
                 onCheckedChange = { reportInteractions.onSendToExternalServerClicked() },
             )
@@ -461,15 +461,15 @@ private fun ReportScreenPreview() {
         ReportScreen1(
             reportTarget = ReportTarget.POST,
             instanceRules =
-                listOf(
-                    noDummies,
-                    noDogs,
-                ),
+            listOf(
+                noDummies,
+                noDogs,
+            ),
             selectedReportType = ReportType.VIOLATION,
             checkedRules =
-                listOf(
-                    noDogs,
-                ),
+            listOf(
+                noDogs,
+            ),
             additionalCommentText = "",
             reportAccountHandle = "john@firefly.com",
             sendToExternalServer = false,
@@ -500,15 +500,15 @@ private fun ReportScreenPreviewDarkMode() {
             ReportScreen1(
                 reportTarget = ReportTarget.POST,
                 instanceRules =
-                    listOf(
-                        noDummies,
-                        noDogs,
-                    ),
+                listOf(
+                    noDummies,
+                    noDogs,
+                ),
                 selectedReportType = ReportType.VIOLATION,
                 checkedRules =
-                    listOf(
-                        noDogs,
-                    ),
+                listOf(
+                    noDogs,
+                ),
                 additionalCommentText = "",
                 reportAccountHandle = "john@firefly.com",
                 sendToExternalServer = false,

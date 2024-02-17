@@ -9,7 +9,6 @@ import social.firefly.core.navigation.NavigationDestination.Auth.navigateToAuthF
 import social.firefly.core.navigation.NavigationDestination.EditAccount.navigateToEditAccount
 import social.firefly.core.navigation.NavigationDestination.Tabs.navigateToTabs
 import social.firefly.core.test.TestUtils
-import social.firefly.core.navigation.NavigationDestination
 
 class NavigationDestinationTest {
     private val navController = mockk<NavController>(relaxed = true)

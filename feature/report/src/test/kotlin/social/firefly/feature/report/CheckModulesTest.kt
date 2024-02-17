@@ -6,8 +6,6 @@ import kotlinx.coroutines.CoroutineScope
 import org.koin.core.annotation.KoinExperimentalAPI
 import org.koin.test.KoinTest
 import org.koin.test.verify.verify
-import social.firefly.feature.report.ReportType
-import social.firefly.feature.report.reportModule
 import kotlin.test.Test
 
 class CheckModulesTest : KoinTest {

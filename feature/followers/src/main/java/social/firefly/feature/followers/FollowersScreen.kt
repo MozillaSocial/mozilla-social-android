@@ -33,12 +33,12 @@ import social.firefly.core.navigation.navigationModule
 import social.firefly.core.ui.accountfollower.AccountFollower
 import social.firefly.core.ui.accountfollower.AccountFollowerUiState
 import social.firefly.core.ui.common.MoSoSurface
-import social.firefly.core.ui.common.tabs.MoSoTab
-import social.firefly.core.ui.common.tabs.MoSoTabRow
 import social.firefly.core.ui.common.account.quickview.AccountQuickViewUiState
 import social.firefly.core.ui.common.appbar.MoSoCloseableTopAppBar
 import social.firefly.core.ui.common.pullrefresh.PullRefreshLazyColumn
 import social.firefly.core.ui.common.pullrefresh.rememberPullRefreshState
+import social.firefly.core.ui.common.tabs.MoSoTab
+import social.firefly.core.ui.common.tabs.MoSoTabRow
 import social.firefly.core.ui.common.utils.PreviewTheme
 
 @Composable

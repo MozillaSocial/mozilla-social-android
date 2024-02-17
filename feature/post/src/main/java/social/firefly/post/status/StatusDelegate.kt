@@ -9,14 +9,14 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import social.firefly.common.utils.findAccountAtCursor
 import social.firefly.common.utils.edit
+import social.firefly.common.utils.findAccountAtCursor
 import social.firefly.common.utils.findHashtagAtCursor
 import social.firefly.common.utils.replaceAccount
 import social.firefly.common.utils.replaceHashtag
+import social.firefly.core.analytics.NewPostAnalytics
 import social.firefly.core.repository.mastodon.SearchRepository
 import social.firefly.core.repository.mastodon.StatusRepository
-import social.firefly.core.analytics.NewPostAnalytics
 import social.firefly.post.NewPostViewModel
 import timber.log.Timber
 
@@ -43,25 +43,29 @@ class StatusDelegate(
 
     private suspend fun populateReply(inReplyToId: String) {
         statusRepository.getStatusLocal(inReplyToId)?.account?.let { account ->
-            _uiState.edit { copy(
-                statusText = TextFieldValue(
-                    text = "@${account.acct} ",
-                    selection = TextRange(account.acct.length + 2),
-                ),
-                inReplyToAccountName = account.username
-            ) }
+            _uiState.edit {
+                copy(
+                    statusText = TextFieldValue(
+                        text = "@${account.acct} ",
+                        selection = TextRange(account.acct.length + 2),
+                    ),
+                    inReplyToAccountName = account.username
+                )
+            }
         }
     }
 
     private suspend fun populateEditStatus(editStatusId: String) {
         statusRepository.getStatusLocal(editStatusId)?.let { status ->
-            _uiState.edit { copy(
-                statusText = TextFieldValue(
-                    text = HtmlCompat.fromHtml(status.content, 0).toString()
-                ),
-                contentWarningText = status.contentWarningText.ifBlank { null },
-                editStatusId = status.statusId,
-            ) }
+            _uiState.edit {
+                copy(
+                    statusText = TextFieldValue(
+                        text = HtmlCompat.fromHtml(status.content, 0).toString()
+                    ),
+                    contentWarningText = status.contentWarningText.ifBlank { null },
+                    editStatusId = status.statusId,
+                )
+            }
         }
     }
 
@@ -70,9 +74,11 @@ class StatusDelegate(
             (uiState.value.contentWarningText?.length ?: 0)
             > NewPostViewModel.MAX_POST_LENGTH
         ) return
-        _uiState.edit { copy(
-            statusText = textFieldValue
-        ) }
+        _uiState.edit {
+            copy(
+                statusText = textFieldValue
+            )
+        }
 
         searchForAccountsAndHashtags(textFieldValue)
     }
@@ -82,16 +88,20 @@ class StatusDelegate(
 
         val accountText = textFieldValue.findAccountAtCursor()
         if (accountText.isNullOrBlank()) {
-            _uiState.edit { copy(
-                accountList = null
-            ) }
+            _uiState.edit {
+                copy(
+                    accountList = null
+                )
+            }
         }
 
         val hashtagText = textFieldValue.findHashtagAtCursor()
         if (hashtagText.isNullOrBlank()) {
-            _uiState.edit { copy(
-                hashtagList = null
-            ) }
+            _uiState.edit {
+                copy(
+                    hashtagList = null
+                )
+            }
         }
 
         searchJob =
@@ -107,9 +117,11 @@ class StatusDelegate(
                                 profilePicUrl = it.avatarStaticUrl,
                             )
                         }
-                        _uiState.edit { copy(
-                            accountList = list
-                        ) }
+                        _uiState.edit {
+                            copy(
+                                accountList = list
+                            )
+                        }
                     } catch (e: Exception) {
                         Timber.e(e)
                     }
@@ -118,9 +130,11 @@ class StatusDelegate(
                 if (!hashtagText.isNullOrBlank()) {
                     try {
                         val list = searchRepository.searchForHashtags(hashtagText).map { it.name }
-                        _uiState.edit { copy(
-                            hashtagList = list
-                        ) }
+                        _uiState.edit {
+                            copy(
+                                hashtagList = list
+                            )
+                        }
                     } catch (e: Exception) {
                         Timber.e(e)
                     }
@@ -129,37 +143,47 @@ class StatusDelegate(
     }
 
     override fun onAccountClicked(accountName: String) {
-        _uiState.edit { copy(
-            statusText = uiState.value.statusText.replaceAccount(accountName),
-            accountList = null,
-        ) }
+        _uiState.edit {
+            copy(
+                statusText = uiState.value.statusText.replaceAccount(accountName),
+                accountList = null,
+            )
+        }
     }
 
     override fun onHashtagClicked(hashtag: String) {
-        _uiState.edit { copy(
-            statusText = uiState.value.statusText.replaceHashtag(hashtag),
-            hashtagList = null,
-        ) }
+        _uiState.edit {
+            copy(
+                statusText = uiState.value.statusText.replaceHashtag(hashtag),
+                hashtagList = null,
+            )
+        }
     }
 
     override fun onContentWarningClicked() {
         analytics.contentWarningClicked()
         if (uiState.value.contentWarningText == null) {
-            _uiState.edit { copy(
-                contentWarningText = ""
-            ) }
+            _uiState.edit {
+                copy(
+                    contentWarningText = ""
+                )
+            }
         } else {
-            _uiState.edit { copy(
-                contentWarningText = null
-            ) }
+            _uiState.edit {
+                copy(
+                    contentWarningText = null
+                )
+            }
         }
     }
 
     override fun onContentWarningTextChanged(text: String) {
         if (text.length + uiState.value.statusText.text.length > NewPostViewModel.MAX_POST_LENGTH) return
-        _uiState.edit { copy(
-            contentWarningText = text
-        ) }
+        _uiState.edit {
+            copy(
+                contentWarningText = text
+            )
+        }
     }
 
     companion object {

@@ -122,9 +122,9 @@ private fun TestBox(
 ) {
     Box(
         modifier =
-            modifier
-                .padding(4.dp)
-                .background(color = backgroundColor),
+        modifier
+            .padding(4.dp)
+            .background(color = backgroundColor),
     ) {
         Text(modifier = Modifier.padding(16.dp), text = text, color = textColor)
     }

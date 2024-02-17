@@ -14,6 +14,7 @@ interface NotificationInteractions {
         accountId: String,
         notificationId: Int,
     )
+
     fun onDenyFollowRequestClicked(
         accountId: String,
         notificationId: Int,

@@ -9,11 +9,11 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import social.firefly.common.Resource
 import social.firefly.common.updateData
+import social.firefly.core.analytics.AccountAnalytics
 import social.firefly.core.navigation.usecases.PopNavBackstack
 import social.firefly.core.repository.mastodon.AccountRepository
 import social.firefly.core.usecase.mastodon.account.GetLoggedInUserAccountId
 import social.firefly.core.usecase.mastodon.account.UpdateMyAccount
-import social.firefly.core.analytics.AccountAnalytics
 import timber.log.Timber
 import java.io.File
 
@@ -26,7 +26,8 @@ class EditAccountViewModel(
 ) : ViewModel(), EditAccountInteractions {
     private val accountId = getLoggedInUserAccountId()
 
-    private val _editAccountUiState = MutableStateFlow<Resource<EditAccountUiState>>(Resource.Loading())
+    private val _editAccountUiState =
+        MutableStateFlow<Resource<EditAccountUiState>>(Resource.Loading())
     val editAccountUiState = _editAccountUiState.asStateFlow()
 
     private val _isUploading = MutableStateFlow(false)
@@ -70,12 +71,12 @@ class EditAccountViewModel(
                         locked = data.lockChecked,
                         bot = data.botChecked,
                         fields =
-                            data.fields.map {
-                                Pair(
-                                    first = it.label,
-                                    second = it.content,
-                                )
-                            },
+                        data.fields.map {
+                            Pair(
+                                first = it.label,
+                                second = it.content,
+                            )
+                        },
                     )
                     popNavBackstack()
                 } catch (e: UpdateMyAccount.UpdateAccountFailedException) {
@@ -156,18 +157,18 @@ class EditAccountViewModel(
         _editAccountUiState.updateData {
             copy(
                 fields =
-                    fields.toMutableList().apply {
-                        val content = get(index).content
-                        removeAt(index)
-                        add(
-                            index,
-                            EditAccountUiStateField(
-                                label = text,
-                                content = content,
-                            ),
-                        )
-                        modifyFieldCount()
-                    },
+                fields.toMutableList().apply {
+                    val content = get(index).content
+                    removeAt(index)
+                    add(
+                        index,
+                        EditAccountUiStateField(
+                            label = text,
+                            content = content,
+                        ),
+                    )
+                    modifyFieldCount()
+                },
             )
         }
     }
@@ -180,18 +181,18 @@ class EditAccountViewModel(
         _editAccountUiState.updateData {
             copy(
                 fields =
-                    fields.toMutableList().apply {
-                        val label = get(index).label
-                        removeAt(index)
-                        add(
-                            index,
-                            EditAccountUiStateField(
-                                label = label,
-                                content = text,
-                            ),
-                        )
-                        modifyFieldCount()
-                    },
+                fields.toMutableList().apply {
+                    val label = get(index).label
+                    removeAt(index)
+                    add(
+                        index,
+                        EditAccountUiStateField(
+                            label = label,
+                            content = text,
+                        ),
+                    )
+                    modifyFieldCount()
+                },
             )
         }
     }
@@ -200,9 +201,9 @@ class EditAccountViewModel(
         _editAccountUiState.updateData {
             copy(
                 fields =
-                    fields.toMutableList().apply {
-                        removeAt(index)
-                    },
+                fields.toMutableList().apply {
+                    removeAt(index)
+                },
             )
         }
     }
@@ -211,9 +212,9 @@ class EditAccountViewModel(
         _editAccountUiState.updateData {
             copy(
                 fields =
-                    fields.toMutableList().apply {
-                        add(EditAccountUiStateField("", ""))
-                    },
+                fields.toMutableList().apply {
+                    add(EditAccountUiStateField("", ""))
+                },
             )
         }
     }

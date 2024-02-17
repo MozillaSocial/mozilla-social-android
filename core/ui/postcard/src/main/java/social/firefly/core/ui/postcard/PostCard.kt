@@ -123,10 +123,10 @@ private fun TopRowMetaData(
                 .size(20.dp)
                 .align(Alignment.CenterVertically),
             painter =
-                when (topRowMetaDataUiState.iconType) {
-                    TopRowIconType.BOOSTED -> MoSoIcons.boost()
-                    TopRowIconType.REPLY -> MoSoIcons.chatBubbles()
-                },
+            when (topRowMetaDataUiState.iconType) {
+                TopRowIconType.BOOSTED -> MoSoIcons.boost()
+                TopRowIconType.REPLY -> MoSoIcons.chatBubbles()
+            },
             contentDescription = "",
         )
         Spacer(modifier = Modifier.padding(start = 8.dp))
@@ -282,8 +282,8 @@ private fun ContentWarning(
         if (hasContentWarning) {
             Column(
                 modifier =
-                    Modifier
-                        .clickable { isShowing = !isShowing },
+                Modifier
+                    .clickable { isShowing = !isShowing },
             ) {
                 Row(
                     modifier =
@@ -303,8 +303,8 @@ private fun ContentWarning(
                     Spacer(modifier = Modifier.width(4.dp))
                     Text(
                         modifier =
-                            Modifier
-                                .align(Alignment.CenterVertically),
+                        Modifier
+                            .align(Alignment.CenterVertically),
                         text = contentWarningText,
                         style = MoSoTheme.typography.labelSmall,
                     )
@@ -317,11 +317,11 @@ private fun ContentWarning(
                             .align(Alignment.CenterVertically)
                             .sizeIn(minWidth = 80.dp),
                         text =
-                            if (isShowing) {
-                                stringResource(id = R.string.hide_post)
-                            } else {
-                                stringResource(id = R.string.show_post)
-                            },
+                        if (isShowing) {
+                            stringResource(id = R.string.hide_post)
+                        } else {
+                            stringResource(id = R.string.show_post)
+                        },
                         style = MoSoTheme.typography.bodyMedium,
                         textDecoration = TextDecoration.Underline,
                     )
@@ -365,8 +365,8 @@ private fun OverflowMenu(
         if (post.isBeingDeleted) {
             MoSoCircularProgressIndicator(
                 modifier =
-                    Modifier
-                        .size(26.dp),
+                Modifier
+                    .size(26.dp),
             )
         } else {
             Icon(painter = MoSoIcons.moreVertical(), contentDescription = "")
@@ -399,8 +399,8 @@ private fun BottomRow(
 
     Row(
         modifier =
-            modifier
-                .requiredWidth(getMaxWidth() + 20.dp),
+        modifier
+            .requiredWidth(getMaxWidth() + 20.dp),
     ) {
         BottomIconButton(
             modifier = Modifier.weight(1f),
@@ -457,11 +457,11 @@ private fun BottomIconButton(
                 painter = painter,
                 contentDescription = "",
                 tint =
-                    if (highlighted) {
-                        highlightColor
-                    } else {
-                        LocalContentColor.current
-                    },
+                if (highlighted) {
+                    highlightColor
+                } else {
+                    LocalContentColor.current
+                },
             )
         }
         if (count != null) {
@@ -483,39 +483,39 @@ private fun PostCardPreview() {
     PreviewTheme {
         PostCard(
             post =
-                PostCardUiState(
-                    statusId = "",
-                    topRowMetaDataUiState =
-                        TopRowMetaDataUiState(
-                            TopRowIconType.REPLY,
-                            StringFactory.literal("in reply to Other person"),
-                        ),
-                    mainPostCardUiState =
-                        MainPostCardUiState(
-                            url = "",
-                            username = "Cool guy",
-                            profilePictureUrl = "",
-                            postTimeSince = Instant.fromEpochMilliseconds(1695308821000L).timeSinceNow(),
-                            accountName = StringFactory.literal("coolguy"),
-                            replyCount = "4",
-                            boostCount = "300k",
-                            favoriteCount = "4.4m",
-                            statusId = "",
-                            userBoosted = false,
-                            isFavorited = false,
-                            accountId = "",
-                            isBeingDeleted = false,
-                            postContentUiState = PostContentUiState(
-                                pollUiState = null,
-                                statusTextHtml = "<p><span class=\"h-card\"><a href=\"https://mozilla.social/@obez\" class=\"u-url mention\" rel=\"nofollow noopener noreferrer\" target=\"_blank\">@<span>obez</span></a></span> This is a text status.  Here is the text and that is all I have to say about that.</p>",
-                                mediaAttachments = emptyList(),
-                                mentions = emptyList(),
-                                previewCard = null,
-                                contentWarning = "",
-                            ),
-                            dropDownOptions = listOf(),
-                        ),
+            PostCardUiState(
+                statusId = "",
+                topRowMetaDataUiState =
+                TopRowMetaDataUiState(
+                    TopRowIconType.REPLY,
+                    StringFactory.literal("in reply to Other person"),
                 ),
+                mainPostCardUiState =
+                MainPostCardUiState(
+                    url = "",
+                    username = "Cool guy",
+                    profilePictureUrl = "",
+                    postTimeSince = Instant.fromEpochMilliseconds(1695308821000L).timeSinceNow(),
+                    accountName = StringFactory.literal("coolguy"),
+                    replyCount = "4",
+                    boostCount = "300k",
+                    favoriteCount = "4.4m",
+                    statusId = "",
+                    userBoosted = false,
+                    isFavorited = false,
+                    accountId = "",
+                    isBeingDeleted = false,
+                    postContentUiState = PostContentUiState(
+                        pollUiState = null,
+                        statusTextHtml = "<p><span class=\"h-card\"><a href=\"https://mozilla.social/@obez\" class=\"u-url mention\" rel=\"nofollow noopener noreferrer\" target=\"_blank\">@<span>obez</span></a></span> This is a text status.  Here is the text and that is all I have to say about that.</p>",
+                        mediaAttachments = emptyList(),
+                        mentions = emptyList(),
+                        previewCard = null,
+                        contentWarning = "",
+                    ),
+                    dropDownOptions = listOf(),
+                ),
+            ),
             postCardInteractions = object : PostCardInteractions {},
         )
     }
@@ -528,39 +528,39 @@ private fun PostCardWithContentWarningPreview() {
     PreviewTheme {
         PostCard(
             post =
-                PostCardUiState(
-                    statusId = "",
-                    topRowMetaDataUiState =
-                        TopRowMetaDataUiState(
-                            TopRowIconType.REPLY,
-                            StringFactory.literal("in reply to Other person"),
-                        ),
-                    mainPostCardUiState =
-                        MainPostCardUiState(
-                            url = "",
-                            username = "Cool guy",
-                            profilePictureUrl = "",
-                            postTimeSince = Instant.fromEpochMilliseconds(1695308821000L).timeSinceNow(),
-                            accountName = StringFactory.literal("coolguy"),
-                            replyCount = "4",
-                            boostCount = "300k",
-                            favoriteCount = "4.4m",
-                            statusId = "",
-                            userBoosted = false,
-                            isFavorited = false,
-                            accountId = "",
-                            isBeingDeleted = false,
-                            postContentUiState = PostContentUiState(
-                                pollUiState = null,
-                                statusTextHtml = "<p><span class=\"h-card\"><a href=\"https://mozilla.social/@obez\" class=\"u-url mention\" rel=\"nofollow noopener noreferrer\" target=\"_blank\">@<span>obez</span></a></span> This is a text status.  Here is the text and that is all I have to say about that.</p>",
-                                mediaAttachments = emptyList(),
-                                mentions = emptyList(),
-                                previewCard = null,
-                                contentWarning = "Micky mouse spoilers!",
-                            ),
-                            dropDownOptions = listOf(),
-                        ),
+            PostCardUiState(
+                statusId = "",
+                topRowMetaDataUiState =
+                TopRowMetaDataUiState(
+                    TopRowIconType.REPLY,
+                    StringFactory.literal("in reply to Other person"),
                 ),
+                mainPostCardUiState =
+                MainPostCardUiState(
+                    url = "",
+                    username = "Cool guy",
+                    profilePictureUrl = "",
+                    postTimeSince = Instant.fromEpochMilliseconds(1695308821000L).timeSinceNow(),
+                    accountName = StringFactory.literal("coolguy"),
+                    replyCount = "4",
+                    boostCount = "300k",
+                    favoriteCount = "4.4m",
+                    statusId = "",
+                    userBoosted = false,
+                    isFavorited = false,
+                    accountId = "",
+                    isBeingDeleted = false,
+                    postContentUiState = PostContentUiState(
+                        pollUiState = null,
+                        statusTextHtml = "<p><span class=\"h-card\"><a href=\"https://mozilla.social/@obez\" class=\"u-url mention\" rel=\"nofollow noopener noreferrer\" target=\"_blank\">@<span>obez</span></a></span> This is a text status.  Here is the text and that is all I have to say about that.</p>",
+                        mediaAttachments = emptyList(),
+                        mentions = emptyList(),
+                        previewCard = null,
+                        contentWarning = "Micky mouse spoilers!",
+                    ),
+                    dropDownOptions = listOf(),
+                ),
+            ),
             postCardInteractions = object : PostCardInteractions {},
         )
     }

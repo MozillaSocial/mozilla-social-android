@@ -3,7 +3,6 @@ package social.firefly.core.ui.notifications
 import social.firefly.common.utils.StringFactory
 import social.firefly.common.utils.timeSinceNow
 import social.firefly.core.model.Notification
-import social.firefly.core.ui.poll.toPollUiState
 import social.firefly.core.ui.postcard.toPostContentUiState
 
 fun Notification.toUiState(
@@ -19,6 +18,7 @@ fun Notification.toUiState(
         statusId = status.statusId,
         accountName = account.displayName,
     )
+
     is Notification.NewStatus -> NotificationUiState.NewStatus(
         id = id,
         timeStamp = createdAt.timeSinceNow(),
@@ -31,6 +31,7 @@ fun Notification.toUiState(
         ),
         statusId = status.statusId,
     )
+
     is Notification.Repost -> NotificationUiState.Repost(
         id = id,
         timeStamp = createdAt.timeSinceNow(),
@@ -45,6 +46,7 @@ fun Notification.toUiState(
         ),
         statusId = status.statusId,
     )
+
     is Notification.Follow -> NotificationUiState.Follow(
         id = id,
         timeStamp = createdAt.timeSinceNow(),
@@ -53,6 +55,7 @@ fun Notification.toUiState(
         accountId = account.accountId,
         accountName = account.displayName,
     )
+
     is Notification.FollowRequest -> NotificationUiState.FollowRequest(
         id = id,
         timeStamp = createdAt.timeSinceNow(),
@@ -61,6 +64,7 @@ fun Notification.toUiState(
         accountId = account.accountId,
         accountName = account.displayName,
     )
+
     is Notification.Favorite -> NotificationUiState.Favorite(
         id = id,
         timeStamp = createdAt.timeSinceNow(),
@@ -75,6 +79,7 @@ fun Notification.toUiState(
         ),
         statusId = status.statusId,
     )
+
     is Notification.PollEnded -> NotificationUiState.PollEnded(
         id = id,
         timeStamp = createdAt.timeSinceNow(),
@@ -87,6 +92,7 @@ fun Notification.toUiState(
         ),
         statusId = status.statusId,
     )
+
     is Notification.StatusUpdated -> NotificationUiState.StatusUpdated(
         id = id,
         timeStamp = createdAt.timeSinceNow(),

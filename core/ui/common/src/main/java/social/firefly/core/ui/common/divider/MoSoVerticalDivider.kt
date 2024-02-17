@@ -20,10 +20,10 @@ fun MoSoVerticalDivider(
 ) {
     Box(
         modifier =
-            modifier
-                .fillMaxHeight()
-                .width(thickness)
-                .background(color = color),
+        modifier
+            .fillMaxHeight()
+            .width(thickness)
+            .background(color = color),
     )
 }
 

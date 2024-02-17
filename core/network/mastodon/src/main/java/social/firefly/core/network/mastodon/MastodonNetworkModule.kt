@@ -7,8 +7,8 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
-import social.firefly.core.network.mastodon.interceptors.AuthCredentialInterceptor
 import retrofit2.Retrofit
+import social.firefly.core.network.mastodon.interceptors.AuthCredentialInterceptor
 import java.util.concurrent.TimeUnit
 
 val mastodonNetworkModule =
@@ -19,7 +19,10 @@ val mastodonNetworkModule =
         ) {
             OkHttpClient.Builder()
                 .readTimeout(social.firefly.core.network.mastodon.OKHTTP_TIMEOUT, TimeUnit.SECONDS)
-                .connectTimeout(social.firefly.core.network.mastodon.OKHTTP_TIMEOUT, TimeUnit.SECONDS)
+                .connectTimeout(
+                    social.firefly.core.network.mastodon.OKHTTP_TIMEOUT,
+                    TimeUnit.SECONDS
+                )
                 .addNetworkInterceptor(
                     HttpLoggingInterceptor().apply {
                         level =
@@ -37,7 +40,11 @@ val mastodonNetworkModule =
             Retrofit.Builder()
                 .baseUrl("https://mozilla.social/")
                 .client(get(qualifier = named(social.firefly.core.network.mastodon.AUTHORIZED_CLIENT)))
-                .addConverterFactory(social.firefly.core.network.mastodon.json.asConverterFactory(contentType = "application/json".toMediaType()))
+                .addConverterFactory(
+                    social.firefly.core.network.mastodon.json.asConverterFactory(
+                        contentType = "application/json".toMediaType()
+                    )
+                )
                 .build()
         }
 

@@ -42,38 +42,38 @@ fun RecommendationCarouselCard(
 
     MoSoCard(
         modifier =
-            modifier
-                .height(140.dp)
-                .padding(4.dp),
+        modifier
+            .height(140.dp)
+            .padding(4.dp),
     ) {
         Row(
             modifier =
-                Modifier
-                    .clickable {
-                        CustomTabsIntent.Builder()
-                            .build()
-                            .launchUrl(context, Uri.parse(recommendation.url))
-                    },
+            Modifier
+                .clickable {
+                    CustomTabsIntent.Builder()
+                        .build()
+                        .launchUrl(context, Uri.parse(recommendation.url))
+                },
         ) {
             Column(
                 modifier =
-                    Modifier
-                        .padding(8.dp)
-                        .weight(2f),
+                Modifier
+                    .padding(8.dp)
+                    .weight(2f),
             ) {
                 Row(
                     modifier =
-                        Modifier
-                            .weight(2f)
-                            .padding(8.dp),
+                    Modifier
+                        .weight(2f)
+                        .padding(8.dp),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween,
                 ) {
                     Text(
                         text = recommendation.title,
                         modifier =
-                            Modifier
-                                .weight(2f),
+                        Modifier
+                            .weight(2f),
                         style = Typography.bodyMedium,
                         fontWeight = FontWeight.Bold,
                         overflow = TextOverflow.Ellipsis,
@@ -82,9 +82,9 @@ fun RecommendationCarouselCard(
                     Spacer(modifier = Modifier.width(8.dp))
                     AsyncImage(
                         modifier =
-                            Modifier
-                                .weight(1f)
-                                .clip(RoundedCornerShape(4.dp)),
+                        Modifier
+                            .weight(1f)
+                            .clip(RoundedCornerShape(4.dp)),
                         model = recommendation.image.first().url,
                         contentDescription = "",
                         contentScale = ContentScale.Crop,
@@ -92,9 +92,9 @@ fun RecommendationCarouselCard(
                 }
                 Row(
                     modifier =
-                        Modifier
-                            .padding(8.dp)
-                            .weight(1f),
+                    Modifier
+                        .padding(8.dp)
+                        .weight(1f),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween,
                 ) {
@@ -106,9 +106,9 @@ fun RecommendationCarouselCard(
 
                     Row(
                         modifier =
-                            Modifier
-                                .fillMaxWidth()
-                                .wrapContentHeight(),
+                        Modifier
+                            .fillMaxWidth()
+                            .wrapContentHeight(),
                         verticalAlignment = Alignment.Bottom,
                         horizontalArrangement = Arrangement.End,
                     ) {

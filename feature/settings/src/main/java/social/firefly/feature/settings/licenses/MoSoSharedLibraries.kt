@@ -290,7 +290,7 @@ internal fun Library(
         }
         if (showLicenseBadges && library.library.licenses.isNotEmpty()) {
             library.library.licenses.forEach {
-                Row (
+                Row(
                     modifier = Modifier
                         .padding(2.dp)
                 ) {

@@ -8,6 +8,7 @@ import androidx.paging.RemoteMediator
 import androidx.paging.map
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import retrofit2.HttpException
 import social.firefly.common.getNext
 import social.firefly.common.getPrev
 import social.firefly.common.toHeaderLink
@@ -18,7 +19,6 @@ import social.firefly.core.model.MutedUser
 import social.firefly.core.model.paging.AccountPagingWrapper
 import social.firefly.core.network.mastodon.MutesApi
 import social.firefly.core.repository.mastodon.model.status.toExternalModel
-import retrofit2.HttpException
 
 class MutesRepository(private val api: MutesApi, private val dao: MutesDao) {
     suspend fun getMutes(
@@ -46,6 +46,7 @@ class MutesRepository(private val api: MutesApi, private val dao: MutesDao) {
             prevPage = pagingLinks?.getPrev()?.toHeaderLink(),
         )
     }
+
     @OptIn(ExperimentalPagingApi::class)
     fun getMutesPager(
         remoteMediator: RemoteMediator<Int, MuteWrapper>,

@@ -33,6 +33,7 @@ fun MediaDisplay(
                 onAttachmentClicked = onAttachmentClicked,
             )
         }
+
         2 -> {
             AttachmentRow(
                 attachment1 = attachments.first(),
@@ -40,6 +41,7 @@ fun MediaDisplay(
                 onAttachmentClicked = onAttachmentClicked,
             )
         }
+
         3 -> {
             SingleAttachment(
                 attachment = attachments.first(),
@@ -51,6 +53,7 @@ fun MediaDisplay(
                 onAttachmentClicked = onAttachmentClicked,
             )
         }
+
         4 -> {
             AttachmentRow(
                 attachment1 = attachments.first(),
@@ -75,13 +78,14 @@ private fun SingleAttachment(
         is Attachment.Image -> {
             Attachment(
                 modifier =
-                    Modifier
-                        .fillMaxWidth()
-                        .aspectRatio(attachment.meta?.calculateAspectRatio() ?: 1f),
+                Modifier
+                    .fillMaxWidth()
+                    .aspectRatio(attachment.meta?.calculateAspectRatio() ?: 1f),
                 attachment = attachment,
                 onAttachmentClicked = onAttachmentClicked,
             )
         }
+
         is Attachment.Gifv -> {
             val aspectRatio by remember {
                 mutableFloatStateOf(attachment.meta?.calculateAspectRatio() ?: 1f)
@@ -94,6 +98,7 @@ private fun SingleAttachment(
                 )
             }
         }
+
         is Attachment.Video -> {
             val aspectRatio by remember {
                 mutableFloatStateOf(attachment.meta?.calculateAspectRatio() ?: 1f)
@@ -106,6 +111,7 @@ private fun SingleAttachment(
                 )
             }
         }
+
         else -> {}
     }
 }
@@ -118,6 +124,7 @@ fun Attachment.Gifv.Meta.calculateAspectRatio(): Float =
         aspectRatio != null -> aspectRatio!!
         original?.width != null && original?.height != null ->
             (original!!.width!!.toFloat() / original!!.height!!.toFloat())
+
         else -> 1f
     }
 
@@ -126,6 +133,7 @@ fun Attachment.Image.Meta.calculateAspectRatio(): Float =
         original?.aspectRatio != null -> original!!.aspectRatio!!
         original?.width != null && original?.height != null ->
             (original!!.width!!.toFloat() / original!!.height!!.toFloat())
+
         else -> 1f
     }
 
@@ -134,6 +142,7 @@ fun Attachment.Video.Meta.calculateAspectRatio(): Float =
         aspectRatio != null -> aspectRatio!!
         original?.width != null && original?.height != null ->
             (original!!.width!!.toFloat() / original!!.height!!.toFloat())
+
         else -> 1f
     }
 
@@ -163,17 +172,17 @@ private fun AttachmentRow(
     Row {
         Attachment(
             modifier =
-                Modifier
-                    .weight(1f)
-                    .aspectRatio(1f),
+            Modifier
+                .weight(1f)
+                .aspectRatio(1f),
             attachment = attachment1,
             onAttachmentClicked = onAttachmentClicked,
         )
         Attachment(
             modifier =
-                Modifier
-                    .weight(1f)
-                    .aspectRatio(1f),
+            Modifier
+                .weight(1f)
+                .aspectRatio(1f),
             attachment = attachment2,
             onAttachmentClicked = onAttachmentClicked,
         )

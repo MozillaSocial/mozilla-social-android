@@ -13,5 +13,6 @@ class AppAnalytics internal constructor(private val analytics: Analytics) {
 
     fun clearLoggedInIdentifiers() = analytics.clearLoggedInIdentifiers()
 
-    fun setMastodonAccountId(mastodonAccountId: String) = analytics.setMastodonAccountId(mastodonAccountId)
+    fun setMastodonAccountId(mastodonAccountId: String) =
+        analytics.setMastodonAccountId(mastodonAccountId)
 }

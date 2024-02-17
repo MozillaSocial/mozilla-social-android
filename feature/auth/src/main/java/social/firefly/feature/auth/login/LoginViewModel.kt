@@ -11,7 +11,6 @@ import social.firefly.core.navigation.AuthNavigationDestination
 import social.firefly.core.navigation.usecases.NavigateTo
 import social.firefly.core.navigation.usecases.ShowSnackbar
 import social.firefly.core.usecase.mastodon.auth.Login
-import social.firefly.feature.auth.BuildConfig
 import social.firefly.feature.auth.R
 import timber.log.Timber
 

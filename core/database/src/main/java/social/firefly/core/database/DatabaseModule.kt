@@ -9,28 +9,28 @@ val databaseModule =
         single {
             Room.databaseBuilder(
                 androidContext(),
-                social.firefly.core.database.SocialDatabase::class.java,
+                SocialDatabase::class.java,
                 "database-social",
             )
                 .fallbackToDestructiveMigrationOnDowngrade()
                 .build()
         }
 
-        single { get<social.firefly.core.database.SocialDatabase>().accountsDao() }
-        single { get<social.firefly.core.database.SocialDatabase>().accountTimelineDao() }
-        single { get<social.firefly.core.database.SocialDatabase>().blocksDao() }
-        single { get<social.firefly.core.database.SocialDatabase>().mutesDao() }
-        single { get<social.firefly.core.database.SocialDatabase>().federatedTimelineDao() }
-        single { get<social.firefly.core.database.SocialDatabase>().followersDao() }
-        single { get<social.firefly.core.database.SocialDatabase>().followingsDao() }
-        single { get<social.firefly.core.database.SocialDatabase>().hashTagTimelineDao() }
-        single { get<social.firefly.core.database.SocialDatabase>().homeTimelineDao() }
-        single { get<social.firefly.core.database.SocialDatabase>().localTimelineDao() }
-        single { get<social.firefly.core.database.SocialDatabase>().pollDao() }
-        single { get<social.firefly.core.database.SocialDatabase>().relationshipsDao() }
-        single { get<social.firefly.core.database.SocialDatabase>().statusDao() }
-        single { get<social.firefly.core.database.SocialDatabase>().favoritesDao() }
-        single { get<social.firefly.core.database.SocialDatabase>().searchDao() }
-        single { get<social.firefly.core.database.SocialDatabase>().hashTagsDao() }
-        single { get<social.firefly.core.database.SocialDatabase>().notificationsDao() }
+        single { get<SocialDatabase>().accountsDao() }
+        single { get<SocialDatabase>().accountTimelineDao() }
+        single { get<SocialDatabase>().blocksDao() }
+        single { get<SocialDatabase>().mutesDao() }
+        single { get<SocialDatabase>().federatedTimelineDao() }
+        single { get<SocialDatabase>().followersDao() }
+        single { get<SocialDatabase>().followingsDao() }
+        single { get<SocialDatabase>().hashTagTimelineDao() }
+        single { get<SocialDatabase>().homeTimelineDao() }
+        single { get<SocialDatabase>().localTimelineDao() }
+        single { get<SocialDatabase>().pollDao() }
+        single { get<SocialDatabase>().relationshipsDao() }
+        single { get<SocialDatabase>().statusDao() }
+        single { get<SocialDatabase>().favoritesDao() }
+        single { get<SocialDatabase>().searchDao() }
+        single { get<SocialDatabase>().hashTagsDao() }
+        single { get<SocialDatabase>().notificationsDao() }
     }

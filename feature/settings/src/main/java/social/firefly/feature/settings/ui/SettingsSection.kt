@@ -31,14 +31,14 @@ internal fun SettingsSection(
 ) {
     Row(
         modifier =
-            Modifier
-                .padding(MoSoSpacing.md)
-                .fillMaxWidth()
-                .wrapContentHeight()
-                .clickable { onClick() }
-                .semantics(mergeDescendants = true) {
-                    isTraversalGroup = true
-                },
+        Modifier
+            .padding(MoSoSpacing.md)
+            .fillMaxWidth()
+            .wrapContentHeight()
+            .clickable { onClick() }
+            .semantics(mergeDescendants = true) {
+                isTraversalGroup = true
+            },
         verticalAlignment = Alignment.CenterVertically,
     ) {
         iconPainter?.let {

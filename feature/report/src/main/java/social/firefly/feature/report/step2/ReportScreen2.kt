@@ -94,9 +94,9 @@ private fun ReportScreen2(
     MoSoSurface {
         Column(
             modifier =
-                Modifier
-                    .fillMaxHeight()
-                    .systemBarsPadding(),
+            Modifier
+                .fillMaxHeight()
+                .systemBarsPadding(),
         ) {
             MoSoCloseableTopAppBar(
                 title = stringResource(id = R.string.report_screen_title),
@@ -142,14 +142,14 @@ private fun TopContent(
 
         Text(
             text =
-                stringResource(
-                    id =
-                        if (hasPreAttachedStatus) {
-                            R.string.screen_2_prompt_with_attached_status
-                        } else {
-                            R.string.screen_2_prompt
-                        },
-                ),
+            stringResource(
+                id =
+                if (hasPreAttachedStatus) {
+                    R.string.screen_2_prompt_with_attached_status
+                } else {
+                    R.string.screen_2_prompt
+                },
+            ),
             style = MoSoTheme.typography.titleMedium,
         )
     }
@@ -168,11 +168,13 @@ private fun MiddleContent(
             is Resource.Loading -> {
                 MaxSizeLoading()
             }
+
             is Resource.Error -> {
                 GenericError(
                     onRetryClicked = { reportInteractions.onRetryClicked() },
                 )
             }
+
             is Resource.Loaded -> {
                 LazyColumn(
                     modifier = Modifier.fillMaxSize(),
@@ -209,9 +211,9 @@ private fun BottomContent(
 ) {
     MoSoButton(
         modifier =
-            Modifier
-                .padding(16.dp)
-                .fillMaxWidth(),
+        Modifier
+            .padding(16.dp)
+            .fillMaxWidth(),
         onClick = { reportInteractions.onReportClicked() },
         enabled = !reportIsSending,
     ) {
@@ -235,9 +237,9 @@ private fun SelectableStatusCard(
     NoRipple {
         Row(
             modifier =
-                Modifier
-                    .padding(start = 8.dp, end = 16.dp, top = 16.dp, bottom = 16.dp)
-                    .clickable { reportInteractions.onStatusClicked(uiState.statusId) },
+            Modifier
+                .padding(start = 8.dp, end = 16.dp, top = 16.dp, bottom = 16.dp)
+                .clickable { reportInteractions.onStatusClicked(uiState.statusId) },
         ) {
             MoSoCheckBox(
                 modifier = Modifier.align(Alignment.CenterVertically),
@@ -247,11 +249,11 @@ private fun SelectableStatusCard(
 
             AsyncImage(
                 modifier =
-                    Modifier
-                        .size(36.dp)
-                        .clip(CircleShape)
-                        .background(MoSoTheme.colors.layer2)
-                        .align(Alignment.CenterVertically),
+                Modifier
+                    .size(36.dp)
+                    .clip(CircleShape)
+                    .background(MoSoTheme.colors.layer2)
+                    .align(Alignment.CenterVertically),
                 model = uiState.avatarUrl,
                 contentDescription = "",
             )
@@ -287,8 +289,8 @@ private fun SelectableStatusCard(
                     mentions = emptyList(),
                     htmlText = uiState.htmlStatusText,
                     htmlContentInteractions =
-                        object :
-                            social.firefly.core.ui.htmlcontent.HtmlContentInteractions {},
+                    object :
+                        social.firefly.core.ui.htmlcontent.HtmlContentInteractions {},
                     maximumLineCount = 2,
                     clickableLinks = false,
                 )

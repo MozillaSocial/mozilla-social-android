@@ -13,6 +13,7 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.koin.core.parameter.parametersOf
 import social.firefly.common.utils.edit
+import social.firefly.core.analytics.FeedLocation
 import social.firefly.core.repository.mastodon.AccountRepository
 import social.firefly.core.repository.mastodon.NotificationsRepository
 import social.firefly.core.repository.paging.notifications.AllNotificationsRemoteMediator
@@ -20,7 +21,6 @@ import social.firefly.core.repository.paging.notifications.FollowNotificationsRe
 import social.firefly.core.repository.paging.notifications.MentionNotificationsRemoteMediator
 import social.firefly.core.ui.notifications.NotificationCardDelegate
 import social.firefly.core.ui.notifications.toUiState
-import social.firefly.core.analytics.FeedLocation
 import social.firefly.core.ui.postcard.PostCardDelegate
 import social.firefly.core.usecase.mastodon.account.GetLoggedInUserAccountId
 import timber.log.Timber
@@ -78,9 +78,11 @@ class NotificationsViewModel(
         viewModelScope.launch {
             try {
                 accountRepository.getAccountFlow(loggedInUserAccountId).collect {
-                    _uiState.edit { copy(
-                        requestsTabIsVisible = it.isLocked
-                    ) }
+                    _uiState.edit {
+                        copy(
+                            requestsTabIsVisible = it.isLocked
+                        )
+                    }
                 }
             } catch (e: Exception) {
                 Timber.e(e)
@@ -89,8 +91,10 @@ class NotificationsViewModel(
     }
 
     override fun onTabClicked(tab: NotificationsTab) {
-        _uiState.edit { copy(
-            selectedTab = tab,
-        ) }
+        _uiState.edit {
+            copy(
+                selectedTab = tab,
+            )
+        }
     }
 }

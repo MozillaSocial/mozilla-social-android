@@ -11,8 +11,8 @@ interface PollsDao : BaseDao<DatabasePoll> {
      */
     @Query(
         "UPDATE polls " +
-        "SET ownVotes = :choices " +
-        "WHERE pollId = :pollId",
+                "SET ownVotes = :choices " +
+                "WHERE pollId = :pollId",
     )
     suspend fun updateOwnVotes(
         pollId: String,
@@ -21,7 +21,7 @@ interface PollsDao : BaseDao<DatabasePoll> {
 
     @Query(
         "DELETE FROM polls " +
-        "WHERE pollId NOT IN (:pollIdsToKeep)"
+                "WHERE pollId NOT IN (:pollIdsToKeep)"
     )
     suspend fun deleteAll(
         pollIdsToKeep: List<String> = emptyList()
@@ -29,10 +29,10 @@ interface PollsDao : BaseDao<DatabasePoll> {
 
     @Query(
         "DELETE FROM polls " +
-        "WHERE pollId NOT IN " +
-        "(" +
-            "SELECT pollId FROM statuses" +
-        ")"
+                "WHERE pollId NOT IN " +
+                "(" +
+                "SELECT pollId FROM statuses" +
+                ")"
     )
     suspend fun deleteOldPolls()
 }

@@ -11,14 +11,14 @@ fun NavGraphBuilder.newPostScreen() {
     composable(
         route = NavigationDestination.NewPost.fullRoute,
         arguments =
-            listOf(
-                navArgument(NavigationDestination.NewPost.NAV_PARAM_REPLY_STATUS_ID) {
-                    nullable = true
-                },
-                navArgument(NavigationDestination.NewPost.NAV_PARAM_EDIT_STATUS_ID) {
-                    nullable = true
-                },
-            ),
+        listOf(
+            navArgument(NavigationDestination.NewPost.NAV_PARAM_REPLY_STATUS_ID) {
+                nullable = true
+            },
+            navArgument(NavigationDestination.NewPost.NAV_PARAM_EDIT_STATUS_ID) {
+                nullable = true
+            },
+        ),
         enterTransition = { mosoSlideIn() },
         exitTransition = { mosoSlideOut() },
     ) {

@@ -1,6 +1,5 @@
 package social.firefly.core.repository.mastodon.model.status
 
-import social.firefly.core.database.model.entities.DatabaseAccount
 import social.firefly.core.database.model.DatabaseApplication
 import social.firefly.core.database.model.DatabaseAttachment
 import social.firefly.core.database.model.DatabaseCard
@@ -10,20 +9,21 @@ import social.firefly.core.database.model.DatabaseFocalPoint
 import social.firefly.core.database.model.DatabaseHashTag
 import social.firefly.core.database.model.DatabaseHistory
 import social.firefly.core.database.model.DatabaseMention
-import social.firefly.core.database.model.entities.DatabasePoll
 import social.firefly.core.database.model.DatabasePollOption
 import social.firefly.core.database.model.DatabaseSource
-import social.firefly.core.database.model.entities.DatabaseStatus
 import social.firefly.core.database.model.DatabaseStatusVisibility
+import social.firefly.core.database.model.entities.DatabaseAccount
+import social.firefly.core.database.model.entities.DatabasePoll
+import social.firefly.core.database.model.entities.DatabaseStatus
 import social.firefly.core.database.model.wrappers.StatusWrapper
 import social.firefly.core.model.Account
 import social.firefly.core.model.Application
 import social.firefly.core.model.Attachment
+import social.firefly.core.model.BasicHashTag
 import social.firefly.core.model.Card
 import social.firefly.core.model.Emoji
 import social.firefly.core.model.Field
 import social.firefly.core.model.FocalPoint
-import social.firefly.core.model.BasicHashTag
 import social.firefly.core.model.History
 import social.firefly.core.model.Mention
 import social.firefly.core.model.Poll
@@ -154,6 +154,7 @@ fun DatabaseAttachment.toExternalModel(): Attachment =
                 blurHash = blurHash,
                 meta = meta?.toExternalModel(),
             )
+
         is DatabaseAttachment.Gifv ->
             Attachment.Gifv(
                 attachmentId = attachmentId,
@@ -165,6 +166,7 @@ fun DatabaseAttachment.toExternalModel(): Attachment =
                 description = description,
                 meta = meta?.toExternalModel(),
             )
+
         is DatabaseAttachment.Video ->
             Attachment.Video(
                 attachmentId = attachmentId,
@@ -177,6 +179,7 @@ fun DatabaseAttachment.toExternalModel(): Attachment =
                 blurHash = blurHash,
                 meta = meta?.toExternalModel(),
             )
+
         is DatabaseAttachment.Audio ->
             Attachment.Audio(
                 attachmentId = attachmentId,
@@ -189,6 +192,7 @@ fun DatabaseAttachment.toExternalModel(): Attachment =
                 blurHash = blurHash,
                 meta = meta?.toExternalModel(),
             )
+
         is DatabaseAttachment.Unknown ->
             Attachment.Unknown(
                 attachmentId = attachmentId,
@@ -367,6 +371,7 @@ fun DatabaseCard.toExternalModel(): Card =
                 embedUrl = embedUrl,
                 blurHash = blurHash,
             )
+
         is DatabaseCard.Link ->
             Card.Link(
                 url = url,
@@ -383,6 +388,7 @@ fun DatabaseCard.toExternalModel(): Card =
                 embedUrl = embedUrl,
                 blurHash = blurHash,
             )
+
         is DatabaseCard.Photo ->
             Card.Photo(
                 url = url,
@@ -399,6 +405,7 @@ fun DatabaseCard.toExternalModel(): Card =
                 embedUrl = embedUrl,
                 blurHash = blurHash,
             )
+
         is DatabaseCard.Rich ->
             Card.Rich(
                 url = url,

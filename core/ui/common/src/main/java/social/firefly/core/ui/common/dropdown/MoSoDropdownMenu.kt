@@ -29,8 +29,8 @@ fun MoSoDropdownMenu(
         expanded = expanded,
         onDismissRequest = onDismissRequest,
         modifier =
-            modifier
-                .background(MoSoTheme.colors.layer1),
+        modifier
+            .background(MoSoTheme.colors.layer1),
         offset = offset,
         properties = properties,
         content = content,

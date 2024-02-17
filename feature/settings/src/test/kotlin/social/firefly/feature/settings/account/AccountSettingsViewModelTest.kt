@@ -15,13 +15,13 @@ import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.Test
 import social.firefly.common.Resource
+import social.firefly.core.analytics.SettingsAnalytics
 import social.firefly.core.model.Account
 import social.firefly.core.navigation.usecases.OpenLink
 import social.firefly.core.repository.mastodon.AccountRepository
 import social.firefly.core.usecase.mastodon.account.GetDomain
 import social.firefly.core.usecase.mastodon.account.GetLoggedInUserAccountId
 import social.firefly.core.usecase.mastodon.auth.Logout
-import social.firefly.core.analytics.SettingsAnalytics
 import kotlin.test.BeforeTest
 
 class AccountSettingsViewModelTest {

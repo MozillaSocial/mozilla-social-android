@@ -14,9 +14,6 @@ import social.firefly.core.ui.common.account.toggleablelist.ToggleableAccountLis
 import social.firefly.core.ui.common.account.toggleablelist.ToggleableAccountListItemState
 import social.firefly.core.ui.common.utils.PreviewTheme
 import social.firefly.feature.settings.R
-import social.firefly.feature.settings.contentpreferences.blockedusers.BlockedButtonState
-import social.firefly.feature.settings.contentpreferences.blockedusers.BlockedUsersInteractions
-import social.firefly.feature.settings.contentpreferences.blockedusers.BlockedUsersSettingsScreen
 import social.firefly.feature.settings.ui.SettingsColumn
 
 @Composable
@@ -59,7 +56,11 @@ private fun MutedUsersSettingsScreenPreview() {
             pagingData = emptyFlow(),
             mutedUsersInteractions = object : MutedUsersInteractions {
                 override fun onScreenViewed() = Unit
-                override fun onButtonClicked(accountId: String, mutedButtonState: MutedButtonState) = Unit
+                override fun onButtonClicked(
+                    accountId: String,
+                    mutedButtonState: MutedButtonState
+                ) = Unit
+
                 override fun onAccountClicked(accountId: String) = Unit
             }
         )

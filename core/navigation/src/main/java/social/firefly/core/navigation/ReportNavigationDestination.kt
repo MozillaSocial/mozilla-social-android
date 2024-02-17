@@ -23,11 +23,11 @@ sealed class ReportNavigationDestination(
         const val NAV_PARAM_BUNDLE = "reportDataBundle"
         val fullRoute =
             "$route?" +
-                "$NAV_PARAM_BUNDLE={$NAV_PARAM_BUNDLE}"
+                    "$NAV_PARAM_BUNDLE={$NAV_PARAM_BUNDLE}"
 
         fun route(bundle: String): String =
             "$route?" +
-                "$NAV_PARAM_BUNDLE=$bundle"
+                    "$NAV_PARAM_BUNDLE=$bundle"
     }
 
     data object ReportScreen3 : ReportNavigationDestination(
@@ -43,10 +43,10 @@ sealed class ReportNavigationDestination(
         const val NAV_PARAM_BUNDLE = "reportDataBundle"
         val fullRoute =
             "$route?" +
-                "$NAV_PARAM_BUNDLE={$NAV_PARAM_BUNDLE}"
+                    "$NAV_PARAM_BUNDLE={$NAV_PARAM_BUNDLE}"
 
         fun route(bundle: String): String =
             "$route?" +
-                "$NAV_PARAM_BUNDLE=$bundle"
+                    "$NAV_PARAM_BUNDLE=$bundle"
     }
 }

@@ -1,6 +1,5 @@
 package social.firefly.core.database
 
-import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
@@ -38,21 +37,21 @@ import social.firefly.core.database.model.entities.DatabaseNotification
 import social.firefly.core.database.model.entities.DatabasePoll
 import social.firefly.core.database.model.entities.DatabaseRelationship
 import social.firefly.core.database.model.entities.DatabaseStatus
+import social.firefly.core.database.model.entities.accountCollections.DatabaseBlock
+import social.firefly.core.database.model.entities.accountCollections.DatabaseMute
 import social.firefly.core.database.model.entities.accountCollections.Followee
 import social.firefly.core.database.model.entities.accountCollections.Follower
+import social.firefly.core.database.model.entities.accountCollections.SearchedAccount
+import social.firefly.core.database.model.entities.hashtagCollections.SearchedHashTag
+import social.firefly.core.database.model.entities.notificationCollections.FollowListNotification
+import social.firefly.core.database.model.entities.notificationCollections.MainNotification
+import social.firefly.core.database.model.entities.notificationCollections.MentionListNotification
 import social.firefly.core.database.model.entities.statusCollections.AccountTimelineStatus
 import social.firefly.core.database.model.entities.statusCollections.FavoritesTimelineStatus
 import social.firefly.core.database.model.entities.statusCollections.FederatedTimelineStatus
 import social.firefly.core.database.model.entities.statusCollections.HashTagTimelineStatus
 import social.firefly.core.database.model.entities.statusCollections.HomeTimelineStatus
 import social.firefly.core.database.model.entities.statusCollections.LocalTimelineStatus
-import social.firefly.core.database.model.entities.accountCollections.DatabaseBlock
-import social.firefly.core.database.model.entities.accountCollections.DatabaseMute
-import social.firefly.core.database.model.entities.accountCollections.SearchedAccount
-import social.firefly.core.database.model.entities.hashtagCollections.SearchedHashTag
-import social.firefly.core.database.model.entities.notificationCollections.FollowListNotification
-import social.firefly.core.database.model.entities.notificationCollections.MainNotification
-import social.firefly.core.database.model.entities.notificationCollections.MentionListNotification
 import social.firefly.core.database.model.entities.statusCollections.SearchedStatus
 
 @Suppress("MagicNumber")

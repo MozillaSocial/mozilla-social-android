@@ -7,7 +7,6 @@ import androidx.paging.RemoteMediator
 import kotlinx.coroutines.delay
 import social.firefly.common.Rel
 import social.firefly.core.database.model.entities.statusCollections.FederatedTimelineStatusWrapper
-import social.firefly.core.repository.mastodon.AccountRepository
 import social.firefly.core.repository.mastodon.DatabaseDelegate
 import social.firefly.core.repository.mastodon.TimelineRepository
 import social.firefly.core.usecase.mastodon.status.GetInReplyToAccountNames
@@ -42,7 +41,9 @@ class RefreshFederatedTimeline internal constructor(
                     LoadType.PREPEND -> {
                         val firstItem =
                             state.firstItemOrNull()
-                                ?: return RemoteMediator.MediatorResult.Success(endOfPaginationReached = true)
+                                ?: return RemoteMediator.MediatorResult.Success(
+                                    endOfPaginationReached = true
+                                )
                         timelineRepository.getPublicTimeline(
                             federatedOnly = true,
                             olderThanId = null,
@@ -54,7 +55,9 @@ class RefreshFederatedTimeline internal constructor(
                     LoadType.APPEND -> {
                         val lastItem =
                             state.lastItemOrNull()
-                                ?: return RemoteMediator.MediatorResult.Success(endOfPaginationReached = true)
+                                ?: return RemoteMediator.MediatorResult.Success(
+                                    endOfPaginationReached = true
+                                )
                         timelineRepository.getPublicTimeline(
                             federatedOnly = true,
                             olderThanId = lastItem.federatedTimelineStatus.statusId,
@@ -88,12 +91,12 @@ class RefreshFederatedTimeline internal constructor(
 
             RemoteMediator.MediatorResult.Success(
                 endOfPaginationReached =
-                    when (loadType) {
-                        LoadType.PREPEND -> response.pagingLinks?.find { it.rel == Rel.PREV } == null
-                        LoadType.REFRESH,
-                        LoadType.APPEND,
-                        -> response.pagingLinks?.find { it.rel == Rel.NEXT } == null
-                    },
+                when (loadType) {
+                    LoadType.PREPEND -> response.pagingLinks?.find { it.rel == Rel.PREV } == null
+                    LoadType.REFRESH,
+                    LoadType.APPEND,
+                    -> response.pagingLinks?.find { it.rel == Rel.NEXT } == null
+                },
             )
         } catch (e: Exception) {
             Timber.e(e)

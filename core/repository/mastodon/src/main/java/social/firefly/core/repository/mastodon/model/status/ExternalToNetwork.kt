@@ -43,7 +43,8 @@ internal fun StatusCreate.toNetworkModel(): NetworkStatusCreate =
         language = language,
     )
 
-internal fun MediaUpdate.toNetworkModel(): NetworkMediaUpdate = NetworkMediaUpdate(description = description)
+internal fun MediaUpdate.toNetworkModel(): NetworkMediaUpdate =
+    NetworkMediaUpdate(description = description)
 
 internal fun ReportCreate.toNetworkModel(): NetworkReportCreate =
     NetworkReportCreate(

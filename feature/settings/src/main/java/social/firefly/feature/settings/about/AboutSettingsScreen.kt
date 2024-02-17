@@ -74,6 +74,7 @@ private fun AboutSettingsScreen(
             is Resource.Loading -> {
                 MaxSizeLoading()
             }
+
             is Resource.Loaded -> {
                 LoadedScreen(
                     aboutSettings = aboutSettingsResource.data,
@@ -81,6 +82,7 @@ private fun AboutSettingsScreen(
                     onOpenSourceLicensesClicked = aboutInteractions::onOpenSourceLicensesClicked,
                 )
             }
+
             is Resource.Error -> {
                 GenericError(
                     modifier = Modifier.fillMaxSize(),

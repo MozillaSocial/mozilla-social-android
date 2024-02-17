@@ -1,7 +1,6 @@
 package social.firefly.core.model
 
 import kotlinx.datetime.Instant
-import kotlinx.datetime.LocalDate
 
 /**
  * Represents a user of Mastodon and their associated profile.

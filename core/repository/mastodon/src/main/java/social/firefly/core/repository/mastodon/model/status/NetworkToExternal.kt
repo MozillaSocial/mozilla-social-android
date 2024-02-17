@@ -3,11 +3,11 @@ package social.firefly.core.repository.mastodon.model.status
 import social.firefly.core.model.Account
 import social.firefly.core.model.Application
 import social.firefly.core.model.Attachment
+import social.firefly.core.model.BasicHashTag
 import social.firefly.core.model.Card
 import social.firefly.core.model.Emoji
 import social.firefly.core.model.Field
 import social.firefly.core.model.FocalPoint
-import social.firefly.core.model.BasicHashTag
 import social.firefly.core.model.History
 import social.firefly.core.model.Mention
 import social.firefly.core.model.Poll
@@ -18,11 +18,11 @@ import social.firefly.core.model.StatusVisibility
 import social.firefly.core.network.mastodon.model.NetworkAccount
 import social.firefly.core.network.mastodon.model.NetworkApplication
 import social.firefly.core.network.mastodon.model.NetworkAttachment
+import social.firefly.core.network.mastodon.model.NetworkBasicHashTag
 import social.firefly.core.network.mastodon.model.NetworkCard
 import social.firefly.core.network.mastodon.model.NetworkEmoji
 import social.firefly.core.network.mastodon.model.NetworkField
 import social.firefly.core.network.mastodon.model.NetworkFocalPoint
-import social.firefly.core.network.mastodon.model.NetworkBasicHashTag
 import social.firefly.core.network.mastodon.model.NetworkHistory
 import social.firefly.core.network.mastodon.model.NetworkMention
 import social.firefly.core.network.mastodon.model.NetworkPoll
@@ -114,6 +114,7 @@ fun NetworkAttachment.toExternalModel(): Attachment =
                 blurHash = blurHash,
                 meta = meta?.toExternalModel(),
             )
+
         is NetworkAttachment.Gifv ->
             Attachment.Gifv(
                 attachmentId = attachmentId,
@@ -125,6 +126,7 @@ fun NetworkAttachment.toExternalModel(): Attachment =
                 description = description,
                 meta = meta?.toExternalModel(),
             )
+
         is NetworkAttachment.Video ->
             Attachment.Video(
                 attachmentId = attachmentId,
@@ -137,6 +139,7 @@ fun NetworkAttachment.toExternalModel(): Attachment =
                 blurHash = blurHash,
                 meta = meta?.toExternalModel(),
             )
+
         is NetworkAttachment.Audio ->
             Attachment.Audio(
                 attachmentId = attachmentId,
@@ -149,6 +152,7 @@ fun NetworkAttachment.toExternalModel(): Attachment =
                 blurHash = blurHash,
                 meta = meta?.toExternalModel(),
             )
+
         is NetworkAttachment.Unknown ->
             Attachment.Unknown(
                 attachmentId = attachmentId,
@@ -327,6 +331,7 @@ fun NetworkCard.toExternalModel(): Card =
                 embedUrl = embedUrl,
                 blurHash = blurHash,
             )
+
         "link" ->
             Card.Link(
                 url = url,
@@ -343,6 +348,7 @@ fun NetworkCard.toExternalModel(): Card =
                 embedUrl = embedUrl,
                 blurHash = blurHash,
             )
+
         "photo" ->
             Card.Photo(
                 url = url,
@@ -359,6 +365,7 @@ fun NetworkCard.toExternalModel(): Card =
                 embedUrl = embedUrl,
                 blurHash = blurHash,
             )
+
         "rich" ->
             Card.Rich(
                 url = url,
@@ -375,5 +382,6 @@ fun NetworkCard.toExternalModel(): Card =
                 embedUrl = embedUrl,
                 blurHash = blurHash,
             )
+
         else -> error("type value is incorrect")
     }

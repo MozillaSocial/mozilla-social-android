@@ -7,10 +7,10 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import social.firefly.common.utils.edit
+import social.firefly.core.analytics.ReportScreenAnalytics
 import social.firefly.core.model.InstanceRule
 import social.firefly.core.repository.mastodon.InstanceRepository
 import social.firefly.feature.report.ReportDataBundle
-import social.firefly.core.analytics.ReportScreenAnalytics
 import social.firefly.feature.report.ReportType
 import timber.log.Timber
 
@@ -94,6 +94,7 @@ class ReportScreen1ViewModel(
                         reportAccountHandle = reportAccountHandle,
                         didUserReportAccount = false,
                     )
+
                 else ->
                     ReportDataBundle.ReportDataBundleForScreen2(
                         reportAccountId = reportAccountId,

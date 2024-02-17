@@ -11,8 +11,8 @@ import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.setMain
 import org.junit.Before
 import org.junit.Test
-import social.firefly.core.datastore.AppPreferencesDatastore
 import social.firefly.core.analytics.SettingsAnalytics
+import social.firefly.core.datastore.AppPreferencesDatastore
 
 class PrivacySettingsViewModelTest {
     private lateinit var objUnderTest: PrivacySettingsViewModel

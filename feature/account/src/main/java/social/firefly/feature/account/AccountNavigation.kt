@@ -9,11 +9,11 @@ fun NavGraphBuilder.accountScreen() {
     composable(
         route = NavigationDestination.Account.fullRoute,
         arguments =
-            listOf(
-                navArgument(NavigationDestination.Account.NAV_PARAM_ACCOUNT_ID) {
-                    nullable = true
-                },
-            ),
+        listOf(
+            navArgument(NavigationDestination.Account.NAV_PARAM_ACCOUNT_ID) {
+                nullable = true
+            },
+        ),
     ) {
         val accountId: String? =
             it.arguments?.getString(NavigationDestination.Account.NAV_PARAM_ACCOUNT_ID)

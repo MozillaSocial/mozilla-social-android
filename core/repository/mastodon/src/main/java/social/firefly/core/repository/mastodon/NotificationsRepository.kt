@@ -8,6 +8,7 @@ import androidx.paging.RemoteMediator
 import androidx.paging.map
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import retrofit2.HttpException
 import social.firefly.common.annotations.PreferUseCase
 import social.firefly.common.parseMastodonLinkHeader
 import social.firefly.core.database.dao.NotificationsDao
@@ -23,7 +24,6 @@ import social.firefly.core.model.paging.NotificationsPagingWrapper
 import social.firefly.core.network.mastodon.NotificationsApi
 import social.firefly.core.repository.mastodon.model.notifications.toDatabase
 import social.firefly.core.repository.mastodon.model.notifications.toExternal
-import retrofit2.HttpException
 
 class NotificationsRepository(
     val api: NotificationsApi,

@@ -29,22 +29,22 @@ fun PreviewCard(
     val borderShape = RoundedCornerShape(MoSoRadius.media)
     Column(
         modifier =
-            Modifier
-                .clip(borderShape)
-                .border(
-                    width = 1.dp,
-                    color = MoSoTheme.colors.borderPrimary,
-                    shape = borderShape,
-                )
-                .clickable {
-                    htmlContentInteractions.onLinkClicked(previewCard.url)
-                },
+        Modifier
+            .clip(borderShape)
+            .border(
+                width = 1.dp,
+                color = MoSoTheme.colors.borderPrimary,
+                shape = borderShape,
+            )
+            .clickable {
+                htmlContentInteractions.onLinkClicked(previewCard.url)
+            },
     ) {
         AsyncImage(
             modifier =
-                Modifier
-                    .aspectRatio(2f)
-                    .background(MoSoTheme.colors.layer2),
+            Modifier
+                .aspectRatio(2f)
+                .background(MoSoTheme.colors.layer2),
             model = previewCard.imageUrl,
             contentDescription = "",
             contentScale = ContentScale.Crop,

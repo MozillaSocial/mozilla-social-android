@@ -24,15 +24,15 @@ fun ExpandingAnimation(
         modifier = modifier,
         visible = visible,
         enter =
-            expandVertically(
-                expandFrom = Alignment.Top,
-            ) { 0 } + fadeIn(),
+        expandVertically(
+            expandFrom = Alignment.Top,
+        ) { 0 } + fadeIn(),
         exit =
-            shrinkVertically(
-                shrinkTowards = Alignment.Top,
-            ) {
-                0
-            } + fadeOut(),
+        shrinkVertically(
+            shrinkTowards = Alignment.Top,
+        ) {
+            0
+        } + fadeOut(),
         label = label,
     ) {
         content()

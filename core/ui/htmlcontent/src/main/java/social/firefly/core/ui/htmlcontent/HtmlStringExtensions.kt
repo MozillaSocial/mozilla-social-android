@@ -42,14 +42,18 @@ fun String.htmlToSpannable(
                                     // find the correct mention
                                     mentions.find {
                                         // check the user name and the domain
-                                        it.acct.substringBeforeLast("@") == spanText.substringAfter("@") &&
-                                            url.contains(it.acct.substringAfter("@"))
+                                        it.acct.substringBeforeLast("@") == spanText.substringAfter(
+                                            "@"
+                                        ) &&
+                                                url.contains(it.acct.substringAfter("@"))
                                     }?.accountId?.let {
                                         onAccountClicked(it)
                                     }
                                 }
+
                                 spanText.startsWith("#") ->
                                     onHashTagClicked(spanText.substringAfter("#"))
+
                                 else -> onLinkClick(url)
                             }
                         }

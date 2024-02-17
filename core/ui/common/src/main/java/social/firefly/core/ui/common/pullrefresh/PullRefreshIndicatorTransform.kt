@@ -39,11 +39,11 @@ fun Modifier.pullRefreshIndicatorTransform(
     scale: Boolean = false,
 ) = inspectable(
     inspectorInfo =
-        debugInspectorInfo {
-            name = "pullRefreshIndicatorTransform"
-            properties["state"] = state
-            properties["scale"] = scale
-        },
+    debugInspectorInfo {
+        name = "pullRefreshIndicatorTransform"
+        properties["state"] = state
+        properties["scale"] = scale
+    },
 ) {
     Modifier
         // Essentially we only want to clip the at the top, so the indicator will not appear when

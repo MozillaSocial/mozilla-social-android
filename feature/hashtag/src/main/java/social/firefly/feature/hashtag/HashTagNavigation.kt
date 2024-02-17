@@ -9,13 +9,14 @@ fun NavGraphBuilder.hashTagScreen() {
     composable(
         route = NavigationDestination.HashTag.fullRoute,
         arguments =
-            listOf(
-                navArgument(NavigationDestination.HashTag.NAV_PARAM_HASH_TAG) {
-                    nullable = true
-                },
-            ),
+        listOf(
+            navArgument(NavigationDestination.HashTag.NAV_PARAM_HASH_TAG) {
+                nullable = true
+            },
+        ),
     ) {
-        val hashTagValue: String? = it.arguments?.getString(NavigationDestination.HashTag.NAV_PARAM_HASH_TAG)
+        val hashTagValue: String? =
+            it.arguments?.getString(NavigationDestination.HashTag.NAV_PARAM_HASH_TAG)
         hashTagValue?.let {
             HashTagScreen(
                 hashTag = hashTagValue,

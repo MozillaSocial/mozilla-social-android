@@ -77,10 +77,10 @@ import social.firefly.post.bottombar.BottomBarState
 import social.firefly.post.media.MediaInteractions
 import social.firefly.post.poll.Poll
 import social.firefly.post.poll.PollBar
-import social.firefly.post.poll.PollUiState
 import social.firefly.post.poll.PollDuration
 import social.firefly.post.poll.PollInteractions
 import social.firefly.post.poll.PollStyle
+import social.firefly.post.poll.PollUiState
 import social.firefly.post.status.AccountSearchBar
 import social.firefly.post.status.ContentWarningInteractions
 import social.firefly.post.status.HashtagSearchBar
@@ -91,7 +91,12 @@ import social.firefly.post.status.StatusUiState
 internal fun NewPostScreen(
     replyStatusId: String?,
     editStatusId: String?,
-    viewModel: NewPostViewModel = koinViewModel(parameters = { parametersOf(replyStatusId, editStatusId) }),
+    viewModel: NewPostViewModel = koinViewModel(parameters = {
+        parametersOf(
+            replyStatusId,
+            editStatusId
+        )
+    }),
 ) {
     val statusUiState by viewModel.statusDelegate.uiState.collectAsStateWithLifecycle()
     val mediaStates by viewModel.mediaDelegate.imageStates.collectAsStateWithLifecycle()
@@ -186,8 +191,8 @@ private fun CompactNewPostScreenContent(
     Row {
         Box(
             modifier =
-                Modifier
-                    .weight(1f),
+            Modifier
+                .weight(1f),
         ) {
             MainBox(
                 statusUiState = statusUiState,
@@ -239,8 +244,8 @@ private fun NewPostScreenContent(
         }
         Box(
             modifier =
-                Modifier
-                    .weight(1f),
+            Modifier
+                .weight(1f),
         ) {
             MainBox(
                 statusUiState = statusUiState,
@@ -253,10 +258,16 @@ private fun NewPostScreenContent(
             )
         }
         statusUiState.accountList?.let {
-            AccountSearchBar(accounts = statusUiState.accountList, statusInteractions = statusInteractions)
+            AccountSearchBar(
+                accounts = statusUiState.accountList,
+                statusInteractions = statusInteractions
+            )
         }
         statusUiState.hashtagList?.let {
-            HashtagSearchBar(hashTags = statusUiState.hashtagList, statusInteractions = statusInteractions)
+            HashtagSearchBar(
+                hashTags = statusUiState.hashtagList,
+                statusInteractions = statusInteractions
+            )
         }
         pollUiState?.let {
             PollBar(pollUiState = pollUiState, pollInteractions = pollInteractions)
@@ -382,7 +393,10 @@ private fun MainBox(
                     }
                     statusUiState.contentWarningText?.let {
                         item {
-                            ContentWarningEntry(statusUiState.contentWarningText, contentWarningInteractions)
+                            ContentWarningEntry(
+                                statusUiState.contentWarningText,
+                                contentWarningInteractions
+                            )
                         }
                     }
 
@@ -456,10 +470,10 @@ private fun InReplyToText(inReplyToAccountName: String?) {
             Spacer(modifier = Modifier.padding(start = 8.dp))
             Text(
                 text =
-                    stringResource(
-                        id = R.string.in_reply_to_account_name_label,
-                        inReplyToAccountName,
-                    ),
+                stringResource(
+                    id = R.string.in_reply_to_account_name_label,
+                    inReplyToAccountName,
+                ),
                 fontSize = 14.sp,
             )
         }
@@ -604,12 +618,12 @@ private fun NewPostScreenWithPollPreview() {
             imageStates = listOf(),
             mediaInteractions = object : MediaInteractions {},
             pollUiState =
-                PollUiState(
-                    options = listOf("option 1", "option 2"),
-                    style = PollStyle.SINGLE_CHOICE,
-                    pollDuration = PollDuration.ONE_DAY,
-                    hideTotals = false,
-                ),
+            PollUiState(
+                options = listOf("option 1", "option 2"),
+                style = PollStyle.SINGLE_CHOICE,
+                pollDuration = PollDuration.ONE_DAY,
+                hideTotals = false,
+            ),
             pollInteractions = object : PollInteractions {},
             contentWarningInteractions = object : ContentWarningInteractions {},
             newPostInteractions = social.firefly.post.NewPostInteractionsNoOp,

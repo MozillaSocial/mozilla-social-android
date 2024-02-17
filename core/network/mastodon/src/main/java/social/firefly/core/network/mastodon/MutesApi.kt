@@ -1,9 +1,9 @@
 package social.firefly.core.network.mastodon
 
-import social.firefly.core.network.mastodon.model.NetworkAccount
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
+import social.firefly.core.network.mastodon.model.NetworkAccount
 
 interface MutesApi {
     @GET("/api/v1/mutes")

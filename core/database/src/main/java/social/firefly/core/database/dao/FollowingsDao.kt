@@ -12,20 +12,20 @@ interface FollowingsDao : BaseDao<Followee> {
     @Transaction
     @Query(
         "SELECT * FROM followings " +
-            "WHERE  accountId = :accountId " +
-            "ORDER BY position ASC",
+                "WHERE  accountId = :accountId " +
+                "ORDER BY position ASC",
     )
     fun followingsPagingSource(accountId: String): PagingSource<Int, FolloweeWrapper>
 
     @Query(
         "DELETE FROM followings " +
-            "WHERE accountId = :accountId",
+                "WHERE accountId = :accountId",
     )
     suspend fun deleteFollowings(accountId: String)
 
     @Query(
         "DELETE FROM followings " +
-        "WHERE accountId NOT IN (:accountsToKeep)"
+                "WHERE accountId NOT IN (:accountsToKeep)"
     )
     suspend fun deleteAllFollowings(
         accountsToKeep: List<String> = emptyList()

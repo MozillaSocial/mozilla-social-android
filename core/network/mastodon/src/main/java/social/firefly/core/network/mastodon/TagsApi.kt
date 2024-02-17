@@ -1,9 +1,9 @@
 package social.firefly.core.network.mastodon
 
-import social.firefly.core.network.mastodon.model.NetworkHashTag
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
+import social.firefly.core.network.mastodon.model.NetworkHashTag
 
 interface TagsApi {
 

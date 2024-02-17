@@ -61,6 +61,7 @@ class ChooseServerViewModel(
 
     companion object {
         @Suppress("MaxLineLength")
-        const val URL_REGEX = "(https://www\\.|http://www\\.|https://|http://)?[a-zA-Z0-9]+(\\.[a-zA-Z0-9]+)+"
+        const val URL_REGEX =
+            "(https://www\\.|http://www\\.|https://|http://)?[a-zA-Z0-9]+(\\.[a-zA-Z0-9]+)+"
     }
 }

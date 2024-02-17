@@ -6,15 +6,15 @@ import android.net.Uri
  * Parses the links header from a mastodon paging response
  * [More info here](<https://docs.joinmastodon.org/api/guidelines/#pagination>)
  */
-fun String.parseMastodonLinkHeader(): List<social.firefly.common.MastodonPagingLink> {
+fun String.parseMastodonLinkHeader(): List<MastodonPagingLink> {
     val separated = split(", ")
     return separated.map { link ->
-        social.firefly.common.MastodonPagingLink(
+        MastodonPagingLink(
             link = link.substringAfter("<").substringBefore(">"),
             rel =
             when (link.substringAfter("; rel=\"").substringBefore("\"")) {
-                "prev" -> social.firefly.common.Rel.PREV
-                else -> social.firefly.common.Rel.NEXT
+                "prev" -> Rel.PREV
+                else -> Rel.NEXT
             },
         )
     }
@@ -29,7 +29,7 @@ fun String.parseMastodonLinkHeader(): List<social.firefly.common.MastodonPagingL
  */
 data class MastodonPagingLink(
     val link: String,
-    val rel: social.firefly.common.Rel,
+    val rel: Rel,
 )
 
 /**
@@ -41,12 +41,13 @@ enum class Rel {
     NEXT,
 }
 
-fun List<social.firefly.common.MastodonPagingLink>.getSinceIdValue(): String? =
-    find { it.rel == social.firefly.common.Rel.PREV }?.getSinceIdValue()
+fun List<MastodonPagingLink>.getSinceIdValue(): String? =
+    find { it.rel == Rel.PREV }?.getSinceIdValue()
 
-fun List<social.firefly.common.MastodonPagingLink>.getMaxIdValue(): String? = find { it.rel == social.firefly.common.Rel.NEXT }?.getMaxIdValue()
+fun List<MastodonPagingLink>.getMaxIdValue(): String? =
+    find { it.rel == Rel.NEXT }?.getMaxIdValue()
 
-private fun social.firefly.common.MastodonPagingLink.getSinceIdValue(): String =
+private fun MastodonPagingLink.getSinceIdValue(): String =
     link
         .substringAfter("since_id=")
         .split(">")
@@ -54,7 +55,7 @@ private fun social.firefly.common.MastodonPagingLink.getSinceIdValue(): String =
         .split("&")
         .first()
 
-private fun social.firefly.common.MastodonPagingLink.getMaxIdValue(): String =
+private fun MastodonPagingLink.getMaxIdValue(): String =
     link
         .substringAfter("max_id=")
         .split(">")
@@ -62,7 +63,7 @@ private fun social.firefly.common.MastodonPagingLink.getMaxIdValue(): String =
         .split("&")
         .first()
 
-private fun social.firefly.common.MastodonPagingLink.getLimitValue(): Int {
+private fun MastodonPagingLink.getLimitValue(): Int {
     val uri = Uri.parse(link)
     return uri.getQueryParameter("limit")?.toInt()!!
 }
@@ -73,13 +74,17 @@ data class HeaderLink(
     val minId: String?,
     val limit: Int?
 )
-fun social.firefly.common.MastodonPagingLink.toHeaderLink() = social.firefly.common.HeaderLink(
+
+fun MastodonPagingLink.toHeaderLink() = HeaderLink(
     maxId = getMaxIdValue(),
     sinceId = getSinceIdValue(),
     minId = getMaxIdValue(),
     limit = getLimitValue()
 )
 
-fun List<social.firefly.common.MastodonPagingLink>.getNext() = firstOrNull { it.rel == social.firefly.common.Rel.NEXT }
-fun List<social.firefly.common.MastodonPagingLink>.getPrev() = firstOrNull { it.rel == social.firefly.common.Rel.PREV }
+fun List<MastodonPagingLink>.getNext() =
+    firstOrNull { it.rel == Rel.NEXT }
+
+fun List<MastodonPagingLink>.getPrev() =
+    firstOrNull { it.rel == Rel.PREV }
 

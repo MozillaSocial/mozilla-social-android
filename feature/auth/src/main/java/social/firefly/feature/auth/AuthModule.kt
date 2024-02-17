@@ -2,7 +2,6 @@ package social.firefly.feature.auth
 
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.androidx.viewmodel.dsl.viewModelOf
-import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 import social.firefly.common.commonModule
 import social.firefly.core.analytics.analyticsModule
@@ -12,7 +11,6 @@ import social.firefly.core.repository.mastodon.mastodonRepositoryModule
 import social.firefly.core.usecase.mastodon.mastodonUsecaseModule
 import social.firefly.feature.auth.chooseServer.ChooseServerViewModel
 import social.firefly.feature.auth.login.LoginViewModel
-import social.firefly.core.analytics.LoginAnalytics
 
 val authModule =
     module {

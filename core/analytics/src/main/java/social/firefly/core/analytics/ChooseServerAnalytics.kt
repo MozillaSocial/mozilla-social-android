@@ -10,6 +10,7 @@ class ChooseServerAnalytics internal constructor(private val analytics: Analytic
             uiIdentifier = CHOOSE_A_SERVER_SCREEN_IMPRESSION
         )
     }
+
     fun chooseServerSubmitted(server: String) {
         analytics.uiEngagement(
             engagementType = EngagementType.GENERAL,

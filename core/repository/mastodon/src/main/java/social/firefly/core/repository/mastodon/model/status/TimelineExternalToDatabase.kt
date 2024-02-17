@@ -5,8 +5,8 @@ import social.firefly.core.database.model.entities.statusCollections.FederatedTi
 import social.firefly.core.database.model.entities.statusCollections.HashTagTimelineStatus
 import social.firefly.core.database.model.entities.statusCollections.HomeTimelineStatus
 import social.firefly.core.database.model.entities.statusCollections.LocalTimelineStatus
-import social.firefly.core.model.Status
 import social.firefly.core.model.AccountTimelineType
+import social.firefly.core.model.Status
 
 fun Status.toHomeTimelineStatus(): HomeTimelineStatus =
     HomeTimelineStatus(

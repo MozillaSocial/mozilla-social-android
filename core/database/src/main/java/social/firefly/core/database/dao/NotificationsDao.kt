@@ -15,25 +15,25 @@ import social.firefly.core.database.model.entities.notificationCollections.Menti
 import social.firefly.core.database.model.wrappers.NotificationWrapper
 
 @Dao
-interface NotificationsDao: BaseDao<DatabaseNotification> {
+interface NotificationsDao : BaseDao<DatabaseNotification> {
     @Transaction
     @Query(
         "SELECT * FROM mainNotifications " +
-        "ORDER BY id DESC",
+                "ORDER BY id DESC",
     )
     fun mainNotificationsPagingSource(): PagingSource<Int, MainNotificationWrapper>
 
     @Transaction
     @Query(
         "SELECT * FROM mentionNotifications " +
-        "ORDER BY id DESC",
+                "ORDER BY id DESC",
     )
     fun mentionListNotificationsPagingSource(): PagingSource<Int, MentionListNotificationWrapper>
 
     @Transaction
     @Query(
         "SELECT * FROM followNotifications " +
-        "ORDER BY id DESC",
+                "ORDER BY id DESC",
     )
     fun followListNotificationsPagingSource(): PagingSource<Int, FollowListNotificationWrapper>
 
@@ -44,14 +44,14 @@ interface NotificationsDao: BaseDao<DatabaseNotification> {
 
     @Query(
         "DELETE FROM notifications " +
-        "WHERE id NOT IN " +
-        "(" +
-            "SELECT id FROM mainNotifications " +
-            "UNION " +
-            "SELECT id FROM mentionNotifications " +
-            "UNION " +
-            "SELECT id FROM followNotifications" +
-        ")"
+                "WHERE id NOT IN " +
+                "(" +
+                "SELECT id FROM mainNotifications " +
+                "UNION " +
+                "SELECT id FROM mentionNotifications " +
+                "UNION " +
+                "SELECT id FROM followNotifications" +
+                ")"
     )
     suspend fun deleteOldNotifications()
 
@@ -87,8 +87,8 @@ interface NotificationsDao: BaseDao<DatabaseNotification> {
 
     @Query(
         "UPDATE notifications " +
-        "SET type = :type " +
-        "WHERE id = :notificationId",
+                "SET type = :type " +
+                "WHERE id = :notificationId",
     )
     suspend fun changeNotificationType(
         notificationId: Int,
@@ -97,7 +97,7 @@ interface NotificationsDao: BaseDao<DatabaseNotification> {
 
     @Query(
         "DELETE FROM notifications " +
-        "WHERE id = :notificationId",
+                "WHERE id = :notificationId",
     )
     suspend fun deleteNotification(
         notificationId: Int,
@@ -105,7 +105,7 @@ interface NotificationsDao: BaseDao<DatabaseNotification> {
 
     @Query(
         "SELECT * FROM notifications " +
-        "WHERE id = :notificationId",
+                "WHERE id = :notificationId",
     )
     suspend fun getNotification(
         notificationId: Int,

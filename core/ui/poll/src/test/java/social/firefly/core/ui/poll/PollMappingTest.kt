@@ -2,8 +2,6 @@ package social.firefly.core.ui.poll
 
 import social.firefly.core.model.Poll
 import social.firefly.core.model.PollOption
-import social.firefly.core.ui.poll.Poll
-import social.firefly.core.ui.poll.toPollUiState
 import kotlin.test.Test
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
@@ -16,16 +14,16 @@ class PollMappingTest {
             allowsMultipleChoices = false,
             votesCount = 3,
             options =
-                listOf(
-                    PollOption(
-                        title = "first",
-                        votesCount = 1,
-                    ),
-                    PollOption(
-                        title = "second",
-                        votesCount = 2,
-                    ),
+            listOf(
+                PollOption(
+                    title = "first",
+                    votesCount = 1,
                 ),
+                PollOption(
+                    title = "second",
+                    votesCount = 2,
+                ),
+            ),
             emojis = emptyList(),
             expiresAt = null,
             votersCount = 3,
@@ -43,16 +41,16 @@ class PollMappingTest {
         val poll =
             basePoll.copy(
                 options =
-                    listOf(
-                        PollOption(
-                            title = "first",
-                            votesCount = null,
-                        ),
-                        PollOption(
-                            title = "second",
-                            votesCount = null,
-                        ),
+                listOf(
+                    PollOption(
+                        title = "first",
+                        votesCount = null,
                     ),
+                    PollOption(
+                        title = "second",
+                        votesCount = null,
+                    ),
+                ),
             )
 
         assertFalse(poll.toPollUiState(true).showResults)
@@ -86,16 +84,16 @@ class PollMappingTest {
                 hasVoted = false,
                 isExpired = true,
                 options =
-                    listOf(
-                        PollOption(
-                            title = "first",
-                            votesCount = null,
-                        ),
-                        PollOption(
-                            title = "second",
-                            votesCount = null,
-                        ),
+                listOf(
+                    PollOption(
+                        title = "first",
+                        votesCount = null,
                     ),
+                    PollOption(
+                        title = "second",
+                        votesCount = null,
+                    ),
+                ),
             )
 
         assertFalse(poll.toPollUiState(true).showResults)

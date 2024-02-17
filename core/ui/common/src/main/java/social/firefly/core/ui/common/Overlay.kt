@@ -13,9 +13,9 @@ import social.firefly.core.designsystem.utils.NoRipple
 fun TransparentOverlay(modifier: Modifier = Modifier) {
     Box(
         modifier =
-            modifier
-                .fillMaxSize()
-                .background(Color(OVERLAY_COLOR)),
+        modifier
+            .fillMaxSize()
+            .background(Color(OVERLAY_COLOR)),
     )
 }
 
@@ -26,10 +26,10 @@ fun TransparentNoTouchOverlay(modifier: Modifier = Modifier) {
     NoRipple {
         Box(
             modifier =
-                modifier
-                    .fillMaxSize()
-                    .background(Color(OVERLAY_COLOR))
-                    .clickable { },
+            modifier
+                .fillMaxSize()
+                .background(Color(OVERLAY_COLOR))
+                .clickable { },
         )
     }
 }
@@ -39,9 +39,9 @@ fun NoTouchOverlay(modifier: Modifier = Modifier) {
     NoRipple {
         Box(
             modifier =
-                modifier
-                    .fillMaxSize()
-                    .clickable { },
+            modifier
+                .fillMaxSize()
+                .clickable { },
         )
     }
 }

@@ -133,6 +133,7 @@ object MoSoButtonSecondaryDefaults : MoSoButtonTheme {
 interface MoSoButtonTheme {
     @Composable
     fun colors(): ButtonColors
+
     @Composable
     fun border(): BorderStroke?
 

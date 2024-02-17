@@ -65,8 +65,6 @@ import social.firefly.core.designsystem.utils.NoRipple
 import social.firefly.core.model.AccountTimelineType
 import social.firefly.core.navigation.navigationModule
 import social.firefly.core.ui.common.MoSoSurface
-import social.firefly.core.ui.common.tabs.MoSoTab
-import social.firefly.core.ui.common.tabs.MoSoTabRow
 import social.firefly.core.ui.common.appbar.MoSoCloseableTopAppBar
 import social.firefly.core.ui.common.button.MoSoButton
 import social.firefly.core.ui.common.button.MoSoButtonContentPadding
@@ -76,8 +74,10 @@ import social.firefly.core.ui.common.dropdown.MoSoDropdownMenu
 import social.firefly.core.ui.common.error.GenericError
 import social.firefly.core.ui.common.loading.MoSoCircularProgressIndicator
 import social.firefly.core.ui.common.paging.PagingLazyColumn
-import social.firefly.core.ui.common.utils.PreviewTheme
+import social.firefly.core.ui.common.tabs.MoSoTab
+import social.firefly.core.ui.common.tabs.MoSoTabRow
 import social.firefly.core.ui.common.text.SmallTextLabel
+import social.firefly.core.ui.common.utils.PreviewTheme
 import social.firefly.core.ui.htmlcontent.HtmlContent
 import social.firefly.core.ui.htmlcontent.HtmlContentInteractions
 import social.firefly.core.ui.postcard.PostCardInteractions
@@ -123,8 +123,8 @@ private fun AccountScreen(
     MoSoSurface {
         Column(
             modifier =
-                Modifier
-                    .windowInsetsPadding(windowInsets),
+            Modifier
+                .windowInsetsPadding(windowInsets),
         ) {
             when (uiState) {
                 is Resource.Loading -> {
@@ -204,8 +204,8 @@ private fun MainContent(
 ) {
     Column(
         modifier =
-            Modifier
-                .fillMaxSize(),
+        Modifier
+            .fillMaxSize(),
     ) {
         val postsFeed = timeline.postsFeed.collectAsLazyPagingItems()
         val postsAndRepliesFeed = timeline.postsAndRepliesFeed.collectAsLazyPagingItems()
@@ -328,6 +328,7 @@ private fun MainAccount(
                             AccountTimelineType.POSTS -> stringResource(id = R.string.tab_posts)
                             AccountTimelineType.POSTS_AND_REPLIES ->
                                 stringResource(id = R.string.tab_posts_and_replies)
+
                             AccountTimelineType.MEDIA -> stringResource(id = R.string.tab_media)
                         },
                         style = MoSoTheme.typography.labelMedium,
@@ -393,20 +394,20 @@ private fun OverflowMenu(
                 if (account.isMuted) {
                     MoSoDropDownItem(
                         text =
-                            stringResource(
-                                id = social.firefly.core.ui.common.R.string.unmute_user,
-                                account.username,
-                            ),
+                        stringResource(
+                            id = social.firefly.core.ui.common.R.string.unmute_user,
+                            account.username,
+                        ),
                         expanded = overflowMenuExpanded,
                         onClick = { overflowInteractions.onOverflowUnmuteClicked() },
                     )
                 } else {
                     MoSoDropDownItem(
                         text =
-                            stringResource(
-                                id = social.firefly.core.ui.common.R.string.mute_user,
-                                account.username,
-                            ),
+                        stringResource(
+                            id = social.firefly.core.ui.common.R.string.mute_user,
+                            account.username,
+                        ),
                         expanded = overflowMenuExpanded,
                         onClick = { overflowInteractions.onOverflowMuteClicked() },
                     )
@@ -415,20 +416,20 @@ private fun OverflowMenu(
                 if (account.isBlocked) {
                     MoSoDropDownItem(
                         text =
-                            stringResource(
-                                id = social.firefly.core.ui.common.R.string.unblock_user,
-                                account.username,
-                            ),
+                        stringResource(
+                            id = social.firefly.core.ui.common.R.string.unblock_user,
+                            account.username,
+                        ),
                         expanded = overflowMenuExpanded,
                         onClick = { overflowInteractions.onOverflowUnblockClicked() },
                     )
                 } else {
                     MoSoDropDownItem(
                         text =
-                            stringResource(
-                                id = social.firefly.core.ui.common.R.string.block_user,
-                                account.username,
-                            ),
+                        stringResource(
+                            id = social.firefly.core.ui.common.R.string.block_user,
+                            account.username,
+                        ),
                         expanded = overflowMenuExpanded,
                         onClick = { overflowInteractions.onOverflowBlockClicked() },
                     )
@@ -436,10 +437,10 @@ private fun OverflowMenu(
 
                 MoSoDropDownItem(
                     text =
-                        stringResource(
-                            id = social.firefly.core.ui.common.R.string.report_user,
-                            account.username,
-                        ),
+                    stringResource(
+                        id = social.firefly.core.ui.common.R.string.report_user,
+                        account.username,
+                    ),
                     expanded = overflowMenuExpanded,
                     onClick = { overflowInteractions.onOverflowReportClicked() },
                 )
@@ -456,8 +457,8 @@ private fun UserFollow(
     NoRipple {
         Row(
             modifier =
-                Modifier
-                    .padding(8.dp),
+            Modifier
+                .padding(8.dp),
         ) {
             Counter(
                 value = account.followersCount.toString(),
@@ -488,8 +489,8 @@ private fun Counter(
 ) {
     Column(
         modifier =
-            modifier
-                .clickable { onClick() },
+        modifier
+            .clickable { onClick() },
     ) {
         Text(
             text = value,
@@ -524,27 +525,27 @@ private fun UserBio(
 
             AnimatedContent(
                 modifier =
-                    Modifier
-                        .padding(end = 32.dp),
+                Modifier
+                    .padding(end = 32.dp),
                 targetState = expanded,
                 label = "",
                 transitionSpec = {
                     // expanding
                     if (targetState) {
                         EnterTransition.None togetherWith ExitTransition.None using
-                            SizeTransform { _, _ ->
-                                keyframes {
-                                    durationMillis = animationDuration
+                                SizeTransform { _, _ ->
+                                    keyframes {
+                                        durationMillis = animationDuration
+                                    }
                                 }
-                            }
                     } else { // shrinking
                         fadeIn(animationSpec = tween(0, 0)) togetherWith
-                            fadeOut(animationSpec = tween(animationDuration)) using
-                            SizeTransform { _, _ ->
-                                keyframes {
-                                    durationMillis = animationDuration
+                                fadeOut(animationSpec = tween(animationDuration)) using
+                                SizeTransform { _, _ ->
+                                    keyframes {
+                                        durationMillis = animationDuration
+                                    }
                                 }
-                            }
                     }
                 },
             ) { targetState ->
@@ -572,10 +573,10 @@ private fun UserBio(
                             icon = MoSoIcons.userJoin(),
                             label = "",
                             text =
-                                stringResource(
-                                    id = R.string.joined_date,
-                                    DateTimeFormatters.standard.format(account.joinDate.toJavaLocalDateTime()),
-                                ),
+                            stringResource(
+                                id = R.string.joined_date,
+                                DateTimeFormatters.standard.format(account.joinDate.toJavaLocalDateTime()),
+                            ),
                             htmlContentInteractions = htmlContentInteractions,
                         )
                     }
@@ -614,8 +615,8 @@ private fun UserLabel(
         icon?.let {
             Icon(
                 modifier =
-                    Modifier
-                        .size(16.dp),
+                Modifier
+                    .size(16.dp),
                 painter = icon,
                 contentDescription = null,
                 tint = MoSoTheme.colors.textSecondary,
@@ -636,8 +637,8 @@ private fun UserLabel(
 
         HtmlContent(
             modifier =
-                Modifier
-                    .weight(1f),
+            Modifier
+                .weight(1f),
             mentions = emptyList(),
             htmlText = text,
             htmlContentInteractions = htmlContentInteractions,

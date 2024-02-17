@@ -14,6 +14,8 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.koin.core.parameter.parametersOf
 import social.firefly.common.utils.edit
+import social.firefly.core.analytics.FeedLocation
+import social.firefly.core.analytics.SearchAnalytics
 import social.firefly.core.navigation.NavigationDestination
 import social.firefly.core.navigation.usecases.NavigateTo
 import social.firefly.core.repository.mastodon.SearchRepository
@@ -22,8 +24,6 @@ import social.firefly.core.repository.paging.SearchStatusesRemoteMediator
 import social.firefly.core.repository.paging.SearchedHashTagsRemoteMediator
 import social.firefly.core.ui.accountfollower.toAccountFollowerUiState
 import social.firefly.core.ui.common.hashtag.quickview.toHashTagQuickViewUiState
-import social.firefly.core.analytics.FeedLocation
-import social.firefly.core.analytics.SearchAnalytics
 import social.firefly.core.ui.postcard.PostCardDelegate
 import social.firefly.core.ui.postcard.toPostCardUiState
 import social.firefly.core.usecase.mastodon.account.FollowAccount
@@ -68,15 +68,17 @@ class SearchViewModel(
             )
         }.value
 
-        _uiState.edit { copy(
-            accountsFeed = searchRepository.getAccountsPager(
-                remoteMediator = accountsRemoteMediator,
-            ).map { pagingData ->
-                pagingData.map {
-                    it.toAccountFollowerUiState(usersAccountId)
-                }
-            }.cachedIn(viewModelScope)
-        ) }
+        _uiState.edit {
+            copy(
+                accountsFeed = searchRepository.getAccountsPager(
+                    remoteMediator = accountsRemoteMediator,
+                ).map { pagingData ->
+                    pagingData.map {
+                        it.toAccountFollowerUiState(usersAccountId)
+                    }
+                }.cachedIn(viewModelScope)
+            )
+        }
     }
 
     private fun updateStatusFeed() {
@@ -86,15 +88,17 @@ class SearchViewModel(
             )
         }.value
 
-        _uiState.edit { copy(
-            statusFeed = searchRepository.getStatusesPager(
-                remoteMediator = statusesRemoteMediator,
-            ).map { pagingData ->
-                pagingData.map {
-                    it.toPostCardUiState(usersAccountId, postCardDelegate)
-                }
-            }.cachedIn(viewModelScope)
-        ) }
+        _uiState.edit {
+            copy(
+                statusFeed = searchRepository.getStatusesPager(
+                    remoteMediator = statusesRemoteMediator,
+                ).map { pagingData ->
+                    pagingData.map {
+                        it.toPostCardUiState(usersAccountId, postCardDelegate)
+                    }
+                }.cachedIn(viewModelScope)
+            )
+        }
     }
 
     private fun updateHashTagFeed() {
@@ -104,21 +108,25 @@ class SearchViewModel(
             )
         }.value
 
-        _uiState.edit { copy(
-            hashTagFeed = searchRepository.getHashTagsPager(
-                remoteMediator = hashTagRemoteMediator,
-            ).map { pagingData ->
-                pagingData.map {
-                    it.toHashTagQuickViewUiState()
-                }
-            }.cachedIn(viewModelScope)
-        ) }
+        _uiState.edit {
+            copy(
+                hashTagFeed = searchRepository.getHashTagsPager(
+                    remoteMediator = hashTagRemoteMediator,
+                ).map { pagingData ->
+                    pagingData.map {
+                        it.toHashTagQuickViewUiState()
+                    }
+                }.cachedIn(viewModelScope)
+            )
+        }
     }
 
     override fun onQueryTextChanged(text: String) {
-        _uiState.edit { copy(
-            query = text,
-        ) }
+        _uiState.edit {
+            copy(
+                query = text,
+            )
+        }
     }
 
     override fun onSearchClicked() {
@@ -145,9 +153,11 @@ class SearchViewModel(
                     },
                 )
             }.collect {
-                _uiState.edit { copy(
-                    topResource = it
-                ) }
+                _uiState.edit {
+                    copy(
+                        topResource = it
+                    )
+                }
             }
         }
         analytics.searchClicked(uiState.value.query)
@@ -158,9 +168,11 @@ class SearchViewModel(
     }
 
     override fun onTabClicked(tab: SearchTab) {
-        _uiState.edit { copy(
-            selectedTab = tab
-        ) }
+        _uiState.edit {
+            copy(
+                selectedTab = tab
+            )
+        }
         analytics.searchTabClicked(tab.toAnalyticsSearchTab())
     }
 

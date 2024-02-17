@@ -23,7 +23,8 @@ sealed class NavigationDestination(
             const val NAV_PARAM_ACCOUNT_ID = "accountId"
             val fullRoute: String = route("{$NAV_PARAM_ACCOUNT_ID}")
 
-            private fun route(accountIdValue: String) = "$ROUTE?$NAV_PARAM_ACCOUNT_ID=$accountIdValue"
+            private fun route(accountIdValue: String) =
+                "$ROUTE?$NAV_PARAM_ACCOUNT_ID=$accountIdValue"
         }
     }
 
@@ -154,9 +155,10 @@ sealed class NavigationDestination(
         }
     }
 
-    data class NewPost(val replyStatusId: String? = null, val editStatusId: String? = null) : NavigationDestination(
-        route = ROUTE,
-    ) {
+    data class NewPost(val replyStatusId: String? = null, val editStatusId: String? = null) :
+        NavigationDestination(
+            route = ROUTE,
+        ) {
         fun NavController.navigateToNewPost(navOptions: NavOptions? = null) {
             navigate(route(replyStatusId, editStatusId), navOptions)
         }
@@ -184,8 +186,8 @@ sealed class NavigationDestination(
         val reportAccountHandle: String,
         val reportStatusId: String? = null,
     ) : NavigationDestination(
-            route = ROUTE,
-        ) {
+        route = ROUTE,
+    ) {
         fun NavController.navigateToReport(navOptions: NavOptions? = null) {
             navigate(
                 route(
@@ -204,9 +206,9 @@ sealed class NavigationDestination(
             const val NAV_PARAM_REPORT_ACCOUNT_HANDLE = "reportAccountHandle"
             val fullRoute =
                 "$ROUTE?" +
-                    "$NAV_PARAM_REPORT_STATUS_ID={$NAV_PARAM_REPORT_STATUS_ID}" +
-                    "&$NAV_PARAM_REPORT_ACCOUNT_ID={$NAV_PARAM_REPORT_ACCOUNT_ID}" +
-                    "&$NAV_PARAM_REPORT_ACCOUNT_HANDLE={$NAV_PARAM_REPORT_ACCOUNT_HANDLE}"
+                        "$NAV_PARAM_REPORT_STATUS_ID={$NAV_PARAM_REPORT_STATUS_ID}" +
+                        "&$NAV_PARAM_REPORT_ACCOUNT_ID={$NAV_PARAM_REPORT_ACCOUNT_ID}" +
+                        "&$NAV_PARAM_REPORT_ACCOUNT_HANDLE={$NAV_PARAM_REPORT_ACCOUNT_HANDLE}"
 
             fun route(
                 reportAccountId: String,
@@ -214,13 +216,13 @@ sealed class NavigationDestination(
                 reportStatusId: String? = null,
             ): String =
                 "$ROUTE?" +
-                    "$NAV_PARAM_REPORT_ACCOUNT_ID=$reportAccountId" +
-                    "&$NAV_PARAM_REPORT_ACCOUNT_HANDLE=$reportAccountHandle" +
-                    if (reportStatusId != null) {
-                        "&$NAV_PARAM_REPORT_STATUS_ID=$reportStatusId"
-                    } else {
-                        ""
-                    }
+                        "$NAV_PARAM_REPORT_ACCOUNT_ID=$reportAccountId" +
+                        "&$NAV_PARAM_REPORT_ACCOUNT_HANDLE=$reportAccountHandle" +
+                        if (reportStatusId != null) {
+                            "&$NAV_PARAM_REPORT_STATUS_ID=$reportStatusId"
+                        } else {
+                            ""
+                        }
         }
     }
 

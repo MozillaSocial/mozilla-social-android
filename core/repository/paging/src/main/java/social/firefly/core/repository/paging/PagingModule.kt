@@ -5,8 +5,8 @@ import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 import social.firefly.core.repository.mastodon.mastodonRepositoryModule
 import social.firefly.core.repository.paging.notifications.AllNotificationsRemoteMediator
-import social.firefly.core.repository.paging.notifications.MentionNotificationsRemoteMediator
 import social.firefly.core.repository.paging.notifications.FollowNotificationsRemoteMediator
+import social.firefly.core.repository.paging.notifications.MentionNotificationsRemoteMediator
 import social.firefly.core.usecase.mastodon.mastodonUsecaseModule
 
 val pagingModule = module {

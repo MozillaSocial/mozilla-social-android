@@ -13,9 +13,9 @@ interface AccountTimelineStatusDao : BaseDao<AccountTimelineStatus> {
     @Transaction
     @Query(
         "SELECT * FROM accountTimeline " +
-        "WHERE  accountId = :accountId " +
-        "AND timelineType = :timelineType " +
-        "ORDER BY statusId DESC",
+                "WHERE  accountId = :accountId " +
+                "AND timelineType = :timelineType " +
+                "ORDER BY statusId DESC",
     )
     fun accountTimelinePagingSource(
         accountId: String,
@@ -24,8 +24,8 @@ interface AccountTimelineStatusDao : BaseDao<AccountTimelineStatus> {
 
     @Query(
         "DELETE FROM accountTimeline " +
-        "WHERE accountId = :accountId " +
-        "AND timelineType = :timelineType ",
+                "WHERE accountId = :accountId " +
+                "AND timelineType = :timelineType ",
     )
     suspend fun deleteAccountTimeline(
         accountId: String,
@@ -34,7 +34,7 @@ interface AccountTimelineStatusDao : BaseDao<AccountTimelineStatus> {
 
     @Query(
         "DELETE FROM accountTimeline " +
-        "WHERE accountId NOT IN (:accountsToKeep)"
+                "WHERE accountId NOT IN (:accountsToKeep)"
     )
     suspend fun deleteAllAccountTimelines(
         accountsToKeep: List<String> = emptyList()

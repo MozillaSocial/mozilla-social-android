@@ -36,16 +36,21 @@ fun TextFieldValue.findSymbolTextAtCursor(symbol: Char): String? {
         }
     if (!textBeforeSpaceOrEnd.contains(symbol)) return null
     val textBetweenSymbolAndCursor = textBeforeSpaceOrEnd.substringAfterLast(symbol)
-    return if (!textBetweenSymbolAndCursor.contains(' ') && !textBetweenSymbolAndCursor.contains('\n')) {
+    return if (!textBetweenSymbolAndCursor.contains(' ') && !textBetweenSymbolAndCursor.contains(
+            '\n'
+        )
+    ) {
         textBetweenSymbolAndCursor
     } else {
         null
     }
 }
 
-fun TextFieldValue.replaceAccount(newText: String): TextFieldValue = replaceTextAfterSymbolAtCursor('@', newText)
+fun TextFieldValue.replaceAccount(newText: String): TextFieldValue =
+    replaceTextAfterSymbolAtCursor('@', newText)
 
-fun TextFieldValue.replaceHashtag(newText: String): TextFieldValue = replaceTextAfterSymbolAtCursor('#', newText)
+fun TextFieldValue.replaceHashtag(newText: String): TextFieldValue =
+    replaceTextAfterSymbolAtCursor('#', newText)
 
 /**
  * Copies the [TextFieldValue] and replaces the text after the symbol with the new text.

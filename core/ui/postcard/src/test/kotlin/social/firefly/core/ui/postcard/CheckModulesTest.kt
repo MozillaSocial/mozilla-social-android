@@ -7,7 +7,6 @@ import org.koin.core.annotation.KoinExperimentalAPI
 import org.koin.test.KoinTest
 import org.koin.test.verify.verify
 import social.firefly.core.analytics.FeedLocation
-import social.firefly.core.ui.postcard.postCardModule
 import kotlin.test.Test
 
 class CheckModulesTest : KoinTest {

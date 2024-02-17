@@ -14,18 +14,19 @@ internal fun NavGraphBuilder.reportScreen2(
     composable(
         route = ReportNavigationDestination.ReportScreen2.fullRoute,
         arguments =
-            listOf(
-                navArgument(ReportNavigationDestination.ReportScreen2.NAV_PARAM_BUNDLE) {
-                    nullable = false
-                },
-            ),
+        listOf(
+            navArgument(ReportNavigationDestination.ReportScreen2.NAV_PARAM_BUNDLE) {
+                nullable = false
+            },
+        ),
     ) {
         val bundle: String =
             it.arguments?.getString(
                 ReportNavigationDestination.ReportScreen2.NAV_PARAM_BUNDLE,
             )!!
 
-        val deserializedBundle: ReportDataBundle.ReportDataBundleForScreen2 = Json.decodeFromString(bundle)
+        val deserializedBundle: ReportDataBundle.ReportDataBundleForScreen2 =
+            Json.decodeFromString(bundle)
 
         ReportScreen2(
             onCloseClicked = onCloseClicked,

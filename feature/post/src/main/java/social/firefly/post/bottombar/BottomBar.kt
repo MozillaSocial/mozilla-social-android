@@ -74,11 +74,13 @@ internal fun BottomBar(
                         PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly),
                     )
                 }
+
                 in 2..NewPostViewModel.MAX_IMAGES -> {
                     multipleMediaLauncher.launch(
                         PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly),
                     )
                 }
+
                 else -> {}
             }
         },
@@ -132,10 +134,10 @@ internal fun BottomBar(
         )
         Row(
             modifier =
-                Modifier
-                    .height(56.dp)
-                    .fillMaxWidth()
-                    .background(MoSoTheme.colors.layer1),
+            Modifier
+                .height(56.dp)
+                .fillMaxWidth()
+                .background(MoSoTheme.colors.layer1),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             IconButton(
@@ -206,11 +208,11 @@ private fun ContentWarningButton(
             MoSoIcons.warning(),
             stringResource(id = R.string.content_warning_button_content_description),
             tint =
-                if (contentWarningText == null) {
-                    LocalContentColor.current
-                } else {
-                    MoSoTheme.colors.textWarning
-                },
+            if (contentWarningText == null) {
+                LocalContentColor.current
+            } else {
+                MoSoTheme.colors.textWarning
+            },
         )
     }
 }
@@ -219,9 +221,9 @@ private fun ContentWarningButton(
 private fun CharacterCountLabel(characterCountText: String) {
     Text(
         modifier =
-            Modifier
-                .wrapContentSize()
-                .padding(MoSoSpacing.md),
+        Modifier
+            .wrapContentSize()
+            .padding(MoSoSpacing.md),
         text = characterCountText,
         style = MoSoTheme.typography.labelSmall,
         color = MoSoTheme.colors.textSecondary,

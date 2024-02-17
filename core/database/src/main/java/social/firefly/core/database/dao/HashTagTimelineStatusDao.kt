@@ -12,14 +12,14 @@ interface HashTagTimelineStatusDao : BaseDao<HashTagTimelineStatus> {
     @Transaction
     @Query(
         "SELECT * FROM hashTagTimeline " +
-        "WHERE  hashTag = :hashTag " +
-        "ORDER BY statusId DESC",
+                "WHERE  hashTag = :hashTag " +
+                "ORDER BY statusId DESC",
     )
     fun hashTagTimelinePagingSource(hashTag: String): PagingSource<Int, HashTagTimelineStatusWrapper>
 
     @Query(
         "DELETE FROM hashTagTimeline " +
-        "WHERE hashTag = :hashTag ",
+                "WHERE hashTag = :hashTag ",
     )
     suspend fun deleteHashTagTimeline(hashTag: String)
 

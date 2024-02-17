@@ -5,6 +5,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
+import social.firefly.common.Resource.Error
+import social.firefly.common.Resource.Loaded
+import social.firefly.common.Resource.Loading
 import timber.log.Timber
 
 /**

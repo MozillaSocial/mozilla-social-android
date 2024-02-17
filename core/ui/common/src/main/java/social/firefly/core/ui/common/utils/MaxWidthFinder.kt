@@ -23,13 +23,13 @@ fun getMaxWidth(): Dp {
 
     Box(
         modifier =
-            Modifier
-                .fillMaxWidth()
-                .onSizeChanged {
-                    with(density) {
-                        maxWidth = it.width.toDp()
-                    }
-                },
+        Modifier
+            .fillMaxWidth()
+            .onSizeChanged {
+                with(density) {
+                    maxWidth = it.width.toDp()
+                }
+            },
     )
     return maxWidth
 }

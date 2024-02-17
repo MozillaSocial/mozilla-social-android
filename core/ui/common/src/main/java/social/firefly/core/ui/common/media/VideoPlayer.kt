@@ -29,7 +29,6 @@ import social.firefly.common.LoadState
 import social.firefly.core.designsystem.icon.MoSoIcons
 import social.firefly.core.designsystem.theme.FirefoxColor
 import social.firefly.core.designsystem.theme.MoSoRadius
-import social.firefly.core.model.Attachment
 import social.firefly.core.ui.common.NoTouchOverlay
 import social.firefly.core.ui.common.utils.media
 import timber.log.Timber
@@ -46,14 +45,14 @@ fun VideoPlayer(
 ) {
     Box(
         modifier =
-            Modifier
-                .aspectRatio(aspectRatio)
-                .clip(RoundedCornerShape(MoSoRadius.media))
-                .clickable(
-                    enabled = onVideoClicked != null,
-                ) {
-                    onVideoClicked?.let { it() }
-                },
+        Modifier
+            .aspectRatio(aspectRatio)
+            .clip(RoundedCornerShape(MoSoRadius.media))
+            .clickable(
+                enabled = onVideoClicked != null,
+            ) {
+                onVideoClicked?.let { it() }
+            },
     ) {
         val context = LocalContext.current
 

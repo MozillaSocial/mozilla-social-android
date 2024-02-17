@@ -89,12 +89,12 @@ class HashTagTimelineRemoteMediator(
 
             MediatorResult.Success(
                 endOfPaginationReached =
-                    when (loadType) {
-                        LoadType.PREPEND -> response.pagingLinks?.find { it.rel == Rel.PREV } == null
-                        LoadType.REFRESH,
-                        LoadType.APPEND,
-                        -> response.pagingLinks?.find { it.rel == Rel.NEXT } == null
-                    },
+                when (loadType) {
+                    LoadType.PREPEND -> response.pagingLinks?.find { it.rel == Rel.PREV } == null
+                    LoadType.REFRESH,
+                    LoadType.APPEND,
+                    -> response.pagingLinks?.find { it.rel == Rel.NEXT } == null
+                },
             )
         } catch (e: Exception) {
             MediatorResult.Error(e)
