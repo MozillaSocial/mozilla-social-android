@@ -1,11 +1,11 @@
 plugins {
-    id("org.mozilla.social.android.library")
-    id("org.mozilla.social.android.library.compose")
+    id("social.firefly.android.library")
+    id("social.firefly.android.library.compose")
     alias(libs.plugins.kotlinx.serialization)
 }
 
 android {
-    namespace = "org.mozilla.social.feature.report"
+    namespace = "social.firefly.feature.report"
 }
 
 dependencies {

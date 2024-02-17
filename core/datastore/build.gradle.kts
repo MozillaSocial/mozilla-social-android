@@ -1,11 +1,11 @@
 @Suppress("DSL_SCOPE_VIOLATION")
 plugins {
-    id("org.mozilla.social.android.library")
+    id("social.firefly.android.library")
     alias(libs.plugins.protobuf)
 }
 
 android {
-    namespace = "org.mozilla.social.core.datastore"
+    namespace = "social.firefly.core.datastore"
 }
 
 protobuf {

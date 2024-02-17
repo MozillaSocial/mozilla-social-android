@@ -40,19 +40,19 @@ dependencies {
 gradlePlugin {
     plugins {
         register("androidApplication") {
-            id = "org.mozilla.social.android.application"
+            id = "social.firefly.android.application"
             implementationClass = "AndroidApplicationConventionPlugin"
         }
         register("androidApplicationCompose") {
-            id = "org.mozilla.social.android.application.compose"
+            id = "social.firefly.android.application.compose"
             implementationClass = "AndroidApplicationComposeConventionPlugin"
         }
         register("androidLibrary") {
-            id = "org.mozilla.social.android.library"
+            id = "social.firefly.android.library"
             implementationClass = "AndroidLibraryConventionPlugin"
         }
         register("androidLibraryCompose") {
-            id = "org.mozilla.social.android.library.compose"
+            id = "social.firefly.android.library.compose"
             implementationClass = "AndroidLibraryComposeConventionPlugin"
         }
     }

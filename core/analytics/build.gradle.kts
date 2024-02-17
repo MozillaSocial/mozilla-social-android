@@ -1,10 +1,10 @@
 plugins {
-    id("org.mozilla.social.android.library")
-    id("org.mozilla.social.android.library.secrets")
+    id("social.firefly.android.library")
+    id("social.firefly.android.library.secrets")
 }
 
 android {
-    namespace = "org.mozilla.social.core.analytics"
+    namespace = "social.firefly.core.analytics"
 
     buildTypes {
         release {
