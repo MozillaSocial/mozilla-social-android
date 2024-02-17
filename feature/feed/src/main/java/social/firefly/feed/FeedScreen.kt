@@ -3,12 +3,10 @@
 package social.firefly.feed
 
 import android.content.res.Configuration
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
@@ -19,8 +17,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.PagingData
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -29,16 +30,18 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flowOf
 import org.koin.androidx.compose.koinViewModel
-import social.firefly.core.designsystem.icon.mozillaLogo
+import social.firefly.core.designsystem.font.MoSoFonts
 import social.firefly.core.designsystem.theme.MoSoTheme
 import social.firefly.core.ui.common.MoSoSurface
 import social.firefly.core.ui.common.appbar.MoSoTopBar
 import social.firefly.core.ui.common.pullrefresh.PullRefreshLazyColumn
 import social.firefly.core.ui.common.tabs.MoSoTab
 import social.firefly.core.ui.common.tabs.MoSoTabRow
+import social.firefly.core.ui.common.text.LargeTextTitle
 import social.firefly.core.ui.postcard.PostCardInteractions
 import social.firefly.core.ui.postcard.PostCardUiState
 import social.firefly.core.ui.postcard.postListContent
+import social.firefly.feature.feed.R
 
 @Composable
 internal fun FeedScreen(viewModel: FeedViewModel = koinViewModel()) {
@@ -83,12 +86,11 @@ private fun FeedScreen(
             MoSoTopBar(
                 scrollBehavior = topAppBarScrollBehavior,
                 title = {
-                    Icon(
-                        modifier = Modifier
-                            .background(MoSoTheme.colors.logoBackground),
-                        painter = mozillaLogo(),
-                        contentDescription = "firefly logo",
-                        tint = MoSoTheme.colors.logoForeground,
+                    LargeTextTitle(
+                        text = stringResource(id = R.string.firefly),
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.W700,
+                        fontFamily = MoSoFonts.petiteFormalScript,
                     )
                 },
             )

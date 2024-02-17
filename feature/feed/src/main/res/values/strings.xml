@@ -3,4 +3,5 @@
     <string name="tab_for_you">For You</string>
     <string name="tab_local">Local</string>
     <string name="tab_federated">Federated</string>
+    <string name="firefly">Firefly</string>
 </resources>

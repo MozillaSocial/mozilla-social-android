@@ -19,4 +19,9 @@ object MoSoFonts {
             Font(R.font.zillaslab_semi_bold, FontWeight.SemiBold),
             Font(R.font.zillaslab_semi_bold_italic, FontWeight.SemiBold, FontStyle.Italic),
         )
+
+    val petiteFormalScript =
+        FontFamily(
+            Font(R.font.petit_formal_script_regular, FontWeight.Bold),
+        )
 }
