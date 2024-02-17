@@ -21,8 +21,8 @@
     <string name="manage_your_account">Manage your account on %1$s</string>
 
     <string name="data_collection_and_use">Data collection and use</string>
-    <string name="data_collection_title">Help improve Mozilla.social</string>
-    <string name="data_collection_description">Allow technical, interaction, campaign and referral data to be sent to Mozilla. With this data you will have a personalized experience.</string>
+    <string name="data_collection_title">Help improve Firefly</string>
+    <string name="data_collection_description">Allow technical, interaction, campaign and referral data to be sent to Firefly. With this data you will have a personalized experience.</string>
 
     <string name="sign_out">Sign Out</string>
     <string name="unblock">Unblock</string>

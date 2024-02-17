@@ -16,7 +16,7 @@ dependencyResolutionManagement {
         maven { url = uri("https://maven.mozilla.org/maven2") }
     }
 }
-rootProject.name = "Mozilla Social"
+rootProject.name = "Firefly"
 include(":app")
 include(":core:analytics")
 include(":core:common")

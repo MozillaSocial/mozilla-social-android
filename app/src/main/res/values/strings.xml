@@ -1,6 +1,6 @@
 <resources>
-    <string name="app_name">mozilla.social</string>
-    <string name="app_name_title">Mozilla Social</string>
+    <string name="app_name">firefly</string>
+    <string name="app_name_title">Firefly</string>
     <string name="title_activity_main">MainActivity</string>
 
     <string name="feed_tab_text">Feed</string>

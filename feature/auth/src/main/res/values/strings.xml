@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="login_button">Login</string>
-    <string name="title_text">mozilla.social</string>
+    <string name="title_text">Firefly</string>
 
     <string name="alpha_badge">Alpha</string>
     <string name="intro_title">Get started</string>

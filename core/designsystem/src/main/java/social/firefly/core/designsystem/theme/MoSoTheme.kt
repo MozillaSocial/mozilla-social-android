@@ -21,9 +21,6 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
-/**
- * The theme for Mozilla Social Android.
- */
 @Composable
 fun MoSoTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
@@ -153,9 +150,6 @@ private val lightColorPalette =
         logoBackground = FirefoxColor.Black,
     )
 
-/**
- * A custom Color Palette for Mozilla Social for Android
- */
 @Suppress("LargeClass", "LongParameterList")
 @Stable
 data class MoSoColors(
