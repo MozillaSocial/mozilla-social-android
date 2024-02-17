@@ -1,11 +1,11 @@
 plugins {
-    id("org.mozilla.social.android.library")
-    id("org.mozilla.social.android.library.compose")
+    id("social.firefly.android.library")
+    id("social.firefly.android.library.compose")
     alias(libs.plugins.kotlin.ksp)
 }
 
 android {
-    namespace = "org.mozilla.social.feature.thread"
+    namespace = "social.firefly.feature.thread"
 }
 
 dependencies {

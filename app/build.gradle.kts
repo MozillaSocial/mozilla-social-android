@@ -1,15 +1,15 @@
 plugins {
-    id("org.mozilla.social.android.application")
-    id("org.mozilla.social.android.application.compose")
+    id("social.firefly.android.application")
+    id("social.firefly.android.application.compose")
     alias(libs.plugins.about.libraries.plugin)
-    id("org.mozilla.social.android.application.secrets")
+    id("social.firefly.android.application.secrets")
 }
 
 android {
-    namespace = "org.mozilla.social"
+    namespace = "social.firefly"
 
     defaultConfig {
-        applicationId = "org.mozilla.social"
+        applicationId = "social.firefly"
         versionCode = 1
         versionName = "0.1.0"
 

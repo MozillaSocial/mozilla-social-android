@@ -1,11 +1,11 @@
 plugins {
-    id("org.mozilla.social.android.library")
-    id("org.mozilla.social.android.library.compose")
-    id("org.mozilla.social.android.library.secrets")
+    id("social.firefly.android.library")
+    id("social.firefly.android.library.compose")
+    id("social.firefly.android.library.secrets")
 }
 
 android {
-    namespace = "org.mozilla.social.feature.auth"
+    namespace = "social.firefly.feature.auth"
 }
 
 dependencies {

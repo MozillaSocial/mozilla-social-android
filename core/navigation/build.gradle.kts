@@ -1,10 +1,10 @@
 plugins {
-    id("org.mozilla.social.android.library")
+    id("social.firefly.android.library")
     alias(libs.plugins.kotlinx.serialization)
 }
 
 android {
-    namespace = "org.mozilla.social.core.navigation"
+    namespace = "social.firefly.core.navigation"
 }
 
 dependencies {

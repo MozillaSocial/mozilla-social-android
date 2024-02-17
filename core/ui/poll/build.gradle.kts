@@ -1,10 +1,10 @@
 plugins {
-    id("org.mozilla.social.android.library")
-    id("org.mozilla.social.android.library.compose")
+    id("social.firefly.android.library")
+    id("social.firefly.android.library.compose")
 }
 
 android {
-    namespace = "org.mozilla.social.core.ui.poll"
+    namespace = "social.firefly.core.ui.poll"
 }
 
 dependencies {
