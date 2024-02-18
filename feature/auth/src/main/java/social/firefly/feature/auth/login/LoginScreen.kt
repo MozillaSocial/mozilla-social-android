@@ -166,7 +166,7 @@ private fun ImageBox(modifier: Modifier = Modifier) {
             text = stringResource(id = R.string.title_text),
             fontSize = 24.sp,
             fontWeight = W700,
-            fontFamily = MoSoFonts.zillaSlab,
+            fontFamily = MoSoFonts.petiteFormalScript,
         )
         Image(
             modifier =
@@ -214,20 +214,6 @@ private fun LoginBox(
         )
         Spacer(modifier = Modifier.height(24.dp))
         MoSoButton(
-            modifier = Modifier.fillMaxWidth(),
-            enabled = !uiState.isLoading,
-            onClick = { loginInteractions.onSignInClicked() },
-        ) {
-            if (uiState.isLoading) {
-                MoSoCircularProgressIndicator(
-                    modifier = Modifier.size(20.dp),
-                )
-            } else {
-                MediumTextLabel(text = stringResource(id = R.string.sign_in_button))
-            }
-        }
-        Spacer(modifier = Modifier.height(MoSoSpacing.sm))
-        MoSoButtonSecondary(
             modifier = Modifier.fillMaxWidth(),
             onClick = { loginInteractions.onChooseServerClicked() },
             enabled = !uiState.isLoading,

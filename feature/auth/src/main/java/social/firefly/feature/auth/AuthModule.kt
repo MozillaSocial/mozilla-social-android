@@ -1,6 +1,5 @@
 package social.firefly.feature.auth
 
-import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.dsl.module
 import social.firefly.common.commonModule
@@ -23,6 +22,6 @@ val authModule =
             analyticsModule,
         )
 
-        viewModel { LoginViewModel(get(), get(), get(), get()) }
+        viewModelOf(::LoginViewModel)
         viewModelOf(::ChooseServerViewModel)
     }
