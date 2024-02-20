@@ -38,19 +38,19 @@ import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.KoinApplication
 import social.firefly.common.Resource
 import social.firefly.common.utils.toFile
-import social.firefly.core.designsystem.icon.MoSoIcons
-import social.firefly.core.designsystem.theme.MoSoTheme
+import social.firefly.core.designsystem.icon.FfIcons
+import social.firefly.core.designsystem.theme.FfTheme
 import social.firefly.core.navigation.navigationModule
-import social.firefly.core.ui.common.MoSoCheckBox
-import social.firefly.core.ui.common.MoSoSurface
+import social.firefly.core.ui.common.FfCheckBox
+import social.firefly.core.ui.common.FfSurface
 import social.firefly.core.ui.common.TransparentNoTouchOverlay
-import social.firefly.core.ui.common.appbar.MoSoCloseableTopAppBar
-import social.firefly.core.ui.common.button.MoSoButton
-import social.firefly.core.ui.common.button.MoSoButtonContentPadding
-import social.firefly.core.ui.common.divider.MoSoDivider
+import social.firefly.core.ui.common.appbar.FfCloseableTopAppBar
+import social.firefly.core.ui.common.button.FfButton
+import social.firefly.core.ui.common.button.FfButtonContentPadding
+import social.firefly.core.ui.common.divider.FfDivider
 import social.firefly.core.ui.common.error.GenericError
 import social.firefly.core.ui.common.loading.MaxSizeLoading
-import social.firefly.core.ui.common.text.MoSoTextField
+import social.firefly.core.ui.common.text.FfTextField
 import social.firefly.core.ui.common.text.SmallTextLabel
 import social.firefly.feature.account.Header
 import social.firefly.feature.account.R
@@ -76,7 +76,7 @@ fun EditAccountScreen(
     uiState: Resource<EditAccountUiState>,
     isUploading: Boolean,
 ) {
-    MoSoSurface(
+    FfSurface(
         modifier =
         Modifier
             .fillMaxSize(),
@@ -87,15 +87,15 @@ fun EditAccountScreen(
                 .systemBarsPadding()
                 .imePadding(),
         ) {
-            MoSoCloseableTopAppBar(
+            FfCloseableTopAppBar(
                 title = (uiState as? Resource.Loaded)?.data?.topBarTitle ?: "",
                 actions = {
                     if (uiState is Resource.Loaded) {
-                        MoSoButton(
+                        FfButton(
                             modifier = Modifier
                                 .padding(8.dp),
                             onClick = { editAccountInteractions.onSaveClicked() },
-                            contentPadding = MoSoButtonContentPadding.small,
+                            contentPadding = FfButtonContentPadding.small,
                         ) {
                             SmallTextLabel(text = stringResource(id = R.string.edit_account_save_button))
                         }
@@ -193,7 +193,7 @@ private fun LoadedState(
         Column(
             modifier = Modifier.padding(horizontal = 8.dp),
         ) {
-            MoSoTextField(
+            FfTextField(
                 modifier =
                 Modifier
                     .fillMaxWidth(),
@@ -206,7 +206,7 @@ private fun LoadedState(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            MoSoTextField(
+            FfTextField(
                 modifier =
                 Modifier
                     .fillMaxWidth(),
@@ -222,8 +222,8 @@ private fun LoadedState(
             Text(
                 modifier = Modifier.align(Alignment.End),
                 text = "${uiState.bioCharacterCount}/500",
-                style = MoSoTheme.typography.labelSmall,
-                color = MoSoTheme.colors.textSecondary,
+                style = FfTheme.typography.labelSmall,
+                color = FfTheme.colors.textSecondary,
             )
 
             Metadata(
@@ -241,16 +241,16 @@ private fun EditImageOverlay(onClick: () -> Unit) {
         Modifier
             .size(48.dp)
             .clip(CircleShape)
-            .background(MoSoTheme.colors.actionOverlay)
+            .background(FfTheme.colors.actionOverlay)
             .clickable { onClick() },
     ) {
         Icon(
             modifier =
             Modifier
                 .align(Alignment.Center),
-            painter = MoSoIcons.image(),
+            painter = FfIcons.image(),
             contentDescription = "",
-            tint = MoSoTheme.colors.actionSecondary,
+            tint = FfTheme.colors.actionSecondary,
         )
     }
 }
@@ -263,36 +263,36 @@ private fun BotAndLock(
     Row(
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        MoSoCheckBox(
+        FfCheckBox(
             checked = uiState.lockChecked,
             onCheckedChange = { editAccountInteractions.onLockClicked() },
         )
         Icon(
-            painter = MoSoIcons.lock(),
+            painter = FfIcons.lock(),
             contentDescription = "",
         )
         Spacer(modifier = Modifier.width(8.dp))
         Text(
             text = stringResource(id = R.string.edit_account_lock),
-            style = MoSoTheme.typography.labelSmall,
-            color = MoSoTheme.colors.textSecondary,
+            style = FfTheme.typography.labelSmall,
+            color = FfTheme.colors.textSecondary,
         )
 
         Spacer(modifier = Modifier.width(16.dp))
 
-        MoSoCheckBox(
+        FfCheckBox(
             checked = uiState.botChecked,
             onCheckedChange = { editAccountInteractions.onBotClicked() },
         )
         Icon(
-            painter = MoSoIcons.robot(),
+            painter = FfIcons.robot(),
             contentDescription = "",
         )
         Spacer(modifier = Modifier.width(8.dp))
         Text(
             text = stringResource(id = R.string.edit_account_bot),
-            style = MoSoTheme.typography.labelSmall,
-            color = MoSoTheme.colors.textSecondary,
+            style = FfTheme.typography.labelSmall,
+            color = FfTheme.colors.textSecondary,
         )
         Spacer(modifier = Modifier.width(8.dp))
     }
@@ -306,17 +306,17 @@ private fun Metadata(
     Column {
         Text(
             text = stringResource(id = R.string.edit_account_metadata_title),
-            style = MoSoTheme.typography.bodyMedium,
+            style = FfTheme.typography.bodyMedium,
             fontWeight = W700,
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
             text = stringResource(id = R.string.edit_account_metadata_description),
-            style = MoSoTheme.typography.bodyMedium,
+            style = FfTheme.typography.bodyMedium,
         )
         Spacer(modifier = Modifier.height(16.dp))
         fields.forEachIndexed { index, field ->
-            MoSoTextField(
+            FfTextField(
                 modifier = Modifier.fillMaxWidth(),
                 value = field.label,
                 onValueChange = { editAccountInteractions.onLabelTextChanged(index, it) },
@@ -325,7 +325,7 @@ private fun Metadata(
                 },
             )
             Spacer(modifier = Modifier.height(8.dp))
-            MoSoTextField(
+            FfTextField(
                 modifier = Modifier.fillMaxWidth(),
                 value = field.content,
                 onValueChange = { editAccountInteractions.onContentTextChanged(index, it) },
@@ -335,7 +335,7 @@ private fun Metadata(
             )
             if (index < fields.size - 1) {
                 Spacer(modifier = Modifier.height(16.dp))
-                MoSoDivider()
+                FfDivider()
             }
             Spacer(modifier = Modifier.height(16.dp))
         }
@@ -348,7 +348,7 @@ private fun PreviewEditAccountScreen() {
     KoinApplication(application = {
         modules(navigationModule)
     }) {
-        MoSoTheme {
+        FfTheme {
             EditAccountScreen(
                 uiState =
                 Resource.Loaded(

@@ -4,7 +4,7 @@ import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.runtime.Composable
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.itemKey
-import social.firefly.core.ui.common.divider.MoSoDivider
+import social.firefly.core.ui.common.divider.FfDivider
 
 fun LazyListScope.postListContent(
     lazyPagingItems: LazyPagingItems<PostCardUiState>,
@@ -39,6 +39,6 @@ fun PostCardListItem(
         threadId = threadId,
     )
     if (index < itemCount) {
-        MoSoDivider()
+        FfDivider()
     }
 }

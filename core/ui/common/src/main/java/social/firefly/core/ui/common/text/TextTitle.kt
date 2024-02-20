@@ -12,7 +12,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.TextUnit
-import social.firefly.core.designsystem.theme.MoSoTheme
+import social.firefly.core.designsystem.theme.FfTheme
 
 @Composable
 fun SmallTextTitle(
@@ -50,7 +50,7 @@ fun SmallTextTitle(
         maxLines = maxLines,
         minLines = minLines,
         onTextLayout = onTextLayout,
-        style = MoSoTheme.typography.titleSmall,
+        style = FfTheme.typography.titleSmall,
     )
 }
 
@@ -90,7 +90,7 @@ fun MediumTextTitle(
         maxLines = maxLines,
         minLines = minLines,
         onTextLayout = onTextLayout,
-        style = MoSoTheme.typography.titleMedium,
+        style = FfTheme.typography.titleMedium,
     )
 }
 
@@ -130,6 +130,6 @@ fun LargeTextTitle(
         maxLines = maxLines,
         minLines = minLines,
         onTextLayout = onTextLayout,
-        style = MoSoTheme.typography.titleLarge,
+        style = FfTheme.typography.titleLarge,
     )
 }

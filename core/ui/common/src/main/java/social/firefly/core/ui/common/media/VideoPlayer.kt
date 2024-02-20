@@ -26,9 +26,9 @@ import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.AspectRatioFrameLayout
 import androidx.media3.ui.PlayerView
 import social.firefly.common.LoadState
-import social.firefly.core.designsystem.icon.MoSoIcons
+import social.firefly.core.designsystem.icon.FfIcons
 import social.firefly.core.designsystem.theme.FirefoxColor
-import social.firefly.core.designsystem.theme.MoSoRadius
+import social.firefly.core.designsystem.theme.FfRadius
 import social.firefly.core.ui.common.NoTouchOverlay
 import social.firefly.core.ui.common.utils.media
 import timber.log.Timber
@@ -47,7 +47,7 @@ fun VideoPlayer(
         modifier =
         Modifier
             .aspectRatio(aspectRatio)
-            .clip(RoundedCornerShape(MoSoRadius.media))
+            .clip(RoundedCornerShape(FfRadius.media))
             .clickable(
                 enabled = onVideoClicked != null,
             ) {
@@ -121,13 +121,13 @@ private fun BoxScope.MuteButton(exoPlayer: ExoPlayer) {
     ) {
         if (muted.value) {
             Icon(
-                painter = MoSoIcons.volumeMute(),
+                painter = FfIcons.volumeMute(),
                 contentDescription = null,
                 tint = FirefoxColor.White,
             )
         } else {
             Icon(
-                painter = MoSoIcons.volumeUp(),
+                painter = FfIcons.volumeUp(),
                 contentDescription = null,
                 tint = FirefoxColor.White,
             )

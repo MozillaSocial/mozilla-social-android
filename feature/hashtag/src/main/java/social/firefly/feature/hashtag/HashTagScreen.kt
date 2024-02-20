@@ -17,8 +17,8 @@ import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 import social.firefly.common.Resource
 import social.firefly.core.model.HashTag
-import social.firefly.core.ui.common.MoSoSurface
-import social.firefly.core.ui.common.appbar.MoSoCloseableTopAppBar
+import social.firefly.core.ui.common.FfSurface
+import social.firefly.core.ui.common.appbar.FfCloseableTopAppBar
 import social.firefly.core.ui.common.error.GenericError
 import social.firefly.core.ui.common.following.FollowingButton
 import social.firefly.core.ui.common.loading.MaxSizeLoading
@@ -56,11 +56,11 @@ private fun HashTagScreen(
     postCardInteractions: PostCardInteractions,
     hashTagInteractions: HashTagInteractions,
 ) {
-    MoSoSurface {
+    FfSurface {
         Column(
             modifier = Modifier.systemBarsPadding(),
         ) {
-            MoSoCloseableTopAppBar(
+            FfCloseableTopAppBar(
                 title = "#$hashTag",
                 actions = {
                     if (uiState is Resource.Loaded) {

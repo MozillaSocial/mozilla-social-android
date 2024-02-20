@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import org.koin.androidx.compose.koinViewModel
 import social.firefly.core.navigation.navigationModule
-import social.firefly.core.ui.common.MoSoSurface
+import social.firefly.core.ui.common.FfSurface
 import social.firefly.core.ui.common.account.toggleablelist.ToggleableAccountList
 import social.firefly.core.ui.common.account.toggleablelist.ToggleableAccountListItemState
 import social.firefly.core.ui.common.utils.PreviewTheme
@@ -35,7 +35,7 @@ private fun MutedUsersSettingsScreen(
     pagingData: Flow<PagingData<ToggleableAccountListItemState<MutedButtonState>>>,
     mutedUsersInteractions: MutedUsersInteractions,
 ) {
-    MoSoSurface {
+    FfSurface {
         SettingsColumn(title = stringResource(id = R.string.muted_users_title)) {
             ToggleableAccountList(
                 pagingData = pagingData,

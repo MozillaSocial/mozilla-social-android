@@ -26,10 +26,10 @@ import androidx.compose.ui.unit.dp
 import social.firefly.common.utils.FileType
 import social.firefly.common.utils.getFileType
 import social.firefly.common.utils.toFile
-import social.firefly.core.designsystem.icon.MoSoIcons
-import social.firefly.core.designsystem.theme.MoSoSpacing
-import social.firefly.core.designsystem.theme.MoSoTheme
-import social.firefly.core.ui.common.divider.MoSoDivider
+import social.firefly.core.designsystem.icon.FfIcons
+import social.firefly.core.designsystem.theme.FfSpacing
+import social.firefly.core.designsystem.theme.FfTheme
+import social.firefly.core.ui.common.divider.FfDivider
 import social.firefly.feature.post.R
 import social.firefly.post.NewPostViewModel
 import social.firefly.post.poll.PollInteractions
@@ -129,15 +129,15 @@ internal fun BottomBar(
     videoButtonEnabled: Boolean,
 ) {
     Column {
-        MoSoDivider(
-            color = MoSoTheme.colors.borderPrimary,
+        FfDivider(
+            color = FfTheme.colors.borderPrimary,
         )
         Row(
             modifier =
             Modifier
                 .height(56.dp)
                 .fillMaxWidth()
-                .background(MoSoTheme.colors.layer1),
+                .background(FfTheme.colors.layer1),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             IconButton(
@@ -145,29 +145,29 @@ internal fun BottomBar(
                 enabled = imageButtonEnabled,
             ) {
                 Icon(
-                    MoSoIcons.image(),
+                    FfIcons.image(),
                     contentDescription = stringResource(id = R.string.add_photos_content_description),
                 )
             }
 
-            Spacer(modifier = Modifier.width(MoSoSpacing.sm))
+            Spacer(modifier = Modifier.width(FfSpacing.sm))
 
             IconButton(
                 onClick = onUploadVideoClicked,
                 enabled = videoButtonEnabled,
             ) {
                 Icon(
-                    MoSoIcons.monitorPlay(),
+                    FfIcons.monitorPlay(),
                     contentDescription = stringResource(id = R.string.add_video_content_description),
                 )
             }
 
-            Spacer(modifier = Modifier.width(MoSoSpacing.sm))
+            Spacer(modifier = Modifier.width(FfSpacing.sm))
             AddPollButton(
                 pollInteractions = pollInteractions,
                 pollButtonEnabled = pollButtonEnabled,
             )
-            Spacer(modifier = Modifier.width(MoSoSpacing.sm))
+            Spacer(modifier = Modifier.width(FfSpacing.sm))
             ContentWarningButton(
                 contentWarningInteractions = contentWarningInteractions,
                 contentWarningText = contentWarningText,
@@ -190,7 +190,7 @@ private fun AddPollButton(
         enabled = pollButtonEnabled,
     ) {
         Icon(
-            MoSoIcons.chartBar(),
+            FfIcons.chartBar(),
             stringResource(id = R.string.add_poll_button_content_description),
         )
     }
@@ -205,13 +205,13 @@ private fun ContentWarningButton(
         onClick = { contentWarningInteractions.onContentWarningClicked() },
     ) {
         Icon(
-            MoSoIcons.warning(),
+            FfIcons.warning(),
             stringResource(id = R.string.content_warning_button_content_description),
             tint =
             if (contentWarningText == null) {
                 LocalContentColor.current
             } else {
-                MoSoTheme.colors.textWarning
+                FfTheme.colors.textWarning
             },
         )
     }
@@ -223,9 +223,9 @@ private fun CharacterCountLabel(characterCountText: String) {
         modifier =
         Modifier
             .wrapContentSize()
-            .padding(MoSoSpacing.md),
+            .padding(FfSpacing.md),
         text = characterCountText,
-        style = MoSoTheme.typography.labelSmall,
-        color = MoSoTheme.colors.textSecondary,
+        style = FfTheme.typography.labelSmall,
+        color = FfTheme.colors.textSecondary,
     )
 }

@@ -16,9 +16,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import social.firefly.core.ui.common.MoSoSurface
-import social.firefly.core.ui.common.MoSoSwitch
-import social.firefly.core.ui.common.divider.MoSoDivider
+import social.firefly.core.ui.common.FfSurface
+import social.firefly.core.ui.common.FfSwitch
+import social.firefly.core.ui.common.divider.FfDivider
 
 @Suppress("LongParameterList", "MagicNumber")
 @Composable
@@ -28,7 +28,7 @@ internal fun SettingsSwitch(
     checked: Boolean,
     onCheckedChanged: () -> Unit,
 ) {
-    MoSoSurface(
+    FfSurface(
         color = Color.Transparent,
         modifier =
         Modifier
@@ -65,7 +65,7 @@ internal fun SettingsSwitch(
                         }
                     }
                     Spacer(modifier = Modifier.weight(1f))
-                    MoSoSwitch(
+                    FfSwitch(
                         checked = checked,
                         onCheckChanged = { onCheckedChanged() },
                         modifier =
@@ -74,7 +74,7 @@ internal fun SettingsSwitch(
                     )
                 }
             }
-            MoSoDivider()
+            FfDivider()
         }
     }
 }

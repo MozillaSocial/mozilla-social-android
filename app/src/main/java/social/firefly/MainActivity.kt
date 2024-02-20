@@ -14,8 +14,8 @@ import org.koin.androidx.compose.KoinAndroidContext
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.annotation.KoinExperimentalAPI
 import social.firefly.core.analytics.AppAnalytics
-import social.firefly.core.designsystem.theme.MoSoTheme
-import social.firefly.core.ui.common.MoSoSurface
+import social.firefly.core.designsystem.theme.FfTheme
+import social.firefly.core.ui.common.FfSurface
 import social.firefly.core.workmanager.DatabasePurgeWorker
 import social.firefly.ui.MainActivityScreen
 import timber.log.Timber
@@ -33,8 +33,8 @@ class MainActivity : ComponentActivity() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
         setContent {
-            MoSoTheme {
-                MoSoSurface(modifier = Modifier.fillMaxSize()) {
+            FfTheme {
+                FfSurface(modifier = Modifier.fillMaxSize()) {
                     KoinAndroidContext {
                         MainActivityScreen()
                     }

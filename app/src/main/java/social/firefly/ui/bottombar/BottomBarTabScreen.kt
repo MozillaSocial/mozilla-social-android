@@ -17,7 +17,7 @@ import org.koin.compose.koinInject
 import social.firefly.core.navigation.BottomBarNavigationDestination
 import social.firefly.core.navigation.NavigationDestination
 import social.firefly.core.navigation.usecases.NavigateTo
-import social.firefly.core.ui.common.divider.MoSoDivider
+import social.firefly.core.ui.common.divider.FfDivider
 import social.firefly.navigation.BottomTabNavHost
 import social.firefly.ui.AppState
 
@@ -61,8 +61,8 @@ private fun BottomBar(
     Column(
         modifier = modifier,
     ) {
-        MoSoDivider()
-        MoSoBottomNavigationBar(
+        FfDivider()
+        FfBottomNavigationBar(
             currentDestination = currentDestination,
             bottomBarTabs = BottomBarTabs.entries.map { it.bottomBarTab },
             navigateTo = {

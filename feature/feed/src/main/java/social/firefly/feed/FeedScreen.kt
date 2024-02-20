@@ -30,13 +30,13 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flowOf
 import org.koin.androidx.compose.koinViewModel
-import social.firefly.core.designsystem.font.MoSoFonts
-import social.firefly.core.designsystem.theme.MoSoTheme
-import social.firefly.core.ui.common.MoSoSurface
-import social.firefly.core.ui.common.appbar.MoSoTopBar
+import social.firefly.core.designsystem.font.FfFonts
+import social.firefly.core.designsystem.theme.FfTheme
+import social.firefly.core.ui.common.FfSurface
+import social.firefly.core.ui.common.appbar.FfTopBar
 import social.firefly.core.ui.common.pullrefresh.PullRefreshLazyColumn
-import social.firefly.core.ui.common.tabs.MoSoTab
-import social.firefly.core.ui.common.tabs.MoSoTabRow
+import social.firefly.core.ui.common.tabs.FfTab
+import social.firefly.core.ui.common.tabs.FfTabRow
 import social.firefly.core.ui.common.text.LargeTextTitle
 import social.firefly.core.ui.postcard.PostCardInteractions
 import social.firefly.core.ui.postcard.PostCardUiState
@@ -77,20 +77,20 @@ private fun FeedScreen(
             rememberTopAppBarState(),
         ),
 ) {
-    MoSoSurface {
+    FfSurface {
         Column(
             modifier =
             Modifier
                 .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
         ) {
-            MoSoTopBar(
+            FfTopBar(
                 scrollBehavior = topAppBarScrollBehavior,
                 title = {
                     LargeTextTitle(
                         text = stringResource(id = R.string.firefly),
                         fontSize = 24.sp,
                         fontWeight = FontWeight.W700,
-                        fontFamily = MoSoFonts.petiteFormalScript,
+                        fontFamily = FfFonts.petiteFormalScript,
                     )
                 },
             )
@@ -123,12 +123,12 @@ private fun MainContent(
     val selectedTimelineType by timelineTypeFlow.collectAsStateWithLifecycle()
     val context = LocalContext.current
 
-    MoSoTabRow(
+    FfTabRow(
         selectedTabIndex = selectedTimelineType.ordinal,
         divider = {},
     ) {
         TimelineType.entries.forEach { timelineType ->
-            MoSoTab(
+            FfTab(
                 modifier =
                 Modifier
                     .height(40.dp),
@@ -137,7 +137,7 @@ private fun MainContent(
                 content = {
                     Text(
                         text = timelineType.tabTitle.build(context),
-                        style = MoSoTheme.typography.labelMedium,
+                        style = FfTheme.typography.labelMedium,
                     )
                 },
             )
@@ -182,7 +182,7 @@ private fun MainContent(
 @Composable
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_NO, name = "Light theme")
 private fun FeedScreenPreviewLight() {
-    MoSoTheme(darkTheme = false) {
+    FfTheme(darkTheme = false) {
         FeedScreen(
             homeFeed = flowOf(),
             homePostCardInteractions = object : PostCardInteractions {},
@@ -199,7 +199,7 @@ private fun FeedScreenPreviewLight() {
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, name = "Dark theme")
 @Composable
 private fun FeedScreenPreviewDark() {
-    MoSoTheme(darkTheme = true) {
+    FfTheme(darkTheme = true) {
         FeedScreen(
             homeFeed = flowOf(),
             homePostCardInteractions = object : PostCardInteractions {},

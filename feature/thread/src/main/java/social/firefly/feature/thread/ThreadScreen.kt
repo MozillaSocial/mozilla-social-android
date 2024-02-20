@@ -13,8 +13,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
-import social.firefly.core.ui.common.MoSoSurface
-import social.firefly.core.ui.common.appbar.MoSoCloseableTopAppBar
+import social.firefly.core.ui.common.FfSurface
+import social.firefly.core.ui.common.appbar.FfCloseableTopAppBar
 import social.firefly.core.ui.postcard.PostCardListItem
 
 @Composable
@@ -22,9 +22,9 @@ internal fun ThreadScreen(
     threadStatusId: String,
     viewModel: ThreadViewModel = koinViewModel(parameters = { parametersOf(threadStatusId) }),
 ) {
-    MoSoSurface {
+    FfSurface {
         Column(Modifier.systemBarsPadding()) {
-            MoSoCloseableTopAppBar(title = stringResource(id = R.string.thread_screen_title))
+            FfCloseableTopAppBar(title = stringResource(id = R.string.thread_screen_title))
 
             val items = viewModel.statuses.collectAsState(emptyList()).value
 

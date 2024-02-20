@@ -58,7 +58,7 @@ import androidx.compose.ui.semantics.isTraversalGroup
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import social.firefly.core.designsystem.theme.MoSoTheme
+import social.firefly.core.designsystem.theme.FfTheme
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
@@ -79,8 +79,8 @@ fun PullRefreshIndicator(
     refreshing: Boolean,
     state: PullRefreshState,
     modifier: Modifier = Modifier,
-    backgroundColor: Color = MoSoTheme.colors.layer1,
-    contentColor: Color = MoSoTheme.colors.textPrimary,
+    backgroundColor: Color = FfTheme.colors.layer1,
+    contentColor: Color = FfTheme.colors.textPrimary,
     scale: Boolean = false,
 ) {
     val showElevation by remember(refreshing, state) {

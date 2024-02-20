@@ -59,23 +59,23 @@ import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 import social.firefly.common.Resource
 import social.firefly.common.utils.DateTimeFormatters
-import social.firefly.core.designsystem.icon.MoSoIcons
-import social.firefly.core.designsystem.theme.MoSoTheme
+import social.firefly.core.designsystem.icon.FfIcons
+import social.firefly.core.designsystem.theme.FfTheme
 import social.firefly.core.designsystem.utils.NoRipple
 import social.firefly.core.model.AccountTimelineType
 import social.firefly.core.navigation.navigationModule
-import social.firefly.core.ui.common.MoSoSurface
-import social.firefly.core.ui.common.appbar.MoSoCloseableTopAppBar
-import social.firefly.core.ui.common.button.MoSoButton
-import social.firefly.core.ui.common.button.MoSoButtonContentPadding
-import social.firefly.core.ui.common.button.MoSoButtonSecondary
-import social.firefly.core.ui.common.dropdown.MoSoDropDownItem
-import social.firefly.core.ui.common.dropdown.MoSoDropdownMenu
+import social.firefly.core.ui.common.FfSurface
+import social.firefly.core.ui.common.appbar.FfCloseableTopAppBar
+import social.firefly.core.ui.common.button.FfButton
+import social.firefly.core.ui.common.button.FfButtonContentPadding
+import social.firefly.core.ui.common.button.FfButtonSecondary
+import social.firefly.core.ui.common.dropdown.FfDropDownItem
+import social.firefly.core.ui.common.dropdown.FfDropdownMenu
 import social.firefly.core.ui.common.error.GenericError
-import social.firefly.core.ui.common.loading.MoSoCircularProgressIndicator
+import social.firefly.core.ui.common.loading.FfCircularProgressIndicator
 import social.firefly.core.ui.common.paging.PagingLazyColumn
-import social.firefly.core.ui.common.tabs.MoSoTab
-import social.firefly.core.ui.common.tabs.MoSoTabRow
+import social.firefly.core.ui.common.tabs.FfTab
+import social.firefly.core.ui.common.tabs.FfTabRow
 import social.firefly.core.ui.common.text.SmallTextLabel
 import social.firefly.core.ui.common.utils.PreviewTheme
 import social.firefly.core.ui.htmlcontent.HtmlContent
@@ -120,7 +120,7 @@ private fun AccountScreen(
     accountInteractions: AccountInteractions,
     windowInsets: WindowInsets,
 ) {
-    MoSoSurface {
+    FfSurface {
         Column(
             modifier =
             Modifier
@@ -128,7 +128,7 @@ private fun AccountScreen(
         ) {
             when (uiState) {
                 is Resource.Loading -> {
-                    MoSoCloseableTopAppBar(showCloseButton = closeButtonVisible)
+                    FfCloseableTopAppBar(showCloseButton = closeButtonVisible)
                     Box(
                         modifier =
                         Modifier
@@ -137,12 +137,12 @@ private fun AccountScreen(
                                 align = Alignment.Center,
                             ),
                     ) {
-                        MoSoCircularProgressIndicator()
+                        FfCircularProgressIndicator()
                     }
                 }
 
                 is Resource.Loaded<AccountUiState> -> {
-                    MoSoCloseableTopAppBar(
+                    FfCloseableTopAppBar(
                         title = uiState.data.displayName,
                         showCloseButton = closeButtonVisible,
                         actions = {
@@ -152,7 +152,7 @@ private fun AccountScreen(
                                     onClick = navigateToSettings,
                                 ) {
                                     Icon(
-                                        painter = MoSoIcons.gear(),
+                                        painter = FfIcons.gear(),
                                         contentDescription = "Settings"
                                     )
                                 }
@@ -172,7 +172,7 @@ private fun AccountScreen(
                 }
 
                 is Resource.Error -> {
-                    MoSoCloseableTopAppBar(showCloseButton = closeButtonVisible)
+                    FfCloseableTopAppBar(showCloseButton = closeButtonVisible)
                     Box(
                         modifier =
                         Modifier
@@ -261,16 +261,16 @@ private fun MainAccount(
                 .padding(end = 8.dp)
             Row {
                 if (isUsersProfile) {
-                    MoSoButtonSecondary(
+                    FfButtonSecondary(
                         modifier = buttonModifier
                             .align(Alignment.CenterVertically),
                         onClick = { accountInteractions.onEditAccountClicked() },
-                        contentPadding = MoSoButtonContentPadding.small,
+                        contentPadding = FfButtonContentPadding.small,
                     ) {
                         SmallTextLabel(text = stringResource(id = R.string.edit_button))
                     }
                 } else {
-                    MoSoButton(
+                    FfButton(
                         modifier = buttonModifier
                             .align(Alignment.CenterVertically),
                         onClick = {
@@ -280,7 +280,7 @@ private fun MainAccount(
                                 accountInteractions.onFollowClicked()
                             }
                         },
-                        contentPadding = MoSoButtonContentPadding.small,
+                        contentPadding = FfButtonContentPadding.small,
                     ) {
                         SmallTextLabel(
                             text =
@@ -312,12 +312,12 @@ private fun MainAccount(
         account = account,
         accountInteractions = accountInteractions,
     )
-    MoSoTabRow(
+    FfTabRow(
         modifier = Modifier.padding(top = 20.dp),
         selectedTabIndex = timeline.type.ordinal,
     ) {
         AccountTimelineType.entries.forEach { timelineType ->
-            MoSoTab(
+            FfTab(
                 modifier =
                 Modifier,
                 selected = timeline.type == timelineType,
@@ -331,7 +331,7 @@ private fun MainAccount(
 
                             AccountTimelineType.MEDIA -> stringResource(id = R.string.tab_media)
                         },
-                        style = MoSoTheme.typography.labelMedium,
+                        style = FfTheme.typography.labelMedium,
                     )
                 },
             )
@@ -352,25 +352,25 @@ private fun OverflowMenu(
         onClick = { overflowMenuExpanded.value = true },
     ) {
         Icon(
-            painter = MoSoIcons.moreVertical(),
+            painter = FfIcons.moreVertical(),
             contentDescription = stringResource(R.string.overflow_button)
         )
 
-        MoSoDropdownMenu(
+        FfDropdownMenu(
             expanded = overflowMenuExpanded.value,
             onDismissRequest = {
                 overflowMenuExpanded.value = false
             },
         ) {
             if (isUsersProfile) {
-                MoSoDropDownItem(
+                FfDropDownItem(
                     text = stringResource(id = R.string.favorites_option),
                     expanded = overflowMenuExpanded,
                     onClick = { overflowInteractions.onOverflowFavoritesClicked() }
                 )
             }
 
-            MoSoDropDownItem(
+            FfDropDownItem(
                 text = stringResource(R.string.share_option),
                 expanded = overflowMenuExpanded,
                 onClick = {
@@ -392,7 +392,7 @@ private fun OverflowMenu(
 
             if (!isUsersProfile) {
                 if (account.isMuted) {
-                    MoSoDropDownItem(
+                    FfDropDownItem(
                         text =
                         stringResource(
                             id = social.firefly.core.ui.common.R.string.unmute_user,
@@ -402,7 +402,7 @@ private fun OverflowMenu(
                         onClick = { overflowInteractions.onOverflowUnmuteClicked() },
                     )
                 } else {
-                    MoSoDropDownItem(
+                    FfDropDownItem(
                         text =
                         stringResource(
                             id = social.firefly.core.ui.common.R.string.mute_user,
@@ -414,7 +414,7 @@ private fun OverflowMenu(
                 }
 
                 if (account.isBlocked) {
-                    MoSoDropDownItem(
+                    FfDropDownItem(
                         text =
                         stringResource(
                             id = social.firefly.core.ui.common.R.string.unblock_user,
@@ -424,7 +424,7 @@ private fun OverflowMenu(
                         onClick = { overflowInteractions.onOverflowUnblockClicked() },
                     )
                 } else {
-                    MoSoDropDownItem(
+                    FfDropDownItem(
                         text =
                         stringResource(
                             id = social.firefly.core.ui.common.R.string.block_user,
@@ -435,7 +435,7 @@ private fun OverflowMenu(
                     )
                 }
 
-                MoSoDropDownItem(
+                FfDropDownItem(
                     text =
                     stringResource(
                         id = social.firefly.core.ui.common.R.string.report_user,
@@ -494,12 +494,12 @@ private fun Counter(
     ) {
         Text(
             text = value,
-            style = MoSoTheme.typography.bodyLarge,
+            style = FfTheme.typography.bodyLarge,
             fontWeight = FontWeight.Bold,
         )
         Text(
             text = label,
-            style = MoSoTheme.typography.bodyMedium,
+            style = FfTheme.typography.bodyMedium,
         )
     }
 }
@@ -570,7 +570,7 @@ private fun UserBio(
                             )
                         }
                         UserLabel(
-                            icon = MoSoIcons.userJoin(),
+                            icon = FfIcons.userJoin(),
                             label = "",
                             text =
                             stringResource(
@@ -596,7 +596,7 @@ private fun UserBio(
                     Modifier
                         .rotate(rotation)
                         .align(Alignment.TopEnd),
-                    painter = MoSoIcons.caret(),
+                    painter = FfIcons.caret(),
                     contentDescription = null,
                 )
             }
@@ -619,7 +619,7 @@ private fun UserLabel(
                     .size(16.dp),
                 painter = icon,
                 contentDescription = null,
-                tint = MoSoTheme.colors.textSecondary,
+                tint = FfTheme.colors.textSecondary,
             )
             Spacer(modifier = Modifier.width(4.dp))
         }
@@ -627,8 +627,8 @@ private fun UserLabel(
         if (!label.isNullOrBlank()) {
             Text(
                 text = label,
-                style = MoSoTheme.typography.bodySmall,
-                color = MoSoTheme.colors.textSecondary,
+                style = FfTheme.typography.bodySmall,
+                color = FfTheme.colors.textSecondary,
                 fontWeight = W700,
                 maxLines = 1,
             )
@@ -642,9 +642,9 @@ private fun UserLabel(
             mentions = emptyList(),
             htmlText = text,
             htmlContentInteractions = htmlContentInteractions,
-            textStyle = MoSoTheme.typography.bodySmall,
-            textColor = MoSoTheme.colors.textSecondary,
-            linkColor = MoSoTheme.colors.textSecondary,
+            textStyle = FfTheme.typography.bodySmall,
+            textColor = FfTheme.colors.textSecondary,
+            linkColor = FfTheme.colors.textSecondary,
             maximumLineCount = 1,
         )
     }

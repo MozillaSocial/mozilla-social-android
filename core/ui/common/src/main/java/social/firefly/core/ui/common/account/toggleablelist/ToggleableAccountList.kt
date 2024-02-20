@@ -27,13 +27,13 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import kotlinx.coroutines.flow.Flow
 import social.firefly.common.utils.StringFactory
-import social.firefly.core.designsystem.theme.MoSoSpacing
+import social.firefly.core.designsystem.theme.FfSpacing
 import social.firefly.core.ui.common.account.quickview.AccountQuickView
 import social.firefly.core.ui.common.account.quickview.AccountQuickViewUiState
-import social.firefly.core.ui.common.button.MoSoButton
-import social.firefly.core.ui.common.button.MoSoButtonContentPadding
-import social.firefly.core.ui.common.button.MoSoButtonSecondary
-import social.firefly.core.ui.common.button.MoSoButtonTheme
+import social.firefly.core.ui.common.button.FfButton
+import social.firefly.core.ui.common.button.FfButtonContentPadding
+import social.firefly.core.ui.common.button.FfButtonSecondary
+import social.firefly.core.ui.common.button.FfButtonTheme
 import social.firefly.core.ui.common.error.GenericError
 import social.firefly.core.ui.common.pullrefresh.PullRefreshLazyColumn
 import social.firefly.core.ui.common.text.SmallTextLabel
@@ -123,9 +123,9 @@ private fun <B : ToggleableButtonState> UserRow(
             modifier = Modifier
                 .clickable { onAccountClicked(account.accountId) }
                 .fillMaxWidth()
-                .padding(vertical = MoSoSpacing.md),
+                .padding(vertical = FfSpacing.md),
             buttonSlot = {
-                MoSoButton(
+                FfButton(
                     onClick = {
                         buttonState.confirmationText?.let {
                             openConfirmationDialog = it.build(
@@ -134,7 +134,7 @@ private fun <B : ToggleableButtonState> UserRow(
                         } ?: onButtonClicked(account.accountId, buttonState)
                     },
                     theme = buttonState.theme,
-                    contentPadding = MoSoButtonContentPadding.small,
+                    contentPadding = FfButtonContentPadding.small,
                 ) {
                     SmallTextLabel(text = stringResource(id = buttonState.text))
                 }
@@ -157,14 +157,14 @@ private fun ConfirmationDialog(
         },
         onDismissRequest = onDismissRequest,
         confirmButton = {
-            MoSoButton(
+            FfButton(
                 onClick = onConfirmed,
             ) {
                 Text("Confirm")
             }
         },
         dismissButton = {
-            MoSoButtonSecondary(
+            FfButtonSecondary(
                 onClick = onDismissRequest
             ) {
                 Text("Cancel")
@@ -188,5 +188,5 @@ interface ToggleableButtonState {
     @get:StringRes
     val text: Int
     val confirmationText: StringFactory?
-    val theme: MoSoButtonTheme
+    val theme: FfButtonTheme
 }

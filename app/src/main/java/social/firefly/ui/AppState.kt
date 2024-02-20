@@ -48,7 +48,7 @@ import social.firefly.core.navigation.SettingsNavigationDestination.MainSettings
 import social.firefly.core.navigation.SettingsNavigationDestination.MutedUsersSettings.navigateToMutedUsers
 import social.firefly.core.navigation.SettingsNavigationDestination.OpenSourceLicensesSettings.navigateToOpenSourceSettings
 import social.firefly.core.navigation.SettingsNavigationDestination.PrivacySettings.navigateToPrivacySettings
-import social.firefly.core.ui.common.snackbar.MoSoSnackbarHostState
+import social.firefly.core.ui.common.snackbar.FfSnackbarHostState
 import social.firefly.core.ui.common.snackbar.SnackbarType
 import timber.log.Timber
 
@@ -56,7 +56,7 @@ import timber.log.Timber
 fun rememberAppState(
     mainNavController: NavHostController = rememberNavController(),
     coroutineScope: CoroutineScope = rememberCoroutineScope(),
-    snackbarHostState: MoSoSnackbarHostState = remember { MoSoSnackbarHostState() },
+    snackbarHostState: FfSnackbarHostState = remember { FfSnackbarHostState() },
     navigationEventFlow: NavigationEventFlow = koinInject(),
 ): AppState {
     val context = LocalContext.current
@@ -79,7 +79,7 @@ class AppState(
     initialBottomBarDestination: BottomBarNavigationDestination = BottomBarNavigationDestination.Feed,
     val mainNavController: NavHostController,
     val coroutineScope: CoroutineScope,
-    val snackbarHostState: MoSoSnackbarHostState,
+    val snackbarHostState: FfSnackbarHostState,
     val context: Context,
     val navigationEventFlow: NavigationEventFlow,
 ) {

@@ -25,15 +25,15 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import org.koin.androidx.compose.koinViewModel
 import social.firefly.common.Resource
-import social.firefly.core.designsystem.theme.MoSoRadius
-import social.firefly.core.designsystem.theme.MoSoSpacing
-import social.firefly.core.designsystem.theme.MoSoTheme
+import social.firefly.core.designsystem.theme.FfRadius
+import social.firefly.core.designsystem.theme.FfSpacing
+import social.firefly.core.designsystem.theme.FfTheme
 import social.firefly.core.model.InstanceRule
 import social.firefly.core.navigation.navigationModule
 import social.firefly.core.ui.common.account.quickview.AccountQuickView
 import social.firefly.core.ui.common.account.quickview.AccountQuickViewUiState
-import social.firefly.core.ui.common.appbar.MoSoCloseableTopAppBar
-import social.firefly.core.ui.common.divider.MoSoDivider
+import social.firefly.core.ui.common.appbar.FfCloseableTopAppBar
+import social.firefly.core.ui.common.divider.FfDivider
 import social.firefly.core.ui.common.error.GenericError
 import social.firefly.core.ui.common.loading.MaxSizeLoading
 import social.firefly.core.ui.common.text.MediumTextBody
@@ -69,7 +69,7 @@ private fun AboutSettingsScreen(
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
-        MoSoCloseableTopAppBar(title = stringResource(id = R.string.about_settings_title))
+        FfCloseableTopAppBar(title = stringResource(id = R.string.about_settings_title))
         when (aboutSettingsResource) {
             is Resource.Loading -> {
                 MaxSizeLoading()
@@ -102,12 +102,12 @@ private fun LoadedScreen(
     Column(
         modifier = Modifier
             .verticalScroll(rememberScrollState())
-            .padding(MoSoSpacing.lg)
+            .padding(FfSpacing.lg)
     ) {
         AsyncImage(
             modifier =
             Modifier
-                .clip(RoundedCornerShape(MoSoRadius.lg_16_dp))
+                .clip(RoundedCornerShape(FfRadius.lg_16_dp))
                 .fillMaxWidth()
                 .wrapContentHeight(),
             model = aboutSettings.thumbnailUrl,
@@ -115,15 +115,15 @@ private fun LoadedScreen(
             contentScale = ContentScale.FillWidth,
         )
 
-        Spacer(modifier = Modifier.height(MoSoSpacing.lg))
+        Spacer(modifier = Modifier.height(FfSpacing.lg))
 
-        Text(text = aboutSettings.title, style = MoSoTheme.typography.labelLarge)
+        Text(text = aboutSettings.title, style = FfTheme.typography.labelLarge)
 
-        Spacer(modifier = Modifier.height(MoSoSpacing.lg))
+        Spacer(modifier = Modifier.height(FfSpacing.lg))
 
         Text(
             text = stringResource(id = R.string.decentralized_social_media_powered_by_mastodon),
-            style = MoSoTheme.typography.bodyMedium,
+            style = FfTheme.typography.bodyMedium,
         )
 
         Divider()
@@ -131,7 +131,7 @@ private fun LoadedScreen(
         aboutSettings.administeredBy?.let { state ->
             Text(
                 text = stringResource(id = R.string.administered_by),
-                style = MoSoTheme.typography.titleSmall,
+                style = FfTheme.typography.titleSmall,
             )
             AccountQuickView(uiState = state)
         }
@@ -141,7 +141,7 @@ private fun LoadedScreen(
         aboutSettings.contactEmail?.let { contactEmail ->
             Text(
                 text = stringResource(id = R.string.contact_email, contactEmail),
-                style = MoSoTheme.typography.bodyMedium,
+                style = FfTheme.typography.bodyMedium,
             )
         }
 
@@ -164,7 +164,7 @@ private fun LoadedScreen(
 
         OpenSourceLicenses(onClick = onOpenSourceLicensesClicked)
 
-        Spacer(modifier = Modifier.height(MoSoSpacing.xxl))
+        Spacer(modifier = Modifier.height(FfSpacing.xxl))
     }
 }
 
@@ -188,9 +188,9 @@ private fun OpenSourceLicenses(onClick: () -> Unit) {
 
 @Composable
 private fun Divider() {
-    Spacer(modifier = Modifier.height(MoSoSpacing.lg))
-    MoSoDivider()
-    Spacer(modifier = Modifier.height(MoSoSpacing.lg))
+    Spacer(modifier = Modifier.height(FfSpacing.lg))
+    FfDivider()
+    Spacer(modifier = Modifier.height(FfSpacing.lg))
 }
 
 @Preview

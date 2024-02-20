@@ -27,12 +27,12 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import social.firefly.core.navigation.navigationModule
-import social.firefly.core.ui.common.MoSoCheckBox
-import social.firefly.core.ui.common.MoSoSurface
-import social.firefly.core.ui.common.appbar.MoSoCloseableTopAppBar
-import social.firefly.core.ui.common.button.MoSoButton
+import social.firefly.core.ui.common.FfCheckBox
+import social.firefly.core.ui.common.FfSurface
+import social.firefly.core.ui.common.appbar.FfCloseableTopAppBar
+import social.firefly.core.ui.common.button.FfButton
 import social.firefly.core.ui.common.text.MediumTextLabel
-import social.firefly.core.ui.common.text.MoSoTextField
+import social.firefly.core.ui.common.text.FfTextField
 import social.firefly.core.ui.common.utils.PreviewTheme
 import social.firefly.core.workmanager.DatabasePurgeWorker
 import social.firefly.feature.settings.R
@@ -40,13 +40,13 @@ import java.time.Duration
 
 @Composable
 fun DeveloperOptionsScreen() {
-    MoSoSurface(
+    FfSurface(
         modifier = Modifier
             .fillMaxSize()
             .systemBarsPadding(),
     ) {
         Column {
-            MoSoCloseableTopAppBar(
+            FfCloseableTopAppBar(
                 title = stringResource(id = R.string.developer_options_title)
             )
 
@@ -62,7 +62,7 @@ fun DeveloperOptionsScreen() {
                 modifier = Modifier
                     .padding(8.dp),
             ) {
-                MoSoTextField(
+                FfTextField(
                     modifier = Modifier
                         .width(150.dp)
                         .align(Alignment.CenterVertically),
@@ -85,7 +85,7 @@ fun DeveloperOptionsScreen() {
                         .align(Alignment.CenterVertically)
                         .clickable { restartActivityChecked = !restartActivityChecked },
                 ) {
-                    MoSoCheckBox(
+                    FfCheckBox(
                         modifier = Modifier
                             .align(Alignment.CenterVertically),
                         checked = restartActivityChecked,
@@ -101,7 +101,7 @@ fun DeveloperOptionsScreen() {
 
             }
 
-            MoSoButton(
+            FfButton(
                 modifier = Modifier
                     .padding(8.dp)
                     .fillMaxWidth(),

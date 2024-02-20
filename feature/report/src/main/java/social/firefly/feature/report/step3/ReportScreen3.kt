@@ -19,14 +19,14 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
-import social.firefly.core.designsystem.theme.MoSoRadius
-import social.firefly.core.designsystem.theme.MoSoTheme
-import social.firefly.core.ui.common.MoSoSurface
+import social.firefly.core.designsystem.theme.FfRadius
+import social.firefly.core.designsystem.theme.FfTheme
+import social.firefly.core.ui.common.FfSurface
 import social.firefly.core.ui.common.animation.ExpandingAnimation
-import social.firefly.core.ui.common.appbar.MoSoCloseableTopAppBar
-import social.firefly.core.ui.common.button.MoSoButton
-import social.firefly.core.ui.common.button.MoSoButtonSecondary
-import social.firefly.core.ui.common.divider.MoSoDivider
+import social.firefly.core.ui.common.appbar.FfCloseableTopAppBar
+import social.firefly.core.ui.common.button.FfButton
+import social.firefly.core.ui.common.button.FfButtonSecondary
+import social.firefly.core.ui.common.divider.FfDivider
 import social.firefly.feature.report.R
 
 @Composable
@@ -67,21 +67,21 @@ private fun ReportScreen3(
     blockVisible: Boolean,
     reportInteractions: ReportScreen3Interactions,
 ) {
-    MoSoSurface {
+    FfSurface {
         Column(
             modifier =
             Modifier
                 .fillMaxHeight()
                 .systemBarsPadding(),
         ) {
-            MoSoCloseableTopAppBar(title = stringResource(id = R.string.report_screen_title))
+            FfCloseableTopAppBar(title = stringResource(id = R.string.report_screen_title))
 
             TopContent(
                 reportAccountHandle = reportAccountHandle,
                 didUserReportAccount = didUserReportAccount,
             )
 
-            MoSoDivider()
+            FfDivider()
 
             MiddleContent(
                 modifier = Modifier.weight(1f),
@@ -93,7 +93,7 @@ private fun ReportScreen3(
                 reportInteractions = reportInteractions,
             )
 
-            MoSoDivider()
+            FfDivider()
 
             BottomContent(
                 reportInteractions = reportInteractions,
@@ -121,7 +121,7 @@ private fun TopContent(
                 },
                 "@$reportAccountHandle",
             ),
-            style = MoSoTheme.typography.bodyMedium,
+            style = FfTheme.typography.bodyMedium,
         )
 
         Spacer(modifier = Modifier.height(4.dp))
@@ -136,7 +136,7 @@ private fun TopContent(
                     R.string.limiting_user_description
                 },
             ),
-            style = MoSoTheme.typography.titleMedium,
+            style = FfTheme.typography.titleMedium,
         )
     }
 }
@@ -166,7 +166,7 @@ private fun MiddleContent(
                     R.string.limiting_user_options
                 },
             ),
-            style = MoSoTheme.typography.titleSmall,
+            style = FfTheme.typography.titleSmall,
             fontWeight = W600,
         )
 
@@ -222,7 +222,7 @@ private fun MiddleContent(
 
 @Composable
 private fun BottomContent(reportInteractions: ReportScreen3Interactions) {
-    MoSoButton(
+    FfButton(
         modifier =
         Modifier
             .padding(16.dp)
@@ -245,12 +245,12 @@ private fun ActionableOption(
         modifier
             .border(
                 width = 1.dp,
-                color = MoSoTheme.colors.borderPrimary,
-                shape = RoundedCornerShape(MoSoRadius.md_8_dp),
+                color = FfTheme.colors.borderPrimary,
+                shape = RoundedCornerShape(FfRadius.md_8_dp),
             )
             .padding(16.dp),
     ) {
-        MoSoButtonSecondary(
+        FfButtonSecondary(
             modifier = Modifier.fillMaxWidth(),
             onClick = onClick,
         ) {
@@ -259,7 +259,7 @@ private fun ActionableOption(
         Spacer(modifier = Modifier.height(16.dp))
         Text(
             text = description,
-            style = MoSoTheme.typography.bodyMedium,
+            style = FfTheme.typography.bodyMedium,
         )
     }
 }

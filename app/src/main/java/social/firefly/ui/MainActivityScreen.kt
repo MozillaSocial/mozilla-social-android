@@ -10,10 +10,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import social.firefly.core.ui.common.snackbar.MoSoSnackbar
-import social.firefly.core.ui.common.snackbar.MoSoSnackbarHost
+import social.firefly.core.ui.common.snackbar.FfSnackbar
+import social.firefly.core.ui.common.snackbar.FfSnackbarHost
 import social.firefly.navigation.MainNavHost
-import social.firefly.ui.bottombar.MoSoNavigationBarDefaults.bottomBarPadding
+import social.firefly.ui.bottombar.FfNavigationBarDefaults.bottomBarPadding
 
 /**
  * must pass in view model to ensure it gets instantiated
@@ -30,7 +30,7 @@ fun MainActivityScreen() {
     Box(modifier = Modifier.fillMaxSize()) {
         val currentDestination by appState.currentNavigationDestination.collectAsStateWithLifecycle()
 
-        MoSoSnackbarHost(
+        FfSnackbarHost(
             modifier =
                 Modifier
                     .align(Alignment.BottomStart)
@@ -40,7 +40,7 @@ fun MainActivityScreen() {
                     .bottomBarPadding(currentDestination),
             hostState = appState.snackbarHostState,
         ) { snackbarData, snackbarType ->
-            MoSoSnackbar(snackbarData = snackbarData, snackbarType = snackbarType)
+            FfSnackbar(snackbarData = snackbarData, snackbarType = snackbarType)
         }
     }
 }

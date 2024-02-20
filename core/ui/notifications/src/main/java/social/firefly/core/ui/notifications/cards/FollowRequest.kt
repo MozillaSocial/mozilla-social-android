@@ -9,9 +9,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import social.firefly.common.utils.StringFactory
-import social.firefly.core.ui.common.button.MoSoButton
-import social.firefly.core.ui.common.button.MoSoButtonContentPadding
-import social.firefly.core.ui.common.button.MoSoButtonSecondary
+import social.firefly.core.ui.common.button.FfButton
+import social.firefly.core.ui.common.button.FfButtonContentPadding
+import social.firefly.core.ui.common.button.FfButtonSecondary
 import social.firefly.core.ui.common.text.SmallTextLabel
 import social.firefly.core.ui.common.utils.PreviewTheme
 import social.firefly.core.ui.notifications.NotificationCard
@@ -27,7 +27,7 @@ internal fun FollowRequestNotificationContent(
     notificationInteractions: NotificationInteractions,
 ) {
     Row {
-        MoSoButtonSecondary(
+        FfButtonSecondary(
             modifier = Modifier
                 .weight(1f),
             onClick = {
@@ -36,14 +36,14 @@ internal fun FollowRequestNotificationContent(
                     notificationId = uiState.id,
                 )
             },
-            contentPadding = MoSoButtonContentPadding.small,
+            contentPadding = FfButtonContentPadding.small,
         ) {
             SmallTextLabel(text = stringResource(id = R.string.deny_follow_request))
         }
 
         Spacer(modifier = Modifier.width(16.dp))
 
-        MoSoButton(
+        FfButton(
             modifier = Modifier
                 .weight(1f),
             onClick = {
@@ -52,7 +52,7 @@ internal fun FollowRequestNotificationContent(
                     notificationId = uiState.id,
                 )
             },
-            contentPadding = MoSoButtonContentPadding.small,
+            contentPadding = FfButtonContentPadding.small,
         ) {
             SmallTextLabel(text = stringResource(id = R.string.accept_follow_request))
         }

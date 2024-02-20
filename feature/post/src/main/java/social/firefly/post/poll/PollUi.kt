@@ -26,13 +26,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import social.firefly.core.designsystem.icon.MoSoIcons
-import social.firefly.core.designsystem.theme.MoSoTheme
+import social.firefly.core.designsystem.icon.FfIcons
+import social.firefly.core.designsystem.theme.FfTheme
 import social.firefly.core.designsystem.utils.NoRipple
-import social.firefly.core.ui.common.MoSoCheckBox
-import social.firefly.core.ui.common.button.MoSoButtonSecondary
-import social.firefly.core.ui.common.divider.MoSoDivider
-import social.firefly.core.ui.common.text.MoSoTextField
+import social.firefly.core.ui.common.FfCheckBox
+import social.firefly.core.ui.common.button.FfButtonSecondary
+import social.firefly.core.ui.common.divider.FfDivider
+import social.firefly.core.ui.common.text.FfTextField
 import social.firefly.core.ui.common.text.SmallTextLabel
 import social.firefly.core.ui.common.utils.PreviewTheme
 import social.firefly.feature.post.R
@@ -55,13 +55,13 @@ internal fun Poll(
             )
             Spacer(modifier = Modifier.height(16.dp))
         }
-        MoSoButtonSecondary(
+        FfButtonSecondary(
             enabled = pollUiState.options.size < 4,
             onClick = pollInteractions::onAddPollOptionClicked
         ) {
             Icon(
                 modifier = Modifier.size(16.dp),
-                painter = MoSoIcons.plus(),
+                painter = FfIcons.plus(),
                 contentDescription = null,
             )
             Spacer(modifier = Modifier.width(8.dp))
@@ -82,7 +82,7 @@ private fun PollChoice(
     Row(
         modifier = modifier,
     ) {
-        MoSoTextField(
+        FfTextField(
             modifier = Modifier
                 .weight(1f)
                 .align(Alignment.CenterVertically),
@@ -108,7 +108,7 @@ private fun PollChoice(
                 Modifier
                     .width(24.dp)
                     .height(24.dp),
-                painter = MoSoIcons.trash(),
+                painter = FfIcons.trash(),
                 contentDescription = stringResource(id = R.string.remove_poll_option_button_content_description),
             )
         }
@@ -125,7 +125,7 @@ internal fun PollBar(
         modifier = modifier
             .height(56.dp)
     ) {
-        MoSoDivider()
+        FfDivider()
         Box(
             modifier = Modifier
                 .weight(1f)
@@ -142,7 +142,7 @@ internal fun PollBar(
                     modifier = Modifier
                         .border(
                             width = 1.dp,
-                            color = MoSoTheme.colors.borderPrimary,
+                            color = FfTheme.colors.borderPrimary,
                             shape = CircleShape,
                         )
                         .size(32.dp),
@@ -150,7 +150,7 @@ internal fun PollBar(
                 ) {
                     Icon(
                         modifier = Modifier.size(16.dp),
-                        painter = MoSoIcons.x(),
+                        painter = FfIcons.x(),
                         contentDescription = stringResource(id = R.string.close_poll_content_description)
                     )
                 }
@@ -184,7 +184,7 @@ internal fun PollBar(
                         brush = Brush.horizontalGradient(
                             colors = listOf(
                                 Color.Transparent,
-                                MoSoTheme.colors.layer1,
+                                FfTheme.colors.layer1,
                             )
                         )
                     )
@@ -204,7 +204,7 @@ private fun HideUntilEndCheckbox(
                 .clickable { pollInteractions.onHideCountUntilEndClicked() },
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            MoSoCheckBox(
+            FfCheckBox(
                 checked = pollUiState.hideTotals,
                 onCheckedChange = { pollInteractions.onHideCountUntilEndClicked() },
             )

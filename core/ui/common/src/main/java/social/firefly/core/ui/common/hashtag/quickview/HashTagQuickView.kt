@@ -18,9 +18,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import social.firefly.common.utils.StringFactory
-import social.firefly.core.designsystem.icon.MoSoIcons
-import social.firefly.core.designsystem.theme.MoSoSpacing
-import social.firefly.core.designsystem.theme.MoSoTheme
+import social.firefly.core.designsystem.icon.FfIcons
+import social.firefly.core.designsystem.theme.FfSpacing
+import social.firefly.core.designsystem.theme.FfTheme
 import social.firefly.core.ui.common.following.FollowingButton
 import social.firefly.core.ui.common.text.LargeTextBody
 import social.firefly.core.ui.common.text.MediumTextBody
@@ -37,19 +37,19 @@ fun HashTagQuickView(
             modifier = Modifier
                 .size(48.dp)
                 .clip(CircleShape)
-                .background(MoSoTheme.colors.layer2),
+                .background(FfTheme.colors.layer2),
         ) {
             Icon(
                 modifier = Modifier
                     .size(24.dp)
                     .align(Alignment.Center),
-                painter = MoSoIcons.hash(),
+                painter = FfIcons.hash(),
                 contentDescription = "",
             )
         }
 
 
-        Spacer(modifier = Modifier.width(MoSoSpacing.sm))
+        Spacer(modifier = Modifier.width(FfSpacing.sm))
 
         Row {
             Column(

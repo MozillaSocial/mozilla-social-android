@@ -22,7 +22,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 /**
- * Material color schemes for compatability with our [MoSoTheme]
+ * Material color schemes for compatability with our [FfTheme]
  */
 @Preview
 @Composable
@@ -131,7 +131,7 @@ private fun TestBox(
 }
 
 /**
- * This is for compatability purposes only- please use [MoSoColors] instead
+ * This is for compatability purposes only- please use [FfColors] instead
  */
 internal val MaterialLightColorScheme =
     lightColorScheme(
@@ -167,7 +167,7 @@ internal val MaterialLightColorScheme =
     )
 
 /**
- * This is for compatability purposes only- please use [MoSoColors] instead
+ * This is for compatability purposes only- please use [FfColors] instead
  */
 internal val MaterialDarkColorScheme =
     darkColorScheme(

@@ -32,11 +32,11 @@ import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.AspectRatioFrameLayout
 import androidx.media3.ui.PlayerView
 import kotlinx.coroutines.delay
-import social.firefly.core.designsystem.icon.MoSoIcons
+import social.firefly.core.designsystem.icon.FfIcons
 import social.firefly.core.designsystem.theme.FirefoxColor
 import social.firefly.core.ui.common.NoTouchOverlay
 import social.firefly.core.ui.common.R
-import social.firefly.core.ui.common.loading.MoSoLinearProgressIndicator
+import social.firefly.core.ui.common.loading.FfLinearProgressIndicator
 import social.firefly.core.ui.common.text.SmallTextLabel
 import timber.log.Timber
 import kotlin.math.roundToLong
@@ -131,11 +131,11 @@ private fun VideoControls(
         }) {
             Icon(
                 modifier = Modifier
-                    .size(MoSoIcons.Sizes.small),
+                    .size(FfIcons.Sizes.small),
                 painter = if (isPlaying) {
-                    MoSoIcons.pause()
+                    FfIcons.pause()
                 } else {
-                    MoSoIcons.play()
+                    FfIcons.play()
                 },
                 contentDescription = if (isPlaying) {
                     stringResource(id = R.string.pause)
@@ -146,7 +146,7 @@ private fun VideoControls(
             )
         }
 
-        MoSoLinearProgressIndicator(
+        FfLinearProgressIndicator(
             modifier = Modifier.weight(1f),
             progress = progress,
             onTouch = {
@@ -174,11 +174,11 @@ private fun VideoControls(
         ) {
             Icon(
                 modifier = Modifier
-                    .size(MoSoIcons.Sizes.small),
+                    .size(FfIcons.Sizes.small),
                 painter = if (muted.value) {
-                    MoSoIcons.volumeMute()
+                    FfIcons.volumeMute()
                 } else {
-                    MoSoIcons.volumeUp()
+                    FfIcons.volumeUp()
                 },
                 contentDescription = stringResource(id = R.string.mute),
                 tint = FirefoxColor.White,

@@ -16,8 +16,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import social.firefly.core.designsystem.theme.MoSoRadius
-import social.firefly.core.designsystem.theme.MoSoTheme
+import social.firefly.core.designsystem.theme.FfRadius
+import social.firefly.core.designsystem.theme.FfTheme
 import social.firefly.core.ui.common.utils.media
 import social.firefly.core.ui.htmlcontent.HtmlContentInteractions
 
@@ -26,14 +26,14 @@ fun PreviewCard(
     previewCard: PreviewCard,
     htmlContentInteractions: HtmlContentInteractions,
 ) {
-    val borderShape = RoundedCornerShape(MoSoRadius.media)
+    val borderShape = RoundedCornerShape(FfRadius.media)
     Column(
         modifier =
         Modifier
             .clip(borderShape)
             .border(
                 width = 1.dp,
-                color = MoSoTheme.colors.borderPrimary,
+                color = FfTheme.colors.borderPrimary,
                 shape = borderShape,
             )
             .clickable {
@@ -44,7 +44,7 @@ fun PreviewCard(
             modifier =
             Modifier
                 .aspectRatio(2f)
-                .background(MoSoTheme.colors.layer2),
+                .background(FfTheme.colors.layer2),
             model = previewCard.imageUrl,
             contentDescription = "",
             contentScale = ContentScale.Crop,
@@ -56,7 +56,7 @@ fun PreviewCard(
             previewCard.providerName?.let {
                 Text(
                     text = it,
-                    style = MoSoTheme.typography.bodySmall,
+                    style = FfTheme.typography.bodySmall,
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
@@ -64,7 +64,7 @@ fun PreviewCard(
 
             Text(
                 text = previewCard.title,
-                style = MoSoTheme.typography.titleSmall,
+                style = FfTheme.typography.titleSmall,
             )
         }
     }

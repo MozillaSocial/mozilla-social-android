@@ -25,11 +25,11 @@ import coil.compose.AsyncImage
 import org.koin.androidx.compose.koinViewModel
 import social.firefly.common.Resource
 import social.firefly.common.utils.StringFactory
-import social.firefly.core.designsystem.theme.MoSoSpacing
-import social.firefly.core.designsystem.theme.MoSoTheme
+import social.firefly.core.designsystem.theme.FfSpacing
+import social.firefly.core.designsystem.theme.FfTheme
 import social.firefly.core.navigation.navigationModule
-import social.firefly.core.ui.common.MoSoSurface
-import social.firefly.core.ui.common.button.MoSoButtonSecondary
+import social.firefly.core.ui.common.FfSurface
+import social.firefly.core.ui.common.button.FfButtonSecondary
 import social.firefly.core.ui.common.utils.PreviewTheme
 import social.firefly.feature.settings.R
 import social.firefly.feature.settings.ui.SettingsColumn
@@ -61,7 +61,7 @@ private fun AccountSettingsScreen(
     subtitle: StringFactory?,
     accountSettingsInteractions: AccountSettingsInteractions,
 ) {
-    MoSoSurface {
+    FfSurface {
         SettingsColumn(title = stringResource(id = R.string.account_settings_title)) {
             when (userHeader) {
                 is Resource.Error -> {}
@@ -84,12 +84,12 @@ private fun AccountSettingsScreen(
 @Composable
 private fun UserHeader(userHeader: UserHeader) {
     Row(
-        modifier = Modifier.padding(MoSoSpacing.sm),
+        modifier = Modifier.padding(FfSpacing.sm),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Avatar(userHeader.avatarUrl)
         Spacer(modifier = Modifier.width(8.dp))
-        Text(text = userHeader.accountName, style = MoSoTheme.typography.labelLarge)
+        Text(text = userHeader.accountName, style = FfTheme.typography.labelLarge)
     }
 }
 
@@ -100,7 +100,7 @@ private fun Avatar(avatarUrl: String) {
         Modifier
             .size(40.dp)
             .clip(CircleShape)
-            .background(MoSoTheme.colors.layer2),
+            .background(FfTheme.colors.layer2),
         model = avatarUrl,
         contentDescription = "",
     )
@@ -117,7 +117,7 @@ private fun ManageAccount(subtitle: StringFactory?, onClick: () -> Unit) {
 
 @Composable
 private fun SignoutButton(onLogoutClicked: () -> Unit) {
-    MoSoButtonSecondary(
+    FfButtonSecondary(
         modifier =
         Modifier
             .wrapContentHeight()

@@ -27,18 +27,18 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
-import social.firefly.core.designsystem.theme.MoSoSpacing
-import social.firefly.core.designsystem.theme.MoSoTheme
+import social.firefly.core.designsystem.theme.FfSpacing
+import social.firefly.core.designsystem.theme.FfTheme
 import social.firefly.core.navigation.navigationModule
 import social.firefly.core.ui.accountfollower.AccountFollower
 import social.firefly.core.ui.accountfollower.AccountFollowerUiState
-import social.firefly.core.ui.common.MoSoSurface
+import social.firefly.core.ui.common.FfSurface
 import social.firefly.core.ui.common.account.quickview.AccountQuickViewUiState
-import social.firefly.core.ui.common.appbar.MoSoCloseableTopAppBar
+import social.firefly.core.ui.common.appbar.FfCloseableTopAppBar
 import social.firefly.core.ui.common.pullrefresh.PullRefreshLazyColumn
 import social.firefly.core.ui.common.pullrefresh.rememberPullRefreshState
-import social.firefly.core.ui.common.tabs.MoSoTab
-import social.firefly.core.ui.common.tabs.MoSoTabRow
+import social.firefly.core.ui.common.tabs.FfTab
+import social.firefly.core.ui.common.tabs.FfTabRow
 import social.firefly.core.ui.common.utils.PreviewTheme
 
 @Composable
@@ -76,14 +76,14 @@ private fun FollowersScreen(
     following: Flow<PagingData<AccountFollowerUiState>>,
     followersInteractions: FollowersInteractions,
 ) {
-    MoSoSurface {
+    FfSurface {
         Column(
             modifier =
             Modifier
                 .fillMaxSize()
                 .systemBarsPadding(),
         ) {
-            MoSoCloseableTopAppBar(
+            FfCloseableTopAppBar(
                 title = displayName,
             )
 
@@ -91,11 +91,11 @@ private fun FollowersScreen(
                 mutableStateOf(startingTab)
             }
 
-            MoSoTabRow(
+            FfTabRow(
                 selectedTabIndex = selectedTab.ordinal,
             ) {
                 FollowType.entries.forEach { tabType ->
-                    MoSoTab(
+                    FfTab(
                         modifier =
                         Modifier
                             .height(40.dp),
@@ -114,7 +114,7 @@ private fun FollowersScreen(
                                     FollowType.FOLLOWING ->
                                         stringResource(id = R.string.following)
                                 },
-                                style = MoSoTheme.typography.labelMedium,
+                                style = FfTheme.typography.labelMedium,
                             )
                         },
                     )
@@ -177,7 +177,7 @@ private fun FollowersList(
                                 )
                             },
                             modifier = Modifier
-                                .padding(MoSoSpacing.md)
+                                .padding(FfSpacing.md)
                                 .clickable {
                                     followersInteractions
                                         .onAccountClicked(

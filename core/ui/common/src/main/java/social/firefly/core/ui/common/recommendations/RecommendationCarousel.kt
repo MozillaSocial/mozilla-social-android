@@ -21,12 +21,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import social.firefly.core.designsystem.icon.MoSoIcons
-import social.firefly.core.designsystem.theme.MoSoTheme
+import social.firefly.core.designsystem.icon.FfIcons
+import social.firefly.core.designsystem.theme.FfTheme
 import social.firefly.core.designsystem.theme.Typography
 import social.firefly.core.model.Recommendation
 import social.firefly.core.ui.common.R
-import social.firefly.core.ui.common.divider.MoSoDivider
+import social.firefly.core.ui.common.divider.FfDivider
 
 @Composable
 fun RecommendationCarousel(
@@ -50,7 +50,7 @@ fun RecommendationCarousel(
             Spacer(modifier = Modifier.weight(1f))
             IconButton(onClick = onMoreInfoClicked) {
                 Icon(
-                    painter = MoSoIcons.info(),
+                    painter = FfIcons.info(),
                     contentDescription = stringResource(id = R.string.more_info_content_description),
                     tint = MaterialTheme.colorScheme.onPrimary,
                 )
@@ -75,16 +75,16 @@ fun RecommendationCarousel(
             ) {
                 Text(
                     text = stringResource(id = R.string.recommendations_discover_more),
-                    color = MoSoTheme.colors.actionPrimary,
+                    color = FfTheme.colors.actionPrimary,
                 )
                 Icon(
-                    painter = MoSoIcons.chevronRight(),
-                    tint = MoSoTheme.colors.actionPrimary,
+                    painter = FfIcons.chevronRight(),
+                    tint = FfTheme.colors.actionPrimary,
                     contentDescription = null,
                 )
             }
         }
-        MoSoDivider()
+        FfDivider()
     }
 }
 

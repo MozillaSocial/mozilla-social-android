@@ -18,11 +18,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
-import social.firefly.core.designsystem.theme.MoSoTheme
+import social.firefly.core.designsystem.theme.FfTheme
 import social.firefly.core.ui.common.R
 import social.firefly.core.ui.common.animation.DelayedVisibility
 import social.firefly.core.ui.common.error.GenericError
-import social.firefly.core.ui.common.loading.MoSoCircularProgressIndicator
+import social.firefly.core.ui.common.loading.FfCircularProgressIndicator
 
 @Composable
 fun <A : Any> PagingLazyColumn(
@@ -53,7 +53,7 @@ fun <A : Any> PagingLazyColumn(
                     content()
                     item {
                         DelayedVisibility {
-                            MoSoCircularProgressIndicator(
+                            FfCircularProgressIndicator(
                                 modifier =
                                 Modifier
                                     .fillMaxWidth()
@@ -86,7 +86,7 @@ fun <A : Any> PagingLazyColumn(
             when (lazyPagingItems.loadState.append) {
                 is LoadState.Loading -> {
                     item {
-                        MoSoCircularProgressIndicator(
+                        FfCircularProgressIndicator(
                             modifier =
                             Modifier
                                 .fillMaxWidth()
@@ -112,7 +112,7 @@ fun <A : Any> PagingLazyColumn(
             GenericError(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(MoSoTheme.colors.layer1),
+                    .background(FfTheme.colors.layer1),
                 onRetryClicked = { lazyPagingItems.refresh() },
             )
         }

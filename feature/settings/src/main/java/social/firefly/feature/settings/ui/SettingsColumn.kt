@@ -7,8 +7,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import social.firefly.core.designsystem.theme.MoSoSpacing
-import social.firefly.core.ui.common.appbar.MoSoCloseableTopAppBar
+import social.firefly.core.designsystem.theme.FfSpacing
+import social.firefly.core.ui.common.appbar.FfCloseableTopAppBar
 
 @Composable
 internal fun SettingsColumn(
@@ -19,10 +19,10 @@ internal fun SettingsColumn(
     content: @Composable ColumnScope.() -> Unit,
 ) {
     Column {
-        MoSoCloseableTopAppBar(title = title)
+        FfCloseableTopAppBar(title = title)
         Column(
             modifier = modifier
-                .padding(MoSoSpacing.sm),
+                .padding(FfSpacing.sm),
             verticalArrangement = verticalArrangement,
             horizontalAlignment = horizontalAlignment,
         ) { content() }

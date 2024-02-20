@@ -28,14 +28,14 @@ import androidx.paging.compose.itemKey
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import org.koin.androidx.compose.koinViewModel
-import social.firefly.core.designsystem.theme.MoSoSpacing
-import social.firefly.core.ui.common.MoSoSurface
-import social.firefly.core.ui.common.appbar.MoSoTopBar
-import social.firefly.core.ui.common.divider.MoSoDivider
+import social.firefly.core.designsystem.theme.FfSpacing
+import social.firefly.core.ui.common.FfSurface
+import social.firefly.core.ui.common.appbar.FfTopBar
+import social.firefly.core.ui.common.divider.FfDivider
 import social.firefly.core.ui.common.pullrefresh.PullRefreshLazyColumn
 import social.firefly.core.ui.common.pullrefresh.rememberPullRefreshState
-import social.firefly.core.ui.common.tabs.MoSoTab
-import social.firefly.core.ui.common.tabs.MoSoTabRow
+import social.firefly.core.ui.common.tabs.FfTab
+import social.firefly.core.ui.common.tabs.FfTabRow
 import social.firefly.core.ui.common.text.MediumTextLabel
 import social.firefly.core.ui.common.utils.PreviewTheme
 import social.firefly.core.ui.notifications.NotificationCard
@@ -76,7 +76,7 @@ private fun NotificationsScreen(
             rememberTopAppBarState(),
         ),
 ) {
-    MoSoSurface(
+    FfSurface(
         modifier = Modifier
             .fillMaxSize()
             .systemBarsPadding()
@@ -85,7 +85,7 @@ private fun NotificationsScreen(
             modifier = Modifier
                 .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection)
         ) {
-            MoSoTopBar(
+            FfTopBar(
                 scrollBehavior = topAppBarScrollBehavior,
                 title = stringResource(id = R.string.notifications_title),
                 icon = null,
@@ -130,12 +130,12 @@ private fun Tabs(
 ) {
     val context = LocalContext.current
 
-    MoSoTabRow(selectedTabIndex = uiState.selectedTab.ordinal) {
+    FfTabRow(selectedTabIndex = uiState.selectedTab.ordinal) {
         NotificationsTab.entries.forEach { tabType ->
             if (tabType == NotificationsTab.REQUESTS && !uiState.requestsTabIsVisible) {
                 return@forEach
             }
-            MoSoTab(
+            FfTab(
                 modifier =
                 Modifier
                     .height(40.dp),
@@ -178,12 +178,12 @@ private fun NotificationsList(
                     lazyPagingItems[index]?.let { uiState ->
                         Column {
                             NotificationCard(
-                                modifier = Modifier.padding(MoSoSpacing.md),
+                                modifier = Modifier.padding(FfSpacing.md),
                                 uiState = uiState,
                                 postCardInteractions = postCardInteractions,
                                 notificationInteractions = notificationInteractions,
                             )
-                            MoSoDivider()
+                            FfDivider()
                         }
                     }
                 }

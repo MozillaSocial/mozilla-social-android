@@ -18,7 +18,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import social.firefly.core.designsystem.theme.MoSoTheme
+import social.firefly.core.designsystem.theme.FfTheme
 import kotlin.math.max
 
 @Composable
@@ -46,7 +46,7 @@ internal fun Header(
                         modifier =
                         Modifier
                             .fillMaxSize()
-                            .background(MoSoTheme.colors.layer2),
+                            .background(FfTheme.colors.layer2),
                         model = headerUrl,
                         contentDescription = null,
                         contentScale = ContentScale.Crop,
@@ -65,7 +65,7 @@ internal fun Header(
                         .padding(start = 8.dp)
                         .size(92.dp)
                         .clip(CircleShape)
-                        .background(MoSoTheme.colors.layer1),
+                        .background(FfTheme.colors.layer1),
                 ) {
                     AsyncImage(
                         modifier =
@@ -73,7 +73,7 @@ internal fun Header(
                             .align(Alignment.Center)
                             .size(86.dp)
                             .clip(CircleShape)
-                            .background(MoSoTheme.colors.layer2),
+                            .background(FfTheme.colors.layer2),
                         model = avatarUrl,
                         contentDescription = null,
                         contentScale = ContentScale.Crop,
@@ -103,12 +103,12 @@ private fun UserInfo(
     ) {
         Text(
             text = displayName,
-            style = MoSoTheme.typography.titleLarge,
+            style = FfTheme.typography.titleLarge,
         )
         Text(
             text = handle,
-            style = MoSoTheme.typography.labelMedium,
-            color = MoSoTheme.colors.textSecondary,
+            style = FfTheme.typography.labelMedium,
+            color = FfTheme.colors.textSecondary,
         )
     }
 }

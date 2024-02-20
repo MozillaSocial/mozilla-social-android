@@ -27,16 +27,16 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.KoinApplication
-import social.firefly.core.designsystem.icon.MoSoIcons
-import social.firefly.core.designsystem.theme.MoSoRadius
-import social.firefly.core.designsystem.theme.MoSoSpacing
-import social.firefly.core.designsystem.theme.MoSoTheme
+import social.firefly.core.designsystem.icon.FfIcons
+import social.firefly.core.designsystem.theme.FfRadius
+import social.firefly.core.designsystem.theme.FfSpacing
+import social.firefly.core.designsystem.theme.FfTheme
 import social.firefly.core.navigation.navigationModule
-import social.firefly.core.ui.common.MoSoSurface
-import social.firefly.core.ui.common.appbar.MoSoCloseableTopAppBar
-import social.firefly.core.ui.common.button.MoSoButton
-import social.firefly.core.ui.common.loading.MoSoCircularProgressIndicator
-import social.firefly.core.ui.common.text.MoSoTextField
+import social.firefly.core.ui.common.FfSurface
+import social.firefly.core.ui.common.appbar.FfCloseableTopAppBar
+import social.firefly.core.ui.common.button.FfButton
+import social.firefly.core.ui.common.loading.FfCircularProgressIndicator
+import social.firefly.core.ui.common.text.FfTextField
 import social.firefly.feature.auth.R
 
 @Composable
@@ -57,7 +57,7 @@ private fun ChooseServerScreen(
     uiState: ChooseServerUiState,
     chooseServerInteractions: ChooseServerInteractions,
 ) {
-    MoSoSurface(
+    FfSurface(
         modifier = Modifier.fillMaxSize(),
     ) {
         Column(
@@ -67,21 +67,21 @@ private fun ChooseServerScreen(
                 .imePadding()
                 .verticalScroll(rememberScrollState()),
         ) {
-            MoSoCloseableTopAppBar(
+            FfCloseableTopAppBar(
                 title = stringResource(id = R.string.choose_a_server_screen_title),
             )
 
             Column(
                 modifier =
                 Modifier
-                    .padding(MoSoSpacing.md),
+                    .padding(FfSpacing.md),
             ) {
                 Text(
                     text = stringResource(id = R.string.choose_a_server_message),
-                    style = MoSoTheme.typography.bodyMedium,
+                    style = FfTheme.typography.bodyMedium,
                 )
                 Spacer(modifier = Modifier.height(21.dp))
-                MoSoTextField(
+                FfTextField(
                     modifier = Modifier.fillMaxWidth(),
                     enabled = !uiState.isLoading,
                     value = uiState.serverText,
@@ -91,7 +91,7 @@ private fun ChooseServerScreen(
                     },
                     leadingIcon = {
                         Icon(
-                            painter = MoSoIcons.globeHemisphereWest(),
+                            painter = FfIcons.globeHemisphereWest(),
                             contentDescription = null,
                         )
                     },
@@ -105,17 +105,17 @@ private fun ChooseServerScreen(
                     ),
                 )
                 if (uiState.loginFailed) {
-                    Spacer(modifier = Modifier.height(MoSoSpacing.sm))
+                    Spacer(modifier = Modifier.height(FfSpacing.sm))
                     NoServerError()
                 }
                 Spacer(modifier = Modifier.height(21.dp))
-                MoSoButton(
+                FfButton(
                     modifier = Modifier.fillMaxWidth(),
                     enabled = uiState.nextButtonEnabled && !uiState.isLoading,
                     onClick = { chooseServerInteractions.onNextClicked() },
                 ) {
                     if (uiState.isLoading) {
-                        MoSoCircularProgressIndicator(
+                        FfCircularProgressIndicator(
                             modifier = Modifier.size(20.dp),
                         )
                     } else {
@@ -134,20 +134,20 @@ private fun NoServerError(modifier: Modifier = Modifier) {
         modifier
             .fillMaxWidth()
             .background(
-                color = MoSoTheme.colors.snackbarBkgError,
-                shape = RoundedCornerShape(MoSoRadius.md_8_dp),
+                color = FfTheme.colors.snackbarBkgError,
+                shape = RoundedCornerShape(FfRadius.md_8_dp),
             ),
     ) {
         Text(
             modifier =
             Modifier
                 .padding(
-                    vertical = MoSoSpacing.sm,
-                    horizontal = MoSoSpacing.md,
+                    vertical = FfSpacing.sm,
+                    horizontal = FfSpacing.md,
                 ),
             text = stringResource(id = R.string.choose_server_error_message),
-            style = MoSoTheme.typography.labelSmall,
-            color = MoSoTheme.colors.snackbarTextError,
+            style = FfTheme.typography.labelSmall,
+            color = FfTheme.colors.snackbarTextError,
         )
     }
 }
@@ -158,7 +158,7 @@ private fun ChooseServerScreenPreview() {
     KoinApplication(application = {
         modules(navigationModule)
     }) {
-        MoSoTheme {
+        FfTheme {
             ChooseServerScreen(
                 uiState =
                 ChooseServerUiState(
@@ -177,7 +177,7 @@ private fun ChooseServerScreenLoadingPreview() {
     KoinApplication(application = {
         modules(navigationModule)
     }) {
-        MoSoTheme {
+        FfTheme {
             ChooseServerScreen(
                 uiState =
                 ChooseServerUiState(
@@ -197,7 +197,7 @@ private fun ChooseServerScreenErrorPreview() {
     KoinApplication(application = {
         modules(navigationModule)
     }) {
-        MoSoTheme {
+        FfTheme {
             ChooseServerScreen(
                 uiState =
                 ChooseServerUiState(

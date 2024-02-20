@@ -47,15 +47,15 @@ import coil.compose.AsyncImage
 import kotlinx.datetime.Instant
 import social.firefly.common.utils.StringFactory
 import social.firefly.common.utils.timeSinceNow
-import social.firefly.core.designsystem.icon.MoSoIcons
-import social.firefly.core.designsystem.theme.MoSoRadius
-import social.firefly.core.designsystem.theme.MoSoSpacing
-import social.firefly.core.designsystem.theme.MoSoTheme
+import social.firefly.core.designsystem.icon.FfIcons
+import social.firefly.core.designsystem.theme.FfRadius
+import social.firefly.core.designsystem.theme.FfSpacing
+import social.firefly.core.designsystem.theme.FfTheme
 import social.firefly.core.designsystem.utils.NoRipple
 import social.firefly.core.ui.common.TransparentNoTouchOverlay
-import social.firefly.core.ui.common.dropdown.MoSoDropDownItem
-import social.firefly.core.ui.common.dropdown.MoSoDropdownMenu
-import social.firefly.core.ui.common.loading.MoSoCircularProgressIndicator
+import social.firefly.core.ui.common.dropdown.FfDropDownItem
+import social.firefly.core.ui.common.dropdown.FfDropdownMenu
+import social.firefly.core.ui.common.loading.FfCircularProgressIndicator
 import social.firefly.core.ui.common.media.MediaDisplay
 import social.firefly.core.ui.common.utils.PreviewTheme
 import social.firefly.core.ui.common.utils.getMaxWidth
@@ -124,8 +124,8 @@ private fun TopRowMetaData(
                 .align(Alignment.CenterVertically),
             painter =
             when (topRowMetaDataUiState.iconType) {
-                TopRowIconType.BOOSTED -> MoSoIcons.boost()
-                TopRowIconType.REPLY -> MoSoIcons.chatBubbles()
+                TopRowIconType.BOOSTED -> FfIcons.boost()
+                TopRowIconType.REPLY -> FfIcons.chatBubbles()
             },
             contentDescription = "",
         )
@@ -133,7 +133,7 @@ private fun TopRowMetaData(
         Text(
             modifier = Modifier.align(Alignment.CenterVertically),
             text = topRowMetaDataUiState.text.build(LocalContext.current),
-            style = MoSoTheme.typography.bodyMedium,
+            style = FfTheme.typography.bodyMedium,
         )
     }
 }
@@ -176,7 +176,7 @@ private fun Avatar(
         modifier
             .size(36.dp)
             .clip(CircleShape)
-            .background(MoSoTheme.colors.layer2)
+            .background(FfTheme.colors.layer2)
             .clickable { postCardInteractions.onAccountImageClicked(post.accountId) },
         model = post.profilePictureUrl,
         contentDescription = null,
@@ -198,12 +198,12 @@ private fun MetaData(
         ) {
             Text(
                 text = post.username,
-                style = MoSoTheme.typography.labelMedium,
+                style = FfTheme.typography.labelMedium,
             )
             Text(
                 text = "${post.postTimeSince.build(context)} - @${post.accountName.build(context)}",
-                style = MoSoTheme.typography.bodyMedium,
-                color = MoSoTheme.colors.textSecondary,
+                style = FfTheme.typography.bodyMedium,
+                color = FfTheme.colors.textSecondary,
             )
         }
         OverflowMenu(
@@ -233,9 +233,9 @@ fun PostContent(
                     Int.MAX_VALUE
                 },
                 textColor = if (uiState.onlyShowPreviewOfText) {
-                    MoSoTheme.colors.textSecondary
+                    FfTheme.colors.textSecondary
                 } else {
-                    MoSoTheme.colors.textPrimary
+                    FfTheme.colors.textPrimary
                 }
             )
             Spacer(modifier = Modifier.padding(top = 8.dp))
@@ -288,16 +288,16 @@ private fun ContentWarning(
                 Row(
                     modifier =
                     Modifier
-                        .clip(RoundedCornerShape(MoSoRadius.sm_4_dp))
-                        .background(MoSoTheme.colors.layerActionWarning)
-                        .padding(horizontal = MoSoSpacing.sm, vertical = MoSoSpacing.xs),
+                        .clip(RoundedCornerShape(FfRadius.sm_4_dp))
+                        .background(FfTheme.colors.layerActionWarning)
+                        .padding(horizontal = FfSpacing.sm, vertical = FfSpacing.xs),
                 ) {
                     Icon(
                         modifier =
                         Modifier
                             .size(14.dp)
                             .align(Alignment.CenterVertically),
-                        painter = MoSoIcons.warning(),
+                        painter = FfIcons.warning(),
                         contentDescription = "",
                     )
                     Spacer(modifier = Modifier.width(4.dp))
@@ -306,7 +306,7 @@ private fun ContentWarning(
                         Modifier
                             .align(Alignment.CenterVertically),
                         text = contentWarningText,
-                        style = MoSoTheme.typography.labelSmall,
+                        style = FfTheme.typography.labelSmall,
                     )
                 }
                 Spacer(modifier = Modifier.height(8.dp))
@@ -322,7 +322,7 @@ private fun ContentWarning(
                         } else {
                             stringResource(id = R.string.show_post)
                         },
-                        style = MoSoTheme.typography.bodyMedium,
+                        style = FfTheme.typography.bodyMedium,
                         textDecoration = TextDecoration.Underline,
                     )
 
@@ -337,7 +337,7 @@ private fun ContentWarning(
                         Modifier
                             .rotate(rotation)
                             .align(Alignment.CenterVertically),
-                        painter = MoSoIcons.caretRight(),
+                        painter = FfIcons.caretRight(),
                         contentDescription = null,
                     )
                 }
@@ -363,23 +363,23 @@ private fun OverflowMenu(
         onClick = { overflowMenuExpanded.value = true },
     ) {
         if (post.isBeingDeleted) {
-            MoSoCircularProgressIndicator(
+            FfCircularProgressIndicator(
                 modifier =
                 Modifier
                     .size(26.dp),
             )
         } else {
-            Icon(painter = MoSoIcons.moreVertical(), contentDescription = "")
+            Icon(painter = FfIcons.moreVertical(), contentDescription = "")
         }
 
-        MoSoDropdownMenu(
+        FfDropdownMenu(
             expanded = overflowMenuExpanded.value,
             onDismissRequest = {
                 overflowMenuExpanded.value = false
             },
         ) {
             for (dropDownOption in post.dropDownOptions) {
-                MoSoDropDownItem(
+                FfDropDownItem(
                     text = dropDownOption.text.build(context),
                     expanded = overflowMenuExpanded,
                     onClick = dropDownOption.onOptionClicked,
@@ -405,23 +405,23 @@ private fun BottomRow(
         BottomIconButton(
             modifier = Modifier.weight(1f),
             onClick = { postCardInteractions.onReplyClicked(post.statusId) },
-            painter = MoSoIcons.chatBubbles(),
+            painter = FfIcons.chatBubbles(),
             count = post.replyCount,
         )
         BottomIconButton(
             modifier = Modifier.weight(1f),
             onClick = { postCardInteractions.onBoostClicked(post.statusId, !post.userBoosted) },
-            painter = MoSoIcons.boost(),
+            painter = FfIcons.boost(),
             count = post.boostCount,
             highlighted = post.userBoosted,
         )
         BottomIconButton(
             modifier = Modifier.weight(1f),
             onClick = { postCardInteractions.onFavoriteClicked(post.statusId, !post.isFavorited) },
-            painter = if (post.isFavorited) MoSoIcons.heartFilled() else MoSoIcons.heart(),
+            painter = if (post.isFavorited) FfIcons.heartFilled() else FfIcons.heart(),
             count = post.favoriteCount,
             highlighted = post.isFavorited,
-            highlightColor = MoSoTheme.colors.textWarning,
+            highlightColor = FfTheme.colors.textWarning,
         )
         BottomIconButton(
             onClick = {
@@ -429,7 +429,7 @@ private fun BottomRow(
                     shareUrl(url, context)
                 }
             },
-            painter = MoSoIcons.share(),
+            painter = FfIcons.share(),
         )
     }
 }
@@ -441,7 +441,7 @@ private fun BottomIconButton(
     painter: Painter,
     count: String? = null,
     highlighted: Boolean = false,
-    highlightColor: Color = MoSoTheme.colors.iconAccent,
+    highlightColor: Color = FfTheme.colors.iconAccent,
 ) {
     Row(
         modifier = modifier,

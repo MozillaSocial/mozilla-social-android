@@ -23,8 +23,8 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import social.firefly.core.designsystem.icon.MoSoIcons
-import social.firefly.core.designsystem.theme.MoSoTheme
+import social.firefly.core.designsystem.icon.FfIcons
+import social.firefly.core.designsystem.theme.FfTheme
 import social.firefly.core.designsystem.utils.NoRipple
 import social.firefly.core.ui.common.text.MediumTextLabel
 import social.firefly.core.ui.common.text.SmallTextLabel
@@ -53,7 +53,7 @@ fun NotificationCard(
                 },
                 uiState = uiState,
                 notificationInteractions = notificationInteractions,
-                notificationTypeIcon = MoSoIcons.heart(),
+                notificationTypeIcon = FfIcons.heart(),
             ) {
                 FavoriteNotificationContent(
                     uiState = uiState,
@@ -67,7 +67,7 @@ fun NotificationCard(
                 },
                 uiState = uiState,
                 notificationInteractions = notificationInteractions,
-                notificationTypeIcon = MoSoIcons.following(),
+                notificationTypeIcon = FfIcons.following(),
             ) {}
 
             is NotificationUiState.FollowRequest -> NotificationCard(
@@ -76,7 +76,7 @@ fun NotificationCard(
                 },
                 uiState = uiState,
                 notificationInteractions = notificationInteractions,
-                notificationTypeIcon = MoSoIcons.users(),
+                notificationTypeIcon = FfIcons.users(),
             ) {
                 FollowRequestNotificationContent(
                     uiState = uiState,
@@ -90,7 +90,7 @@ fun NotificationCard(
                 },
                 uiState = uiState,
                 notificationInteractions = notificationInteractions,
-                notificationTypeIcon = MoSoIcons.at(),
+                notificationTypeIcon = FfIcons.at(),
             ) {
                 MentionNotificationContent(
                     uiState = uiState,
@@ -104,7 +104,7 @@ fun NotificationCard(
                 },
                 uiState = uiState,
                 notificationInteractions = notificationInteractions,
-                notificationTypeIcon = MoSoIcons.bell(),
+                notificationTypeIcon = FfIcons.bell(),
             ) {
                 NewStatusNotificationContent(
                     uiState = uiState,
@@ -118,7 +118,7 @@ fun NotificationCard(
                 },
                 uiState = uiState,
                 notificationInteractions = notificationInteractions,
-                notificationTypeIcon = MoSoIcons.chartBar(),
+                notificationTypeIcon = FfIcons.chartBar(),
             ) {
                 PollEndedNotificationContent(
                     uiState = uiState,
@@ -132,7 +132,7 @@ fun NotificationCard(
                 },
                 uiState = uiState,
                 notificationInteractions = notificationInteractions,
-                notificationTypeIcon = MoSoIcons.boost(),
+                notificationTypeIcon = FfIcons.boost(),
             ) {
                 RepostNotificationContent(
                     uiState = uiState,
@@ -146,7 +146,7 @@ fun NotificationCard(
                 },
                 uiState = uiState,
                 notificationInteractions = notificationInteractions,
-                notificationTypeIcon = MoSoIcons.bell(),
+                notificationTypeIcon = FfIcons.bell(),
             ) {
                 StatusUpdatedNotificationContent(
                     uiState = uiState,
@@ -210,7 +210,7 @@ private fun NotificationMetaData(
             modifier = Modifier
                 .align(Alignment.CenterVertically),
             text = uiState.timeStamp.build(context),
-            color = MoSoTheme.colors.textSecondary,
+            color = FfTheme.colors.textSecondary,
         )
     }
 }
@@ -240,7 +240,7 @@ private fun Avatar(
                 .size(36.dp)
                 .align(Alignment.CenterEnd)
                 .clip(CircleShape)
-                .background(MoSoTheme.colors.layer2),
+                .background(FfTheme.colors.layer2),
             model = avatarUrl,
             contentDescription = "",
         )
@@ -248,7 +248,7 @@ private fun Avatar(
             modifier = Modifier
                 .size(24.dp)
                 .clip(CircleShape)
-                .background(MoSoTheme.colors.layer1),
+                .background(FfTheme.colors.layer1),
         ) {
             Icon(
                 modifier = Modifier
@@ -256,7 +256,7 @@ private fun Avatar(
                     .align(Alignment.Center),
                 painter = notificationTypeIcon,
                 contentDescription = "",
-                tint = MoSoTheme.colors.iconAccent,
+                tint = FfTheme.colors.iconAccent,
             )
         }
     }

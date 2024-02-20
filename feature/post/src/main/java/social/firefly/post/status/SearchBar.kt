@@ -22,8 +22,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import social.firefly.core.designsystem.theme.MoSoTheme
-import social.firefly.core.ui.common.divider.MoSoDivider
+import social.firefly.core.designsystem.theme.FfTheme
+import social.firefly.core.ui.common.divider.FfDivider
 
 @Composable
 fun AccountSearchBar(
@@ -31,8 +31,8 @@ fun AccountSearchBar(
     statusInteractions: StatusInteractions,
 ) {
     Column {
-        MoSoDivider(
-            color = MoSoTheme.colors.borderPrimary,
+        FfDivider(
+            color = FfTheme.colors.borderPrimary,
         )
         LazyRow(content = {
             items(accounts.size) { index ->
@@ -48,7 +48,7 @@ fun AccountSearchBar(
                         Modifier
                             .border(
                                 width = 2.dp,
-                                color = MoSoTheme.colors.borderPrimary,
+                                color = FfTheme.colors.borderPrimary,
                                 shape = RoundedCornerShape(4.dp),
                             )
                             .align(Alignment.Center)
@@ -63,7 +63,7 @@ fun AccountSearchBar(
                                 .align(Alignment.CenterVertically)
                                 .border(
                                     width = 1.dp,
-                                    color = MoSoTheme.colors.borderPrimary,
+                                    color = FfTheme.colors.borderPrimary,
                                     shape = CircleShape,
                                 )
                                 .clip(CircleShape),
@@ -93,8 +93,8 @@ fun HashtagSearchBar(
     statusInteractions: StatusInteractions,
 ) {
     Column {
-        MoSoDivider(
-            color = MoSoTheme.colors.borderPrimary,
+        FfDivider(
+            color = FfTheme.colors.borderPrimary,
         )
         LazyRow(content = {
             items(hashTags.size) { index ->
@@ -110,7 +110,7 @@ fun HashtagSearchBar(
                         Modifier
                             .border(
                                 width = 2.dp,
-                                color = MoSoTheme.colors.borderPrimary,
+                                color = FfTheme.colors.borderPrimary,
                                 shape = RoundedCornerShape(4.dp),
                             )
                             .align(Alignment.Center)
@@ -136,7 +136,7 @@ fun HashtagSearchBar(
 @Preview
 @Composable
 private fun AccountSearchBarPreview() {
-    MoSoTheme {
+    FfTheme {
         AccountSearchBar(
             accounts =
             listOf(

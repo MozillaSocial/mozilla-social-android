@@ -1,7 +1,7 @@
 package social.firefly.core.ui.common.utils
 
 import androidx.compose.ui.unit.Dp
-import social.firefly.core.designsystem.theme.MoSoRadius
+import social.firefly.core.designsystem.theme.FfRadius
 
-val MoSoRadius.media: Dp
+val FfRadius.media: Dp
     get() = lg_16_dp

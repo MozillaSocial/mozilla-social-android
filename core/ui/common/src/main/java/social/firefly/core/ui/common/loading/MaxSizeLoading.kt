@@ -15,6 +15,6 @@ fun MaxSizeLoading() {
             .fillMaxSize()
             .wrapContentSize(Alignment.Center),
     ) {
-        MoSoCircularProgressIndicator()
+        FfCircularProgressIndicator()
     }
 }

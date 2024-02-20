@@ -31,18 +31,18 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.KoinApplication
 import org.koin.core.parameter.parametersOf
-import social.firefly.core.designsystem.theme.MoSoTheme
+import social.firefly.core.designsystem.theme.FfTheme
 import social.firefly.core.designsystem.utils.NoRipple
 import social.firefly.core.model.InstanceRule
 import social.firefly.core.navigation.navigationModule
-import social.firefly.core.ui.common.MoSoCheckBox
-import social.firefly.core.ui.common.MoSoSurface
+import social.firefly.core.ui.common.FfCheckBox
+import social.firefly.core.ui.common.FfSurface
 import social.firefly.core.ui.common.animation.ExpandingAnimation
-import social.firefly.core.ui.common.appbar.MoSoCloseableTopAppBar
-import social.firefly.core.ui.common.button.MoSoButton
-import social.firefly.core.ui.common.button.MoSoRadioButton
-import social.firefly.core.ui.common.divider.MoSoDivider
-import social.firefly.core.ui.common.text.MoSoTextField
+import social.firefly.core.ui.common.appbar.FfCloseableTopAppBar
+import social.firefly.core.ui.common.button.FfButton
+import social.firefly.core.ui.common.button.FfRadioButton
+import social.firefly.core.ui.common.divider.FfDivider
+import social.firefly.core.ui.common.text.FfTextField
 import social.firefly.feature.report.R
 import social.firefly.feature.report.ReportDataBundle
 import social.firefly.feature.report.ReportTarget
@@ -103,7 +103,7 @@ private fun ReportScreen1(
     sendToExternalServer: Boolean,
     reportInteractions: ReportScreen1Interactions,
 ) {
-    MoSoSurface {
+    FfSurface {
         Column(
             modifier =
             Modifier
@@ -111,10 +111,10 @@ private fun ReportScreen1(
                 .systemBarsPadding()
                 .imePadding(),
         ) {
-            MoSoCloseableTopAppBar(
+            FfCloseableTopAppBar(
                 title = stringResource(id = R.string.report_screen_title),
             )
-            MoSoDivider()
+            FfDivider()
             MainContent(
                 reportTarget = reportTarget,
                 instanceRules = instanceRules,
@@ -149,7 +149,7 @@ private fun MainContent(
         Spacer(modifier = Modifier.height(16.dp))
         Text(
             text = stringResource(id = R.string.report_prompt, "@$reportAccountHandle"),
-            style = MoSoTheme.typography.bodyMedium,
+            style = FfTheme.typography.bodyMedium,
         )
         Spacer(modifier = Modifier.height(4.dp))
         Text(
@@ -162,12 +162,12 @@ private fun MainContent(
                     R.string.report_instructions_for_account
                 },
             ),
-            style = MoSoTheme.typography.titleMedium,
+            style = FfTheme.typography.titleMedium,
         )
         Spacer(modifier = Modifier.height(16.dp))
         Text(
             text = stringResource(id = R.string.choose_best_match),
-            style = MoSoTheme.typography.titleMedium,
+            style = FfTheme.typography.titleMedium,
         )
         Spacer(modifier = Modifier.height(8.dp))
         ReportOptions(
@@ -186,7 +186,7 @@ private fun MainContent(
             reportInteractions = reportInteractions,
         )
 
-        MoSoButton(
+        FfButton(
             modifier =
             Modifier
                 .fillMaxWidth(),
@@ -214,7 +214,7 @@ private fun ReportOptions(
     ) {
         Text(
             text = stringResource(id = R.string.report_reason_do_not_like_description),
-            style = MoSoTheme.typography.bodyMedium,
+            style = FfTheme.typography.bodyMedium,
         )
     }
     SelectableReportType(
@@ -225,7 +225,7 @@ private fun ReportOptions(
     ) {
         Text(
             text = stringResource(id = R.string.report_reason_spam_description),
-            style = MoSoTheme.typography.bodyMedium,
+            style = FfTheme.typography.bodyMedium,
         )
     }
 
@@ -239,7 +239,7 @@ private fun ReportOptions(
             Column {
                 Text(
                     text = stringResource(id = R.string.report_reason_violation_description),
-                    style = MoSoTheme.typography.bodyMedium,
+                    style = FfTheme.typography.bodyMedium,
                 )
                 instanceRules.forEach { instanceRule ->
                     CheckableInstanceRule(
@@ -260,7 +260,7 @@ private fun ReportOptions(
     ) {
         Text(
             text = stringResource(id = R.string.report_reason_other_description),
-            style = MoSoTheme.typography.bodyMedium,
+            style = FfTheme.typography.bodyMedium,
         )
     }
 }
@@ -280,7 +280,7 @@ private fun SelectableReportType(
                 .padding(4.dp)
                 .clickable { reportInteractions.onReportTypeSelected(reportType) },
         ) {
-            MoSoRadioButton(
+            FfRadioButton(
                 modifier =
                 Modifier
                     .size(20.dp),
@@ -291,7 +291,7 @@ private fun SelectableReportType(
             Column {
                 Text(
                     text = title,
-                    style = MoSoTheme.typography.bodyMedium,
+                    style = FfTheme.typography.bodyMedium,
                     fontWeight = FontWeight.W700,
                 )
                 content()
@@ -314,7 +314,7 @@ private fun CheckableInstanceRule(
             .padding(4.dp)
             .fillMaxWidth(),
     ) {
-        MoSoCheckBox(
+        FfCheckBox(
             modifier =
             Modifier
                 .size(20.dp),
@@ -387,10 +387,10 @@ private fun AdditionalComments(
 ) {
     Text(
         text = stringResource(id = R.string.extra_info_prompt),
-        style = MoSoTheme.typography.titleMedium,
+        style = FfTheme.typography.titleMedium,
     )
     Spacer(modifier = Modifier.height(16.dp))
-    MoSoTextField(
+    FfTextField(
         modifier =
         Modifier
             .fillMaxWidth()
@@ -412,12 +412,12 @@ private fun SendToOtherServerOption(
     Column {
         Text(
             text = stringResource(id = R.string.external_instance_title),
-            style = MoSoTheme.typography.titleMedium,
+            style = FfTheme.typography.titleMedium,
         )
         Spacer(modifier = Modifier.height(4.dp))
         Text(
             text = stringResource(id = R.string.external_instance_description),
-            style = MoSoTheme.typography.bodyMedium,
+            style = FfTheme.typography.bodyMedium,
         )
         Spacer(modifier = Modifier.height(4.dp))
 
@@ -427,7 +427,7 @@ private fun SendToOtherServerOption(
                 .padding(4.dp)
                 .fillMaxWidth(),
         ) {
-            MoSoCheckBox(
+            FfCheckBox(
                 modifier =
                 Modifier
                     .size(20.dp),
@@ -438,7 +438,7 @@ private fun SendToOtherServerOption(
             Text(
                 modifier = Modifier.align(Alignment.CenterVertically),
                 text = stringResource(id = R.string.external_instance_option, externalInstance),
-                style = MoSoTheme.typography.bodyMedium,
+                style = FfTheme.typography.bodyMedium,
             )
         }
     }
@@ -457,7 +457,7 @@ private fun ReportScreenPreview() {
             2,
             "no dogs",
         )
-    MoSoTheme {
+    FfTheme {
         ReportScreen1(
             reportTarget = ReportTarget.POST,
             instanceRules =
@@ -494,7 +494,7 @@ private fun ReportScreenPreviewDarkMode() {
     KoinApplication(application = {
         modules(navigationModule)
     }) {
-        MoSoTheme(
+        FfTheme(
             darkTheme = true,
         ) {
             ReportScreen1(

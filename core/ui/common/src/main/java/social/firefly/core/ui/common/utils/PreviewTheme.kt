@@ -4,8 +4,8 @@ import androidx.compose.runtime.Composable
 import org.koin.compose.KoinApplication
 import org.koin.core.context.stopKoin
 import org.koin.core.module.Module
-import social.firefly.core.designsystem.theme.MoSoTheme
-import social.firefly.core.ui.common.MoSoSurface
+import social.firefly.core.designsystem.theme.FfTheme
+import social.firefly.core.ui.common.FfSurface
 
 @Composable
 fun PreviewTheme(
@@ -16,10 +16,10 @@ fun PreviewTheme(
     KoinApplication(application = {
         modules(modules)
     }) {
-        MoSoTheme(
+        FfTheme(
             darkTheme = darkTheme,
         ) {
-            MoSoSurface {
+            FfSurface {
                 content()
             }
         }

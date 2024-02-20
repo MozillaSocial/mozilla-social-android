@@ -12,7 +12,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.TextUnit
-import social.firefly.core.designsystem.theme.MoSoTheme
+import social.firefly.core.designsystem.theme.FfTheme
 
 @Composable
 fun SmallTextLabel(
@@ -50,7 +50,7 @@ fun SmallTextLabel(
         maxLines = maxLines,
         minLines = minLines,
         onTextLayout = onTextLayout,
-        style = MoSoTheme.typography.labelSmall,
+        style = FfTheme.typography.labelSmall,
     )
 }
 
@@ -90,7 +90,7 @@ fun MediumTextLabel(
         maxLines = maxLines,
         minLines = minLines,
         onTextLayout = onTextLayout,
-        style = MoSoTheme.typography.labelMedium,
+        style = FfTheme.typography.labelMedium,
     )
 }
 
@@ -130,6 +130,6 @@ fun LargeTextLabel(
         maxLines = maxLines,
         minLines = minLines,
         onTextLayout = onTextLayout,
-        style = MoSoTheme.typography.labelLarge,
+        style = FfTheme.typography.labelLarge,
     )
 }

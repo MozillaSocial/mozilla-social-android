@@ -54,20 +54,20 @@ import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 import social.firefly.common.LoadState
 import social.firefly.common.utils.buildAnnotatedStringForAccountsAndHashtags
-import social.firefly.core.designsystem.icon.MoSoIcons
-import social.firefly.core.designsystem.theme.MoSoSpacing
-import social.firefly.core.designsystem.theme.MoSoTheme
+import social.firefly.core.designsystem.icon.FfIcons
+import social.firefly.core.designsystem.theme.FfSpacing
+import social.firefly.core.designsystem.theme.FfTheme
 import social.firefly.core.designsystem.utils.NoIndication
 import social.firefly.core.model.ImageState
 import social.firefly.core.model.StatusVisibility
-import social.firefly.core.ui.common.MoSoSurface
+import social.firefly.core.ui.common.FfSurface
 import social.firefly.core.ui.common.TransparentNoTouchOverlay
-import social.firefly.core.ui.common.appbar.MoSoCloseableTopAppBar
-import social.firefly.core.ui.common.button.MoSoButton
-import social.firefly.core.ui.common.button.MoSoButtonContentPadding
+import social.firefly.core.ui.common.appbar.FfCloseableTopAppBar
+import social.firefly.core.ui.common.button.FfButton
+import social.firefly.core.ui.common.button.FfButtonContentPadding
 import social.firefly.core.ui.common.dropdown.VisibilityDropDownButton
 import social.firefly.core.ui.common.media.AttachmentMedia
-import social.firefly.core.ui.common.text.MoSoTextField
+import social.firefly.core.ui.common.text.FfTextField
 import social.firefly.core.ui.common.text.SmallTextLabel
 import social.firefly.core.ui.common.transparentTextFieldColors
 import social.firefly.core.ui.common.utils.getWindowHeightClass
@@ -137,7 +137,7 @@ private fun NewPostScreen(
         Modifier
             .systemBarsPadding()
             .imePadding()
-            .background(MoSoTheme.colors.layer1),
+            .background(FfTheme.colors.layer1),
     ) {
         if (getWindowHeightClass() == WindowHeightSizeClass.Compact) {
             Row {
@@ -293,12 +293,12 @@ fun UserHeader(
         AsyncImage(
             modifier =
             Modifier
-                .padding(horizontal = MoSoSpacing.sm)
+                .padding(horizontal = FfSpacing.sm)
                 .size(92.dp)
                 .clip(CircleShape)
                 .border(
                     width = 3.dp,
-                    color = MoSoTheme.colors.layer1,
+                    color = FfTheme.colors.layer1,
                     shape = CircleShape,
                 ),
             model = userHeaderState.avatarUrl,
@@ -306,7 +306,7 @@ fun UserHeader(
         )
 
         Column {
-            Text(text = userHeaderState.displayName, style = MoSoTheme.typography.labelMedium)
+            Text(text = userHeaderState.displayName, style = FfTheme.typography.labelMedium)
 
             Spacer(modifier = Modifier.height(4.dp))
 
@@ -325,7 +325,7 @@ private fun TopBar(
     onEditClicked: () -> Unit,
     sendButtonEnabled: Boolean,
 ) {
-    MoSoCloseableTopAppBar(
+    FfCloseableTopAppBar(
         actions = {
             SubmitButton(
                 modifier = Modifier.padding(end = 16.dp),
@@ -346,11 +346,11 @@ private fun SubmitButton(
     modifier: Modifier = Modifier,
     buttonText: Int = R.string.post
 ) {
-    MoSoButton(
+    FfButton(
         modifier = modifier,
         onClick = onPostClicked,
         enabled = sendButtonEnabled,
-        contentPadding = MoSoButtonContentPadding.small,
+        contentPadding = FfButtonContentPadding.small,
     ) {
         SmallTextLabel(text = stringResource(id = buttonText))
     }
@@ -375,7 +375,7 @@ private fun MainBox(
         val keyboard = LocalSoftwareKeyboardController.current
 
         val textFieldFocusRequester = remember { FocusRequester() }
-        MoSoSurface(
+        FfSurface(
             modifier =
             Modifier
                 .fillMaxSize()
@@ -401,8 +401,8 @@ private fun MainBox(
                     }
 
                     item {
-                        val highlightColor = MoSoTheme.colors.textLink
-                        MoSoTextField(
+                        val highlightColor = FfTheme.colors.textLink
+                        FfTextField(
                             modifier =
                             Modifier
                                 .fillMaxWidth()
@@ -464,7 +464,7 @@ private fun InReplyToText(inReplyToAccountName: String?) {
                 Modifier
                     .size(20.dp)
                     .align(Alignment.CenterVertically),
-                painter = MoSoIcons.chatBubbles(),
+                painter = FfIcons.chatBubbles(),
                 contentDescription = "",
             )
             Spacer(modifier = Modifier.padding(start = 8.dp))
@@ -485,7 +485,7 @@ private fun ContentWarningEntry(
     contentWarningText: String,
     contentWarningInteractions: ContentWarningInteractions,
 ) {
-    MoSoTextField(
+    FfTextField(
         modifier =
         Modifier
             .padding(16.dp)
@@ -493,7 +493,7 @@ private fun ContentWarningEntry(
         value = contentWarningText,
         onValueChange = { contentWarningInteractions.onContentWarningTextChanged(it) },
         label = { Text(text = stringResource(id = R.string.content_warning_label)) },
-        borderColor = MoSoTheme.colors.borderAccent,
+        borderColor = FfTheme.colors.borderAccent,
     )
 }
 
@@ -509,7 +509,7 @@ private fun AttachmentMediaBox(
             .padding(16.dp)
             .border(
                 width = 2.dp,
-                color = MoSoTheme.colors.borderPrimary,
+                color = FfTheme.colors.borderPrimary,
                 shape = outlineShape,
             )
             .clip(
@@ -527,7 +527,7 @@ private fun AttachmentMediaBox(
             modifier = Modifier.fillMaxWidth(),
         ) {
             if (imageState.loadState == LoadState.LOADED) {
-                MoSoTextField(
+                FfTextField(
                     modifier = Modifier.weight(1f),
                     value = imageState.description,
                     onValueChange = {
@@ -553,7 +553,7 @@ private fun AttachmentMediaBox(
                 },
             ) {
                 Icon(
-                    MoSoIcons.delete(),
+                    FfIcons.delete(),
                     stringResource(id = R.string.delete_button_content_description),
                 )
             }
@@ -564,7 +564,7 @@ private fun AttachmentMediaBox(
 @Preview
 @Composable
 private fun NewPostScreenPreview() {
-    MoSoTheme(
+    FfTheme(
         false,
     ) {
         NewPostScreen(
@@ -596,7 +596,7 @@ private fun NewPostScreenPreview() {
 @Preview
 @Composable
 private fun NewPostScreenWithPollPreview() {
-    MoSoTheme(
+    FfTheme(
         false,
     ) {
         NewPostScreen(
@@ -634,7 +634,7 @@ private fun NewPostScreenWithPollPreview() {
 @Preview
 @Composable
 private fun NewPostScreenWithContentWarningPreview() {
-    MoSoTheme(
+    FfTheme(
         false,
     ) {
         NewPostScreen(
@@ -666,7 +666,7 @@ private fun NewPostScreenWithContentWarningPreview() {
 @Preview
 @Composable
 private fun EditPostScreenPreview() {
-    MoSoTheme(
+    FfTheme(
         false,
     ) {
         NewPostScreen(

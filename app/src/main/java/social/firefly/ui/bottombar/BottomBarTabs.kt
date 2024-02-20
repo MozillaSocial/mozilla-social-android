@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.painter.Painter
 import social.firefly.R
 import social.firefly.common.utils.StringFactory
-import social.firefly.core.designsystem.icon.MoSoIcons
+import social.firefly.core.designsystem.icon.FfIcons
 import social.firefly.core.navigation.BottomBarNavigationDestination
 import social.firefly.core.navigation.NavigationDestination
 
@@ -22,12 +22,12 @@ enum class BottomBarTabs(
             object : BottomBarTab {
                 @Composable
                 override fun selectedIcon(): Painter {
-                    return MoSoIcons.houseFill()
+                    return FfIcons.houseFill()
                 }
 
                 @Composable
                 override fun unselectedIcon(): Painter {
-                    return MoSoIcons.house()
+                    return FfIcons.house()
                 }
 
                 override val tabText = StringFactory.resource(R.string.feed_tab_text)
@@ -41,12 +41,12 @@ enum class BottomBarTabs(
             object : BottomBarTab {
                 @Composable
                 override fun selectedIcon(): Painter {
-                    return MoSoIcons.magnifyingGlassFill()
+                    return FfIcons.magnifyingGlassFill()
                 }
 
                 @Composable
                 override fun unselectedIcon(): Painter {
-                    return MoSoIcons.magnifyingGlass()
+                    return FfIcons.magnifyingGlass()
                 }
 
                 override val tabText = StringFactory.resource(R.string.discover_tab_text)
@@ -61,12 +61,12 @@ enum class BottomBarTabs(
             object : BottomBarTab {
                 @Composable
                 override fun selectedIcon(): Painter {
-                    return MoSoIcons.connect()
+                    return FfIcons.connect()
                 }
 
                 @Composable
                 override fun unselectedIcon(): Painter {
-                    return MoSoIcons.connect()
+                    return FfIcons.connect()
                 }
 
                 override val tabText = StringFactory.resource(R.string.new_post_tab_text)
@@ -80,12 +80,12 @@ enum class BottomBarTabs(
             object : BottomBarTab {
                 @Composable
                 override fun selectedIcon(): Painter {
-                    return MoSoIcons.bellFill()
+                    return FfIcons.bellFill()
                 }
 
                 @Composable
                 override fun unselectedIcon(): Painter {
-                    return MoSoIcons.bell()
+                    return FfIcons.bell()
                 }
 
                 override val tabText = StringFactory.resource(R.string.notifications_tab_text)
@@ -99,12 +99,12 @@ enum class BottomBarTabs(
             object : BottomBarTab {
                 @Composable
                 override fun selectedIcon(): Painter {
-                    return MoSoIcons.userCircleFill()
+                    return FfIcons.userCircleFill()
                 }
 
                 @Composable
                 override fun unselectedIcon(): Painter {
-                    return MoSoIcons.userCircle()
+                    return FfIcons.userCircle()
                 }
 
                 override val tabText = StringFactory.resource(R.string.account_tab_text)

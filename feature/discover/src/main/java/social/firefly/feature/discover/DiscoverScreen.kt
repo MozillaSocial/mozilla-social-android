@@ -37,18 +37,18 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import org.koin.androidx.compose.koinViewModel
 import social.firefly.common.Resource
-import social.firefly.core.designsystem.icon.MoSoIcons
-import social.firefly.core.designsystem.theme.MoSoRadius
-import social.firefly.core.designsystem.theme.MoSoSpacing
-import social.firefly.core.designsystem.theme.MoSoTheme
+import social.firefly.core.designsystem.icon.FfIcons
+import social.firefly.core.designsystem.theme.FfRadius
+import social.firefly.core.designsystem.theme.FfSpacing
+import social.firefly.core.designsystem.theme.FfTheme
 import social.firefly.core.designsystem.utils.NoRipple
 import social.firefly.core.model.Recommendation
-import social.firefly.core.ui.common.MoSoSurface
-import social.firefly.core.ui.common.appbar.MoSoTopBar
-import social.firefly.core.ui.common.divider.MoSoDivider
+import social.firefly.core.ui.common.FfSurface
+import social.firefly.core.ui.common.appbar.FfTopBar
+import social.firefly.core.ui.common.divider.FfDivider
 import social.firefly.core.ui.common.error.GenericError
 import social.firefly.core.ui.common.loading.MaxSizeLoading
-import social.firefly.core.ui.common.search.MoSoSearchBar
+import social.firefly.core.ui.common.search.FfSearchBar
 import social.firefly.core.ui.common.utils.PreviewTheme
 import social.firefly.core.ui.common.utils.media
 import social.firefly.core.ui.common.utils.shareUrl
@@ -73,7 +73,7 @@ private fun DiscoverScreen(
     discoverInteractions: DiscoverInteractions,
 ) {
     val searchField = stringResource(id = R.string.search_field)
-    MoSoSurface(
+    FfSurface(
         modifier = Modifier
             .fillMaxSize()
             .systemBarsPadding()
@@ -86,14 +86,14 @@ private fun DiscoverScreen(
             ) {
                 // Adding an empty top bar ensure the search bar will align with the
                 // search bar on the search screen
-                MoSoTopBar(title = { })
-                MoSoSearchBar(
+                FfTopBar(title = { })
+                FfSearchBar(
                     modifier = Modifier
                         .fillMaxWidth()
                         .align(Alignment.CenterEnd)
                         .padding(
-                            end = MoSoSpacing.md,
-                            start = MoSoSpacing.md,
+                            end = FfSpacing.md,
+                            start = FfSpacing.md,
                         ),
                     query = "",
                     onQueryChange = {},
@@ -148,7 +148,7 @@ private fun MainContent(
                 Modifier
                     .padding(start = 16.dp, top = 8.dp),
                 text = stringResource(id = R.string.discover_title),
-                style = MoSoTheme.typography.titleLarge,
+                style = FfTheme.typography.titleLarge,
             )
         }
         items(
@@ -160,7 +160,7 @@ private fun MainContent(
                 discoverInteractions = discoverInteractions,
             )
             if (index < recommendations.size - 1) {
-                MoSoDivider()
+                FfDivider()
             }
         }
     }
@@ -198,24 +198,24 @@ private fun Recommendation(
                 ) {
                     Text(
                         text = recommendation.publisher,
-                        style = MoSoTheme.typography.bodySmall,
+                        style = FfTheme.typography.bodySmall,
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
                         text = recommendation.title,
-                        style = MoSoTheme.typography.titleMedium,
+                        style = FfTheme.typography.titleMedium,
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
                         text = recommendation.excerpt,
-                        style = MoSoTheme.typography.bodyMedium,
+                        style = FfTheme.typography.bodyMedium,
                     )
                 }
                 AsyncImage(
                     modifier = Modifier
                         .padding(start = 16.dp)
                         .weight(1f)
-                        .clip(RoundedCornerShape(MoSoRadius.media)),
+                        .clip(RoundedCornerShape(FfRadius.media)),
                     model = recommendation.image.firstOrNull()?.url,
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
@@ -228,7 +228,7 @@ private fun Recommendation(
                     discoverInteractions.onShareClicked(recommendation.id)
                 }) {
                     Icon(
-                        painter = MoSoIcons.share(),
+                        painter = FfIcons.share(),
                         contentDescription = stringResource(id = R.string.share_content_description),
                     )
                 }

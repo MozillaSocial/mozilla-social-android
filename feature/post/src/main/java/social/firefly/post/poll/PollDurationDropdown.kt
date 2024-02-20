@@ -8,8 +8,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
-import social.firefly.core.designsystem.theme.MoSoTheme
-import social.firefly.core.ui.common.dropdown.MoSoDropDownMenu
+import social.firefly.core.designsystem.theme.FfTheme
+import social.firefly.core.ui.common.dropdown.FfDropDownMenu
 import social.firefly.core.ui.common.text.SmallTextLabel
 
 @Composable
@@ -20,7 +20,7 @@ fun PollDurationDropDown(
 ) {
     val expanded = remember { mutableStateOf(false) }
 
-    MoSoDropDownMenu(
+    FfDropDownMenu(
         modifier = modifier,
         expanded = expanded,
         dropDownMenuContent = {
@@ -44,7 +44,7 @@ fun PollDurationDropDown(
 @Preview
 @Composable
 private fun PollDurationDropDownPreview() {
-    MoSoTheme {
+    FfTheme {
         PollDurationDropDown(
             pollUiState =
             PollUiState(

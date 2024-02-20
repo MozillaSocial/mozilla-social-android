@@ -17,9 +17,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import org.koin.androidx.compose.koinViewModel
 import social.firefly.common.Version
-import social.firefly.core.designsystem.icon.MoSoIcons
+import social.firefly.core.designsystem.icon.FfIcons
 import social.firefly.core.navigation.navigationModule
-import social.firefly.core.ui.common.MoSoSurface
+import social.firefly.core.ui.common.FfSurface
 import social.firefly.core.ui.common.utils.PreviewTheme
 import social.firefly.feature.settings.ui.SettingsColumn
 import social.firefly.feature.settings.ui.SettingsSection
@@ -37,7 +37,7 @@ fun SettingsScreen(
 fun SettingsScreen(
     settingsInteractions: social.firefly.feature.settings.SettingsInteractions,
 ) {
-    MoSoSurface {
+    FfSurface {
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -48,27 +48,27 @@ fun SettingsScreen(
             ) {
                 SettingsSection(
                     title = stringResource(id = R.string.account_settings_title),
-                    iconPainter = MoSoIcons.identificationCard(),
+                    iconPainter = FfIcons.identificationCard(),
                     onClick = settingsInteractions::onAccountClicked,
                 )
                 SettingsSection(
                     title = stringResource(id = R.string.content_preferences_title),
-                    iconPainter = MoSoIcons.listChecks(),
+                    iconPainter = FfIcons.listChecks(),
                     onClick = settingsInteractions::onContentPreferencesClicked,
                 )
                 SettingsSection(
                     title = stringResource(id = R.string.privacy_settings_title),
-                    iconPainter = MoSoIcons.lockKey(),
+                    iconPainter = FfIcons.lockKey(),
                     onClick = settingsInteractions::onPrivacyClicked,
                 )
                 SettingsSection(
                     title = stringResource(id = R.string.about_settings_title),
-                    iconPainter = MoSoIcons.info(),
+                    iconPainter = FfIcons.info(),
                     onClick = settingsInteractions::onAboutClicked,
                 )
                 SettingsSection(
                     title = stringResource(id = R.string.open_source_licenses),
-                    iconPainter = MoSoIcons.info(),
+                    iconPainter = FfIcons.info(),
                     onClick = settingsInteractions::onOpenSourceLicensesClicked,
                 )
 
@@ -76,7 +76,7 @@ fun SettingsScreen(
                 if (social.firefly.feature.settings.BuildConfig.DEBUG || clickCount > DEV_UNLOCK_CLICK_COUNT) {
                     SettingsSection(
                         title = stringResource(id = R.string.developer_options_title),
-                        iconPainter = MoSoIcons.robot(),
+                        iconPainter = FfIcons.robot(),
                         onClick = settingsInteractions::onDeveloperOptionsClicked,
                     )
                 }

@@ -5,7 +5,7 @@ import androidx.compose.material3.ButtonColors
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.unit.dp
-import social.firefly.core.designsystem.theme.MoSoTheme
+import social.firefly.core.designsystem.theme.FfTheme
 
 sealed class ToggleButtonState {
     @Composable
@@ -16,18 +16,18 @@ sealed class ToggleButtonState {
 
     data object Primary : ToggleButtonState() {
         @Composable
-        override fun colors(): ButtonColors = MoSoButtonPrimaryDefaults.colors()
+        override fun colors(): ButtonColors = FfButtonPrimaryDefaults.colors()
     }
 
     data object Secondary : ToggleButtonState() {
         @Composable
-        override fun colors(): ButtonColors = MoSoButtonSecondaryDefaults.colors()
+        override fun colors(): ButtonColors = FfButtonSecondaryDefaults.colors()
 
         @Composable
         override fun borderStroke(): BorderStroke {
             return BorderStroke(
                 width = 1.dp,
-                brush = SolidColor(MoSoTheme.colors.borderPrimary),
+                brush = SolidColor(FfTheme.colors.borderPrimary),
             )
         }
     }

@@ -5,8 +5,8 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import social.firefly.common.utils.mosoFadeIn
-import social.firefly.common.utils.mosoFadeOut
+import social.firefly.common.utils.ffFadeIn
+import social.firefly.common.utils.ffFadeOut
 import social.firefly.feature.account.accountScreen
 import social.firefly.feature.account.edit.editAccountScreen
 import social.firefly.feature.auth.authFlow
@@ -32,10 +32,10 @@ fun MainNavHost(
         modifier = modifier,
         navController = appState.mainNavController,
         startDestination = Routes.SPLASH,
-        enterTransition = { mosoFadeIn() },
-        exitTransition = { mosoFadeOut() },
-        popEnterTransition = { mosoFadeIn() },
-        popExitTransition = { mosoFadeOut() },
+        enterTransition = { ffFadeIn() },
+        exitTransition = { ffFadeOut() },
+        popEnterTransition = { ffFadeIn() },
+        popExitTransition = { ffFadeOut() },
     ) {
         splashScreen()
         authFlow()

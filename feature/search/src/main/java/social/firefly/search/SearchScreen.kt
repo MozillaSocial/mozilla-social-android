@@ -48,27 +48,27 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import org.koin.androidx.compose.koinViewModel
 import social.firefly.common.Resource
-import social.firefly.core.designsystem.icon.MoSoIcons
-import social.firefly.core.designsystem.theme.MoSoRadius
-import social.firefly.core.designsystem.theme.MoSoSpacing
-import social.firefly.core.designsystem.theme.MoSoTheme
+import social.firefly.core.designsystem.icon.FfIcons
+import social.firefly.core.designsystem.theme.FfRadius
+import social.firefly.core.designsystem.theme.FfSpacing
+import social.firefly.core.designsystem.theme.FfTheme
 import social.firefly.core.designsystem.utils.NoRipple
 import social.firefly.core.navigation.navigationModule
 import social.firefly.core.ui.accountfollower.AccountFollower
 import social.firefly.core.ui.accountfollower.AccountFollowerUiState
-import social.firefly.core.ui.common.MoSoSurface
+import social.firefly.core.ui.common.FfSurface
 import social.firefly.core.ui.common.account.quickview.AccountQuickViewBox
-import social.firefly.core.ui.common.appbar.MoSoCloseableTopAppBar
-import social.firefly.core.ui.common.divider.MoSoDivider
+import social.firefly.core.ui.common.appbar.FfCloseableTopAppBar
+import social.firefly.core.ui.common.divider.FfDivider
 import social.firefly.core.ui.common.error.GenericError
 import social.firefly.core.ui.common.following.FollowingButton
 import social.firefly.core.ui.common.hashtag.quickview.HashTagQuickView
 import social.firefly.core.ui.common.hashtag.quickview.HashTagQuickViewUiState
 import social.firefly.core.ui.common.loading.MaxSizeLoading
 import social.firefly.core.ui.common.paging.PagingLazyColumn
-import social.firefly.core.ui.common.search.MoSoSearchBar
-import social.firefly.core.ui.common.tabs.MoSoTab
-import social.firefly.core.ui.common.tabs.MoSoTabRow
+import social.firefly.core.ui.common.search.FfSearchBar
+import social.firefly.core.ui.common.tabs.FfTab
+import social.firefly.core.ui.common.tabs.FfTabRow
 import social.firefly.core.ui.common.utils.PreviewTheme
 import social.firefly.core.ui.postcard.PostCard
 import social.firefly.core.ui.postcard.PostCardInteractions
@@ -95,7 +95,7 @@ private fun SearchScreen(
     searchInteractions: SearchInteractions,
     postCardInteractions: PostCardInteractions,
 ) {
-    MoSoSurface(
+    FfSurface(
         modifier = Modifier
             .fillMaxSize()
             .systemBarsPadding()
@@ -115,8 +115,8 @@ private fun SearchScreen(
             }
 
             Box {
-                MoSoCloseableTopAppBar()
-                MoSoSearchBar(
+                FfCloseableTopAppBar()
+                FfSearchBar(
                     modifier = Modifier
                         .align(Alignment.CenterEnd)
                         .fillMaxWidth()
@@ -125,7 +125,7 @@ private fun SearchScreen(
                         }
                         .focusRequester(searchFocusRequester)
                         .padding(
-                            end = MoSoSpacing.md,
+                            end = FfSpacing.md,
                             start = 60.dp,
                         ),
                     query = uiState.query,
@@ -145,10 +145,10 @@ private fun SearchScreen(
                             }
                         ) {
                             Icon(
-                                modifier = Modifier.size(MoSoIcons.Sizes.small),
-                                painter = MoSoIcons.x(),
+                                modifier = Modifier.size(FfIcons.Sizes.small),
+                                painter = FfIcons.x(),
                                 contentDescription = stringResource(id = R.string.clear_search),
-                                tint = MoSoTheme.colors.iconSecondary,
+                                tint = FfTheme.colors.iconSecondary,
                             )
                         }
                     },
@@ -169,7 +169,7 @@ private fun SearchScreen(
                     )
                 }
                 androidx.compose.animation.AnimatedVisibility(
-                    modifier = Modifier.background(MoSoTheme.colors.layer1),
+                    modifier = Modifier.background(FfTheme.colors.layer1),
                     visible = searchHasFocus,
                     enter = fadeIn(),
                     exit = fadeOut()
@@ -188,9 +188,9 @@ private fun Tabs(
 ) {
     val context = LocalContext.current
 
-    MoSoTabRow(selectedTabIndex = uiState.selectedTab.ordinal) {
+    FfTabRow(selectedTabIndex = uiState.selectedTab.ordinal) {
         SearchTab.entries.forEach { tabType ->
-            MoSoTab(
+            FfTab(
                 modifier =
                 Modifier
                     .height(40.dp),
@@ -199,7 +199,7 @@ private fun Tabs(
                 content = {
                     Text(
                         text = tabType.tabTitle.build(context),
-                        style = MoSoTheme.typography.labelMedium,
+                        style = FfTheme.typography.labelMedium,
                     )
                 },
             )
@@ -301,16 +301,16 @@ private fun TopList(
             item {
                 Row(
                     modifier = Modifier
-                        .padding(MoSoSpacing.md)
+                        .padding(FfSpacing.md)
                         .clickable { searchInteractions.onTabClicked(SearchTab.POSTS) }
                 ) {
                     Text(
                         modifier = Modifier
                             .weight(1f),
                         text = stringResource(id = R.string.posts_tab),
-                        style = MoSoTheme.typography.titleMedium,
+                        style = FfTheme.typography.titleMedium,
                     )
-                    Icon(painter = MoSoIcons.caretRight(), contentDescription = "")
+                    Icon(painter = FfIcons.caretRight(), contentDescription = "")
                 }
             }
 
@@ -324,7 +324,7 @@ private fun TopList(
                     postCardInteractions = postCardInteractions,
                 )
                 if (index < searchResultUiState.postCardUiStates.count()) {
-                    MoSoDivider()
+                    FfDivider()
                 }
             }
         }
@@ -353,16 +353,16 @@ private fun TopAccounts(
 ) {
     Row(
         modifier = Modifier
-            .padding(start = MoSoSpacing.md, end = MoSoSpacing.md, top = MoSoSpacing.md)
+            .padding(start = FfSpacing.md, end = FfSpacing.md, top = FfSpacing.md)
             .clickable { searchInteractions.onTabClicked(SearchTab.ACCOUNTS) }
     ) {
         Text(
             modifier = Modifier
                 .weight(1f),
             text = stringResource(id = R.string.accounts_tab),
-            style = MoSoTheme.typography.titleMedium,
+            style = FfTheme.typography.titleMedium,
         )
-        Icon(painter = MoSoIcons.caretRight(), contentDescription = "")
+        Icon(painter = FfIcons.caretRight(), contentDescription = "")
     }
     LazyRow(
         state = scrollState,
@@ -375,17 +375,17 @@ private fun TopAccounts(
             NoRipple {
                 AccountQuickViewBox(
                     modifier = Modifier
-                        .padding(MoSoSpacing.md)
+                        .padding(FfSpacing.md)
                         .border(
                             width = 1.dp,
-                            color = MoSoTheme.colors.borderPrimary,
-                            shape = RoundedCornerShape(MoSoRadius.lg_16_dp)
+                            color = FfTheme.colors.borderPrimary,
+                            shape = RoundedCornerShape(FfRadius.lg_16_dp)
                         )
                         .clickable {
                             searchInteractions.onAccountClicked(item.quickViewUiState.accountId)
                         }
                         .width(256.dp)
-                        .padding(MoSoSpacing.md),
+                        .padding(FfSpacing.md),
                     uiState = item.quickViewUiState,
                     buttonSlot = {
                         if (item.followButtonVisible) {
@@ -405,7 +405,7 @@ private fun TopAccounts(
         }
     }
 
-    MoSoDivider()
+    FfDivider()
 }
 
 @Composable
@@ -434,7 +434,7 @@ private fun AccountsList(
                             )
                         },
                         modifier = Modifier
-                            .padding(MoSoSpacing.md)
+                            .padding(FfSpacing.md)
                             .clickable {
                                 searchInteractions.onAccountClicked(
                                     accountId = uiState.accountQuickViewUiState.accountId
@@ -486,7 +486,7 @@ private fun HashTagsList(
                 lazyPagingItems[index]?.let { uiState ->
                     HashTagQuickView(
                         modifier = Modifier
-                            .padding(MoSoSpacing.md)
+                            .padding(FfSpacing.md)
                             .clickable { searchInteractions.onHashTagClicked(uiState.name) },
                         uiState = uiState,
                         onButtonClicked = {

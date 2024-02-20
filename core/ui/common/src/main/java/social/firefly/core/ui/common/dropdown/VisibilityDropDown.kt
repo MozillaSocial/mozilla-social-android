@@ -17,8 +17,8 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import social.firefly.core.designsystem.icon.MoSoIcons
-import social.firefly.core.designsystem.theme.MoSoTheme
+import social.firefly.core.designsystem.icon.FfIcons
+import social.firefly.core.designsystem.theme.FfTheme
 import social.firefly.core.model.StatusVisibility
 import social.firefly.core.ui.common.R
 
@@ -29,34 +29,34 @@ fun VisibilityDropDownButton(
     onVisibilitySelected: (StatusVisibility) -> Unit,
 ) {
     val expanded = remember { mutableStateOf(false) }
-    MoSoDropDownMenu(
+    FfDropDownMenu(
         modifier = modifier,
         expanded = expanded,
         dropDownMenuContent = {
             VisibilityDropDownItem(
                 type = StatusVisibility.Public,
-                icon = MoSoIcons.public(),
+                icon = FfIcons.public(),
                 text = stringResource(id = R.string.visibility_public),
                 expanded = expanded,
                 onVisibilitySelected = onVisibilitySelected,
             )
             VisibilityDropDownItem(
                 type = StatusVisibility.Unlisted,
-                icon = MoSoIcons.lockOpen(),
+                icon = FfIcons.lockOpen(),
                 text = stringResource(id = R.string.visibility_unlisted),
                 expanded = expanded,
                 onVisibilitySelected = onVisibilitySelected,
             )
             VisibilityDropDownItem(
                 type = StatusVisibility.Private,
-                icon = MoSoIcons.materialLock(),
+                icon = FfIcons.materialLock(),
                 text = stringResource(id = R.string.visibility_private),
                 expanded = expanded,
                 onVisibilitySelected = onVisibilitySelected,
             )
             VisibilityDropDownItem(
                 type = StatusVisibility.Direct,
-                icon = MoSoIcons.message(),
+                icon = FfIcons.message(),
                 text = stringResource(id = R.string.visibility_direct),
                 expanded = expanded,
                 onVisibilitySelected = onVisibilitySelected,
@@ -66,25 +66,25 @@ fun VisibilityDropDownButton(
         when (visibility) {
             StatusVisibility.Public ->
                 ButtonContent(
-                    icon = MoSoIcons.public(),
+                    icon = FfIcons.public(),
                     text = stringResource(id = R.string.visibility_public),
                 )
 
             StatusVisibility.Unlisted ->
                 ButtonContent(
-                    icon = MoSoIcons.lockOpen(),
+                    icon = FfIcons.lockOpen(),
                     text = stringResource(id = R.string.visibility_unlisted),
                 )
 
             StatusVisibility.Private ->
                 ButtonContent(
-                    icon = MoSoIcons.materialLock(),
+                    icon = FfIcons.materialLock(),
                     text = stringResource(id = R.string.visibility_private),
                 )
 
             StatusVisibility.Direct ->
                 ButtonContent(
-                    icon = MoSoIcons.message(),
+                    icon = FfIcons.message(),
                     text = stringResource(id = R.string.visibility_direct),
                 )
         }
@@ -100,16 +100,16 @@ private fun RowScope.ButtonContent(
         icon,
         "",
         modifier = Modifier
-            .size(MoSoIcons.Sizes.small)
+            .size(FfIcons.Sizes.small)
             .align(Alignment.CenterVertically),
-        tint = MoSoTheme.colors.iconPrimary,
+        tint = FfTheme.colors.iconPrimary,
     )
     Spacer(modifier = Modifier.padding(start = 8.dp))
     Text(
         modifier = Modifier.align(Alignment.CenterVertically),
         text = text,
-        color = MoSoTheme.colors.textPrimary,
-        style = MoSoTheme.typography.labelMedium,
+        color = FfTheme.colors.textPrimary,
+        style = FfTheme.typography.labelMedium,
     )
 }
 
@@ -122,7 +122,7 @@ private fun VisibilityDropDownItem(
     onVisibilitySelected: (StatusVisibility) -> Unit,
     contentDescription: String = "",
 ) {
-    MoSoDropdownMenuItem(
+    FfDropdownMenuItem(
         text = {
             Row {
                 Icon(icon, contentDescription)
@@ -140,7 +140,7 @@ private fun VisibilityDropDownItem(
 @Preview
 @Composable
 private fun VisibilityDropDownPreview() {
-    MoSoTheme(
+    FfTheme(
         true,
     ) {
         VisibilityDropDownButton(

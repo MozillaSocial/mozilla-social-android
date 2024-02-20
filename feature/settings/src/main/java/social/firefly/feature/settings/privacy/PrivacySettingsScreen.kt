@@ -9,7 +9,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.koin.androidx.compose.koinViewModel
 import social.firefly.core.navigation.navigationModule
-import social.firefly.core.ui.common.MoSoSurface
+import social.firefly.core.ui.common.FfSurface
 import social.firefly.core.ui.common.utils.PreviewTheme
 import social.firefly.feature.settings.R
 import social.firefly.feature.settings.ui.SettingsColumn
@@ -35,7 +35,7 @@ private fun PrivacySettingsScreen(
     isAnalyticsToggledOn: Boolean,
     toggleAnalyticsSwitch: () -> Unit,
 ) {
-    MoSoSurface {
+    FfSurface {
         SettingsColumn(title = stringResource(id = R.string.privacy_settings_title)) {
             AllowAnalyticsSwitch(
                 initialAllowAnalytics = isAnalyticsToggledOn,

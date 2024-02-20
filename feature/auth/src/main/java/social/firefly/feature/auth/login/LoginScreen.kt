@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -34,14 +33,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.koin.androidx.compose.koinViewModel
-import social.firefly.core.designsystem.font.MoSoFonts
-import social.firefly.core.designsystem.theme.MoSoSpacing
-import social.firefly.core.designsystem.theme.MoSoTheme
-import social.firefly.core.ui.common.MoSoBadge
-import social.firefly.core.ui.common.MoSoSurface
-import social.firefly.core.ui.common.button.MoSoButton
-import social.firefly.core.ui.common.button.MoSoButtonSecondary
-import social.firefly.core.ui.common.loading.MoSoCircularProgressIndicator
+import social.firefly.core.designsystem.font.FfFonts
+import social.firefly.core.designsystem.theme.FfSpacing
+import social.firefly.core.designsystem.theme.FfTheme
+import social.firefly.core.ui.common.FfBadge
+import social.firefly.core.ui.common.FfSurface
+import social.firefly.core.ui.common.button.FfButton
 import social.firefly.core.ui.common.text.MediumTextLabel
 import social.firefly.core.ui.common.utils.getWindowHeightClass
 import social.firefly.core.ui.common.utils.getWindowWidthClass
@@ -65,9 +62,9 @@ private fun LoginScreen(
     uiState: LoginUiState,
     loginInteractions: LoginInteractions,
 ) {
-    MoSoSurface(
+    FfSurface(
         modifier = Modifier.fillMaxSize(),
-        color = MoSoTheme.colors.layer2,
+        color = FfTheme.colors.layer2,
     ) {
         val heightClass = getWindowHeightClass()
         val widthClass = getWindowWidthClass()
@@ -112,7 +109,7 @@ private fun HorizontalLoginScreen(
                 .weight(1f)
                 .align(Alignment.CenterVertically)
                 .fillMaxHeight()
-                .background(MoSoTheme.colors.layer1),
+                .background(FfTheme.colors.layer1),
         ) {
             LoginBox(
                 modifier = Modifier.align(Alignment.Center),
@@ -166,7 +163,7 @@ private fun ImageBox(modifier: Modifier = Modifier) {
             text = stringResource(id = R.string.title_text),
             fontSize = 24.sp,
             fontWeight = W700,
-            fontFamily = MoSoFonts.petiteFormalScript,
+            fontFamily = FfFonts.petiteFormalScript,
         )
         Image(
             modifier =
@@ -190,30 +187,30 @@ private fun LoginBox(
         modifier =
         modifier
             .fillMaxWidth()
-            .background(MoSoTheme.colors.layer1)
-            .padding(MoSoSpacing.lg)
+            .background(FfTheme.colors.layer1)
+            .padding(FfSpacing.lg)
             .semantics(mergeDescendants = true) {},
     ) {
-        MoSoBadge {
+        FfBadge {
             Text(
                 text = stringResource(id = R.string.alpha_badge),
-                style = MoSoTheme.typography.labelSmall,
+                style = FfTheme.typography.labelSmall,
             )
         }
 
-        Spacer(modifier = Modifier.height(MoSoSpacing.md))
+        Spacer(modifier = Modifier.height(FfSpacing.md))
 
         Text(
             text = stringResource(id = R.string.intro_title),
-            style = MoSoTheme.typography.titleLarge,
+            style = FfTheme.typography.titleLarge,
         )
-        Spacer(modifier = Modifier.height(MoSoSpacing.md))
+        Spacer(modifier = Modifier.height(FfSpacing.md))
         Text(
             text = stringResource(id = R.string.intro_message),
-            style = MoSoTheme.typography.bodyMedium,
+            style = FfTheme.typography.bodyMedium,
         )
         Spacer(modifier = Modifier.height(24.dp))
-        MoSoButton(
+        FfButton(
             modifier = Modifier.fillMaxWidth(),
             onClick = { loginInteractions.onChooseServerClicked() },
             enabled = !uiState.isLoading,
@@ -226,7 +223,7 @@ private fun LoginBox(
 @Preview
 @Composable
 internal fun AuthVerticalScreenPreview() {
-    MoSoTheme {
+    FfTheme {
         LoginScreen(
             uiState = LoginUiState(),
             loginInteractions = object : LoginInteractions {},
@@ -237,7 +234,7 @@ internal fun AuthVerticalScreenPreview() {
 @Preview(heightDp = 400, widthDp = 800)
 @Composable
 internal fun AuthHorizontalScreenPreview() {
-    MoSoTheme {
+    FfTheme {
         LoginScreen(
             uiState = LoginUiState(),
             loginInteractions = object : LoginInteractions {},
@@ -248,7 +245,7 @@ internal fun AuthHorizontalScreenPreview() {
 @Preview
 @Composable
 internal fun AuthScreenLoadingPreview() {
-    MoSoTheme {
+    FfTheme {
         LoginScreen(
             uiState =
             LoginUiState(

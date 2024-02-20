@@ -16,7 +16,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import coil.compose.AsyncImage
-import social.firefly.core.designsystem.theme.MoSoRadius
+import social.firefly.core.designsystem.theme.FfRadius
 import social.firefly.core.model.Attachment
 import social.firefly.core.ui.common.utils.media
 
@@ -155,7 +155,7 @@ private fun Attachment(
     AsyncImage(
         modifier = modifier
             .padding(2.dp)
-            .clip(RoundedCornerShape(MoSoRadius.media))
+            .clip(RoundedCornerShape(FfRadius.media))
             .clickable { onAttachmentClicked(attachment) },
         model = attachment.previewUrl,
         contentDescription = attachment.description,

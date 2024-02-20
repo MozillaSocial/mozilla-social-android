@@ -28,10 +28,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import social.firefly.core.designsystem.icon.MoSoIcons
+import social.firefly.core.designsystem.icon.FfIcons
 import social.firefly.core.designsystem.theme.Typography
 import social.firefly.core.model.Recommendation
-import social.firefly.core.ui.common.MoSoCard
+import social.firefly.core.ui.common.FfCard
 
 @Composable
 fun RecommendationCarouselCard(
@@ -40,7 +40,7 @@ fun RecommendationCarouselCard(
 ) {
     val context = LocalContext.current
 
-    MoSoCard(
+    FfCard(
         modifier =
         modifier
             .height(140.dp)
@@ -114,11 +114,11 @@ fun RecommendationCarouselCard(
                     ) {
                         BottomIconButton(
                             onClick = { },
-                            painter = MoSoIcons.bookmarkBorder(),
+                            painter = FfIcons.bookmarkBorder(),
                         )
                         BottomIconButton(
                             onClick = { },
-                            painter = MoSoIcons.share(),
+                            painter = FfIcons.share(),
                         )
                     }
                 }

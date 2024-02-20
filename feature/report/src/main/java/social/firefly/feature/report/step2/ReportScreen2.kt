@@ -31,17 +31,17 @@ import coil.compose.AsyncImage
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 import social.firefly.common.Resource
-import social.firefly.core.designsystem.theme.MoSoTheme
+import social.firefly.core.designsystem.theme.FfTheme
 import social.firefly.core.designsystem.utils.NoRipple
 import social.firefly.core.model.InstanceRule
-import social.firefly.core.ui.common.MoSoCheckBox
-import social.firefly.core.ui.common.MoSoSurface
-import social.firefly.core.ui.common.appbar.MoSoCloseableTopAppBar
-import social.firefly.core.ui.common.button.MoSoButton
-import social.firefly.core.ui.common.divider.MoSoDivider
+import social.firefly.core.ui.common.FfCheckBox
+import social.firefly.core.ui.common.FfSurface
+import social.firefly.core.ui.common.appbar.FfCloseableTopAppBar
+import social.firefly.core.ui.common.button.FfButton
+import social.firefly.core.ui.common.divider.FfDivider
 import social.firefly.core.ui.common.error.GenericError
 import social.firefly.core.ui.common.loading.MaxSizeLoading
-import social.firefly.core.ui.common.loading.MoSoCircularProgressIndicator
+import social.firefly.core.ui.common.loading.FfCircularProgressIndicator
 import social.firefly.feature.report.R
 import social.firefly.feature.report.ReportDataBundle
 import social.firefly.feature.report.ReportType
@@ -91,14 +91,14 @@ private fun ReportScreen2(
     hasPreAttachedStatus: Boolean,
     reportInteractions: ReportScreen2Interactions,
 ) {
-    MoSoSurface {
+    FfSurface {
         Column(
             modifier =
             Modifier
                 .fillMaxHeight()
                 .systemBarsPadding(),
         ) {
-            MoSoCloseableTopAppBar(
+            FfCloseableTopAppBar(
                 title = stringResource(id = R.string.report_screen_title),
             )
 
@@ -107,7 +107,7 @@ private fun ReportScreen2(
                 hasPreAttachedStatus = hasPreAttachedStatus,
             )
 
-            MoSoDivider()
+            FfDivider()
 
             MiddleContent(
                 modifier = Modifier.weight(1f),
@@ -115,7 +115,7 @@ private fun ReportScreen2(
                 reportInteractions = reportInteractions,
             )
 
-            MoSoDivider()
+            FfDivider()
 
             BottomContent(
                 reportIsSending = reportIsSending,
@@ -135,7 +135,7 @@ private fun TopContent(
     ) {
         Text(
             text = stringResource(id = R.string.report_prompt, "@$reportAccountHandle"),
-            style = MoSoTheme.typography.bodyMedium,
+            style = FfTheme.typography.bodyMedium,
         )
 
         Spacer(modifier = Modifier.height(4.dp))
@@ -150,7 +150,7 @@ private fun TopContent(
                     R.string.screen_2_prompt
                 },
             ),
-            style = MoSoTheme.typography.titleMedium,
+            style = FfTheme.typography.titleMedium,
         )
     }
 }
@@ -195,7 +195,7 @@ private fun MiddleContent(
                             reportInteractions = reportInteractions,
                         )
                         if (index < uiState.data.count() - 1) {
-                            MoSoDivider()
+                            FfDivider()
                         }
                     }
                 }
@@ -209,7 +209,7 @@ private fun BottomContent(
     reportIsSending: Boolean,
     reportInteractions: ReportScreen2Interactions,
 ) {
-    MoSoButton(
+    FfButton(
         modifier =
         Modifier
             .padding(16.dp)
@@ -218,7 +218,7 @@ private fun BottomContent(
         enabled = !reportIsSending,
     ) {
         if (reportIsSending) {
-            MoSoCircularProgressIndicator(
+            FfCircularProgressIndicator(
                 modifier = Modifier.size(24.dp),
             )
         } else {
@@ -241,7 +241,7 @@ private fun SelectableStatusCard(
                 .padding(start = 8.dp, end = 16.dp, top = 16.dp, bottom = 16.dp)
                 .clickable { reportInteractions.onStatusClicked(uiState.statusId) },
         ) {
-            MoSoCheckBox(
+            FfCheckBox(
                 modifier = Modifier.align(Alignment.CenterVertically),
                 checked = uiState.checked,
                 onCheckedChange = { reportInteractions.onStatusClicked(uiState.statusId) },
@@ -252,7 +252,7 @@ private fun SelectableStatusCard(
                 Modifier
                     .size(36.dp)
                     .clip(CircleShape)
-                    .background(MoSoTheme.colors.layer2)
+                    .background(FfTheme.colors.layer2)
                     .align(Alignment.CenterVertically),
                 model = uiState.avatarUrl,
                 contentDescription = "",
@@ -269,19 +269,19 @@ private fun SelectableStatusCard(
                     ) {
                         Text(
                             text = uiState.userName,
-                            style = MoSoTheme.typography.labelMedium,
+                            style = FfTheme.typography.labelMedium,
                             fontWeight = FontWeight.W600,
                         )
                         Text(
                             text = "@${uiState.handle}",
-                            style = MoSoTheme.typography.bodySmall,
-                            color = MoSoTheme.colors.textSecondary,
+                            style = FfTheme.typography.bodySmall,
+                            color = FfTheme.colors.textSecondary,
                         )
                     }
                     Text(
                         text = uiState.postTimeSince.build(context),
-                        style = MoSoTheme.typography.bodySmall,
-                        color = MoSoTheme.colors.textSecondary,
+                        style = FfTheme.typography.bodySmall,
+                        color = FfTheme.colors.textSecondary,
                     )
                 }
 

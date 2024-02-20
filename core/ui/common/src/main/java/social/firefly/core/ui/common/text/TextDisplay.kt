@@ -12,7 +12,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.TextUnit
-import social.firefly.core.designsystem.theme.MoSoTheme
+import social.firefly.core.designsystem.theme.FfTheme
 
 @Composable
 fun SmallTextDisplay(
@@ -50,7 +50,7 @@ fun SmallTextDisplay(
         maxLines = maxLines,
         minLines = minLines,
         onTextLayout = onTextLayout,
-        style = MoSoTheme.typography.displaySmall,
+        style = FfTheme.typography.displaySmall,
     )
 }
 
@@ -90,7 +90,7 @@ fun MediumTextDisplay(
         maxLines = maxLines,
         minLines = minLines,
         onTextLayout = onTextLayout,
-        style = MoSoTheme.typography.displayMedium,
+        style = FfTheme.typography.displayMedium,
     )
 }
 
@@ -130,6 +130,6 @@ fun LargeTextDisplay(
         maxLines = maxLines,
         minLines = minLines,
         onTextLayout = onTextLayout,
-        style = MoSoTheme.typography.displayLarge,
+        style = FfTheme.typography.displayLarge,
     )
 }

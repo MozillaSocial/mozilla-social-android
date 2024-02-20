@@ -11,7 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import social.firefly.core.designsystem.theme.MoSoTheme
+import social.firefly.core.designsystem.theme.FfTheme
 
 @Suppress("MagicNumber")
 @Composable
@@ -24,7 +24,7 @@ fun SettingsGroup(
         Modifier
             .padding(start = 16.dp, top = 16.dp, bottom = 8.dp, end = 16.dp),
     ) {
-        Text(text = stringResource(id = name), style = MoSoTheme.typography.titleSmall)
+        Text(text = stringResource(id = name), style = FfTheme.typography.titleSmall)
         Spacer(modifier = Modifier.height(8.dp))
         content()
     }

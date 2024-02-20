@@ -18,9 +18,9 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.semantics.isTraversalGroup
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
-import social.firefly.core.designsystem.icon.MoSoIcons
-import social.firefly.core.designsystem.theme.MoSoSpacing
-import social.firefly.core.designsystem.theme.MoSoTheme
+import social.firefly.core.designsystem.icon.FfIcons
+import social.firefly.core.designsystem.theme.FfSpacing
+import social.firefly.core.designsystem.theme.FfTheme
 
 @Composable
 internal fun SettingsSection(
@@ -32,7 +32,7 @@ internal fun SettingsSection(
     Row(
         modifier =
         Modifier
-            .padding(MoSoSpacing.md)
+            .padding(FfSpacing.md)
             .fillMaxWidth()
             .wrapContentHeight()
             .clickable { onClick() }
@@ -43,27 +43,27 @@ internal fun SettingsSection(
     ) {
         iconPainter?.let {
             Icon(
-                modifier = Modifier.size(MoSoIcons.Sizes.normal),
+                modifier = Modifier.size(FfIcons.Sizes.normal),
                 painter = iconPainter,
                 contentDescription = null,
             )
         }
         Column(
-            modifier = Modifier.padding(MoSoSpacing.sm),
+            modifier = Modifier.padding(FfSpacing.sm),
         ) {
             Text(
                 text = title,
-                style = MoSoTheme.typography.labelMedium,
+                style = FfTheme.typography.labelMedium,
             )
             if (subtitle != null) {
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
                     text = subtitle,
-                    style = MoSoTheme.typography.bodySmall,
+                    style = FfTheme.typography.bodySmall,
                 )
             }
         }
         Spacer(modifier = Modifier.weight(1f))
-        Icon(painter = MoSoIcons.chevronRight(), contentDescription = null)
+        Icon(painter = FfIcons.chevronRight(), contentDescription = null)
     }
 }

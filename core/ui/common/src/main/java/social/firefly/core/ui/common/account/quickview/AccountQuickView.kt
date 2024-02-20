@@ -18,9 +18,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import social.firefly.core.designsystem.theme.MoSoSpacing
-import social.firefly.core.designsystem.theme.MoSoTheme
-import social.firefly.core.ui.common.button.MoSoButton
+import social.firefly.core.designsystem.theme.FfSpacing
+import social.firefly.core.designsystem.theme.FfTheme
+import social.firefly.core.ui.common.button.FfButton
 import social.firefly.core.ui.common.text.LargeTextBody
 import social.firefly.core.ui.common.text.MediumTextBody
 import social.firefly.core.ui.common.utils.PreviewTheme
@@ -35,7 +35,7 @@ fun AccountQuickView(
     Row(modifier = modifier) {
         CircleAvatar(uiState.avatarUrl)
 
-        Spacer(modifier = Modifier.width(MoSoSpacing.sm))
+        Spacer(modifier = Modifier.width(FfSpacing.sm))
 
         Column {
             Row {
@@ -88,7 +88,7 @@ fun AccountQuickViewBox(
             }
         }
 
-        Spacer(modifier = Modifier.width(MoSoSpacing.sm))
+        Spacer(modifier = Modifier.width(FfSpacing.sm))
 
         Column {
             LargeTextBody(
@@ -118,7 +118,7 @@ private fun CircleAvatar(
         modifier
             .size(CIRCLE_AVATAR_SIZE)
             .clip(CircleShape)
-            .background(MoSoTheme.colors.layer2),
+            .background(FfTheme.colors.layer2),
         model = avatarUrl,
         contentDescription = null,
     )
@@ -153,7 +153,7 @@ private fun AccountQuickViewPreview2() {
                 avatarUrl = "url",
             ),
             buttonSlot = {
-                MoSoButton(onClick = { /*TODO*/ }) {
+                FfButton(onClick = { /*TODO*/ }) {
                     Text(text = "button")
                 }
             }
@@ -174,7 +174,7 @@ private fun AccountQuickViewPreview3() {
                 avatarUrl = "url",
             ),
             buttonSlot = {
-                MoSoButton(onClick = { /*TODO*/ }) {
+                FfButton(onClick = { /*TODO*/ }) {
                     Text(text = "button")
                 }
             },
@@ -200,7 +200,7 @@ private fun AccountQuickViewBoxPreview() {
                 avatarUrl = "url",
             ),
             buttonSlot = {
-                MoSoButton(onClick = { /*TODO*/ }) {
+                FfButton(onClick = { /*TODO*/ }) {
                     Text(text = "button")
                 }
             },

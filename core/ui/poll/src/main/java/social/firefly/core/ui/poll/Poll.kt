@@ -29,11 +29,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import social.firefly.common.utils.StringFactory
-import social.firefly.core.designsystem.icon.MoSoIcons
-import social.firefly.core.designsystem.theme.MoSoTheme
+import social.firefly.core.designsystem.icon.FfIcons
+import social.firefly.core.designsystem.theme.FfTheme
 import social.firefly.core.designsystem.utils.NoRipple
-import social.firefly.core.ui.common.MoSoSurface
-import social.firefly.core.ui.common.button.MoSoButton
+import social.firefly.core.ui.common.FfSurface
+import social.firefly.core.ui.common.button.FfButton
 
 @Composable
 fun Poll(
@@ -69,10 +69,10 @@ fun Poll(
         }
         Text(
             text = pollUiState.pollInfoText.build(LocalContext.current),
-            style = MoSoTheme.typography.bodyMedium,
+            style = FfTheme.typography.bodyMedium,
         )
         if (pollUiState.canVote) {
-            MoSoButton(
+            FfButton(
                 modifier =
                 Modifier
                     .fillMaxWidth(),
@@ -102,7 +102,7 @@ private fun PollOption(
             .clip(RoundedCornerShape(90.dp))
             .border(
                 width = 1.dp,
-                color = MoSoTheme.colors.borderPrimary,
+                color = FfTheme.colors.borderPrimary,
                 shape = RoundedCornerShape(90.dp),
             )
             .semantics(mergeDescendants = true) { },
@@ -186,7 +186,7 @@ private fun PollOptionText(
                         .align(Alignment.CenterVertically)
                         .weight(1f),
                     text = pollOptionUiState.title,
-                    style = MoSoTheme.typography.labelMedium,
+                    style = FfTheme.typography.labelMedium,
                 )
                 if (userVotes.value.contains(optionIndex)) {
                     Icon(
@@ -194,7 +194,7 @@ private fun PollOptionText(
                         Modifier
                             .align(Alignment.CenterVertically)
                             .padding(horizontal = 8.dp),
-                        painter = MoSoIcons.check(),
+                        painter = FfIcons.check(),
                         contentDescription = "",
                     )
                 }
@@ -207,7 +207,7 @@ private fun PollOptionText(
                         .padding(8.dp)
                         .align(Alignment.CenterVertically),
                     text = pollOptionUiState.voteInfo.build(LocalContext.current),
-                    style = MoSoTheme.typography.labelMedium,
+                    style = FfTheme.typography.labelMedium,
                 )
             }
         }
@@ -217,8 +217,8 @@ private fun PollOptionText(
 @Preview
 @Composable
 private fun PollPreview() {
-    MoSoTheme {
-        MoSoSurface {
+    FfTheme {
+        FfSurface {
             Poll(
                 pollUiState =
                 PollUiState(

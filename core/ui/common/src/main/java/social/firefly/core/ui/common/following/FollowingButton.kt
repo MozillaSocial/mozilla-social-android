@@ -4,8 +4,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import social.firefly.core.ui.common.R
-import social.firefly.core.ui.common.button.MoSoButtonContentPadding
-import social.firefly.core.ui.common.button.MoSoToggleButton
+import social.firefly.core.ui.common.button.FfButtonContentPadding
+import social.firefly.core.ui.common.button.FfToggleButton
 import social.firefly.core.ui.common.button.ToggleButtonState
 import social.firefly.core.ui.common.text.SmallTextLabel
 
@@ -15,7 +15,7 @@ fun FollowingButton(
     isFollowing: Boolean,
     modifier: Modifier = Modifier,
 ) {
-    MoSoToggleButton(
+    FfToggleButton(
         modifier = modifier,
         onClick = { onButtonClicked() },
         toggleState = if (isFollowing) {
@@ -23,7 +23,7 @@ fun FollowingButton(
         } else {
             ToggleButtonState.Primary
         },
-        contentPadding = MoSoButtonContentPadding.small,
+        contentPadding = FfButtonContentPadding.small,
     ) {
         SmallTextLabel(
             text = if (isFollowing) {

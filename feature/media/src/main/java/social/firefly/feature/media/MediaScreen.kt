@@ -37,11 +37,11 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
-import social.firefly.core.designsystem.icon.MoSoIcons
+import social.firefly.core.designsystem.icon.FfIcons
 import social.firefly.core.model.Attachment
 import social.firefly.core.navigation.NavigationDestination
-import social.firefly.core.ui.common.MoSoSurface
-import social.firefly.core.ui.common.appbar.MoSoCloseableTopAppBar
+import social.firefly.core.ui.common.FfSurface
+import social.firefly.core.ui.common.appbar.FfCloseableTopAppBar
 import social.firefly.core.ui.common.media.VideoPlayer
 import social.firefly.core.ui.common.media.calculateAspectRatio
 import kotlin.math.max
@@ -67,7 +67,7 @@ private fun MediaScreen(
     selectedIndex: Int,
     mediaInteractions: MediaInteractions,
 ) {
-    MoSoSurface(
+    FfSurface(
         modifier = Modifier
             .fillMaxSize()
             .systemBarsPadding()
@@ -80,7 +80,7 @@ private fun MediaScreen(
                 initialPage = selectedIndex
             ) { attachments.size }
 
-            MoSoCloseableTopAppBar(
+            FfCloseableTopAppBar(
                 modifier = Modifier
                     .zIndex(1f),
                 actions = {
@@ -102,8 +102,8 @@ private fun MediaScreen(
                         }
                     ) {
                         Icon(
-                            modifier = Modifier.size(MoSoIcons.Sizes.normal),
-                            painter = MoSoIcons.downloadSimple(),
+                            modifier = Modifier.size(FfIcons.Sizes.normal),
+                            painter = FfIcons.downloadSimple(),
                             contentDescription = stringResource(id = R.string.download_content_description),
                         )
                     }

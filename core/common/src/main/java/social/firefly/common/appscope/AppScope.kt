@@ -7,7 +7,7 @@ import kotlin.coroutines.CoroutineContext
 /**
  * A coroutine scope that uses a supervisor job as it's context.
  *
- * In MoSo, we are only canceling the supervisor job on logout.
+ * In Ff, we are only canceling the supervisor job on logout.
  */
 class AppScope : CoroutineScope {
     private var supervisorJob = SupervisorJob()

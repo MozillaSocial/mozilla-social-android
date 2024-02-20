@@ -14,7 +14,7 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.view.doOnNextLayout
-import social.firefly.core.designsystem.theme.MoSoTheme
+import social.firefly.core.designsystem.theme.FfTheme
 import social.firefly.core.model.Mention
 import kotlin.math.min
 
@@ -29,9 +29,9 @@ fun HtmlContent(
     htmlText: String,
     htmlContentInteractions: HtmlContentInteractions,
     maximumLineCount: Int = Int.MAX_VALUE,
-    textStyle: TextStyle = MoSoTheme.typography.bodyMedium,
-    textColor: Color = MoSoTheme.colors.textPrimary,
-    linkColor: Color = MoSoTheme.colors.textLink,
+    textStyle: TextStyle = FfTheme.typography.bodyMedium,
+    textColor: Color = FfTheme.colors.textPrimary,
+    linkColor: Color = FfTheme.colors.textLink,
     clickableLinks: Boolean = true,
 ) {
     val textContent =
