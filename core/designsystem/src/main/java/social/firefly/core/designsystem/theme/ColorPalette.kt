@@ -2,7 +2,7 @@ package social.firefly.core.designsystem.theme
 
 import androidx.compose.ui.graphics.Color
 
-object FirefoxColor {
+object ColorPalette {
     val Blue05 = Color(0xFFAAF2FF)
     val Blue10 = Color(0xFF80EBFF)
     val Blue20 = Color(0xFF00DDFF)

@@ -19,7 +19,7 @@ import coil.compose.AsyncImage
 import social.firefly.common.LoadState
 import social.firefly.common.utils.FileType
 import social.firefly.common.utils.toFile
-import social.firefly.core.designsystem.theme.FirefoxColor
+import social.firefly.core.designsystem.theme.ColorPalette
 import social.firefly.core.ui.common.R
 import social.firefly.core.ui.common.TransparentOverlay
 import java.io.File
@@ -53,7 +53,7 @@ fun AttachmentMedia(
                 ) {
                     Text(
                         text = stringResource(id = R.string.media_uploading),
-                        color = FirefoxColor.White,
+                        color = ColorPalette.White,
                     )
                     CircularProgressIndicator(
                         modifier =
@@ -71,7 +71,7 @@ fun AttachmentMedia(
                 ) {
                     Text(
                         text = stringResource(id = R.string.media_upload_failed),
-                        color = FirefoxColor.White,
+                        color = ColorPalette.White,
                     )
                     Button(
                         modifier =
@@ -84,7 +84,7 @@ fun AttachmentMedia(
                     ) {
                         Text(
                             text = stringResource(id = R.string.retry),
-                            color = FirefoxColor.White,
+                            color = ColorPalette.White,
                         )
                     }
                 }

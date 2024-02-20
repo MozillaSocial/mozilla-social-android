@@ -33,7 +33,7 @@ import androidx.media3.ui.AspectRatioFrameLayout
 import androidx.media3.ui.PlayerView
 import kotlinx.coroutines.delay
 import social.firefly.core.designsystem.icon.FfIcons
-import social.firefly.core.designsystem.theme.FirefoxColor
+import social.firefly.core.designsystem.theme.FfTheme
 import social.firefly.core.ui.common.NoTouchOverlay
 import social.firefly.core.ui.common.R
 import social.firefly.core.ui.common.loading.FfLinearProgressIndicator
@@ -118,7 +118,7 @@ private fun VideoControls(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .background(FirefoxColor.DarkGrey90A80),
+            .background(FfTheme.colors.playerControlsBackground),
         verticalAlignment = Alignment.CenterVertically
     ) {
         IconButton(onClick = {
@@ -142,7 +142,7 @@ private fun VideoControls(
                 } else {
                     stringResource(id = R.string.play)
                 },
-                tint = FirefoxColor.White,
+                tint = FfTheme.colors.playerControlsForeground,
             )
         }
 
@@ -158,7 +158,7 @@ private fun VideoControls(
 
         SmallTextLabel(
             text = "${exoPlayer.contentPosition.toTimeString()}/${exoPlayer.duration.toTimeString()}",
-            color = FirefoxColor.White,
+            color = FfTheme.colors.playerControlsForeground,
         )
 
         IconButton(
@@ -181,7 +181,7 @@ private fun VideoControls(
                     FfIcons.volumeUp()
                 },
                 contentDescription = stringResource(id = R.string.mute),
-                tint = FirefoxColor.White,
+                tint = FfTheme.colors.playerControlsForeground,
             )
         }
     }
