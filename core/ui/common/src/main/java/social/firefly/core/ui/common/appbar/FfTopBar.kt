@@ -14,6 +14,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -45,6 +46,7 @@ fun FfCloseableTopAppBar(
     popBackstack: PopNavBackstack = koinInject(),
     actions: @Composable () -> Unit = {},
     showDivider: Boolean = false,
+    colors: TopAppBarColors = FfTopBarDefaults.colors(),
 ) {
     FfTopBar(
         modifier = modifier,
@@ -53,6 +55,7 @@ fun FfCloseableTopAppBar(
         onIconClicked = { popBackstack() },
         actions = actions,
         showDivider = showDivider,
+        colors = colors,
     )
 }
 
@@ -65,6 +68,7 @@ fun FfTopBar(
     onIconClicked: () -> Unit,
     actions: @Composable () -> Unit = {},
     showDivider: Boolean = true,
+    colors: TopAppBarColors = FfTopBarDefaults.colors(),
     scrollBehavior: TopAppBarScrollBehavior? = null,
 ) {
     Column(
@@ -82,6 +86,7 @@ fun FfTopBar(
             },
             actions = { actions() },
             scrollBehavior = scrollBehavior,
+            colors = colors,
         )
 
         if (showDivider) {
@@ -140,16 +145,23 @@ private fun TopBarIconButton(
 object FfTopBarDefaults {
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    fun colors(): TopAppBarColors =
+    fun colors(
+        containerColor: Color = FfTheme.colors.layer1,
+        scrolledContainerColor: Color = FfTheme.colors.layer1,
+        navigationIconContentColor: Color = FfTheme.colors.iconPrimary,
+        titleContentColor: Color = FfTheme.colors.textPrimary,
+        actionIconContentColor: Color = FfTheme.colors.iconPrimary,
+    ): TopAppBarColors =
         TopAppBarDefaults.topAppBarColors(
-            containerColor = FfTheme.colors.layer1,
-            scrolledContainerColor = FfTheme.colors.layer1,
-            navigationIconContentColor = FfTheme.colors.iconPrimary,
-            titleContentColor = FfTheme.colors.textPrimary,
-            actionIconContentColor = FfTheme.colors.iconPrimary,
+            containerColor = containerColor,
+            scrolledContainerColor = scrolledContainerColor,
+            navigationIconContentColor = navigationIconContentColor,
+            titleContentColor = titleContentColor,
+            actionIconContentColor = actionIconContentColor,
         )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
 private fun FfTopBarPreview() {

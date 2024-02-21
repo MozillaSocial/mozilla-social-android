@@ -2,10 +2,15 @@ package social.firefly.core.ui.common.media
 
 import android.net.Uri
 import androidx.annotation.OptIn
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -34,7 +39,7 @@ import androidx.media3.ui.PlayerView
 import kotlinx.coroutines.delay
 import social.firefly.core.designsystem.icon.FfIcons
 import social.firefly.core.designsystem.theme.FfTheme
-import social.firefly.core.ui.common.NoTouchOverlay
+import social.firefly.core.designsystem.utils.NoRipple
 import social.firefly.core.ui.common.R
 import social.firefly.core.ui.common.loading.FfLinearProgressIndicator
 import social.firefly.core.ui.common.text.SmallTextLabel
@@ -48,7 +53,11 @@ private const val TAG = "VideoPlayer"
 fun VideoPlayer(
     uri: Uri,
     modifier: Modifier = Modifier,
+    onClick: () -> Unit = {},
 ) {
+    var controlsVisibility by remember {
+        mutableStateOf(true)
+    }
     Box(
         modifier = modifier,
     ) {
@@ -88,12 +97,25 @@ fun VideoPlayer(
                 exoPlayer.release()
             }
         }
-        NoTouchOverlay()
-
-        VideoControls(
-            modifier = Modifier.align(Alignment.BottomCenter),
-            exoPlayer = exoPlayer,
+        Box(
+            modifier = modifier
+                .fillMaxSize()
+                .clickable {
+                    controlsVisibility = !controlsVisibility
+                    onClick()
+                },
         )
+
+        AnimatedVisibility(
+            modifier = Modifier.align(Alignment.BottomCenter),
+            visible = controlsVisibility,
+            enter = fadeIn(),
+            exit = fadeOut(),
+        ) {
+            VideoControls(
+                exoPlayer = exoPlayer,
+            )
+        }
     }
 }
 
