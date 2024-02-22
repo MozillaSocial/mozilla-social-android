@@ -53,11 +53,9 @@ private const val TAG = "VideoPlayer"
 fun VideoPlayer(
     uri: Uri,
     modifier: Modifier = Modifier,
+    controlsVisible: Boolean,
     onClick: () -> Unit = {},
 ) {
-    var controlsVisibility by remember {
-        mutableStateOf(true)
-    }
     Box(
         modifier = modifier,
     ) {
@@ -97,18 +95,20 @@ fun VideoPlayer(
                 exoPlayer.release()
             }
         }
-        Box(
-            modifier = modifier
-                .fillMaxSize()
-                .clickable {
-                    controlsVisibility = !controlsVisibility
-                    onClick()
-                },
-        )
+
+        NoRipple {
+            Box(
+                modifier = modifier
+                    .fillMaxSize()
+                    .clickable {
+                        onClick()
+                    },
+            )
+        }
 
         AnimatedVisibility(
             modifier = Modifier.align(Alignment.BottomCenter),
-            visible = controlsVisibility,
+            visible = controlsVisible,
             enter = fadeIn(),
             exit = fadeOut(),
         ) {
@@ -120,7 +120,7 @@ fun VideoPlayer(
 }
 
 @OptIn(UnstableApi::class)
-@Suppress("MagicNumber")
+@Suppress("MagicNumber", "LongMethod")
 @Composable
 private fun VideoControls(
     exoPlayer: ExoPlayer,

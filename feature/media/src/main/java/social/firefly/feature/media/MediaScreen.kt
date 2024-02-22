@@ -91,7 +91,7 @@ private fun MediaScreen(
     var altTextVisible by remember {
         mutableStateOf(false)
     }
-    var barVisibility by remember {
+    var uiVisible by remember {
         mutableStateOf(true)
     }
     val pagerState = rememberPagerState(
@@ -99,7 +99,7 @@ private fun MediaScreen(
     ) { attachments.size }
 
     val visibilityClick = {
-        barVisibility = !barVisibility
+        uiVisible = !uiVisible
         altTextVisible = false
     }
 
@@ -118,16 +118,18 @@ private fun MediaScreen(
             is Attachment.Video -> VideoContent(
                 onClick = visibilityClick,
                 attachment = attachment,
+                controlsVisible = uiVisible,
             )
             is Attachment.Gifv -> VideoContent(
                 onClick = visibilityClick,
                 attachment = attachment,
+                controlsVisible = uiVisible,
             )
             else -> {}
         }
 
         AnimatedVisibility(
-            visible = barVisibility,
+            visible = uiVisible,
             enter = fadeIn(),
             exit = fadeOut(),
         ) {
@@ -347,6 +349,7 @@ private fun ZoomableImage(
 private fun VideoContent(
     attachment: Attachment.Video,
     onClick: () -> Unit,
+    controlsVisible: Boolean,
     modifier: Modifier = Modifier,
 ) {
     Box(
@@ -358,6 +361,7 @@ private fun VideoContent(
                 .aspectRatio(attachment.meta?.calculateAspectRatio() ?: 1f),
             uri = Uri.parse(attachment.url),
             onClick = onClick,
+            controlsVisible = controlsVisible,
         )
     }
 }
@@ -366,6 +370,7 @@ private fun VideoContent(
 private fun VideoContent(
     attachment: Attachment.Gifv,
     onClick: () -> Unit,
+    controlsVisible: Boolean,
     modifier: Modifier = Modifier,
 ) {
     Box(
@@ -377,6 +382,7 @@ private fun VideoContent(
                 .aspectRatio(attachment.meta?.calculateAspectRatio() ?: 1f),
             uri = Uri.parse(attachment.url),
             onClick = onClick,
+            controlsVisible = controlsVisible,
         )
     }
 }
