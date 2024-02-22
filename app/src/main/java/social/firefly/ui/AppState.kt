@@ -197,7 +197,7 @@ class AppState(
     }
 
     private fun popBackStack() {
-        if (!mainNavController.popBackStack()) tabbedNavController?.popBackStack()
+        if (!mainNavController.navigateUp()) tabbedNavController?.navigateUp()
     }
 
     @Suppress("CyclomaticComplexMethod")
