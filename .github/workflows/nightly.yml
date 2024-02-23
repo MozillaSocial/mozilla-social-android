@@ -29,6 +29,11 @@ jobs:
       run: .github/workflows/setup-homebrew.sh
     - name: Set up Ruby
       run: .github/workflows/setup-ruby.sh
+    - name: Decrypt secrets
+      env:
+        GPG_KEY: ${{ secrets.gpg_key }}
+      run: ./decrypt.sh
+      working-directory: ./secrets
     - name: Build and release
       env:
         GRADLE_OPTS: -Dorg.gradle.daemon=false

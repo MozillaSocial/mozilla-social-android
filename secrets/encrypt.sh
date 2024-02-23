@@ -11,5 +11,7 @@ if [[ -z "$GPG_KEY" ]]; then
   GPG_KEY="$REPLY"
 fi
 
-encrypt "secret.properties"
-encrypt "secret-environment-variables.sh"
+#encrypt "secret.properties"
+#encrypt "secret-environment-variables.sh"
+encrypt "keystore.properties"
+encrypt "firefly.jks"

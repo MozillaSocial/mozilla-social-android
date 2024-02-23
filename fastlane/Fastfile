@@ -13,20 +13,13 @@
 default_platform(:android)
 
 platform :android do
-  desc "Submit a new nightly build to Play Store."
+  desc "Submit a new nightly build."
   lane :nightly do |options|
     # Switch to the root directory to run the release script.
     # https://docs.fastlane.tools/advanced/fastlane/#directory-behavior
     Dir.chdir("..") do
       sh "ci/nightly-build.sh"
     end
-
-#     upload_to_play_store(
-#       package_name: "social.firefly.nightly",
-#       aab: "secrets/firefly-nightly.aab",
-#       track: "alpha",
-#       skip_upload_metadata: true,
-#     )
 
     set_github_release(
         repository_name: "Firefly-Social/Firefly",
@@ -35,7 +28,7 @@ platform :android do
         tag_name: options[:tag],
         is_prerelease: true,
         is_generate_release_notes: true,
-        upload_assets: ["secrets/firefly-nightly.apk", "secrets/firefly-nightly.aab"]
+        upload_assets: ["secrets/firefly-nightly.apk"]
     )
   end
 end
