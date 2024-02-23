@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -66,7 +65,6 @@ import social.firefly.core.ui.common.TransparentNoTouchOverlay
 import social.firefly.core.ui.common.appbar.FfCloseableTopAppBar
 import social.firefly.core.ui.common.button.FfButton
 import social.firefly.core.ui.common.button.FfButtonContentPadding
-import social.firefly.core.ui.common.dropdown.VisibilityDropDownButton
 import social.firefly.core.ui.common.media.AttachmentMedia
 import social.firefly.core.ui.common.text.FfTextField
 import social.firefly.core.ui.common.text.SmallTextLabel
@@ -131,7 +129,7 @@ private fun NewPostScreen(
     mediaInteractions: MediaInteractions,
     pollInteractions: PollInteractions,
     contentWarningInteractions: ContentWarningInteractions,
-    newPostInteractions: social.firefly.post.NewPostInteractions,
+    newPostInteractions: NewPostInteractions,
 ) {
     Box(
         modifier =
@@ -187,7 +185,7 @@ private fun CompactNewPostScreenContent(
     mediaInteractions: MediaInteractions,
     pollInteractions: PollInteractions,
     contentWarningInteractions: ContentWarningInteractions,
-    newPostInteractions: social.firefly.post.NewPostInteractions,
+    newPostInteractions: NewPostInteractions,
 ) {
     Row {
         Box(
@@ -227,7 +225,7 @@ private fun NewPostScreenContent(
     mediaInteractions: MediaInteractions,
     pollInteractions: PollInteractions,
     contentWarningInteractions: ContentWarningInteractions,
-    newPostInteractions: social.firefly.post.NewPostInteractions,
+    newPostInteractions: NewPostInteractions,
 ) {
     Column {
         TopBar(
@@ -236,18 +234,16 @@ private fun NewPostScreenContent(
             onEditClicked = newPostInteractions::onEditClicked,
             sendButtonEnabled = newPostUiState.sendButtonEnabled,
         )
-        newPostUiState.userHeaderState?.let { userHeaderState ->
-            UserHeader(
-                userHeaderState = userHeaderState,
-                visibility = newPostUiState.visibility,
-                onVisibilitySelected = newPostInteractions::onVisibilitySelected,
-            )
-        }
-        Box(
-            modifier =
-            Modifier
+        Row(
+            modifier = Modifier
                 .weight(1f),
         ) {
+            newPostUiState.userHeaderState?.let { userHeaderState ->
+                UserHeader(
+                    userHeaderState = userHeaderState,
+                )
+            }
+
             MainBox(
                 statusUiState = statusUiState,
                 statusInteractions = statusInteractions,
@@ -280,6 +276,8 @@ private fun NewPostScreenContent(
             contentWarningInteractions = contentWarningInteractions,
             onUploadImageClicked = newPostInteractions::onUploadImageClicked,
             onUploadMediaClicked = newPostInteractions::onUploadMediaClicked,
+            visibility = newPostUiState.visibility,
+            onVisibilitySelected = newPostInteractions::onVisibilitySelected,
         )
     }
 }
@@ -287,15 +285,12 @@ private fun NewPostScreenContent(
 @Composable
 fun UserHeader(
     userHeaderState: UserHeaderState,
-    visibility: StatusVisibility,
-    onVisibilitySelected: (StatusVisibility) -> Unit,
 ) {
     Row {
         AsyncImage(
-            modifier =
-            Modifier
-                .padding(horizontal = FfSpacing.sm)
-                .size(92.dp)
+            modifier = Modifier
+                .padding(start = FfSpacing.sm)
+                .size(40.dp)
                 .clip(CircleShape)
                 .border(
                     width = 3.dp,
@@ -305,17 +300,6 @@ fun UserHeader(
             model = userHeaderState.avatarUrl,
             contentDescription = null,
         )
-
-        Column {
-            Text(text = userHeaderState.displayName, style = FfTheme.typography.labelMedium)
-
-            Spacer(modifier = Modifier.height(4.dp))
-
-            VisibilityDropDownButton(
-                visibility = visibility,
-                onVisibilitySelected = onVisibilitySelected,
-            )
-        }
     }
 }
 
@@ -338,6 +322,7 @@ private fun TopBar(
                     R.string.edit else R.string.post
             )
         },
+        showDivider = true
     )
 }
 
@@ -377,9 +362,8 @@ private fun MainBox(
         val keyboard = LocalSoftwareKeyboardController.current
 
         val textFieldFocusRequester = remember { FocusRequester() }
-        FfSurface(
-            modifier =
-            Modifier
+        Box(
+            modifier = Modifier
                 .fillMaxSize()
                 .clickable {
                     keyboard?.show()
@@ -590,7 +574,7 @@ private fun NewPostScreenPreview() {
             pollUiState = null,
             pollInteractions = object : PollInteractions {},
             contentWarningInteractions = object : ContentWarningInteractions {},
-            newPostInteractions = social.firefly.post.NewPostInteractionsNoOp,
+            newPostInteractions = NewPostInteractionsNoOp,
         )
     }
 }
@@ -628,7 +612,7 @@ private fun NewPostScreenWithPollPreview() {
             ),
             pollInteractions = object : PollInteractions {},
             contentWarningInteractions = object : ContentWarningInteractions {},
-            newPostInteractions = social.firefly.post.NewPostInteractionsNoOp,
+            newPostInteractions = NewPostInteractionsNoOp,
         )
     }
 }
@@ -660,7 +644,7 @@ private fun NewPostScreenWithContentWarningPreview() {
             pollUiState = null,
             pollInteractions = object : PollInteractions {},
             contentWarningInteractions = object : ContentWarningInteractions {},
-            newPostInteractions = social.firefly.post.NewPostInteractionsNoOp,
+            newPostInteractions = NewPostInteractionsNoOp,
         )
     }
 }
@@ -693,7 +677,7 @@ private fun EditPostScreenPreview() {
             pollUiState = null,
             pollInteractions = object : PollInteractions {},
             contentWarningInteractions = object : ContentWarningInteractions {},
-            newPostInteractions = social.firefly.post.NewPostInteractionsNoOp,
+            newPostInteractions = NewPostInteractionsNoOp,
         )
     }
 }
