@@ -15,12 +15,12 @@ val mastodonNetworkModule =
     module {
         single { AuthCredentialInterceptor() }
         single(
-            named(social.firefly.core.network.mastodon.AUTHORIZED_CLIENT),
+            named(AUTHORIZED_CLIENT),
         ) {
             OkHttpClient.Builder()
-                .readTimeout(social.firefly.core.network.mastodon.OKHTTP_TIMEOUT, TimeUnit.SECONDS)
+                .readTimeout(OKHTTP_TIMEOUT, TimeUnit.SECONDS)
                 .connectTimeout(
-                    social.firefly.core.network.mastodon.OKHTTP_TIMEOUT,
+                    OKHTTP_TIMEOUT,
                     TimeUnit.SECONDS
                 )
                 .addNetworkInterceptor(
@@ -39,30 +39,30 @@ val mastodonNetworkModule =
         single {
             Retrofit.Builder()
                 .baseUrl("https://mozilla.social/")
-                .client(get(qualifier = named(social.firefly.core.network.mastodon.AUTHORIZED_CLIENT)))
+                .client(get(qualifier = named(AUTHORIZED_CLIENT)))
                 .addConverterFactory(
-                    social.firefly.core.network.mastodon.json.asConverterFactory(
+                    json.asConverterFactory(
                         contentType = "application/json".toMediaType()
                     )
                 )
                 .build()
         }
 
-        single { get<Retrofit>().create(social.firefly.core.network.mastodon.AccountApi::class.java) }
-        single { get<Retrofit>().create(social.firefly.core.network.mastodon.AppApi::class.java) }
-        single { get<Retrofit>().create(social.firefly.core.network.mastodon.BlocksApi::class.java) }
-        single { get<Retrofit>().create(social.firefly.core.network.mastodon.FavoritesApi::class.java) }
-        single { get<Retrofit>().create(social.firefly.core.network.mastodon.InstanceApi::class.java) }
-        single { get<Retrofit>().create(social.firefly.core.network.mastodon.MediaApi::class.java) }
-        single { get<Retrofit>().create(social.firefly.core.network.mastodon.MutesApi::class.java) }
-        single { get<Retrofit>().create(social.firefly.core.network.mastodon.OauthApi::class.java) }
-        single { get<Retrofit>().create(social.firefly.core.network.mastodon.ReportApi::class.java) }
-        single { get<Retrofit>().create(social.firefly.core.network.mastodon.SearchApi::class.java) }
-        single { get<Retrofit>().create(social.firefly.core.network.mastodon.StatusApi::class.java) }
-        single { get<Retrofit>().create(social.firefly.core.network.mastodon.TimelineApi::class.java) }
-        single { get<Retrofit>().create(social.firefly.core.network.mastodon.TagsApi::class.java) }
-        single { get<Retrofit>().create(social.firefly.core.network.mastodon.NotificationsApi::class.java) }
-        single { get<Retrofit>().create(social.firefly.core.network.mastodon.FollowRequestApi::class.java) }
+        single { get<Retrofit>().create(AccountApi::class.java) }
+        single { get<Retrofit>().create(AppApi::class.java) }
+        single { get<Retrofit>().create(BlocksApi::class.java) }
+        single { get<Retrofit>().create(FavoritesApi::class.java) }
+        single { get<Retrofit>().create(InstanceApi::class.java) }
+        single { get<Retrofit>().create(MediaApi::class.java) }
+        single { get<Retrofit>().create(MutesApi::class.java) }
+        single { get<Retrofit>().create(OauthApi::class.java) }
+        single { get<Retrofit>().create(ReportApi::class.java) }
+        single { get<Retrofit>().create(SearchApi::class.java) }
+        single { get<Retrofit>().create(StatusApi::class.java) }
+        single { get<Retrofit>().create(TimelineApi::class.java) }
+        single { get<Retrofit>().create(TagsApi::class.java) }
+        single { get<Retrofit>().create(NotificationsApi::class.java) }
+        single { get<Retrofit>().create(FollowRequestApi::class.java) }
     }
 
 private var json: Json = Json { ignoreUnknownKeys = true }

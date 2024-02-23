@@ -1,46 +1,29 @@
 package social.firefly.core.network.mastodon.model
 
 import kotlinx.datetime.Instant
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-/**
- * Admin-level information about a filed report.
- */
+@Serializable
 data class NetworkAdminReport(
-    val reportId: String,
-    /**
-     * Whether an action was taken to resolve this report.
-     */
-    val wasActionTaken: Boolean,
-    /**
-     * An optional reason for reporting.
-     */
+    @SerialName("id")
+    val id: String,
+    @SerialName("action_taken")
+    val actionTaken: Boolean,
+    @SerialName("action_taken_at")
+    val actionTakenAt: Instant?,
+    @SerialName("category")
+    val category: String,
+    @SerialName("comment")
     val comment: String,
-    /**
-     * The moment the report was filed.
-     */
+    @SerialName("forwarded")
+    val forwarded: Boolean,
+    @SerialName("created_at")
     val createdAt: Instant,
-    /**
-     * The time of last action on this report.
-     */
-    val updatedAt: Instant,
-    /**
-     * The account which filed the report.
-     */
-    val account: NetworkAdminAccount,
-    /**
-     * The account being reported.
-     */
-    val targetAccount: NetworkAdminAccount,
-    /**
-     * Statuses attached to the report, for context.
-     */
-    val statuses: List<NetworkStatus>,
-    /**
-     * The account of the moderator assigned to this report.
-     */
-    val assignedAccount: NetworkAdminAccount? = null,
-    /**
-     * The account of the moderator who handled the report.
-     */
-    val actionTakenByAccount: NetworkAdminAccount? = null,
+    @SerialName("status_ids")
+    val statusIds: List<String>?,
+    @SerialName("rule_ids")
+    val ruleIds: List<String>?,
+    @SerialName("target_account")
+    val targetAccount: NetworkAccount,
 )

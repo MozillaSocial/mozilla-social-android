@@ -3,7 +3,7 @@ package social.firefly.core.repository.mastodon.model.notifications
 import social.firefly.core.database.model.entities.DatabaseNotification
 import social.firefly.core.model.Notification
 
-fun Notification.toDatabase(): DatabaseNotification = when (this) {
+fun Notification.toDatabase(): DatabaseNotification? = when (this) {
     is Notification.Mention -> DatabaseNotification(
         id = id,
         type = DatabaseNotification.Type.MENTION,
@@ -67,4 +67,6 @@ fun Notification.toDatabase(): DatabaseNotification = when (this) {
         accountId = account.accountId,
         statusId = null,
     )
+
+    else -> null
 }

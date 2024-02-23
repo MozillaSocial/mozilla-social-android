@@ -4,7 +4,9 @@ import social.firefly.common.utils.StringFactory
 import social.firefly.common.utils.timeSinceNow
 import social.firefly.core.model.Notification
 import social.firefly.core.ui.postcard.toPostContentUiState
+import java.lang.RuntimeException
 
+@Suppress("TooGenericExceptionThrown")
 fun Notification.toUiState(
     currentUserAccountId: String,
 ): NotificationUiState = when (this) {
@@ -105,4 +107,6 @@ fun Notification.toUiState(
         ),
         statusId = status.statusId,
     )
+
+    else -> throw RuntimeException("Notification type not implemented")
 }

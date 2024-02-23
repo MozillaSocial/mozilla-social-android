@@ -36,6 +36,11 @@ class AllNotificationsRemoteMediator(
                         notificationsRepository.getNotifications(
                             maxId = null,
                             limit = pageSize,
+                            excludeTypes = arrayOf(
+                                "admin.sign_up",
+                                "admin.report",
+                                "severed_relationships",
+                            ),
                         )
                     }
 
@@ -50,6 +55,11 @@ class AllNotificationsRemoteMediator(
                         notificationsRepository.getNotifications(
                             maxId = nextKey,
                             limit = pageSize,
+                            excludeTypes = arrayOf(
+                                "admin.sign_up",
+                                "admin.report",
+                                "severed_relationships",
+                            ),
                         )
                     }
                 }

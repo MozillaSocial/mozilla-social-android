@@ -126,7 +126,7 @@ class NotificationsRepository(
     @PreferUseCase
     suspend fun insertAll(
         notifications: List<Notification>
-    ) = dao.upsertAll(notifications.map { it.toDatabase() })
+    ) = dao.upsertAll(notifications.mapNotNull { it.toDatabase() })
 
     suspend fun insertAllMainNotifications(
         mainNotifications: List<MainNotification>

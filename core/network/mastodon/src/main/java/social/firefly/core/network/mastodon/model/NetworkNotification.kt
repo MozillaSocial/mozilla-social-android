@@ -133,4 +133,41 @@ sealed class NetworkNotification {
         @SerialName("status")
         val status: NetworkStatus,
     ) : NetworkNotification()
+
+    @Serializable
+    @SerialName("admin.sign_up")
+    data class AdminSignUp(
+        @SerialName("id")
+        override val id: String,
+        @SerialName("created_at")
+        override val createdAt: Instant,
+        @SerialName("account")
+        override val account: NetworkAccount,
+    ) : NetworkNotification()
+
+    @Serializable
+    @SerialName("admin.report")
+    data class AdminReport(
+        @SerialName("id")
+        override val id: String,
+        @SerialName("created_at")
+        override val createdAt: Instant,
+        @SerialName("account")
+        override val account: NetworkAccount,
+        @SerialName("report")
+        val report: NetworkAdminReport,
+    ) : NetworkNotification()
+
+    @Serializable
+    @SerialName("severed_relationships")
+    data class SeveredRelationships(
+        @SerialName("id")
+        override val id: String,
+        @SerialName("created_at")
+        override val createdAt: Instant,
+        @SerialName("account")
+        override val account: NetworkAccount,
+        @SerialName("relationship_severance_event")
+        val severanceEvent: NetworkRelationshipSeveranceEvent,
+    ) : NetworkNotification()
 }
