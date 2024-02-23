@@ -1,7 +1,6 @@
 package social.firefly.ui
 
 import android.content.Context
-import android.util.Log
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -11,6 +10,7 @@ import androidx.core.net.toUri
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -21,6 +21,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.mapLatest
+import kotlinx.coroutines.flow.onSubscription
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
@@ -98,7 +99,9 @@ class AppState(
 
     init {
         coroutineScope.launch(Dispatchers.Main) {
-            navigationEventFlow().collectLatest {
+            navigationEventFlow().onSubscription {
+                navigationCollectionCompletable.complete(Unit)
+            }.collectLatest {
                 Timber.d("NAVIGATION consuming event $it")
                 when (it) {
                     is Event.NavigateToDestination -> {
@@ -339,5 +342,8 @@ class AppState(
 
     companion object {
         private const val HTTPS_SCHEME = "https"
+
+        // complete when the navigation event flow has started
+        val navigationCollectionCompletable = CompletableDeferred<Unit>()
     }
 }

@@ -11,6 +11,7 @@ import social.firefly.core.navigation.NavigationDestination
 import social.firefly.core.navigation.usecases.NavigateTo
 import social.firefly.core.usecase.mastodon.auth.IsSignedInFlow
 import social.firefly.core.usecase.mastodon.auth.Login
+import social.firefly.ui.AppState
 
 /**
  * Main view model- handles login logic and logout navigation
@@ -23,6 +24,7 @@ class MainViewModel(
 ) : ViewModel() {
     init {
         viewModelScope.launch(Dispatchers.Main) {
+            AppState.navigationCollectionCompletable.await()
             isSignedInFlow().collectLatest {
                 if (!it) {
                     navigateTo(NavigationDestination.Auth)

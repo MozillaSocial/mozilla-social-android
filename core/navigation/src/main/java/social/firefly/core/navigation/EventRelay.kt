@@ -7,7 +7,7 @@ import timber.log.Timber
 
 class EventRelay {
     private val _navigationEvents = MutableSharedFlow<Event>(
-        replay = 1,
+        replay = 0,
         extraBufferCapacity = 10,
     )
     val navigationEvents: SharedFlow<Event>
