@@ -137,6 +137,9 @@ object FfIcons {
     fun moreVertical() = painterResource(id = R.drawable.more_vertical)
 
     @Composable
+    fun note() = painterResource(id = R.drawable.note)
+
+    @Composable
     fun pause() = painterResource(id = R.drawable.pause)
 
     @Composable

@@ -68,12 +68,12 @@ fun SettingsScreen(
                 )
                 SettingsSection(
                     title = stringResource(id = R.string.open_source_licenses),
-                    iconPainter = FfIcons.info(),
+                    iconPainter = FfIcons.note(),
                     onClick = settingsInteractions::onOpenSourceLicensesClicked,
                 )
 
                 var clickCount by remember { mutableIntStateOf(0) }
-                if (social.firefly.feature.settings.BuildConfig.DEBUG || clickCount > DEV_UNLOCK_CLICK_COUNT) {
+                if (BuildConfig.DEBUG || clickCount > DEV_UNLOCK_CLICK_COUNT) {
                     SettingsSection(
                         title = stringResource(id = R.string.developer_options_title),
                         iconPainter = FfIcons.robot(),
