@@ -8,6 +8,7 @@ import androidx.compose.ui.unit.dp
 import social.firefly.core.designsystem.utils.NoRipple
 import social.firefly.core.ui.common.account.quickview.AccountQuickView
 import social.firefly.core.ui.common.account.quickview.AccountQuickViewUiState
+import social.firefly.core.ui.common.following.FollowStatus
 import social.firefly.core.ui.common.following.FollowingButton
 import social.firefly.core.ui.common.utils.PreviewTheme
 import social.firefly.core.ui.htmlcontent.HtmlContent
@@ -27,7 +28,7 @@ fun AccountFollower(
                 if (uiState.followButtonVisible) {
                     FollowingButton(
                         onButtonClicked = onButtonClicked,
-                        isFollowing = uiState.isFollowing
+                        followStatus = uiState.followStatus
                     )
                 }
             },
@@ -57,7 +58,7 @@ private fun AccountFollowerPreview() {
                     webFinger = "webfinger",
                     avatarUrl = "url",
                 ),
-                isFollowing = true,
+                followStatus = FollowStatus.FOLLOWING,
                 bioHtml = "Engineer at mozilla",
                 followButtonVisible = true,
             ),

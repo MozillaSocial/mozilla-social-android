@@ -12,24 +12,24 @@ import social.firefly.core.ui.common.text.SmallTextLabel
 @Composable
 fun FollowingButton(
     onButtonClicked: () -> Unit,
-    isFollowing: Boolean,
+    followStatus: FollowStatus,
     modifier: Modifier = Modifier,
 ) {
     FfToggleButton(
         modifier = modifier,
         onClick = { onButtonClicked() },
-        toggleState = if (isFollowing) {
-            ToggleButtonState.Secondary
-        } else {
-            ToggleButtonState.Primary
+        toggleState = when (followStatus) {
+            FollowStatus.FOLLOWING -> ToggleButtonState.Secondary
+            FollowStatus.PENDING_REQUEST -> ToggleButtonState.Secondary
+            FollowStatus.NOT_FOLLOWING -> ToggleButtonState.Primary
         },
         contentPadding = FfButtonContentPadding.small,
     ) {
         SmallTextLabel(
-            text = if (isFollowing) {
-                stringResource(id = R.string.following_button)
-            } else {
-                stringResource(id = R.string.follow_button)
+            text = when (followStatus) {
+                FollowStatus.FOLLOWING -> stringResource(id = R.string.following_button)
+                FollowStatus.PENDING_REQUEST -> stringResource(id = R.string.pending_follow_button)
+                FollowStatus.NOT_FOLLOWING -> stringResource(id = R.string.follow_button)
             }
         )
     }

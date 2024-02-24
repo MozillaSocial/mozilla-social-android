@@ -394,10 +394,10 @@ private fun TopAccounts(
                                 onButtonClicked = {
                                     searchInteractions.onFollowClicked(
                                         item.quickViewUiState.accountId,
-                                        item.isFollowing
+                                        item.followStatus
                                     )
                                 },
-                                isFollowing = item.isFollowing
+                                followStatus = item.followStatus
                             )
                         }
                     },
@@ -431,7 +431,7 @@ private fun AccountsList(
                         onButtonClicked = {
                             searchInteractions.onFollowClicked(
                                 uiState.accountQuickViewUiState.accountId,
-                                isFollowing = uiState.isFollowing,
+                                followStatus = uiState.followStatus,
                             )
                         },
                         modifier = Modifier
@@ -493,7 +493,7 @@ private fun HashTagsList(
                         onButtonClicked = {
                             searchInteractions.onHashTagFollowClicked(
                                 name = uiState.name,
-                                isFollowing = uiState.isFollowing
+                                followStatus = uiState.followStatus
                             )
                         }
                     )

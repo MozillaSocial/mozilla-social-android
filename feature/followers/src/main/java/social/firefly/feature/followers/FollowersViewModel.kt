@@ -17,6 +17,7 @@ import social.firefly.core.repository.mastodon.FollowingsRepository
 import social.firefly.core.repository.paging.FollowersRemoteMediator
 import social.firefly.core.repository.paging.FollowingsRemoteMediator
 import social.firefly.core.ui.accountfollower.toAccountFollowerUiState
+import social.firefly.core.ui.common.following.FollowStatus
 import social.firefly.core.usecase.mastodon.account.FollowAccount
 import social.firefly.core.usecase.mastodon.account.GetLoggedInUserAccountId
 import social.firefly.core.usecase.mastodon.account.UnfollowAccount
@@ -68,21 +69,25 @@ class FollowersViewModel(
         navigateTo(NavigationDestination.Account(accountId))
     }
 
-    override fun onFollowClicked(accountId: String, isFollowing: Boolean) {
+    override fun onFollowClicked(accountId: String, followStatus: FollowStatus) {
         viewModelScope.launch {
-            if (isFollowing) {
-                try {
-                    analytics.unfollowClicked()
-                    unfollowAccount(accountId, loggedInUserAccountId)
-                } catch (e: UnfollowAccount.UnfollowFailedException) {
-                    Timber.e(e)
+            when (followStatus) {
+                FollowStatus.FOLLOWING,
+                FollowStatus.PENDING_REQUEST -> {
+                    try {
+                        analytics.unfollowClicked()
+                        unfollowAccount(accountId, loggedInUserAccountId)
+                    } catch (e: UnfollowAccount.UnfollowFailedException) {
+                        Timber.e(e)
+                    }
                 }
-            } else {
-                try {
-                    analytics.followClicked()
-                    followAccount(accountId, loggedInUserAccountId)
-                } catch (e: FollowAccount.FollowFailedException) {
-                    Timber.e(e)
+                FollowStatus.NOT_FOLLOWING -> {
+                    try {
+                        analytics.followClicked()
+                        followAccount(accountId, loggedInUserAccountId)
+                    } catch (e: FollowAccount.FollowFailedException) {
+                        Timber.e(e)
+                    }
                 }
             }
         }

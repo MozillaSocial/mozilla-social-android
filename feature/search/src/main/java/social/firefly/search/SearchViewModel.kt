@@ -23,6 +23,7 @@ import social.firefly.core.repository.paging.SearchAccountsRemoteMediator
 import social.firefly.core.repository.paging.SearchStatusesRemoteMediator
 import social.firefly.core.repository.paging.SearchedHashTagsRemoteMediator
 import social.firefly.core.ui.accountfollower.toAccountFollowerUiState
+import social.firefly.core.ui.common.following.FollowStatus
 import social.firefly.core.ui.common.hashtag.quickview.toHashTagQuickViewUiState
 import social.firefly.core.ui.postcard.PostCardDelegate
 import social.firefly.core.ui.postcard.toPostCardUiState
@@ -176,19 +177,23 @@ class SearchViewModel(
         analytics.searchTabClicked(tab.toAnalyticsSearchTab())
     }
 
-    override fun onFollowClicked(accountId: String, isFollowing: Boolean) {
+    override fun onFollowClicked(accountId: String, followStatus: FollowStatus) {
         viewModelScope.launch {
-            if (isFollowing) {
-                try {
-                    unfollowAccount(accountId, usersAccountId)
-                } catch (e: UnfollowAccount.UnfollowFailedException) {
-                    Timber.e(e)
+            when (followStatus) {
+                FollowStatus.FOLLOWING,
+                FollowStatus.PENDING_REQUEST -> {
+                    try {
+                        unfollowAccount(accountId, usersAccountId)
+                    } catch (e: UnfollowAccount.UnfollowFailedException) {
+                        Timber.e(e)
+                    }
                 }
-            } else {
-                try {
-                    followAccount(accountId, usersAccountId)
-                } catch (e: FollowAccount.FollowFailedException) {
-                    Timber.e(e)
+                FollowStatus.NOT_FOLLOWING -> {
+                    try {
+                        followAccount(accountId, usersAccountId)
+                    } catch (e: FollowAccount.FollowFailedException) {
+                        Timber.e(e)
+                    }
                 }
             }
         }
@@ -205,19 +210,23 @@ class SearchViewModel(
         analytics.hashtagClicked()
     }
 
-    override fun onHashTagFollowClicked(name: String, isFollowing: Boolean) {
+    override fun onHashTagFollowClicked(name: String, followStatus: FollowStatus) {
         viewModelScope.launch {
-            if (isFollowing) {
-                try {
-                    unfollowHashTag(name)
-                } catch (e: UnfollowHashTag.UnfollowFailedException) {
-                    Timber.e(e)
+            when (followStatus) {
+                FollowStatus.FOLLOWING,
+                FollowStatus.PENDING_REQUEST -> {
+                    try {
+                        unfollowHashTag(name)
+                    } catch (e: UnfollowHashTag.UnfollowFailedException) {
+                        Timber.e(e)
+                    }
                 }
-            } else {
-                try {
-                    followHashTag(name)
-                } catch (e: FollowHashTag.FollowFailedException) {
-                    Timber.e(e)
+                FollowStatus.NOT_FOLLOWING -> {
+                    try {
+                        followHashTag(name)
+                    } catch (e: FollowHashTag.FollowFailedException) {
+                        Timber.e(e)
+                    }
                 }
             }
         }

@@ -70,9 +70,12 @@ import social.firefly.core.ui.common.appbar.FfCloseableTopAppBar
 import social.firefly.core.ui.common.button.FfButton
 import social.firefly.core.ui.common.button.FfButtonContentPadding
 import social.firefly.core.ui.common.button.FfButtonSecondary
+import social.firefly.core.ui.common.button.FfToggleButton
+import social.firefly.core.ui.common.button.ToggleButtonState
 import social.firefly.core.ui.common.dropdown.FfDropDownItem
 import social.firefly.core.ui.common.dropdown.FfDropdownMenu
 import social.firefly.core.ui.common.error.GenericError
+import social.firefly.core.ui.common.following.FollowStatus
 import social.firefly.core.ui.common.loading.FfCircularProgressIndicator
 import social.firefly.core.ui.common.paging.PagingLazyColumn
 import social.firefly.core.ui.common.tabs.FfTab
@@ -245,6 +248,7 @@ private fun MainContent(
     }
 }
 
+@Suppress("CyclomaticComplexMethod")
 @Composable
 private fun MainAccount(
     account: AccountUiState,
@@ -272,24 +276,28 @@ private fun MainAccount(
                         SmallTextLabel(text = stringResource(id = R.string.edit_button))
                     }
                 } else {
-                    FfButton(
+                    FfToggleButton(
                         modifier = buttonModifier
                             .align(Alignment.CenterVertically),
                         onClick = {
-                            if (account.isFollowing) {
-                                accountInteractions.onUnfollowClicked()
-                            } else {
-                                accountInteractions.onFollowClicked()
+                            when (account.followStatus) {
+                                FollowStatus.FOLLOWING -> accountInteractions.onUnfollowClicked()
+                                FollowStatus.PENDING_REQUEST -> accountInteractions.onUnfollowClicked()
+                                FollowStatus.NOT_FOLLOWING -> accountInteractions.onFollowClicked()
                             }
+                        },
+                        toggleState = when (account.followStatus) {
+                            FollowStatus.FOLLOWING -> ToggleButtonState.Secondary
+                            FollowStatus.PENDING_REQUEST -> ToggleButtonState.Secondary
+                            FollowStatus.NOT_FOLLOWING -> ToggleButtonState.Primary
                         },
                         contentPadding = FfButtonContentPadding.small,
                     ) {
                         SmallTextLabel(
-                            text =
-                            if (account.isFollowing) {
-                                stringResource(id = R.string.unfollow_button)
-                            } else {
-                                stringResource(id = R.string.follow_button)
+                            text = when (account.followStatus) {
+                                FollowStatus.FOLLOWING -> stringResource(id = R.string.unfollow_button)
+                                FollowStatus.PENDING_REQUEST -> stringResource(id = R.string.pending_follow_button)
+                                FollowStatus.NOT_FOLLOWING -> stringResource(id = R.string.follow_button)
                             },
                         )
                     }
@@ -677,7 +685,7 @@ fun AccountScreenPreview() {
                     statusesCount = 4000,
                     fields = listOf(),
                     isBot = false,
-                    isFollowing = false,
+                    followStatus = FollowStatus.NOT_FOLLOWING,
                     isMuted = false,
                     isBlocked = false,
                     joinDate =

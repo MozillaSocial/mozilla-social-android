@@ -21,6 +21,7 @@ import social.firefly.common.utils.StringFactory
 import social.firefly.core.designsystem.icon.FfIcons
 import social.firefly.core.designsystem.theme.FfSpacing
 import social.firefly.core.designsystem.theme.FfTheme
+import social.firefly.core.ui.common.following.FollowStatus
 import social.firefly.core.ui.common.following.FollowingButton
 import social.firefly.core.ui.common.text.LargeTextBody
 import social.firefly.core.ui.common.text.MediumTextBody
@@ -75,7 +76,7 @@ fun HashTagQuickView(
             ) {
                 FollowingButton(
                     onButtonClicked = onButtonClicked,
-                    isFollowing = uiState.isFollowing
+                    followStatus = uiState.followStatus
                 )
             }
         }
@@ -90,7 +91,7 @@ private fun HashTagQuickViewPreview() {
             uiState = HashTagQuickViewUiState(
                 name = "linux",
                 details = StringFactory.literal("18 in past 5 days"),
-                isFollowing = true
+                followStatus = FollowStatus.NOT_FOLLOWING
             ),
             onButtonClicked = {}
         )

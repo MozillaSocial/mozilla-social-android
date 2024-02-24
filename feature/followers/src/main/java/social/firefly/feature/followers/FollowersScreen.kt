@@ -36,6 +36,7 @@ import social.firefly.core.ui.accountfollower.AccountFollowerUiState
 import social.firefly.core.ui.common.FfSurface
 import social.firefly.core.ui.common.account.quickview.AccountQuickViewUiState
 import social.firefly.core.ui.common.appbar.FfCloseableTopAppBar
+import social.firefly.core.ui.common.following.FollowStatus
 import social.firefly.core.ui.common.pullrefresh.PullRefreshLazyColumn
 import social.firefly.core.ui.common.pullrefresh.rememberPullRefreshState
 import social.firefly.core.ui.common.tabs.FfTab
@@ -175,7 +176,7 @@ private fun FollowersList(
                             onButtonClicked = {
                                 followersInteractions.onFollowClicked(
                                     uiState.accountQuickViewUiState.accountId,
-                                    isFollowing = uiState.isFollowing,
+                                    followStatus = uiState.followStatus,
                                 )
                             },
                             modifier = Modifier
@@ -213,7 +214,7 @@ private fun FollowersScreenPreview() {
                                 webFinger = "person",
                                 avatarUrl = "",
                             ),
-                            isFollowing = false,
+                            followStatus = FollowStatus.NOT_FOLLOWING,
                             bioHtml = "",
                             followButtonVisible = true,
                         )

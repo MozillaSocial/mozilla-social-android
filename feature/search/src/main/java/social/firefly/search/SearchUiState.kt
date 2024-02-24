@@ -6,6 +6,7 @@ import social.firefly.common.Resource
 import social.firefly.core.model.wrappers.DetailedAccountWrapper
 import social.firefly.core.ui.accountfollower.AccountFollowerUiState
 import social.firefly.core.ui.common.account.quickview.AccountQuickViewUiState
+import social.firefly.core.ui.common.following.FollowStatus
 import social.firefly.core.ui.common.hashtag.quickview.HashTagQuickViewUiState
 import social.firefly.core.ui.postcard.PostCardUiState
 
@@ -25,7 +26,7 @@ data class SearchResultUiState(
 
 data class SearchedAccountUiState(
     val quickViewUiState: AccountQuickViewUiState,
-    val isFollowing: Boolean,
+    val followStatus: FollowStatus,
     val followButtonVisible: Boolean,
 )
 
@@ -39,6 +40,10 @@ fun DetailedAccountWrapper.toSearchedAccountUiState(
             webFinger = account.acct,
             avatarUrl = account.avatarUrl,
         ),
-        isFollowing = relationship.isFollowing,
+        followStatus = when {
+            relationship.hasPendingFollowRequest -> FollowStatus.PENDING_REQUEST
+            relationship.isFollowing -> FollowStatus.FOLLOWING
+            else -> FollowStatus.NOT_FOLLOWING
+        },
         followButtonVisible = currentUserAccountId != account.accountId,
     )

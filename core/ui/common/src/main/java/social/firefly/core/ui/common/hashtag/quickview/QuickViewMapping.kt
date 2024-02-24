@@ -3,6 +3,7 @@ package social.firefly.core.ui.common.hashtag.quickview
 import social.firefly.common.utils.StringFactory
 import social.firefly.core.model.HashTag
 import social.firefly.core.ui.common.R
+import social.firefly.core.ui.common.following.FollowStatus
 
 fun HashTag.toHashTagQuickViewUiState(): HashTagQuickViewUiState {
     val usages = history?.sumOf { it.usageCount } ?: 0
@@ -14,6 +15,10 @@ fun HashTag.toHashTagQuickViewUiState(): HashTagQuickViewUiState {
             quantity = days,
             usages, days,
         ),
-        isFollowing = following,
+        followStatus = if (following) {
+            FollowStatus.FOLLOWING
+        } else {
+            FollowStatus.NOT_FOLLOWING
+        },
     )
 }

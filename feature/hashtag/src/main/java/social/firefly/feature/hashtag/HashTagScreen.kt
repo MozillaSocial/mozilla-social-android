@@ -21,6 +21,7 @@ import social.firefly.core.model.HashTag
 import social.firefly.core.ui.common.FfSurface
 import social.firefly.core.ui.common.appbar.FfCloseableTopAppBar
 import social.firefly.core.ui.common.error.GenericError
+import social.firefly.core.ui.common.following.FollowStatus
 import social.firefly.core.ui.common.following.FollowingButton
 import social.firefly.core.ui.common.loading.MaxSizeLoading
 import social.firefly.core.ui.common.pullrefresh.PullRefreshLazyColumn
@@ -75,7 +76,11 @@ private fun HashTagScreen(
                                     uiState.data.following
                                 )
                             },
-                            isFollowing = uiState.data.following
+                            followStatus = if (uiState.data.following) {
+                                FollowStatus.FOLLOWING
+                            } else {
+                                FollowStatus.NOT_FOLLOWING
+                            }
                         )
                     }
                 }

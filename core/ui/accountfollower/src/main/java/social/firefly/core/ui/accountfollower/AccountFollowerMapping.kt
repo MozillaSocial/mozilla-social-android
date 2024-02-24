@@ -2,6 +2,7 @@ package social.firefly.core.ui.accountfollower
 
 import social.firefly.core.model.wrappers.DetailedAccountWrapper
 import social.firefly.core.ui.common.account.quickview.AccountQuickViewUiState
+import social.firefly.core.ui.common.following.FollowStatus
 
 fun DetailedAccountWrapper.toAccountFollowerUiState(
     currentUserAccountId: String,
@@ -13,7 +14,11 @@ fun DetailedAccountWrapper.toAccountFollowerUiState(
             webFinger = account.acct,
             avatarUrl = account.avatarUrl,
         ),
-        isFollowing = relationship.isFollowing,
+        followStatus = when {
+            relationship.hasPendingFollowRequest -> FollowStatus.PENDING_REQUEST
+            relationship.isFollowing -> FollowStatus.FOLLOWING
+            else -> FollowStatus.NOT_FOLLOWING
+        },
         bioHtml = account.bio,
         followButtonVisible = currentUserAccountId != account.accountId,
     )

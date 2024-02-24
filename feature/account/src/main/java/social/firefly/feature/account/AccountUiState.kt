@@ -4,6 +4,7 @@ import androidx.paging.PagingData
 import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.LocalDateTime
 import social.firefly.core.model.AccountTimelineType
+import social.firefly.core.ui.common.following.FollowStatus
 import social.firefly.core.ui.postcard.PostCardUiState
 
 data class AccountUiState(
@@ -20,7 +21,7 @@ data class AccountUiState(
     val statusesCount: Long,
     val fields: List<AccountFieldUiState>,
     val isBot: Boolean,
-    val isFollowing: Boolean,
+    val followStatus: FollowStatus,
     val isMuted: Boolean,
     val isBlocked: Boolean,
     val joinDate: LocalDateTime,
