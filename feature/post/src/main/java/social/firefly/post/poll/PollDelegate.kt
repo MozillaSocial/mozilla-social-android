@@ -1,16 +1,60 @@
 package social.firefly.post.poll
 
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
 import social.firefly.common.utils.edit
 import social.firefly.core.analytics.NewPostAnalytics
+import social.firefly.core.model.Poll
+import social.firefly.core.repository.mastodon.StatusRepository
 
 class PollDelegate(
     private val analytics: NewPostAnalytics,
+    coroutineScope: CoroutineScope,
+    private val statusRepository: StatusRepository,
+    private val editStatusId: String?,
 ) : PollInteractions {
 
     private val _uiState = MutableStateFlow<PollUiState?>(null)
     val uiState = _uiState.asStateFlow()
+
+    init {
+        coroutineScope.launch { editStatusId?.let { populateEditStatus(it) } }
+    }
+
+    private suspend fun populateEditStatus(editStatusId: String) {
+        statusRepository.getStatusLocal(editStatusId)?.let { status ->
+            status.poll?.let {  poll ->
+                _uiState.update {
+                    PollUiState(
+                        options = poll.options.map { it.title },
+                        style = if (poll.allowsMultipleChoices) {
+                            PollStyle.MULTIPLE_CHOICE
+                        } else {
+                            PollStyle.SINGLE_CHOICE
+                        },
+                        pollDuration = poll.getPollDuration(),
+                        hideTotals = poll.options.first().votesCount == null
+                    )
+                }
+            }
+        }
+    }
+
+    private fun Poll.getPollDuration(): PollDuration {
+        if (expiresAt == null) return PollDuration.ONE_DAY
+        val timeDifference = (expiresAt!!.epochSeconds - Clock.System.now().epochSeconds)
+        PollDuration.entries.forEach {
+            if (it.inSeconds >= timeDifference) {
+                return it
+            }
+        }
+        return PollDuration.ONE_WEEK
+    }
 
     override fun onNewPollClicked() {
         analytics.newPollClicked()

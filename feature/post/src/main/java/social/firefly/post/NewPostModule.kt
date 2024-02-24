@@ -1,7 +1,6 @@
 package social.firefly.post
 
 import org.koin.androidx.viewmodel.dsl.viewModel
-import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.module
 import social.firefly.common.commonModule
 import social.firefly.core.analytics.analyticsModule
@@ -24,7 +23,7 @@ val newPostModule = module {
     )
 
     viewModel { parametersHolder ->
-        social.firefly.post.NewPostViewModel(
+        NewPostViewModel(
             analytics = get(),
             replyStatusId = parametersHolder[0],
             editStatusId = parametersHolder[1],
@@ -34,7 +33,6 @@ val newPostModule = module {
             showSnackbar = get(),
             getLoggedInUserAccountId = get(),
             accountRepository = get(),
-            pollDelegate = get(),
         )
     }
 
@@ -49,7 +47,14 @@ val newPostModule = module {
         )
     }
 
-    factoryOf(::PollDelegate)
+    factory { parametersHolder ->
+        PollDelegate(
+            analytics = get(),
+            coroutineScope = parametersHolder[0],
+            statusRepository = get(),
+            editStatusId = parametersHolder[1],
+        )
+    }
 
     factory { parametersHolder ->
         MediaDelegate(

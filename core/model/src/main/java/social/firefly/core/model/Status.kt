@@ -18,7 +18,7 @@ data class Status(
     /**
      * The account that authored this status.
      */
-    val account: social.firefly.core.model.Account,
+    val account: Account,
     /**
      * HTML-encoded status content.
      */

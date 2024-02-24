@@ -54,14 +54,12 @@ fun Status.toDropDownOptions(
 ): List<DropDownOption> {
     return buildList {
         if (isUsersPost) {
-            if (this@toDropDownOptions.poll == null) {
-                add(
-                    DropDownOption(
-                        text = StringFactory.resource(resId = social.firefly.core.ui.postcard.R.string.edit_post),
-                        onOptionClicked = { postCardInteractions.onOverflowEditClicked(statusId) },
-                    )
+            add(
+                DropDownOption(
+                    text = StringFactory.resource(resId = social.firefly.core.ui.postcard.R.string.edit_post),
+                    onOptionClicked = { postCardInteractions.onOverflowEditClicked(statusId) },
                 )
-            }
+            )
             add(
                 DropDownOption(
                     text = StringFactory.resource(resId = R.string.delete_post),

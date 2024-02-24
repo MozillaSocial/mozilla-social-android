@@ -42,8 +42,7 @@ class NewPostViewModel(
     private val editStatus: EditStatus,
     private val popNavBackstack: PopNavBackstack,
     private val showSnackbar: ShowSnackbar,
-    val pollDelegate: PollDelegate,
-) : ViewModel(), social.firefly.post.NewPostInteractions, KoinComponent {
+) : ViewModel(), NewPostInteractions, KoinComponent {
 
     val statusDelegate: StatusDelegate by inject {
         parametersOf(
@@ -54,6 +53,13 @@ class NewPostViewModel(
     }
 
     val mediaDelegate: MediaDelegate by inject {
+        parametersOf(
+            viewModelScope,
+            editStatusId,
+        )
+    }
+
+    val pollDelegate: PollDelegate by inject {
         parametersOf(
             viewModelScope,
             editStatusId,

@@ -23,4 +23,5 @@ dependencies {
     implementation(libs.koin.androidx.compose)
     implementation(libs.coil)
     implementation(libs.jakewharton.timber)
+    implementation(libs.kotlinx.datetime)
 }
