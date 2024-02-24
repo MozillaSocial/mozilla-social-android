@@ -65,7 +65,7 @@ fun <A : Any> PagingLazyColumn(
                 }
 
                 is LoadState.NotLoading -> {
-                    item {
+                    item(key = lazyPagingItems.itemCount) {
                         DelayedVisibility(
                             key = lazyPagingItems.itemCount,
                             visible = lazyPagingItems.itemCount == 0
