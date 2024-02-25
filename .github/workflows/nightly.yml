@@ -2,7 +2,7 @@ name: nightly
 
 on:
   schedule:
-    - cron: '45 0 * * 0-6'
+    - cron: '45 0 * * *'
 
 # Cancel in-progress/pending daily release workflows if a new one starts.
 # When we merge PRs one after another quickly, we only need one release with the latest code.
