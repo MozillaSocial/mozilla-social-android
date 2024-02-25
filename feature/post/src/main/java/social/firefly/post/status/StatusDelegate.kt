@@ -18,11 +18,14 @@ import social.firefly.common.utils.replaceHashtag
 import social.firefly.core.analytics.NewPostAnalytics
 import social.firefly.core.repository.mastodon.SearchRepository
 import social.firefly.core.repository.mastodon.StatusRepository
+import social.firefly.core.ui.htmlcontent.htmlToStringWithExpandedMentions
+import social.firefly.core.usecase.mastodon.account.GetDomain
 import social.firefly.post.NewPostViewModel
 import timber.log.Timber
 
 class StatusDelegate(
     private val analytics: NewPostAnalytics,
+    private val getDomain: GetDomain,
     private val searchRepository: SearchRepository,
     private val statusRepository: StatusRepository,
     private val coroutineScope: CoroutineScope,
@@ -57,17 +60,19 @@ class StatusDelegate(
     }
 
     private suspend fun populateEditStatus(editStatusId: String) {
-        statusRepository.getStatusLocal(editStatusId)?.let { status ->
-            val content = HtmlCompat.fromHtml(status.content, 0).toString().trim('\n')
-            _uiState.edit {
-                copy(
-                    statusText = TextFieldValue(
-                        text = content,
-                        selection = TextRange(content.trimmedLength())
-                    ),
-                    contentWarningText = status.contentWarningText.ifBlank { null },
-                    editStatusId = status.statusId,
-                )
+        getDomain().collect { domain ->
+            statusRepository.getStatusLocal(editStatusId)?.let { status ->
+                val content = status.content.htmlToStringWithExpandedMentions(domain)
+                _uiState.edit {
+                    copy(
+                        statusText = TextFieldValue(
+                            text = content,
+                            selection = TextRange(content.trimmedLength())
+                        ),
+                        contentWarningText = status.contentWarningText.ifBlank { null },
+                        editStatusId = status.statusId,
+                    )
+                }
             }
         }
     }

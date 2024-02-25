@@ -94,7 +94,10 @@ fun String.htmlToStringWithExpandedMentions(
 
         val link = matchResult.value.substringAfter("href=\"").substringBefore("\"")
         val domain = link.substringAfter("https://").substringBefore("/")
-        val user = link.substringAfter("$domain/")
+        var user = HtmlCompat.fromHtml(matchResult.value, 0).toString()
+        if (user.substringAfter("@").contains("@")) {
+            user = user.substringBeforeLast("@")
+        }
         val fullHandle = "$user@$domain"
         expandedHtml = expandedHtml.replace(
             matchResult.value,
