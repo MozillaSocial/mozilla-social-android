@@ -3,20 +3,29 @@ package social.firefly.core.ui.common.text
 import androidx.compose.foundation.border
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.selection.LocalTextSelectionColors
+import androidx.compose.foundation.text.selection.TextSelectionColors
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldColors
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.graphics.takeOrElse
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
@@ -92,8 +101,9 @@ fun FfTextField(
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FfTextField(
+fun FfTextFieldNoBorder(
     value: TextFieldValue,
     onValueChange: (TextFieldValue) -> Unit,
     modifier: Modifier = Modifier,
@@ -116,33 +126,54 @@ fun FfTextField(
     minLines: Int = 1,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     shape: Shape = TextFieldDefaults.shape,
-    colors: TextFieldColors = FfTextFieldDefaults.colors(),
+    colors: NoBorderTextFieldColors = NoBorderTextFieldDefaults.colors(),
 ) {
-    TextField(
-        value = value,
-        onValueChange = onValueChange,
-        modifier = modifier,
-        enabled = enabled,
-        readOnly = readOnly,
-        textStyle = textStyle,
-        label = label,
-        placeholder = placeholder,
-        leadingIcon = leadingIcon,
-        trailingIcon = trailingIcon,
-        prefix = prefix,
-        suffix = suffix,
-        supportingText = supportingText,
-        isError = isError,
-        visualTransformation = visualTransformation,
-        keyboardOptions = keyboardOptions,
-        keyboardActions = keyboardActions,
-        singleLine = singleLine,
-        maxLines = maxLines,
-        minLines = minLines,
-        interactionSource = interactionSource,
-        shape = shape,
-        colors = colors,
-    )
+    // If color is not provided via the text style, use content color as a default
+    val textColor = textStyle.color.takeOrElse {
+        colors.textColor
+    }
+    val mergedTextStyle = textStyle.merge(TextStyle(color = textColor))
+
+    CompositionLocalProvider(LocalTextSelectionColors provides colors.selectionColors) {
+        BasicTextField(
+            value = value,
+            modifier = modifier,
+            onValueChange = onValueChange,
+            enabled = enabled,
+            readOnly = readOnly,
+            textStyle = mergedTextStyle,
+            cursorBrush = SolidColor(colors.cursorColor),
+            visualTransformation = visualTransformation,
+            keyboardOptions = keyboardOptions,
+            keyboardActions = keyboardActions,
+            interactionSource = interactionSource,
+            singleLine = singleLine,
+            maxLines = maxLines,
+            minLines = minLines,
+            decorationBox = @Composable { innerTextField ->
+                // places leading icon, text field with label and placeholder, trailing icon
+                TextFieldDefaults.DecorationBox(
+                    value = value.text,
+                    visualTransformation = visualTransformation,
+                    innerTextField = innerTextField,
+                    placeholder = placeholder,
+                    label = label,
+                    leadingIcon = leadingIcon,
+                    trailingIcon = trailingIcon,
+                    prefix = prefix,
+                    suffix = suffix,
+                    supportingText = supportingText,
+                    shape = shape,
+                    singleLine = singleLine,
+                    enabled = enabled,
+                    isError = isError,
+                    interactionSource = interactionSource,
+                    colors = colors.inputFieldColors,
+                    contentPadding = PaddingValues(0.dp)
+                )
+            }
+        )
+    }
 }
 
 object FfTextFieldDefaults {
@@ -162,6 +193,10 @@ object FfTextFieldDefaults {
         errorContainerColor: Color = Color.Transparent,
         unfocusedContainerColor: Color = Color.Transparent,
         focusedContainerColor: Color = Color.Transparent,
+        disabledPlaceholderColor: Color = FfTheme.colors.textSecondary,
+        errorPlaceholderColor: Color = FfTheme.colors.textSecondary,
+        focusedPlaceholderColor: Color = FfTheme.colors.textSecondary,
+        unfocusedPlaceholderColor: Color = FfTheme.colors.textSecondary,
     ): TextFieldColors =
         TextFieldDefaults.colors(
             cursorColor = cursorColor,
@@ -178,8 +213,30 @@ object FfTextFieldDefaults {
             errorContainerColor = errorContainerColor,
             unfocusedContainerColor = unfocusedContainerColor,
             focusedContainerColor = focusedContainerColor,
+            disabledPlaceholderColor = disabledPlaceholderColor,
+            errorPlaceholderColor = errorPlaceholderColor,
+            focusedPlaceholderColor = focusedPlaceholderColor,
+            unfocusedPlaceholderColor = unfocusedPlaceholderColor,
         )
 }
+
+internal object NoBorderTextFieldDefaults {
+    @Composable
+    fun colors(): NoBorderTextFieldColors =
+        NoBorderTextFieldColors(
+            cursorColor = FfTheme.colors.textPrimary,
+            textColor = FfTheme.colors.textPrimary,
+            selectionColors = LocalTextSelectionColors.current,
+            inputFieldColors = FfTextFieldDefaults.colors(),
+        )
+}
+
+data class NoBorderTextFieldColors(
+    val cursorColor: Color,
+    val textColor: Color,
+    val selectionColors: TextSelectionColors,
+    val inputFieldColors: TextFieldColors,
+)
 
 @Preview
 @Composable

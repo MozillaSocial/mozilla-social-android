@@ -26,7 +26,7 @@
     <string name="add_poll_option_button_content_description">add poll option</string>
     <string name="remove_poll_option_button_content_description">remove poll option</string>
 
-    <string name="new_post_text_field_label">What is on your mind?</string>
+    <string name="new_post_text_field_label">What\'s on your mind?</string>
 
     <string name="in_reply_to_account_name_label">In reply to %s</string>
 

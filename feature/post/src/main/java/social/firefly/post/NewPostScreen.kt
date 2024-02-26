@@ -68,6 +68,7 @@ import social.firefly.core.ui.common.button.FfButton
 import social.firefly.core.ui.common.button.FfButtonContentPadding
 import social.firefly.core.ui.common.media.AttachmentMedia
 import social.firefly.core.ui.common.text.FfTextField
+import social.firefly.core.ui.common.text.FfTextFieldNoBorder
 import social.firefly.core.ui.common.text.SmallTextLabel
 import social.firefly.core.ui.common.transparentTextFieldColors
 import social.firefly.core.ui.common.utils.getWindowHeightClass
@@ -290,21 +291,14 @@ private fun NewPostScreenContent(
 fun UserHeader(
     userHeaderState: UserHeaderState,
 ) {
-    Row {
-        AsyncImage(
-            modifier = Modifier
-                .padding(start = FfSpacing.sm)
-                .size(40.dp)
-                .clip(CircleShape)
-                .border(
-                    width = 3.dp,
-                    color = FfTheme.colors.layer1,
-                    shape = CircleShape,
-                ),
-            model = userHeaderState.avatarUrl,
-            contentDescription = null,
-        )
-    }
+    AsyncImage(
+        modifier = Modifier
+            .padding(start = FfSpacing.sm)
+            .size(40.dp)
+            .clip(CircleShape),
+        model = userHeaderState.avatarUrl,
+        contentDescription = null,
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -392,14 +386,14 @@ private fun MainBox(
 
                     item {
                         val highlightColor = FfTheme.colors.textLink
-                        FfTextField(
-                            modifier =
-                            Modifier
+                        FfTextFieldNoBorder(
+                            modifier = Modifier
                                 .fillMaxWidth()
-                                .focusRequester(textFieldFocusRequester),
+                                .focusRequester(textFieldFocusRequester)
+                                .padding(start = 16.dp, end = 16.dp, bottom = 6.dp),
                             value = statusUiState.statusText,
                             onValueChange = { statusInteractions.onStatusTextUpdated(it) },
-                            label = {
+                            placeholder = {
                                 Text(
                                     text = stringResource(id = R.string.new_post_text_field_label),
                                 )
@@ -447,7 +441,7 @@ private fun MainBox(
 private fun InReplyToText(inReplyToAccountName: String?) {
     if (inReplyToAccountName != null) {
         Row(
-            modifier = Modifier.padding(start = 12.dp),
+            modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 6.dp),
         ) {
             Icon(
                 modifier =
@@ -476,9 +470,8 @@ private fun ContentWarningEntry(
     contentWarningInteractions: ContentWarningInteractions,
 ) {
     FfTextField(
-        modifier =
-        Modifier
-            .padding(16.dp)
+        modifier = Modifier
+            .padding(start = 16.dp, end = 16.dp, bottom = 6.dp)
             .fillMaxWidth(),
         value = contentWarningText,
         onValueChange = { contentWarningInteractions.onContentWarningTextChanged(it) },
