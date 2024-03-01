@@ -14,7 +14,7 @@ runs:
   steps:
   - name: Set up JDK
     if: ${{ inputs.jdk || inputs.gradle }}
-    uses: actions/setup-java@0ab4596768b603586c0de567f2430c30f5b0d2b0 # v3.13.0
+    uses: actions/setup-java@v4
     with:
       java-version: '17'
       distribution: 'temurin'
@@ -22,4 +22,4 @@ runs:
       # See: https://github.com/actions/setup-java/blob/main/docs/advanced-usage.md#Hosted-Tool-Cache
   - name: Set up Gradle
     if: ${{ inputs.gradle }}
-    uses: gradle/gradle-build-action@842c587ad8aa4c68eeba24c396e15af4c2e9f30a # v2.9.0
+    uses: gradle/gradle-build-action@v3
