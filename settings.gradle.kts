@@ -14,6 +14,12 @@ dependencyResolutionManagement {
         google()
         mavenCentral()
         maven { url = uri("https://maven.mozilla.org/maven2") }
+        maven {
+            setUrl("https://www.jitpack.io")
+            content {
+                includeModule("com.github.UnifiedPush", "android-connector")
+            }
+        }
     }
 }
 rootProject.name = "Firefly"
@@ -54,3 +60,4 @@ include(":core:workmanager")
 include(":feature:notifications")
 include(":core:ui:notifications")
 include(":feature:media")
+include(":core:push")

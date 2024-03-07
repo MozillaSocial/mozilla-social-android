@@ -101,6 +101,7 @@ dependencies {
     implementation(project(":core:workmanager"))
     implementation(project(":feature:notifications"))
     implementation(project(":feature:media"))
+    implementation(project(":core:push"))
 
     implementation(kotlin("reflect"))
 

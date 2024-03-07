@@ -34,6 +34,7 @@ import social.firefly.feed.feedModule
 import social.firefly.post.newPostModule
 import social.firefly.search.searchModule
 import social.firefly.BuildConfig
+import social.firefly.core.push.pushModule
 import timber.log.Timber
 
 class MainApplication : Application(), ImageLoaderFactory {
@@ -63,6 +64,7 @@ class MainApplication : Application(), ImageLoaderFactory {
                 featureModules,
                 mainModule,
                 workManagerModule,
+                pushModule,
             )
         }
     }

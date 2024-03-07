@@ -32,6 +32,7 @@ import kotlinx.coroutines.flow.flowOf
 import org.koin.androidx.compose.koinViewModel
 import social.firefly.core.designsystem.font.FfFonts
 import social.firefly.core.designsystem.theme.FfTheme
+import social.firefly.core.push.PushRegistration
 import social.firefly.core.ui.common.FfSurface
 import social.firefly.core.ui.common.appbar.FfTopBar
 import social.firefly.core.ui.common.pullrefresh.PullRefreshLazyColumn
@@ -56,8 +57,11 @@ internal fun FeedScreen(viewModel: FeedViewModel = koinViewModel()) {
         feedInteractions = viewModel,
     )
 
+    val context = LocalContext.current
+
     LaunchedEffect(Unit) {
         viewModel.onScreenViewed()
+        PushRegistration.register(context)
     }
 }
 

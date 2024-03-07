@@ -9,4 +9,5 @@ message UserPreferences {
   string access_token = 1;
   string account_id = 2;
   string domain = 3;
+  string serialized_push_keys = 6;
 }

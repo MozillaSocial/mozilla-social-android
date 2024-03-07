@@ -52,7 +52,7 @@ class Login(
                     .addPathSegments(OAUTH_AUTHORIZE)
                     .addQueryParameter(RESPONSE_TYPE_QUERY_PARAM, CODE)
                     .addQueryParameter(REDIRECT_URI_QUERY_PARAM, AUTH_SCHEME)
-                    .addQueryParameter(SCOPE_QUERY_PARAM, READ_WRITE_PUSH)
+                    .addQueryParameter(SCOPE_QUERY_PARAM, SCOPES)
                     .addQueryParameter(CLIENT_ID_QUERY_PARAM, application.clientId!!)
                     .build()
                     .toString(),
@@ -129,7 +129,6 @@ class Login(
         const val REDIRECT_URI_QUERY_PARAM = "redirect_uri"
         const val CLIENT_ID_QUERY_PARAM = "client_id"
         const val SCOPE_QUERY_PARAM = "scope"
-        const val READ_WRITE_PUSH = "read write push"
         const val TAG = "Login"
     }
 

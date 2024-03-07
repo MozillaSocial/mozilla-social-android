@@ -15,8 +15,6 @@ data class Application(
     val website: String? = null,
     /**
      * Used for Push Streaming API.
-     *
-     * Equivalent to [PushSubscription.serverKey].
      */
     val vapidKey: String? = null,
     /**
