@@ -205,7 +205,7 @@ class SearchViewModel(
         analytics.accountClicked()
     }
 
-    override fun onHashTagClicked(name: String) {
+    override fun onHashtagClick(name: String) {
         navigateTo(NavigationDestination.HashTag(name))
         analytics.hashtagClicked()
     }

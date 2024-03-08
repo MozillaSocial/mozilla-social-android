@@ -5,15 +5,19 @@ import org.koin.dsl.module
 import social.firefly.common.commonModule
 import social.firefly.core.analytics.analyticsModule
 import social.firefly.core.navigation.navigationModule
-import social.firefly.core.usecase.mozilla.mozillaUsecaseModule
+import social.firefly.core.repository.mastodon.mastodonRepositoryModule
+import social.firefly.core.repository.paging.pagingModule
+import social.firefly.core.usecase.mastodon.mastodonUsecaseModule
 
 val discoverModule =
     module {
         includes(
             commonModule,
-            mozillaUsecaseModule,
             navigationModule,
             analyticsModule,
+            mastodonRepositoryModule,
+            mastodonUsecaseModule,
+            pagingModule,
         )
 
         viewModelOf(::DiscoverViewModel)

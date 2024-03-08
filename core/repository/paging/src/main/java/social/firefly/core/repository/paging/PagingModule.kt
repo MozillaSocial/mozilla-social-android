@@ -95,4 +95,6 @@ val pagingModule = module {
             query = parametersHolder[0],
         )
     }
+
+    factoryOf(::TrendingHashtagsRemoteMediator)
 }

@@ -2,53 +2,47 @@ package social.firefly.feature.discover
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
+import androidx.paging.ExperimentalPagingApi
+import androidx.paging.PagingData
+import androidx.paging.map
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import social.firefly.common.Resource
 import social.firefly.core.analytics.DiscoverAnalytics
 import social.firefly.core.analytics.utils.ImpressionTracker
-import social.firefly.core.model.Recommendation
 import social.firefly.core.navigation.NavigationDestination
 import social.firefly.core.navigation.usecases.NavigateTo
-import social.firefly.core.usecase.mozilla.GetRecommendations
+import social.firefly.core.repository.mastodon.DatabaseDelegate
+import social.firefly.core.repository.mastodon.TrendsRepository
+import social.firefly.core.repository.paging.TrendingHashtagsRemoteMediator
+import social.firefly.core.ui.common.following.FollowStatus
+import social.firefly.core.ui.common.hashtag.quickview.HashTagQuickViewUiState
+import social.firefly.core.ui.common.hashtag.quickview.toHashTagQuickViewUiState
+import social.firefly.core.usecase.mastodon.hashtag.FollowHashTag
+import social.firefly.core.usecase.mastodon.hashtag.UnfollowHashTag
 import timber.log.Timber
 
+@OptIn(ExperimentalPagingApi::class)
 class DiscoverViewModel(
-    private val getRecommendations: GetRecommendations,
+    trendsRepository: TrendsRepository,
     private val analytics: DiscoverAnalytics,
     private val navigateTo: NavigateTo,
+    private val followHashTag: FollowHashTag,
+    private val unfollowHashTag: UnfollowHashTag,
+    remoteMediator: TrendingHashtagsRemoteMediator,
 ) : ViewModel(), DiscoverInteractions {
-    private val _recommendations =
-        MutableStateFlow<Resource<List<Recommendation>>>(Resource.Loading())
-    val recommendations = _recommendations.asStateFlow()
+    @OptIn(ExperimentalPagingApi::class)
+     val trendingHashtags: Flow<PagingData<HashTagQuickViewUiState>> = trendsRepository.getHashTagsPager(
+        remoteMediator = remoteMediator
+     ).map { it.map { it.toHashTagQuickViewUiState() } }
 
     private val recommendationImpressionTracker =
         ImpressionTracker<String> { recommendationId ->
             analytics.recommendationViewed(recommendationId)
         }
 
-    init {
-        getRecs()
-    }
-
-    private fun getRecs() {
-        _recommendations.update { Resource.Loading() }
-        viewModelScope.launch {
-            try {
-                _recommendations.update {
-                    Resource.Loaded(getRecommendations())
-                }
-            } catch (e: Exception) {
-                Timber.e(e)
-                _recommendations.update { Resource.Error(e) }
-            }
-        }
-    }
-
     override fun onRetryClicked() {
-        getRecs()
+        // TODO@DA
     }
 
     override fun onRecommendationClicked(recommendationId: String) {
@@ -69,5 +63,31 @@ class DiscoverViewModel(
 
     override fun onSearchBarClicked() {
         navigateTo(NavigationDestination.Search)
+    }
+
+    override fun onHashTagFollowClicked(name: String, followStatus: FollowStatus) {
+        viewModelScope.launch {
+            when (followStatus) {
+                FollowStatus.FOLLOWING,
+                FollowStatus.PENDING_REQUEST -> {
+                    try {
+                        unfollowHashTag(name)
+                    } catch (e: UnfollowHashTag.UnfollowFailedException) {
+                        Timber.e(e)
+                    }
+                }
+                FollowStatus.NOT_FOLLOWING -> {
+                    try {
+                        followHashTag(name)
+                    } catch (e: FollowHashTag.FollowFailedException) {
+                        Timber.e(e)
+                    }
+                }
+            }
+        }
+    }
+
+    override fun onHashtagClick(name: String) {
+        navigateTo(NavigationDestination.HashTag(name))
     }
 }

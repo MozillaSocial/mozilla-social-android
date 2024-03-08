@@ -63,8 +63,7 @@ import social.firefly.core.ui.common.appbar.FfCloseableTopAppBar
 import social.firefly.core.ui.common.divider.FfDivider
 import social.firefly.core.ui.common.error.GenericError
 import social.firefly.core.ui.common.following.FollowingButton
-import social.firefly.core.ui.common.hashtag.quickview.HashTagQuickView
-import social.firefly.core.ui.common.hashtag.quickview.HashTagQuickViewUiState
+import social.firefly.core.ui.common.hashtag.HashTagList
 import social.firefly.core.ui.common.loading.MaxSizeLoading
 import social.firefly.core.ui.common.paging.PagingLazyColumn
 import social.firefly.core.ui.common.search.FfSearchBar
@@ -256,10 +255,12 @@ private fun ListContent(
                 }
 
                 SearchTab.HASHTAGS -> {
-                    HashTagsList(
+                    HashTagList(
                         hashTagsFeed = hashTagFeed,
+                        noResultText = stringResource(id = R.string.search_empty),
                         scrollState = hashTagScrollState,
-                        searchInteractions = searchInteractions,
+                        hashtagInteractions = searchInteractions,
+
                     )
                 }
 
@@ -374,7 +375,7 @@ private fun TopAccounts(
         ) { index ->
             val item = searchResultUiState.accountUiStates[index]
             NoRipple {
-                AccountQuickViewBox(
+                AccountQuickViewBox( 
                     modifier = Modifier
                         .padding(FfSpacing.md)
                         .border(
@@ -468,41 +469,6 @@ private fun StatusesList(
     }
 }
 
-@Composable
-private fun HashTagsList(
-    hashTagsFeed: LazyPagingItems<HashTagQuickViewUiState>?,
-    scrollState: LazyListState,
-    searchInteractions: SearchInteractions,
-) {
-    hashTagsFeed?.let { lazyPagingItems ->
-        PagingLazyColumn(
-            lazyPagingItems = lazyPagingItems,
-            noResultText = stringResource(id = R.string.search_empty),
-            listState = scrollState,
-        ) {
-            items(
-                count = lazyPagingItems.itemCount,
-                key = lazyPagingItems.itemKey { it.name },
-            ) { index ->
-                lazyPagingItems[index]?.let { uiState ->
-                    HashTagQuickView(
-                        modifier = Modifier
-                            .padding(FfSpacing.md)
-                            .clickable { searchInteractions.onHashTagClicked(uiState.name) },
-                        uiState = uiState,
-                        onButtonClicked = {
-                            searchInteractions.onHashTagFollowClicked(
-                                name = uiState.name,
-                                followStatus = uiState.followStatus
-                            )
-                        }
-                    )
-                }
-            }
-        }
-    }
-}
-
 //TODO add search suggestions or recent searches
 @Composable
 private fun Suggestions() {
@@ -527,7 +493,7 @@ private fun SearchScreenPreview() {
                 ),
                 query = "test",
             ),
-            searchInteractions = object : SearchInteractions {},
+            searchInteractions = SearchInteractionsNoOp,
             postCardInteractions = object : PostCardInteractions {},
         )
     }

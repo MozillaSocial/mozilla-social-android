@@ -1,5 +1,6 @@
 package social.firefly.core.database
 
+import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
@@ -31,18 +32,23 @@ import social.firefly.core.database.dao.PollsDao
 import social.firefly.core.database.dao.RelationshipsDao
 import social.firefly.core.database.dao.SearchDao
 import social.firefly.core.database.dao.StatusDao
+import social.firefly.core.database.dao.TrendingHashTagDao
+import social.firefly.core.database.dao.TrendingLinkDao
+import social.firefly.core.database.dao.TrendingStatusDao
 import social.firefly.core.database.model.entities.DatabaseAccount
 import social.firefly.core.database.model.entities.DatabaseHashTagEntity
 import social.firefly.core.database.model.entities.DatabaseNotification
 import social.firefly.core.database.model.entities.DatabasePoll
 import social.firefly.core.database.model.entities.DatabaseRelationship
 import social.firefly.core.database.model.entities.DatabaseStatus
+import social.firefly.core.database.model.entities.TrendingLink
 import social.firefly.core.database.model.entities.accountCollections.DatabaseBlock
 import social.firefly.core.database.model.entities.accountCollections.DatabaseMute
 import social.firefly.core.database.model.entities.accountCollections.Followee
 import social.firefly.core.database.model.entities.accountCollections.Follower
 import social.firefly.core.database.model.entities.accountCollections.SearchedAccount
 import social.firefly.core.database.model.entities.hashtagCollections.SearchedHashTag
+import social.firefly.core.database.model.entities.hashtagCollections.TrendingHashTag
 import social.firefly.core.database.model.entities.notificationCollections.FollowListNotification
 import social.firefly.core.database.model.entities.notificationCollections.MainNotification
 import social.firefly.core.database.model.entities.notificationCollections.MentionListNotification
@@ -53,6 +59,7 @@ import social.firefly.core.database.model.entities.statusCollections.HashTagTime
 import social.firefly.core.database.model.entities.statusCollections.HomeTimelineStatus
 import social.firefly.core.database.model.entities.statusCollections.LocalTimelineStatus
 import social.firefly.core.database.model.entities.statusCollections.SearchedStatus
+import social.firefly.core.database.model.entities.statusCollections.TrendingStatus
 
 @Suppress("MagicNumber")
 @Database(
@@ -79,9 +86,14 @@ import social.firefly.core.database.model.entities.statusCollections.SearchedSta
         MainNotification::class,
         MentionListNotification::class,
         FollowListNotification::class,
+        TrendingLink::class,
+        TrendingStatus::class,
+        TrendingHashTag::class,
     ],
-    version = 1,
-    autoMigrations = [],
+    version = 2,
+    autoMigrations = [
+        AutoMigration (from = 1, to = 2)
+    ],
     exportSchema = true,
 )
 @TypeConverters(
@@ -129,6 +141,12 @@ abstract class SocialDatabase : RoomDatabase() {
     abstract fun hashTagsDao(): HashTagsDao
 
     abstract fun searchDao(): SearchDao
+
+    abstract fun trendingLinkDao(): TrendingLinkDao
+
+    abstract fun trendingHashtagDao(): TrendingHashTagDao
+
+    abstract fun trendingStatusDao(): TrendingStatusDao
 
     abstract fun notificationsDao(): NotificationsDao
 }
