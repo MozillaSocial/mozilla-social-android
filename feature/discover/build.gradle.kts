@@ -12,6 +12,8 @@ dependencies {
     implementation(project(":core:usecase:mastodon"))
     implementation(project(":core:designsystem"))
     implementation(project(":core:ui:common"))
+    implementation(project(":core:ui:postcard"))
+    implementation(project(":core:ui:accountfollower"))
     implementation(project(":core:common"))
     implementation(project(":core:navigation"))
     implementation(project(":core:model"))

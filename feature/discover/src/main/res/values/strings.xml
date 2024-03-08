@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="discover_title">Trending</string>
-
     <string name="share_content_description">share</string>
     <string name="bookmark_content_description">bookmark</string>
     <string name="repost_content_description">repost</string>
     <string name="search_field">Search</string>
+    <string name="hashtags_tab">Hashtags</string>
+    <string name="posts_tab">Posts</string>
+    <string name="links_tab">Links</string>
+    <string name="suggestions_tab">Suggestions</string>
 </resources>

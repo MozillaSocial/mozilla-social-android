@@ -13,18 +13,19 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.PagingData
-import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOf
 import org.koin.androidx.compose.koinViewModel
 import social.firefly.core.designsystem.theme.FfSpacing
 import social.firefly.core.designsystem.utils.NoRipple
@@ -34,15 +35,16 @@ import social.firefly.core.ui.common.hashtag.HashtagInteractions
 import social.firefly.core.ui.common.hashtag.hashTagListItems
 import social.firefly.core.ui.common.hashtag.quickview.HashTagQuickViewUiState
 import social.firefly.core.ui.common.search.FfSearchBar
-import social.firefly.core.ui.common.text.LargeTextTitle
+import social.firefly.core.ui.common.tabs.FfTab
+import social.firefly.core.ui.common.tabs.FfTabRow
+import social.firefly.core.ui.common.text.MediumTextLabel
 import social.firefly.core.ui.common.utils.PreviewTheme
-import social.firefly.core.ui.common.utils.shareUrl
 
 @Composable
 internal fun DiscoverScreen(viewModel: DiscoverViewModel = koinViewModel()) {
-    val hashtagsFeed = viewModel.trendingHashtags
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     DiscoverScreen(
-        hashTagsFeed = hashtagsFeed,
+        uiState = uiState,
         discoverInteractions = viewModel,
     )
 
@@ -54,7 +56,7 @@ internal fun DiscoverScreen(viewModel: DiscoverViewModel = koinViewModel()) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun DiscoverScreen(
-    hashTagsFeed: Flow<PagingData<HashTagQuickViewUiState>>,
+    uiState: DiscoverUiState,
     discoverInteractions: DiscoverInteractions,
 ) {
     val searchField = stringResource(id = R.string.search_field)
@@ -98,8 +100,8 @@ private fun DiscoverScreen(
                 }
             }
             MainContent(
-                hashTagsFeed = hashTagsFeed,
-                hashtagInteractions = discoverInteractions,
+                uiState = uiState,
+                discoverInteractions = discoverInteractions,
             )
         }
     }
@@ -107,19 +109,37 @@ private fun DiscoverScreen(
 
 @Composable
 private fun MainContent(
-    hashTagsFeed: Flow<PagingData<HashTagQuickViewUiState>>,
+    uiState: DiscoverUiState,
+    discoverInteractions: DiscoverInteractions,
+) {
+    Box {
+        Column {
+            Tabs(
+                uiState = uiState,
+                discoverInteractions = discoverInteractions,
+            )
+
+            when (uiState.selectedTab) {
+                is DiscoverTab.Hashtags -> {
+                    Hashtags(
+                        hashtags = uiState.selectedTab.hashtags,
+                        hashtagInteractions = discoverInteractions
+                    )
+                }
+
+                is DiscoverTab.Posts -> TODO()
+            }
+        }
+    }
+}
+
+@Composable
+private fun Hashtags(
+    hashtags: Flow<PagingData<HashTagQuickViewUiState>>,
     hashtagInteractions: HashtagInteractions,
 ) {
-    val feed = hashTagsFeed.collectAsLazyPagingItems()
+    val feed = hashtags.collectAsLazyPagingItems()
     LazyColumn {
-        item {
-            LargeTextTitle(
-                modifier =
-                Modifier
-                    .padding(start = 16.dp, top = 8.dp),
-                text = stringResource(id = R.string.discover_title),
-            )
-        }
         hashTagListItems(
             hashTagsFeed = feed,
             hashtagInteractions = hashtagInteractions,
@@ -127,14 +147,36 @@ private fun MainContent(
     }
 }
 
+@Composable
+private fun Tabs(
+    uiState: DiscoverUiState,
+    discoverInteractions: DiscoverInteractions,
+) {
+    val context = LocalContext.current
+
+    FfTabRow(selectedTabIndex = uiState.selectedTab.index) {
+        uiState.tabs.forEach { tab ->
+            FfTab(
+                modifier =
+                Modifier
+                    .height(40.dp),
+                selected = uiState.selectedTab == tab,
+                onClick = { discoverInteractions.onTabClicked(tab) },
+                content = {
+                    MediumTextLabel(text = tab.tabTitle.build(context))
+                },
+            )
+        }
+    }
+}
 
 @Preview
 @Composable
 private fun DiscoverScreenPreview() {
     PreviewTheme {
-        DiscoverScreen(
-            hashTagsFeed = flowOf(),
-            discoverInteractions = DiscoverInteractionsNoOp,
-        )
+//        DiscoverScreen(
+//            uiState = flowOf(),
+//            discoverInteractions = DiscoverInteractionsNoOp,
+//        )
     }
 }
