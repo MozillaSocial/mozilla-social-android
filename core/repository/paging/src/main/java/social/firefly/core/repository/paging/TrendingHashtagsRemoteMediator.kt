@@ -5,6 +5,7 @@ import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import kotlinx.coroutines.delay
+import social.firefly.core.database.model.entities.hashtagCollections.TrendingHashTag
 import social.firefly.core.database.model.entities.hashtagCollections.TrendingHashTagWrapper
 import social.firefly.core.repository.mastodon.DatabaseDelegate
 import social.firefly.core.repository.mastodon.HashtagRepository
@@ -53,7 +54,14 @@ class TrendingHashtagsRemoteMediator(
                     nextPositionIndex = 0
                 }
                 hashtagRepository.insertAll(hashtags)
-                repository.insertAll(hashtags)
+                repository.insertAll(
+                    hashtags.mapIndexed { index, hashTag ->
+                        TrendingHashTag(
+                            hashTag.name,
+                            position = nextPositionIndex + index,
+                        )
+                    }
+                )
             }
 
             nextPositionIndex += hashtags.size

@@ -50,12 +50,7 @@ class TrendsRepository internal constructor(
         dao.deleteAll()
     }
 
-    suspend fun insertAll(data: List<HashTag>) {
-        dao.upsertAll(data.mapIndexed { index, hashtag ->
-            TrendingHashTag(
-                hashTagName = hashtag.name,
-                position = index
-            )
-        })
+    suspend fun insertAll(data: List<TrendingHashTag>) {
+        dao.upsertAll(data)
     }
 }
