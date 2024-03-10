@@ -6,7 +6,7 @@ import io.gitlab.arturbosch.detekt.extensions.DetektExtension
 import org.gradle.api.Action
 import org.gradle.api.Project
 
-fun Project.android(configure: Action<CommonExtension<*, *, *, *, *>>) {
+fun Project.android(configure: Action<CommonExtension<*, *, *, *, *, *>>) {
     extensions.configure("android", configure)
 }
 
