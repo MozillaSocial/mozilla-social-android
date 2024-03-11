@@ -1,5 +1,9 @@
+@file:OptIn(ExperimentalPagingApi::class)
+
 package social.firefly.core.repository.mastodon
 
+import androidx.paging.ExperimentalPagingApi
+import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 import social.firefly.core.database.databaseModule
@@ -36,5 +40,6 @@ val mastodonRepositoryModule =
         singleOf(::NotificationsRepository)
         singleOf(::FollowRequestRepository)
         singleOf(::TrendsRepository)
+        factoryOf(::TrendingStatusRepository)
         singleOf(::PushRepository)
     }

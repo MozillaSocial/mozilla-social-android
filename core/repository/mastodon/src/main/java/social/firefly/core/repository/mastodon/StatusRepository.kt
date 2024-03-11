@@ -126,7 +126,7 @@ class StatusRepository(
     }
 }
 
-private fun Status.toDatabaseModel(): DatabaseStatus =
+ fun Status.toDatabaseModel(): DatabaseStatus =
     DatabaseStatus(
         statusId = statusId,
         uri = uri,

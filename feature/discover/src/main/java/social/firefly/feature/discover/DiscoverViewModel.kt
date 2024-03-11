@@ -3,9 +3,7 @@ package social.firefly.feature.discover
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.ExperimentalPagingApi
-import androidx.paging.PagingData
 import androidx.paging.map
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
@@ -16,32 +14,49 @@ import social.firefly.core.navigation.NavigationDestination
 import social.firefly.core.navigation.usecases.NavigateTo
 import social.firefly.core.repository.mastodon.TrendsRepository
 import social.firefly.core.repository.paging.TrendingHashtagsRemoteMediator
+import social.firefly.core.repository.paging.TrendingStatusPagingDataFlow
 import social.firefly.core.ui.common.following.FollowStatus
-import social.firefly.core.ui.common.hashtag.quickview.HashTagQuickViewUiState
 import social.firefly.core.ui.common.hashtag.quickview.toHashTagQuickViewUiState
+import social.firefly.core.ui.postcard.toPostCardUiState
+import social.firefly.core.usecase.mastodon.account.GetLoggedInUserAccountId
 import social.firefly.core.usecase.mastodon.hashtag.FollowHashTag
 import social.firefly.core.usecase.mastodon.hashtag.UnfollowHashTag
 import timber.log.Timber
 
 @OptIn(ExperimentalPagingApi::class)
 class DiscoverViewModel(
+    getLoggedInUserAccountId: GetLoggedInUserAccountId,
     trendsRepository: TrendsRepository,
+    trendingStatusPagingDataFlow: TrendingStatusPagingDataFlow,
     private val analytics: DiscoverAnalytics,
     private val navigateTo: NavigateTo,
     private val followHashTag: FollowHashTag,
     private val unfollowHashTag: UnfollowHashTag,
     hashtagsRemoteMediator: TrendingHashtagsRemoteMediator,
 ) : ViewModel(), DiscoverInteractions {
-    @OptIn(ExperimentalPagingApi::class)
-    private val trendingHashtags: DiscoverTab.Hashtags =
-        DiscoverTab.Hashtags(trendsRepository.getHashTagsPager(
+
+    private val usersAccountId: String = getLoggedInUserAccountId()
+
+    private val hashtags: DiscoverTab.Hashtags =
+        DiscoverTab.Hashtags(pagingDataFlow = trendsRepository.getPager(
             remoteMediator = hashtagsRemoteMediator
         ).map { pagingData -> pagingData.map { hashtag -> hashtag.toHashTagQuickViewUiState() } })
 
+    private val posts: DiscoverTab.Posts =
+        DiscoverTab.Posts(trendingStatusPagingDataFlow.pagingDataFlow()
+            .map { pagingData ->
+                pagingData.map { hashtag ->
+                    hashtag.toPostCardUiState(
+                        currentUserAccountId = usersAccountId,
+                        postCardInteractions = this,
+                    )
+                }
+            })
+
     private val _uiState = MutableStateFlow(
         DiscoverUiState(
-            selectedTab = trendingHashtags,
-            tabs = listOf(trendingHashtags)
+            selectedTab = hashtags,
+            tabs = listOf(hashtags, posts)
         )
     )
     val uiState = _uiState.asStateFlow()

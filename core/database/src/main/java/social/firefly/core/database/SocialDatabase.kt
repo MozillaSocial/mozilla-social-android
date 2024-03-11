@@ -59,7 +59,7 @@ import social.firefly.core.database.model.entities.statusCollections.HashTagTime
 import social.firefly.core.database.model.entities.statusCollections.HomeTimelineStatus
 import social.firefly.core.database.model.entities.statusCollections.LocalTimelineStatus
 import social.firefly.core.database.model.entities.statusCollections.SearchedStatus
-import social.firefly.core.database.model.entities.statusCollections.TrendingStatus
+import social.firefly.core.database.model.entities.statusCollections.DbTrendingStatus
 
 @Suppress("MagicNumber")
 @Database(
@@ -87,7 +87,7 @@ import social.firefly.core.database.model.entities.statusCollections.TrendingSta
         MentionListNotification::class,
         FollowListNotification::class,
         TrendingLink::class,
-        TrendingStatus::class,
+        DbTrendingStatus::class,
         TrendingHashTag::class,
     ],
     version = 2,

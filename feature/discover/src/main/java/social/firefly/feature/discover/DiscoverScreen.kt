@@ -39,6 +39,7 @@ import social.firefly.core.ui.common.tabs.FfTab
 import social.firefly.core.ui.common.tabs.FfTabRow
 import social.firefly.core.ui.common.text.MediumTextLabel
 import social.firefly.core.ui.common.utils.PreviewTheme
+import social.firefly.core.ui.postcard.PostCardList
 
 @Composable
 internal fun DiscoverScreen(viewModel: DiscoverViewModel = koinViewModel()) {
@@ -122,12 +123,17 @@ private fun MainContent(
             when (uiState.selectedTab) {
                 is DiscoverTab.Hashtags -> {
                     Hashtags(
-                        hashtags = uiState.selectedTab.hashtags,
+                        hashtags = uiState.selectedTab.pagingDataFlow,
                         hashtagInteractions = discoverInteractions
                     )
                 }
 
-                is DiscoverTab.Posts -> TODO()
+                is DiscoverTab.Posts -> {
+                    PostCardList(
+                        posts = uiState.selectedTab.pagingDataFlow.collectAsLazyPagingItems(),
+                        postCardInteractions = discoverInteractions
+                    )
+                }
             }
         }
     }

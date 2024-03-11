@@ -21,7 +21,7 @@ import social.firefly.core.database.model.wrappers.StatusWrapper
         ),
     ]
 )
-data class TrendingStatus(
+data class DbTrendingStatus(
     @PrimaryKey
     val statusId: String,
     val position: Int,
@@ -29,7 +29,7 @@ data class TrendingStatus(
 
 data class TrendingStatusWrapper(
     @Embedded
-    val searchedStatus: TrendingStatus,
+    val searchedStatus: DbTrendingStatus,
     @Relation(
         entity = DatabaseStatus::class,
         parentColumn = "statusId",

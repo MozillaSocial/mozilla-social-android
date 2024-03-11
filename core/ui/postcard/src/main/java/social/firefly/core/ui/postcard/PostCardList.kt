@@ -5,6 +5,20 @@ import androidx.compose.runtime.Composable
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.itemKey
 import social.firefly.core.ui.common.divider.FfDivider
+import social.firefly.core.ui.common.paging.PagingLazyColumn
+
+@Composable
+fun PostCardList(
+    posts: LazyPagingItems<PostCardUiState>,
+    postCardInteractions: PostCardInteractions,
+) {
+    PagingLazyColumn(lazyPagingItems = posts) {
+        postListContent(
+            lazyPagingItems = posts,
+            postCardInteractions = postCardInteractions,
+        )
+    }
+}
 
 fun LazyListScope.postListContent(
     lazyPagingItems: LazyPagingItems<PostCardUiState>,

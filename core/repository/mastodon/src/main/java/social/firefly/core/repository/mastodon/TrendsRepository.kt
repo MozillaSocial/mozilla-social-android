@@ -26,7 +26,7 @@ class TrendsRepository internal constructor(
         api.getTrendingTags(limit = limit, offset = offset).map { it.toExternalModel() }
 
     @ExperimentalPagingApi
-    fun getHashTagsPager(
+    fun getPager(
         remoteMediator: RemoteMediator<Int, TrendingHashTagWrapper>,
         pageSize: Int = 40,
         initialLoadSize: Int = 40,
@@ -52,5 +52,19 @@ class TrendsRepository internal constructor(
 
     suspend fun insertAll(data: List<TrendingHashTag>) {
         dao.upsertAll(data)
+    }
+
+    suspend fun getRemotely(limit: Int, offset: Int): List<HashTag> = getTrendingTags(
+        limit = limit,
+        offset = offset
+    )
+
+    suspend fun saveLocally(currentPage: List<PageItem<HashTag>>) {
+        insertAll(currentPage.map { hashtag ->
+            TrendingHashTag(
+                hashTagName = hashtag.item.name,
+                position = hashtag.position
+            )
+        })
     }
 }

@@ -2,8 +2,9 @@ package social.firefly.feature.discover
 
 import social.firefly.core.ui.common.following.FollowStatus
 import social.firefly.core.ui.common.hashtag.HashtagInteractions
+import social.firefly.core.ui.postcard.PostCardInteractions
 
-interface DiscoverInteractions: HashtagInteractions {
+interface DiscoverInteractions: HashtagInteractions, PostCardInteractions {
     fun onRetryClicked()
     fun onShareClicked(recommendationId: String)
     fun onRecommendationClicked(recommendationId: String)
