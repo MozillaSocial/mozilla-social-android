@@ -39,6 +39,7 @@ import social.firefly.core.ui.common.tabs.FfTab
 import social.firefly.core.ui.common.tabs.FfTabRow
 import social.firefly.core.ui.common.text.MediumTextLabel
 import social.firefly.core.ui.common.utils.PreviewTheme
+import social.firefly.core.ui.postcard.PostCardInteractions
 import social.firefly.core.ui.postcard.PostCardList
 
 @Composable
@@ -47,6 +48,7 @@ internal fun DiscoverScreen(viewModel: DiscoverViewModel = koinViewModel()) {
     DiscoverScreen(
         uiState = uiState,
         discoverInteractions = viewModel,
+        postCardInteractions = viewModel,
     )
 
     LaunchedEffect(Unit) {
@@ -59,6 +61,7 @@ internal fun DiscoverScreen(viewModel: DiscoverViewModel = koinViewModel()) {
 private fun DiscoverScreen(
     uiState: DiscoverUiState,
     discoverInteractions: DiscoverInteractions,
+    postCardInteractions: PostCardInteractions,
 ) {
     val searchField = stringResource(id = R.string.search_field)
     FfSurface(
@@ -103,6 +106,7 @@ private fun DiscoverScreen(
             MainContent(
                 uiState = uiState,
                 discoverInteractions = discoverInteractions,
+                postCardInteractions = postCardInteractions,
             )
         }
     }
@@ -112,6 +116,7 @@ private fun DiscoverScreen(
 private fun MainContent(
     uiState: DiscoverUiState,
     discoverInteractions: DiscoverInteractions,
+    postCardInteractions: PostCardInteractions,
 ) {
     Box {
         Column {
@@ -131,7 +136,7 @@ private fun MainContent(
                 is DiscoverTab.Posts -> {
                     PostCardList(
                         posts = uiState.selectedTab.pagingDataFlow.collectAsLazyPagingItems(),
-                        postCardInteractions = discoverInteractions
+                        postCardInteractions = postCardInteractions,
                     )
                 }
             }

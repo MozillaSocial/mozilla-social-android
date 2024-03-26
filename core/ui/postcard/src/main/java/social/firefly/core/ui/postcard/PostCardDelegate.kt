@@ -1,8 +1,7 @@
 package social.firefly.core.ui.postcard
 
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import social.firefly.core.analytics.FeedLocation
+import social.firefly.common.appscope.AppScope
 import social.firefly.core.analytics.PostCardAnalytics
 import social.firefly.core.model.Attachment
 import social.firefly.core.navigation.NavigationDestination
@@ -19,8 +18,7 @@ import social.firefly.core.usecase.mastodon.status.VoteOnPoll
 import timber.log.Timber
 
 class PostCardDelegate(
-    private val coroutineScope: CoroutineScope,
-    feedLocation: FeedLocation,
+    private val appScope: AppScope,
     private val navigateTo: NavigateTo,
     private val openLink: OpenLink,
     private val blockAccount: BlockAccount,
@@ -34,12 +32,12 @@ class PostCardDelegate(
     private val analytics: PostCardAnalytics,
 ) : PostCardInteractions {
 
-    private val baseAnalyticsIdentifier: String = feedLocation.baseAnalyticsIdentifier
+    private val baseAnalyticsIdentifier: String = ""
     override fun onVoteClicked(
         pollId: String,
         choices: List<Int>,
     ) {
-        coroutineScope.launch {
+        appScope.launch {
             try {
                 analytics
                 voteOnPoll(pollId, choices)
@@ -58,7 +56,7 @@ class PostCardDelegate(
         statusId: String,
         isBoosting: Boolean,
     ) {
-        coroutineScope.launch {
+        appScope.launch {
             if (isBoosting) {
                 try {
                     analytics.boostClicked(baseAnalyticsIdentifier)
@@ -81,7 +79,7 @@ class PostCardDelegate(
         statusId: String,
         isFavoriting: Boolean,
     ) {
-        coroutineScope.launch {
+        appScope.launch {
             if (isFavoriting) {
                 try {
                     analytics.favoriteClicked(baseAnalyticsIdentifier)
@@ -110,7 +108,7 @@ class PostCardDelegate(
     ) {
         analytics.muteClicked(baseAnalyticsIdentifier)
 
-        coroutineScope.launch {
+        appScope.launch {
             try {
                 muteAccount(accountId)
             } catch (e: MuteAccount.MuteFailedException) {
@@ -124,7 +122,7 @@ class PostCardDelegate(
         statusId: String,
     ) {
         analytics.blockClicked(baseAnalyticsIdentifier)
-        coroutineScope.launch {
+        appScope.launch {
             try {
                 blockAccount(accountId)
             } catch (e: BlockAccount.BlockFailedException) {
@@ -151,7 +149,7 @@ class PostCardDelegate(
     }
 
     override fun onOverflowDeleteClicked(statusId: String) {
-        coroutineScope.launch {
+        appScope.launch {
             try {
                 deleteStatus(statusId)
             } catch (e: DeleteStatus.DeleteStatusFailedException) {

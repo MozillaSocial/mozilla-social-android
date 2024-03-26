@@ -40,6 +40,7 @@ import social.firefly.core.ui.common.tabs.FfTab
 import social.firefly.core.ui.common.tabs.FfTabRow
 import social.firefly.core.ui.common.text.LargeTextTitle
 import social.firefly.core.ui.postcard.PostCardInteractions
+import social.firefly.core.ui.postcard.PostCardInteractionsNoOp
 import social.firefly.core.ui.postcard.PostCardUiState
 import social.firefly.core.ui.postcard.postListContent
 import social.firefly.feature.feed.R
@@ -189,9 +190,9 @@ private fun FeedScreenPreviewLight() {
     FfTheme(darkTheme = false) {
         FeedScreen(
             homeFeed = flowOf(),
-            homePostCardInteractions = object : PostCardInteractions {},
-            localPostCardInteractions = object : PostCardInteractions {},
-            federatedPostCardInteractions = object : PostCardInteractions {},
+            homePostCardInteractions = PostCardInteractionsNoOp,
+            localPostCardInteractions = PostCardInteractionsNoOp,
+            federatedPostCardInteractions = PostCardInteractionsNoOp,
             timelineTypeFlow = MutableStateFlow(TimelineType.FOR_YOU),
             feedInteractions = object : FeedInteractions {},
             localFeed = flowOf(),
@@ -206,9 +207,9 @@ private fun FeedScreenPreviewDark() {
     FfTheme(darkTheme = true) {
         FeedScreen(
             homeFeed = flowOf(),
-            homePostCardInteractions = object : PostCardInteractions {},
-            localPostCardInteractions = object : PostCardInteractions {},
-            federatedPostCardInteractions = object : PostCardInteractions {},
+            homePostCardInteractions = PostCardInteractionsNoOp,
+            localPostCardInteractions = PostCardInteractionsNoOp,
+            federatedPostCardInteractions = PostCardInteractionsNoOp,
             timelineTypeFlow = MutableStateFlow(TimelineType.FOR_YOU),
             feedInteractions = object : FeedInteractions {},
             localFeed = flowOf(),

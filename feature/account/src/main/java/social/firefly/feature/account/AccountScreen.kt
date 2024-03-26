@@ -85,6 +85,7 @@ import social.firefly.core.ui.common.utils.PreviewTheme
 import social.firefly.core.ui.htmlcontent.HtmlContent
 import social.firefly.core.ui.htmlcontent.HtmlContentInteractions
 import social.firefly.core.ui.postcard.PostCardInteractions
+import social.firefly.core.ui.postcard.PostCardInteractionsNoOp
 import social.firefly.core.ui.postcard.postListContent
 
 @Composable
@@ -704,7 +705,7 @@ fun AccountScreenPreview() {
                 mediaFeed = flowOf(),
             ),
             htmlContentInteractions = object : HtmlContentInteractions {},
-            postCardInteractions = object : PostCardInteractions {},
+            postCardInteractions = PostCardInteractionsNoOp,
             accountInteractions = object : AccountInteractions {},
             windowInsets = WindowInsets.systemBars,
             navigateToSettings = {},

@@ -43,6 +43,7 @@ import social.firefly.core.ui.notifications.NotificationInteractions
 import social.firefly.core.ui.notifications.NotificationInteractionsNoOp
 import social.firefly.core.ui.notifications.NotificationUiState
 import social.firefly.core.ui.postcard.PostCardInteractions
+import social.firefly.core.ui.postcard.PostCardInteractionsNoOp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -206,7 +207,7 @@ private fun NotificationsScreenPreview() {
             notificationsInteractions = object : NotificationsInteractions {
                 override fun onTabClicked(tab: NotificationsTab) = Unit
             },
-            postCardInteractions = object : PostCardInteractions {},
+            postCardInteractions = PostCardInteractionsNoOp,
             notificationInteractions = NotificationInteractionsNoOp,
         )
     }

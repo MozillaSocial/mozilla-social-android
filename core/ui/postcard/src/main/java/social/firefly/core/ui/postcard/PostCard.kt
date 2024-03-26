@@ -516,7 +516,7 @@ private fun PostCardPreview() {
                     dropDownOptions = listOf(),
                 ),
             ),
-            postCardInteractions = object : PostCardInteractions {},
+            postCardInteractions = PostCardInteractionsNoOp,
         )
     }
 }
@@ -561,7 +561,7 @@ private fun PostCardWithContentWarningPreview() {
                     dropDownOptions = listOf(),
                 ),
             ),
-            postCardInteractions = object : PostCardInteractions {},
+            postCardInteractions = PostCardInteractionsNoOp,
         )
     }
 }

@@ -72,6 +72,7 @@ import social.firefly.core.ui.common.tabs.FfTabRow
 import social.firefly.core.ui.common.utils.PreviewTheme
 import social.firefly.core.ui.postcard.PostCard
 import social.firefly.core.ui.postcard.PostCardInteractions
+import social.firefly.core.ui.postcard.PostCardInteractionsNoOp
 import social.firefly.core.ui.postcard.PostCardUiState
 import social.firefly.core.ui.postcard.postListContent
 import social.firefly.feature.search.R
@@ -494,7 +495,7 @@ private fun SearchScreenPreview() {
                 query = "test",
             ),
             searchInteractions = SearchInteractionsNoOp,
-            postCardInteractions = object : PostCardInteractions {},
+            postCardInteractions = PostCardInteractionsNoOp,
         )
     }
 }

@@ -8,6 +8,7 @@ import social.firefly.core.ui.notifications.NotificationCard
 import social.firefly.core.ui.notifications.NotificationInteractionsNoOp
 import social.firefly.core.ui.notifications.NotificationUiState
 import social.firefly.core.ui.postcard.PostCardInteractions
+import social.firefly.core.ui.postcard.PostCardInteractionsNoOp
 
 @Preview
 @Composable
@@ -22,7 +23,7 @@ private fun FollowNotificationPreview() {
                 accountId = "",
                 accountName = "",
             ),
-            postCardInteractions = object : PostCardInteractions {},
+            postCardInteractions = PostCardInteractionsNoOp,
             notificationInteractions = NotificationInteractionsNoOp,
         )
     }
