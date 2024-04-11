@@ -9,12 +9,6 @@ plugins {
     alias(libs.plugins.sentry)
 }
 
-val keystorePropertiesFile = rootProject.file("secrets/keystore.properties")
-val keystoreProperties = Properties()
-if (keystorePropertiesFile.exists()) {
-    keystoreProperties.load(FileInputStream(keystorePropertiesFile))
-}
-
 android {
     namespace = "social.firefly"
 
@@ -29,22 +23,12 @@ android {
         }
     }
 
-    signingConfigs {
-        create("release") {
-            keyAlias = keystoreProperties["keyAlias"] as String?
-            keyPassword = keystoreProperties["keyPassword"] as String?
-            storeFile = (keystoreProperties["storeFile"] as String?)?.let { file(it) }
-            storePassword = keystoreProperties["storePassword"] as String?
-        }
-    }
-
     buildTypes {
         release {
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFile("proguard-rules.pro")
             matchingFallbacks += "release"
-            signingConfig = signingConfigs.getByName("release")
         }
         debug {
             isDefault = true
