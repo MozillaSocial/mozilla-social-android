@@ -34,6 +34,7 @@
 
     <string name="follow_button">Follow</string>
     <string name="following_button">Following</string>
+    <string name="pending_follow_button">Pending</string>
 
     <plurals name="hash_tag_details">
         <item quantity="one">%d in the past %d day</item>

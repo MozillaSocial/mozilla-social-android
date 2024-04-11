@@ -6,16 +6,6 @@ pluginManagement {
         maven { url = uri("https://maven.mozilla.org/maven2") }
         gradlePluginPortal()
     }
-    resolutionStrategy {
-        eachPlugin {
-            // Manually resolve Glean plugin ID to Maven coordinates,
-            // because the Maven repository is missing plugin marker artifacts.
-            // See: https://docs.gradle.org/current/userguide/plugins.html#sec:plugin_resolution_rules
-            if (requested.id.id == "org.mozilla.telemetry.glean-gradle-plugin") {
-                useModule("org.mozilla.telemetry:glean-gradle-plugin:${requested.version}")
-            }
-        }
-    }
 }
 
 dependencyResolutionManagement {
@@ -24,9 +14,15 @@ dependencyResolutionManagement {
         google()
         mavenCentral()
         maven { url = uri("https://maven.mozilla.org/maven2") }
+        maven {
+            setUrl("https://www.jitpack.io")
+            content {
+                includeModule("com.github.UnifiedPush", "android-connector")
+            }
+        }
     }
 }
-rootProject.name = "Mozilla Social"
+rootProject.name = "Firefly"
 include(":app")
 include(":core:analytics")
 include(":core:common")
@@ -64,3 +60,4 @@ include(":core:workmanager")
 include(":feature:notifications")
 include(":core:ui:notifications")
 include(":feature:media")
+include(":core:push")

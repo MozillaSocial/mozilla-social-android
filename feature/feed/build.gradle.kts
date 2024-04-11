@@ -1,11 +1,11 @@
 plugins {
-    id("org.mozilla.social.android.library")
-    id("org.mozilla.social.android.library.compose")
+    id("social.firefly.android.library")
+    id("social.firefly.android.library.compose")
     alias(libs.plugins.kotlin.ksp)
 }
 
 android {
-    namespace = "org.mozilla.social.feature.feed"
+    namespace = "social.firefly.feature.feed"
 }
 
 dependencies {
@@ -21,6 +21,7 @@ dependencies {
     implementation(project(":core:ui:common"))
     implementation(project(":core:ui:postcard"))
     implementation(project(":core:usecase:mastodon"))
+    implementation(project(":core:push"))
 
     implementation(libs.androidx.paging.runtime)
 

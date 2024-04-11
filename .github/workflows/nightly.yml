@@ -1,8 +1,9 @@
 name: nightly
 
+# 0 7 is 1 AM CST
 on:
-  push:
-    branches: [ "main" ]
+  schedule:
+    - cron: '0 7 * * *'
 
 # Cancel in-progress/pending daily release workflows if a new one starts.
 # When we merge PRs one after another quickly, we only need one release with the latest code.
@@ -11,11 +12,29 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  # Check if the latest commit was within the last 24 hours
+  # https://github.com/orgs/community/discussions/27128
+  check_date:
+    runs-on: ubuntu-latest
+    name: Check latest commit
+    outputs:
+      should_run: ${{ steps.should_run.outputs.should_run }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: print latest_commit
+        run: echo ${{ github.sha }}
+      - id: should_run
+        continue-on-error: true
+        name: check latest commit is less than a day old
+        run: test -z $(git rev-list --after="24 hours" ${{ github.sha }}) && echo "should_run=false" >> "$GITHUB_OUTPUT"
+
   release:
+    needs: check_date
+    if: ${{ needs.check_date.outputs.should_run != 'false' }}
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
-      uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # v4.1.0
+      uses: actions/checkout@v4
     - name: Set up JDK
       uses: actions/setup-java@0ab4596768b603586c0de567f2430c30f5b0d2b0 # v3.13.0
       with:

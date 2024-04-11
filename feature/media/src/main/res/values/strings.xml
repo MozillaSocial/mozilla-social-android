@@ -2,4 +2,5 @@
 <resources>
     <string name="download_content_description">Download</string>
     <string name="downloading_file">Downloading %s</string>
+    <string name="alt_text_label">Alt</string>
 </resources>

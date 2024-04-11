@@ -1,9 +1,9 @@
 plugins {
-    id("org.mozilla.social.android.library")
+    id("social.firefly.android.library")
 }
 
 android {
-    namespace = "org.mozilla.social.core.common"
+    namespace = "social.firefly.core.common"
 }
 
 dependencies {

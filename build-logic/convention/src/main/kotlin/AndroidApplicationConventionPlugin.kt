@@ -18,9 +18,9 @@ import com.android.build.api.dsl.ApplicationExtension
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
-import org.mozilla.social.COMPILE_SDK
-import org.mozilla.social.configureKotlinAndroid
-import org.mozilla.social.configureUnitTests
+import social.firefly.COMPILE_SDK
+import social.firefly.configureKotlinAndroid
+import social.firefly.configureUnitTests
 
 class AndroidApplicationConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) {
@@ -28,7 +28,7 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
             with(pluginManager) {
                 apply("com.android.application")
                 apply("org.jetbrains.kotlin.android")
-                apply("org.mozilla.social.detekt")
+                apply("social.firefly.detekt")
             }
 
             extensions.configure<ApplicationExtension> {

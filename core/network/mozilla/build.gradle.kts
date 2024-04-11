@@ -1,10 +1,10 @@
 plugins {
-    id("org.mozilla.social.android.library")
+    id("social.firefly.android.library")
     alias(libs.plugins.kotlinx.serialization)
 }
 
 android {
-    namespace = "org.mozilla.social.core.network.mozilla"
+    namespace = "social.firefly.core.network.mozilla"
 
     buildFeatures {
         buildConfig = true

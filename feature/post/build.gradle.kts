@@ -1,10 +1,10 @@
 plugins {
-    id("org.mozilla.social.android.library")
-    id("org.mozilla.social.android.library.compose")
+    id("social.firefly.android.library")
+    id("social.firefly.android.library.compose")
 }
 
 android {
-    namespace = "org.mozilla.social.feature.post"
+    namespace = "social.firefly.feature.post"
 }
 
 dependencies {
@@ -17,10 +17,12 @@ dependencies {
     implementation(project(":core:ui:common"))
     implementation(project(":core:navigation"))
     implementation(project(":core:analytics"))
+    implementation(project(":core:ui:htmlcontent"))
 
     implementation(libs.androidx.navigation.compose)
     implementation(libs.koin.core)
     implementation(libs.koin.androidx.compose)
     implementation(libs.coil)
     implementation(libs.jakewharton.timber)
+    implementation(libs.kotlinx.datetime)
 }
