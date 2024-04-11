@@ -22,7 +22,7 @@ dependencyResolutionManagement {
         }
     }
 }
-rootProject.name = "Firefly"
+rootProject.name = "Mozilla Social"
 include(":app")
 include(":core:analytics")
 include(":core:common")
