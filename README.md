@@ -1,1 +1,4 @@
-This repository is no longer being maintained.  Work will continue at [Firefly](https://github.com/Firefly-Social/Firefly) 
+# Firefly
+A [Mastodon](https://joinmastodon.org/) client for Android
+## Try it out 
+- [Download an APK](https://github.com/MozillaSocial/mozilla-social-android/releases) from our latest pre-release

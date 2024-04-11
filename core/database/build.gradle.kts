@@ -1,11 +1,11 @@
 plugins {
-    id("org.mozilla.social.android.library")
+    id("social.firefly.android.library")
     alias(libs.plugins.kotlin.ksp)
     alias(libs.plugins.kotlinx.serialization)
 }
 
 android {
-    namespace = "org.mozilla.social.core.database"
+    namespace = "social.firefly.core.database"
 
     defaultConfig {
         ksp {

@@ -18,8 +18,8 @@ import com.android.build.api.dsl.LibraryExtension
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
-import org.mozilla.social.configureKotlinAndroid
-import org.mozilla.social.configureUnitTests
+import social.firefly.configureKotlinAndroid
+import social.firefly.configureUnitTests
 
 class AndroidLibraryConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) {
@@ -27,7 +27,7 @@ class AndroidLibraryConventionPlugin : Plugin<Project> {
             with(pluginManager) {
                 apply("com.android.library")
                 apply("org.jetbrains.kotlin.android")
-                apply("org.mozilla.social.detekt")
+                apply("social.firefly.detekt")
             }
 
             extensions.configure<LibraryExtension> {

@@ -56,7 +56,7 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
--keep class org.mozilla.social.core.navigation.** { *; }
+-keep class social.firefly.core.navigation.** { *; }
 
 -keepclassmembers class * extends com.google.protobuf.GeneratedMessageLite* {
    <fields>;
