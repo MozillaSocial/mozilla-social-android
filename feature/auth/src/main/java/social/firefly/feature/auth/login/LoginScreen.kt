@@ -163,7 +163,7 @@ private fun ImageBox(modifier: Modifier = Modifier) {
             text = stringResource(id = R.string.title_text),
             fontSize = 24.sp,
             fontWeight = W700,
-            fontFamily = FfFonts.petiteFormalScript,
+            fontFamily = FfFonts.zillaSlab,
         )
         Image(
             modifier =

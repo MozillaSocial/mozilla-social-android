@@ -92,10 +92,10 @@ private fun FeedScreen(
                 scrollBehavior = topAppBarScrollBehavior,
                 title = {
                     LargeTextTitle(
-                        text = stringResource(id = R.string.firefly),
+                        text = stringResource(id = R.string.mozilla),
                         fontSize = 24.sp,
                         fontWeight = FontWeight.W700,
-                        fontFamily = FfFonts.petiteFormalScript,
+                        fontFamily = FfFonts.zillaSlab,
                     )
                 },
             )
