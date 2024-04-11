@@ -6,16 +6,8 @@ set -e
 RELEASE_VERSION_CODE=$1
 GITHUB_TOKEN=$2
 
-KEY_STORE="secrets/firefly.jks"
-
-if [[ ! -f "$KEY_STORE" ]]; then
-  echo "Secrets not decrypted"
-  exit 1
-fi
-
-# TODO: re-add if we ever add secret env vars
-#echo "Initializing secrets…"
-#source "secrets/secret-environment-variables.sh"
+echo "Initializing secrets…"
+source "secrets/secret-environment-variables.sh"
 
 echo "Bumping version code to ${RELEASE_VERSION_CODE}…"
 ci/set-version-code.sh "$RELEASE_VERSION_CODE"
