@@ -6,10 +6,12 @@ encrypt() {
 }
 
 if [[ -z "$GPG_KEY" ]]; then
-  read -p "Firefly GPG key: " -r -s
+  read -p "Mozilla Social Android GPG key: " -r -s
   echo # (optional) move to a new line
   GPG_KEY="$REPLY"
 fi
 
 encrypt "secret.properties"
+encrypt "../app/sentry.properties"
 encrypt "secret-environment-variables.sh"
+encrypt "boxwood-axon-825-ed7aa5764ee6.json"
