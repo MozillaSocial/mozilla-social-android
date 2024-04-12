@@ -9,12 +9,12 @@ import social.firefly.core.database.model.entities.hashtagCollections.TrendingHa
 import social.firefly.core.database.model.entities.hashtagCollections.TrendingHashTagWrapper
 import social.firefly.core.repository.mastodon.DatabaseDelegate
 import social.firefly.core.repository.mastodon.HashtagRepository
-import social.firefly.core.repository.mastodon.TrendsRepository
+import social.firefly.core.repository.mastodon.TrendingHashtagRepository
 import timber.log.Timber
 
 @OptIn(ExperimentalPagingApi::class)
 class TrendingHashtagsRemoteMediator(
-    val repository: TrendsRepository,
+    val repository: TrendingHashtagRepository,
     val hashtagRepository: HashtagRepository,
     val databaseDelegate: DatabaseDelegate,
 ) : RemoteMediator<Int, TrendingHashTagWrapper>() {

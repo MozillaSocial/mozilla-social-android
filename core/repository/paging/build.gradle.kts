@@ -8,6 +8,7 @@ android {
 
 dependencies {
     implementation(project(":core:repository:mastodon"))
+    api(project(":core:repository:common"))
     implementation(project(":core:database"))
     implementation(project(":core:usecase:mastodon"))
     implementation(project(":core:common"))

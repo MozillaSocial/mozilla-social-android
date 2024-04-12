@@ -1,24 +1,25 @@
-package social.firefly.core.repository.paging
+package social.firefly.core.repository.paging.common
 
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import kotlinx.coroutines.delay
-import social.firefly.core.repository.mastodon.FFLocalSource
-import social.firefly.core.repository.mastodon.FFRemoteSource
-import social.firefly.core.repository.mastodon.PageItem
+import social.firefly.core.repository.common.FFLocalSource
+import social.firefly.core.repository.common.FFRemoteSource
+import social.firefly.core.repository.common.PageItem
 
 import timber.log.Timber
 
+/**
+ *
+ */
 @OptIn(ExperimentalPagingApi::class)
-abstract class FfRemoteMediator<T : Any, DBO : Any> : RemoteMediator<Int, DBO>() {
+class FfRemoteMediator<T : Any, DBO : Any>(
+    private val localSource: FFLocalSource<T>,
+    private val remoteSource: FFRemoteSource<T>,
+) : RemoteMediator<Int, DBO>() {
     private var nextPositionIndex = 0
-
-    protected abstract val localSource: FFLocalSource<T>
-
-    protected abstract val remoteSource: FFRemoteSource<T>
-
     @Suppress("ReturnCount")
     override suspend fun load(
         loadType: LoadType,
