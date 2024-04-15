@@ -88,12 +88,7 @@ class FeedViewModel(
     }
 
     override fun onStatusViewed(statusId: String) {
-        lastStatusViewedId = statusId
-    }
-
-    companion object {
-        var lastStatusViewedId: String = ""
-            private set
+        HomeTimelineCleanupWorker.lastStatusViewedId = statusId
     }
 }
 

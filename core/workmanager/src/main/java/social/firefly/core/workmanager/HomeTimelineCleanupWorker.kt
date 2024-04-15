@@ -36,24 +36,26 @@ class HomeTimelineCleanupWorker(
         private const val LAST_SEEN_ID = "lastSeenId"
         private const val WORKER_NAME = "homeTimelineCleanup"
 
+        var lastStatusViewedId: String = ""
+
         fun setupWorker(
-            lastSeenStatusId: String,
             context: Context,
         ) {
-            val workRequest = OneTimeWorkRequestBuilder<HomeTimelineCleanupWorker>()
-                .setInputData(
-                    Data.Builder()
-                        .putString(LAST_SEEN_ID, lastSeenStatusId)
-                        .build()
-                )
-                .build()
+            if (lastStatusViewedId.isNotBlank()) {
+                val workRequest = OneTimeWorkRequestBuilder<HomeTimelineCleanupWorker>()
+                    .setInputData(
+                        Data.Builder()
+                            .putString(LAST_SEEN_ID, lastStatusViewedId)
+                            .build()
+                    )
+                    .build()
 
-            WorkManager.getInstance(context).enqueueUniqueWork(
-                WORKER_NAME,
-                ExistingWorkPolicy.KEEP,
-                workRequest,
-            )
-            println("johnny worker created")
+                WorkManager.getInstance(context).enqueueUniqueWork(
+                    WORKER_NAME,
+                    ExistingWorkPolicy.KEEP,
+                    workRequest,
+                )
+            }
         }
     }
 }

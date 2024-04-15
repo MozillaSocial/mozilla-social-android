@@ -59,12 +59,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        if (FeedViewModel.lastStatusViewedId.isNotBlank()) {
-            HomeTimelineCleanupWorker.setupWorker(
-                FeedViewModel.lastStatusViewedId,
-                this,
-            )
-        }
+        HomeTimelineCleanupWorker.setupWorker(this)
     }
 
     override fun onNewIntent(intent: Intent) {
