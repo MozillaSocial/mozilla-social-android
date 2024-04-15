@@ -199,6 +199,9 @@ class TimelineRepository internal constructor(
     suspend fun deleteHomeStatusesBeforeId(statusId: String) =
         homeTimelineStatusDao.deleteStatusesBeforeId(statusId)
 
+    suspend fun getFirstStatusFromHomeTimeline() =
+        homeTimelineStatusDao.getFirstStatus().status.toExternalModel()
+
     suspend fun removePostInHomeTimelineForAccount(accountId: String) =
         homeTimelineStatusDao.removePostsFromAccount(accountId)
     //endregion

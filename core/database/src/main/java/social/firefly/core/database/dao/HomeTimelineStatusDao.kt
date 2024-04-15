@@ -19,6 +19,7 @@ interface HomeTimelineStatusDao : BaseDao<HomeTimelineStatus> {
     @Query("DELETE FROM homeTimeline")
     suspend fun deleteHomeTimeline()
 
+    @Transaction
     @Query(
         "DELETE FROM homeTimeline " +
         "WHERE statusId > :statusId "
@@ -47,4 +48,12 @@ interface HomeTimelineStatusDao : BaseDao<HomeTimelineStatus> {
                 ")",
     )
     suspend fun getPostsFromAccount(accountId: String): List<HomeTimelineStatusWrapper>
+
+    @Transaction
+    @Query(
+        "SELECT * FROM homeTimeline " +
+        "ORDER BY statusId DESC " +
+        "LIMIT 1"
+    )
+    suspend fun getFirstStatus(): HomeTimelineStatusWrapper
 }

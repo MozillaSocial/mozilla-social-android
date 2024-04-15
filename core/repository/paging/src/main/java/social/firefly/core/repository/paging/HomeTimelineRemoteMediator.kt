@@ -20,6 +20,9 @@ class HomeTimelineRemoteMediator(
     private val databaseDelegate: DatabaseDelegate,
     private val getInReplyToAccountNames: GetInReplyToAccountNames,
 ) : RemoteMediator<Int, HomeTimelineStatusWrapper>() {
+
+    private var firstLoad = true
+
     @Suppress("ReturnCount", "MagicNumber")
     override suspend fun load(
         loadType: LoadType,
@@ -30,9 +33,14 @@ class HomeTimelineRemoteMediator(
             val response =
                 when (loadType) {
                     LoadType.REFRESH -> {
+                        var olderThanId: String? = null
+                        if (firstLoad) {
+                            firstLoad = false
+                            olderThanId = timelineRepository.getFirstStatusFromHomeTimeline().statusId
+                        }
                         pageSize = state.config.initialLoadSize
                         timelineRepository.getHomeTimeline(
-                            olderThanId = null,
+                            olderThanId = olderThanId,
                             immediatelyNewerThanId = null,
                             loadSize = pageSize,
                         )
