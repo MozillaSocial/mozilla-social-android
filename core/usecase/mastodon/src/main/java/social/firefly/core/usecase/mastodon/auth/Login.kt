@@ -117,7 +117,7 @@ class Login(
     }
 
     companion object {
-        const val CLIENT_NAME = "Firefly"
+        const val CLIENT_NAME = "Mozilla Social Android"
         const val REDIRECT_URI = "mozsoc://auth"
         const val SCOPES = "read write push"
         const val AUTHORIZATION_CODE = "authorization_code"
