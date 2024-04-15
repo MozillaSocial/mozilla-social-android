@@ -9,10 +9,13 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import org.koin.core.parameter.parametersOf
 import org.koin.java.KoinJavaComponent
+import social.firefly.common.appscope.AppScope
 import social.firefly.core.analytics.FeedAnalytics
 import social.firefly.core.analytics.FeedLocation
+import social.firefly.core.datastore.UserPreferencesDatastore
 import social.firefly.core.repository.mastodon.TimelineRepository
 import social.firefly.core.repository.paging.FederatedTimelineRemoteMediator
 import social.firefly.core.repository.paging.HomeTimelineRemoteMediator
@@ -20,6 +23,7 @@ import social.firefly.core.repository.paging.LocalTimelineRemoteMediator
 import social.firefly.core.ui.postcard.PostCardDelegate
 import social.firefly.core.ui.postcard.toPostCardUiState
 import social.firefly.core.usecase.mastodon.account.GetLoggedInUserAccountId
+import social.firefly.core.workmanager.HomeTimelineCleanupWorker
 
 /**
  * Produces a flow of pages of statuses for a feed
@@ -81,6 +85,15 @@ class FeedViewModel(
 
     override fun onScreenViewed() {
         analytics.feedScreenViewed()
+    }
+
+    override fun onStatusViewed(statusId: String) {
+        lastStatusViewedId = statusId
+    }
+
+    companion object {
+        var lastStatusViewedId: String = ""
+            private set
     }
 }
 

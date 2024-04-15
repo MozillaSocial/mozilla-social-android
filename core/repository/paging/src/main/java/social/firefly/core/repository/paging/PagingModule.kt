@@ -18,7 +18,6 @@ val pagingModule = module {
         mastodonUsecaseModule,
     )
 
-    singleOf(::RefreshHomeTimeline)
     singleOf(::RefreshFederatedTimeline)
     singleOf(::RefreshLocalTimeline)
     factoryOf(::FavoritesRemoteMediator)

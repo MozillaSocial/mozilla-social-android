@@ -17,6 +17,8 @@ import social.firefly.core.analytics.AppAnalytics
 import social.firefly.core.designsystem.theme.FfTheme
 import social.firefly.core.ui.common.FfSurface
 import social.firefly.core.workmanager.DatabasePurgeWorker
+import social.firefly.core.workmanager.HomeTimelineCleanupWorker
+import social.firefly.feed.FeedViewModel
 import social.firefly.ui.MainActivityScreen
 import timber.log.Timber
 
@@ -53,6 +55,16 @@ class MainActivity : ComponentActivity() {
     override fun onPause() {
         super.onPause()
         analytics.appBackgrounded()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (FeedViewModel.lastStatusViewedId.isNotBlank()) {
+            HomeTimelineCleanupWorker.setupWorker(
+                FeedViewModel.lastStatusViewedId,
+                this,
+            )
+        }
     }
 
     override fun onNewIntent(intent: Intent) {

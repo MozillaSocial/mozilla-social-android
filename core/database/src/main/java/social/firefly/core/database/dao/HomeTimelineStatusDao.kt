@@ -21,6 +21,12 @@ interface HomeTimelineStatusDao : BaseDao<HomeTimelineStatus> {
 
     @Query(
         "DELETE FROM homeTimeline " +
+        "WHERE statusId < :statusId "
+    )
+    suspend fun deleteStatusesBeforeId(statusId: String)
+
+    @Query(
+        "DELETE FROM homeTimeline " +
                 "WHERE statusId IN " +
                 "(" +
                 "SELECT statusId FROM statuses " +

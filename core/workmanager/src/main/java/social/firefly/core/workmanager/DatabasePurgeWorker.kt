@@ -148,7 +148,7 @@ class DatabasePurgeWorker(
         }
 
         /**
-         * Observes a work request and restarted that app when the request is complete.
+         * Observes a work request and restarts the app when the request is complete.
          * Because the coroutine scope is a [LifecycleCoroutineScope], the app will not restart
          * if it is not running.
          */

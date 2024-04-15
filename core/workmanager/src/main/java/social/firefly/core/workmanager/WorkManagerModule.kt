@@ -29,4 +29,12 @@ val workManagerModule = module {
             get(),
         )
     }
+
+    worker {
+        HomeTimelineCleanupWorker(
+            context = androidApplication(),
+            get(),
+            get(),
+        )
+    }
 }
