@@ -1,6 +1,3 @@
-import java.io.FileInputStream
-import java.util.Properties
-
 plugins {
     id("social.firefly.android.application")
     id("social.firefly.android.application.compose")
@@ -13,7 +10,7 @@ android {
     namespace = "social.firefly"
 
     defaultConfig {
-        applicationId = "social.firefly"
+        applicationId = "org.mozilla.social"
         versionCode = 1
         versionName = "0.1.0"
 
@@ -39,6 +36,7 @@ android {
             applicationIdSuffix = ".nightly"
         }
 
+        // For testing release builds locally
         create("unsignedRelease") {
             initWith(getByName("release"))
             signingConfig = signingConfigs.getByName("debug")
