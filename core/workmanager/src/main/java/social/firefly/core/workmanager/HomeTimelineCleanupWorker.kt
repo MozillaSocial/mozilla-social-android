@@ -23,6 +23,7 @@ class HomeTimelineCleanupWorker(
         println("johnny work started")
         return try {
             workerParams.inputData.getString(LAST_SEEN_ID)?.let {
+                println("worker id $it")
                 timelineRepository.deleteHomeStatusesBeforeId(it)
             }
             Result.success()
