@@ -10,4 +10,5 @@ message UserPreferences {
   string account_id = 2;
   string domain = 3;
   string serialized_push_keys = 6;
+  string last_seen_home_status_id = 7;
 }

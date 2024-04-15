@@ -4,14 +4,21 @@ import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
+import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import social.firefly.common.Rel
 import social.firefly.core.database.model.entities.statusCollections.HomeTimelineStatusWrapper
+import social.firefly.core.datastore.UserPreferencesDatastore
 import social.firefly.core.repository.mastodon.DatabaseDelegate
 import social.firefly.core.repository.mastodon.TimelineRepository
 import social.firefly.core.usecase.mastodon.status.GetInReplyToAccountNames
 import social.firefly.core.usecase.mastodon.status.SaveStatusToDatabase
 import timber.log.Timber
+import kotlin.coroutines.coroutineContext
 
 @OptIn(ExperimentalPagingApi::class)
 class HomeTimelineRemoteMediator(
@@ -19,6 +26,7 @@ class HomeTimelineRemoteMediator(
     private val saveStatusToDatabase: SaveStatusToDatabase,
     private val databaseDelegate: DatabaseDelegate,
     private val getInReplyToAccountNames: GetInReplyToAccountNames,
+    private val userPreferencesDatastore: UserPreferencesDatastore,
 ) : RemoteMediator<Int, HomeTimelineStatusWrapper>() {
 
     private var firstLoad = true
@@ -30,13 +38,23 @@ class HomeTimelineRemoteMediator(
     ): MediatorResult {
         return try {
             var pageSize: Int = state.config.pageSize
+            println("johnny $loadType")
             val response =
                 when (loadType) {
                     LoadType.REFRESH -> {
                         var olderThanId: String? = null
                         if (firstLoad) {
                             firstLoad = false
-                            olderThanId = timelineRepository.getFirstStatusFromHomeTimeline().statusId
+                            val lastSeenId = CompletableDeferred<String>()
+                            with(CoroutineScope(coroutineContext)) {
+                                launch {
+                                    userPreferencesDatastore.lastSeenHomeStatusId.collectLatest {
+                                        lastSeenId.complete(it)
+                                        cancel()
+                                    }
+                                }
+                            }
+                            olderThanId = lastSeenId.await()
                         }
                         pageSize = state.config.initialLoadSize
                         timelineRepository.getHomeTimeline(
@@ -101,7 +119,7 @@ class HomeTimelineRemoteMediator(
                     LoadType.PREPEND -> response.pagingLinks?.find { it.rel == Rel.PREV } == null
                     LoadType.REFRESH,
                     LoadType.APPEND,
-                    -> response.pagingLinks?.find { it.rel == Rel.NEXT } == null
+                        -> response.pagingLinks?.find { it.rel == Rel.NEXT } == null
                 },
             )
         } catch (e: Exception) {

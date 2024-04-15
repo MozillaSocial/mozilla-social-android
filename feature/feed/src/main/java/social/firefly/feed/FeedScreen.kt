@@ -49,8 +49,11 @@ import social.firefly.feature.feed.R
 
 @Composable
 internal fun FeedScreen(viewModel: FeedViewModel = koinViewModel()) {
+
+    val homeFeed = viewModel.homeFeed.collectAsStateWithLifecycle().value
+
     FeedScreen(
-        homeFeed = viewModel.homeFeed,
+        homeFeed = homeFeed,
         localFeed = viewModel.localFeed,
         federatedFeed = viewModel.federatedFeed,
         timelineTypeFlow = viewModel.timelineType,

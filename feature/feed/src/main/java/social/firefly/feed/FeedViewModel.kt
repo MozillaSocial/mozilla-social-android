@@ -3,10 +3,16 @@ package social.firefly.feed
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.ExperimentalPagingApi
+import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
+import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -21,6 +27,7 @@ import social.firefly.core.repository.paging.FederatedTimelineRemoteMediator
 import social.firefly.core.repository.paging.HomeTimelineRemoteMediator
 import social.firefly.core.repository.paging.LocalTimelineRemoteMediator
 import social.firefly.core.ui.postcard.PostCardDelegate
+import social.firefly.core.ui.postcard.PostCardUiState
 import social.firefly.core.ui.postcard.toPostCardUiState
 import social.firefly.core.usecase.mastodon.account.GetLoggedInUserAccountId
 import social.firefly.core.workmanager.HomeTimelineCleanupWorker
@@ -28,8 +35,10 @@ import social.firefly.core.workmanager.HomeTimelineCleanupWorker
 /**
  * Produces a flow of pages of statuses for a feed
  */
+@OptIn(ExperimentalPagingApi::class)
 class FeedViewModel(
     private val analytics: FeedAnalytics,
+    private val userPreferencesDatastore: UserPreferencesDatastore,
     homeTimelineRemoteMediator: HomeTimelineRemoteMediator,
     localTimelineRemoteMediator: LocalTimelineRemoteMediator,
     federatedTimelineRemoteMediator: FederatedTimelineRemoteMediator,
@@ -41,14 +50,8 @@ class FeedViewModel(
     private val _timelineType = MutableStateFlow(TimelineType.FOR_YOU)
     val timelineType = _timelineType.asStateFlow()
 
-    @OptIn(ExperimentalPagingApi::class)
-    val homeFeed = timelineRepository.getHomeTimelinePager(
-        remoteMediator = homeTimelineRemoteMediator,
-    ).map { pagingData ->
-        pagingData.map {
-            it.toPostCardUiState(userAccountId, homePostCardDelegate)
-        }
-    }.cachedIn(viewModelScope)
+    private val _homeFeed = MutableStateFlow<Flow<PagingData<PostCardUiState>>>(emptyFlow())
+    var homeFeed = _homeFeed.asStateFlow()
 
     @OptIn(ExperimentalPagingApi::class)
     val localFeed = timelineRepository.getLocalTimelinePager(
@@ -78,6 +81,28 @@ class FeedViewModel(
         PostCardDelegate::class.java,
     ) { parametersOf(viewModelScope, FeedLocation.FEDERATED) }
 
+    init {
+        viewModelScope.launch {
+            val lastSeenId = CompletableDeferred<String>()
+            launch {
+                userPreferencesDatastore.lastSeenHomeStatusId.collectLatest {
+                    lastSeenId.complete(it)
+                    cancel()
+                }
+            }
+            timelineRepository.deleteHomeStatusesBeforeId(lastSeenId.await())
+            _homeFeed.update {
+                timelineRepository.getHomeTimelinePager(
+                    remoteMediator = homeTimelineRemoteMediator,
+                ).map { pagingData ->
+                    pagingData.map {
+                        it.toPostCardUiState(userAccountId, homePostCardDelegate)
+                    }
+                }.cachedIn(viewModelScope)
+            }
+        }
+    }
+
     override fun onTabClicked(timelineType: TimelineType) {
         analytics.feedScreenClicked(timelineType.toAnalyticsTimelineType())
         _timelineType.update { timelineType }
@@ -88,7 +113,11 @@ class FeedViewModel(
     }
 
     override fun onStatusViewed(statusId: String) {
-        HomeTimelineCleanupWorker.lastStatusViewedId = statusId
+        viewModelScope.launch {
+            userPreferencesDatastore.saveLastSeenHomeStatusId(statusId)
+        }
+
+//        HomeTimelineCleanupWorker.lastStatusViewedId = statusId
     }
 }
 

@@ -59,7 +59,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        HomeTimelineCleanupWorker.setupWorker(this)
+//        HomeTimelineCleanupWorker.setupWorker(this)
     }
 
     override fun onNewIntent(intent: Intent) {

@@ -38,6 +38,11 @@ class UserPreferencesDatastore(context: Context) {
             it.serializedPushKeys
         }.distinctUntilChanged()
 
+    val lastSeenHomeStatusId: Flow<String> =
+        dataStore.data.mapLatest {
+            it.lastSeenHomeStatusId
+        }.distinctUntilChanged()
+
     /**
      * Preload the data so that it's available in the cache
      */
@@ -79,6 +84,14 @@ class UserPreferencesDatastore(context: Context) {
         dataStore.updateData {
             it.toBuilder()
                 .setSerializedPushKeys(serializedPushKeyPair)
+                .build()
+        }
+    }
+
+    suspend fun saveLastSeenHomeStatusId(statusId: String) {
+        dataStore.updateData {
+            it.toBuilder()
+                .setLastSeenHomeStatusId(statusId)
                 .build()
         }
     }
