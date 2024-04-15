@@ -5,9 +5,10 @@
 
     <string name="alpha_badge">Alpha</string>
     <string name="intro_title">Get started</string>
-    <string name="intro_message">Like, share, and follow interesting profiles and hashtags.</string>
+    <string name="intro_message">Like, share, and follow interesting people and hashtags.</string>
     <string name="sign_in_button">Sign in or sign up</string>
     <string name="choose_server_option">Choose a server</string>
+    <string name="sign_in_staging_button">Sign in to staging</string>
     <string name="error_connecting">Oops, check your internet connection</string>
 
     <string name="choose_a_server_screen_title">Choose a server</string>

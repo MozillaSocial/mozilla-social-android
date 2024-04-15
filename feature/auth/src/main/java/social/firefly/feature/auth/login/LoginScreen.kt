@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -39,9 +40,12 @@ import social.firefly.core.designsystem.theme.FfTheme
 import social.firefly.core.ui.common.FfBadge
 import social.firefly.core.ui.common.FfSurface
 import social.firefly.core.ui.common.button.FfButton
+import social.firefly.core.ui.common.button.FfButtonSecondary
+import social.firefly.core.ui.common.loading.FfCircularProgressIndicator
 import social.firefly.core.ui.common.text.MediumTextLabel
 import social.firefly.core.ui.common.utils.getWindowHeightClass
 import social.firefly.core.ui.common.utils.getWindowWidthClass
+import social.firefly.feature.auth.BuildConfig
 import social.firefly.feature.auth.R
 
 @Composable
@@ -212,10 +216,34 @@ private fun LoginBox(
         Spacer(modifier = Modifier.height(24.dp))
         FfButton(
             modifier = Modifier.fillMaxWidth(),
+            enabled = !uiState.isLoading,
+            onClick = { loginInteractions.onSignInClicked() },
+        ) {
+            if (uiState.isLoading) {
+                FfCircularProgressIndicator(
+                    modifier = Modifier.size(20.dp),
+                )
+            } else {
+                MediumTextLabel(text = stringResource(id = R.string.sign_in_button))
+            }
+        }
+        Spacer(modifier = Modifier.height(FfSpacing.sm))
+        FfButtonSecondary(
+            modifier = Modifier.fillMaxWidth(),
             onClick = { loginInteractions.onChooseServerClicked() },
             enabled = !uiState.isLoading,
         ) {
             MediumTextLabel(text = stringResource(id = R.string.choose_server_option))
+        }
+        if (BuildConfig.DEBUG) {
+            Spacer(modifier = Modifier.height(FfSpacing.sm))
+            FfButtonSecondary(
+                modifier = Modifier.fillMaxWidth(),
+                onClick = { loginInteractions.onSignInToStagingClicked() },
+                enabled = !uiState.isLoading,
+            ) {
+                MediumTextLabel(text = stringResource(id = R.string.sign_in_staging_button))
+            }
         }
     }
 }
