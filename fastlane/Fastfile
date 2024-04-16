@@ -28,7 +28,7 @@ platform :android do
         tag_name: options[:tag],
         is_prerelease: true,
         is_generate_release_notes: true,
-        upload_assets: ["secrets/mozilla-social-nightly.apk"]
+        upload_assets: ["secrets/nightly.apk"]
     )
   end
 end
