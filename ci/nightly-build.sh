@@ -9,7 +9,7 @@ set -e
 #SIGNED_AAB="secrets/firefly-nightly.aab"
 
 APK_OUTPUT_DIR="app/build/outputs/apk/nightly"
-UNSIGNED_APK="$APK_OUTPUT_DIR/nightly-unsigned.apk"
+UNSIGNED_APK="$APK_OUTPUT_DIR/app-nightly-unsigned.apk"
 ALIGNED_APK="$APK_OUTPUT_DIR/nightly-aligned.apk"
 SIGNED_APK="$APK_OUTPUT_DIR/nightly.apk"
 SIGNED_APK_FINAL_PATH="secrets/nightly.apk"
