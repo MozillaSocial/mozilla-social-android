@@ -137,6 +137,13 @@ class FeedViewModel(
         }
     }
 
+    override suspend fun onScrollToTopClicked(onDatabaseCleared: suspend () -> Unit) {
+        timelineRepository.deleteHomeTimeline()
+        // race condition where the database needs to emit it's changes
+        delay(150)
+        onDatabaseCleared()
+    }
+
     companion object {
         private const val SAVE_RATE = 1_500L
     }

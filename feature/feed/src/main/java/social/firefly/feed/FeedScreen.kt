@@ -271,9 +271,11 @@ private fun BoxScope.MainContent(
             FfFloatingActionButton(
                 onClick = {
                     coroutineScope.launch {
-                        forYouScrollState.scrollToItem(0, 0)
+                        feedInteractions.onScrollToTopClicked {
+                            homeFeedPagingItems.refresh()
+                            forYouScrollState.scrollToItem(0, 0)
+                        }
                     }
-                    homeFeedPagingItems.refresh()
                 }
             ) {
                 Icon(
