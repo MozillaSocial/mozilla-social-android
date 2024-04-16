@@ -162,15 +162,23 @@ private fun MainContent(
     val localFeedPagingItems = localFeed.collectAsLazyPagingItems()
     val federatedPagingItems = federatedFeed.collectAsLazyPagingItems()
 
-    val visibleForYouStatuses by remember(forYouScrollState) {
+    val forYouFirstVisibleIndex by remember(forYouScrollState) {
         derivedStateOf {
-            forYouScrollState.firstVisibleItemIndex
+            // there seems to be a bug where 0 is not possible.
+            // It's not perfect, but using 0 is better than 1 if we are not sure which is right
+            if (forYouScrollState.firstVisibleItemIndex <= 1) {
+                0
+            } else {
+                forYouScrollState.firstVisibleItemIndex
+            }
         }
     }
 
-    LaunchedEffect(visibleForYouStatuses) {
-        if (homeFeedPagingItems.itemCount > visibleForYouStatuses) {
-            homeFeedPagingItems[visibleForYouStatuses]?.let { feedInteractions.onStatusViewed(it.statusId) }
+    LaunchedEffect(forYouFirstVisibleIndex) {
+        if (homeFeedPagingItems.itemCount != 0) {
+            homeFeedPagingItems.peek(forYouFirstVisibleIndex)?.let { uiState ->
+                feedInteractions.onStatusViewed(uiState.statusId)
+            }
         }
     }
 

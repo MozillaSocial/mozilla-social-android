@@ -13,6 +13,7 @@ import kotlinx.coroutines.launch
 import social.firefly.common.Rel
 import social.firefly.core.database.model.entities.statusCollections.HomeTimelineStatusWrapper
 import social.firefly.core.datastore.UserPreferencesDatastore
+import social.firefly.core.model.paging.StatusPagingWrapper
 import social.firefly.core.repository.mastodon.DatabaseDelegate
 import social.firefly.core.repository.mastodon.TimelineRepository
 import social.firefly.core.usecase.mastodon.status.GetInReplyToAccountNames
@@ -37,31 +38,11 @@ class HomeTimelineRemoteMediator(
         state: PagingState<Int, HomeTimelineStatusWrapper>,
     ): MediatorResult {
         return try {
-            var pageSize: Int = state.config.pageSize
-            println("johnny $loadType")
+            val pageSize: Int = state.config.pageSize
             val response =
                 when (loadType) {
                     LoadType.REFRESH -> {
-                        var olderThanId: String? = null
-                        if (firstLoad) {
-                            firstLoad = false
-                            val lastSeenId = CompletableDeferred<String>()
-                            with(CoroutineScope(coroutineContext)) {
-                                launch {
-                                    userPreferencesDatastore.lastSeenHomeStatusId.collectLatest {
-                                        lastSeenId.complete(it)
-                                        cancel()
-                                    }
-                                }
-                            }
-                            olderThanId = lastSeenId.await()
-                        }
-                        pageSize = state.config.initialLoadSize
-                        timelineRepository.getHomeTimeline(
-                            olderThanId = olderThanId,
-                            immediatelyNewerThanId = null,
-                            loadSize = pageSize,
-                        )
+                        fetchRefresh(state)
                     }
 
                     LoadType.PREPEND -> {
@@ -126,5 +107,74 @@ class HomeTimelineRemoteMediator(
             Timber.e(e)
             MediatorResult.Error(e)
         }
+    }
+
+    private suspend fun fetchRefresh(
+        state: PagingState<Int, HomeTimelineStatusWrapper>,
+    ): StatusPagingWrapper {
+        var olderThanId: String? = null
+        val pageSize = state.config.initialLoadSize
+
+        // If this is the first time we are loading the page, we need to start where
+        // the user last left off.  Grab the lastSeenHomeStatusId
+        if (firstLoad) {
+            firstLoad = false
+            val lastSeenId = CompletableDeferred<String>()
+            with(CoroutineScope(coroutineContext)) {
+                launch {
+                    userPreferencesDatastore.lastSeenHomeStatusId.collectLatest {
+                        lastSeenId.complete(it)
+                        cancel()
+                    }
+                }
+            }
+            olderThanId = lastSeenId.await()
+        }
+
+        val mainResponse = timelineRepository.getHomeTimeline(
+            olderThanId = olderThanId,
+            immediatelyNewerThanId = null,
+            loadSize = if (olderThanId != null) {
+                // if we are going to fetch the first status separately, we need to decrease this
+                // call's page size by 1
+                pageSize - 1
+            } else {
+                pageSize
+            },
+        )
+
+        val firstIdInMainList =
+            mainResponse.statuses.maxByOrNull { it.statusId }?.statusId
+
+        val topStatusResponse = if (olderThanId != null) {
+            timelineRepository.getHomeTimeline(
+                olderThanId = null,
+                immediatelyNewerThanId = firstIdInMainList,
+                loadSize = 1,
+            )
+        } else {
+            null
+        }
+
+        return StatusPagingWrapper(
+            statuses = buildList {
+                addAll(mainResponse.statuses)
+                topStatusResponse?.let { addAll(it.statuses) }
+            },
+            pagingLinks = buildList {
+                mainResponse.pagingLinks?.find { it.rel == Rel.NEXT }?.let {
+                    add(it)
+                }
+                if (topStatusResponse != null) {
+                    topStatusResponse.pagingLinks?.find { it.rel == Rel.PREV }?.let {
+                        add(it)
+                    }
+                } else {
+                    mainResponse.pagingLinks?.find { it.rel == Rel.PREV }?.let {
+                        add(it)
+                    }
+                }
+            }
+        )
     }
 }
