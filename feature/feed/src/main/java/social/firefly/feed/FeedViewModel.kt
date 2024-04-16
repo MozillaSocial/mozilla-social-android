@@ -40,10 +40,10 @@ import social.firefly.core.usecase.mastodon.account.GetLoggedInUserAccountId
 class FeedViewModel(
     private val analytics: FeedAnalytics,
     private val userPreferencesDatastore: UserPreferencesDatastore,
-    homeTimelineRemoteMediator: HomeTimelineRemoteMediator,
+    private val homeTimelineRemoteMediator: HomeTimelineRemoteMediator,
     localTimelineRemoteMediator: LocalTimelineRemoteMediator,
     federatedTimelineRemoteMediator: FederatedTimelineRemoteMediator,
-    timelineRepository: TimelineRepository,
+    private val timelineRepository: TimelineRepository,
     getLoggedInUserAccountId: GetLoggedInUserAccountId,
 ) : ViewModel(), FeedInteractions {
     private val userAccountId: String = getLoggedInUserAccountId()
@@ -86,6 +86,15 @@ class FeedViewModel(
     ) { parametersOf(viewModelScope, FeedLocation.FEDERATED) }
 
     init {
+        setupHomeFeed()
+    }
+
+    /**
+     * We restore the user's place in their timeline by removing items in the database
+     * above their last seen item.  This needs to happen before we start observing the
+     * home timeline.
+     */
+    private fun setupHomeFeed() {
         viewModelScope.launch {
             val lastSeenId = CompletableDeferred<String>()
             launch {
