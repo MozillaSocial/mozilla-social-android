@@ -105,7 +105,7 @@ private fun FeedScreen(
                 },
             )
 
-            MainContent(
+            TabbedContent(
                 homeFeed = homeFeed,
                 localFeed = localFeed,
                 federatedFeed = federatedFeed,
@@ -120,7 +120,7 @@ private fun FeedScreen(
 }
 
 @Composable
-private fun MainContent(
+private fun TabbedContent(
     homeFeed: Flow<PagingData<PostCardUiState>>,
     localFeed: Flow<PagingData<PostCardUiState>>,
     federatedFeed: Flow<PagingData<PostCardUiState>>,
@@ -154,6 +154,29 @@ private fun MainContent(
         }
     }
 
+    MainContent(
+        homeFeed = homeFeed,
+        localFeed = localFeed,
+        federatedFeed = federatedFeed,
+        selectedTimelineType = selectedTimelineType,
+        homePostCardInteractions = homePostCardInteractions,
+        localPostCardInteractions = localPostCardInteractions,
+        federatedPostCardInteractions = federatedPostCardInteractions,
+        feedInteractions = feedInteractions,
+    )
+}
+
+@Composable
+private fun MainContent(
+    homeFeed: Flow<PagingData<PostCardUiState>>,
+    localFeed: Flow<PagingData<PostCardUiState>>,
+    federatedFeed: Flow<PagingData<PostCardUiState>>,
+    selectedTimelineType: TimelineType,
+    homePostCardInteractions: PostCardInteractions,
+    localPostCardInteractions: PostCardInteractions,
+    federatedPostCardInteractions: PostCardInteractions,
+    feedInteractions: FeedInteractions,
+) {
     val forYouScrollState = rememberLazyListState()
     val localScrollState = rememberLazyListState()
     val federatedScrollState = rememberLazyListState()
