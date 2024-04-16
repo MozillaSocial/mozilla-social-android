@@ -115,8 +115,6 @@ class FeedViewModel(
         viewModelScope.launch {
             userPreferencesDatastore.saveLastSeenHomeStatusId(statusId)
         }
-
-//        HomeTimelineCleanupWorker.lastStatusViewedId = statusId
     }
 }
 
