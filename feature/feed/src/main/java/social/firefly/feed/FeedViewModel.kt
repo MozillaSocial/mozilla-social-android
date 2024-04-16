@@ -30,7 +30,6 @@ import social.firefly.core.ui.postcard.PostCardDelegate
 import social.firefly.core.ui.postcard.PostCardUiState
 import social.firefly.core.ui.postcard.toPostCardUiState
 import social.firefly.core.usecase.mastodon.account.GetLoggedInUserAccountId
-import social.firefly.core.workmanager.HomeTimelineCleanupWorker
 
 /**
  * Produces a flow of pages of statuses for a feed

@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
@@ -37,7 +36,6 @@ import social.firefly.core.ui.common.text.MediumTextLabel
 import social.firefly.core.ui.common.text.FfTextField
 import social.firefly.core.ui.common.utils.PreviewTheme
 import social.firefly.core.workmanager.DatabasePurgeWorker
-import social.firefly.core.workmanager.HomeTimelineCleanupWorker
 import social.firefly.feature.settings.R
 import java.time.Duration
 
@@ -119,21 +117,6 @@ fun DeveloperOptionsScreen() {
                 }
             ) {
                 MediumTextLabel(text = "Test database purge")
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            FfButton(
-                modifier = Modifier
-                    .padding(8.dp)
-                    .fillMaxWidth(),
-                onClick = {
-                    HomeTimelineCleanupWorker.setupWorker(
-                        context as Activity,
-                    )
-                }
-            ) {
-                MediumTextLabel(text = "Test home timeline cleanup")
             }
         }
     }
