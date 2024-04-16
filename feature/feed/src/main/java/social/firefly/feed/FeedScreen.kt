@@ -3,8 +3,10 @@
 package social.firefly.feed
 
 import android.content.res.Configuration
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
@@ -26,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.PagingData
+import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -185,25 +188,11 @@ private fun MainContent(
     val localFeedPagingItems = localFeed.collectAsLazyPagingItems()
     val federatedPagingItems = federatedFeed.collectAsLazyPagingItems()
 
-    val forYouFirstVisibleIndex by remember(forYouScrollState) {
-        derivedStateOf {
-            // there seems to be a bug where 0 is not possible.
-            // It's not perfect, but using 0 is better than 1 if we are not sure which is right
-            if (forYouScrollState.firstVisibleItemIndex <= 1) {
-                0
-            } else {
-                forYouScrollState.firstVisibleItemIndex
-            }
-        }
-    }
-
-    LaunchedEffect(forYouFirstVisibleIndex) {
-        if (homeFeedPagingItems.itemCount != 0) {
-            homeFeedPagingItems.peek(forYouFirstVisibleIndex)?.let { uiState ->
-                feedInteractions.onStatusViewed(uiState.statusId)
-            }
-        }
-    }
+    HomeListener(
+        forYouScrollState = forYouScrollState,
+        homeFeedPagingItems = homeFeedPagingItems,
+        feedInteractions = feedInteractions,
+    )
 
     PullRefreshLazyColumn(
         lazyPagingItems = when (selectedTimelineType) {
@@ -229,6 +218,35 @@ private fun MainContent(
                 TimelineType.FEDERATED -> federatedPostCardInteractions
             },
         )
+    }
+}
+
+// Watches for the first visible item and sends the status ID to the viewmodel.
+// Used for saving the last seen item so we can bring the user back there when they reopen the app.
+@Composable
+private fun HomeListener(
+    forYouScrollState: LazyListState,
+    homeFeedPagingItems: LazyPagingItems<PostCardUiState>,
+    feedInteractions: FeedInteractions,
+) {
+    val forYouFirstVisibleIndex by remember(forYouScrollState) {
+        derivedStateOf {
+            // there seems to be a bug where 0 is not possible.
+            // It's not perfect, but using 0 is better than 1 if we are not sure which is right
+            if (forYouScrollState.firstVisibleItemIndex <= 1) {
+                0
+            } else {
+                forYouScrollState.firstVisibleItemIndex
+            }
+        }
+    }
+
+    LaunchedEffect(forYouFirstVisibleIndex) {
+        if (homeFeedPagingItems.itemCount != 0) {
+            homeFeedPagingItems.peek(forYouFirstVisibleIndex)?.let { uiState ->
+                feedInteractions.onStatusViewed(uiState.statusId)
+            }
+        }
     }
 }
 
