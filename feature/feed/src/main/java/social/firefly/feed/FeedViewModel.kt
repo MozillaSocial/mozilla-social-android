@@ -7,7 +7,9 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
 import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -51,6 +53,9 @@ class FeedViewModel(
 
     private val _homeFeed = MutableStateFlow<Flow<PagingData<PostCardUiState>>>(emptyFlow())
     var homeFeed = _homeFeed.asStateFlow()
+
+    private var statusViewedJob: Job? = null
+    private var lastSeenId: String? = null
 
     @OptIn(ExperimentalPagingApi::class)
     val localFeed = timelineRepository.getLocalTimelinePager(
@@ -112,9 +117,19 @@ class FeedViewModel(
     }
 
     override fun onStatusViewed(statusId: String) {
-        viewModelScope.launch {
-            userPreferencesDatastore.saveLastSeenHomeStatusId(statusId)
+        lastSeenId = statusId
+        // save the last seen status no more than once per x seconds (SAVE_RATE)
+        if (statusViewedJob == null) {
+            statusViewedJob = viewModelScope.launch {
+                lastSeenId?.let { userPreferencesDatastore.saveLastSeenHomeStatusId(it) }
+                delay(SAVE_RATE)
+                statusViewedJob = null
+            }
         }
+    }
+
+    companion object {
+        private const val SAVE_RATE = 1_500L
     }
 }
 
