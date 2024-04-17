@@ -5,4 +5,5 @@ interface FeedInteractions {
     fun onScreenViewed() = Unit
     fun onStatusViewed(statusId: String) = Unit
     suspend fun onScrollToTopClicked(onDatabaseCleared: suspend () -> Unit) = Unit
+    fun topOfFeedReached() = Unit
 }

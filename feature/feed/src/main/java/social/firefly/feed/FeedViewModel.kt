@@ -20,7 +20,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.koin.core.parameter.parametersOf
 import org.koin.java.KoinJavaComponent
-import social.firefly.common.appscope.AppScope
+import social.firefly.common.utils.edit
 import social.firefly.core.analytics.FeedAnalytics
 import social.firefly.core.analytics.FeedLocation
 import social.firefly.core.datastore.UserPreferencesDatastore
@@ -48,14 +48,11 @@ class FeedViewModel(
 ) : ViewModel(), FeedInteractions {
     private val userAccountId: String = getLoggedInUserAccountId()
 
-    private val _timelineType = MutableStateFlow(TimelineType.FOR_YOU)
-    val timelineType = _timelineType.asStateFlow()
-
-    private val _homeFeed = MutableStateFlow<Flow<PagingData<PostCardUiState>>>(emptyFlow())
-    var homeFeed = _homeFeed.asStateFlow()
-
     private var statusViewedJob: Job? = null
     private var lastSeenId: String? = null
+
+    private val _uiState = MutableStateFlow(FeedUiState())
+    val uiState = _uiState.asStateFlow()
 
     @OptIn(ExperimentalPagingApi::class)
     val localFeed = timelineRepository.getLocalTimelinePager(
@@ -104,21 +101,23 @@ class FeedViewModel(
                 }
             }
             timelineRepository.deleteHomeStatusesBeforeId(lastSeenId.await())
-            _homeFeed.update {
-                timelineRepository.getHomeTimelinePager(
+            _uiState.edit {copy(
+                homeFeed = timelineRepository.getHomeTimelinePager(
                     remoteMediator = homeTimelineRemoteMediator,
                 ).map { pagingData ->
                     pagingData.map {
                         it.toPostCardUiState(userAccountId, homePostCardDelegate)
                     }
                 }.cachedIn(viewModelScope)
-            }
+            ) }
         }
     }
 
     override fun onTabClicked(timelineType: TimelineType) {
         analytics.feedScreenClicked(timelineType.toAnalyticsTimelineType())
-        _timelineType.update { timelineType }
+        _uiState.edit { copy(
+            timelineType = timelineType
+        ) }
     }
 
     override fun onScreenViewed() {
@@ -140,8 +139,14 @@ class FeedViewModel(
     override suspend fun onScrollToTopClicked(onDatabaseCleared: suspend () -> Unit) {
         timelineRepository.deleteHomeTimeline()
         // race condition where the database needs to emit it's changes
-        delay(150)
+        delay(200)
         onDatabaseCleared()
+    }
+
+    override fun topOfFeedReached() {
+        _uiState.edit { copy(
+            scrollUpButtonCanShow = false
+        ) }
     }
 
     companion object {

@@ -31,8 +31,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -75,13 +77,13 @@ import social.firefly.feature.feed.R
 @Composable
 internal fun FeedScreen(viewModel: FeedViewModel = koinViewModel()) {
 
-    val homeFeed = viewModel.homeFeed.collectAsStateWithLifecycle().value
+    val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
 
     FeedScreen(
-        homeFeed = homeFeed,
+        uiState = uiState,
+        homeFeed = uiState.homeFeed,
         localFeed = viewModel.localFeed,
         federatedFeed = viewModel.federatedFeed,
-        timelineTypeFlow = viewModel.timelineType,
         homePostCardInteractions = viewModel.homePostCardDelegate,
         localPostCardInteractions = viewModel.localPostCardDelegate,
         federatedPostCardInteractions = viewModel.federatedPostCardDelegate,
@@ -99,10 +101,10 @@ internal fun FeedScreen(viewModel: FeedViewModel = koinViewModel()) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun FeedScreen(
+    uiState: FeedUiState,
     homeFeed: Flow<PagingData<PostCardUiState>>,
     localFeed: Flow<PagingData<PostCardUiState>>,
     federatedFeed: Flow<PagingData<PostCardUiState>>,
-    timelineTypeFlow: StateFlow<TimelineType>,
     homePostCardInteractions: PostCardInteractions,
     localPostCardInteractions: PostCardInteractions,
     federatedPostCardInteractions: PostCardInteractions,
@@ -131,10 +133,10 @@ private fun FeedScreen(
             )
 
             TabbedContent(
+                uiState = uiState,
                 homeFeed = homeFeed,
                 localFeed = localFeed,
                 federatedFeed = federatedFeed,
-                timelineTypeFlow = timelineTypeFlow,
                 homePostCardInteractions = homePostCardInteractions,
                 localPostCardInteractions = localPostCardInteractions,
                 federatedPostCardInteractions = federatedPostCardInteractions,
@@ -146,20 +148,19 @@ private fun FeedScreen(
 
 @Composable
 private fun TabbedContent(
+    uiState: FeedUiState,
     homeFeed: Flow<PagingData<PostCardUiState>>,
     localFeed: Flow<PagingData<PostCardUiState>>,
     federatedFeed: Flow<PagingData<PostCardUiState>>,
-    timelineTypeFlow: StateFlow<TimelineType>,
     homePostCardInteractions: PostCardInteractions,
     localPostCardInteractions: PostCardInteractions,
     federatedPostCardInteractions: PostCardInteractions,
     feedInteractions: FeedInteractions,
 ) {
-    val selectedTimelineType by timelineTypeFlow.collectAsStateWithLifecycle()
     val context = LocalContext.current
 
     FfTabRow(
-        selectedTabIndex = selectedTimelineType.ordinal,
+        selectedTabIndex = uiState.timelineType.ordinal,
         divider = {},
     ) {
         TimelineType.entries.forEach { timelineType ->
@@ -167,7 +168,7 @@ private fun TabbedContent(
                 modifier =
                 Modifier
                     .height(40.dp),
-                selected = selectedTimelineType == timelineType,
+                selected = uiState.timelineType == timelineType,
                 onClick = { feedInteractions.onTabClicked(timelineType) },
                 content = {
                     Text(
@@ -181,10 +182,10 @@ private fun TabbedContent(
 
     Box {
         MainContent(
+            uiState = uiState,
             homeFeed = homeFeed,
             localFeed = localFeed,
             federatedFeed = federatedFeed,
-            selectedTimelineType = selectedTimelineType,
             homePostCardInteractions = homePostCardInteractions,
             localPostCardInteractions = localPostCardInteractions,
             federatedPostCardInteractions = federatedPostCardInteractions,
@@ -195,10 +196,10 @@ private fun TabbedContent(
 
 @Composable
 private fun BoxScope.MainContent(
+    uiState: FeedUiState,
     homeFeed: Flow<PagingData<PostCardUiState>>,
     localFeed: Flow<PagingData<PostCardUiState>>,
     federatedFeed: Flow<PagingData<PostCardUiState>>,
-    selectedTimelineType: TimelineType,
     homePostCardInteractions: PostCardInteractions,
     localPostCardInteractions: PostCardInteractions,
     federatedPostCardInteractions: PostCardInteractions,
@@ -219,24 +220,24 @@ private fun BoxScope.MainContent(
     )
 
     PullRefreshLazyColumn(
-        lazyPagingItems = when (selectedTimelineType) {
+        lazyPagingItems = when (uiState.timelineType) {
             TimelineType.FOR_YOU -> homeFeedPagingItems
             TimelineType.LOCAL -> localFeedPagingItems
             TimelineType.FEDERATED -> federatedPagingItems
         },
-        listState = when (selectedTimelineType) {
+        listState = when (uiState.timelineType) {
             TimelineType.FOR_YOU -> forYouScrollState
             TimelineType.LOCAL -> localScrollState
             TimelineType.FEDERATED -> federatedScrollState
         },
     ) {
         postListContent(
-            lazyPagingItems = when (selectedTimelineType) {
+            lazyPagingItems = when (uiState.timelineType) {
                 TimelineType.FOR_YOU -> homeFeedPagingItems
                 TimelineType.LOCAL -> localFeedPagingItems
                 TimelineType.FEDERATED -> federatedPagingItems
             },
-            postCardInteractions = when (selectedTimelineType) {
+            postCardInteractions = when (uiState.timelineType) {
                 TimelineType.FOR_YOU -> homePostCardInteractions
                 TimelineType.LOCAL -> localPostCardInteractions
                 TimelineType.FEDERATED -> federatedPostCardInteractions
@@ -244,9 +245,26 @@ private fun BoxScope.MainContent(
         )
     }
 
-    if (selectedTimelineType == TimelineType.FOR_YOU) {
-        val showScrollUpButton by remember(forYouScrollState) {
-            derivedStateOf { forYouScrollState.firstVisibleItemIndex > 1 }
+    homeFeedPagingItems.loadState.prepend.endOfPaginationReached
+
+    if (uiState.timelineType == TimelineType.FOR_YOU) {
+        val showScrollUpButton by remember(
+            forYouScrollState,
+            homeFeedPagingItems.loadState.prepend.endOfPaginationReached,
+            uiState.scrollUpButtonCanShow,
+        ) {
+            derivedStateOf {
+                if (homeFeedPagingItems.loadState.prepend.endOfPaginationReached &&
+                    forYouScrollState.firstVisibleItemIndex <= 1) {
+                    feedInteractions.topOfFeedReached()
+                }
+                if (!uiState.scrollUpButtonCanShow) {
+                    false
+                } else {
+                    homeFeedPagingItems.loadState.prepend.endOfPaginationReached &&
+                            forYouScrollState.firstVisibleItemIndex > 1
+                }
+            }
         }
         val coroutineScope = rememberCoroutineScope()
 
@@ -324,11 +342,11 @@ private fun HomeListener(
 private fun FeedScreenPreviewLight() {
     FfTheme(darkTheme = false) {
         FeedScreen(
+            uiState = FeedUiState(),
             homeFeed = flowOf(),
             homePostCardInteractions = PostCardInteractionsNoOp,
             localPostCardInteractions = PostCardInteractionsNoOp,
             federatedPostCardInteractions = PostCardInteractionsNoOp,
-            timelineTypeFlow = MutableStateFlow(TimelineType.FOR_YOU),
             feedInteractions = object : FeedInteractions {},
             localFeed = flowOf(),
             federatedFeed = flowOf(),
@@ -341,11 +359,11 @@ private fun FeedScreenPreviewLight() {
 private fun FeedScreenPreviewDark() {
     FfTheme(darkTheme = true) {
         FeedScreen(
+            uiState = FeedUiState(),
             homeFeed = flowOf(),
             homePostCardInteractions = PostCardInteractionsNoOp,
             localPostCardInteractions = PostCardInteractionsNoOp,
             federatedPostCardInteractions = PostCardInteractionsNoOp,
-            timelineTypeFlow = MutableStateFlow(TimelineType.FOR_YOU),
             feedInteractions = object : FeedInteractions {},
             localFeed = flowOf(),
             federatedFeed = flowOf(),

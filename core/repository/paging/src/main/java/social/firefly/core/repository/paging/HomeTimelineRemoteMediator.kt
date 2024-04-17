@@ -30,7 +30,7 @@ class HomeTimelineRemoteMediator(
     private val userPreferencesDatastore: UserPreferencesDatastore,
 ) : RemoteMediator<Int, HomeTimelineStatusWrapper>() {
 
-    private var firstLoad = true
+    private var firstRefreshHasHappened = false
 
     @Suppress("ReturnCount", "MagicNumber")
     override suspend fun load(
@@ -117,8 +117,7 @@ class HomeTimelineRemoteMediator(
 
         // If this is the first time we are loading the page, we need to start where
         // the user last left off.  Grab the lastSeenHomeStatusId
-        if (firstLoad) {
-            firstLoad = false
+        if (!firstRefreshHasHappened) {
             val lastSeenId = CompletableDeferred<String>()
             with(CoroutineScope(coroutineContext)) {
                 launch {
@@ -155,6 +154,8 @@ class HomeTimelineRemoteMediator(
         } else {
             null
         }
+
+        firstRefreshHasHappened = true
 
         return StatusPagingWrapper(
             statuses = buildList {
