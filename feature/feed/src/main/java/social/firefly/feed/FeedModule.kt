@@ -1,6 +1,7 @@
 package social.firefly.feed
 
 import org.koin.androidx.viewmodel.dsl.viewModelOf
+import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 import social.firefly.common.commonModule
 import social.firefly.core.analytics.analyticsModule
@@ -24,11 +25,7 @@ val feedModule = module {
         analyticsModule,
     )
 
-    single {
-        HomeTimelineRemoteMediator(
-            get(),
-        )
-    }
+    singleOf(::HomeTimelineRemoteMediator)
     single {
         LocalTimelineRemoteMediator(
             get(),

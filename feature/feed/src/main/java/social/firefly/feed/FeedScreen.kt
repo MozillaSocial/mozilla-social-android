@@ -3,38 +3,68 @@
 package social.firefly.feed
 
 import android.content.res.Configuration
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.slideIn
+import androidx.compose.animation.slideOut
+import androidx.compose.foundation.ScrollState
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.PagingData
+import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 import social.firefly.core.designsystem.font.FfFonts
+import social.firefly.core.designsystem.icon.FfIcons
 import social.firefly.core.designsystem.theme.FfTheme
 import social.firefly.core.push.PushRegistration
 import social.firefly.core.ui.common.FfSurface
 import social.firefly.core.ui.common.appbar.FfTopBar
+import social.firefly.core.ui.common.button.FfButton
+import social.firefly.core.ui.common.button.FfFloatingActionButton
 import social.firefly.core.ui.common.pullrefresh.PullRefreshLazyColumn
 import social.firefly.core.ui.common.tabs.FfTab
 import social.firefly.core.ui.common.tabs.FfTabRow
@@ -47,11 +77,14 @@ import social.firefly.feature.feed.R
 
 @Composable
 internal fun FeedScreen(viewModel: FeedViewModel = koinViewModel()) {
+
+    val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
+
     FeedScreen(
-        homeFeed = viewModel.homeFeed,
+        uiState = uiState,
+        homeFeed = uiState.homeFeed,
         localFeed = viewModel.localFeed,
         federatedFeed = viewModel.federatedFeed,
-        timelineTypeFlow = viewModel.timelineType,
         homePostCardInteractions = viewModel.homePostCardDelegate,
         localPostCardInteractions = viewModel.localPostCardDelegate,
         federatedPostCardInteractions = viewModel.federatedPostCardDelegate,
@@ -69,10 +102,10 @@ internal fun FeedScreen(viewModel: FeedViewModel = koinViewModel()) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun FeedScreen(
+    uiState: FeedUiState,
     homeFeed: Flow<PagingData<PostCardUiState>>,
     localFeed: Flow<PagingData<PostCardUiState>>,
     federatedFeed: Flow<PagingData<PostCardUiState>>,
-    timelineTypeFlow: StateFlow<TimelineType>,
     homePostCardInteractions: PostCardInteractions,
     localPostCardInteractions: PostCardInteractions,
     federatedPostCardInteractions: PostCardInteractions,
@@ -100,11 +133,11 @@ private fun FeedScreen(
                 },
             )
 
-            MainContent(
+            TabbedContent(
+                uiState = uiState,
                 homeFeed = homeFeed,
                 localFeed = localFeed,
                 federatedFeed = federatedFeed,
-                timelineTypeFlow = timelineTypeFlow,
                 homePostCardInteractions = homePostCardInteractions,
                 localPostCardInteractions = localPostCardInteractions,
                 federatedPostCardInteractions = federatedPostCardInteractions,
@@ -115,21 +148,20 @@ private fun FeedScreen(
 }
 
 @Composable
-private fun MainContent(
+private fun TabbedContent(
+    uiState: FeedUiState,
     homeFeed: Flow<PagingData<PostCardUiState>>,
     localFeed: Flow<PagingData<PostCardUiState>>,
     federatedFeed: Flow<PagingData<PostCardUiState>>,
-    timelineTypeFlow: StateFlow<TimelineType>,
     homePostCardInteractions: PostCardInteractions,
     localPostCardInteractions: PostCardInteractions,
     federatedPostCardInteractions: PostCardInteractions,
     feedInteractions: FeedInteractions,
 ) {
-    val selectedTimelineType by timelineTypeFlow.collectAsStateWithLifecycle()
     val context = LocalContext.current
 
     FfTabRow(
-        selectedTabIndex = selectedTimelineType.ordinal,
+        selectedTabIndex = uiState.timelineType.ordinal,
         divider = {},
     ) {
         TimelineType.entries.forEach { timelineType ->
@@ -137,7 +169,7 @@ private fun MainContent(
                 modifier =
                 Modifier
                     .height(40.dp),
-                selected = selectedTimelineType == timelineType,
+                selected = uiState.timelineType == timelineType,
                 onClick = { feedInteractions.onTabClicked(timelineType) },
                 content = {
                     Text(
@@ -149,6 +181,29 @@ private fun MainContent(
         }
     }
 
+    MainContent(
+        uiState = uiState,
+        homeFeed = homeFeed,
+        localFeed = localFeed,
+        federatedFeed = federatedFeed,
+        homePostCardInteractions = homePostCardInteractions,
+        localPostCardInteractions = localPostCardInteractions,
+        federatedPostCardInteractions = federatedPostCardInteractions,
+        feedInteractions = feedInteractions,
+    )
+}
+
+@Composable
+private fun MainContent(
+    uiState: FeedUiState,
+    homeFeed: Flow<PagingData<PostCardUiState>>,
+    localFeed: Flow<PagingData<PostCardUiState>>,
+    federatedFeed: Flow<PagingData<PostCardUiState>>,
+    homePostCardInteractions: PostCardInteractions,
+    localPostCardInteractions: PostCardInteractions,
+    federatedPostCardInteractions: PostCardInteractions,
+    feedInteractions: FeedInteractions,
+) {
     val forYouScrollState = rememberLazyListState()
     val localScrollState = rememberLazyListState()
     val federatedScrollState = rememberLazyListState()
@@ -157,30 +212,142 @@ private fun MainContent(
     val localFeedPagingItems = localFeed.collectAsLazyPagingItems()
     val federatedPagingItems = federatedFeed.collectAsLazyPagingItems()
 
-    PullRefreshLazyColumn(
-        lazyPagingItems = when (selectedTimelineType) {
-            TimelineType.FOR_YOU -> homeFeedPagingItems
-            TimelineType.LOCAL -> localFeedPagingItems
-            TimelineType.FEDERATED -> federatedPagingItems
-        },
-        listState = when (selectedTimelineType) {
-            TimelineType.FOR_YOU -> forYouScrollState
-            TimelineType.LOCAL -> localScrollState
-            TimelineType.FEDERATED -> federatedScrollState
-        },
-    ) {
-        postListContent(
-            lazyPagingItems = when (selectedTimelineType) {
+    HomeListener(
+        forYouScrollState = forYouScrollState,
+        homeFeedPagingItems = homeFeedPagingItems,
+        feedInteractions = feedInteractions,
+    )
+
+    Box {
+        PullRefreshLazyColumn(
+            lazyPagingItems = when (uiState.timelineType) {
                 TimelineType.FOR_YOU -> homeFeedPagingItems
                 TimelineType.LOCAL -> localFeedPagingItems
                 TimelineType.FEDERATED -> federatedPagingItems
             },
-            postCardInteractions = when (selectedTimelineType) {
-                TimelineType.FOR_YOU -> homePostCardInteractions
-                TimelineType.LOCAL -> localPostCardInteractions
-                TimelineType.FEDERATED -> federatedPostCardInteractions
+            listState = when (uiState.timelineType) {
+                TimelineType.FOR_YOU -> forYouScrollState
+                TimelineType.LOCAL -> localScrollState
+                TimelineType.FEDERATED -> federatedScrollState
             },
+        ) {
+            postListContent(
+                lazyPagingItems = when (uiState.timelineType) {
+                    TimelineType.FOR_YOU -> homeFeedPagingItems
+                    TimelineType.LOCAL -> localFeedPagingItems
+                    TimelineType.FEDERATED -> federatedPagingItems
+                },
+                postCardInteractions = when (uiState.timelineType) {
+                    TimelineType.FOR_YOU -> homePostCardInteractions
+                    TimelineType.LOCAL -> localPostCardInteractions
+                    TimelineType.FEDERATED -> federatedPostCardInteractions
+                },
+            )
+        }
+
+        ScrollUpButton(
+            uiState = uiState,
+            forYouScrollState = forYouScrollState,
+            homeFeedPagingItems = homeFeedPagingItems,
+            feedInteractions = feedInteractions
         )
+    }
+}
+
+@Composable
+private fun BoxScope.ScrollUpButton(
+    uiState: FeedUiState,
+    forYouScrollState: LazyListState,
+    homeFeedPagingItems: LazyPagingItems<PostCardUiState>,
+    feedInteractions: FeedInteractions,
+) {
+    if (uiState.timelineType == TimelineType.FOR_YOU) {
+        val showScrollUpButton by remember(
+            forYouScrollState,
+            homeFeedPagingItems.loadState.prepend.endOfPaginationReached,
+            uiState.scrollUpButtonCanShow,
+        ) {
+            derivedStateOf {
+                if (homeFeedPagingItems.loadState.prepend.endOfPaginationReached &&
+                    forYouScrollState.firstVisibleItemIndex <= 1) {
+                    feedInteractions.topOfFeedReached()
+                }
+                if (!uiState.scrollUpButtonCanShow) {
+                    false
+                } else {
+                    homeFeedPagingItems.loadState.prepend.endOfPaginationReached &&
+                            forYouScrollState.firstVisibleItemIndex > 1
+                }
+            }
+        }
+        val coroutineScope = rememberCoroutineScope()
+
+        AnimatedVisibility(
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(16.dp),
+            visible = showScrollUpButton,
+            enter = slideIn {
+                IntOffset(
+                    x = 0,
+                    y = 300
+                )
+            },
+            exit = slideOut {
+                IntOffset(
+                    x = 0,
+                    y = 300
+                )
+            }
+        ) {
+            FfFloatingActionButton(
+                onClick = {
+                    coroutineScope.launch {
+                        feedInteractions.onScrollToTopClicked {
+                            homeFeedPagingItems.refresh()
+                            forYouScrollState.scrollToItem(0, 0)
+                        }
+                    }
+                }
+            ) {
+                Icon(
+                    modifier = Modifier
+                        .size(24.dp),
+                    painter = FfIcons.arrowLineUp(),
+                    contentDescription = stringResource(id = R.string.scroll_to_top_content_description),
+                    tint = FfTheme.colors.textActionPrimary,
+                )
+            }
+        }
+    }
+}
+
+// Watches for the first visible item and sends the status ID to the viewmodel.
+// Used for saving the last seen item so we can bring the user back there when they reopen the app.
+@Composable
+private fun HomeListener(
+    forYouScrollState: LazyListState,
+    homeFeedPagingItems: LazyPagingItems<PostCardUiState>,
+    feedInteractions: FeedInteractions,
+) {
+    val forYouFirstVisibleIndex by remember(forYouScrollState) {
+        derivedStateOf {
+            // there seems to be a bug where 0 is not possible.
+            // It's not perfect, but using 0 is better than 1 if we are not sure which is right
+            if (forYouScrollState.firstVisibleItemIndex <= 1) {
+                0
+            } else {
+                forYouScrollState.firstVisibleItemIndex
+            }
+        }
+    }
+
+    LaunchedEffect(forYouFirstVisibleIndex) {
+        if (homeFeedPagingItems.itemCount != 0) {
+            homeFeedPagingItems.peek(forYouFirstVisibleIndex)?.let { uiState ->
+                feedInteractions.onStatusViewed(uiState.statusId)
+            }
+        }
     }
 }
 
@@ -189,11 +356,11 @@ private fun MainContent(
 private fun FeedScreenPreviewLight() {
     FfTheme(darkTheme = false) {
         FeedScreen(
+            uiState = FeedUiState(),
             homeFeed = flowOf(),
             homePostCardInteractions = PostCardInteractionsNoOp,
             localPostCardInteractions = PostCardInteractionsNoOp,
             federatedPostCardInteractions = PostCardInteractionsNoOp,
-            timelineTypeFlow = MutableStateFlow(TimelineType.FOR_YOU),
             feedInteractions = object : FeedInteractions {},
             localFeed = flowOf(),
             federatedFeed = flowOf(),
@@ -206,11 +373,11 @@ private fun FeedScreenPreviewLight() {
 private fun FeedScreenPreviewDark() {
     FfTheme(darkTheme = true) {
         FeedScreen(
+            uiState = FeedUiState(),
             homeFeed = flowOf(),
             homePostCardInteractions = PostCardInteractionsNoOp,
             localPostCardInteractions = PostCardInteractionsNoOp,
             federatedPostCardInteractions = PostCardInteractionsNoOp,
-            timelineTypeFlow = MutableStateFlow(TimelineType.FOR_YOU),
             feedInteractions = object : FeedInteractions {},
             localFeed = flowOf(),
             federatedFeed = flowOf(),

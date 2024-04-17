@@ -4,4 +4,5 @@
     <string name="tab_local">Local</string>
     <string name="tab_federated">Federated</string>
     <string name="mozilla" translatable="false">Mozilla</string>
+    <string name="scroll_to_top_content_description">scroll to top</string>
 </resources>

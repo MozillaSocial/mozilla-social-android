@@ -6,6 +6,7 @@ import androidx.paging.ExperimentalPagingApi
 import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
+import social.firefly.core.datastore.dataStoreModule
 import social.firefly.core.repository.mastodon.mastodonRepositoryModule
 import social.firefly.core.repository.paging.notifications.AllNotificationsRemoteMediator
 import social.firefly.core.repository.paging.notifications.FollowNotificationsRemoteMediator
@@ -16,9 +17,9 @@ val pagingModule = module {
     includes(
         mastodonRepositoryModule,
         mastodonUsecaseModule,
+        dataStoreModule,
     )
 
-    singleOf(::RefreshHomeTimeline)
     singleOf(::RefreshFederatedTimeline)
     singleOf(::RefreshLocalTimeline)
     factoryOf(::FavoritesRemoteMediator)

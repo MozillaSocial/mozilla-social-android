@@ -32,6 +32,9 @@ import social.firefly.core.designsystem.R
  */
 object FfIcons {
     @Composable
+    fun arrowLineUp() = painterResource(id = R.drawable.arrow_line_up)
+
+    @Composable
     fun at() = painterResource(id = R.drawable.at)
 
     @Composable
