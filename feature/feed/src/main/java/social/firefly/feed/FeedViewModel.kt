@@ -136,6 +136,7 @@ class FeedViewModel(
         }
     }
 
+    @Suppress("MagicNumber")
     override suspend fun onScrollToTopClicked(onDatabaseCleared: suspend () -> Unit) {
         timelineRepository.deleteHomeTimeline()
         // race condition where the database needs to emit it's changes
