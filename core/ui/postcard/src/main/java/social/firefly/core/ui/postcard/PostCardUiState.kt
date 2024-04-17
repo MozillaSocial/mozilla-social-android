@@ -9,6 +9,7 @@ data class PostCardUiState(
     val statusId: String,
     val topRowMetaDataUiState: TopRowMetaDataUiState?,
     val mainPostCardUiState: MainPostCardUiState,
+    val depthLinesUiState: DepthLinesUiState?,
 )
 
 /**
@@ -50,6 +51,11 @@ data class PostContentUiState(
 data class TopRowMetaDataUiState(
     val iconType: TopRowIconType,
     val text: StringFactory,
+)
+
+data class DepthLinesUiState(
+    val postDepth: Int,
+    val depthLines: List<Int>
 )
 
 enum class TopRowIconType {

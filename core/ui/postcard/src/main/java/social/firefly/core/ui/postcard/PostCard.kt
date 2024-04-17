@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
@@ -53,6 +54,8 @@ import social.firefly.core.designsystem.theme.FfSpacing
 import social.firefly.core.designsystem.theme.FfTheme
 import social.firefly.core.designsystem.utils.NoRipple
 import social.firefly.core.ui.common.TransparentNoTouchOverlay
+import social.firefly.core.ui.common.divider.FfDivider
+import social.firefly.core.ui.common.divider.FfVerticalDivider
 import social.firefly.core.ui.common.dropdown.FfDropDownItem
 import social.firefly.core.ui.common.dropdown.FfDropdownMenu
 import social.firefly.core.ui.common.loading.FfCircularProgressIndicator
@@ -76,25 +79,46 @@ fun PostCard(
 ) {
     NoRipple {
         Box(modifier = modifier) {
-            Column(
-                Modifier
-                    .padding(8.dp)
+            Row(
+                modifier = Modifier
                     .fillMaxWidth()
-                    .clickable {
-                        // prevent the user from being able to click on the same status
-                        // as the root thread status
-                        if (post.mainPostCardUiState.statusId != threadId) {
-                            postCardInteractions.onPostCardClicked(post.mainPostCardUiState.statusId)
-                        }
-                    },
+                    .height(IntrinsicSize.Min),
             ) {
-                post.topRowMetaDataUiState?.let {
-                    TopRowMetaData(
-                        topRowMetaDataUiState = it,
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
+                val postDepth = post.depthLinesUiState?.postDepth ?: 0
+                if (postDepth > 0) {
+                    for (i in 0..<postDepth) {
+                        if (post.depthLinesUiState?.depthLines?.contains(i) == true) {
+                            FfDivider(
+                                modifier = Modifier
+                                    .fillMaxHeight()
+                                    .padding(start = 4.dp)
+                                    .width(1.dp)
+                            )
+                        } else {
+                            Spacer(modifier = Modifier.width(5.dp))
+                        }
+                    }
                 }
-                Post(post.mainPostCardUiState, postCardInteractions)
+
+                Column(
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .clickable {
+                            // prevent the user from being able to click on the same status
+                            // as the root thread status
+                            if (post.mainPostCardUiState.statusId != threadId) {
+                                postCardInteractions.onPostCardClicked(post.mainPostCardUiState.statusId)
+                            }
+                        },
+                ) {
+                    post.topRowMetaDataUiState?.let {
+                        TopRowMetaData(
+                            topRowMetaDataUiState = it,
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                    }
+                    Post(post.mainPostCardUiState, postCardInteractions)
+                }
             }
 
             AnimatedVisibility(
@@ -482,16 +506,13 @@ private fun BottomIconButton(
 private fun PostCardPreview() {
     PreviewTheme {
         PostCard(
-            post =
-            PostCardUiState(
+            post = PostCardUiState(
                 statusId = "",
-                topRowMetaDataUiState =
-                TopRowMetaDataUiState(
+                topRowMetaDataUiState = TopRowMetaDataUiState(
                     TopRowIconType.REPLY,
                     StringFactory.literal("in reply to Other person"),
                 ),
-                mainPostCardUiState =
-                MainPostCardUiState(
+                mainPostCardUiState = MainPostCardUiState(
                     url = "",
                     username = "Cool guy",
                     profilePictureUrl = "",
@@ -515,6 +536,7 @@ private fun PostCardPreview() {
                     ),
                     dropDownOptions = listOf(),
                 ),
+                depthLinesUiState = null,
             ),
             postCardInteractions = PostCardInteractionsNoOp,
         )
@@ -527,16 +549,13 @@ private fun PostCardPreview() {
 private fun PostCardWithContentWarningPreview() {
     PreviewTheme {
         PostCard(
-            post =
-            PostCardUiState(
+            post = PostCardUiState(
                 statusId = "",
-                topRowMetaDataUiState =
-                TopRowMetaDataUiState(
+                topRowMetaDataUiState = TopRowMetaDataUiState(
                     TopRowIconType.REPLY,
                     StringFactory.literal("in reply to Other person"),
                 ),
-                mainPostCardUiState =
-                MainPostCardUiState(
+                mainPostCardUiState = MainPostCardUiState(
                     url = "",
                     username = "Cool guy",
                     profilePictureUrl = "",
@@ -559,6 +578,53 @@ private fun PostCardWithContentWarningPreview() {
                         contentWarning = "Micky mouse spoilers!",
                     ),
                     dropDownOptions = listOf(),
+                ),
+                depthLinesUiState = null,
+            ),
+            postCardInteractions = PostCardInteractionsNoOp,
+        )
+    }
+}
+
+@Suppress("MagicNumber", "MaxLineLength")
+@Preview
+@Composable
+private fun PostCardPreviewWithDepth() {
+    PreviewTheme {
+        PostCard(
+            post = PostCardUiState(
+                statusId = "",
+                topRowMetaDataUiState = null,
+                mainPostCardUiState = MainPostCardUiState(
+                    url = "",
+                    username = "Cool guy",
+                    profilePictureUrl = "",
+                    postTimeSince = Instant.fromEpochMilliseconds(1695308821000L).timeSinceNow(),
+                    accountName = StringFactory.literal("coolguy"),
+                    replyCount = "4",
+                    boostCount = "300k",
+                    favoriteCount = "4.4m",
+                    statusId = "",
+                    userBoosted = false,
+                    isFavorited = false,
+                    accountId = "",
+                    isBeingDeleted = false,
+                    postContentUiState = PostContentUiState(
+                        pollUiState = null,
+                        statusTextHtml = "<p><span class=\"h-card\"><a href=\"https://mozilla.social/@obez\" class=\"u-url mention\" rel=\"nofollow noopener noreferrer\" target=\"_blank\">@<span>obez</span></a></span> This is a text status.  Here is the text and that is all I have to say about that.</p>",
+                        mediaAttachments = emptyList(),
+                        mentions = emptyList(),
+                        previewCard = null,
+                        contentWarning = "",
+                    ),
+                    dropDownOptions = listOf(),
+                ),
+                depthLinesUiState = DepthLinesUiState(
+                    postDepth = 2,
+                    depthLines = listOf(
+                        0,
+                        1,
+                    )
                 ),
             ),
             postCardInteractions = PostCardInteractionsNoOp,

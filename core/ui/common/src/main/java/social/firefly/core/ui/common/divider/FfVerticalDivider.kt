@@ -19,9 +19,7 @@ fun FfVerticalDivider(
     thickness: Dp = 1.dp,
 ) {
     Box(
-        modifier =
-        modifier
-            .fillMaxHeight()
+        modifier = modifier
             .width(thickness)
             .background(color = color),
     )
