@@ -50,6 +50,12 @@ class GetThread internal constructor(
                                     else -> {
                                         val inReplyToId = status.inReplyToId ?: return@forEach
                                         val parentDepth = this.find { it.status.statusId == inReplyToId }?.depth ?: 0
+
+                                        // filter replies beyond the max depth
+                                        if (parentDepth == MAX_DEPTH) {
+                                            return@forEach
+                                        }
+
                                         val parentIndex = this.indexOfFirst { it.status.statusId == inReplyToId }
                                         val insertIndex = this.indexOfFirst(
                                             startingAtIndex = parentIndex + 1
@@ -72,4 +78,8 @@ class GetThread internal constructor(
                 }
             )
         }
+
+    companion object {
+        private const val MAX_DEPTH = 10
+    }
 }
