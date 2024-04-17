@@ -63,6 +63,7 @@ import social.firefly.core.designsystem.theme.FfTheme
 import social.firefly.core.push.PushRegistration
 import social.firefly.core.ui.common.FfSurface
 import social.firefly.core.ui.common.appbar.FfTopBar
+import social.firefly.core.ui.common.button.FfButton
 import social.firefly.core.ui.common.button.FfFloatingActionButton
 import social.firefly.core.ui.common.pullrefresh.PullRefreshLazyColumn
 import social.firefly.core.ui.common.tabs.FfTab
@@ -180,22 +181,20 @@ private fun TabbedContent(
         }
     }
 
-    Box {
-        MainContent(
-            uiState = uiState,
-            homeFeed = homeFeed,
-            localFeed = localFeed,
-            federatedFeed = federatedFeed,
-            homePostCardInteractions = homePostCardInteractions,
-            localPostCardInteractions = localPostCardInteractions,
-            federatedPostCardInteractions = federatedPostCardInteractions,
-            feedInteractions = feedInteractions,
-        )
-    }
+    MainContent(
+        uiState = uiState,
+        homeFeed = homeFeed,
+        localFeed = localFeed,
+        federatedFeed = federatedFeed,
+        homePostCardInteractions = homePostCardInteractions,
+        localPostCardInteractions = localPostCardInteractions,
+        federatedPostCardInteractions = federatedPostCardInteractions,
+        feedInteractions = feedInteractions,
+    )
 }
 
 @Composable
-private fun BoxScope.MainContent(
+private fun MainContent(
     uiState: FeedUiState,
     homeFeed: Flow<PagingData<PostCardUiState>>,
     localFeed: Flow<PagingData<PostCardUiState>>,
@@ -219,34 +218,49 @@ private fun BoxScope.MainContent(
         feedInteractions = feedInteractions,
     )
 
-    PullRefreshLazyColumn(
-        lazyPagingItems = when (uiState.timelineType) {
-            TimelineType.FOR_YOU -> homeFeedPagingItems
-            TimelineType.LOCAL -> localFeedPagingItems
-            TimelineType.FEDERATED -> federatedPagingItems
-        },
-        listState = when (uiState.timelineType) {
-            TimelineType.FOR_YOU -> forYouScrollState
-            TimelineType.LOCAL -> localScrollState
-            TimelineType.FEDERATED -> federatedScrollState
-        },
-    ) {
-        postListContent(
+    Box {
+        PullRefreshLazyColumn(
             lazyPagingItems = when (uiState.timelineType) {
                 TimelineType.FOR_YOU -> homeFeedPagingItems
                 TimelineType.LOCAL -> localFeedPagingItems
                 TimelineType.FEDERATED -> federatedPagingItems
             },
-            postCardInteractions = when (uiState.timelineType) {
-                TimelineType.FOR_YOU -> homePostCardInteractions
-                TimelineType.LOCAL -> localPostCardInteractions
-                TimelineType.FEDERATED -> federatedPostCardInteractions
+            listState = when (uiState.timelineType) {
+                TimelineType.FOR_YOU -> forYouScrollState
+                TimelineType.LOCAL -> localScrollState
+                TimelineType.FEDERATED -> federatedScrollState
             },
+        ) {
+            postListContent(
+                lazyPagingItems = when (uiState.timelineType) {
+                    TimelineType.FOR_YOU -> homeFeedPagingItems
+                    TimelineType.LOCAL -> localFeedPagingItems
+                    TimelineType.FEDERATED -> federatedPagingItems
+                },
+                postCardInteractions = when (uiState.timelineType) {
+                    TimelineType.FOR_YOU -> homePostCardInteractions
+                    TimelineType.LOCAL -> localPostCardInteractions
+                    TimelineType.FEDERATED -> federatedPostCardInteractions
+                },
+            )
+        }
+
+        ScrollUpButton(
+            uiState = uiState,
+            forYouScrollState = forYouScrollState,
+            homeFeedPagingItems = homeFeedPagingItems,
+            feedInteractions = feedInteractions
         )
     }
+}
 
-    homeFeedPagingItems.loadState.prepend.endOfPaginationReached
-
+@Composable
+private fun BoxScope.ScrollUpButton(
+    uiState: FeedUiState,
+    forYouScrollState: LazyListState,
+    homeFeedPagingItems: LazyPagingItems<PostCardUiState>,
+    feedInteractions: FeedInteractions,
+) {
     if (uiState.timelineType == TimelineType.FOR_YOU) {
         val showScrollUpButton by remember(
             forYouScrollState,
