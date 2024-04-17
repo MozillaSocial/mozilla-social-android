@@ -4,6 +4,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.transform
+import social.firefly.common.utils.indexOfFirst
 import social.firefly.core.model.StatusWithDepth
 import social.firefly.core.repository.mastodon.StatusRepository
 import social.firefly.core.usecase.mastodon.status.SaveStatusToDatabase
@@ -49,17 +50,18 @@ class GetThread internal constructor(
                                     else -> {
                                         val inReplyToId = status.inReplyToId ?: return@forEach
                                         val parentDepth = this.find { it.status.statusId == inReplyToId }?.depth ?: 0
-                                        val sublist = this.subList(
-                                            this.indexOfFirst { it.status.statusId == inReplyToId } + 1,
-                                            this.size
-                                        )
-                                        val sublistIndex = sublist.indexOfFirst { it.depth <= parentDepth }
-                                        if (sublistIndex == -1) {
+                                        val parentIndex = this.indexOfFirst { it.status.statusId == inReplyToId }
+                                        val insertIndex = this.indexOfFirst(
+                                            startingAtIndex = parentIndex + 1
+                                        ) { it.depth <= parentDepth }
+
+                                        if (insertIndex == -1) {
                                             add(StatusWithDepth(status, parentDepth + 1))
                                             return@forEach
                                         }
+
                                         add(
-                                            index = (sublistIndex + this.size - sublist.size),
+                                            index = insertIndex,
                                             element = StatusWithDepth(status, parentDepth + 1)
                                         )
                                     }
