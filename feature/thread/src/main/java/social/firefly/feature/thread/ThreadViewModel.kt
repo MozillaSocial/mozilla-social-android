@@ -9,6 +9,7 @@ import org.koin.core.parameter.parametersOf
 import org.koin.java.KoinJavaComponent
 import social.firefly.core.analytics.FeedLocation
 import social.firefly.core.analytics.ThreadAnalytics
+import social.firefly.core.ui.postcard.DepthLinesUiState
 import social.firefly.core.ui.postcard.PostCardDelegate
 import social.firefly.core.ui.postcard.PostCardUiState
 import social.firefly.core.ui.postcard.toPostCardUiState
@@ -24,7 +25,23 @@ class ThreadViewModel(
 ) : ViewModel(), ThreadInteractions {
     var statuses: Flow<List<PostCardUiState>> =
         getThread.invoke(mainStatusId).map { statuses ->
-            statuses.map { it.toPostCardUiState(getLoggedInUserAccountId(), postCardDelegate) }
+            statuses.map {
+                it.status.toPostCardUiState(
+                    currentUserAccountId = getLoggedInUserAccountId(),
+                    postCardInteractions = postCardDelegate,
+                    depthLinesUiState = DepthLinesUiState(
+                        postDepth = it.depth,
+                        depthLines = buildList {
+                            if (it.depth == 0) {
+                                return@buildList
+                            }
+                            for (i in 0..it.depth) {
+                                add(i)
+                            }
+                        }
+                    )
+                )
+            }
         }.catch {
             Timber.e(it)
         }

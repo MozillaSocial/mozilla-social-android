@@ -32,8 +32,7 @@ internal fun ThreadScreen(
 
             LazyColumn(
                 Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 4.dp),
+                    .fillMaxSize(),
             ) {
                 items(
                     count = items.count(),
