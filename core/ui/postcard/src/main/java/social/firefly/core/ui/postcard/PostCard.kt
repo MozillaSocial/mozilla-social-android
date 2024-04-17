@@ -84,9 +84,9 @@ fun PostCard(
                     .fillMaxWidth()
                     .height(IntrinsicSize.Min),
             ) {
-                val postDepth = post.depthLinesUiState?.postDepth ?: 0
-                if (postDepth > 0) {
-                    for (i in 0..<postDepth) {
+                val postDepth = post.depthLinesUiState?.postDepth ?: -1
+                if (postDepth >= 0) {
+                    for (i in 0 until postDepth) {
                         if (post.depthLinesUiState?.depthLines?.contains(i) == true) {
                             FfDivider(
                                 modifier = Modifier
@@ -97,6 +97,16 @@ fun PostCard(
                         } else {
                             Spacer(modifier = Modifier.width(5.dp))
                         }
+                    }
+
+                    if (post.depthLinesUiState?.depthLines?.contains(post.depthLinesUiState.postDepth) == true) {
+                        FfDivider(
+                            modifier = Modifier
+                                .padding(top = 26.dp)
+                                .fillMaxHeight()
+                                .padding(start = 4.dp)
+                                .width(1.dp)
+                        )
                     }
                 }
 
@@ -624,6 +634,7 @@ private fun PostCardPreviewWithDepth() {
                     depthLines = listOf(
                         0,
                         1,
+                        2,
                     )
                 ),
             ),

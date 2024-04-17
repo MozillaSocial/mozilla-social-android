@@ -25,18 +25,21 @@ class ThreadViewModel(
 ) : ViewModel(), ThreadInteractions {
     var statuses: Flow<List<PostCardUiState>> =
         getThread.invoke(mainStatusId).map { statuses ->
-            statuses.map {
-                it.status.toPostCardUiState(
+            statuses.mapIndexed { index, statusWithDepth ->
+                statusWithDepth.status.toPostCardUiState(
                     currentUserAccountId = getLoggedInUserAccountId(),
                     postCardInteractions = postCardDelegate,
                     depthLinesUiState = DepthLinesUiState(
-                        postDepth = it.depth,
+                        postDepth = statusWithDepth.depth,
                         depthLines = buildList {
-                            if (it.depth == 0) {
+                            if (statusWithDepth.depth == -1) {
                                 return@buildList
                             }
-                            for (i in 0..it.depth) {
+                            for (i in 0..<statusWithDepth.depth) {
                                 add(i)
+                            }
+                            if (statusWithDepth.status.repliesCount > 0) {
+                                add(statusWithDepth.depth)
                             }
                         }
                     )

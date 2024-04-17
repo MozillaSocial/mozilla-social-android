@@ -41,7 +41,7 @@ class GetThread internal constructor(
                             statuses.forEach { status ->
                                 when {
                                     context.ancestors.map { it.statusId }.contains(status.statusId) -> {
-                                        add(StatusWithDepth(status, 0))
+                                        add(StatusWithDepth(status, -1))
                                     }
                                     status.statusId == statusId -> {
                                         add(StatusWithDepth(status, 0))

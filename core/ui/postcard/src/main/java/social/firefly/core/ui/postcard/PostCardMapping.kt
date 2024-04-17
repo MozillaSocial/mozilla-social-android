@@ -18,7 +18,7 @@ fun Status.toPostCardUiState(
 ): PostCardUiState =
     PostCardUiState(
         statusId = statusId,
-        topRowMetaDataUiState = if ((depthLinesUiState?.postDepth ?: 0) > 0) {
+        topRowMetaDataUiState = if (depthLinesUiState != null) {
             null
         } else {
             toTopRowMetaDataUiState()

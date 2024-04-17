@@ -55,7 +55,7 @@ data class TopRowMetaDataUiState(
 
 data class DepthLinesUiState(
     val postDepth: Int,
-    val depthLines: List<Int>
+    val depthLines: List<Int>,
 )
 
 enum class TopRowIconType {
