@@ -302,7 +302,6 @@ private fun ScrollWatcher(
     }
 
     LaunchedEffect(firstVisibleIndex) {
-        println("johnny launch")
         if (homeFeedPagingItems.itemCount != 0) {
             homeFeedPagingItems.peek(firstVisibleIndex)?.let { uiState ->
                 feedInteractions.onFirstVisibleItemIndexForHomeChanged(
