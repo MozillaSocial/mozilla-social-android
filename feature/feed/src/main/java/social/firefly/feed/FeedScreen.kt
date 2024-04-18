@@ -228,15 +228,18 @@ private fun MainContent(
             )
         }
 
-        ScrollUpButton(
-            uiState = uiState,
-            forYouScrollState = forYouScrollState,
-            homeFeedPagingItems = homeFeedPagingItems,
-            feedInteractions = feedInteractions
-        )
+        //TODO maybe try enabling this again some day.  Seems to be some weird bugs with
+        // the list when prepending data.
+//        ScrollUpButton(
+//            uiState = uiState,
+//            forYouScrollState = forYouScrollState,
+//            homeFeedPagingItems = homeFeedPagingItems,
+//            feedInteractions = feedInteractions
+//        )
     }
 }
 
+@Suppress("UnusedPrivateMember")
 @Composable
 private fun BoxScope.ScrollUpButton(
     uiState: FeedUiState,

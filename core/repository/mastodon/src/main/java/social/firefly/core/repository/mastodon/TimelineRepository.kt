@@ -178,7 +178,6 @@ class TimelineRepository internal constructor(
             PagingConfig(
                 pageSize = pageSize,
                 initialLoadSize = initialLoadSize,
-                prefetchDistance = 10,
             ),
             remoteMediator = remoteMediator,
         ) {
