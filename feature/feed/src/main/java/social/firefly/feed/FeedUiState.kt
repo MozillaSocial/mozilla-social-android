@@ -8,5 +8,5 @@ import social.firefly.core.ui.postcard.PostCardUiState
 data class FeedUiState(
     val timelineType: TimelineType = TimelineType.FOR_YOU,
     val homeFeed: Flow<PagingData<PostCardUiState>> = emptyFlow(),
-    val scrollUpButtonCanShow: Boolean = true
+    val scrollUpButtonVisible: Boolean = false
 )

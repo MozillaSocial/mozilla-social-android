@@ -3,20 +3,16 @@ package social.firefly.feed
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.ExperimentalPagingApi
-import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.koin.core.parameter.parametersOf
 import org.koin.java.KoinJavaComponent
@@ -29,7 +25,6 @@ import social.firefly.core.repository.paging.FederatedTimelineRemoteMediator
 import social.firefly.core.repository.paging.HomeTimelineRemoteMediator
 import social.firefly.core.repository.paging.LocalTimelineRemoteMediator
 import social.firefly.core.ui.postcard.PostCardDelegate
-import social.firefly.core.ui.postcard.PostCardUiState
 import social.firefly.core.ui.postcard.toPostCardUiState
 import social.firefly.core.usecase.mastodon.account.GetLoggedInUserAccountId
 
@@ -50,6 +45,9 @@ class FeedViewModel(
 
     private var statusViewedJob: Job? = null
     private var lastSeenId: String? = null
+    private var homeFirstVisibleItemIndex = 0
+    private var homePrependEndReached = false
+    private var hasBeenToTopOfHome = false
 
     private val _uiState = MutableStateFlow(FeedUiState())
     val uiState = _uiState.asStateFlow()
@@ -144,9 +142,25 @@ class FeedViewModel(
         onDatabaseCleared()
     }
 
-    override fun topOfFeedReached() {
+    override fun onFirstVisibleItemIndexForHomeChanged(index: Int) {
+        homeFirstVisibleItemIndex = index
+        updateScrollUpButtonVisibility()
+    }
+
+    override fun onHomePrependEndReached(reached: Boolean) {
+        homePrependEndReached = reached
+        updateScrollUpButtonVisibility()
+    }
+
+    private fun updateScrollUpButtonVisibility() {
+        if (homePrependEndReached &&
+            homeFirstVisibleItemIndex <= 1) {
+            hasBeenToTopOfHome = true
+        }
+        val visible = !hasBeenToTopOfHome
+
         _uiState.edit { copy(
-            scrollUpButtonCanShow = false
+            scrollUpButtonVisible = visible,
         ) }
     }
 
