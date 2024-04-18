@@ -178,7 +178,6 @@ private fun TabbedContent(
         homePostCardInteractions = homePostCardInteractions,
         localPostCardInteractions = localPostCardInteractions,
         federatedPostCardInteractions = federatedPostCardInteractions,
-        feedInteractions = feedInteractions,
     )
 }
 
@@ -191,7 +190,6 @@ private fun MainContent(
     homePostCardInteractions: PostCardInteractions,
     localPostCardInteractions: PostCardInteractions,
     federatedPostCardInteractions: PostCardInteractions,
-    feedInteractions: FeedInteractions,
 ) {
     val forYouScrollState = rememberLazyListState()
     val localScrollState = rememberLazyListState()
