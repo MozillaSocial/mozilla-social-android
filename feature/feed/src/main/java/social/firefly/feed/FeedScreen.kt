@@ -243,26 +243,11 @@ private fun BoxScope.ScrollUpButton(
     feedInteractions: FeedInteractions,
 ) {
     if (uiState.timelineType == TimelineType.FOR_YOU) {
-        val firstVisibleIndex by remember(forYouScrollState) {
-            derivedStateOf { forYouScrollState.firstVisibleItemIndex }
-        }
-
-        LaunchedEffect(firstVisibleIndex) {
-            if (homeFeedPagingItems.itemCount != 0) {
-                homeFeedPagingItems.peek(firstVisibleIndex)?.let { uiState ->
-                    feedInteractions.onFirstVisibleItemIndexForHomeChanged(
-                        index = firstVisibleIndex,
-                        statusId = uiState.statusId
-                    )
-                }
-            }
-        }
-
-        LaunchedEffect(homeFeedPagingItems.loadState.prepend.endOfPaginationReached) {
-            feedInteractions.onHomePrependEndReached(
-                homeFeedPagingItems.loadState.prepend.endOfPaginationReached
-            )
-        }
+        ScrollWatcher(
+            forYouScrollState = forYouScrollState,
+            homeFeedPagingItems = homeFeedPagingItems,
+            feedInteractions = feedInteractions,
+        )
 
         val coroutineScope = rememberCoroutineScope()
 
@@ -303,6 +288,35 @@ private fun BoxScope.ScrollUpButton(
                 )
             }
         }
+    }
+}
+
+@Composable
+private fun ScrollWatcher(
+    forYouScrollState: LazyListState,
+    homeFeedPagingItems: LazyPagingItems<PostCardUiState>,
+    feedInteractions: FeedInteractions,
+) {
+    val firstVisibleIndex by remember(forYouScrollState) {
+        derivedStateOf { forYouScrollState.firstVisibleItemIndex }
+    }
+
+    LaunchedEffect(firstVisibleIndex) {
+        println("johnny launch")
+        if (homeFeedPagingItems.itemCount != 0) {
+            homeFeedPagingItems.peek(firstVisibleIndex)?.let { uiState ->
+                feedInteractions.onFirstVisibleItemIndexForHomeChanged(
+                    index = firstVisibleIndex,
+                    statusId = uiState.statusId
+                )
+            }
+        }
+    }
+
+    LaunchedEffect(homeFeedPagingItems.loadState.prepend.endOfPaginationReached) {
+        feedInteractions.onHomePrependEndReached(
+            homeFeedPagingItems.loadState.prepend.endOfPaginationReached
+        )
     }
 }
 
