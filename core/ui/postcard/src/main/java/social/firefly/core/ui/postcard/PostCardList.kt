@@ -29,6 +29,7 @@ fun LazyListScope.postListContent(
         key = lazyPagingItems.itemKey { it.statusId },
     ) { index ->
         lazyPagingItems[index]?.let { item ->
+            println("johnny status id ${item.statusId}")
             PostCardListItem(
                 uiState = item,
                 postCardInteractions = postCardInteractions,

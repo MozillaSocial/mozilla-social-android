@@ -27,6 +27,7 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -42,6 +43,7 @@ import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
@@ -69,7 +71,7 @@ internal fun FeedScreen(viewModel: FeedViewModel = koinViewModel()) {
 
     FeedScreen(
         uiState = uiState,
-        homeFeed = uiState.homeFeed,
+        homeFeed = viewModel.homeFeed,
         localFeed = viewModel.localFeed,
         federatedFeed = viewModel.federatedFeed,
         homePostCardInteractions = viewModel.homePostCardDelegate,
@@ -297,19 +299,19 @@ private fun ScrollWatcher(
     homeFeedPagingItems: LazyPagingItems<PostCardUiState>,
     feedInteractions: FeedInteractions,
 ) {
-    val firstVisibleIndex by remember(forYouScrollState) {
-        derivedStateOf { forYouScrollState.firstVisibleItemIndex }
-    }
-
-    LaunchedEffect(firstVisibleIndex) {
-        if (homeFeedPagingItems.itemCount != 0) {
-            homeFeedPagingItems.peek(firstVisibleIndex)?.let { uiState ->
-                feedInteractions.onFirstVisibleItemIndexForHomeChanged(
-                    index = firstVisibleIndex,
-                    statusId = uiState.statusId
-                )
+    LaunchedEffect(forYouScrollState) {
+        snapshotFlow { forYouScrollState.firstVisibleItemIndex }
+            .distinctUntilChanged()
+            .collect { firstVisibleIndex ->
+                if (homeFeedPagingItems.itemCount != 0) {
+                    homeFeedPagingItems.peek(firstVisibleIndex)?.let { uiState ->
+                        feedInteractions.onFirstVisibleItemIndexForHomeChanged(
+                            index = firstVisibleIndex,
+                            statusId = uiState.statusId
+                        )
+                    }
+                }
             }
-        }
     }
 
     LaunchedEffect(homeFeedPagingItems.loadState.prepend.endOfPaginationReached) {

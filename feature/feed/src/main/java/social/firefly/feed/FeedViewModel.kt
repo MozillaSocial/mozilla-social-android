@@ -52,6 +52,15 @@ class FeedViewModel(
     val uiState = _uiState.asStateFlow()
 
     @OptIn(ExperimentalPagingApi::class)
+    val homeFeed = timelineRepository.getHomeTimelinePager(
+        remoteMediator = homeTimelineRemoteMediator,
+    ).map { pagingData ->
+        pagingData.map {
+            it.toPostCardUiState(userAccountId, homePostCardDelegate)
+        }
+    }.cachedIn(viewModelScope)
+
+    @OptIn(ExperimentalPagingApi::class)
     val localFeed = timelineRepository.getLocalTimelinePager(
         remoteMediator = localTimelineRemoteMediator,
     ).map { pagingData ->
@@ -79,36 +88,11 @@ class FeedViewModel(
         PostCardDelegate::class.java,
     ) { parametersOf(viewModelScope, FeedLocation.FEDERATED) }
 
-    init {
-        setupHomeFeed()
-    }
-
     /**
      * We restore the user's place in their timeline by removing items in the database
      * above their last seen item.  This needs to happen before we start observing the
      * home timeline.
      */
-    private fun setupHomeFeed() {
-        viewModelScope.launch {
-            val lastSeenId = CompletableDeferred<String>()
-            launch {
-                userPreferencesDatastore.lastSeenHomeStatusId.collectLatest {
-                    lastSeenId.complete(it)
-                    cancel()
-                }
-            }
-            timelineRepository.deleteHomeStatusesBeforeId(lastSeenId.await())
-            _uiState.edit {copy(
-                homeFeed = timelineRepository.getHomeTimelinePager(
-                    remoteMediator = homeTimelineRemoteMediator,
-                ).map { pagingData ->
-                    pagingData.map {
-                        it.toPostCardUiState(userAccountId, homePostCardDelegate)
-                    }
-                }.cachedIn(viewModelScope)
-            ) }
-        }
-    }
 
     override fun onTabClicked(timelineType: TimelineType) {
         analytics.feedScreenClicked(timelineType.toAnalyticsTimelineType())
