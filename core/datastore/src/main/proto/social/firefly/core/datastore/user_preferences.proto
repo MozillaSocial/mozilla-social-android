@@ -4,11 +4,11 @@ option java_package = "social.firefly.core.datastore";
 option java_multiple_files = true;
 
 message UserPreferences {
-  reserved 4, 5;
+  reserved 4, 5, 7;
   reserved "client_id", "client_secret";
   string access_token = 1;
   string account_id = 2;
   string domain = 3;
   string serialized_push_keys = 6;
-  string last_seen_home_status_id = 7;
+  string last_seen_home_status_id = 8;
 }

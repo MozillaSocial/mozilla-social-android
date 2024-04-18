@@ -95,12 +95,10 @@ class HomeTimelineRemoteMediator(
             }
 
             MediatorResult.Success(
-                endOfPaginationReached =
-                when (loadType) {
+                endOfPaginationReached = when (loadType) {
                     LoadType.PREPEND -> response.pagingLinks?.find { it.rel == Rel.PREV } == null
-                    LoadType.REFRESH,
-                    LoadType.APPEND,
-                        -> response.pagingLinks?.find { it.rel == Rel.NEXT } == null
+                    LoadType.REFRESH -> response.pagingLinks.isNullOrEmpty()
+                    LoadType.APPEND -> response.pagingLinks?.find { it.rel == Rel.NEXT } == null
                 },
             )
         } catch (e: Exception) {

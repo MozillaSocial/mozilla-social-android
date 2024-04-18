@@ -99,9 +99,7 @@ class UserPreferencesDatastore(context: Context) {
     suspend fun clearData() {
         dataStore.updateData {
             it.toBuilder()
-                .clearAccessToken()
-                .clearDomain()
-                .clearAccountId()
+                .clear()
                 .build()
         }
     }

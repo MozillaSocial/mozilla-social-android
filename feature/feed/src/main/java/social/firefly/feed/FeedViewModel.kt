@@ -3,20 +3,16 @@ package social.firefly.feed
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.ExperimentalPagingApi
-import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.koin.core.parameter.parametersOf
 import org.koin.java.KoinJavaComponent
@@ -29,7 +25,6 @@ import social.firefly.core.repository.paging.FederatedTimelineRemoteMediator
 import social.firefly.core.repository.paging.HomeTimelineRemoteMediator
 import social.firefly.core.repository.paging.LocalTimelineRemoteMediator
 import social.firefly.core.ui.postcard.PostCardDelegate
-import social.firefly.core.ui.postcard.PostCardUiState
 import social.firefly.core.ui.postcard.toPostCardUiState
 import social.firefly.core.usecase.mastodon.account.GetLoggedInUserAccountId
 
@@ -49,10 +44,21 @@ class FeedViewModel(
     private val userAccountId: String = getLoggedInUserAccountId()
 
     private var statusViewedJob: Job? = null
-    private var lastSeenId: String? = null
+    private var homeFirstVisibleItemIndex = 0
+    private var homePrependEndReached = false
+    private var hasBeenToTopOfHome = false
 
     private val _uiState = MutableStateFlow(FeedUiState())
     val uiState = _uiState.asStateFlow()
+
+    @OptIn(ExperimentalPagingApi::class)
+    val homeFeed = timelineRepository.getHomeTimelinePager(
+        remoteMediator = homeTimelineRemoteMediator,
+    ).map { pagingData ->
+        pagingData.map {
+            it.toPostCardUiState(userAccountId, homePostCardDelegate)
+        }
+    }.cachedIn(viewModelScope)
 
     @OptIn(ExperimentalPagingApi::class)
     val localFeed = timelineRepository.getLocalTimelinePager(
@@ -82,36 +88,11 @@ class FeedViewModel(
         PostCardDelegate::class.java,
     ) { parametersOf(viewModelScope, FeedLocation.FEDERATED) }
 
-    init {
-        setupHomeFeed()
-    }
-
     /**
      * We restore the user's place in their timeline by removing items in the database
      * above their last seen item.  This needs to happen before we start observing the
      * home timeline.
      */
-    private fun setupHomeFeed() {
-        viewModelScope.launch {
-            val lastSeenId = CompletableDeferred<String>()
-            launch {
-                userPreferencesDatastore.lastSeenHomeStatusId.collectLatest {
-                    lastSeenId.complete(it)
-                    cancel()
-                }
-            }
-            timelineRepository.deleteHomeStatusesBeforeId(lastSeenId.await())
-            _uiState.edit {copy(
-                homeFeed = timelineRepository.getHomeTimelinePager(
-                    remoteMediator = homeTimelineRemoteMediator,
-                ).map { pagingData ->
-                    pagingData.map {
-                        it.toPostCardUiState(userAccountId, homePostCardDelegate)
-                    }
-                }.cachedIn(viewModelScope)
-            ) }
-        }
-    }
 
     override fun onTabClicked(timelineType: TimelineType) {
         analytics.feedScreenClicked(timelineType.toAnalyticsTimelineType())
@@ -124,18 +105,6 @@ class FeedViewModel(
         analytics.feedScreenViewed()
     }
 
-    override fun onStatusViewed(statusId: String) {
-        lastSeenId = statusId
-        // save the last seen status no more than once per x seconds (SAVE_RATE)
-        if (statusViewedJob == null) {
-            statusViewedJob = viewModelScope.launch {
-                lastSeenId?.let { userPreferencesDatastore.saveLastSeenHomeStatusId(it) }
-                delay(SAVE_RATE)
-                statusViewedJob = null
-            }
-        }
-    }
-
     @Suppress("MagicNumber")
     override suspend fun onScrollToTopClicked(onDatabaseCleared: suspend () -> Unit) {
         timelineRepository.deleteHomeTimeline()
@@ -144,9 +113,36 @@ class FeedViewModel(
         onDatabaseCleared()
     }
 
-    override fun topOfFeedReached() {
+    override fun onFirstVisibleItemIndexForHomeChanged(
+        index: Int,
+        statusId: String,
+    ) {
+        // save the last seen status no more than once per x seconds (SAVE_RATE)
+        if (statusViewedJob == null) {
+            statusViewedJob = viewModelScope.launch {
+                userPreferencesDatastore.saveLastSeenHomeStatusId(statusId)
+                delay(SAVE_RATE)
+                statusViewedJob = null
+            }
+        }
+        homeFirstVisibleItemIndex = index
+        updateScrollUpButtonVisibility()
+    }
+
+    override fun onHomePrependEndReached(reached: Boolean) {
+        homePrependEndReached = reached
+        updateScrollUpButtonVisibility()
+    }
+
+    private fun updateScrollUpButtonVisibility() {
+        if (homePrependEndReached &&
+            homeFirstVisibleItemIndex <= 1) {
+            hasBeenToTopOfHome = true
+        }
+        val visible = !hasBeenToTopOfHome
+
         _uiState.edit { copy(
-            scrollUpButtonCanShow = false
+            scrollUpButtonVisible = visible,
         ) }
     }
 
