@@ -44,7 +44,6 @@ class FeedViewModel(
     private val userAccountId: String = getLoggedInUserAccountId()
 
     private var statusViewedJob: Job? = null
-    private var lastSeenId: String? = null
     private var homeFirstVisibleItemIndex = 0
     private var homePrependEndReached = false
     private var hasBeenToTopOfHome = false
@@ -122,18 +121,6 @@ class FeedViewModel(
         analytics.feedScreenViewed()
     }
 
-    override fun onStatusViewed(statusId: String) {
-        lastSeenId = statusId
-        // save the last seen status no more than once per x seconds (SAVE_RATE)
-        if (statusViewedJob == null) {
-            statusViewedJob = viewModelScope.launch {
-                lastSeenId?.let { userPreferencesDatastore.saveLastSeenHomeStatusId(it) }
-                delay(SAVE_RATE)
-                statusViewedJob = null
-            }
-        }
-    }
-
     @Suppress("MagicNumber")
     override suspend fun onScrollToTopClicked(onDatabaseCleared: suspend () -> Unit) {
         timelineRepository.deleteHomeTimeline()
@@ -142,7 +129,18 @@ class FeedViewModel(
         onDatabaseCleared()
     }
 
-    override fun onFirstVisibleItemIndexForHomeChanged(index: Int) {
+    override fun onFirstVisibleItemIndexForHomeChanged(
+        index: Int,
+        statusId: String,
+    ) {
+        // save the last seen status no more than once per x seconds (SAVE_RATE)
+        if (statusViewedJob == null) {
+            statusViewedJob = viewModelScope.launch {
+                userPreferencesDatastore.saveLastSeenHomeStatusId(statusId)
+                delay(SAVE_RATE)
+                statusViewedJob = null
+            }
+        }
         homeFirstVisibleItemIndex = index
         updateScrollUpButtonVisibility()
     }

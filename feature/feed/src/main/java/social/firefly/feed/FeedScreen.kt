@@ -199,12 +199,6 @@ private fun MainContent(
     val localFeedPagingItems = localFeed.collectAsLazyPagingItems()
     val federatedPagingItems = federatedFeed.collectAsLazyPagingItems()
 
-    HomeListener(
-        forYouScrollState = forYouScrollState,
-        homeFeedPagingItems = homeFeedPagingItems,
-        feedInteractions = feedInteractions,
-    )
-
     Box {
         PullRefreshLazyColumn(
             lazyPagingItems = when (uiState.timelineType) {
@@ -254,7 +248,14 @@ private fun BoxScope.ScrollUpButton(
         }
 
         LaunchedEffect(firstVisibleIndex) {
-            feedInteractions.onFirstVisibleItemIndexForHomeChanged(firstVisibleIndex)
+            if (homeFeedPagingItems.itemCount != 0) {
+                homeFeedPagingItems.peek(firstVisibleIndex)?.let { uiState ->
+                    feedInteractions.onFirstVisibleItemIndexForHomeChanged(
+                        index = firstVisibleIndex,
+                        statusId = uiState.statusId
+                    )
+                }
+            }
         }
 
         LaunchedEffect(homeFeedPagingItems.loadState.prepend.endOfPaginationReached) {
@@ -300,35 +301,6 @@ private fun BoxScope.ScrollUpButton(
                     contentDescription = stringResource(id = R.string.scroll_to_top_content_description),
                     tint = FfTheme.colors.textActionPrimary,
                 )
-            }
-        }
-    }
-}
-
-// Watches for the first visible item and sends the status ID to the viewmodel.
-// Used for saving the last seen item so we can bring the user back there when they reopen the app.
-@Composable
-private fun HomeListener(
-    forYouScrollState: LazyListState,
-    homeFeedPagingItems: LazyPagingItems<PostCardUiState>,
-    feedInteractions: FeedInteractions,
-) {
-    val forYouFirstVisibleIndex by remember(forYouScrollState) {
-        derivedStateOf {
-            // there seems to be a bug where 0 is not possible.
-            // It's not perfect, but using 0 is better than 1 if we are not sure which is right
-            if (forYouScrollState.firstVisibleItemIndex <= 1) {
-                0
-            } else {
-                forYouScrollState.firstVisibleItemIndex
-            }
-        }
-    }
-
-    LaunchedEffect(forYouFirstVisibleIndex) {
-        if (homeFeedPagingItems.itemCount != 0) {
-            homeFeedPagingItems.peek(forYouFirstVisibleIndex)?.let { uiState ->
-                feedInteractions.onStatusViewed(uiState.statusId)
             }
         }
     }
