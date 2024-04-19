@@ -57,6 +57,7 @@ fun <T> TreeNode<T>.depthOfChild(
     depth: Int = 0,
     isTargetChild: (T) -> Boolean,
 ): Int {
+    if (isTargetChild(value)) return depth
     branches.forEach {
         return if (isTargetChild(it.value)) {
             depth
