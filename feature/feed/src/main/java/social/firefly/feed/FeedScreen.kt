@@ -6,38 +6,30 @@ import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideIn
 import androidx.compose.animation.slideOut
-import androidx.compose.foundation.ScrollState
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -46,14 +38,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
@@ -63,7 +53,6 @@ import social.firefly.core.designsystem.theme.FfTheme
 import social.firefly.core.push.PushRegistration
 import social.firefly.core.ui.common.FfSurface
 import social.firefly.core.ui.common.appbar.FfTopBar
-import social.firefly.core.ui.common.button.FfButton
 import social.firefly.core.ui.common.button.FfFloatingActionButton
 import social.firefly.core.ui.common.pullrefresh.PullRefreshLazyColumn
 import social.firefly.core.ui.common.tabs.FfTab
@@ -82,7 +71,7 @@ internal fun FeedScreen(viewModel: FeedViewModel = koinViewModel()) {
 
     FeedScreen(
         uiState = uiState,
-        homeFeed = uiState.homeFeed,
+        homeFeed = viewModel.homeFeed,
         localFeed = viewModel.localFeed,
         federatedFeed = viewModel.federatedFeed,
         homePostCardInteractions = viewModel.homePostCardDelegate,
@@ -189,7 +178,6 @@ private fun TabbedContent(
         homePostCardInteractions = homePostCardInteractions,
         localPostCardInteractions = localPostCardInteractions,
         federatedPostCardInteractions = federatedPostCardInteractions,
-        feedInteractions = feedInteractions,
     )
 }
 
@@ -202,7 +190,6 @@ private fun MainContent(
     homePostCardInteractions: PostCardInteractions,
     localPostCardInteractions: PostCardInteractions,
     federatedPostCardInteractions: PostCardInteractions,
-    feedInteractions: FeedInteractions,
 ) {
     val forYouScrollState = rememberLazyListState()
     val localScrollState = rememberLazyListState()
@@ -211,12 +198,6 @@ private fun MainContent(
     val homeFeedPagingItems = homeFeed.collectAsLazyPagingItems()
     val localFeedPagingItems = localFeed.collectAsLazyPagingItems()
     val federatedPagingItems = federatedFeed.collectAsLazyPagingItems()
-
-    HomeListener(
-        forYouScrollState = forYouScrollState,
-        homeFeedPagingItems = homeFeedPagingItems,
-        feedInteractions = feedInteractions,
-    )
 
     Box {
         PullRefreshLazyColumn(
@@ -245,15 +226,18 @@ private fun MainContent(
             )
         }
 
-        ScrollUpButton(
-            uiState = uiState,
-            forYouScrollState = forYouScrollState,
-            homeFeedPagingItems = homeFeedPagingItems,
-            feedInteractions = feedInteractions
-        )
+        //TODO maybe try enabling this again some day.  Seems to be some weird bugs with
+        // the list when prepending data.
+//        ScrollUpButton(
+//            uiState = uiState,
+//            forYouScrollState = forYouScrollState,
+//            homeFeedPagingItems = homeFeedPagingItems,
+//            feedInteractions = feedInteractions
+//        )
     }
 }
 
+@Suppress("UnusedPrivateMember")
 @Composable
 private fun BoxScope.ScrollUpButton(
     uiState: FeedUiState,
@@ -262,31 +246,19 @@ private fun BoxScope.ScrollUpButton(
     feedInteractions: FeedInteractions,
 ) {
     if (uiState.timelineType == TimelineType.FOR_YOU) {
-        val showScrollUpButton by remember(
-            forYouScrollState,
-            homeFeedPagingItems.loadState.prepend.endOfPaginationReached,
-            uiState.scrollUpButtonCanShow,
-        ) {
-            derivedStateOf {
-                if (homeFeedPagingItems.loadState.prepend.endOfPaginationReached &&
-                    forYouScrollState.firstVisibleItemIndex <= 1) {
-                    feedInteractions.topOfFeedReached()
-                }
-                if (!uiState.scrollUpButtonCanShow) {
-                    false
-                } else {
-                    homeFeedPagingItems.loadState.prepend.endOfPaginationReached &&
-                            forYouScrollState.firstVisibleItemIndex > 1
-                }
-            }
-        }
+        ScrollWatcher(
+            forYouScrollState = forYouScrollState,
+            homeFeedPagingItems = homeFeedPagingItems,
+            feedInteractions = feedInteractions,
+        )
+
         val coroutineScope = rememberCoroutineScope()
 
         AnimatedVisibility(
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(16.dp),
-            visible = showScrollUpButton,
+            visible = uiState.scrollUpButtonVisible,
             enter = slideIn {
                 IntOffset(
                     x = 0,
@@ -322,32 +294,31 @@ private fun BoxScope.ScrollUpButton(
     }
 }
 
-// Watches for the first visible item and sends the status ID to the viewmodel.
-// Used for saving the last seen item so we can bring the user back there when they reopen the app.
 @Composable
-private fun HomeListener(
+private fun ScrollWatcher(
     forYouScrollState: LazyListState,
     homeFeedPagingItems: LazyPagingItems<PostCardUiState>,
     feedInteractions: FeedInteractions,
 ) {
-    val forYouFirstVisibleIndex by remember(forYouScrollState) {
-        derivedStateOf {
-            // there seems to be a bug where 0 is not possible.
-            // It's not perfect, but using 0 is better than 1 if we are not sure which is right
-            if (forYouScrollState.firstVisibleItemIndex <= 1) {
-                0
-            } else {
-                forYouScrollState.firstVisibleItemIndex
+    LaunchedEffect(forYouScrollState) {
+        snapshotFlow { forYouScrollState.firstVisibleItemIndex }
+            .distinctUntilChanged()
+            .collect { firstVisibleIndex ->
+                if (homeFeedPagingItems.itemCount != 0) {
+                    homeFeedPagingItems.peek(firstVisibleIndex)?.let { uiState ->
+                        feedInteractions.onFirstVisibleItemIndexForHomeChanged(
+                            index = firstVisibleIndex,
+                            statusId = uiState.statusId
+                        )
+                    }
+                }
             }
-        }
     }
 
-    LaunchedEffect(forYouFirstVisibleIndex) {
-        if (homeFeedPagingItems.itemCount != 0) {
-            homeFeedPagingItems.peek(forYouFirstVisibleIndex)?.let { uiState ->
-                feedInteractions.onStatusViewed(uiState.statusId)
-            }
-        }
+    LaunchedEffect(homeFeedPagingItems.loadState.prepend.endOfPaginationReached) {
+        feedInteractions.onHomePrependEndReached(
+            homeFeedPagingItems.loadState.prepend.endOfPaginationReached
+        )
     }
 }
 
