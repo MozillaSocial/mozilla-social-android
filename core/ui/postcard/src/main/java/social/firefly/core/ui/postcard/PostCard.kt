@@ -5,6 +5,7 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -37,7 +38,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -48,14 +52,13 @@ import coil.compose.AsyncImage
 import kotlinx.datetime.Instant
 import social.firefly.common.utils.StringFactory
 import social.firefly.common.utils.timeSinceNow
+import social.firefly.common.utils.toPx
 import social.firefly.core.designsystem.icon.FfIcons
 import social.firefly.core.designsystem.theme.FfRadius
 import social.firefly.core.designsystem.theme.FfSpacing
 import social.firefly.core.designsystem.theme.FfTheme
 import social.firefly.core.designsystem.utils.NoRipple
 import social.firefly.core.ui.common.TransparentNoTouchOverlay
-import social.firefly.core.ui.common.divider.FfDivider
-import social.firefly.core.ui.common.divider.FfVerticalDivider
 import social.firefly.core.ui.common.dropdown.FfDropDownItem
 import social.firefly.core.ui.common.dropdown.FfDropdownMenu
 import social.firefly.core.ui.common.loading.FfCircularProgressIndicator
@@ -84,35 +87,11 @@ fun PostCard(
                     .fillMaxWidth()
                     .height(IntrinsicSize.Min),
             ) {
-                val postDepth = post.depthLinesUiState?.postDepth ?: -1
-                if (postDepth >= 0) {
-                    for (i in 0 until postDepth) {
-                        if (post.depthLinesUiState?.depthLines?.contains(i) == true) {
-                            FfDivider(
-                                modifier = Modifier
-                                    .fillMaxHeight()
-                                    .padding(start = 4.dp)
-                                    .width(1.dp)
-                            )
-                        } else {
-                            Spacer(modifier = Modifier.width(5.dp))
-                        }
-                    }
-
-                    if (post.depthLinesUiState?.depthLines?.contains(post.depthLinesUiState.postDepth) == true) {
-                        FfDivider(
-                            modifier = Modifier
-                                .padding(top = 26.dp)
-                                .fillMaxHeight()
-                                .padding(start = 4.dp)
-                                .width(1.dp)
-                        )
-                    }
-                }
+                DepthLines(post = post)
 
                 Column(
                     modifier = Modifier
-                        .padding(8.dp)
+                        .padding(end = 8.dp, bottom = 8.dp, top = 8.dp)
                         .clickable {
                             // prevent the user from being able to click on the same status
                             // as the root thread status
@@ -138,6 +117,80 @@ fun PostCard(
                 exit = fadeOut(),
             ) {
                 TransparentNoTouchOverlay()
+            }
+        }
+    }
+}
+
+@Composable
+private fun DepthLines(
+    post: PostCardUiState,
+) {
+    val spacingWidth = 8
+
+    val postDepth = post.depthLinesUiState?.postDepth ?: -1
+    val startingDepth = post.depthLinesUiState?.startingDepth ?: 0
+
+    val width = maxOf(((postDepth - startingDepth + 1) * spacingWidth), 0)
+    val lineColor = FfTheme.colors.borderPrimary
+    val context = LocalContext.current
+
+    if (width == 0) {
+        Spacer(modifier = Modifier.width(spacingWidth.dp))
+    }
+
+    Canvas(
+        modifier = Modifier
+            .fillMaxHeight()
+            .width(width.dp),
+    ) {
+        val height = size.height
+        if (postDepth >= startingDepth) {
+            for (i in startingDepth until postDepth) {
+                val drawDepth = i - startingDepth + 1
+                val x = (spacingWidth * drawDepth).toFloat()
+                if (post.depthLinesUiState?.depthLines?.contains(i) == true) {
+                    drawLine(
+                        color = lineColor,
+                        start = Offset(x.toPx(context), 0f.toPx(context)),
+                        end = Offset(x.toPx(context), height),
+                        strokeWidth = 2f.toPx(context),
+                    )
+                }
+            }
+
+            if (postDepth > startingDepth) {
+                val drawDepth = postDepth - startingDepth
+                val x = (spacingWidth * drawDepth).toFloat()
+
+                val path = Path().apply {
+                    moveTo(x.toPx(context), 0f.toPx(context))
+                    lineTo(x.toPx(context), 18f.toPx(context))
+                    quadraticBezierTo(
+                        x1 = x.toPx(context),
+                        y1 = 28f.toPx(context),
+                        x2 = (x + 8).toPx(context),
+                        y2 = 26f.toPx(context),
+                    )
+                }
+                drawPath(
+                    path = path,
+                    color = lineColor,
+                    style = Stroke(
+                        width = 2f.toPx(context),
+                    )
+                )
+            }
+
+            if (post.depthLinesUiState?.depthLines?.contains(post.depthLinesUiState.postDepth) == true) {
+                val drawDepth = postDepth - startingDepth + 1
+                val x = (spacingWidth * drawDepth).toFloat()
+                drawLine(
+                    color = lineColor,
+                    start = Offset(x.toPx(context), 26f.toPx(context)),
+                    end = Offset(x.toPx(context), height),
+                    strokeWidth = 2f.toPx(context),
+                )
             }
         }
     }
@@ -635,7 +688,8 @@ private fun PostCardPreviewWithDepth() {
                         0,
                         1,
                         2,
-                    )
+                    ),
+                    startingDepth = 0,
                 ),
             ),
             postCardInteractions = PostCardInteractionsNoOp,

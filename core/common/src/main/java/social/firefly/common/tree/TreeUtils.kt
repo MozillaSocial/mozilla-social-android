@@ -26,7 +26,7 @@ fun <T> TreeNode<T>.toDepthList(
         addAll(
             treeNode.toDepthList(
                 depth + 1,
-                newDepthLines
+                newDepthLines,
             )
         )
     }
@@ -51,4 +51,18 @@ fun <T> List<T>.toTree(
     }
 
     return nodes[identifier(first())]
+}
+
+fun <T> TreeNode<T>.depthOfChild(
+    depth: Int = 0,
+    isTargetChild: (T) -> Boolean,
+): Int {
+    branches.forEach {
+        return if (isTargetChild(it.value)) {
+            depth
+        } else {
+            it.depthOfChild(depth + 1, isTargetChild)
+        }
+    }
+    return depth
 }

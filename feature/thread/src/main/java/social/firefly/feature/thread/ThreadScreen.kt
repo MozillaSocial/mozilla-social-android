@@ -45,6 +45,7 @@ internal fun ThreadScreen(
                         index = index,
                         itemCount = items.count(),
                         threadId = threadStatusId,
+                        showDividers = false,
                     )
                 }
             }
