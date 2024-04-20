@@ -75,6 +75,7 @@ class ThreadViewModel(
                     it.toPostCardUiState(
                         currentUserAccountId = loggedInAccountId,
                         postCardInteractions = postCardDelegate,
+                        showTopRowMetaData = false,
                     )
                 }
             }
@@ -93,7 +94,8 @@ class ThreadViewModel(
                             postDepth = statusWithDepth.depth,
                             depthLines = statusWithDepth.depthLines,
                             startingDepth = mainStatusDepth + 1,
-                        )
+                        ),
+                        showTopRowMetaData = false,
                     )
                 }
             }

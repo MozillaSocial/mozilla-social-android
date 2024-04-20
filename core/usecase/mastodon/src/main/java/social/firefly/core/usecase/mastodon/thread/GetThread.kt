@@ -14,13 +14,26 @@ class GetThread internal constructor(
     operator fun invoke(statusId: String): Flow<List<Status>> =
         flow {
             // emit the original status first since it should be in the database already
-            statusRepository.getStatusLocal(statusId)?.let {
+            val mainStatus = statusRepository.getStatusLocal(statusId)
+            mainStatus?.let {
                 emit(listOf(it))
             }
 
             val context = statusRepository.getStatusContext(statusId)
-            saveStatusToDatabase(context.ancestors)
-            saveStatusToDatabase(context.descendants)
+            val allStatuses = buildList {
+                addAll(context.ancestors)
+                mainStatus?.let { add(it) }
+                addAll(context.descendants)
+            }
+            saveStatusToDatabase(
+                allStatuses.map { status ->
+                    status.copy(
+                        inReplyToAccountName = allStatuses.find {
+                            it.account.accountId == status.inReplyToAccountId
+                        }?.account?.displayName
+                    )
+                }
+            )
 
             val statusIds =
                 buildList {

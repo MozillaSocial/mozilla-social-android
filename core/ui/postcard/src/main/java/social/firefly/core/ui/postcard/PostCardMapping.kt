@@ -15,13 +15,14 @@ fun Status.toPostCardUiState(
     currentUserAccountId: String,
     postCardInteractions: PostCardInteractions,
     depthLinesUiState: DepthLinesUiState? = null,
+    showTopRowMetaData: Boolean = true,
 ): PostCardUiState =
     PostCardUiState(
         statusId = statusId,
-        topRowMetaDataUiState = if (depthLinesUiState != null) {
-            null
-        } else {
+        topRowMetaDataUiState = if (showTopRowMetaData) {
             toTopRowMetaDataUiState()
+        } else {
+            null
         },
         mainPostCardUiState = boostedStatus?.toMainPostCardUiState(currentUserAccountId, postCardInteractions)
                 ?: toMainPostCardUiState(currentUserAccountId, postCardInteractions),
