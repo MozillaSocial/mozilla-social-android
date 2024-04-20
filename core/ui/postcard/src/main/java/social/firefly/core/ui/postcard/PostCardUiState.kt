@@ -10,6 +10,7 @@ data class PostCardUiState(
     val topRowMetaDataUiState: TopRowMetaDataUiState?,
     val mainPostCardUiState: MainPostCardUiState,
     val depthLinesUiState: DepthLinesUiState?,
+    val isClickable: Boolean = true,
 )
 
 /**

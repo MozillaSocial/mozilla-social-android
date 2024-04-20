@@ -61,6 +61,7 @@ class ThreadViewModel(
                     it.toPostCardUiState(
                         currentUserAccountId = loggedInAccountId,
                         postCardInteractions = postCardDelegate,
+                        isClickable = it.statusId != mainStatusId,
                     )
                 }
             }
@@ -76,6 +77,7 @@ class ThreadViewModel(
                         currentUserAccountId = loggedInAccountId,
                         postCardInteractions = postCardDelegate,
                         showTopRowMetaData = false,
+                        isClickable = it.statusId != mainStatusId,
                     )
                 }
             }
@@ -101,6 +103,7 @@ class ThreadViewModel(
                             showViewMoreRepliesText = isAtMaxDepth && hasReplies,
                         ),
                         showTopRowMetaData = false,
+                        isClickable = statusWithDepth.value.statusId != mainStatusId,
                     )
                 }
             }

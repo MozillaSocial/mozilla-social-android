@@ -38,7 +38,6 @@ internal fun ThreadScreen(
 
     ThreadScreen(
         threadType = threadType,
-        threadStatusId = threadStatusId,
         statuses = statuses,
         postCardDelegate = viewModel.postCardDelegate,
         threadInteractions = viewModel,
@@ -53,7 +52,6 @@ internal fun ThreadScreen(
 @Composable
 private fun ThreadScreen(
     threadType: ThreadType,
-    threadStatusId: String,
     statuses: List<PostCardUiState>,
     postCardDelegate: PostCardDelegate,
     threadInteractions: ThreadInteractions,
@@ -84,7 +82,6 @@ private fun ThreadScreen(
                         postCardInteractions = postCardDelegate,
                         index = index,
                         itemCount = statuses.count(),
-                        threadId = threadStatusId,
                         showDividers = threadType != ThreadType.TREE,
                     )
                 }
