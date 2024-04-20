@@ -28,6 +28,7 @@ import social.firefly.core.ui.postcard.PostCardInteractions
 import social.firefly.core.ui.postcard.PostCardInteractionsNoOp
 import social.firefly.core.ui.postcard.PostContentUiState
 
+@Suppress("MagicNumber")
 @Composable
 internal fun BottomRow(
     modifier: Modifier = Modifier,
