@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
@@ -23,7 +22,6 @@ import social.firefly.core.ui.common.FfSurface
 import social.firefly.core.ui.common.appbar.FfCloseableTopAppBar
 import social.firefly.core.ui.common.dropdown.FfDropDownItem
 import social.firefly.core.ui.common.dropdown.FfDropDownMenu
-import social.firefly.core.ui.common.dropdown.FfDropdownMenu
 import social.firefly.core.ui.postcard.PostCardDelegate
 import social.firefly.core.ui.postcard.PostCardListItem
 import social.firefly.core.ui.postcard.PostCardUiState
@@ -87,7 +85,7 @@ private fun ThreadScreen(
                         index = index,
                         itemCount = statuses.count(),
                         threadId = threadStatusId,
-                        showDividers = false,
+                        showDividers = threadType != ThreadType.TREE,
                     )
                 }
             }
@@ -121,7 +119,7 @@ private fun ThreadTypeButton(
                     icon = {
                         Icon(
                             modifier = Modifier
-                                .size(16.dp),
+                                .size(FfIcons.Sizes.small),
                             painter = when (dropDownOption) {
                                 ThreadType.LIST -> {
                                     FfIcons.listPlus()
@@ -143,6 +141,8 @@ private fun ThreadTypeButton(
         }
     ) {
         Icon(
+            modifier = Modifier
+                .size(FfIcons.Sizes.normal),
             painter = when (threadType) {
                 ThreadType.LIST -> {
                     FfIcons.listPlus()
