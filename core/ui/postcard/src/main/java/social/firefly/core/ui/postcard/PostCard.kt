@@ -41,6 +41,7 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalContext
@@ -190,6 +191,7 @@ private fun DepthLines(
                     start = Offset(x.toPx(context), 26f.toPx(context)),
                     end = Offset(x.toPx(context), height),
                     strokeWidth = 2f.toPx(context),
+                    cap = StrokeCap.Round
                 )
             }
         }

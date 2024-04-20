@@ -7,7 +7,6 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import org.koin.core.parameter.parametersOf
 import org.koin.java.KoinJavaComponent
-import social.firefly.common.tree.depthOfChild
 import social.firefly.common.tree.toDepthList
 import social.firefly.core.analytics.FeedLocation
 import social.firefly.core.analytics.ThreadAnalytics
