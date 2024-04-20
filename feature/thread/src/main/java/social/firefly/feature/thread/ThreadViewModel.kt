@@ -27,15 +27,16 @@ class ThreadViewModel(
 ) : ViewModel(), ThreadInteractions {
     var statuses: Flow<List<PostCardUiState>> =
         getThread.invoke(mainStatusId).map { rootNode ->
-            val mainStatusDepth = rootNode.depthOfChild { it.statusId == mainStatusId }
-            rootNode.toDepthList().map { statusWithDepth ->
+            val depthList = rootNode.toDepthList()
+            val mainStatusDepth = depthList.find { it.value.statusId == mainStatusId }?.depth ?: 0
+            depthList.map { statusWithDepth ->
                 statusWithDepth.value.toPostCardUiState(
                     currentUserAccountId = getLoggedInUserAccountId(),
                     postCardInteractions = postCardDelegate,
                     depthLinesUiState = DepthLinesUiState(
                         postDepth = statusWithDepth.depth,
                         depthLines = statusWithDepth.depthLines,
-                        startingDepth = mainStatusDepth + 1,
+                        startingDepth = mainStatusDepth,
                     )
                 )
             }

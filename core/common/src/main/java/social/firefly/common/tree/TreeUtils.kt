@@ -52,18 +52,3 @@ fun <T> List<T>.toTree(
 
     return nodes[identifier(first())]
 }
-
-fun <T> TreeNode<T>.depthOfChild(
-    depth: Int = 0,
-    isTargetChild: (T) -> Boolean,
-): Int {
-    if (isTargetChild(value)) return depth
-    branches.forEach {
-        return if (isTargetChild(it.value)) {
-            depth
-        } else {
-            it.depthOfChild(depth + 1, isTargetChild)
-        }
-    }
-    return depth
-}
