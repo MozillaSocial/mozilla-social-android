@@ -46,13 +46,14 @@ fun PostCardListItem(
     index: Int,
     itemCount: Int,
     threadId: String? = null,
+    showDividers: Boolean = true,
 ) {
     PostCard(
         post = uiState,
         postCardInteractions = postCardInteractions,
         threadId = threadId,
     )
-    if (index < itemCount) {
+    if (index < itemCount && showDividers) {
         FfDivider()
     }
 }

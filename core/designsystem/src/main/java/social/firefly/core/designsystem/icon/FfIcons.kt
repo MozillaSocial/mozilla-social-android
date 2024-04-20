@@ -122,6 +122,9 @@ object FfIcons {
     fun listChecks() = painterResource(id = R.drawable.list_checks)
 
     @Composable
+    fun listPlus() = painterResource(id = R.drawable.list_plus)
+
+    @Composable
     fun lock() = painterResource(id = R.drawable.lock)
 
     @Composable
@@ -168,6 +171,9 @@ object FfIcons {
 
     @Composable
     fun trash() = painterResource(id = R.drawable.trash)
+
+    @Composable
+    fun treeView() = painterResource(id = R.drawable.tree_view)
 
     @Composable
     fun userCircle() = painterResource(id = R.drawable.user_circle)

@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.mapLatest
+import social.firefly.core.datastore.UserPreferences.ThreadType
 import timber.log.Timber
 import java.io.IOException
 
@@ -41,6 +42,11 @@ class UserPreferencesDatastore(context: Context) {
     val lastSeenHomeStatusId: Flow<String> =
         dataStore.data.mapLatest {
             it.lastSeenHomeStatusId
+        }.distinctUntilChanged()
+
+    val threadType: Flow<ThreadType> =
+        dataStore.data.mapLatest {
+            it.threadType
         }.distinctUntilChanged()
 
     /**
@@ -92,6 +98,14 @@ class UserPreferencesDatastore(context: Context) {
         dataStore.updateData {
             it.toBuilder()
                 .setLastSeenHomeStatusId(statusId)
+                .build()
+        }
+    }
+
+    suspend fun saveThreadType(threadType: ThreadType) {
+        dataStore.updateData {
+            it.toBuilder()
+                .setThreadType(threadType)
                 .build()
         }
     }

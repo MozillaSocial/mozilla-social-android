@@ -11,8 +11,8 @@ import social.firefly.core.ui.poll.PollOptionUiState
 import social.firefly.core.ui.poll.PollUiState
 import social.firefly.core.ui.postcard.PostCardInteractions
 import social.firefly.core.ui.postcard.PostCardInteractionsNoOp
-import social.firefly.core.ui.postcard.PostContent
 import social.firefly.core.ui.postcard.PostContentUiState
+import social.firefly.core.ui.postcard.components.PostContent
 
 @Composable
 internal fun PollEndedNotificationContent(

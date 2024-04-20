@@ -13,14 +13,20 @@ import social.firefly.core.ui.poll.toPollUiState
  */
 fun Status.toPostCardUiState(
     currentUserAccountId: String,
-    postCardInteractions: PostCardInteractions
+    postCardInteractions: PostCardInteractions,
+    depthLinesUiState: DepthLinesUiState? = null,
+    showTopRowMetaData: Boolean = true,
 ): PostCardUiState =
     PostCardUiState(
         statusId = statusId,
-        topRowMetaDataUiState = toTopRowMetaDataUiState(),
-        mainPostCardUiState =
-        boostedStatus?.toMainPostCardUiState(currentUserAccountId, postCardInteractions)
-            ?: toMainPostCardUiState(currentUserAccountId, postCardInteractions),
+        topRowMetaDataUiState = if (showTopRowMetaData) {
+            toTopRowMetaDataUiState()
+        } else {
+            null
+        },
+        mainPostCardUiState = boostedStatus?.toMainPostCardUiState(currentUserAccountId, postCardInteractions)
+                ?: toMainPostCardUiState(currentUserAccountId, postCardInteractions),
+        depthLinesUiState = depthLinesUiState,
     )
 
 private fun Status.toMainPostCardUiState(

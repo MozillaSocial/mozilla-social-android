@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="thread_screen_title">Thread</string>
+    <string name="view_type">View type</string>
+    <string name="list_view">List view</string>
+    <string name="direct_replies_list_view">Direct replies view</string>
+    <string name="tree_view">Tree view</string>
 </resources>
