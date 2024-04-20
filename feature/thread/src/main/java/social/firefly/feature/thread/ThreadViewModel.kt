@@ -5,14 +5,13 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapLatest
 import org.koin.core.parameter.parametersOf
 import org.koin.java.KoinJavaComponent
 import social.firefly.common.tree.toDepthList
 import social.firefly.common.tree.toTree
 import social.firefly.core.analytics.FeedLocation
 import social.firefly.core.analytics.ThreadAnalytics
-import social.firefly.core.datastore.UserPreferences.ThreadType
 import social.firefly.core.datastore.UserPreferencesDatastore
 import social.firefly.core.ui.postcard.DepthLinesUiState
 import social.firefly.core.ui.postcard.PostCardDelegate
@@ -27,10 +26,22 @@ class ThreadViewModel(
     getThread: GetThread,
     mainStatusId: String,
     getLoggedInUserAccountId: GetLoggedInUserAccountId,
-    private val userPreferences: UserPreferencesDatastore,
+    userPreferences: UserPreferencesDatastore,
 ) : ViewModel(), ThreadInteractions {
 
-    val threadType = userPreferences.threadType
+    val threadType = userPreferences.threadType.mapLatest {
+        when (it) {
+            social.firefly.core.datastore.UserPreferences.ThreadType.LIST -> {
+                ThreadType.LIST
+            }
+            social.firefly.core.datastore.UserPreferences.ThreadType.DIRECT_REPLIES_LIST -> {
+                ThreadType.DIRECT_REPLIES
+            }
+            else -> {
+                ThreadType.TREE
+            }
+        }
+    }
 
     private val innerStatuses = getThread.invoke(mainStatusId)
         .catch {
@@ -47,7 +58,7 @@ class ThreadViewModel(
                     )
                 }
             }
-            ThreadType.DIRECT_REPLIES_LIST -> {
+            ThreadType.DIRECT_REPLIES -> {
                 statuses.map {
                     it.toPostCardUiState(
                         currentUserAccountId = getLoggedInUserAccountId(),
@@ -73,10 +84,6 @@ class ThreadViewModel(
                         )
                     )
                 }
-            }
-            else -> {
-                // shouldn't happen
-                emptyList()
             }
         }
     }

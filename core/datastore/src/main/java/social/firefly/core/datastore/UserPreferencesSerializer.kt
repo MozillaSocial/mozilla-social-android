@@ -9,7 +9,7 @@ import java.io.OutputStream
 
 internal object UserPreferencesSerializer : Serializer<UserPreferences> {
     override val defaultValue: UserPreferences = UserPreferences.newBuilder()
-        .setThreadType(UserPreferences.ThreadType.LIST)
+        .setThreadType(UserPreferences.ThreadType.TREE)
         .build()
 
     override suspend fun readFrom(input: InputStream): UserPreferences =
