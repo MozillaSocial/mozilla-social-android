@@ -57,6 +57,7 @@ data class DepthLinesUiState(
     val postDepth: Int,
     val depthLines: List<Int>,
     val startingDepth: Int,
+    val showViewMoreRepliesText: Boolean = false,
 )
 
 enum class TopRowIconType {

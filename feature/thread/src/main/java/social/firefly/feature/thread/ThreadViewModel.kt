@@ -86,7 +86,11 @@ class ThreadViewModel(
                 )
                 val depthList = rootNode?.toDepthList() ?: emptyList()
                 val mainStatusDepth = depthList.find { it.value.statusId == mainStatusId }?.depth ?: 0
-                depthList.map { statusWithDepth ->
+                depthList.filter {
+                    it.depth - mainStatusDepth <= MAX_DEPTH
+                }.map { statusWithDepth ->
+                    val isAtMaxDepth = statusWithDepth.depth - mainStatusDepth == MAX_DEPTH
+                    val hasReplies = statusWithDepth.value.repliesCount > 0
                     statusWithDepth.value.toPostCardUiState(
                         currentUserAccountId = loggedInAccountId,
                         postCardInteractions = postCardDelegate,
@@ -94,6 +98,7 @@ class ThreadViewModel(
                             postDepth = statusWithDepth.depth,
                             depthLines = statusWithDepth.depthLines,
                             startingDepth = mainStatusDepth + 1,
+                            showViewMoreRepliesText = isAtMaxDepth && hasReplies,
                         ),
                         showTopRowMetaData = false,
                     )
@@ -121,4 +126,8 @@ class ThreadViewModel(
     val postCardDelegate: PostCardDelegate by KoinJavaComponent.inject(
         PostCardDelegate::class.java,
     ) { parametersOf(viewModelScope, FeedLocation.THREAD) }
+
+    companion object {
+        private const val MAX_DEPTH = 10
+    }
 }
