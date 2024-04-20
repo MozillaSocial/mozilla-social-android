@@ -123,6 +123,9 @@ fun PostCard(
     }
 }
 
+/**
+ * These are the lines that show in a thread in tree view
+ */
 @Composable
 private fun DepthLines(
     post: PostCardUiState,
@@ -149,7 +152,7 @@ private fun DepthLines(
         if (postDepth >= startingDepth) {
             for (i in startingDepth until postDepth) {
                 val drawDepth = i - startingDepth + 1
-                val x = (spacingWidth * drawDepth).toFloat()
+                val x = (spacingWidth * drawDepth).toFloat() + 1
                 if (post.depthLinesUiState?.depthLines?.contains(i) == true) {
                     drawLine(
                         color = lineColor,
@@ -162,7 +165,7 @@ private fun DepthLines(
 
             if (postDepth > startingDepth) {
                 val drawDepth = postDepth - startingDepth
-                val x = (spacingWidth * drawDepth).toFloat()
+                val x = (spacingWidth * drawDepth).toFloat() + 1
 
                 val path = Path().apply {
                     moveTo(x.toPx(context), 0f.toPx(context))
@@ -185,7 +188,7 @@ private fun DepthLines(
 
             if (post.depthLinesUiState?.depthLines?.contains(post.depthLinesUiState.postDepth) == true) {
                 val drawDepth = postDepth - startingDepth + 1
-                val x = (spacingWidth * drawDepth).toFloat()
+                val x = (spacingWidth * drawDepth).toFloat() + 1
                 drawLine(
                     color = lineColor,
                     start = Offset(x.toPx(context), 26f.toPx(context)),

@@ -32,6 +32,8 @@ class ThreadViewModel(
     private val userPreferences: UserPreferencesDatastore,
 ) : ViewModel(), ThreadInteractions {
 
+    private val loggedInAccountId = getLoggedInUserAccountId()
+
     @OptIn(ExperimentalCoroutinesApi::class)
     val threadType = userPreferences.threadType.mapLatest {
         when (it) {
@@ -57,15 +59,21 @@ class ThreadViewModel(
             ThreadType.LIST -> {
                 statuses.map {
                     it.toPostCardUiState(
-                        currentUserAccountId = getLoggedInUserAccountId(),
+                        currentUserAccountId = loggedInAccountId,
                         postCardInteractions = postCardDelegate,
                     )
                 }
             }
             ThreadType.DIRECT_REPLIES -> {
-                statuses.map {
+                val mainStatusIndex = statuses.indexOf(statuses.find { it.statusId == mainStatusId })
+                val ancestors = statuses.subList(0, mainStatusIndex + 1)
+                val directReplies = statuses.filter { it.inReplyToId == mainStatusId }
+                buildList {
+                    addAll(ancestors)
+                    addAll(directReplies)
+                }.map {
                     it.toPostCardUiState(
-                        currentUserAccountId = getLoggedInUserAccountId(),
+                        currentUserAccountId = loggedInAccountId,
                         postCardInteractions = postCardDelegate,
                     )
                 }
@@ -79,12 +87,12 @@ class ThreadViewModel(
                 val mainStatusDepth = depthList.find { it.value.statusId == mainStatusId }?.depth ?: 0
                 depthList.map { statusWithDepth ->
                     statusWithDepth.value.toPostCardUiState(
-                        currentUserAccountId = getLoggedInUserAccountId(),
+                        currentUserAccountId = loggedInAccountId,
                         postCardInteractions = postCardDelegate,
                         depthLinesUiState = DepthLinesUiState(
                             postDepth = statusWithDepth.depth,
                             depthLines = statusWithDepth.depthLines,
-                            startingDepth = mainStatusDepth,
+                            startingDepth = mainStatusDepth + 1,
                         )
                     )
                 }
