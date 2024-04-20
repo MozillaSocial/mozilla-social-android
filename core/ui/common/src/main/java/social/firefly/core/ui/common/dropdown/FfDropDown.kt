@@ -62,15 +62,6 @@ fun FfDropDownMenu(
                     .clickable { if (canExpand) expanded.value = true },
             ) {
                 content()
-                Spacer(modifier = Modifier.padding(start = 8.dp))
-                Icon(
-                    modifier = Modifier
-                        .size(FfIcons.Sizes.small)
-                        .align(Alignment.CenterVertically),
-                    painter = FfIcons.caretDown(),
-                    contentDescription = null,
-                    tint = FfTheme.colors.iconPrimary,
-                )
             }
         }
         FfDropdownMenu(
