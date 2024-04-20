@@ -28,6 +28,7 @@ val threadModule =
                 getLoggedInUserAccountId = get(),
                 getThread = get(),
                 mainStatusId = parametersHolder[0],
+                userPreferences = get(),
             )
         }
     }

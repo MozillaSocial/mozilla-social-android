@@ -4,6 +4,12 @@ option java_package = "social.firefly.core.datastore";
 option java_multiple_files = true;
 
 message UserPreferences {
+  enum ThreadType {
+    LIST = 0;
+    DIRECT_REPLIES_LIST = 1;
+    TREE = 2;
+  }
+
   reserved 4, 5, 7;
   reserved "client_id", "client_secret";
   string access_token = 1;
@@ -11,4 +17,5 @@ message UserPreferences {
   string domain = 3;
   string serialized_push_keys = 6;
   string last_seen_home_status_id = 8;
+  ThreadType thread_type = 9;
 }
