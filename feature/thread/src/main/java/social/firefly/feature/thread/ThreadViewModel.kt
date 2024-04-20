@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.map
 import org.koin.core.parameter.parametersOf
 import org.koin.java.KoinJavaComponent
 import social.firefly.common.tree.toDepthList
+import social.firefly.common.tree.toTree
 import social.firefly.core.analytics.FeedLocation
 import social.firefly.core.analytics.ThreadAnalytics
 import social.firefly.core.ui.postcard.DepthLinesUiState
@@ -25,8 +26,12 @@ class ThreadViewModel(
     getLoggedInUserAccountId: GetLoggedInUserAccountId,
 ) : ViewModel(), ThreadInteractions {
     var statuses: Flow<List<PostCardUiState>> =
-        getThread.invoke(mainStatusId).map { rootNode ->
-            val depthList = rootNode.toDepthList()
+        getThread.invoke(mainStatusId).map { statuses ->
+            val rootNode = statuses.toTree(
+                identifier = { it.statusId },
+                parentIdentifier = { it.inReplyToId },
+            )
+            val depthList = rootNode?.toDepthList() ?: emptyList()
             val mainStatusDepth = depthList.find { it.value.statusId == mainStatusId }?.depth ?: 0
             depthList.map { statusWithDepth ->
                 statusWithDepth.value.toPostCardUiState(
