@@ -4,6 +4,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
+import social.firefly.common.Resource
 import social.firefly.core.model.Context
 import social.firefly.core.model.Thread
 import social.firefly.core.repository.mastodon.StatusRepository
@@ -15,37 +16,45 @@ class GetThread internal constructor(
 ) {
     operator fun invoke(
         statusId: String,
-    ): Flow<Thread> =
+    ): Flow<Resource<Thread>> =
         flow {
-            val context = statusRepository.getStatusContext(statusId)
-            val allStatuses = buildList {
-                addAll(context.ancestors)
-                addAll(context.descendants)
-            }
-            saveStatusToDatabase(
-                allStatuses.map { status ->
-                    status.copy(
-                        inReplyToAccountName = allStatuses.find {
-                            it.account.accountId == status.inReplyToAccountId
-                        }?.account?.displayName
-                    )
-                }
-            )
+            emit(Resource.Loading())
 
-            emitAll(
-                combine(
-                statusRepository.getStatusesFlow(listOf(statusId)),
-                statusRepository.getStatusesFlow(context.ancestors.map { it.statusId }),
-                statusRepository.getStatusesFlow(context.descendants.map { it.statusId }),
-                ) { rootStatus, ancestors, descendants ->
-                    Thread(
-                        status = rootStatus.first(),
-                        context = Context(
-                            ancestors = ancestors,
-                            descendants = descendants,
-                        )
-                    )
+            try {
+                val context = statusRepository.getStatusContext(statusId)
+                val allStatuses = buildList {
+                    addAll(context.ancestors)
+                    addAll(context.descendants)
                 }
-            )
+                saveStatusToDatabase(
+                    allStatuses.map { status ->
+                        status.copy(
+                            inReplyToAccountName = allStatuses.find {
+                                it.account.accountId == status.inReplyToAccountId
+                            }?.account?.displayName
+                        )
+                    }
+                )
+
+                emitAll(
+                    combine(
+                        statusRepository.getStatusesFlow(listOf(statusId)),
+                        statusRepository.getStatusesFlow(context.ancestors.map { it.statusId }),
+                        statusRepository.getStatusesFlow(context.descendants.map { it.statusId }),
+                    ) { rootStatus, ancestors, descendants ->
+                        Resource.Loaded(
+                            Thread(
+                                status = rootStatus.first(),
+                                context = Context(
+                                    ancestors = ancestors,
+                                    descendants = descendants,
+                                )
+                            )
+                        )
+                    }
+                )
+            } catch (e: Exception) {
+                emit(Resource.Error(e))
+            }
         }
 }

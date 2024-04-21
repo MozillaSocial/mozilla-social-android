@@ -4,12 +4,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.launch
 import org.koin.core.parameter.parametersOf
 import org.koin.java.KoinJavaComponent
+import social.firefly.common.Resource
 import social.firefly.common.tree.toDepthList
 import social.firefly.common.tree.toTree
 import social.firefly.core.analytics.FeedLocation
@@ -23,12 +23,11 @@ import social.firefly.core.ui.postcard.PostCardUiState
 import social.firefly.core.ui.postcard.toPostCardUiState
 import social.firefly.core.usecase.mastodon.account.GetLoggedInUserAccountId
 import social.firefly.core.usecase.mastodon.thread.GetThread
-import timber.log.Timber
 
 class ThreadViewModel(
     private val analytics: ThreadAnalytics,
     getThread: GetThread,
-    mainStatusId: String,
+    private val mainStatusId: String,
     getLoggedInUserAccountId: GetLoggedInUserAccountId,
     private val userPreferences: UserPreferencesDatastore,
 ) : ViewModel(), ThreadInteractions {
@@ -50,78 +49,85 @@ class ThreadViewModel(
         }
     }
 
-    private val innerStatuses = getThread.invoke(mainStatusId)
-        .catch {
-            Timber.e(it)
-        }
-
-    var statuses: Flow<ThreadPostCardCollection> = threadType.combine(innerStatuses) { threadType, thread ->
-        when (threadType) {
-            ThreadType.LIST -> {
-                val mapToPostCardUiState = fun Status.(): PostCardUiState = toPostCardUiState(
-                    currentUserAccountId = loggedInAccountId,
-                    postCardInteractions = postCardDelegate,
-                    isClickable = statusId != mainStatusId,
-                )
-                ThreadPostCardCollection(
-                    ancestors = thread.context.ancestors.map { it.mapToPostCardUiState() },
-                    mainPost = thread.status.mapToPostCardUiState(),
-                    descendants = thread.context.descendants.map { it.mapToPostCardUiState() },
-                )
+    var statuses: Flow<Resource<ThreadPostCardCollection>> =
+        threadType.combine(getThread(mainStatusId)) { threadType, threadResource ->
+            val thread = threadResource.data ?: return@combine when (threadResource) {
+                is Resource.Loading -> Resource.Loading()
+                is Resource.Error -> Resource.Error(threadResource.exception)
+                is Resource.Loaded -> Resource.Loaded(ThreadPostCardCollection())
             }
-            ThreadType.DIRECT_REPLIES -> {
-                val mapToPostCardUiState = fun Status.(): PostCardUiState = toPostCardUiState(
-                    currentUserAccountId = loggedInAccountId,
-                    postCardInteractions = postCardDelegate,
-                    showTopRowMetaData = false,
-                    isClickable = statusId != mainStatusId,
-                )
-                ThreadPostCardCollection(
-                    ancestors = thread.context.ancestors.map { it.mapToPostCardUiState() },
-                    mainPost = thread.status.mapToPostCardUiState(),
-                    descendants = thread.context.descendants
-                        .filter { it.inReplyToId == mainStatusId }
-                        .map { it.mapToPostCardUiState() },
-                )
-            }
-            ThreadType.TREE -> {
-                val descendants = buildList {
-                    add(thread.status)
-                    addAll(thread.context.descendants)
-                }.toTree(
-                    identifier = { it.statusId },
-                    parentIdentifier = { it.inReplyToId },
-                )?.toDepthList()?.drop(1)?.filter {
-                    it.depth <= MAX_DEPTH
-                }?.map { statusWithDepth ->
-                    val isAtMaxDepth = statusWithDepth.depth == MAX_DEPTH
-                    val hasReplies = statusWithDepth.value.repliesCount > 0
-                    statusWithDepth.value.toPostCardUiState(
+            when (threadType) {
+                ThreadType.LIST -> {
+                    val mapToPostCardUiState = fun Status.(): PostCardUiState = toPostCardUiState(
                         currentUserAccountId = loggedInAccountId,
                         postCardInteractions = postCardDelegate,
-                        depthLinesUiState = DepthLinesUiState(
-                            postDepth = statusWithDepth.depth,
-                            depthLines = statusWithDepth.depthLines,
-                            startingDepth = 1,
-                            showViewMoreRepliesText = isAtMaxDepth && hasReplies,
-                        ),
-                        showTopRowMetaData = false,
+                        isClickable = statusId != mainStatusId,
                     )
-                } ?: emptyList()
+                    Resource.Loaded(
+                        ThreadPostCardCollection(
+                            ancestors = thread.context.ancestors.map { it.mapToPostCardUiState() },
+                            mainPost = thread.status.mapToPostCardUiState(),
+                            descendants = thread.context.descendants.map { it.mapToPostCardUiState() },
+                        )
+                    )
+                }
+                ThreadType.DIRECT_REPLIES -> {
+                    val mapToPostCardUiState = fun Status.(): PostCardUiState = toPostCardUiState(
+                        currentUserAccountId = loggedInAccountId,
+                        postCardInteractions = postCardDelegate,
+                        showTopRowMetaData = false,
+                        isClickable = statusId != mainStatusId,
+                    )
+                    Resource.Loaded(
+                        ThreadPostCardCollection(
+                            ancestors = thread.context.ancestors.map { it.mapToPostCardUiState() },
+                            mainPost = thread.status.mapToPostCardUiState(),
+                            descendants = thread.context.descendants
+                                .filter { it.inReplyToId == mainStatusId }
+                                .map { it.mapToPostCardUiState() },
+                        )
+                    )
+                }
+                ThreadType.TREE -> {
+                    val descendants = buildList {
+                        add(thread.status)
+                        addAll(thread.context.descendants)
+                    }.toTree(
+                        identifier = { it.statusId },
+                        parentIdentifier = { it.inReplyToId },
+                    )?.toDepthList()?.drop(1)?.filter {
+                        it.depth <= MAX_DEPTH
+                    }?.map { statusWithDepth ->
+                        val isAtMaxDepth = statusWithDepth.depth == MAX_DEPTH
+                        val hasReplies = statusWithDepth.value.repliesCount > 0
+                        statusWithDepth.value.toPostCardUiState(
+                            currentUserAccountId = loggedInAccountId,
+                            postCardInteractions = postCardDelegate,
+                            depthLinesUiState = DepthLinesUiState(
+                                postDepth = statusWithDepth.depth,
+                                depthLines = statusWithDepth.depthLines,
+                                startingDepth = 1,
+                                showViewMoreRepliesText = isAtMaxDepth && hasReplies,
+                            ),
+                            showTopRowMetaData = false,
+                        )
+                    } ?: emptyList()
 
-                val mapToPostCardUiState = fun Status.(): PostCardUiState = toPostCardUiState(
-                    currentUserAccountId = loggedInAccountId,
-                    postCardInteractions = postCardDelegate,
-                    showTopRowMetaData = false,
-                    isClickable = statusId != mainStatusId,
-                )
-                ThreadPostCardCollection(
-                    ancestors = thread.context.ancestors.map { it.mapToPostCardUiState() },
-                    mainPost = thread.status.mapToPostCardUiState(),
-                    descendants = descendants,
-                )
+                    val mapToPostCardUiState = fun Status.(): PostCardUiState = toPostCardUiState(
+                        currentUserAccountId = loggedInAccountId,
+                        postCardInteractions = postCardDelegate,
+                        showTopRowMetaData = false,
+                        isClickable = statusId != mainStatusId,
+                    )
+                    Resource.Loaded(
+                        ThreadPostCardCollection(
+                            ancestors = thread.context.ancestors.map { it.mapToPostCardUiState() },
+                            mainPost = thread.status.mapToPostCardUiState(),
+                            descendants = descendants,
+                        )
+                    )
+                }
             }
-        }
     }
 
     override fun onThreadTypeSelected(threadType: ThreadType) {
