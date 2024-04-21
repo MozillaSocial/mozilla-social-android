@@ -34,7 +34,7 @@ import social.firefly.core.ui.common.dropdown.FfIconButtonDropDownMenu
 import social.firefly.core.ui.common.error.GenericError
 import social.firefly.core.ui.common.loading.MaxSizeLoading
 import social.firefly.core.ui.common.text.MediumTextLabel
-import social.firefly.core.ui.postcard.PostCardDelegate
+import social.firefly.core.ui.postcard.PostCardInteractions
 import social.firefly.core.ui.postcard.PostCardListItem
 
 @Composable
@@ -64,7 +64,7 @@ internal fun ThreadScreen(
 private fun ThreadScreen(
     threadType: ThreadType,
     uiState: Resource<ThreadPostCardCollection>,
-    postCardDelegate: PostCardDelegate,
+    postCardDelegate: PostCardInteractions,
     threadInteractions: ThreadInteractions,
 ) {
     FfSurface {
@@ -104,7 +104,7 @@ private fun ThreadScreen(
 private fun ThreadList(
     threadType: ThreadType,
     statuses: ThreadPostCardCollection,
-    postCardDelegate: PostCardDelegate,
+    postCardDelegate: PostCardInteractions,
 ) {
     if (statuses.mainPost == null) return
 

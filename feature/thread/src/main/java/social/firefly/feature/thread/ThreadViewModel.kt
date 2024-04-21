@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.mapLatest
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.koin.core.parameter.parametersOf
 import org.koin.java.KoinJavaComponent
@@ -37,6 +38,25 @@ class ThreadViewModel(
 
     private val loggedInAccountId = getLoggedInUserAccountId()
 
+    private val postsIdsWithHiddenReplies = MutableStateFlow<List<String>>(emptyList())
+
+    val postCardDelegate: PostCardDelegate by KoinJavaComponent.inject(
+        PostCardDelegate::class.java,
+    ) { parametersOf(
+        FeedLocation.THREAD,
+        { statusId: String ->
+            postsIdsWithHiddenReplies.update {
+                postsIdsWithHiddenReplies.value.toMutableList().apply {
+                    if (contains(statusId)) {
+                        remove(statusId)
+                    } else {
+                        add(statusId)
+                    }
+                }
+            }
+        }
+    ) }
+
     private val _uiState = MutableStateFlow<Resource<ThreadPostCardCollection>>(Resource.Loading())
     val uiState = _uiState.asStateFlow()
 
@@ -64,7 +84,11 @@ class ThreadViewModel(
     private fun loadThread() {
         getThreadJob?.cancel()
         getThreadJob = viewModelScope.launch {
-            threadType.combine(getThread(mainStatusId)) { threadType, threadResource ->
+            combine(
+                threadType,
+                getThread(mainStatusId),
+                postsIdsWithHiddenReplies
+            ) { threadType, threadResource, postsIdsWithHiddenReplies ->
                 val thread = threadResource.data ?: return@combine when (threadResource) {
                     is Resource.Loading -> Resource.Loading()
                     is Resource.Error -> Resource.Error(threadResource.exception)
@@ -113,6 +137,7 @@ class ThreadViewModel(
                         }.toTree(
                             identifier = { it.statusId },
                             parentIdentifier = { it.inReplyToId },
+                            shouldIgnore = { postsIdsWithHiddenReplies.contains(it.statusId) }
                         )?.toDepthList()?.drop(1)?.filter {
                             it.depth <= MAX_DEPTH
                         }?.map { statusWithDepth ->
@@ -126,6 +151,7 @@ class ThreadViewModel(
                                     depthLines = statusWithDepth.depthLines,
                                     startingDepth = 1,
                                     showViewMoreRepliesText = isAtMaxDepth && hasReplies,
+                                    isHidingReplies = postsIdsWithHiddenReplies.contains(statusWithDepth.value.statusId),
                                 ),
                                 showTopRowMetaData = false,
                             )
@@ -172,10 +198,6 @@ class ThreadViewModel(
     override fun onsScreenViewed() {
         analytics.threadScreenViewed()
     }
-
-    val postCardDelegate: PostCardDelegate by KoinJavaComponent.inject(
-        PostCardDelegate::class.java,
-    ) { parametersOf(viewModelScope, FeedLocation.THREAD) }
 
     companion object {
         private const val MAX_DEPTH = 10

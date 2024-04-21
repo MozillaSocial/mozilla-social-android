@@ -45,6 +45,10 @@ interface PostCardInteractions : PollInteractions, HtmlContentInteractions {
         attachments: List<Attachment>,
         index: Int,
     )
+
+    fun onHideRepliesClicked(
+        statusId: String,
+    )
 }
 
 object PostCardInteractionsNoOp: PostCardInteractions {
@@ -74,4 +78,5 @@ object PostCardInteractionsNoOp: PostCardInteractions {
 
     override fun onMediaClicked(attachments: List<Attachment>, index: Int) = Unit
 
+    override fun onHideRepliesClicked(statusId: String) = Unit
 }

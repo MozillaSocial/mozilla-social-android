@@ -41,13 +41,16 @@ data class DepthItem<T>(
 fun <T> List<T>.toTree(
     identifier: (T) -> String,
     parentIdentifier: (T) -> String?,
+    shouldIgnore: (T) -> Boolean,
 ): TreeNode<T>? {
     val nodes = mutableMapOf<String, MutableTreeNode<T>>()
 
     forEach {
-        val newNode = MutableTreeNode(it)
-        nodes[parentIdentifier(it)]?.add(newNode)
-        nodes[identifier(it)] = newNode
+        if (!shouldIgnore(it)) {
+            val newNode = MutableTreeNode(it)
+            nodes[parentIdentifier(it)]?.add(newNode)
+            nodes[identifier(it)] = newNode
+        }
     }
 
     return nodes[identifier(first())]

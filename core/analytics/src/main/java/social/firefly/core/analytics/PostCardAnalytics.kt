@@ -110,6 +110,7 @@ class PostCardAnalytics internal constructor(private val analytics: Analytics) {
 
 enum class FeedLocation(val baseAnalyticsIdentifier: String) {
     PROFILE("profile"),
+    DISCOVER("discover"),
     HOME("home"),
     LOCAL("local"),
     FEDERATED("federated"),

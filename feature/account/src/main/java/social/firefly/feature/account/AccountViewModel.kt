@@ -51,7 +51,6 @@ class AccountViewModel(
 
     val postCardDelegate: PostCardDelegate by inject {
         parametersOf(
-            viewModelScope,
             FeedLocation.PROFILE,
         )
     }

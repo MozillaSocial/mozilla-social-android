@@ -80,13 +80,13 @@ class FeedViewModel(
 
     val homePostCardDelegate: PostCardDelegate by KoinJavaComponent.inject(
         PostCardDelegate::class.java,
-    ) { parametersOf(viewModelScope, FeedLocation.HOME) }
+    ) { parametersOf(FeedLocation.HOME) }
     val localPostCardDelegate: PostCardDelegate by KoinJavaComponent.inject(
         PostCardDelegate::class.java,
-    ) { parametersOf(viewModelScope, FeedLocation.LOCAL) }
+    ) { parametersOf(FeedLocation.LOCAL) }
     val federatedPostCardDelegate: PostCardDelegate by KoinJavaComponent.inject(
         PostCardDelegate::class.java,
-    ) { parametersOf(viewModelScope, FeedLocation.FEDERATED) }
+    ) { parametersOf(FeedLocation.FEDERATED) }
 
     /**
      * We restore the user's place in their timeline by removing items in the database

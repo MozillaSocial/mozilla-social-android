@@ -48,7 +48,7 @@ internal fun DiscoverScreen(viewModel: DiscoverViewModel = koinViewModel()) {
     DiscoverScreen(
         uiState = uiState,
         discoverInteractions = viewModel,
-        postCardInteractions = viewModel,
+        postCardInteractions = viewModel.postCardDelegate,
     )
 
     LaunchedEffect(Unit) {
