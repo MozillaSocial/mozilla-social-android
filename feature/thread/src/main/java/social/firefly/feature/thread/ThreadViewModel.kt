@@ -154,16 +154,15 @@ class ThreadViewModel(
             }.toTree(
                 identifier = { it.statusId },
                 parentIdentifier = { it.inReplyToId },
-                shouldIgnore = { postsIdsWithHiddenReplies.contains(it.inReplyToId) }
             )?.toDepthList(
-                addNewDepthLine = {
-                    it.repliesCount > 0
+                shouldIgnoreChildren = {
+                    postsIdsWithHiddenReplies.contains(it.statusId)
                 }
             )?.drop(1)?.filter {
                 it.depth <= MAX_DEPTH
             }?.map { statusWithDepth ->
                 val isAtMaxDepth = statusWithDepth.depth == MAX_DEPTH
-                val hasReplies = statusWithDepth.value.repliesCount > 0
+                val hasReplies = statusWithDepth.hasReplies
                 statusWithDepth.value.toPostCardUiState(
                     currentUserAccountId = loggedInAccountId,
                     postCardInteractions = postCardDelegate,
