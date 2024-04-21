@@ -4,6 +4,8 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -13,8 +15,11 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import social.firefly.common.utils.toPx
+import social.firefly.core.designsystem.icon.FfIcons
 import social.firefly.core.designsystem.theme.FfTheme
 import social.firefly.core.ui.postcard.DepthLinesUiState
+import social.firefly.core.ui.postcard.ExpandRepliesButtonUiState
+import social.firefly.core.ui.postcard.PostCardInteractions
 import social.firefly.core.ui.postcard.PostCardUiState
 
 /**
@@ -23,11 +28,13 @@ import social.firefly.core.ui.postcard.PostCardUiState
 @Composable
 internal fun DepthLines(
     depthLinesUiState: DepthLinesUiState,
+    statusId: String,
+    postCardInteractions: PostCardInteractions,
 ) {
     val spacingWidth = 8
 
     val postDepth = depthLinesUiState.postDepth
-    val startingDepth = depthLinesUiState.startingDepth
+    val startingDepth = 1
 
     val width = maxOf(((postDepth - startingDepth + 1) * spacingWidth), 0)
     val lineColor = FfTheme.colors.borderPrimary
@@ -116,6 +123,15 @@ internal fun DepthLines(
                         style = Stroke(
                             width = 2f.toPx(context),
                         )
+                    )
+                } else if (depthLinesUiState.expandRepliesButtonUiState == ExpandRepliesButtonUiState.PLUS) {
+                    // goes to the plus icon
+                    drawLine(
+                        color = lineColor,
+                        start = Offset(x.toPx(context), 26f.toPx(context)),
+                        end = Offset(x.toPx(context), height - 26f.toPx(context)),
+                        strokeWidth = 2f.toPx(context),
+                        cap = StrokeCap.Round
                     )
                 } else {
                     // goes to the next post

@@ -22,6 +22,7 @@ import social.firefly.core.datastore.UserPreferences
 import social.firefly.core.datastore.UserPreferencesDatastore
 import social.firefly.core.model.Status
 import social.firefly.core.ui.postcard.DepthLinesUiState
+import social.firefly.core.ui.postcard.ExpandRepliesButtonUiState
 import social.firefly.core.ui.postcard.PostCardDelegate
 import social.firefly.core.ui.postcard.PostCardUiState
 import social.firefly.core.ui.postcard.toPostCardUiState
@@ -137,8 +138,12 @@ class ThreadViewModel(
                         }.toTree(
                             identifier = { it.statusId },
                             parentIdentifier = { it.inReplyToId },
-                            shouldIgnore = { postsIdsWithHiddenReplies.contains(it.statusId) }
-                        )?.toDepthList()?.drop(1)?.filter {
+                            shouldIgnore = { postsIdsWithHiddenReplies.contains(it.inReplyToId) }
+                        )?.toDepthList(
+                            addNewDepthLine = {
+                                it.repliesCount > 0
+                            }
+                        )?.drop(1)?.filter {
                             it.depth <= MAX_DEPTH
                         }?.map { statusWithDepth ->
                             val isAtMaxDepth = statusWithDepth.depth == MAX_DEPTH
@@ -149,9 +154,14 @@ class ThreadViewModel(
                                 depthLinesUiState = DepthLinesUiState(
                                     postDepth = statusWithDepth.depth,
                                     depthLines = statusWithDepth.depthLines,
-                                    startingDepth = 1,
                                     showViewMoreRepliesText = isAtMaxDepth && hasReplies,
-                                    isHidingReplies = postsIdsWithHiddenReplies.contains(statusWithDepth.value.statusId),
+                                    expandRepliesButtonUiState = when {
+                                        !hasReplies || isAtMaxDepth -> ExpandRepliesButtonUiState.HIDDEN
+                                        postsIdsWithHiddenReplies.contains(
+                                            statusWithDepth.value.statusId
+                                        ) -> ExpandRepliesButtonUiState.PLUS
+                                        else -> ExpandRepliesButtonUiState.MINUS
+                                    },
                                 ),
                                 showTopRowMetaData = false,
                             )

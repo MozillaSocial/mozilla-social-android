@@ -137,6 +137,9 @@ object FfIcons {
     fun magnifyingGlassFill() = painterResource(id = R.drawable.magnifying_glass_fill)
 
     @Composable
+    fun minusCircle() = painterResource(id = R.drawable.minus_circle)
+
+    @Composable
     fun monitorPlay() = painterResource(id = R.drawable.monitor_play)
 
     @Composable
@@ -153,6 +156,9 @@ object FfIcons {
 
     @Composable
     fun plus() = painterResource(id = R.drawable.plus)
+
+    @Composable
+    fun plusCircle() = painterResource(id = R.drawable.plus_circle)
 
     @Composable
     fun prohibit() = painterResource(id = R.drawable.prohibit)

@@ -3,10 +3,11 @@ package social.firefly.common.tree
 fun <T> TreeNode<T>.toDepthList(
     depth: Int = 0,
     depthLines: List<Int> = listOf(),
+    addNewDepthLine: (T) -> Boolean,
 ): List<DepthItem<T>> = buildList {
     var newDepthLines = buildList {
         addAll(depthLines)
-        if (!isLeaf) {
+        if (addNewDepthLine(value)) {
             add(depth)
         }
     }
@@ -27,6 +28,7 @@ fun <T> TreeNode<T>.toDepthList(
             treeNode.toDepthList(
                 depth + 1,
                 newDepthLines,
+                addNewDepthLine,
             )
         )
     }

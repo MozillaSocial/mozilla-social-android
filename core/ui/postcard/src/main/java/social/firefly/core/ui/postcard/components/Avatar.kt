@@ -20,8 +20,7 @@ internal fun Avatar(
     postCardInteractions: PostCardInteractions,
 ) {
     AsyncImage(
-        modifier =
-        modifier
+        modifier = modifier
             .size(36.dp)
             .clip(CircleShape)
             .background(FfTheme.colors.layer2)
