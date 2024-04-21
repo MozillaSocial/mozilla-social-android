@@ -30,7 +30,7 @@ import social.firefly.core.designsystem.theme.FfTheme
 import social.firefly.core.ui.common.FfSurface
 import social.firefly.core.ui.common.appbar.FfCloseableTopAppBar
 import social.firefly.core.ui.common.dropdown.FfDropDownItem
-import social.firefly.core.ui.common.dropdown.FfDropDownMenu
+import social.firefly.core.ui.common.dropdown.FfIconButtonDropDownMenu
 import social.firefly.core.ui.common.error.GenericError
 import social.firefly.core.ui.common.loading.MaxSizeLoading
 import social.firefly.core.ui.common.text.MediumTextLabel
@@ -42,7 +42,7 @@ internal fun ThreadScreen(
     threadStatusId: String,
     viewModel: ThreadViewModel = koinViewModel(parameters = { parametersOf(threadStatusId) }),
 ) {
-    val uiState = viewModel.uiState.collectAsStateWithLifecycle(initialValue = Resource.Loading()).value
+    val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
     val threadType = viewModel.threadType.collectAsStateWithLifecycle(
         initialValue = ThreadType.TREE
     ).value
@@ -187,7 +187,7 @@ private fun ThreadTypeButton(
 ) {
     val overflowMenuExpanded = remember { mutableStateOf(false) }
 
-    FfDropDownMenu(
+    FfIconButtonDropDownMenu(
         expanded = overflowMenuExpanded,
         dropDownMenuContent = {
             for (dropDownOption in ThreadType.entries) {

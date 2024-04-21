@@ -1,12 +1,9 @@
 package social.firefly.core.ui.postcard.components
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -17,7 +14,7 @@ import androidx.compose.ui.unit.dp
 import social.firefly.core.designsystem.icon.FfIcons
 import social.firefly.core.designsystem.theme.FfTheme
 import social.firefly.core.ui.common.dropdown.FfDropDownItem
-import social.firefly.core.ui.common.dropdown.FfDropdownMenu
+import social.firefly.core.ui.common.dropdown.FfIconButtonDropDownMenu
 import social.firefly.core.ui.common.loading.FfCircularProgressIndicator
 import social.firefly.core.ui.postcard.MainPostCardUiState
 
@@ -57,9 +54,17 @@ private fun OverflowMenu(
     val overflowMenuExpanded = remember { mutableStateOf(false) }
     val context = LocalContext.current
 
-    IconButton(
-        modifier = Modifier.width(IntrinsicSize.Max),
-        onClick = { overflowMenuExpanded.value = true },
+    FfIconButtonDropDownMenu(
+        expanded = overflowMenuExpanded,
+        dropDownMenuContent = {
+            for (dropDownOption in post.dropDownOptions) {
+                FfDropDownItem(
+                    text = dropDownOption.text.build(context),
+                    expanded = overflowMenuExpanded,
+                    onClick = dropDownOption.onOptionClicked,
+                )
+            }
+        }
     ) {
         if (post.isBeingDeleted) {
             FfCircularProgressIndicator(
@@ -69,21 +74,6 @@ private fun OverflowMenu(
             )
         } else {
             Icon(painter = FfIcons.moreVertical(), contentDescription = "")
-        }
-
-        FfDropdownMenu(
-            expanded = overflowMenuExpanded.value,
-            onDismissRequest = {
-                overflowMenuExpanded.value = false
-            },
-        ) {
-            for (dropDownOption in post.dropDownOptions) {
-                FfDropDownItem(
-                    text = dropDownOption.text.build(context),
-                    expanded = overflowMenuExpanded,
-                    onClick = dropDownOption.onOptionClicked,
-                )
-            }
         }
     }
 }

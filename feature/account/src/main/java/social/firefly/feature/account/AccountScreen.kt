@@ -67,13 +67,12 @@ import social.firefly.core.model.AccountTimelineType
 import social.firefly.core.navigation.navigationModule
 import social.firefly.core.ui.common.FfSurface
 import social.firefly.core.ui.common.appbar.FfCloseableTopAppBar
-import social.firefly.core.ui.common.button.FfButton
 import social.firefly.core.ui.common.button.FfButtonContentPadding
 import social.firefly.core.ui.common.button.FfButtonSecondary
 import social.firefly.core.ui.common.button.FfToggleButton
 import social.firefly.core.ui.common.button.ToggleButtonState
 import social.firefly.core.ui.common.dropdown.FfDropDownItem
-import social.firefly.core.ui.common.dropdown.FfDropdownMenu
+import social.firefly.core.ui.common.dropdown.FfIconButtonDropDownMenu
 import social.firefly.core.ui.common.error.GenericError
 import social.firefly.core.ui.common.following.FollowStatus
 import social.firefly.core.ui.common.loading.FfCircularProgressIndicator
@@ -358,21 +357,10 @@ private fun OverflowMenu(
 ) {
     val overflowMenuExpanded = remember { mutableStateOf(false) }
     val context = LocalContext.current
-    IconButton(
-        modifier = Modifier.width(IntrinsicSize.Max),
-        onClick = { overflowMenuExpanded.value = true },
-    ) {
-        Icon(
-            painter = FfIcons.moreVertical(),
-            contentDescription = stringResource(R.string.overflow_button)
-        )
 
-        FfDropdownMenu(
-            expanded = overflowMenuExpanded.value,
-            onDismissRequest = {
-                overflowMenuExpanded.value = false
-            },
-        ) {
+    FfIconButtonDropDownMenu(
+        expanded = overflowMenuExpanded,
+        dropDownMenuContent = {
             if (isUsersProfile) {
                 FfDropDownItem(
                     text = stringResource(id = R.string.favorites_option),
@@ -457,6 +445,11 @@ private fun OverflowMenu(
                 )
             }
         }
+    ) {
+        Icon(
+            painter = FfIcons.moreVertical(),
+            contentDescription = stringResource(R.string.overflow_button)
+        )
     }
 }
 
