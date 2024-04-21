@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -28,6 +29,52 @@ import social.firefly.core.designsystem.icon.FfIcons
 import social.firefly.core.designsystem.theme.FfTheme
 import social.firefly.core.designsystem.utils.NoRipple
 import social.firefly.core.ui.common.utils.PreviewTheme
+
+@Suppress("MagicNumber")
+@Composable
+fun FfIconButtonDropDownMenu(
+    modifier: Modifier = Modifier,
+    expanded: MutableState<Boolean>,
+    properties: PopupProperties = PopupProperties(focusable = false),
+    dropDownMenuContent: @Composable ColumnScope.() -> Unit,
+    content: @Composable () -> Unit,
+) {
+    var canExpand by remember {
+        mutableStateOf(true)
+    }
+
+    // slight delay for allowing the menu to expand after being close.
+    // necessary for making closing the menu by clicking the button not instantly re-open the menu.
+    LaunchedEffect(key1 = expanded.value) {
+        canExpand = if (!expanded.value) {
+            delay(200)
+            true
+        } else {
+            false
+        }
+    }
+
+    Box(
+        modifier = modifier,
+    ) {
+        IconButton(
+            onClick = {
+                if (canExpand) expanded.value = true
+            }
+        ) {
+            content()
+        }
+        FfDropdownMenu(
+            expanded = expanded.value,
+            onDismissRequest = {
+                expanded.value = false
+            },
+            properties = properties,
+        ) {
+            dropDownMenuContent()
+        }
+    }
+}
 
 @Suppress("MagicNumber")
 @Composable
@@ -62,6 +109,15 @@ fun FfDropDownMenu(
                     .clickable { if (canExpand) expanded.value = true },
             ) {
                 content()
+                Spacer(modifier = Modifier.padding(start = 8.dp))
+                Icon(
+                    modifier = Modifier
+                        .size(FfIcons.Sizes.small)
+                        .align(Alignment.CenterVertically),
+                    painter = FfIcons.caretDown(),
+                    contentDescription = null,
+                    tint = FfTheme.colors.iconPrimary,
+                )
             }
         }
         FfDropdownMenu(
