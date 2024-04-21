@@ -1,44 +1,55 @@
 package social.firefly.feature.thread
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
+import social.firefly.common.Resource
 import social.firefly.core.designsystem.icon.FfIcons
+import social.firefly.core.designsystem.theme.FfTheme
 import social.firefly.core.ui.common.FfSurface
 import social.firefly.core.ui.common.appbar.FfCloseableTopAppBar
 import social.firefly.core.ui.common.dropdown.FfDropDownItem
 import social.firefly.core.ui.common.dropdown.FfDropDownMenu
+import social.firefly.core.ui.common.error.GenericError
+import social.firefly.core.ui.common.loading.MaxSizeLoading
+import social.firefly.core.ui.common.text.MediumTextLabel
 import social.firefly.core.ui.postcard.PostCardDelegate
 import social.firefly.core.ui.postcard.PostCardListItem
-import social.firefly.core.ui.postcard.PostCardUiState
 
 @Composable
 internal fun ThreadScreen(
     threadStatusId: String,
     viewModel: ThreadViewModel = koinViewModel(parameters = { parametersOf(threadStatusId) }),
 ) {
-    val statuses = viewModel.statuses.collectAsStateWithLifecycle(initialValue = emptyList()).value
+    val uiState = viewModel.uiState.collectAsStateWithLifecycle(initialValue = Resource.Loading()).value
     val threadType = viewModel.threadType.collectAsStateWithLifecycle(
         initialValue = ThreadType.TREE
     ).value
 
     ThreadScreen(
         threadType = threadType,
-        statuses = statuses,
+        uiState = uiState,
         postCardDelegate = viewModel.postCardDelegate,
         threadInteractions = viewModel,
     )
@@ -52,7 +63,7 @@ internal fun ThreadScreen(
 @Composable
 private fun ThreadScreen(
     threadType: ThreadType,
-    statuses: List<PostCardUiState>,
+    uiState: Resource<ThreadPostCardCollection>,
     postCardDelegate: PostCardDelegate,
     threadInteractions: ThreadInteractions,
 ) {
@@ -68,24 +79,103 @@ private fun ThreadScreen(
                 }
             )
 
-            LazyColumn(
-                Modifier
-                    .fillMaxSize(),
-            ) {
-                items(
-                    count = statuses.count(),
-                    key = { statuses[it].statusId },
-                ) { index ->
-                    val item = statuses[index]
-                    PostCardListItem(
-                        uiState = item,
-                        postCardInteractions = postCardDelegate,
-                        index = index,
-                        itemCount = statuses.count(),
-                        showDividers = threadType != ThreadType.TREE,
+            when (uiState) {
+                is Resource.Loading -> {
+                    MaxSizeLoading()
+                }
+                is Resource.Error -> {
+                    GenericError(
+                        onRetryClicked = { threadInteractions.onRetryClicked() }
+                    )
+                }
+                is Resource.Loaded -> {
+                    ThreadList(
+                        threadType = threadType,
+                        statuses = uiState.data,
+                        postCardDelegate = postCardDelegate,
                     )
                 }
             }
+        }
+    }
+}
+
+@Composable
+private fun ThreadList(
+    threadType: ThreadType,
+    statuses: ThreadPostCardCollection,
+    postCardDelegate: PostCardDelegate,
+) {
+    if (statuses.mainPost == null) return
+
+    val listState = rememberSaveable(
+        saver = LazyListState.Saver,
+        key = statuses.mainPost.statusId
+    ) {
+        LazyListState(
+            firstVisibleItemIndex = statuses.ancestors.size,
+            firstVisibleItemScrollOffset = 0,
+        )
+    }
+
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize(),
+        state = listState,
+    ) {
+        items(
+            count = statuses.ancestors.count(),
+            key = { statuses.ancestors[it].statusId },
+        ) { index ->
+            val item = statuses.ancestors[index]
+            PostCardListItem(
+                uiState = item,
+                postCardInteractions = postCardDelegate,
+                showDivider = true,
+            )
+        }
+
+        item {
+            PostCardListItem(
+                uiState = statuses.mainPost,
+                postCardInteractions = postCardDelegate,
+                showDivider = false,
+            )
+        }
+
+        item {
+            if (statuses.descendants.isNotEmpty()) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(FfTheme.colors.layer2),
+                ) {
+                    MediumTextLabel(
+                        modifier = Modifier
+                            .padding(start = 8.dp, top = 16.dp, bottom = 16.dp)
+                            .align(Alignment.CenterVertically),
+                        text = stringResource(id = R.string.replies),
+                    )
+                    Icon(
+                        modifier = Modifier
+                            .align(Alignment.CenterVertically),
+                        painter = FfIcons.arrowDropDown(),
+                        contentDescription = null,
+                    )
+                }
+            }
+        }
+
+        items(
+            count = statuses.descendants.count(),
+            key = { statuses.descendants[it].statusId },
+        ) { index ->
+            val item = statuses.descendants[index]
+            PostCardListItem(
+                uiState = item,
+                postCardInteractions = postCardDelegate,
+                showDivider = threadType != ThreadType.TREE,
+            )
         }
     }
 }
