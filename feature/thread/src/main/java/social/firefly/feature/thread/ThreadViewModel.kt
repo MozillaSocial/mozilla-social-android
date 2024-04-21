@@ -221,6 +221,6 @@ class ThreadViewModel(
     }
 
     companion object {
-        private const val MAX_DEPTH = 10
+        private const val MAX_DEPTH = 6
     }
 }
