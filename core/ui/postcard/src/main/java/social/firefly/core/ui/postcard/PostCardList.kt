@@ -45,13 +45,27 @@ fun PostCardListItem(
     postCardInteractions: PostCardInteractions,
     index: Int,
     itemCount: Int,
-    showDividers: Boolean = true,
 ) {
     PostCard(
         post = uiState,
         postCardInteractions = postCardInteractions,
     )
-    if (index < itemCount && showDividers) {
+    if (index < itemCount) {
+        FfDivider()
+    }
+}
+
+@Composable
+fun PostCardListItem(
+    uiState: PostCardUiState,
+    postCardInteractions: PostCardInteractions,
+    showDivider: Boolean,
+) {
+    PostCard(
+        post = uiState,
+        postCardInteractions = postCardInteractions,
+    )
+    if (showDivider) {
         FfDivider()
     }
 }

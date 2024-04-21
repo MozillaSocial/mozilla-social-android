@@ -31,7 +31,7 @@ internal fun ThreadScreen(
     threadStatusId: String,
     viewModel: ThreadViewModel = koinViewModel(parameters = { parametersOf(threadStatusId) }),
 ) {
-    val statuses = viewModel.statuses.collectAsStateWithLifecycle(initialValue = emptyList()).value
+    val statuses = viewModel.statuses.collectAsStateWithLifecycle(initialValue = ThreadPostCardCollection()).value
     val threadType = viewModel.threadType.collectAsStateWithLifecycle(
         initialValue = ThreadType.TREE
     ).value
@@ -52,7 +52,7 @@ internal fun ThreadScreen(
 @Composable
 private fun ThreadScreen(
     threadType: ThreadType,
-    statuses: List<PostCardUiState>,
+    statuses: ThreadPostCardCollection,
     postCardDelegate: PostCardDelegate,
     threadInteractions: ThreadInteractions,
 ) {
@@ -73,16 +73,36 @@ private fun ThreadScreen(
                     .fillMaxSize(),
             ) {
                 items(
-                    count = statuses.count(),
-                    key = { statuses[it].statusId },
+                    count = statuses.ancestors.count(),
+                    key = { statuses.ancestors[it].statusId },
                 ) { index ->
-                    val item = statuses[index]
+                    val item = statuses.ancestors[index]
                     PostCardListItem(
                         uiState = item,
                         postCardInteractions = postCardDelegate,
-                        index = index,
-                        itemCount = statuses.count(),
-                        showDividers = threadType != ThreadType.TREE,
+                        showDivider = true,
+                    )
+                }
+
+                item {
+                    statuses.mainPost?.let {
+                        PostCardListItem(
+                            uiState = statuses.mainPost,
+                            postCardInteractions = postCardDelegate,
+                            showDivider = true,
+                        )
+                    }
+                }
+
+                items(
+                    count = statuses.descendants.count(),
+                    key = { statuses.descendants[it].statusId },
+                ) { index ->
+                    val item = statuses.descendants[index]
+                    PostCardListItem(
+                        uiState = item,
+                        postCardInteractions = postCardDelegate,
+                        showDivider = threadType != ThreadType.TREE,
                     )
                 }
             }
