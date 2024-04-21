@@ -16,6 +16,7 @@ fun Status.toPostCardUiState(
     postCardInteractions: PostCardInteractions,
     depthLinesUiState: DepthLinesUiState? = null,
     showTopRowMetaData: Boolean = true,
+    isClickable: Boolean = true,
 ): PostCardUiState =
     PostCardUiState(
         statusId = statusId,
@@ -27,6 +28,7 @@ fun Status.toPostCardUiState(
         mainPostCardUiState = boostedStatus?.toMainPostCardUiState(currentUserAccountId, postCardInteractions)
                 ?: toMainPostCardUiState(currentUserAccountId, postCardInteractions),
         depthLinesUiState = depthLinesUiState,
+        isClickable = isClickable,
     )
 
 private fun Status.toMainPostCardUiState(

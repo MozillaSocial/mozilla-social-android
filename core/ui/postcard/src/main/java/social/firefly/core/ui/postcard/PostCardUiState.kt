@@ -10,6 +10,7 @@ data class PostCardUiState(
     val topRowMetaDataUiState: TopRowMetaDataUiState?,
     val mainPostCardUiState: MainPostCardUiState,
     val depthLinesUiState: DepthLinesUiState?,
+    val isClickable: Boolean = true,
 )
 
 /**
@@ -57,6 +58,7 @@ data class DepthLinesUiState(
     val postDepth: Int,
     val depthLines: List<Int>,
     val startingDepth: Int,
+    val showViewMoreRepliesText: Boolean = false,
 )
 
 enum class TopRowIconType {

@@ -14,6 +14,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import social.firefly.common.utils.toPx
 import social.firefly.core.designsystem.theme.FfTheme
+import social.firefly.core.ui.postcard.DepthLinesUiState
 import social.firefly.core.ui.postcard.PostCardUiState
 
 /**
@@ -21,12 +22,12 @@ import social.firefly.core.ui.postcard.PostCardUiState
  */
 @Composable
 internal fun DepthLines(
-    post: PostCardUiState,
+    depthLinesUiState: DepthLinesUiState,
 ) {
     val spacingWidth = 8
 
-    val postDepth = post.depthLinesUiState?.postDepth ?: -1
-    val startingDepth = post.depthLinesUiState?.startingDepth ?: 0
+    val postDepth = depthLinesUiState.postDepth
+    val startingDepth = depthLinesUiState.startingDepth
 
     val width = maxOf(((postDepth - startingDepth + 1) * spacingWidth), 0)
     val lineColor = FfTheme.colors.borderPrimary
@@ -43,10 +44,12 @@ internal fun DepthLines(
     ) {
         val height = size.height
         if (postDepth >= startingDepth) {
+
+            // depth lines from other posts
             for (i in startingDepth until postDepth) {
                 val drawDepth = i - startingDepth + 1
                 val x = (spacingWidth * drawDepth).toFloat() + 1
-                if (post.depthLinesUiState?.depthLines?.contains(i) == true) {
+                if (depthLinesUiState.depthLines.contains(i)) {
                     drawLine(
                         color = lineColor,
                         start = Offset(x.toPx(context), 0f.toPx(context)),
@@ -56,6 +59,7 @@ internal fun DepthLines(
                 }
             }
 
+            // curved line leading into the avatar
             if (postDepth > startingDepth) {
                 val drawDepth = postDepth - startingDepth
                 val x = (spacingWidth * drawDepth).toFloat() + 1
@@ -79,16 +83,50 @@ internal fun DepthLines(
                 )
             }
 
-            if (post.depthLinesUiState?.depthLines?.contains(post.depthLinesUiState.postDepth) == true) {
+            // new depth line coming out of avatar
+            if (depthLinesUiState.depthLines.contains(depthLinesUiState.postDepth)) {
                 val drawDepth = postDepth - startingDepth + 1
                 val x = (spacingWidth * drawDepth).toFloat() + 1
-                drawLine(
-                    color = lineColor,
-                    start = Offset(x.toPx(context), 26f.toPx(context)),
-                    end = Offset(x.toPx(context), height),
-                    strokeWidth = 2f.toPx(context),
-                    cap = StrokeCap.Round
-                )
+                if (depthLinesUiState.showViewMoreRepliesText) {
+                    // goes to the view more replies text
+                    val endingHeight = height - 32f.toPx(context)
+                    val path = Path().apply {
+                        moveTo(
+                            x = x.toPx(context),
+                            y = 26f.toPx(context),
+                        )
+                        lineTo(
+                            x = x.toPx(context),
+                            y = endingHeight - 18f.toPx(context),
+                        )
+                        quadraticBezierTo(
+                            x1 = x.toPx(context),
+                            y1 = endingHeight,
+                            x2 = (x + 8).toPx(context),
+                            y2 = endingHeight,
+                        )
+                        lineTo(
+                            x = (x + 40).toPx(context),
+                            y = endingHeight,
+                        )
+                    }
+                    drawPath(
+                        path = path,
+                        color = lineColor,
+                        style = Stroke(
+                            width = 2f.toPx(context),
+                        )
+                    )
+                } else {
+                    // goes to the next post
+                    drawLine(
+                        color = lineColor,
+                        start = Offset(x.toPx(context), 26f.toPx(context)),
+                        end = Offset(x.toPx(context), height),
+                        strokeWidth = 2f.toPx(context),
+                        cap = StrokeCap.Round
+                    )
+                }
             }
         }
     }
