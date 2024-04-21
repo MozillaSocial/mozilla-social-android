@@ -13,7 +13,7 @@ class CheckModulesTest : KoinTest {
     @OptIn(KoinExperimentalAPI::class)
     @Test
     fun checkAllModules() {
-        social.firefly.feature.settings.settingsModule.verify(
+        settingsModule.verify(
             extraTypes = listOf(
                 Context::class,
                 CoroutineDispatcher::class,
