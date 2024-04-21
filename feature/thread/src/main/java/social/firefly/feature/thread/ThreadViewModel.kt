@@ -21,6 +21,7 @@ import social.firefly.core.analytics.ThreadAnalytics
 import social.firefly.core.datastore.UserPreferences
 import social.firefly.core.datastore.UserPreferencesDatastore
 import social.firefly.core.model.Status
+import social.firefly.core.model.Thread
 import social.firefly.core.ui.postcard.DepthLinesUiState
 import social.firefly.core.ui.postcard.ExpandRepliesButtonUiState
 import social.firefly.core.ui.postcard.PostCardDelegate
@@ -95,97 +96,107 @@ class ThreadViewModel(
                     is Resource.Error -> Resource.Error(threadResource.exception)
                     is Resource.Loaded -> Resource.Loaded(ThreadPostCardCollection())
                 }
-                when (threadType) {
-                    ThreadType.LIST -> {
-                        val mapToPostCardUiState =
-                            fun Status.(): PostCardUiState = toPostCardUiState(
-                                currentUserAccountId = loggedInAccountId,
-                                postCardInteractions = postCardDelegate,
-                                isClickable = statusId != mainStatusId,
-                            )
-                        Resource.Loaded(
-                            ThreadPostCardCollection(
-                                ancestors = thread.context.ancestors.map { it.mapToPostCardUiState() },
-                                mainPost = thread.status.mapToPostCardUiState(),
-                                descendants = thread.context.descendants.map { it.mapToPostCardUiState() },
-                            )
-                        )
-                    }
-
-                    ThreadType.DIRECT_REPLIES -> {
-                        val mapToPostCardUiState =
-                            fun Status.(): PostCardUiState = toPostCardUiState(
-                                currentUserAccountId = loggedInAccountId,
-                                postCardInteractions = postCardDelegate,
-                                showTopRowMetaData = false,
-                                isClickable = statusId != mainStatusId,
-                            )
-                        Resource.Loaded(
-                            ThreadPostCardCollection(
-                                ancestors = thread.context.ancestors.map { it.mapToPostCardUiState() },
-                                mainPost = thread.status.mapToPostCardUiState(),
-                                descendants = thread.context.descendants
-                                    .filter { it.inReplyToId == mainStatusId }
-                                    .map { it.mapToPostCardUiState() },
-                            )
-                        )
-                    }
-
-                    ThreadType.TREE -> {
-                        val descendants = buildList {
-                            add(thread.status)
-                            addAll(thread.context.descendants)
-                        }.toTree(
-                            identifier = { it.statusId },
-                            parentIdentifier = { it.inReplyToId },
-                            shouldIgnore = { postsIdsWithHiddenReplies.contains(it.inReplyToId) }
-                        )?.toDepthList(
-                            addNewDepthLine = {
-                                it.repliesCount > 0
-                            }
-                        )?.drop(1)?.filter {
-                            it.depth <= MAX_DEPTH
-                        }?.map { statusWithDepth ->
-                            val isAtMaxDepth = statusWithDepth.depth == MAX_DEPTH
-                            val hasReplies = statusWithDepth.value.repliesCount > 0
-                            statusWithDepth.value.toPostCardUiState(
-                                currentUserAccountId = loggedInAccountId,
-                                postCardInteractions = postCardDelegate,
-                                depthLinesUiState = DepthLinesUiState(
-                                    postDepth = statusWithDepth.depth,
-                                    depthLines = statusWithDepth.depthLines,
-                                    showViewMoreRepliesText = isAtMaxDepth && hasReplies,
-                                    expandRepliesButtonUiState = when {
-                                        !hasReplies || isAtMaxDepth -> ExpandRepliesButtonUiState.HIDDEN
-                                        postsIdsWithHiddenReplies.contains(
-                                            statusWithDepth.value.statusId
-                                        ) -> ExpandRepliesButtonUiState.PLUS
-                                        else -> ExpandRepliesButtonUiState.MINUS
-                                    },
-                                ),
-                                showTopRowMetaData = false,
-                            )
-                        } ?: emptyList()
-
-                        val mapToPostCardUiState =
-                            fun Status.(): PostCardUiState = toPostCardUiState(
-                                currentUserAccountId = loggedInAccountId,
-                                postCardInteractions = postCardDelegate,
-                                showTopRowMetaData = false,
-                                isClickable = statusId != mainStatusId,
-                            )
-                        Resource.Loaded(
-                            ThreadPostCardCollection(
-                                ancestors = thread.context.ancestors.map { it.mapToPostCardUiState() },
-                                mainPost = thread.status.mapToPostCardUiState(),
-                                descendants = descendants,
-                            )
-                        )
-                    }
-                }
+                generateLoadedThread(
+                    threadType = threadType,
+                    thread = thread,
+                    postsIdsWithHiddenReplies = postsIdsWithHiddenReplies,
+                )
             }.collect {
                 _uiState.edit { it }
             }
+        }
+    }
+
+    private fun generateLoadedThread(
+        threadType: ThreadType,
+        thread: Thread,
+        postsIdsWithHiddenReplies: List<String>,
+    ): Resource<ThreadPostCardCollection> = when (threadType) {
+        ThreadType.LIST -> {
+            val mapToPostCardUiState =
+                fun Status.(): PostCardUiState = toPostCardUiState(
+                    currentUserAccountId = loggedInAccountId,
+                    postCardInteractions = postCardDelegate,
+                    isClickable = statusId != mainStatusId,
+                )
+            Resource.Loaded(
+                ThreadPostCardCollection(
+                    ancestors = thread.context.ancestors.map { it.mapToPostCardUiState() },
+                    mainPost = thread.status.mapToPostCardUiState(),
+                    descendants = thread.context.descendants.map { it.mapToPostCardUiState() },
+                )
+            )
+        }
+
+        ThreadType.DIRECT_REPLIES -> {
+            val mapToPostCardUiState =
+                fun Status.(): PostCardUiState = toPostCardUiState(
+                    currentUserAccountId = loggedInAccountId,
+                    postCardInteractions = postCardDelegate,
+                    showTopRowMetaData = false,
+                    isClickable = statusId != mainStatusId,
+                )
+            Resource.Loaded(
+                ThreadPostCardCollection(
+                    ancestors = thread.context.ancestors.map { it.mapToPostCardUiState() },
+                    mainPost = thread.status.mapToPostCardUiState(),
+                    descendants = thread.context.descendants
+                        .filter { it.inReplyToId == mainStatusId }
+                        .map { it.mapToPostCardUiState() },
+                )
+            )
+        }
+
+        ThreadType.TREE -> {
+            val descendants = buildList {
+                add(thread.status)
+                addAll(thread.context.descendants)
+            }.toTree(
+                identifier = { it.statusId },
+                parentIdentifier = { it.inReplyToId },
+                shouldIgnore = { postsIdsWithHiddenReplies.contains(it.inReplyToId) }
+            )?.toDepthList(
+                addNewDepthLine = {
+                    it.repliesCount > 0
+                }
+            )?.drop(1)?.filter {
+                it.depth <= MAX_DEPTH
+            }?.map { statusWithDepth ->
+                val isAtMaxDepth = statusWithDepth.depth == MAX_DEPTH
+                val hasReplies = statusWithDepth.value.repliesCount > 0
+                statusWithDepth.value.toPostCardUiState(
+                    currentUserAccountId = loggedInAccountId,
+                    postCardInteractions = postCardDelegate,
+                    depthLinesUiState = DepthLinesUiState(
+                        postDepth = statusWithDepth.depth,
+                        depthLines = statusWithDepth.depthLines,
+                        showViewMoreRepliesText = isAtMaxDepth && hasReplies,
+                        expandRepliesButtonUiState = when {
+                            !hasReplies || isAtMaxDepth -> ExpandRepliesButtonUiState.HIDDEN
+                            postsIdsWithHiddenReplies.contains(
+                                statusWithDepth.value.statusId
+                            ) -> ExpandRepliesButtonUiState.PLUS
+                            else -> ExpandRepliesButtonUiState.MINUS
+                        },
+                    ),
+                    showTopRowMetaData = false,
+                )
+            } ?: emptyList()
+
+            val mapToPostCardUiState =
+                fun Status.(): PostCardUiState = toPostCardUiState(
+                    currentUserAccountId = loggedInAccountId,
+                    postCardInteractions = postCardDelegate,
+                    showTopRowMetaData = false,
+                    isClickable = statusId != mainStatusId,
+                )
+            Resource.Loaded(
+                ThreadPostCardCollection(
+                    ancestors = thread.context.ancestors.map { it.mapToPostCardUiState() },
+                    mainPost = thread.status.mapToPostCardUiState(),
+                    descendants = descendants,
+                )
+            )
         }
     }
 

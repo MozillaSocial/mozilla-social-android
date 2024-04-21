@@ -25,13 +25,12 @@ import social.firefly.core.ui.postcard.PostCardUiState
 /**
  * These are the lines that show in a thread in tree view
  */
+@Suppress("LongMethod")
 @Composable
 internal fun DepthLines(
     depthLinesUiState: DepthLinesUiState,
-    statusId: String,
-    postCardInteractions: PostCardInteractions,
 ) {
-    val spacingWidth = 8
+    val spacingWidth = 12
 
     val postDepth = depthLinesUiState.postDepth
     val startingDepth = 1

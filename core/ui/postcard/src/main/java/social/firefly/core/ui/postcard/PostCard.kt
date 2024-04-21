@@ -60,8 +60,6 @@ fun PostCard(
                 if (post.depthLinesUiState != null) {
                     DepthLines(
                         depthLinesUiState = post.depthLinesUiState,
-                        statusId = post.statusId,
-                        postCardInteractions = postCardInteractions,
                     )
                 } else {
                     Spacer(modifier = Modifier.width(8.dp))
@@ -85,7 +83,8 @@ fun PostCard(
                     Post(
                         post = post.mainPostCardUiState,
                         showViewMoreReplies = post.depthLinesUiState?.showViewMoreRepliesText ?: false,
-                        expandRepliesButtonUiState = post.depthLinesUiState?.expandRepliesButtonUiState ?: ExpandRepliesButtonUiState.HIDDEN,
+                        expandRepliesButtonUiState = post.depthLinesUiState?.expandRepliesButtonUiState
+                            ?: ExpandRepliesButtonUiState.HIDDEN,
                         postCardInteractions = postCardInteractions,
                     )
                 }
