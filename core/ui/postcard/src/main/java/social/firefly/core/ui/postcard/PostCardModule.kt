@@ -1,6 +1,5 @@
 package social.firefly.core.ui.postcard
 
-import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.module
 import social.firefly.common.commonModule
 import social.firefly.core.analytics.analyticsModule
