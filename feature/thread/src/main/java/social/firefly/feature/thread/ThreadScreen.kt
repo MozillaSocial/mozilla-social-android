@@ -42,14 +42,14 @@ internal fun ThreadScreen(
     threadStatusId: String,
     viewModel: ThreadViewModel = koinViewModel(parameters = { parametersOf(threadStatusId) }),
 ) {
-    val resource = viewModel.statuses.collectAsStateWithLifecycle(initialValue = Resource.Loading()).value
+    val uiState = viewModel.uiState.collectAsStateWithLifecycle(initialValue = Resource.Loading()).value
     val threadType = viewModel.threadType.collectAsStateWithLifecycle(
         initialValue = ThreadType.TREE
     ).value
 
     ThreadScreen(
         threadType = threadType,
-        resource = resource,
+        uiState = uiState,
         postCardDelegate = viewModel.postCardDelegate,
         threadInteractions = viewModel,
     )
@@ -63,7 +63,7 @@ internal fun ThreadScreen(
 @Composable
 private fun ThreadScreen(
     threadType: ThreadType,
-    resource: Resource<ThreadPostCardCollection>,
+    uiState: Resource<ThreadPostCardCollection>,
     postCardDelegate: PostCardDelegate,
     threadInteractions: ThreadInteractions,
 ) {
@@ -79,21 +79,19 @@ private fun ThreadScreen(
                 }
             )
 
-            when (resource) {
+            when (uiState) {
                 is Resource.Loading -> {
                     MaxSizeLoading()
                 }
                 is Resource.Error -> {
                     GenericError(
-                        onRetryClicked = {
-
-                        }
+                        onRetryClicked = { threadInteractions.onRetryClicked() }
                     )
                 }
                 is Resource.Loaded -> {
                     ThreadList(
                         threadType = threadType,
-                        statuses = resource.data,
+                        statuses = uiState.data,
                         postCardDelegate = postCardDelegate,
                     )
                 }
