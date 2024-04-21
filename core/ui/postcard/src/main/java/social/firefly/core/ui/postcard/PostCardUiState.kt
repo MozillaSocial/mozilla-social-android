@@ -57,9 +57,15 @@ data class TopRowMetaDataUiState(
 data class DepthLinesUiState(
     val postDepth: Int,
     val depthLines: List<Int>,
-    val startingDepth: Int,
     val showViewMoreRepliesText: Boolean = false,
+    val expandRepliesButtonUiState: ExpandRepliesButtonUiState,
 )
+
+enum class ExpandRepliesButtonUiState {
+    HIDDEN,
+    MINUS,
+    PLUS,
+}
 
 enum class TopRowIconType {
     REPLY,

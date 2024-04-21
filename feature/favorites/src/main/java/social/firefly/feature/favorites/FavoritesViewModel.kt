@@ -23,7 +23,7 @@ class FavoritesViewModel(
 ) : ViewModel(), KoinComponent {
 
     val postCardDelegate by inject<PostCardDelegate> {
-        parametersOf(viewModelScope, FeedLocation.FAVORITES)
+        parametersOf(FeedLocation.FAVORITES)
     }
 
     @OptIn(ExperimentalPagingApi::class)

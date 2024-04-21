@@ -3,6 +3,7 @@ package social.firefly.common.tree
 fun <T> TreeNode<T>.toDepthList(
     depth: Int = 0,
     depthLines: List<Int> = listOf(),
+    shouldIgnoreChildren: (T) -> Boolean,
 ): List<DepthItem<T>> = buildList {
     var newDepthLines = buildList {
         addAll(depthLines)
@@ -15,20 +16,24 @@ fun <T> TreeNode<T>.toDepthList(
             value,
             depth,
             newDepthLines,
+            hasReplies = !isLeaf,
         )
     )
-    branches.forEachIndexed { index, treeNode ->
-        if (index == branches.size - 1) {
-            newDepthLines = newDepthLines.toMutableList().apply {
-                remove(depth)
+    if (!shouldIgnoreChildren(value)) {
+        branches.forEachIndexed { index, treeNode ->
+            if (index == branches.size - 1) {
+                newDepthLines = newDepthLines.toMutableList().apply {
+                    remove(depth)
+                }
             }
-        }
-        addAll(
-            treeNode.toDepthList(
-                depth + 1,
-                newDepthLines,
+            addAll(
+                treeNode.toDepthList(
+                    depth + 1,
+                    newDepthLines,
+                    shouldIgnoreChildren,
+                )
             )
-        )
+        }
     }
 }
 
@@ -36,6 +41,7 @@ data class DepthItem<T>(
     val value: T,
     val depth: Int,
     val depthLines: List<Int>,
+    val hasReplies: Boolean,
 )
 
 fun <T> List<T>.toTree(

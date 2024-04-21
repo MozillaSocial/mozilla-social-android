@@ -15,19 +15,20 @@ import androidx.compose.ui.unit.dp
 import social.firefly.common.utils.toPx
 import social.firefly.core.designsystem.theme.FfTheme
 import social.firefly.core.ui.postcard.DepthLinesUiState
-import social.firefly.core.ui.postcard.PostCardUiState
+import social.firefly.core.ui.postcard.ExpandRepliesButtonUiState
 
 /**
  * These are the lines that show in a thread in tree view
  */
+@Suppress("LongMethod")
 @Composable
 internal fun DepthLines(
     depthLinesUiState: DepthLinesUiState,
 ) {
-    val spacingWidth = 8
+    val spacingWidth = 12
 
     val postDepth = depthLinesUiState.postDepth
-    val startingDepth = depthLinesUiState.startingDepth
+    val startingDepth = 1
 
     val width = maxOf(((postDepth - startingDepth + 1) * spacingWidth), 0)
     val lineColor = FfTheme.colors.borderPrimary
@@ -45,16 +46,26 @@ internal fun DepthLines(
         val height = size.height
         if (postDepth >= startingDepth) {
 
+            val avatarCenterYPx = 26f.toPx(context)
+            val plusIconCenterYPx = height - 26f.toPx(context)
+            val strokeWidthPx = 2f.toPx(context)
+
             // depth lines from other posts
-            for (i in startingDepth until postDepth) {
-                val drawDepth = i - startingDepth + 1
+            for (drawDepth in startingDepth until postDepth) {
                 val x = (spacingWidth * drawDepth).toFloat() + 1
-                if (depthLinesUiState.depthLines.contains(i)) {
+                val xPx = x.toPx(context)
+                if (depthLinesUiState.depthLines.contains(drawDepth)) {
                     drawLine(
                         color = lineColor,
-                        start = Offset(x.toPx(context), 0f.toPx(context)),
-                        end = Offset(x.toPx(context), height),
-                        strokeWidth = 2f.toPx(context),
+                        start = Offset(
+                            x = xPx,
+                            y = 0f,
+                        ),
+                        end = Offset(
+                            x = xPx,
+                            y = height,
+                        ),
+                        strokeWidth = strokeWidthPx,
                     )
                 }
             }
@@ -63,22 +74,29 @@ internal fun DepthLines(
             if (postDepth > startingDepth) {
                 val drawDepth = postDepth - startingDepth
                 val x = (spacingWidth * drawDepth).toFloat() + 1
+                val curveStartY = avatarCenterYPx - spacingWidth.toFloat().toPx(context)
 
                 val path = Path().apply {
-                    moveTo(x.toPx(context), 0f.toPx(context))
-                    lineTo(x.toPx(context), 18f.toPx(context))
+                    moveTo(
+                        x = x.toPx(context),
+                        y = 0f.toPx(context)
+                    )
+                    lineTo(
+                        x = x.toPx(context),
+                        y = curveStartY
+                    )
                     quadraticBezierTo(
                         x1 = x.toPx(context),
-                        y1 = 28f.toPx(context),
-                        x2 = (x + 8).toPx(context),
-                        y2 = 26f.toPx(context),
+                        y1 = avatarCenterYPx,
+                        x2 = (x + spacingWidth).toPx(context),
+                        y2 = avatarCenterYPx,
                     )
                 }
                 drawPath(
                     path = path,
                     color = lineColor,
                     style = Stroke(
-                        width = 2f.toPx(context),
+                        width = strokeWidthPx,
                     )
                 )
             }
@@ -87,43 +105,67 @@ internal fun DepthLines(
             if (depthLinesUiState.depthLines.contains(depthLinesUiState.postDepth)) {
                 val drawDepth = postDepth - startingDepth + 1
                 val x = (spacingWidth * drawDepth).toFloat() + 1
+                val xPx = x.toPx(context)
                 if (depthLinesUiState.showViewMoreRepliesText) {
                     // goes to the view more replies text
-                    val endingHeight = height - 32f.toPx(context)
+                    val viewMoreRepliesTextCenterY = height - 32f.toPx(context)
+                    val curveStartY = viewMoreRepliesTextCenterY - spacingWidth.toFloat().toPx(context)
+
                     val path = Path().apply {
                         moveTo(
-                            x = x.toPx(context),
-                            y = 26f.toPx(context),
+                            x = xPx,
+                            y = avatarCenterYPx,
                         )
                         lineTo(
-                            x = x.toPx(context),
-                            y = endingHeight - 18f.toPx(context),
+                            x = xPx,
+                            y = curveStartY,
                         )
                         quadraticBezierTo(
-                            x1 = x.toPx(context),
-                            y1 = endingHeight,
-                            x2 = (x + 8).toPx(context),
-                            y2 = endingHeight,
+                            x1 = xPx,
+                            y1 = viewMoreRepliesTextCenterY,
+                            x2 = (x + spacingWidth).toPx(context),
+                            y2 = viewMoreRepliesTextCenterY,
                         )
                         lineTo(
                             x = (x + 40).toPx(context),
-                            y = endingHeight,
+                            y = viewMoreRepliesTextCenterY,
                         )
                     }
                     drawPath(
                         path = path,
                         color = lineColor,
                         style = Stroke(
-                            width = 2f.toPx(context),
+                            width = strokeWidthPx,
                         )
+                    )
+                } else if (depthLinesUiState.expandRepliesButtonUiState == ExpandRepliesButtonUiState.PLUS) {
+                    // goes to the plus icon
+                    drawLine(
+                        color = lineColor,
+                        start = Offset(
+                            x = xPx,
+                            y = avatarCenterYPx,
+                        ),
+                        end = Offset(
+                            x = xPx,
+                            y = plusIconCenterYPx,
+                        ),
+                        strokeWidth = strokeWidthPx,
+                        cap = StrokeCap.Round
                     )
                 } else {
                     // goes to the next post
                     drawLine(
                         color = lineColor,
-                        start = Offset(x.toPx(context), 26f.toPx(context)),
-                        end = Offset(x.toPx(context), height),
-                        strokeWidth = 2f.toPx(context),
+                        start = Offset(
+                            x = xPx,
+                            y = avatarCenterYPx,
+                        ),
+                        end = Offset(
+                            x = xPx,
+                            y = height,
+                        ),
+                        strokeWidth = strokeWidthPx,
                         cap = StrokeCap.Round
                     )
                 }

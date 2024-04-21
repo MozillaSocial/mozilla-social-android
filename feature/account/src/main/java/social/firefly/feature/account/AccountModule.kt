@@ -23,6 +23,7 @@ val accountModule =
             postCardModule,
             navigationModule,
             analyticsModule,
+            postCardModule,
         )
 
         viewModel { parametersHolder ->

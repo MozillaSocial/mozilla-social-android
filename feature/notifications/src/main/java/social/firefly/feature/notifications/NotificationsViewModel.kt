@@ -39,7 +39,7 @@ class NotificationsViewModel(
     }
 
     val postCardDelegate by inject<PostCardDelegate> {
-        parametersOf(viewModelScope, FeedLocation.NOTIFICATIONS)
+        parametersOf(FeedLocation.NOTIFICATIONS)
     }
 
     private val loggedInUserAccountId = getLoggedInUserAccountId()

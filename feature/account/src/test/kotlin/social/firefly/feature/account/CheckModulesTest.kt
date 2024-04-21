@@ -21,6 +21,7 @@ class CheckModulesTest : KoinTest {
                 CoroutineScope::class,
                 AccountTimelineType::class,
                 FeedLocation::class,
+                kotlin.Function1::class,
             ),
         )
     }

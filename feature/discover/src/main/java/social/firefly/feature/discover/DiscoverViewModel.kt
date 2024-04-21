@@ -8,8 +8,13 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
+import org.koin.core.parameter.parametersOf
+import org.koin.java.KoinJavaComponent.inject
 import social.firefly.common.utils.edit
 import social.firefly.core.analytics.DiscoverAnalytics
+import social.firefly.core.analytics.FeedLocation
 import social.firefly.core.navigation.NavigationDestination
 import social.firefly.core.navigation.usecases.NavigateTo
 import social.firefly.core.repository.mastodon.TrendsRepository
@@ -35,8 +40,13 @@ class DiscoverViewModel(
     private val followHashTag: FollowHashTag,
     private val unfollowHashTag: UnfollowHashTag,
     hashtagsRemoteMediator: TrendingHashtagsRemoteMediator,
-    postCardDelegate: PostCardDelegate,
-) : ViewModel(), DiscoverInteractions, PostCardInteractions by postCardDelegate {
+) : ViewModel(), DiscoverInteractions, KoinComponent {
+
+    val postCardDelegate: PostCardDelegate by inject {
+        parametersOf(
+            FeedLocation.PROFILE,
+        )
+    }
 
     private val usersAccountId: String = getLoggedInUserAccountId()
 
@@ -51,7 +61,7 @@ class DiscoverViewModel(
                 pagingData.map { hashtag ->
                     hashtag.toPostCardUiState(
                         currentUserAccountId = usersAccountId,
-                        postCardInteractions = this,
+                        postCardInteractions = postCardDelegate,
                     )
                 }
             })

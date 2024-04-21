@@ -43,7 +43,7 @@ class HashTagViewModel(
     }
 
     val postCardDelegate: PostCardDelegate by inject {
-        parametersOf(viewModelScope, FeedLocation.HASHTAG)
+        parametersOf(FeedLocation.HASHTAG)
     }
 
     private var getHashTagJob: Job? = null

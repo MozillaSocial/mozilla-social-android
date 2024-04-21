@@ -57,7 +57,6 @@ class SearchViewModel(
 
     val postCardDelegate: PostCardDelegate by inject {
         parametersOf(
-            viewModelScope,
             FeedLocation.SEARCH,
         )
     }

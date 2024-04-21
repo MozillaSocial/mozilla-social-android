@@ -2,6 +2,7 @@ package social.firefly.core.ui.postcard
 
 import kotlinx.coroutines.launch
 import social.firefly.common.appscope.AppScope
+import social.firefly.core.analytics.FeedLocation
 import social.firefly.core.analytics.PostCardAnalytics
 import social.firefly.core.model.Attachment
 import social.firefly.core.navigation.NavigationDestination
@@ -18,6 +19,8 @@ import social.firefly.core.usecase.mastodon.status.VoteOnPoll
 import timber.log.Timber
 
 class PostCardDelegate(
+    feedLocation: FeedLocation,
+    private val onHideRepliesClickedCallback: (statusId: String) -> Unit = {},
     private val appScope: AppScope,
     private val navigateTo: NavigateTo,
     private val openLink: OpenLink,
@@ -32,7 +35,7 @@ class PostCardDelegate(
     private val analytics: PostCardAnalytics,
 ) : PostCardInteractions {
 
-    private val baseAnalyticsIdentifier: String = ""
+    private val baseAnalyticsIdentifier: String = feedLocation.baseAnalyticsIdentifier
     override fun onVoteClicked(
         pollId: String,
         choices: List<Int>,
@@ -190,5 +193,9 @@ class PostCardDelegate(
                 startIndex = index,
             )
         )
+    }
+
+    override fun onHideRepliesClicked(statusId: String) {
+        onHideRepliesClickedCallback(statusId)
     }
 }
