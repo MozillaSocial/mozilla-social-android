@@ -19,6 +19,7 @@ class CheckModulesTest : KoinTest {
                 CoroutineDispatcher::class,
                 CoroutineScope::class,
                 FeedLocation::class,
+                kotlin.Function1::class,
             ),
         )
     }
