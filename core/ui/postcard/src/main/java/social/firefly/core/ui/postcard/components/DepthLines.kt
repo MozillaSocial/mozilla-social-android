@@ -46,20 +46,26 @@ internal fun DepthLines(
         val height = size.height
         if (postDepth >= startingDepth) {
 
-            val avatarCenterY = 26f
-            val avatarCenterYPx = avatarCenterY.toPx(context)
-            val plusIconCenterY = height - 26f.toPx(context)
-            val strokeWidth = 2f.toPx(context)
+            val avatarCenterYPx = 26f.toPx(context)
+            val plusIconCenterYPx = height - 26f.toPx(context)
+            val strokeWidthPx = 2f.toPx(context)
 
             // depth lines from other posts
             for (drawDepth in startingDepth until postDepth) {
                 val x = (spacingWidth * drawDepth).toFloat() + 1
+                val xPx = x.toPx(context)
                 if (depthLinesUiState.depthLines.contains(drawDepth)) {
                     drawLine(
                         color = lineColor,
-                        start = Offset(x.toPx(context), 0f.toPx(context)),
-                        end = Offset(x.toPx(context), height),
-                        strokeWidth = strokeWidth,
+                        start = Offset(
+                            x = xPx,
+                            y = 0f,
+                        ),
+                        end = Offset(
+                            x = xPx,
+                            y = height,
+                        ),
+                        strokeWidth = strokeWidthPx,
                     )
                 }
             }
@@ -68,11 +74,17 @@ internal fun DepthLines(
             if (postDepth > startingDepth) {
                 val drawDepth = postDepth - startingDepth
                 val x = (spacingWidth * drawDepth).toFloat() + 1
-                val curveStartY = avatarCenterY - spacingWidth
+                val curveStartY = avatarCenterYPx - spacingWidth.toFloat().toPx(context)
 
                 val path = Path().apply {
-                    moveTo(x.toPx(context), 0f.toPx(context))
-                    lineTo(x.toPx(context), curveStartY.toPx(context))
+                    moveTo(
+                        x = x.toPx(context),
+                        y = 0f.toPx(context)
+                    )
+                    lineTo(
+                        x = x.toPx(context),
+                        y = curveStartY
+                    )
                     quadraticBezierTo(
                         x1 = x.toPx(context),
                         y1 = avatarCenterYPx,
@@ -84,7 +96,7 @@ internal fun DepthLines(
                     path = path,
                     color = lineColor,
                     style = Stroke(
-                        width = strokeWidth,
+                        width = strokeWidthPx,
                     )
                 )
             }
@@ -123,25 +135,37 @@ internal fun DepthLines(
                         path = path,
                         color = lineColor,
                         style = Stroke(
-                            width = strokeWidth,
+                            width = strokeWidthPx,
                         )
                     )
                 } else if (depthLinesUiState.expandRepliesButtonUiState == ExpandRepliesButtonUiState.PLUS) {
                     // goes to the plus icon
                     drawLine(
                         color = lineColor,
-                        start = Offset(xPx, avatarCenterYPx),
-                        end = Offset(xPx, plusIconCenterY),
-                        strokeWidth = strokeWidth,
+                        start = Offset(
+                            x = xPx,
+                            y = avatarCenterYPx,
+                        ),
+                        end = Offset(
+                            x = xPx,
+                            y = plusIconCenterYPx,
+                        ),
+                        strokeWidth = strokeWidthPx,
                         cap = StrokeCap.Round
                     )
                 } else {
                     // goes to the next post
                     drawLine(
                         color = lineColor,
-                        start = Offset(xPx, avatarCenterYPx),
-                        end = Offset(xPx, height),
-                        strokeWidth = strokeWidth,
+                        start = Offset(
+                            x = xPx,
+                            y = avatarCenterYPx,
+                        ),
+                        end = Offset(
+                            x = xPx,
+                            y = height,
+                        ),
+                        strokeWidth = strokeWidthPx,
                         cap = StrokeCap.Round
                     )
                 }
