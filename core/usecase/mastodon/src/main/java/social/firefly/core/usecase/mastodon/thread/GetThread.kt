@@ -17,24 +17,9 @@ class GetThread internal constructor(
         statusId: String,
     ): Flow<Thread> =
         flow {
-            // emit the original status first since it should be in the database already
-            val mainStatus = statusRepository.getStatusLocal(statusId)
-            mainStatus?.let {
-                emit(
-                    Thread(
-                        status = it,
-                        context = Context(
-                            emptyList(),
-                            emptyList(),
-                        )
-                    )
-                )
-            }
-
             val context = statusRepository.getStatusContext(statusId)
             val allStatuses = buildList {
                 addAll(context.ancestors)
-                mainStatus?.let { add(it) }
                 addAll(context.descendants)
             }
             saveStatusToDatabase(
@@ -47,21 +32,20 @@ class GetThread internal constructor(
                 }
             )
 
-            val returnedFlow = combine(
+            emitAll(
+                combine(
                 statusRepository.getStatusesFlow(listOf(statusId)),
                 statusRepository.getStatusesFlow(context.ancestors.map { it.statusId }),
                 statusRepository.getStatusesFlow(context.descendants.map { it.statusId }),
-            ) { rootStatus, ancestors, descendants ->
-                Thread(
-                    status = rootStatus.first(),
-                    context = Context(
-                        ancestors = ancestors,
-                        descendants = descendants,
+                ) { rootStatus, ancestors, descendants ->
+                    Thread(
+                        status = rootStatus.first(),
+                        context = Context(
+                            ancestors = ancestors,
+                            descendants = descendants,
+                        )
                     )
-                )
-            }
-
-
-            emitAll(returnedFlow)
+                }
+            )
         }
 }
