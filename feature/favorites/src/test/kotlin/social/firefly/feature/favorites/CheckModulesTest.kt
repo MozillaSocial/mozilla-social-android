@@ -7,6 +7,7 @@ import org.koin.core.annotation.KoinExperimentalAPI
 import org.koin.test.KoinTest
 import org.koin.test.verify.verify
 import social.firefly.core.analytics.FeedLocation
+import social.firefly.core.model.AccountTimelineType
 import kotlin.test.Test
 
 class CheckModulesTest : KoinTest {
@@ -20,6 +21,7 @@ class CheckModulesTest : KoinTest {
                 CoroutineScope::class,
                 FeedLocation::class,
                 kotlin.Function1::class,
+                AccountTimelineType::class,
             ),
         )
     }
