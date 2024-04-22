@@ -23,7 +23,6 @@ val pagingModule = module {
     factoryOf(::HomeTimelineRemoteMediator)
     factoryOf(::LocalTimelineRemoteMediator)
     factoryOf(::FederatedTimelineRemoteMediator)
-    singleOf(::RefreshLocalTimeline)
     factoryOf(::FavoritesRemoteMediator)
     factoryOf(::BlocksListRemoteMediator)
     factoryOf(::MutesListRemoteMediator)

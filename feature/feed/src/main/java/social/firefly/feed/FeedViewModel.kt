@@ -25,9 +25,6 @@ import social.firefly.core.ui.postcard.PostCardDelegate
 import social.firefly.core.ui.postcard.toPostCardUiState
 import social.firefly.core.usecase.mastodon.account.GetLoggedInUserAccountId
 
-/**
- * Produces a flow of pages of statuses for a feed
- */
 @OptIn(ExperimentalPagingApi::class)
 class FeedViewModel(
     private val analytics: FeedAnalytics,
