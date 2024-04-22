@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalPagingApi::class)
 
-package social.firefly.core.repository.paging
+package social.firefly.core.repository.paging.pagers
 
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.PagingSource
@@ -10,7 +10,7 @@ import social.firefly.core.repository.common.PageItem
 import social.firefly.core.repository.mastodon.DatabaseDelegate
 import social.firefly.core.repository.mastodon.TrendingStatusRepository
 import social.firefly.core.repository.mastodon.model.status.toExternalModel
-import social.firefly.core.repository.paging.common.IndexBasedPager
+import social.firefly.core.repository.paging.IndexBasedPager
 import social.firefly.core.usecase.mastodon.status.SaveStatusToDatabase
 
 class TrendingStatusPager(

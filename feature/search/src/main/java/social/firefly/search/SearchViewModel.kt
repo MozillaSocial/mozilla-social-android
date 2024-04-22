@@ -19,9 +19,9 @@ import social.firefly.core.analytics.SearchAnalytics
 import social.firefly.core.navigation.NavigationDestination
 import social.firefly.core.navigation.usecases.NavigateTo
 import social.firefly.core.repository.mastodon.SearchRepository
-import social.firefly.core.repository.paging.SearchAccountsRemoteMediator
-import social.firefly.core.repository.paging.SearchStatusesRemoteMediator
-import social.firefly.core.repository.paging.SearchedHashTagsRemoteMediator
+import social.firefly.core.repository.paging.remotemediators.SearchAccountsRemoteMediator
+import social.firefly.core.repository.paging.remotemediators.SearchStatusesRemoteMediator
+import social.firefly.core.repository.paging.remotemediators.SearchedHashTagsRemoteMediator
 import social.firefly.core.ui.accountfollower.toAccountFollowerUiState
 import social.firefly.core.ui.common.following.FollowStatus
 import social.firefly.core.ui.hashtagcard.HashTagCardDelegate
@@ -31,8 +31,6 @@ import social.firefly.core.ui.postcard.toPostCardUiState
 import social.firefly.core.usecase.mastodon.account.FollowAccount
 import social.firefly.core.usecase.mastodon.account.GetLoggedInUserAccountId
 import social.firefly.core.usecase.mastodon.account.UnfollowAccount
-import social.firefly.core.usecase.mastodon.hashtag.FollowHashTag
-import social.firefly.core.usecase.mastodon.hashtag.UnfollowHashTag
 import social.firefly.core.usecase.mastodon.search.SearchAll
 import timber.log.Timber
 

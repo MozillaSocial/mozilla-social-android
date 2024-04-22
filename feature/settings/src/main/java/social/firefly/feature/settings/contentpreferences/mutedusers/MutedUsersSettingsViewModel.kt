@@ -14,7 +14,7 @@ import social.firefly.core.analytics.SettingsAnalytics
 import social.firefly.core.model.MutedUser
 import social.firefly.core.navigation.usecases.NavigateToAccount
 import social.firefly.core.repository.mastodon.MutesRepository
-import social.firefly.core.repository.paging.MutesListRemoteMediator
+import social.firefly.core.repository.paging.remotemediators.MutesListRemoteMediator
 import social.firefly.core.ui.common.account.quickview.toQuickViewUiState
 import social.firefly.core.ui.common.account.toggleablelist.ToggleableAccountListItemState
 import social.firefly.core.usecase.mastodon.account.MuteAccount

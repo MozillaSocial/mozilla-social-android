@@ -18,9 +18,9 @@ import social.firefly.core.analytics.FeedAnalytics
 import social.firefly.core.analytics.FeedLocation
 import social.firefly.core.datastore.UserPreferencesDatastore
 import social.firefly.core.repository.mastodon.TimelineRepository
-import social.firefly.core.repository.paging.FederatedTimelineRemoteMediator
-import social.firefly.core.repository.paging.HomeTimelineRemoteMediator
-import social.firefly.core.repository.paging.LocalTimelineRemoteMediator
+import social.firefly.core.repository.paging.remotemediators.FederatedTimelineRemoteMediator
+import social.firefly.core.repository.paging.remotemediators.HomeTimelineRemoteMediator
+import social.firefly.core.repository.paging.remotemediators.LocalTimelineRemoteMediator
 import social.firefly.core.ui.postcard.PostCardDelegate
 import social.firefly.core.ui.postcard.toPostCardUiState
 import social.firefly.core.usecase.mastodon.account.GetLoggedInUserAccountId

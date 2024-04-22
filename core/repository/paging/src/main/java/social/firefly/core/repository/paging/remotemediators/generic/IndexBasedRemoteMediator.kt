@@ -1,4 +1,4 @@
-package social.firefly.core.repository.paging.common
+package social.firefly.core.repository.paging.remotemediators.generic
 
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType

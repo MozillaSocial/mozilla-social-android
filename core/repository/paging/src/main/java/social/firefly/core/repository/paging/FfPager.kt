@@ -1,4 +1,4 @@
-package social.firefly.core.repository.paging.common
+package social.firefly.core.repository.paging
 
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
@@ -10,6 +10,7 @@ import androidx.paging.map
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import social.firefly.core.repository.common.PageItem
+import social.firefly.core.repository.paging.remotemediators.generic.IndexBasedRemoteMediator
 
 interface FfPager<T : Any, KEY: Any, DBO: Any> {
 

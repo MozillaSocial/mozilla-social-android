@@ -8,7 +8,6 @@ import social.firefly.core.analytics.analyticsModule
 import social.firefly.core.datastore.dataStoreModule
 import social.firefly.core.navigation.navigationModule
 import social.firefly.core.repository.mastodon.mastodonRepositoryModule
-import social.firefly.core.repository.paging.AccountTimelineRemoteMediator
 import social.firefly.core.ui.postcard.postCardModule
 import social.firefly.core.usecase.mastodon.mastodonUsecaseModule
 import social.firefly.feature.account.edit.EditAccountViewModel

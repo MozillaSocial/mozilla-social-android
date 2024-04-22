@@ -1,46 +1,43 @@
-package social.firefly.core.repository.paging
+package social.firefly.core.repository.paging.remotemediators
 
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import kotlinx.coroutines.delay
-import social.firefly.common.Rel
-import social.firefly.common.getMaxIdValue
-import social.firefly.core.database.model.entities.accountCollections.Follower
-import social.firefly.core.database.model.entities.accountCollections.FollowerWrapper
+import social.firefly.core.database.model.entities.accountCollections.BlockWrapper
+import social.firefly.core.model.paging.AccountPagingWrapper
 import social.firefly.core.repository.mastodon.AccountRepository
+import social.firefly.core.repository.mastodon.BlocksRepository
 import social.firefly.core.repository.mastodon.DatabaseDelegate
-import social.firefly.core.repository.mastodon.FollowersRepository
 import social.firefly.core.repository.mastodon.RelationshipRepository
+import social.firefly.core.repository.mastodon.model.status.toDatabaseBlock
 import timber.log.Timber
 
 @OptIn(ExperimentalPagingApi::class)
-class FollowersRemoteMediator(
+class BlocksListRemoteMediator(
     private val accountRepository: AccountRepository,
     private val databaseDelegate: DatabaseDelegate,
-    private val followersRepository: FollowersRepository,
     private val relationshipRepository: RelationshipRepository,
-    private val accountId: String,
-) : RemoteMediator<Int, FollowerWrapper>() {
+    private val blocksRepository: BlocksRepository,
+) : RemoteMediator<Int, BlockWrapper>() {
     private var nextKey: String? = null
     private var nextPositionIndex = 0
 
     @Suppress("ReturnCount")
     override suspend fun load(
         loadType: LoadType,
-        state: PagingState<Int, FollowerWrapper>,
+        state: PagingState<Int, BlockWrapper>,
     ): MediatorResult {
         return try {
             var pageSize: Int = state.config.pageSize
-            val response =
+            val response: AccountPagingWrapper =
                 when (loadType) {
                     LoadType.REFRESH -> {
                         pageSize = state.config.initialLoadSize
-                        accountRepository.getAccountFollowers(
-                            accountId = accountId,
-                            olderThanId = null,
-                            loadSize = pageSize,
+                        blocksRepository.getBlocks(
+                            maxId = null,
+                            limit = pageSize,
                         )
                     }
 
@@ -52,36 +49,32 @@ class FollowersRemoteMediator(
                         if (nextKey == null) {
                             return MediatorResult.Success(endOfPaginationReached = true)
                         }
-                        accountRepository.getAccountFollowers(
-                            accountId = accountId,
-                            olderThanId = nextKey,
-                            loadSize = pageSize,
+                        blocksRepository.getBlocks(
+                            maxId = nextKey,
+                            limit = pageSize,
                         )
                     }
                 }
 
-            val relationships = response.accounts.getRelationships(accountRepository)
+            val relationships =
+                accountRepository.getAccountRelationships(response.accounts.map { it.accountId })
 
             databaseDelegate.withTransaction {
                 if (loadType == LoadType.REFRESH) {
-                    followersRepository.deleteFollowers(accountId)
+                    blocksRepository.deleteAll()
                     nextPositionIndex = 0
                 }
 
                 accountRepository.insertAll(response.accounts)
                 relationshipRepository.insertAll(relationships)
-                followersRepository.insertAll(
+                blocksRepository.insertAll(
                     response.accounts.mapIndexed { index, account ->
-                        Follower(
-                            accountId = accountId,
-                            followerAccountId = account.accountId,
-                            position = nextPositionIndex + index,
-                        )
+                        account.toDatabaseBlock(position = nextPositionIndex + index)
                     },
                 )
             }
 
-            nextKey = response.pagingLinks?.getMaxIdValue()
+            nextKey = response.nextPage?.maxId
             nextPositionIndex += response.accounts.size
 
             // There seems to be some race condition for refreshes.  Subsequent pages do
@@ -96,15 +89,13 @@ class FollowersRemoteMediator(
             }
 
             @Suppress("KotlinConstantConditions")
-            MediatorResult.Success(
-                endOfPaginationReached =
-                when (loadType) {
-                    LoadType.PREPEND -> response.pagingLinks?.find { it.rel == Rel.PREV } == null
+            (MediatorResult.Success(
+                endOfPaginationReached = when (loadType) {
+                    LoadType.PREPEND -> response.prevPage == null
                     LoadType.REFRESH,
-                    LoadType.APPEND,
-                    -> response.pagingLinks?.find { it.rel == Rel.NEXT } == null
+                    LoadType.APPEND -> response.nextPage == null
                 },
-            )
+            ))
         } catch (e: Exception) {
             Timber.e(e)
             MediatorResult.Error(e)
@@ -115,4 +106,3 @@ class FollowersRemoteMediator(
         private const val REFRESH_DELAY = 200L
     }
 }
-

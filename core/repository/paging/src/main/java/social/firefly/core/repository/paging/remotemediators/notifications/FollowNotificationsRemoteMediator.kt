@@ -1,39 +1,43 @@
-package social.firefly.core.repository.paging
+package social.firefly.core.repository.paging.remotemediators.notifications
 
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import kotlinx.coroutines.delay
-import social.firefly.core.database.model.entities.hashtagCollections.TrendingHashTag
-import social.firefly.core.database.model.entities.hashtagCollections.TrendingHashTagWrapper
+import social.firefly.common.Rel
+import social.firefly.common.getMaxIdValue
+import social.firefly.core.database.model.entities.notificationCollections.FollowListNotification
+import social.firefly.core.database.model.entities.notificationCollections.FollowListNotificationWrapper
+import social.firefly.core.model.Notification
 import social.firefly.core.repository.mastodon.DatabaseDelegate
-import social.firefly.core.repository.mastodon.HashtagRepository
-import social.firefly.core.repository.mastodon.TrendingHashtagRepository
+import social.firefly.core.repository.mastodon.NotificationsRepository
+import social.firefly.core.usecase.mastodon.notification.SaveNotificationsToDatabase
 import timber.log.Timber
 
 @OptIn(ExperimentalPagingApi::class)
-class TrendingHashtagsRemoteMediator(
-    val repository: TrendingHashtagRepository,
-    val hashtagRepository: HashtagRepository,
-    val databaseDelegate: DatabaseDelegate,
-) : RemoteMediator<Int, TrendingHashTagWrapper>() {
-    private var nextPositionIndex = 0
+class FollowNotificationsRemoteMediator(
+    private val notificationsRepository: NotificationsRepository,
+    private val databaseDelegate: DatabaseDelegate,
+    private val saveNotificationsToDatabase: SaveNotificationsToDatabase,
+) : RemoteMediator<Int, FollowListNotificationWrapper>() {
+    private var nextKey: String? = null
 
+    @Suppress("ComplexMethod")
     override suspend fun load(
         loadType: LoadType,
-        state: PagingState<Int, TrendingHashTagWrapper>
+        state: PagingState<Int, FollowListNotificationWrapper>
     ): MediatorResult {
         return try {
             var pageSize: Int = state.config.pageSize
-            val hashtags =
+            val response =
                 when (loadType) {
                     LoadType.REFRESH -> {
-                        nextPositionIndex = 0
                         pageSize = state.config.initialLoadSize
-                        repository.getTrendingTags(
+                        notificationsRepository.getNotifications(
+                            maxId = null,
                             limit = pageSize,
-                            offset = nextPositionIndex,
+                            types = arrayOf(Notification.FollowRequest.VALUE),
                         )
                     }
 
@@ -42,29 +46,33 @@ class TrendingHashtagsRemoteMediator(
                     }
 
                     LoadType.APPEND -> {
-                        repository.getTrendingTags(
+                        if (nextKey == null) {
+                            return MediatorResult.Success(endOfPaginationReached = true)
+                        }
+                        notificationsRepository.getNotifications(
+                            maxId = nextKey,
                             limit = pageSize,
-                            offset = nextPositionIndex,
+                            types = arrayOf(Notification.FollowRequest.VALUE),
                         )
                     }
                 }
 
             databaseDelegate.withTransaction {
                 if (loadType == LoadType.REFRESH) {
-                    nextPositionIndex = 0
+                    notificationsRepository.deleteFollowNotificationsList()
                 }
-                hashtagRepository.insertAll(hashtags)
-                repository.insertAll(
-                    hashtags.mapIndexed { index, hashTag ->
-                        TrendingHashTag(
-                            hashTag.name,
-                            position = nextPositionIndex + index,
+
+                saveNotificationsToDatabase(response.notifications)
+                notificationsRepository.insertFollowNotifications(
+                    response.notifications.map {
+                        FollowListNotification(
+                            id = it.id,
                         )
                     }
                 )
             }
 
-            nextPositionIndex += hashtags.size
+            nextKey = response.pagingLinks?.getMaxIdValue()
 
             // There seems to be some race condition for refreshes.  Subsequent pages do
             // not get loaded because once we return a mediator result, the next append
@@ -78,12 +86,7 @@ class TrendingHashtagsRemoteMediator(
             }
 
             MediatorResult.Success(
-                endOfPaginationReached = when (loadType) {
-                    LoadType.REFRESH,
-                    LoadType.APPEND -> hashtags.isEmpty()
-
-                    else -> true
-                },
+                endOfPaginationReached = response.pagingLinks?.find { it.rel == Rel.NEXT } == null,
             )
         } catch (e: Exception) {
             Timber.e(e)
