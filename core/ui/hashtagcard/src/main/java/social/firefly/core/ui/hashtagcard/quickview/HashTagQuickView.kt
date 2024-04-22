@@ -1,4 +1,4 @@
-package social.firefly.core.ui.common.hashtag.quickview
+package social.firefly.core.ui.hashtagcard.quickview
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box

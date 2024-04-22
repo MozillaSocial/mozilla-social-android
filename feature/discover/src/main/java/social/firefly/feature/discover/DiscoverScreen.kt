@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -31,16 +30,18 @@ import social.firefly.core.designsystem.theme.FfSpacing
 import social.firefly.core.designsystem.utils.NoRipple
 import social.firefly.core.ui.common.FfSurface
 import social.firefly.core.ui.common.appbar.FfTopBar
-import social.firefly.core.ui.common.hashtag.HashtagInteractions
-import social.firefly.core.ui.common.hashtag.hashTagListItems
-import social.firefly.core.ui.common.hashtag.quickview.HashTagQuickViewUiState
+import social.firefly.core.ui.hashtagcard.HashTagInteractions
+import social.firefly.core.ui.hashtagcard.hashTagListItems
+import social.firefly.core.ui.hashtagcard.quickview.HashTagQuickViewUiState
+import social.firefly.core.ui.common.pullrefresh.PullRefreshLazyColumn
 import social.firefly.core.ui.common.search.FfSearchBar
 import social.firefly.core.ui.common.tabs.FfTab
 import social.firefly.core.ui.common.tabs.FfTabRow
 import social.firefly.core.ui.common.text.MediumTextLabel
 import social.firefly.core.ui.common.utils.PreviewTheme
 import social.firefly.core.ui.postcard.PostCardInteractions
-import social.firefly.core.ui.postcard.PostCardList
+import social.firefly.core.ui.postcard.PostCardUiState
+import social.firefly.core.ui.postcard.postListContent
 
 @Composable
 internal fun DiscoverScreen(viewModel: DiscoverViewModel = koinViewModel()) {
@@ -49,6 +50,7 @@ internal fun DiscoverScreen(viewModel: DiscoverViewModel = koinViewModel()) {
         uiState = uiState,
         discoverInteractions = viewModel,
         postCardInteractions = viewModel.postCardDelegate,
+        hashtagInteractions = viewModel.hashTagCardDelegate,
     )
 
     LaunchedEffect(Unit) {
@@ -62,8 +64,8 @@ private fun DiscoverScreen(
     uiState: DiscoverUiState,
     discoverInteractions: DiscoverInteractions,
     postCardInteractions: PostCardInteractions,
+    hashtagInteractions: HashTagInteractions,
 ) {
-    val searchField = stringResource(id = R.string.search_field)
     FfSurface(
         modifier = Modifier
             .fillMaxSize()
@@ -93,6 +95,7 @@ private fun DiscoverScreen(
                 )
                 NoRipple {
                     // invisible box that intercepts clicks
+                    val searchField = stringResource(id = R.string.search_field)
                     Box(
                         modifier = Modifier
                             .fillMaxSize()
@@ -107,6 +110,7 @@ private fun DiscoverScreen(
                 uiState = uiState,
                 discoverInteractions = discoverInteractions,
                 postCardInteractions = postCardInteractions,
+                hashtagInteractions = hashtagInteractions,
             )
         }
     }
@@ -117,6 +121,7 @@ private fun MainContent(
     uiState: DiscoverUiState,
     discoverInteractions: DiscoverInteractions,
     postCardInteractions: PostCardInteractions,
+    hashtagInteractions: HashTagInteractions,
 ) {
     Box {
         Column {
@@ -129,32 +134,18 @@ private fun MainContent(
                 is DiscoverTab.Hashtags -> {
                     Hashtags(
                         hashtags = uiState.selectedTab.pagingDataFlow,
-                        hashtagInteractions = discoverInteractions
+                        hashtagInteractions = hashtagInteractions
                     )
                 }
 
                 is DiscoverTab.Posts -> {
-                    PostCardList(
-                        posts = uiState.selectedTab.pagingDataFlow.collectAsLazyPagingItems(),
+                    Posts(
+                        posts = uiState.selectedTab.pagingDataFlow,
                         postCardInteractions = postCardInteractions,
                     )
                 }
             }
         }
-    }
-}
-
-@Composable
-private fun Hashtags(
-    hashtags: Flow<PagingData<HashTagQuickViewUiState>>,
-    hashtagInteractions: HashtagInteractions,
-) {
-    val feed = hashtags.collectAsLazyPagingItems()
-    LazyColumn {
-        hashTagListItems(
-            hashTagsFeed = feed,
-            hashtagInteractions = hashtagInteractions,
-        )
     }
 }
 
@@ -165,11 +156,12 @@ private fun Tabs(
 ) {
     val context = LocalContext.current
 
-    FfTabRow(selectedTabIndex = uiState.selectedTab.index) {
+    FfTabRow(
+        selectedTabIndex = uiState.tabs.indexOf(uiState.selectedTab)
+    ) {
         uiState.tabs.forEach { tab ->
             FfTab(
-                modifier =
-                Modifier
+                modifier = Modifier
                     .height(40.dp),
                 selected = uiState.selectedTab == tab,
                 onClick = { discoverInteractions.onTabClicked(tab) },
@@ -178,6 +170,38 @@ private fun Tabs(
                 },
             )
         }
+    }
+}
+
+@Composable
+private fun Hashtags(
+    hashtags: Flow<PagingData<HashTagQuickViewUiState>>,
+    hashtagInteractions: HashTagInteractions,
+) {
+    val feed = hashtags.collectAsLazyPagingItems()
+    PullRefreshLazyColumn(
+        lazyPagingItems = feed,
+    ) {
+        hashTagListItems(
+            hashTagsFeed = feed,
+            hashtagInteractions = hashtagInteractions,
+        )
+    }
+}
+
+@Composable
+private fun Posts(
+    posts: Flow<PagingData<PostCardUiState>>,
+    postCardInteractions: PostCardInteractions,
+) {
+    val feed = posts.collectAsLazyPagingItems()
+    PullRefreshLazyColumn(
+        lazyPagingItems = feed,
+    ) {
+        postListContent(
+            lazyPagingItems = feed,
+            postCardInteractions = postCardInteractions,
+        )
     }
 }
 

@@ -11,7 +11,6 @@ import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.koin.core.parameter.parametersOf
-import org.koin.java.KoinJavaComponent.inject
 import social.firefly.common.utils.edit
 import social.firefly.core.analytics.DiscoverAnalytics
 import social.firefly.core.analytics.FeedLocation
@@ -21,9 +20,9 @@ import social.firefly.core.repository.mastodon.TrendsRepository
 import social.firefly.core.repository.paging.TrendingHashtagsRemoteMediator
 import social.firefly.core.repository.paging.TrendingStatusPagingDataFlow
 import social.firefly.core.ui.common.following.FollowStatus
-import social.firefly.core.ui.common.hashtag.quickview.toHashTagQuickViewUiState
+import social.firefly.core.ui.hashtagcard.HashTagCardDelegate
+import social.firefly.core.ui.hashtagcard.quickview.toHashTagQuickViewUiState
 import social.firefly.core.ui.postcard.PostCardDelegate
-import social.firefly.core.ui.postcard.PostCardInteractions
 import social.firefly.core.ui.postcard.toPostCardUiState
 import social.firefly.core.usecase.mastodon.account.GetLoggedInUserAccountId
 import social.firefly.core.usecase.mastodon.hashtag.FollowHashTag
@@ -37,8 +36,6 @@ class DiscoverViewModel(
     trendingStatusPagingDataFlow: TrendingStatusPagingDataFlow,
     private val analytics: DiscoverAnalytics,
     private val navigateTo: NavigateTo,
-    private val followHashTag: FollowHashTag,
-    private val unfollowHashTag: UnfollowHashTag,
     hashtagsRemoteMediator: TrendingHashtagsRemoteMediator,
 ) : ViewModel(), DiscoverInteractions, KoinComponent {
 
@@ -48,15 +45,24 @@ class DiscoverViewModel(
         )
     }
 
+    val hashTagCardDelegate: HashTagCardDelegate by inject {
+        parametersOf(viewModelScope)
+    }
+
     private val usersAccountId: String = getLoggedInUserAccountId()
 
-    private val hashtags: DiscoverTab.Hashtags =
-        DiscoverTab.Hashtags(pagingDataFlow = trendsRepository.getPager(
+    private val hashtags: DiscoverTab.Hashtags = DiscoverTab.Hashtags(
+        pagingDataFlow = trendsRepository.getPager(
             remoteMediator = hashtagsRemoteMediator
-        ).map { pagingData -> pagingData.map { hashtag -> hashtag.toHashTagQuickViewUiState() } })
+        ).map { pagingData ->
+            pagingData.map { hashtag ->
+                hashtag.toHashTagQuickViewUiState()
+            }
+        }
+    )
 
-    private val posts: DiscoverTab.Posts =
-        DiscoverTab.Posts(trendingStatusPagingDataFlow.pagingDataFlow()
+    private val posts: DiscoverTab.Posts = DiscoverTab.Posts(
+        trendingStatusPagingDataFlow.pagingDataFlow()
             .map { pagingData ->
                 pagingData.map { hashtag ->
                     hashtag.toPostCardUiState(
@@ -64,7 +70,8 @@ class DiscoverViewModel(
                         postCardInteractions = postCardDelegate,
                     )
                 }
-            })
+            }
+    )
 
     private val _uiState = MutableStateFlow(
         DiscoverUiState(
@@ -73,18 +80,6 @@ class DiscoverViewModel(
         )
     )
     val uiState = _uiState.asStateFlow()
-
-    override fun onRetryClicked() {
-        // TODO@DA
-    }
-
-    override fun onRecommendationClicked(recommendationId: String) {
-        analytics.recommendationOpened(recommendationId)
-    }
-
-    override fun onShareClicked(recommendationId: String) {
-        analytics.recommendationShared(recommendationId)
-    }
 
     override fun onScreenViewed() {
         analytics.discoverScreenViewed()
@@ -100,32 +95,5 @@ class DiscoverViewModel(
                 selectedTab = tab
             )
         }
-    }
-
-    override fun onHashTagFollowClicked(name: String, followStatus: FollowStatus) {
-        viewModelScope.launch {
-            when (followStatus) {
-                FollowStatus.FOLLOWING,
-                FollowStatus.PENDING_REQUEST -> {
-                    try {
-                        unfollowHashTag(name)
-                    } catch (e: UnfollowHashTag.UnfollowFailedException) {
-                        Timber.e(e)
-                    }
-                }
-
-                FollowStatus.NOT_FOLLOWING -> {
-                    try {
-                        followHashTag(name)
-                    } catch (e: FollowHashTag.FollowFailedException) {
-                        Timber.e(e)
-                    }
-                }
-            }
-        }
-    }
-
-    override fun onHashtagClick(name: String) {
-        navigateTo(NavigationDestination.HashTag(name))
     }
 }
