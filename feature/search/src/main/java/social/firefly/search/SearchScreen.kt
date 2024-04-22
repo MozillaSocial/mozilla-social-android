@@ -63,7 +63,7 @@ import social.firefly.core.ui.common.appbar.FfCloseableTopAppBar
 import social.firefly.core.ui.common.divider.FfDivider
 import social.firefly.core.ui.common.error.GenericError
 import social.firefly.core.ui.common.following.FollowingButton
-import social.firefly.core.ui.common.hashtag.HashTagList
+import social.firefly.core.ui.hashtagcard.hashTagListItems
 import social.firefly.core.ui.common.loading.MaxSizeLoading
 import social.firefly.core.ui.common.paging.PagingLazyColumn
 import social.firefly.core.ui.common.search.FfSearchBar
@@ -256,13 +256,18 @@ private fun ListContent(
                 }
 
                 SearchTab.HASHTAGS -> {
-                    HashTagList(
-                        hashTagsFeed = hashTagFeed,
-                        noResultText = stringResource(id = R.string.search_empty),
-                        scrollState = hashTagScrollState,
-                        hashtagInteractions = searchInteractions,
-
-                    )
+                    hashTagFeed?.let { lazyPagingItems ->
+                        PagingLazyColumn(
+                            lazyPagingItems = lazyPagingItems,
+                            noResultText = stringResource(id = R.string.search_empty),
+                            listState = hashTagScrollState,
+                        ) {
+                            hashTagListItems(
+                                hashTagsFeed = lazyPagingItems,
+                                hashtagInteractions = searchInteractions,
+                            )
+                        }
+                    }
                 }
 
                 SearchTab.POSTS -> {

@@ -30,9 +30,9 @@ import social.firefly.core.designsystem.theme.FfSpacing
 import social.firefly.core.designsystem.utils.NoRipple
 import social.firefly.core.ui.common.FfSurface
 import social.firefly.core.ui.common.appbar.FfTopBar
-import social.firefly.core.ui.common.hashtag.HashtagInteractions
-import social.firefly.core.ui.common.hashtag.hashTagListItems
-import social.firefly.core.ui.common.hashtag.quickview.HashTagQuickViewUiState
+import social.firefly.core.ui.hashtagcard.HashtagInteractions
+import social.firefly.core.ui.hashtagcard.hashTagListItems
+import social.firefly.core.ui.hashtagcard.quickview.HashTagQuickViewUiState
 import social.firefly.core.ui.common.pullrefresh.PullRefreshLazyColumn
 import social.firefly.core.ui.common.search.FfSearchBar
 import social.firefly.core.ui.common.tabs.FfTab

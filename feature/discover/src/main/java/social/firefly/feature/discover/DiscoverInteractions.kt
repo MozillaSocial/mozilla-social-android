@@ -1,7 +1,7 @@
 package social.firefly.feature.discover
 
 import social.firefly.core.ui.common.following.FollowStatus
-import social.firefly.core.ui.common.hashtag.HashtagInteractions
+import social.firefly.core.ui.hashtagcard.HashtagInteractions
 
 interface DiscoverInteractions: HashtagInteractions {
     fun onScreenViewed()

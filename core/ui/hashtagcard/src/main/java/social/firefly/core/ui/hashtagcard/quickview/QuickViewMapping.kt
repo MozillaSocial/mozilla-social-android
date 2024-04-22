@@ -1,4 +1,4 @@
-package social.firefly.core.ui.common.hashtag.quickview
+package social.firefly.core.ui.hashtagcard.quickview
 
 import social.firefly.common.utils.StringFactory
 import social.firefly.core.model.HashTag

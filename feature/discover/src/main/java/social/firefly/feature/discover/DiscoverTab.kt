@@ -3,7 +3,7 @@ package social.firefly.feature.discover
 import androidx.paging.PagingData
 import kotlinx.coroutines.flow.Flow
 import social.firefly.common.utils.StringFactory
-import social.firefly.core.ui.common.hashtag.quickview.HashTagQuickViewUiState
+import social.firefly.core.ui.hashtagcard.quickview.HashTagQuickViewUiState
 import social.firefly.core.ui.postcard.PostCardUiState
 
 sealed class DiscoverTab(

@@ -24,7 +24,7 @@ import social.firefly.core.repository.paging.SearchStatusesRemoteMediator
 import social.firefly.core.repository.paging.SearchedHashTagsRemoteMediator
 import social.firefly.core.ui.accountfollower.toAccountFollowerUiState
 import social.firefly.core.ui.common.following.FollowStatus
-import social.firefly.core.ui.common.hashtag.quickview.toHashTagQuickViewUiState
+import social.firefly.core.ui.hashtagcard.quickview.toHashTagQuickViewUiState
 import social.firefly.core.ui.postcard.PostCardDelegate
 import social.firefly.core.ui.postcard.toPostCardUiState
 import social.firefly.core.usecase.mastodon.account.FollowAccount

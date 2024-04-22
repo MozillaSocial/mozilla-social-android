@@ -20,7 +20,7 @@ import social.firefly.core.repository.mastodon.TrendsRepository
 import social.firefly.core.repository.paging.TrendingHashtagsRemoteMediator
 import social.firefly.core.repository.paging.TrendingStatusPagingDataFlow
 import social.firefly.core.ui.common.following.FollowStatus
-import social.firefly.core.ui.common.hashtag.quickview.toHashTagQuickViewUiState
+import social.firefly.core.ui.hashtagcard.quickview.toHashTagQuickViewUiState
 import social.firefly.core.ui.postcard.PostCardDelegate
 import social.firefly.core.ui.postcard.toPostCardUiState
 import social.firefly.core.usecase.mastodon.account.GetLoggedInUserAccountId

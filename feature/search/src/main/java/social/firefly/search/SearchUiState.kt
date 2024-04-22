@@ -7,7 +7,7 @@ import social.firefly.core.model.wrappers.DetailedAccountWrapper
 import social.firefly.core.ui.accountfollower.AccountFollowerUiState
 import social.firefly.core.ui.common.account.quickview.AccountQuickViewUiState
 import social.firefly.core.ui.common.following.FollowStatus
-import social.firefly.core.ui.common.hashtag.quickview.HashTagQuickViewUiState
+import social.firefly.core.ui.hashtagcard.quickview.HashTagQuickViewUiState
 import social.firefly.core.ui.postcard.PostCardUiState
 
 data class SearchUiState(

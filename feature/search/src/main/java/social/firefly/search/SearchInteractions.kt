@@ -1,7 +1,7 @@
 package social.firefly.search
 
 import social.firefly.core.ui.common.following.FollowStatus
-import social.firefly.core.ui.common.hashtag.HashtagInteractions
+import social.firefly.core.ui.hashtagcard.HashtagInteractions
 interface SearchInteractions: HashtagInteractions {
     fun onQueryTextChanged(text: String)
     fun onSearchClicked()

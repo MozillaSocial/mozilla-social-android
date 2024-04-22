@@ -19,6 +19,7 @@ dependencies {
     implementation(project(":core:usecase:mastodon"))
     implementation(project(":core:ui:postcard"))
     implementation(project(":core:ui:accountfollower"))
+    implementation(project(":core:ui:hashtagcard"))
     implementation(project(":core:analytics"))
 
     implementation(libs.androidx.navigation.compose)
