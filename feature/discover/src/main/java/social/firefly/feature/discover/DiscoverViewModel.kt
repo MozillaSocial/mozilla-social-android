@@ -15,8 +15,7 @@ import social.firefly.core.analytics.DiscoverAnalytics
 import social.firefly.core.analytics.FeedLocation
 import social.firefly.core.navigation.NavigationDestination
 import social.firefly.core.navigation.usecases.NavigateTo
-import social.firefly.core.repository.mastodon.TrendingHashtagRepository
-import social.firefly.core.repository.paging.remotemediators.TrendingHashtagsRemoteMediator
+import social.firefly.core.repository.paging.pagers.TrendingHashTagPager
 import social.firefly.core.repository.paging.pagers.TrendingStatusPager
 import social.firefly.core.ui.hashtagcard.HashTagCardDelegate
 import social.firefly.core.ui.hashtagcard.quickview.toHashTagQuickViewUiState
@@ -27,11 +26,10 @@ import social.firefly.core.usecase.mastodon.account.GetLoggedInUserAccountId
 @OptIn(ExperimentalPagingApi::class)
 class DiscoverViewModel(
     getLoggedInUserAccountId: GetLoggedInUserAccountId,
-    trendingHashtagRepository: TrendingHashtagRepository,
     trendingStatusPager: TrendingStatusPager,
     private val analytics: DiscoverAnalytics,
     private val navigateTo: NavigateTo,
-    hashtagsRemoteMediator: TrendingHashtagsRemoteMediator,
+    trendingHashTagPager: TrendingHashTagPager,
 ) : ViewModel(), DiscoverInteractions, KoinComponent {
 
     val postCardDelegate: PostCardDelegate by inject {
@@ -47,13 +45,12 @@ class DiscoverViewModel(
     private val usersAccountId: String = getLoggedInUserAccountId()
 
     private val hashtags: DiscoverTab.Hashtags = DiscoverTab.Hashtags(
-        pagingDataFlow = trendingHashtagRepository.getPager(
-            remoteMediator = hashtagsRemoteMediator
-        ).map { pagingData ->
-            pagingData.map { hashtag ->
-                hashtag.toHashTagQuickViewUiState()
+        pagingDataFlow = trendingHashTagPager.build()
+            .map { pagingData ->
+                pagingData.map { hashtag ->
+                    hashtag.toHashTagQuickViewUiState()
+                }
             }
-        }
     )
 
     private val posts: DiscoverTab.Posts = DiscoverTab.Posts(

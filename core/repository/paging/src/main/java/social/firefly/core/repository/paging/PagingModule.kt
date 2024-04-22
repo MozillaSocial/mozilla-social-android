@@ -5,6 +5,7 @@ import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.module
 import social.firefly.core.datastore.dataStoreModule
 import social.firefly.core.repository.mastodon.mastodonRepositoryModule
+import social.firefly.core.repository.paging.pagers.TrendingHashTagPager
 import social.firefly.core.repository.paging.pagers.TrendingStatusPager
 import social.firefly.core.repository.paging.remotemediators.notifications.AllNotificationsRemoteMediator
 import social.firefly.core.repository.paging.remotemediators.notifications.FollowNotificationsRemoteMediator
@@ -22,7 +23,6 @@ import social.firefly.core.repository.paging.remotemediators.MutesListRemoteMedi
 import social.firefly.core.repository.paging.remotemediators.SearchAccountsRemoteMediator
 import social.firefly.core.repository.paging.remotemediators.SearchStatusesRemoteMediator
 import social.firefly.core.repository.paging.remotemediators.SearchedHashTagsRemoteMediator
-import social.firefly.core.repository.paging.remotemediators.TrendingHashtagsRemoteMediator
 import social.firefly.core.usecase.mastodon.mastodonUsecaseModule
 
 @OptIn(ExperimentalPagingApi::class)
@@ -114,6 +114,6 @@ val pagingModule = module {
         )
     }
 
-    factoryOf(::TrendingHashtagsRemoteMediator)
     factoryOf(::TrendingStatusPager)
+    factoryOf(::TrendingHashTagPager)
 }

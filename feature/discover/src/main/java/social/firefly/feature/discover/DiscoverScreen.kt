@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -22,9 +24,8 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.paging.PagingData
+import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import kotlinx.coroutines.flow.Flow
 import org.koin.androidx.compose.koinViewModel
 import social.firefly.core.designsystem.theme.FfSpacing
 import social.firefly.core.designsystem.utils.NoRipple
@@ -130,17 +131,29 @@ private fun MainContent(
                 discoverInteractions = discoverInteractions,
             )
 
+            val hashTagLazyPagingItems = (uiState.tabs.find { it is DiscoverTab.Hashtags } as DiscoverTab.Hashtags)
+                .pagingDataFlow
+                .collectAsLazyPagingItems()
+            val hashTagListState = rememberLazyListState()
+
+            val postsLazyPagingItems = (uiState.tabs.find { it is DiscoverTab.Posts } as DiscoverTab.Posts)
+                .pagingDataFlow
+                .collectAsLazyPagingItems()
+            val postListState = rememberLazyListState()
+
             when (uiState.selectedTab) {
                 is DiscoverTab.Hashtags -> {
                     Hashtags(
-                        hashtags = uiState.selectedTab.pagingDataFlow,
-                        hashtagInteractions = hashtagInteractions
+                        feed = hashTagLazyPagingItems,
+                        listState = hashTagListState,
+                        hashtagInteractions = hashtagInteractions,
                     )
                 }
 
                 is DiscoverTab.Posts -> {
                     Posts(
-                        posts = uiState.selectedTab.pagingDataFlow,
+                        feed = postsLazyPagingItems,
+                        listState = postListState,
                         postCardInteractions = postCardInteractions,
                     )
                 }
@@ -175,12 +188,13 @@ private fun Tabs(
 
 @Composable
 private fun Hashtags(
-    hashtags: Flow<PagingData<HashTagQuickViewUiState>>,
+    feed: LazyPagingItems<HashTagQuickViewUiState>,
+    listState: LazyListState,
     hashtagInteractions: HashTagInteractions,
 ) {
-    val feed = hashtags.collectAsLazyPagingItems()
     PullRefreshLazyColumn(
         lazyPagingItems = feed,
+        listState = listState,
     ) {
         hashTagListItems(
             hashTagsFeed = feed,
@@ -191,12 +205,13 @@ private fun Hashtags(
 
 @Composable
 private fun Posts(
-    posts: Flow<PagingData<PostCardUiState>>,
+    feed: LazyPagingItems<PostCardUiState>,
+    listState: LazyListState,
     postCardInteractions: PostCardInteractions,
 ) {
-    val feed = posts.collectAsLazyPagingItems()
     PullRefreshLazyColumn(
         lazyPagingItems = feed,
+        listState = listState,
     ) {
         postListContent(
             lazyPagingItems = feed,
