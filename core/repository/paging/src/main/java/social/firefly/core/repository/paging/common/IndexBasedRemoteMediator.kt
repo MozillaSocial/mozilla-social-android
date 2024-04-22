@@ -5,21 +5,17 @@ import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import kotlinx.coroutines.delay
-import social.firefly.core.repository.common.FFLocalSource
-import social.firefly.core.repository.common.FFRemoteSource
 import social.firefly.core.repository.common.PageItem
-
 import timber.log.Timber
 
-/**
- *
- */
 @OptIn(ExperimentalPagingApi::class)
-class FfRemoteMediator<T : Any, DBO : Any>(
-    private val localSource: FFLocalSource<T>,
-    private val remoteSource: FFRemoteSource<T>,
+class IndexBasedRemoteMediator<T : Any, DBO : Any>(
+    private val saveLocally: suspend (items: List<PageItem<T>>) -> Unit,
+    private val getRemotely: suspend (limit: Int, offset: Int) -> List<T>
 ) : RemoteMediator<Int, DBO>() {
+
     private var nextPositionIndex = 0
+
     @Suppress("ReturnCount")
     override suspend fun load(
         loadType: LoadType,
@@ -34,9 +30,9 @@ class FfRemoteMediator<T : Any, DBO : Any>(
 
                         pageSize = state.config.initialLoadSize
 
-                        remoteSource.getRemotely(
-                            limit = pageSize,
-                            offset = nextPositionIndex,
+                        getRemotely(
+                            pageSize,
+                            nextPositionIndex,
                         ).mapIndexed { index, dbo ->
                             PageItem(position = index + nextPositionIndex, item = dbo)
                         }
@@ -47,9 +43,9 @@ class FfRemoteMediator<T : Any, DBO : Any>(
                     }
 
                     LoadType.APPEND -> {
-                        remoteSource.getRemotely(
-                            limit = pageSize,
-                            offset = nextPositionIndex,
+                        getRemotely(
+                            pageSize,
+                            nextPositionIndex,
                         ).mapIndexed { index, dbo ->
                             PageItem(position = index + nextPositionIndex, item = dbo)
                         }
@@ -60,7 +56,7 @@ class FfRemoteMediator<T : Any, DBO : Any>(
                 nextPositionIndex = 0
             }
 
-            localSource.saveLocally(currentPage)
+            saveLocally(currentPage)
 
             nextPositionIndex += currentPage.size
 
