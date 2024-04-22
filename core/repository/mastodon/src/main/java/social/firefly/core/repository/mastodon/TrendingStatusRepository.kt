@@ -5,7 +5,7 @@ import social.firefly.core.database.dao.TrendingStatusDao
 import social.firefly.core.database.model.entities.statusCollections.DbTrendingStatus
 import social.firefly.core.model.Status
 import social.firefly.core.network.mastodon.TrendsApi
-import social.firefly.core.repository.common.PageItem
+import social.firefly.core.model.PageItem
 import social.firefly.core.repository.mastodon.model.status.toExternalModel
 
 @ExperimentalPagingApi

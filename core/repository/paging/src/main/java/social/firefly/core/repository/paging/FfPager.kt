@@ -9,7 +9,7 @@ import androidx.paging.RemoteMediator
 import androidx.paging.map
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import social.firefly.core.repository.common.PageItem
+import social.firefly.core.model.PageItem
 import social.firefly.core.repository.paging.remotemediators.generic.IndexBasedRemoteMediator
 
 interface FfPager<T : Any, KEY: Any, DBO: Any> {

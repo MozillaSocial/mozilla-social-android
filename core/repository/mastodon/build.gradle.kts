@@ -13,7 +13,6 @@ dependencies {
     implementation(project(":core:datastore"))
     implementation(project(":core:model"))
     implementation(project(":core:network:mastodon"))
-    implementation(project(":core:repository:common"))
 
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.kotlinx.datetime)

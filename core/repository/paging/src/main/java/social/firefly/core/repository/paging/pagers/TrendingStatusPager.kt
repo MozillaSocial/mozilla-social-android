@@ -6,7 +6,7 @@ import androidx.paging.ExperimentalPagingApi
 import androidx.paging.PagingSource
 import social.firefly.core.database.model.entities.statusCollections.TrendingStatusWrapper
 import social.firefly.core.model.Status
-import social.firefly.core.repository.common.PageItem
+import social.firefly.core.model.PageItem
 import social.firefly.core.repository.mastodon.DatabaseDelegate
 import social.firefly.core.repository.mastodon.TrendingStatusRepository
 import social.firefly.core.repository.mastodon.model.status.toExternalModel

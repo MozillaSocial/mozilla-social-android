@@ -13,7 +13,7 @@ import social.firefly.core.database.model.entities.hashtagCollections.TrendingHa
 import social.firefly.core.database.model.entities.hashtagCollections.TrendingHashTagWrapper
 import social.firefly.core.model.HashTag
 import social.firefly.core.network.mastodon.TrendsApi
-import social.firefly.core.repository.common.PageItem
+import social.firefly.core.model.PageItem
 import social.firefly.core.repository.mastodon.model.hashtag.toExternalModel
 
 class TrendingHashtagRepository internal constructor(
