@@ -30,18 +30,6 @@ val pagingModule = module {
     factoryOf(::FollowNotificationsRemoteMediator)
 
     factory {
-        RefreshAccountTimeline(
-            accountRepository = get(),
-            saveStatusToDatabase = get(),
-            databaseDelegate = get(),
-            timelineRepository = get(),
-            getInReplyToAccountNames = get(),
-            accountId = it[0],
-            timelineType = it[1],
-        )
-    }
-
-    factory {
         FollowersRemoteMediator(
             accountRepository = get(),
             databaseDelegate = get(),
@@ -97,6 +85,18 @@ val pagingModule = module {
             searchRepository = get(),
             hashtagRepository = get(),
             query = parametersHolder[0],
+        )
+    }
+
+    factory { parametersHolder ->
+        AccountTimelineRemoteMediator(
+            accountRepository = get(),
+            saveStatusToDatabase = get(),
+            databaseDelegate = get(),
+            timelineRepository = get(),
+            getInReplyToAccountNames = get(),
+            accountId = parametersHolder[0],
+            timelineType = parametersHolder[1],
         )
     }
 
