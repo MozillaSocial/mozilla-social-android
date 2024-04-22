@@ -168,14 +168,21 @@ private fun ThreadList(
 
         items(
             count = statuses.descendants.count(),
-            key = { statuses.descendants[it].statusId },
+            key = { statuses.descendants[it].id },
         ) { index ->
-            val item = statuses.descendants[index]
-            PostCardListItem(
-                uiState = item,
-                postCardInteractions = postCardDelegate,
-                showDivider = threadType != ThreadType.TREE,
-            )
+            when (val item = statuses.descendants[index]) {
+                is ThreadDescendant.PostCard -> {
+                    PostCardListItem(
+                        uiState = item.uiState,
+                        postCardInteractions = postCardDelegate,
+                        showDivider = threadType != ThreadType.TREE,
+                    )
+                }
+                is ThreadDescendant.ViewMore -> {
+
+                }
+            }
+
         }
     }
 }
