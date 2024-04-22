@@ -11,7 +11,7 @@ import org.koin.core.component.inject
 import org.koin.core.parameter.parametersOf
 import social.firefly.core.analytics.FeedLocation
 import social.firefly.core.repository.mastodon.FavoritesRepository
-import social.firefly.core.repository.paging.FavoritesRemoteMediator
+import social.firefly.core.repository.paging.remotemediators.FavoritesRemoteMediator
 import social.firefly.core.ui.postcard.PostCardDelegate
 import social.firefly.core.ui.postcard.toPostCardUiState
 import social.firefly.core.usecase.mastodon.account.GetLoggedInUserAccountId

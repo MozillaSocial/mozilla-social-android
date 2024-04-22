@@ -1,32 +1,30 @@
-package social.firefly.core.repository.paging
+package social.firefly.core.repository.paging.remotemediators
 
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import kotlinx.coroutines.delay
-import social.firefly.core.database.model.entities.statusCollections.SearchedStatusWrapper
+import social.firefly.core.database.model.entities.hashtagCollections.SearchedHashTagWrapper
 import social.firefly.core.model.SearchType
 import social.firefly.core.repository.mastodon.DatabaseDelegate
+import social.firefly.core.repository.mastodon.HashtagRepository
 import social.firefly.core.repository.mastodon.SearchRepository
-import social.firefly.core.repository.mastodon.model.search.toSearchedStatus
-import social.firefly.core.usecase.mastodon.status.GetInReplyToAccountNames
-import social.firefly.core.usecase.mastodon.status.SaveStatusToDatabase
+import social.firefly.core.repository.mastodon.model.search.toSearchedHashTags
 import timber.log.Timber
 
 @OptIn(ExperimentalPagingApi::class)
-class SearchStatusesRemoteMediator(
+class SearchedHashTagsRemoteMediator(
     private val searchRepository: SearchRepository,
     private val databaseDelegate: DatabaseDelegate,
-    private val saveStatusToDatabase: SaveStatusToDatabase,
-    private val getInReplyToAccountNames: GetInReplyToAccountNames,
+    private val hashtagRepository: HashtagRepository,
     private val query: String,
-) : RemoteMediator<Int, SearchedStatusWrapper>() {
+) : RemoteMediator<Int, SearchedHashTagWrapper>() {
     private var nextPositionIndex = 0
 
     override suspend fun load(
         loadType: LoadType,
-        state: PagingState<Int, SearchedStatusWrapper>
+        state: PagingState<Int, SearchedHashTagWrapper>
     ): MediatorResult {
         return try {
             var pageSize: Int = state.config.pageSize
@@ -37,7 +35,7 @@ class SearchStatusesRemoteMediator(
                         pageSize = state.config.initialLoadSize
                         searchRepository.search(
                             query = query,
-                            type = SearchType.Statuses,
+                            type = SearchType.Hashtags,
                             limit = pageSize,
                             offset = nextPositionIndex,
                         )
@@ -50,27 +48,25 @@ class SearchStatusesRemoteMediator(
                     LoadType.APPEND -> {
                         searchRepository.search(
                             query = query,
-                            type = SearchType.Statuses,
+                            type = SearchType.Hashtags,
                             limit = pageSize,
                             offset = nextPositionIndex,
                         )
                     }
                 }
 
-            val result = getInReplyToAccountNames(response.statuses)
-
             databaseDelegate.withTransaction {
                 if (loadType == LoadType.REFRESH) {
                     nextPositionIndex = 0
                 }
 
-                saveStatusToDatabase(result)
-                searchRepository.insertAllStatuses(
-                    response.statuses.toSearchedStatus(startIndex = nextPositionIndex)
+                hashtagRepository.insertAll(response.hashtags)
+                searchRepository.insertAllHashTags(
+                    response.hashtags.toSearchedHashTags(startIndex = nextPositionIndex)
                 )
             }
 
-            nextPositionIndex += response.statuses.size
+            nextPositionIndex += response.hashtags.size
 
             // There seems to be some race condition for refreshes.  Subsequent pages do
             // not get loaded because once we return a mediator result, the next append
@@ -86,7 +82,7 @@ class SearchStatusesRemoteMediator(
             MediatorResult.Success(
                 endOfPaginationReached = when (loadType) {
                     LoadType.REFRESH,
-                    LoadType.APPEND -> response.statuses.isEmpty()
+                    LoadType.APPEND -> response.hashtags.isEmpty()
 
                     else -> true
                 },

@@ -1,4 +1,4 @@
-package social.firefly.core.repository.paging
+package social.firefly.core.repository.paging.remotemediators
 
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
@@ -7,29 +7,27 @@ import androidx.paging.RemoteMediator
 import kotlinx.coroutines.delay
 import social.firefly.common.Rel
 import social.firefly.common.getMaxIdValue
-import social.firefly.core.database.model.entities.accountCollections.Followee
-import social.firefly.core.database.model.entities.accountCollections.FolloweeWrapper
-import social.firefly.core.repository.mastodon.AccountRepository
+import social.firefly.core.database.model.entities.statusCollections.FavoritesTimelineStatus
+import social.firefly.core.database.model.entities.statusCollections.FavoritesTimelineStatusWrapper
 import social.firefly.core.repository.mastodon.DatabaseDelegate
-import social.firefly.core.repository.mastodon.FollowingsRepository
-import social.firefly.core.repository.mastodon.RelationshipRepository
+import social.firefly.core.repository.mastodon.FavoritesRepository
+import social.firefly.core.usecase.mastodon.status.GetInReplyToAccountNames
+import social.firefly.core.usecase.mastodon.status.SaveStatusToDatabase
 import timber.log.Timber
 
 @OptIn(ExperimentalPagingApi::class)
-class FollowingsRemoteMediator(
-    private val accountRepository: AccountRepository,
+class FavoritesRemoteMediator(
+    private val favoritesRepository: FavoritesRepository,
+    private val saveStatusToDatabase: SaveStatusToDatabase,
     private val databaseDelegate: DatabaseDelegate,
-    private val followingsRepository: FollowingsRepository,
-    private val relationshipRepository: RelationshipRepository,
-    private val accountId: String,
-) : RemoteMediator<Int, FolloweeWrapper>() {
+    private val getInReplyToAccountNames: GetInReplyToAccountNames,
+) : RemoteMediator<Int, FavoritesTimelineStatusWrapper>() {
     private var nextKey: String? = null
     private var nextPositionIndex = 0
 
-    @Suppress("ReturnCount")
     override suspend fun load(
         loadType: LoadType,
-        state: PagingState<Int, FolloweeWrapper>,
+        state: PagingState<Int, FavoritesTimelineStatusWrapper>
     ): MediatorResult {
         return try {
             var pageSize: Int = state.config.pageSize
@@ -37,52 +35,56 @@ class FollowingsRemoteMediator(
                 when (loadType) {
                     LoadType.REFRESH -> {
                         pageSize = state.config.initialLoadSize
-                        accountRepository.getAccountFollowing(
-                            accountId = accountId,
+                        favoritesRepository.getFavorites(
                             olderThanId = null,
+                            immediatelyNewerThanId = null,
                             loadSize = pageSize,
                         )
                     }
 
                     LoadType.PREPEND -> {
-                        return MediatorResult.Success(endOfPaginationReached = true)
+                        val firstItem =
+                            state.firstItemOrNull()
+                                ?: return MediatorResult.Success(endOfPaginationReached = true)
+                        favoritesRepository.getFavorites(
+                            olderThanId = null,
+                            immediatelyNewerThanId = firstItem.favoritesTimelineStatus.statusId,
+                            loadSize = pageSize,
+                        )
                     }
 
                     LoadType.APPEND -> {
-                        if (nextKey == null) {
-                            return MediatorResult.Success(endOfPaginationReached = true)
-                        }
-                        accountRepository.getAccountFollowing(
-                            accountId = accountId,
-                            olderThanId = nextKey,
+                        val lastItem =
+                            state.lastItemOrNull()
+                                ?: return MediatorResult.Success(endOfPaginationReached = true)
+                        favoritesRepository.getFavorites(
+                            olderThanId = lastItem.favoritesTimelineStatus.statusId,
+                            immediatelyNewerThanId = null,
                             loadSize = pageSize,
                         )
                     }
                 }
 
-            val relationships = response.accounts.getRelationships(accountRepository)
+            val result = getInReplyToAccountNames(response.statuses)
 
             databaseDelegate.withTransaction {
                 if (loadType == LoadType.REFRESH) {
-                    followingsRepository.deleteFollowings(accountId)
+                    favoritesRepository.deleteFavoritesTimeline()
                     nextPositionIndex = 0
                 }
 
-                accountRepository.insertAll(response.accounts)
-                relationshipRepository.insertAll(relationships)
-                followingsRepository.insertAll(
-                    response.accounts.mapIndexed { index, account ->
-                        Followee(
-                            accountId = accountId,
-                            followeeAccountId = account.accountId,
-                            position = nextPositionIndex + index,
-                        )
-                    },
-                )
+                saveStatusToDatabase(result)
+
+                favoritesRepository.insertAll(result.mapIndexed { index, status ->
+                    FavoritesTimelineStatus(
+                        statusId = status.statusId,
+                        position = nextPositionIndex + index,
+                    )
+                })
             }
 
             nextKey = response.pagingLinks?.getMaxIdValue()
-            nextPositionIndex += response.accounts.size
+            nextPositionIndex += response.statuses.size
 
             // There seems to be some race condition for refreshes.  Subsequent pages do
             // not get loaded because once we return a mediator result, the next append
@@ -95,7 +97,6 @@ class FollowingsRemoteMediator(
                 delay(REFRESH_DELAY)
             }
 
-            @Suppress("KotlinConstantConditions")
             MediatorResult.Success(
                 endOfPaginationReached =
                 when (loadType) {

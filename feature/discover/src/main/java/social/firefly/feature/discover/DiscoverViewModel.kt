@@ -7,7 +7,6 @@ import androidx.paging.map
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.koin.core.parameter.parametersOf
@@ -16,24 +15,20 @@ import social.firefly.core.analytics.DiscoverAnalytics
 import social.firefly.core.analytics.FeedLocation
 import social.firefly.core.navigation.NavigationDestination
 import social.firefly.core.navigation.usecases.NavigateTo
-import social.firefly.core.repository.mastodon.TrendsRepository
-import social.firefly.core.repository.paging.TrendingHashtagsRemoteMediator
-import social.firefly.core.repository.paging.TrendingStatusPagingDataFlow
-import social.firefly.core.ui.common.following.FollowStatus
+import social.firefly.core.repository.mastodon.TrendingHashtagRepository
+import social.firefly.core.repository.paging.remotemediators.TrendingHashtagsRemoteMediator
+import social.firefly.core.repository.paging.pagers.TrendingStatusPager
 import social.firefly.core.ui.hashtagcard.HashTagCardDelegate
 import social.firefly.core.ui.hashtagcard.quickview.toHashTagQuickViewUiState
 import social.firefly.core.ui.postcard.PostCardDelegate
 import social.firefly.core.ui.postcard.toPostCardUiState
 import social.firefly.core.usecase.mastodon.account.GetLoggedInUserAccountId
-import social.firefly.core.usecase.mastodon.hashtag.FollowHashTag
-import social.firefly.core.usecase.mastodon.hashtag.UnfollowHashTag
-import timber.log.Timber
 
 @OptIn(ExperimentalPagingApi::class)
 class DiscoverViewModel(
     getLoggedInUserAccountId: GetLoggedInUserAccountId,
-    trendsRepository: TrendsRepository,
-    trendingStatusPagingDataFlow: TrendingStatusPagingDataFlow,
+    trendingHashtagRepository: TrendingHashtagRepository,
+    trendingStatusPager: TrendingStatusPager,
     private val analytics: DiscoverAnalytics,
     private val navigateTo: NavigateTo,
     hashtagsRemoteMediator: TrendingHashtagsRemoteMediator,
@@ -52,7 +47,7 @@ class DiscoverViewModel(
     private val usersAccountId: String = getLoggedInUserAccountId()
 
     private val hashtags: DiscoverTab.Hashtags = DiscoverTab.Hashtags(
-        pagingDataFlow = trendsRepository.getPager(
+        pagingDataFlow = trendingHashtagRepository.getPager(
             remoteMediator = hashtagsRemoteMediator
         ).map { pagingData ->
             pagingData.map { hashtag ->
@@ -62,10 +57,10 @@ class DiscoverViewModel(
     )
 
     private val posts: DiscoverTab.Posts = DiscoverTab.Posts(
-        trendingStatusPagingDataFlow.pagingDataFlow()
+        pagingDataFlow = trendingStatusPager.build()
             .map { pagingData ->
-                pagingData.map { hashtag ->
-                    hashtag.toPostCardUiState(
+                pagingData.map { status ->
+                    status.toPostCardUiState(
                         currentUserAccountId = usersAccountId,
                         postCardInteractions = postCardDelegate,
                     )

@@ -1,18 +1,31 @@
-@file:OptIn(ExperimentalPagingApi::class)
-
 package social.firefly.core.repository.paging
 
 import androidx.paging.ExperimentalPagingApi
 import org.koin.core.module.dsl.factoryOf
-import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 import social.firefly.core.datastore.dataStoreModule
 import social.firefly.core.repository.mastodon.mastodonRepositoryModule
-import social.firefly.core.repository.paging.notifications.AllNotificationsRemoteMediator
-import social.firefly.core.repository.paging.notifications.FollowNotificationsRemoteMediator
-import social.firefly.core.repository.paging.notifications.MentionNotificationsRemoteMediator
+import social.firefly.core.repository.paging.pagers.TrendingStatusPager
+import social.firefly.core.repository.paging.remotemediators.notifications.AllNotificationsRemoteMediator
+import social.firefly.core.repository.paging.remotemediators.notifications.FollowNotificationsRemoteMediator
+import social.firefly.core.repository.paging.remotemediators.notifications.MentionNotificationsRemoteMediator
+import social.firefly.core.repository.paging.remotemediators.AccountTimelineRemoteMediator
+import social.firefly.core.repository.paging.remotemediators.BlocksListRemoteMediator
+import social.firefly.core.repository.paging.remotemediators.FavoritesRemoteMediator
+import social.firefly.core.repository.paging.remotemediators.FederatedTimelineRemoteMediator
+import social.firefly.core.repository.paging.remotemediators.FollowersRemoteMediator
+import social.firefly.core.repository.paging.remotemediators.FollowingsRemoteMediator
+import social.firefly.core.repository.paging.remotemediators.HashTagTimelineRemoteMediator
+import social.firefly.core.repository.paging.remotemediators.HomeTimelineRemoteMediator
+import social.firefly.core.repository.paging.remotemediators.LocalTimelineRemoteMediator
+import social.firefly.core.repository.paging.remotemediators.MutesListRemoteMediator
+import social.firefly.core.repository.paging.remotemediators.SearchAccountsRemoteMediator
+import social.firefly.core.repository.paging.remotemediators.SearchStatusesRemoteMediator
+import social.firefly.core.repository.paging.remotemediators.SearchedHashTagsRemoteMediator
+import social.firefly.core.repository.paging.remotemediators.TrendingHashtagsRemoteMediator
 import social.firefly.core.usecase.mastodon.mastodonUsecaseModule
 
+@OptIn(ExperimentalPagingApi::class)
 val pagingModule = module {
     includes(
         mastodonRepositoryModule,
@@ -102,8 +115,5 @@ val pagingModule = module {
     }
 
     factoryOf(::TrendingHashtagsRemoteMediator)
-    factoryOf(::TrendingStatusRemoteMediator)
-    factoryOf(::TrendingStatusRemoteSource)
-    factoryOf(::TrendingStatusLocalSource)
-    factoryOf(::TrendingStatusPagingDataFlow)
+    factoryOf(::TrendingStatusPager)
 }

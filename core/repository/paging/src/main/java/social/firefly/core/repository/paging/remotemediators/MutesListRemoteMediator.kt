@@ -1,31 +1,32 @@
-package social.firefly.core.repository.paging.notifications
+package social.firefly.core.repository.paging.remotemediators
 
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import kotlinx.coroutines.delay
-import social.firefly.common.Rel
-import social.firefly.common.getMaxIdValue
-import social.firefly.core.database.model.entities.notificationCollections.MainNotification
-import social.firefly.core.database.model.entities.notificationCollections.MainNotificationWrapper
+import social.firefly.core.database.model.entities.accountCollections.MuteWrapper
+import social.firefly.core.repository.mastodon.AccountRepository
 import social.firefly.core.repository.mastodon.DatabaseDelegate
-import social.firefly.core.repository.mastodon.NotificationsRepository
-import social.firefly.core.usecase.mastodon.notification.SaveNotificationsToDatabase
+import social.firefly.core.repository.mastodon.MutesRepository
+import social.firefly.core.repository.mastodon.RelationshipRepository
+import social.firefly.core.repository.mastodon.model.status.toDatabaseMute
 import timber.log.Timber
 
 @OptIn(ExperimentalPagingApi::class)
-class AllNotificationsRemoteMediator(
-    private val notificationsRepository: NotificationsRepository,
+class MutesListRemoteMediator(
+    private val accountRepository: AccountRepository,
     private val databaseDelegate: DatabaseDelegate,
-    private val saveNotificationsToDatabase: SaveNotificationsToDatabase,
-) : RemoteMediator<Int, MainNotificationWrapper>() {
+    private val relationshipRepository: RelationshipRepository,
+    private val mutesRepository: MutesRepository,
+) : RemoteMediator<Int, MuteWrapper>() {
     private var nextKey: String? = null
+    private var nextPositionIndex = 0
 
-    @Suppress("ComplexMethod")
+    @Suppress("ReturnCount")
     override suspend fun load(
         loadType: LoadType,
-        state: PagingState<Int, MainNotificationWrapper>
+        state: PagingState<Int, MuteWrapper>,
     ): MediatorResult {
         return try {
             var pageSize: Int = state.config.pageSize
@@ -33,14 +34,9 @@ class AllNotificationsRemoteMediator(
                 when (loadType) {
                     LoadType.REFRESH -> {
                         pageSize = state.config.initialLoadSize
-                        notificationsRepository.getNotifications(
+                        mutesRepository.getMutes(
                             maxId = null,
                             limit = pageSize,
-                            excludeTypes = arrayOf(
-                                "admin.sign_up",
-                                "admin.report",
-                                "severed_relationships",
-                            ),
                         )
                     }
 
@@ -52,34 +48,33 @@ class AllNotificationsRemoteMediator(
                         if (nextKey == null) {
                             return MediatorResult.Success(endOfPaginationReached = true)
                         }
-                        notificationsRepository.getNotifications(
+                        mutesRepository.getMutes(
                             maxId = nextKey,
                             limit = pageSize,
-                            excludeTypes = arrayOf(
-                                "admin.sign_up",
-                                "admin.report",
-                                "severed_relationships",
-                            ),
                         )
                     }
                 }
+
+            val relationships =
+                accountRepository.getAccountRelationships(response.accounts.map { it.accountId })
 
             databaseDelegate.withTransaction {
                 if (loadType == LoadType.REFRESH) {
-                    notificationsRepository.deleteMainNotificationsList()
+                    mutesRepository.deleteAll()
+                    nextPositionIndex = 0
                 }
 
-                saveNotificationsToDatabase(response.notifications)
-                notificationsRepository.insertAllMainNotifications(
-                    response.notifications.map {
-                        MainNotification(
-                            id = it.id,
-                        )
-                    }
+                accountRepository.insertAll(response.accounts)
+                relationshipRepository.insertAll(relationships)
+                mutesRepository.insertAll(
+                    response.accounts.mapIndexed { index, account ->
+                        account.toDatabaseMute(position = nextPositionIndex + index)
+                    },
                 )
             }
 
-            nextKey = response.pagingLinks?.getMaxIdValue()
+            nextKey = response.nextPage?.maxId
+            nextPositionIndex += response.accounts.size
 
             // There seems to be some race condition for refreshes.  Subsequent pages do
             // not get loaded because once we return a mediator result, the next append
@@ -92,9 +87,14 @@ class AllNotificationsRemoteMediator(
                 delay(REFRESH_DELAY)
             }
 
-            MediatorResult.Success(
-                endOfPaginationReached = response.pagingLinks?.find { it.rel == Rel.NEXT } == null,
-            )
+            @Suppress("KotlinConstantConditions")
+            (MediatorResult.Success(
+                endOfPaginationReached = when (loadType) {
+                    LoadType.PREPEND -> response.prevPage == null
+                    LoadType.REFRESH,
+                    LoadType.APPEND -> response.nextPage == null
+                },
+            ))
         } catch (e: Exception) {
             Timber.e(e)
             MediatorResult.Error(e)

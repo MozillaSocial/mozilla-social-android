@@ -1,43 +1,45 @@
-package social.firefly.core.repository.paging
+package social.firefly.core.repository.paging.remotemediators
 
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import kotlinx.coroutines.delay
-import social.firefly.core.database.model.entities.accountCollections.BlockWrapper
-import social.firefly.core.model.paging.AccountPagingWrapper
-import social.firefly.core.repository.mastodon.AccountRepository
-import social.firefly.core.repository.mastodon.BlocksRepository
+import social.firefly.core.database.model.entities.statusCollections.SearchedStatusWrapper
+import social.firefly.core.model.SearchType
 import social.firefly.core.repository.mastodon.DatabaseDelegate
-import social.firefly.core.repository.mastodon.RelationshipRepository
-import social.firefly.core.repository.mastodon.model.status.toDatabaseBlock
+import social.firefly.core.repository.mastodon.SearchRepository
+import social.firefly.core.repository.mastodon.model.search.toSearchedStatus
+import social.firefly.core.usecase.mastodon.status.GetInReplyToAccountNames
+import social.firefly.core.usecase.mastodon.status.SaveStatusToDatabase
 import timber.log.Timber
 
 @OptIn(ExperimentalPagingApi::class)
-class BlocksListRemoteMediator(
-    private val accountRepository: AccountRepository,
+class SearchStatusesRemoteMediator(
+    private val searchRepository: SearchRepository,
     private val databaseDelegate: DatabaseDelegate,
-    private val relationshipRepository: RelationshipRepository,
-    private val blocksRepository: BlocksRepository,
-) : RemoteMediator<Int, BlockWrapper>() {
-    private var nextKey: String? = null
+    private val saveStatusToDatabase: SaveStatusToDatabase,
+    private val getInReplyToAccountNames: GetInReplyToAccountNames,
+    private val query: String,
+) : RemoteMediator<Int, SearchedStatusWrapper>() {
     private var nextPositionIndex = 0
 
-    @Suppress("ReturnCount")
     override suspend fun load(
         loadType: LoadType,
-        state: PagingState<Int, BlockWrapper>,
+        state: PagingState<Int, SearchedStatusWrapper>
     ): MediatorResult {
         return try {
             var pageSize: Int = state.config.pageSize
-            val response: AccountPagingWrapper =
+            val response =
                 when (loadType) {
                     LoadType.REFRESH -> {
+                        nextPositionIndex = 0
                         pageSize = state.config.initialLoadSize
-                        blocksRepository.getBlocks(
-                            maxId = null,
+                        searchRepository.search(
+                            query = query,
+                            type = SearchType.Statuses,
                             limit = pageSize,
+                            offset = nextPositionIndex,
                         )
                     }
 
@@ -46,36 +48,29 @@ class BlocksListRemoteMediator(
                     }
 
                     LoadType.APPEND -> {
-                        if (nextKey == null) {
-                            return MediatorResult.Success(endOfPaginationReached = true)
-                        }
-                        blocksRepository.getBlocks(
-                            maxId = nextKey,
+                        searchRepository.search(
+                            query = query,
+                            type = SearchType.Statuses,
                             limit = pageSize,
+                            offset = nextPositionIndex,
                         )
                     }
                 }
 
-            val relationships =
-                accountRepository.getAccountRelationships(response.accounts.map { it.accountId })
+            val result = getInReplyToAccountNames(response.statuses)
 
             databaseDelegate.withTransaction {
                 if (loadType == LoadType.REFRESH) {
-                    blocksRepository.deleteAll()
                     nextPositionIndex = 0
                 }
 
-                accountRepository.insertAll(response.accounts)
-                relationshipRepository.insertAll(relationships)
-                blocksRepository.insertAll(
-                    response.accounts.mapIndexed { index, account ->
-                        account.toDatabaseBlock(position = nextPositionIndex + index)
-                    },
+                saveStatusToDatabase(result)
+                searchRepository.insertAllStatuses(
+                    response.statuses.toSearchedStatus(startIndex = nextPositionIndex)
                 )
             }
 
-            nextKey = response.nextPage?.maxId
-            nextPositionIndex += response.accounts.size
+            nextPositionIndex += response.statuses.size
 
             // There seems to be some race condition for refreshes.  Subsequent pages do
             // not get loaded because once we return a mediator result, the next append
@@ -88,14 +83,14 @@ class BlocksListRemoteMediator(
                 delay(REFRESH_DELAY)
             }
 
-            @Suppress("KotlinConstantConditions")
-            (MediatorResult.Success(
+            MediatorResult.Success(
                 endOfPaginationReached = when (loadType) {
-                    LoadType.PREPEND -> response.prevPage == null
                     LoadType.REFRESH,
-                    LoadType.APPEND -> response.nextPage == null
+                    LoadType.APPEND -> response.statuses.isEmpty()
+
+                    else -> true
                 },
-            ))
+            )
         } catch (e: Exception) {
             Timber.e(e)
             MediatorResult.Error(e)

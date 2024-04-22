@@ -16,9 +16,9 @@ import social.firefly.common.utils.edit
 import social.firefly.core.analytics.FeedLocation
 import social.firefly.core.repository.mastodon.AccountRepository
 import social.firefly.core.repository.mastodon.NotificationsRepository
-import social.firefly.core.repository.paging.notifications.AllNotificationsRemoteMediator
-import social.firefly.core.repository.paging.notifications.FollowNotificationsRemoteMediator
-import social.firefly.core.repository.paging.notifications.MentionNotificationsRemoteMediator
+import social.firefly.core.repository.paging.remotemediators.notifications.AllNotificationsRemoteMediator
+import social.firefly.core.repository.paging.remotemediators.notifications.FollowNotificationsRemoteMediator
+import social.firefly.core.repository.paging.remotemediators.notifications.MentionNotificationsRemoteMediator
 import social.firefly.core.ui.notifications.NotificationCardDelegate
 import social.firefly.core.ui.notifications.toUiState
 import social.firefly.core.ui.postcard.PostCardDelegate

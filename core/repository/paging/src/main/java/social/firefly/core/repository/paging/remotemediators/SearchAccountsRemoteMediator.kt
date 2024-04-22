@@ -1,43 +1,46 @@
-package social.firefly.core.repository.paging.notifications
+package social.firefly.core.repository.paging.remotemediators
 
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import kotlinx.coroutines.delay
-import social.firefly.common.Rel
-import social.firefly.common.getMaxIdValue
-import social.firefly.core.database.model.entities.notificationCollections.MentionListNotification
-import social.firefly.core.database.model.entities.notificationCollections.MentionListNotificationWrapper
-import social.firefly.core.model.Notification
+import social.firefly.core.database.model.entities.accountCollections.SearchedAccountWrapper
+import social.firefly.core.model.SearchType
+import social.firefly.core.repository.mastodon.AccountRepository
 import social.firefly.core.repository.mastodon.DatabaseDelegate
-import social.firefly.core.repository.mastodon.NotificationsRepository
-import social.firefly.core.usecase.mastodon.notification.SaveNotificationsToDatabase
+import social.firefly.core.repository.mastodon.RelationshipRepository
+import social.firefly.core.repository.mastodon.SearchRepository
+import social.firefly.core.repository.mastodon.model.search.toSearchedAccount
+import social.firefly.core.repository.paging.getRelationships
 import timber.log.Timber
 
 @OptIn(ExperimentalPagingApi::class)
-class MentionNotificationsRemoteMediator(
-    private val notificationsRepository: NotificationsRepository,
+class SearchAccountsRemoteMediator(
+    private val searchRepository: SearchRepository,
     private val databaseDelegate: DatabaseDelegate,
-    private val saveNotificationsToDatabase: SaveNotificationsToDatabase,
-) : RemoteMediator<Int, MentionListNotificationWrapper>() {
-    private var nextKey: String? = null
+    private val accountRepository: AccountRepository,
+    private val relationshipRepository: RelationshipRepository,
+    private val query: String,
+) : RemoteMediator<Int, SearchedAccountWrapper>() {
+    private var nextPositionIndex = 0
 
-    @Suppress("ComplexMethod")
     override suspend fun load(
         loadType: LoadType,
-        state: PagingState<Int, MentionListNotificationWrapper>
+        state: PagingState<Int, SearchedAccountWrapper>
     ): MediatorResult {
         return try {
             var pageSize: Int = state.config.pageSize
             val response =
                 when (loadType) {
                     LoadType.REFRESH -> {
+                        nextPositionIndex = 0
                         pageSize = state.config.initialLoadSize
-                        notificationsRepository.getNotifications(
-                            maxId = null,
+                        searchRepository.search(
+                            query = query,
+                            type = SearchType.Accounts,
                             limit = pageSize,
-                            types = arrayOf(Notification.Mention.VALUE),
+                            offset = nextPositionIndex,
                         )
                     }
 
@@ -46,33 +49,30 @@ class MentionNotificationsRemoteMediator(
                     }
 
                     LoadType.APPEND -> {
-                        if (nextKey == null) {
-                            return MediatorResult.Success(endOfPaginationReached = true)
-                        }
-                        notificationsRepository.getNotifications(
-                            maxId = nextKey,
+                        searchRepository.search(
+                            query = query,
+                            type = SearchType.Accounts,
                             limit = pageSize,
-                            types = arrayOf(Notification.Mention.VALUE),
+                            offset = nextPositionIndex,
                         )
                     }
                 }
+
+            val relationships = response.accounts.getRelationships(accountRepository)
 
             databaseDelegate.withTransaction {
                 if (loadType == LoadType.REFRESH) {
-                    notificationsRepository.deleteMentionNotificationsList()
+                    nextPositionIndex = 0
                 }
 
-                saveNotificationsToDatabase(response.notifications)
-                notificationsRepository.insertMentionNotifications(
-                    response.notifications.map {
-                        MentionListNotification(
-                            id = it.id,
-                        )
-                    }
+                accountRepository.insertAll(response.accounts)
+                relationshipRepository.insertAll(relationships)
+                searchRepository.insertAllAccounts(
+                    response.accounts.toSearchedAccount(startIndex = nextPositionIndex)
                 )
             }
 
-            nextKey = response.pagingLinks?.getMaxIdValue()
+            nextPositionIndex += response.accounts.size
 
             // There seems to be some race condition for refreshes.  Subsequent pages do
             // not get loaded because once we return a mediator result, the next append
@@ -86,7 +86,12 @@ class MentionNotificationsRemoteMediator(
             }
 
             MediatorResult.Success(
-                endOfPaginationReached = response.pagingLinks?.find { it.rel == Rel.NEXT } == null,
+                endOfPaginationReached = when (loadType) {
+                    LoadType.REFRESH,
+                    LoadType.APPEND -> response.accounts.isEmpty()
+
+                    else -> true
+                },
             )
         } catch (e: Exception) {
             Timber.e(e)

@@ -1,4 +1,4 @@
-package social.firefly.core.repository.paging
+package social.firefly.core.repository.paging.remotemediators
 
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
@@ -6,24 +6,31 @@ import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import kotlinx.coroutines.delay
 import social.firefly.common.Rel
-import social.firefly.core.database.model.entities.statusCollections.HashTagTimelineStatusWrapper
+import social.firefly.common.getMaxIdValue
+import social.firefly.core.database.model.entities.accountCollections.Followee
+import social.firefly.core.database.model.entities.accountCollections.FolloweeWrapper
+import social.firefly.core.repository.mastodon.AccountRepository
 import social.firefly.core.repository.mastodon.DatabaseDelegate
-import social.firefly.core.repository.mastodon.TimelineRepository
-import social.firefly.core.usecase.mastodon.status.GetInReplyToAccountNames
-import social.firefly.core.usecase.mastodon.status.SaveStatusToDatabase
+import social.firefly.core.repository.mastodon.FollowingsRepository
+import social.firefly.core.repository.mastodon.RelationshipRepository
+import social.firefly.core.repository.paging.getRelationships
+import timber.log.Timber
 
 @OptIn(ExperimentalPagingApi::class)
-class HashTagTimelineRemoteMediator(
-    private val timelineRepository: TimelineRepository,
-    private val saveStatusToDatabase: SaveStatusToDatabase,
+class FollowingsRemoteMediator(
+    private val accountRepository: AccountRepository,
     private val databaseDelegate: DatabaseDelegate,
-    private val getInReplyToAccountNames: GetInReplyToAccountNames,
-    private val hashTag: String,
-) : RemoteMediator<Int, HashTagTimelineStatusWrapper>() {
+    private val followingsRepository: FollowingsRepository,
+    private val relationshipRepository: RelationshipRepository,
+    private val accountId: String,
+) : RemoteMediator<Int, FolloweeWrapper>() {
+    private var nextKey: String? = null
+    private var nextPositionIndex = 0
+
     @Suppress("ReturnCount")
     override suspend fun load(
         loadType: LoadType,
-        state: PagingState<Int, HashTagTimelineStatusWrapper>,
+        state: PagingState<Int, FolloweeWrapper>,
     ): MediatorResult {
         return try {
             var pageSize: Int = state.config.pageSize
@@ -31,50 +38,52 @@ class HashTagTimelineRemoteMediator(
                 when (loadType) {
                     LoadType.REFRESH -> {
                         pageSize = state.config.initialLoadSize
-                        timelineRepository.getHashtagTimeline(
-                            hashTag = hashTag,
+                        accountRepository.getAccountFollowing(
+                            accountId = accountId,
                             olderThanId = null,
-                            immediatelyNewerThanId = null,
                             loadSize = pageSize,
                         )
                     }
 
                     LoadType.PREPEND -> {
-                        val firstItem =
-                            state.firstItemOrNull()
-                                ?: return MediatorResult.Success(endOfPaginationReached = true)
-                        timelineRepository.getHashtagTimeline(
-                            hashTag = hashTag,
-                            olderThanId = null,
-                            immediatelyNewerThanId = firstItem.hashTagTimelineStatus.statusId,
-                            loadSize = pageSize,
-                        )
+                        return MediatorResult.Success(endOfPaginationReached = true)
                     }
 
                     LoadType.APPEND -> {
-                        val lastItem =
-                            state.lastItemOrNull()
-                                ?: return MediatorResult.Success(endOfPaginationReached = true)
-                        timelineRepository.getHashtagTimeline(
-                            hashTag = hashTag,
-                            olderThanId = lastItem.hashTagTimelineStatus.statusId,
-                            immediatelyNewerThanId = null,
+                        if (nextKey == null) {
+                            return MediatorResult.Success(endOfPaginationReached = true)
+                        }
+                        accountRepository.getAccountFollowing(
+                            accountId = accountId,
+                            olderThanId = nextKey,
                             loadSize = pageSize,
                         )
                     }
                 }
 
-            val result = getInReplyToAccountNames(response.statuses)
+            val relationships = response.accounts.getRelationships(accountRepository)
 
             databaseDelegate.withTransaction {
                 if (loadType == LoadType.REFRESH) {
-                    timelineRepository.deleteHashTagTimeline(hashTag)
+                    followingsRepository.deleteFollowings(accountId)
+                    nextPositionIndex = 0
                 }
 
-                saveStatusToDatabase(result)
-
-                timelineRepository.insertAllIntoHashTagTimeline(hashTag, result)
+                accountRepository.insertAll(response.accounts)
+                relationshipRepository.insertAll(relationships)
+                followingsRepository.insertAll(
+                    response.accounts.mapIndexed { index, account ->
+                        Followee(
+                            accountId = accountId,
+                            followeeAccountId = account.accountId,
+                            position = nextPositionIndex + index,
+                        )
+                    },
+                )
             }
+
+            nextKey = response.pagingLinks?.getMaxIdValue()
+            nextPositionIndex += response.accounts.size
 
             // There seems to be some race condition for refreshes.  Subsequent pages do
             // not get loaded because once we return a mediator result, the next append
@@ -87,6 +96,7 @@ class HashTagTimelineRemoteMediator(
                 delay(REFRESH_DELAY)
             }
 
+            @Suppress("KotlinConstantConditions")
             MediatorResult.Success(
                 endOfPaginationReached =
                 when (loadType) {
@@ -97,6 +107,7 @@ class HashTagTimelineRemoteMediator(
                 },
             )
         } catch (e: Exception) {
+            Timber.e(e)
             MediatorResult.Error(e)
         }
     }

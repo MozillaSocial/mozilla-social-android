@@ -1,4 +1,4 @@
-package social.firefly.core.repository.paging.notifications
+package social.firefly.core.repository.paging.remotemediators.notifications
 
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
@@ -7,26 +7,25 @@ import androidx.paging.RemoteMediator
 import kotlinx.coroutines.delay
 import social.firefly.common.Rel
 import social.firefly.common.getMaxIdValue
-import social.firefly.core.database.model.entities.notificationCollections.FollowListNotification
-import social.firefly.core.database.model.entities.notificationCollections.FollowListNotificationWrapper
-import social.firefly.core.model.Notification
+import social.firefly.core.database.model.entities.notificationCollections.MainNotification
+import social.firefly.core.database.model.entities.notificationCollections.MainNotificationWrapper
 import social.firefly.core.repository.mastodon.DatabaseDelegate
 import social.firefly.core.repository.mastodon.NotificationsRepository
 import social.firefly.core.usecase.mastodon.notification.SaveNotificationsToDatabase
 import timber.log.Timber
 
 @OptIn(ExperimentalPagingApi::class)
-class FollowNotificationsRemoteMediator(
+class AllNotificationsRemoteMediator(
     private val notificationsRepository: NotificationsRepository,
     private val databaseDelegate: DatabaseDelegate,
     private val saveNotificationsToDatabase: SaveNotificationsToDatabase,
-) : RemoteMediator<Int, FollowListNotificationWrapper>() {
+) : RemoteMediator<Int, MainNotificationWrapper>() {
     private var nextKey: String? = null
 
     @Suppress("ComplexMethod")
     override suspend fun load(
         loadType: LoadType,
-        state: PagingState<Int, FollowListNotificationWrapper>
+        state: PagingState<Int, MainNotificationWrapper>
     ): MediatorResult {
         return try {
             var pageSize: Int = state.config.pageSize
@@ -37,7 +36,11 @@ class FollowNotificationsRemoteMediator(
                         notificationsRepository.getNotifications(
                             maxId = null,
                             limit = pageSize,
-                            types = arrayOf(Notification.FollowRequest.VALUE),
+                            excludeTypes = arrayOf(
+                                "admin.sign_up",
+                                "admin.report",
+                                "severed_relationships",
+                            ),
                         )
                     }
 
@@ -52,20 +55,24 @@ class FollowNotificationsRemoteMediator(
                         notificationsRepository.getNotifications(
                             maxId = nextKey,
                             limit = pageSize,
-                            types = arrayOf(Notification.FollowRequest.VALUE),
+                            excludeTypes = arrayOf(
+                                "admin.sign_up",
+                                "admin.report",
+                                "severed_relationships",
+                            ),
                         )
                     }
                 }
 
             databaseDelegate.withTransaction {
                 if (loadType == LoadType.REFRESH) {
-                    notificationsRepository.deleteFollowNotificationsList()
+                    notificationsRepository.deleteMainNotificationsList()
                 }
 
                 saveNotificationsToDatabase(response.notifications)
-                notificationsRepository.insertFollowNotifications(
+                notificationsRepository.insertAllMainNotifications(
                     response.notifications.map {
-                        FollowListNotification(
+                        MainNotification(
                             id = it.id,
                         )
                     }

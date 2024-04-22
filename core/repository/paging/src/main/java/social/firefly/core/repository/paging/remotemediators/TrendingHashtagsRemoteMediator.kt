@@ -1,43 +1,37 @@
-package social.firefly.core.repository.paging
+package social.firefly.core.repository.paging.remotemediators
 
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import kotlinx.coroutines.delay
-import social.firefly.core.database.model.entities.accountCollections.SearchedAccountWrapper
-import social.firefly.core.model.SearchType
-import social.firefly.core.repository.mastodon.AccountRepository
+import social.firefly.core.database.model.entities.hashtagCollections.TrendingHashTag
+import social.firefly.core.database.model.entities.hashtagCollections.TrendingHashTagWrapper
 import social.firefly.core.repository.mastodon.DatabaseDelegate
-import social.firefly.core.repository.mastodon.RelationshipRepository
-import social.firefly.core.repository.mastodon.SearchRepository
-import social.firefly.core.repository.mastodon.model.search.toSearchedAccount
+import social.firefly.core.repository.mastodon.HashtagRepository
+import social.firefly.core.repository.mastodon.TrendingHashtagRepository
 import timber.log.Timber
 
 @OptIn(ExperimentalPagingApi::class)
-class SearchAccountsRemoteMediator(
-    private val searchRepository: SearchRepository,
-    private val databaseDelegate: DatabaseDelegate,
-    private val accountRepository: AccountRepository,
-    private val relationshipRepository: RelationshipRepository,
-    private val query: String,
-) : RemoteMediator<Int, SearchedAccountWrapper>() {
+class TrendingHashtagsRemoteMediator(
+    val repository: TrendingHashtagRepository,
+    val hashtagRepository: HashtagRepository,
+    val databaseDelegate: DatabaseDelegate,
+) : RemoteMediator<Int, TrendingHashTagWrapper>() {
     private var nextPositionIndex = 0
 
     override suspend fun load(
         loadType: LoadType,
-        state: PagingState<Int, SearchedAccountWrapper>
+        state: PagingState<Int, TrendingHashTagWrapper>
     ): MediatorResult {
         return try {
             var pageSize: Int = state.config.pageSize
-            val response =
+            val hashtags =
                 when (loadType) {
                     LoadType.REFRESH -> {
                         nextPositionIndex = 0
                         pageSize = state.config.initialLoadSize
-                        searchRepository.search(
-                            query = query,
-                            type = SearchType.Accounts,
+                        repository.getTrendingTags(
                             limit = pageSize,
                             offset = nextPositionIndex,
                         )
@@ -48,30 +42,29 @@ class SearchAccountsRemoteMediator(
                     }
 
                     LoadType.APPEND -> {
-                        searchRepository.search(
-                            query = query,
-                            type = SearchType.Accounts,
+                        repository.getTrendingTags(
                             limit = pageSize,
                             offset = nextPositionIndex,
                         )
                     }
                 }
 
-            val relationships = response.accounts.getRelationships(accountRepository)
-
             databaseDelegate.withTransaction {
                 if (loadType == LoadType.REFRESH) {
                     nextPositionIndex = 0
                 }
-
-                accountRepository.insertAll(response.accounts)
-                relationshipRepository.insertAll(relationships)
-                searchRepository.insertAllAccounts(
-                    response.accounts.toSearchedAccount(startIndex = nextPositionIndex)
+                hashtagRepository.insertAll(hashtags)
+                repository.insertAll(
+                    hashtags.mapIndexed { index, hashTag ->
+                        TrendingHashTag(
+                            hashTag.name,
+                            position = nextPositionIndex + index,
+                        )
+                    }
                 )
             }
 
-            nextPositionIndex += response.accounts.size
+            nextPositionIndex += hashtags.size
 
             // There seems to be some race condition for refreshes.  Subsequent pages do
             // not get loaded because once we return a mediator result, the next append
@@ -87,7 +80,7 @@ class SearchAccountsRemoteMediator(
             MediatorResult.Success(
                 endOfPaginationReached = when (loadType) {
                     LoadType.REFRESH,
-                    LoadType.APPEND -> response.accounts.isEmpty()
+                    LoadType.APPEND -> hashtags.isEmpty()
 
                     else -> true
                 },

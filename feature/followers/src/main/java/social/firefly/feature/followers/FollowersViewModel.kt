@@ -14,8 +14,8 @@ import social.firefly.core.navigation.NavigationDestination
 import social.firefly.core.navigation.usecases.NavigateTo
 import social.firefly.core.repository.mastodon.FollowersRepository
 import social.firefly.core.repository.mastodon.FollowingsRepository
-import social.firefly.core.repository.paging.FollowersRemoteMediator
-import social.firefly.core.repository.paging.FollowingsRemoteMediator
+import social.firefly.core.repository.paging.remotemediators.FollowersRemoteMediator
+import social.firefly.core.repository.paging.remotemediators.FollowingsRemoteMediator
 import social.firefly.core.ui.accountfollower.toAccountFollowerUiState
 import social.firefly.core.ui.common.following.FollowStatus
 import social.firefly.core.usecase.mastodon.account.FollowAccount

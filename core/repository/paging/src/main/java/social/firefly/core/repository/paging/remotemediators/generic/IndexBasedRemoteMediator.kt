@@ -1,23 +1,20 @@
-package social.firefly.core.repository.paging
+package social.firefly.core.repository.paging.remotemediators.generic
 
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import kotlinx.coroutines.delay
-import social.firefly.core.repository.mastodon.FFLocalSource
-import social.firefly.core.repository.mastodon.FFRemoteSource
-import social.firefly.core.repository.mastodon.PageItem
-
+import social.firefly.core.model.PageItem
 import timber.log.Timber
 
 @OptIn(ExperimentalPagingApi::class)
-abstract class FfRemoteMediator<T : Any, DBO : Any> : RemoteMediator<Int, DBO>() {
+class IndexBasedRemoteMediator<T : Any, DBO : Any>(
+    private val saveLocally: suspend (items: List<PageItem<T>>) -> Unit,
+    private val getRemotely: suspend (limit: Int, offset: Int) -> List<T>
+) : RemoteMediator<Int, DBO>() {
+
     private var nextPositionIndex = 0
-
-    protected abstract val localSource: FFLocalSource<T>
-
-    protected abstract val remoteSource: FFRemoteSource<T>
 
     @Suppress("ReturnCount")
     override suspend fun load(
@@ -33,9 +30,9 @@ abstract class FfRemoteMediator<T : Any, DBO : Any> : RemoteMediator<Int, DBO>()
 
                         pageSize = state.config.initialLoadSize
 
-                        remoteSource.getRemotely(
-                            limit = pageSize,
-                            offset = nextPositionIndex,
+                        getRemotely(
+                            pageSize,
+                            nextPositionIndex,
                         ).mapIndexed { index, dbo ->
                             PageItem(position = index + nextPositionIndex, item = dbo)
                         }
@@ -46,9 +43,9 @@ abstract class FfRemoteMediator<T : Any, DBO : Any> : RemoteMediator<Int, DBO>()
                     }
 
                     LoadType.APPEND -> {
-                        remoteSource.getRemotely(
-                            limit = pageSize,
-                            offset = nextPositionIndex,
+                        getRemotely(
+                            pageSize,
+                            nextPositionIndex,
                         ).mapIndexed { index, dbo ->
                             PageItem(position = index + nextPositionIndex, item = dbo)
                         }
@@ -59,7 +56,7 @@ abstract class FfRemoteMediator<T : Any, DBO : Any> : RemoteMediator<Int, DBO>()
                 nextPositionIndex = 0
             }
 
-            localSource.saveLocally(currentPage)
+            saveLocally(currentPage)
 
             nextPositionIndex += currentPage.size
 
