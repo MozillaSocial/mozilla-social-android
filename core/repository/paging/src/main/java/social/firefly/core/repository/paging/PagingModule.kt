@@ -20,7 +20,9 @@ val pagingModule = module {
         dataStoreModule,
     )
 
-    singleOf(::RefreshFederatedTimeline)
+    factoryOf(::HomeTimelineRemoteMediator)
+    factoryOf(::LocalTimelineRemoteMediator)
+    factoryOf(::FederatedTimelineRemoteMediator)
     singleOf(::RefreshLocalTimeline)
     factoryOf(::FavoritesRemoteMediator)
     factoryOf(::BlocksListRemoteMediator)
