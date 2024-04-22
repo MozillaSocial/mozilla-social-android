@@ -12,7 +12,7 @@ import social.firefly.core.ui.hashtagcard.quickview.HashTagQuickViewUiState
 
 fun LazyListScope.hashTagListItems(
     hashTagsFeed: LazyPagingItems<HashTagQuickViewUiState>,
-    hashtagInteractions: HashtagInteractions,
+    hashtagInteractions: HashTagInteractions,
 ) {
     items(
         count = hashTagsFeed.itemCount,

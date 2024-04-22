@@ -20,6 +20,7 @@ import social.firefly.core.repository.mastodon.TrendsRepository
 import social.firefly.core.repository.paging.TrendingHashtagsRemoteMediator
 import social.firefly.core.repository.paging.TrendingStatusPagingDataFlow
 import social.firefly.core.ui.common.following.FollowStatus
+import social.firefly.core.ui.hashtagcard.HashTagCardDelegate
 import social.firefly.core.ui.hashtagcard.quickview.toHashTagQuickViewUiState
 import social.firefly.core.ui.postcard.PostCardDelegate
 import social.firefly.core.ui.postcard.toPostCardUiState
@@ -35,8 +36,6 @@ class DiscoverViewModel(
     trendingStatusPagingDataFlow: TrendingStatusPagingDataFlow,
     private val analytics: DiscoverAnalytics,
     private val navigateTo: NavigateTo,
-    private val followHashTag: FollowHashTag,
-    private val unfollowHashTag: UnfollowHashTag,
     hashtagsRemoteMediator: TrendingHashtagsRemoteMediator,
 ) : ViewModel(), DiscoverInteractions, KoinComponent {
 
@@ -44,6 +43,10 @@ class DiscoverViewModel(
         parametersOf(
             FeedLocation.PROFILE,
         )
+    }
+
+    val hashTagCardDelegate: HashTagCardDelegate by inject {
+        parametersOf(viewModelScope)
     }
 
     private val usersAccountId: String = getLoggedInUserAccountId()
@@ -92,32 +95,5 @@ class DiscoverViewModel(
                 selectedTab = tab
             )
         }
-    }
-
-    override fun onHashTagFollowClicked(name: String, followStatus: FollowStatus) {
-        viewModelScope.launch {
-            when (followStatus) {
-                FollowStatus.FOLLOWING,
-                FollowStatus.PENDING_REQUEST -> {
-                    try {
-                        unfollowHashTag(name)
-                    } catch (e: UnfollowHashTag.UnfollowFailedException) {
-                        Timber.e(e)
-                    }
-                }
-
-                FollowStatus.NOT_FOLLOWING -> {
-                    try {
-                        followHashTag(name)
-                    } catch (e: FollowHashTag.FollowFailedException) {
-                        Timber.e(e)
-                    }
-                }
-            }
-        }
-    }
-
-    override fun onHashtagClick(name: String) {
-        navigateTo(NavigationDestination.HashTag(name))
     }
 }

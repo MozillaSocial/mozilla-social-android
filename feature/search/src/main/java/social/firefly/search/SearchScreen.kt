@@ -32,7 +32,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
@@ -70,6 +69,8 @@ import social.firefly.core.ui.common.search.FfSearchBar
 import social.firefly.core.ui.common.tabs.FfTab
 import social.firefly.core.ui.common.tabs.FfTabRow
 import social.firefly.core.ui.common.utils.PreviewTheme
+import social.firefly.core.ui.hashtagcard.HashTagInteractions
+import social.firefly.core.ui.hashtagcard.HashTagInteractionsNoOp
 import social.firefly.core.ui.postcard.PostCard
 import social.firefly.core.ui.postcard.PostCardInteractions
 import social.firefly.core.ui.postcard.PostCardInteractionsNoOp
@@ -86,15 +87,17 @@ internal fun SearchScreen(
         uiState = uiState,
         searchInteractions = viewModel,
         postCardInteractions = viewModel.postCardDelegate,
+        hashTagInteractions = viewModel.hashTagCardDelegate,
     )
 }
 
-@OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SearchScreen(
     uiState: SearchUiState,
     searchInteractions: SearchInteractions,
     postCardInteractions: PostCardInteractions,
+    hashTagInteractions: HashTagInteractions,
 ) {
     FfSurface(
         modifier = Modifier
@@ -167,6 +170,7 @@ private fun SearchScreen(
                         uiState = uiState,
                         searchInteractions = searchInteractions,
                         postCardInteractions = postCardInteractions,
+                        hashTagInteractions = hashTagInteractions,
                     )
                 }
                 androidx.compose.animation.AnimatedVisibility(
@@ -213,6 +217,7 @@ private fun ListContent(
     uiState: SearchUiState,
     searchInteractions: SearchInteractions,
     postCardInteractions: PostCardInteractions,
+    hashTagInteractions: HashTagInteractions,
 ) {
     when (uiState.topResource) {
         is Resource.Loading -> {
@@ -264,7 +269,7 @@ private fun ListContent(
                         ) {
                             hashTagListItems(
                                 hashTagsFeed = lazyPagingItems,
-                                hashtagInteractions = searchInteractions,
+                                hashtagInteractions = hashTagInteractions,
                             )
                         }
                     }
@@ -501,6 +506,7 @@ private fun SearchScreenPreview() {
             ),
             searchInteractions = SearchInteractionsNoOp,
             postCardInteractions = PostCardInteractionsNoOp,
+            hashTagInteractions = HashTagInteractionsNoOp,
         )
     }
 }

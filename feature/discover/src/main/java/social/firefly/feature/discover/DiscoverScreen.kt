@@ -30,7 +30,7 @@ import social.firefly.core.designsystem.theme.FfSpacing
 import social.firefly.core.designsystem.utils.NoRipple
 import social.firefly.core.ui.common.FfSurface
 import social.firefly.core.ui.common.appbar.FfTopBar
-import social.firefly.core.ui.hashtagcard.HashtagInteractions
+import social.firefly.core.ui.hashtagcard.HashTagInteractions
 import social.firefly.core.ui.hashtagcard.hashTagListItems
 import social.firefly.core.ui.hashtagcard.quickview.HashTagQuickViewUiState
 import social.firefly.core.ui.common.pullrefresh.PullRefreshLazyColumn
@@ -50,6 +50,7 @@ internal fun DiscoverScreen(viewModel: DiscoverViewModel = koinViewModel()) {
         uiState = uiState,
         discoverInteractions = viewModel,
         postCardInteractions = viewModel.postCardDelegate,
+        hashtagInteractions = viewModel.hashTagCardDelegate,
     )
 
     LaunchedEffect(Unit) {
@@ -63,6 +64,7 @@ private fun DiscoverScreen(
     uiState: DiscoverUiState,
     discoverInteractions: DiscoverInteractions,
     postCardInteractions: PostCardInteractions,
+    hashtagInteractions: HashTagInteractions,
 ) {
     FfSurface(
         modifier = Modifier
@@ -108,6 +110,7 @@ private fun DiscoverScreen(
                 uiState = uiState,
                 discoverInteractions = discoverInteractions,
                 postCardInteractions = postCardInteractions,
+                hashtagInteractions = hashtagInteractions,
             )
         }
     }
@@ -118,6 +121,7 @@ private fun MainContent(
     uiState: DiscoverUiState,
     discoverInteractions: DiscoverInteractions,
     postCardInteractions: PostCardInteractions,
+    hashtagInteractions: HashTagInteractions,
 ) {
     Box {
         Column {
@@ -130,7 +134,7 @@ private fun MainContent(
                 is DiscoverTab.Hashtags -> {
                     Hashtags(
                         hashtags = uiState.selectedTab.pagingDataFlow,
-                        hashtagInteractions = discoverInteractions
+                        hashtagInteractions = hashtagInteractions
                     )
                 }
 
@@ -172,7 +176,7 @@ private fun Tabs(
 @Composable
 private fun Hashtags(
     hashtags: Flow<PagingData<HashTagQuickViewUiState>>,
-    hashtagInteractions: HashtagInteractions,
+    hashtagInteractions: HashTagInteractions,
 ) {
     val feed = hashtags.collectAsLazyPagingItems()
     PullRefreshLazyColumn(

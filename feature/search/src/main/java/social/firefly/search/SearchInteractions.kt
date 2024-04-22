@@ -1,8 +1,8 @@
 package social.firefly.search
 
 import social.firefly.core.ui.common.following.FollowStatus
-import social.firefly.core.ui.hashtagcard.HashtagInteractions
-interface SearchInteractions: HashtagInteractions {
+
+interface SearchInteractions {
     fun onQueryTextChanged(text: String)
     fun onSearchClicked()
     fun onTabClicked(tab: SearchTab)
@@ -18,6 +18,4 @@ object SearchInteractionsNoOp : SearchInteractions {
     override fun onRetryClicked() = Unit
     override fun onFollowClicked(accountId: String, followStatus: FollowStatus) = Unit
     override fun onAccountClicked(accountId: String) = Unit
-    override fun onHashTagFollowClicked(name: String, followStatus: FollowStatus) = Unit
-    override fun onHashtagClick(name: String) = Unit
 }

@@ -2,8 +2,8 @@ package social.firefly.core.ui.hashtagcard.quickview
 
 import social.firefly.common.utils.StringFactory
 import social.firefly.core.model.HashTag
-import social.firefly.core.ui.common.R
 import social.firefly.core.ui.common.following.FollowStatus
+import social.firefly.core.ui.hashtagcard.R
 
 fun HashTag.toHashTagQuickViewUiState(): HashTagQuickViewUiState {
     val usages = history?.sumOf { it.usageCount } ?: 0

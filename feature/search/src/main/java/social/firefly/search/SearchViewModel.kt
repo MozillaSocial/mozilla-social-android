@@ -24,6 +24,7 @@ import social.firefly.core.repository.paging.SearchStatusesRemoteMediator
 import social.firefly.core.repository.paging.SearchedHashTagsRemoteMediator
 import social.firefly.core.ui.accountfollower.toAccountFollowerUiState
 import social.firefly.core.ui.common.following.FollowStatus
+import social.firefly.core.ui.hashtagcard.HashTagCardDelegate
 import social.firefly.core.ui.hashtagcard.quickview.toHashTagQuickViewUiState
 import social.firefly.core.ui.postcard.PostCardDelegate
 import social.firefly.core.ui.postcard.toPostCardUiState
@@ -43,8 +44,6 @@ class SearchViewModel(
     private val unfollowAccount: UnfollowAccount,
     private val navigateTo: NavigateTo,
     private val searchRepository: SearchRepository,
-    private val followHashTag: FollowHashTag,
-    private val unfollowHashTag: UnfollowHashTag,
     private val analytics: SearchAnalytics,
 ) : ViewModel(), SearchInteractions, KoinComponent {
 
@@ -59,6 +58,10 @@ class SearchViewModel(
         parametersOf(
             FeedLocation.SEARCH,
         )
+    }
+
+    val hashTagCardDelegate: HashTagCardDelegate by inject {
+        parametersOf(viewModelScope)
     }
 
     private fun updateAccountFeed() {
@@ -202,34 +205,6 @@ class SearchViewModel(
     override fun onAccountClicked(accountId: String) {
         navigateTo(NavigationDestination.Account(accountId = accountId))
         analytics.accountClicked()
-    }
-
-    override fun onHashtagClick(name: String) {
-        navigateTo(NavigationDestination.HashTag(name))
-        analytics.hashtagClicked()
-    }
-
-    override fun onHashTagFollowClicked(name: String, followStatus: FollowStatus) {
-        viewModelScope.launch {
-            when (followStatus) {
-                FollowStatus.FOLLOWING,
-                FollowStatus.PENDING_REQUEST -> {
-                    try {
-                        unfollowHashTag(name)
-                    } catch (e: UnfollowHashTag.UnfollowFailedException) {
-                        Timber.e(e)
-                    }
-                }
-                FollowStatus.NOT_FOLLOWING -> {
-                    try {
-                        followHashTag(name)
-                    } catch (e: FollowHashTag.FollowFailedException) {
-                        Timber.e(e)
-                    }
-                }
-            }
-        }
-        analytics.hashtagFollowClicked()
     }
 }
 
