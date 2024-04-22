@@ -5,13 +5,10 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.cachedIn
 import androidx.paging.map
-import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import org.koin.core.parameter.parametersOf
@@ -28,14 +25,11 @@ import social.firefly.core.ui.postcard.PostCardDelegate
 import social.firefly.core.ui.postcard.toPostCardUiState
 import social.firefly.core.usecase.mastodon.account.GetLoggedInUserAccountId
 
-/**
- * Produces a flow of pages of statuses for a feed
- */
 @OptIn(ExperimentalPagingApi::class)
 class FeedViewModel(
     private val analytics: FeedAnalytics,
     private val userPreferencesDatastore: UserPreferencesDatastore,
-    private val homeTimelineRemoteMediator: HomeTimelineRemoteMediator,
+    homeTimelineRemoteMediator: HomeTimelineRemoteMediator,
     localTimelineRemoteMediator: LocalTimelineRemoteMediator,
     federatedTimelineRemoteMediator: FederatedTimelineRemoteMediator,
     private val timelineRepository: TimelineRepository,

@@ -42,11 +42,6 @@ val accountModule =
                 timelineRepository = get(),
             )
         }
-        factory { parametersHolder ->
-            AccountTimelineRemoteMediator(
-                accountId = parametersHolder[0],
-                timelineType = parametersHolder[1],
-            )
-        }
+
         viewModelOf(::EditAccountViewModel)
     }

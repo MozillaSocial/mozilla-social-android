@@ -25,16 +25,5 @@ val feedModule = module {
         analyticsModule,
     )
 
-    singleOf(::HomeTimelineRemoteMediator)
-    single {
-        LocalTimelineRemoteMediator(
-            get(),
-        )
-    }
-    single {
-        FederatedTimelineRemoteMediator(
-            get(),
-        )
-    }
     viewModelOf(::FeedViewModel)
 }

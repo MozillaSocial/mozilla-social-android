@@ -20,26 +20,15 @@ val pagingModule = module {
         dataStoreModule,
     )
 
-    singleOf(::RefreshFederatedTimeline)
-    singleOf(::RefreshLocalTimeline)
+    factoryOf(::HomeTimelineRemoteMediator)
+    factoryOf(::LocalTimelineRemoteMediator)
+    factoryOf(::FederatedTimelineRemoteMediator)
     factoryOf(::FavoritesRemoteMediator)
     factoryOf(::BlocksListRemoteMediator)
     factoryOf(::MutesListRemoteMediator)
     factoryOf(::AllNotificationsRemoteMediator)
     factoryOf(::MentionNotificationsRemoteMediator)
     factoryOf(::FollowNotificationsRemoteMediator)
-
-    factory {
-        RefreshAccountTimeline(
-            accountRepository = get(),
-            saveStatusToDatabase = get(),
-            databaseDelegate = get(),
-            timelineRepository = get(),
-            getInReplyToAccountNames = get(),
-            accountId = it[0],
-            timelineType = it[1],
-        )
-    }
 
     factory {
         FollowersRemoteMediator(
@@ -97,6 +86,18 @@ val pagingModule = module {
             searchRepository = get(),
             hashtagRepository = get(),
             query = parametersHolder[0],
+        )
+    }
+
+    factory { parametersHolder ->
+        AccountTimelineRemoteMediator(
+            accountRepository = get(),
+            saveStatusToDatabase = get(),
+            databaseDelegate = get(),
+            timelineRepository = get(),
+            getInReplyToAccountNames = get(),
+            accountId = parametersHolder[0],
+            timelineType = parametersHolder[1],
         )
     }
 
