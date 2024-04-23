@@ -193,7 +193,7 @@ private fun ThreadList(
                 is ThreadDescendant.ViewMore -> {
                     Row(
                         modifier = Modifier
-                            .height(30.dp)
+                            .height(36.dp)
                             .fillMaxWidth()
                     ) {
                         DepthLines(depthLinesUiState = item.depthLinesUiState)

@@ -49,7 +49,7 @@ fun <T> TreeNode<T>.toDepthList(
                         depth + 1,
                         newDepthLines,
                         hasReplies = false,
-                        hiddenRepliesCount = index - childLimit
+                        hiddenRepliesCount = index - childLimit + 1
                     )
                 )
             }
