@@ -2,22 +2,20 @@ package social.firefly.feature.thread
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
@@ -42,7 +40,6 @@ import social.firefly.core.ui.common.dropdown.FfIconButtonDropDownMenu
 import social.firefly.core.ui.common.error.GenericError
 import social.firefly.core.ui.common.loading.MaxSizeLoading
 import social.firefly.core.ui.common.text.MediumTextLabel
-import social.firefly.core.ui.postcard.ExpandRepliesButtonUiState
 import social.firefly.core.ui.postcard.PostCardInteractions
 import social.firefly.core.ui.postcard.PostCardListItem
 import social.firefly.core.ui.postcard.components.DepthLines
@@ -178,57 +175,71 @@ private fun ThreadList(
             }
         }
 
-        items(
-            count = statuses.descendants.count(),
-            key = { statuses.descendants[it].id },
-        ) { index ->
-            when (val item = statuses.descendants[index]) {
-                is ThreadDescendant.PostCard -> {
-                    PostCardListItem(
-                        uiState = item.uiState,
-                        postCardInteractions = postCardDelegate,
-                        showDivider = threadType != ThreadType.TREE,
-                    )
-                }
-                is ThreadDescendant.ViewMore -> {
+        descendants(
+            threadType = threadType,
+            statuses = statuses,
+            postCardDelegate = postCardDelegate,
+            threadInteractions = threadInteractions
+        )
+    }
+}
+
+private fun LazyListScope.descendants(
+    threadType: ThreadType,
+    statuses: ThreadPostCardCollection,
+    postCardDelegate: PostCardInteractions,
+    threadInteractions: ThreadInteractions,
+) {
+    items(
+        count = statuses.descendants.count(),
+        key = { statuses.descendants[it].id },
+    ) { index ->
+        when (val item = statuses.descendants[index]) {
+            is ThreadDescendant.PostCard -> {
+                PostCardListItem(
+                    uiState = item.uiState,
+                    postCardInteractions = postCardDelegate,
+                    showDivider = threadType != ThreadType.TREE,
+                )
+            }
+            is ThreadDescendant.ViewMore -> {
+                Row(
+                    modifier = Modifier
+                        .height(36.dp)
+                        .fillMaxWidth()
+                ) {
+                    DepthLines(depthLinesUiState = item.depthLinesUiState)
                     Row(
                         modifier = Modifier
-                            .height(36.dp)
-                            .fillMaxWidth()
+                            .padding(start = 20.dp)
+                            .align(Alignment.CenterVertically)
+                            .clip(RoundedCornerShape(4.dp))
+                            .clickable { threadInteractions.onShowAllRepliesClicked(item.statusId) }
+                            .padding(2.dp),
                     ) {
-                        DepthLines(depthLinesUiState = item.depthLinesUiState)
-                        Row(
+                        Icon(
                             modifier = Modifier
-                                .padding(start = 20.dp)
                                 .align(Alignment.CenterVertically)
-                                .clip(RoundedCornerShape(4.dp))
-                                .clickable { threadInteractions.onShowAllRepliesClicked(item.statusId) }
-                                .padding(2.dp),
-                        ) {
-                            Icon(
-                                modifier = Modifier
-                                    .align(Alignment.CenterVertically)
-                                    .background(FfTheme.colors.layer1)
-                                    .size(20.dp),
-                                painter = FfIcons.plusCircle(),
-                                contentDescription = null
+                                .background(FfTheme.colors.layer1)
+                                .size(20.dp),
+                            painter = FfIcons.plusCircle(),
+                            contentDescription = null
+                        )
+                        MediumTextLabel(
+                            modifier = Modifier
+                                .padding(start = 8.dp)
+                                .align(Alignment.CenterVertically),
+                            text = pluralStringResource(
+                                id = R.plurals.show_more_replies,
+                                count = item.count,
+                                item.count,
                             )
-                            MediumTextLabel(
-                                modifier = Modifier
-                                    .padding(start = 8.dp)
-                                    .align(Alignment.CenterVertically),
-                                text = pluralStringResource(
-                                    id = R.plurals.show_more_replies,
-                                    count = item.count,
-                                    item.count,
-                                )
-                            )
-                        }
+                        )
                     }
                 }
             }
-
         }
+
     }
 }
 
