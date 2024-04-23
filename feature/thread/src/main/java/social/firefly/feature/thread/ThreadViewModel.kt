@@ -7,12 +7,15 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.koin.core.parameter.parametersOf
 import org.koin.java.KoinJavaComponent
+import org.koin.java.KoinJavaComponent.inject
 import social.firefly.common.Resource
+import social.firefly.common.tree.TreeNode
 import social.firefly.common.tree.toDepthList
 import social.firefly.common.tree.toTree
 import social.firefly.common.utils.edit
@@ -40,15 +43,16 @@ class ThreadViewModel(
 
     private val loggedInAccountId = getLoggedInUserAccountId()
 
-    private val postsIdsWithHiddenReplies = MutableStateFlow<List<String>>(emptyList())
+    private val postIdsWithHiddenReplies = MutableStateFlow<List<String>>(emptyList())
+    private val postIdsIgnoringMaxReplyCount = MutableStateFlow<List<String>>(emptyList())
 
-    val postCardDelegate: PostCardDelegate by KoinJavaComponent.inject(
+    val postCardDelegate: PostCardDelegate by inject(
         PostCardDelegate::class.java,
     ) { parametersOf(
         FeedLocation.THREAD,
         { statusId: String ->
-            postsIdsWithHiddenReplies.update {
-                postsIdsWithHiddenReplies.value.toMutableList().apply {
+            postIdsWithHiddenReplies.update {
+                postIdsWithHiddenReplies.value.toMutableList().apply {
                     if (contains(statusId)) {
                         remove(statusId)
                     } else {
@@ -86,20 +90,39 @@ class ThreadViewModel(
     private fun loadThread() {
         getThreadJob?.cancel()
         getThreadJob = viewModelScope.launch {
+            val threadDataFlow = getThread(mainStatusId).map { threadResource ->
+                when (threadResource) {
+                    is Resource.Loading -> ThreadData(threadResource)
+                    is Resource.Error -> ThreadData(threadResource)
+                    is Resource.Loaded -> ThreadData(
+                        threadResource = threadResource,
+                        repliesTree = buildList {
+                            add(threadResource.data.status)
+                            addAll(threadResource.data.context.descendants)
+                        }.toTree(
+                            identifier = { it.statusId },
+                            parentIdentifier = { it.inReplyToId },
+                        )
+                    )
+                }
+            }
             combine(
                 threadType,
-                getThread(mainStatusId),
-                postsIdsWithHiddenReplies
-            ) { threadType, threadResource, postsIdsWithHiddenReplies ->
-                val thread = threadResource.data ?: return@combine when (threadResource) {
+                threadDataFlow,
+                postIdsWithHiddenReplies,
+                postIdsIgnoringMaxReplyCount,
+            ) { threadType, threadData, postsIdsWithHiddenReplies, postIdsIgnoringMaxReplyCount ->
+                val threadResource = threadData.threadResource
+                threadResource.data ?: return@combine when (threadResource) {
                     is Resource.Loading -> Resource.Loading()
                     is Resource.Error -> Resource.Error(threadResource.exception)
-                    is Resource.Loaded -> Resource.Loaded(ThreadPostCardCollection())
+                    is Resource.Loaded -> Resource.Loaded(ThreadPostCardCollection()) // won't happen
                 }
                 generateLoadedThread(
                     threadType = threadType,
-                    thread = thread,
+                    threadData = threadData,
                     postsIdsWithHiddenReplies = postsIdsWithHiddenReplies,
+                    postIdsIgnoringMaxReplyCount = postIdsIgnoringMaxReplyCount,
                 )
             }.collect {
                 _uiState.edit { it }
@@ -109,93 +132,114 @@ class ThreadViewModel(
 
     private fun generateLoadedThread(
         threadType: ThreadType,
-        thread: Thread,
+        threadData: ThreadData,
         postsIdsWithHiddenReplies: List<String>,
-    ): Resource<ThreadPostCardCollection> = when (threadType) {
-        ThreadType.LIST -> {
-            val mapToPostCardUiState =
-                fun Status.(): PostCardUiState = toPostCardUiState(
-                    currentUserAccountId = loggedInAccountId,
-                    postCardInteractions = postCardDelegate,
-                    isClickable = statusId != mainStatusId,
-                )
-            Resource.Loaded(
-                ThreadPostCardCollection(
-                    ancestors = thread.context.ancestors.map { it.mapToPostCardUiState() },
-                    mainPost = thread.status.mapToPostCardUiState(),
-                    descendants = thread.context.descendants.map { it.mapToPostCardUiState() },
-                )
-            )
-        }
-
-        ThreadType.DIRECT_REPLIES -> {
-            val mapToPostCardUiState =
-                fun Status.(): PostCardUiState = toPostCardUiState(
-                    currentUserAccountId = loggedInAccountId,
-                    postCardInteractions = postCardDelegate,
-                    showTopRowMetaData = false,
-                    isClickable = statusId != mainStatusId,
-                )
-            Resource.Loaded(
-                ThreadPostCardCollection(
-                    ancestors = thread.context.ancestors.map { it.mapToPostCardUiState() },
-                    mainPost = thread.status.mapToPostCardUiState(),
-                    descendants = thread.context.descendants
-                        .filter { it.inReplyToId == mainStatusId }
-                        .map { it.mapToPostCardUiState() },
-                )
-            )
-        }
-
-        ThreadType.TREE -> {
-            val descendants = buildList {
-                add(thread.status)
-                addAll(thread.context.descendants)
-            }.toTree(
-                identifier = { it.statusId },
-                parentIdentifier = { it.inReplyToId },
-            )?.toDepthList(
-                shouldIgnoreChildren = {
-                    postsIdsWithHiddenReplies.contains(it.statusId)
-                }
-            )?.drop(1)?.filter {
-                it.depth <= MAX_DEPTH
-            }?.map { statusWithDepth ->
-                val isAtMaxDepth = statusWithDepth.depth == MAX_DEPTH
-                val hasReplies = statusWithDepth.hasReplies
-                statusWithDepth.value.toPostCardUiState(
-                    currentUserAccountId = loggedInAccountId,
-                    postCardInteractions = postCardDelegate,
-                    depthLinesUiState = DepthLinesUiState(
-                        postDepth = statusWithDepth.depth,
-                        depthLines = statusWithDepth.depthLines,
-                        showViewMoreRepliesText = isAtMaxDepth && hasReplies,
-                        expandRepliesButtonUiState = when {
-                            !hasReplies || isAtMaxDepth -> ExpandRepliesButtonUiState.HIDDEN
-                            postsIdsWithHiddenReplies.contains(
-                                statusWithDepth.value.statusId
-                            ) -> ExpandRepliesButtonUiState.PLUS
-                            else -> ExpandRepliesButtonUiState.MINUS
+        postIdsIgnoringMaxReplyCount: List<String>,
+    ): Resource<ThreadPostCardCollection> {
+        val thread = threadData.threadResource.data!!
+        return when (threadType) {
+            ThreadType.LIST -> {
+                val mapToPostCardUiState =
+                    fun Status.(): PostCardUiState = toPostCardUiState(
+                        currentUserAccountId = loggedInAccountId,
+                        postCardInteractions = postCardDelegate,
+                        isClickable = statusId != mainStatusId,
+                    )
+                Resource.Loaded(
+                    ThreadPostCardCollection(
+                        ancestors = thread.context.ancestors.map { it.mapToPostCardUiState() },
+                        mainPost = thread.status.mapToPostCardUiState(),
+                        descendants = thread.context.descendants.map {
+                            ThreadDescendant.PostCard(it.mapToPostCardUiState())
                         },
-                    ),
-                    showTopRowMetaData = false,
+                    )
                 )
-            } ?: emptyList()
+            }
 
-            val mapToPostCardUiState =
-                fun Status.(): PostCardUiState = toPostCardUiState(
-                    currentUserAccountId = loggedInAccountId,
-                    postCardInteractions = postCardDelegate,
-                    showTopRowMetaData = false,
-                    isClickable = statusId != mainStatusId,
+            ThreadType.DIRECT_REPLIES -> {
+                val mapToPostCardUiState =
+                    fun Status.(): PostCardUiState = toPostCardUiState(
+                        currentUserAccountId = loggedInAccountId,
+                        postCardInteractions = postCardDelegate,
+                        showTopRowMetaData = false,
+                        isClickable = statusId != mainStatusId,
+                    )
+                Resource.Loaded(
+                    ThreadPostCardCollection(
+                        ancestors = thread.context.ancestors.map { it.mapToPostCardUiState() },
+                        mainPost = thread.status.mapToPostCardUiState(),
+                        descendants = thread.context.descendants
+                            .filter { it.inReplyToId == mainStatusId }
+                            .map { ThreadDescendant.PostCard(it.mapToPostCardUiState()) },
+                    )
                 )
-            Resource.Loaded(
-                ThreadPostCardCollection(
-                    ancestors = thread.context.ancestors.map { it.mapToPostCardUiState() },
-                    mainPost = thread.status.mapToPostCardUiState(),
-                    descendants = descendants,
+            }
+
+            ThreadType.TREE -> {
+                val descendants = threadData.repliesTree?.toDepthList(
+                    shouldIgnoreChildren = {
+                        postsIdsWithHiddenReplies.contains(it.statusId)
+                    },
+                    shouldAddAllChildrenBeyondLimit = {
+                        postIdsIgnoringMaxReplyCount.contains(it.statusId)
+                    },
+                    childLimit = MAX_REPLY_COUNT,
+                )?.drop(1)?.filter {
+                    it.depth <= MAX_DEPTH
+                }?.map { depthItem ->
+                    if (depthItem.hiddenRepliesCount == -1) {
+                        val status = depthItem.value
+                        val isAtMaxDepth = depthItem.depth == MAX_DEPTH
+                        val hasReplies = depthItem.hasReplies
+                        ThreadDescendant.PostCard(
+                            status.toPostCardUiState(
+                                currentUserAccountId = loggedInAccountId,
+                                postCardInteractions = postCardDelegate,
+                                depthLinesUiState = DepthLinesUiState(
+                                    postDepth = depthItem.depth,
+                                    depthLines = depthItem.depthLines,
+                                    showViewMoreRepliesText = isAtMaxDepth && hasReplies,
+                                    expandRepliesButtonUiState = when {
+                                        !hasReplies || isAtMaxDepth -> ExpandRepliesButtonUiState.HIDDEN
+                                        postsIdsWithHiddenReplies.contains(
+                                            status.statusId
+                                        ) -> ExpandRepliesButtonUiState.PLUS
+                                        else -> ExpandRepliesButtonUiState.MINUS
+                                    },
+                                ),
+                                showTopRowMetaData = false,
+                            )
+                        )
+                    } else {
+                        ThreadDescendant.ViewMore(
+                            depthLinesUiState = DepthLinesUiState(
+                                postDepth = depthItem.depth,
+                                depthLines = depthItem.depthLines,
+                                showViewMoreRepliesText = false,
+                                expandRepliesButtonUiState = ExpandRepliesButtonUiState.HIDDEN,
+                                showViewMoreRepliesWithPlusButton = true,
+                            ),
+                            count = depthItem.hiddenRepliesCount,
+                            statusId = depthItem.value.statusId,
+                        )
+                    }
+                } ?: emptyList()
+
+                val mapToPostCardUiState =
+                    fun Status.(): PostCardUiState = toPostCardUiState(
+                        currentUserAccountId = loggedInAccountId,
+                        postCardInteractions = postCardDelegate,
+                        showTopRowMetaData = false,
+                        isClickable = statusId != mainStatusId,
+                    )
+                Resource.Loaded(
+                    ThreadPostCardCollection(
+                        ancestors = thread.context.ancestors.map { it.mapToPostCardUiState() },
+                        mainPost = thread.status.mapToPostCardUiState(),
+                        descendants = descendants,
+                    )
                 )
-            )
+            }
         }
     }
 
@@ -215,11 +259,25 @@ class ThreadViewModel(
         }
     }
 
+    override fun onShowAllRepliesClicked(statusId: String) {
+        postIdsIgnoringMaxReplyCount.update {
+            postIdsIgnoringMaxReplyCount.value.toMutableList().apply {
+                add(statusId)
+            }
+        }
+    }
+
     override fun onsScreenViewed() {
         analytics.threadScreenViewed()
     }
 
     companion object {
         private const val MAX_DEPTH = 6
+        private const val MAX_REPLY_COUNT = 2
     }
+
+    private data class ThreadData(
+        val threadResource: Resource<Thread>,
+        val repliesTree: TreeNode<Status>? = null
+    )
 }

@@ -59,6 +59,7 @@ data class DepthLinesUiState(
     val depthLines: List<Int>,
     val showViewMoreRepliesText: Boolean = false,
     val expandRepliesButtonUiState: ExpandRepliesButtonUiState,
+    val showViewMoreRepliesWithPlusButton: Boolean = false,
 )
 
 enum class ExpandRepliesButtonUiState {
