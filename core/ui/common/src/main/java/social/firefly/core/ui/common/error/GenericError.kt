@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import social.firefly.core.ui.common.R
+import social.firefly.core.ui.common.button.FfButton
 
 @Composable
 fun GenericError(
@@ -29,9 +30,8 @@ fun GenericError(
             modifier = Modifier.align(Alignment.CenterHorizontally),
             text = stringResource(id = R.string.error_oops),
         )
-        Button(
-            modifier =
-            Modifier
+        FfButton(
+            modifier = Modifier
                 .padding(8.dp)
                 .align(Alignment.CenterHorizontally),
             onClick = { onRetryClicked() },
