@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.koin.core.parameter.parametersOf
 import org.koin.java.KoinJavaComponent
+import org.koin.java.KoinJavaComponent.inject
 import social.firefly.common.Resource
 import social.firefly.common.tree.TreeNode
 import social.firefly.common.tree.toDepthList
@@ -42,15 +43,16 @@ class ThreadViewModel(
 
     private val loggedInAccountId = getLoggedInUserAccountId()
 
-    private val postsIdsWithHiddenReplies = MutableStateFlow<List<String>>(emptyList())
+    private val postIdsWithHiddenReplies = MutableStateFlow<List<String>>(emptyList())
+    private val postIdsIgnoringMaxReplyCount = MutableStateFlow<List<String>>(emptyList())
 
-    val postCardDelegate: PostCardDelegate by KoinJavaComponent.inject(
+    val postCardDelegate: PostCardDelegate by inject(
         PostCardDelegate::class.java,
     ) { parametersOf(
         FeedLocation.THREAD,
         { statusId: String ->
-            postsIdsWithHiddenReplies.update {
-                postsIdsWithHiddenReplies.value.toMutableList().apply {
+            postIdsWithHiddenReplies.update {
+                postIdsWithHiddenReplies.value.toMutableList().apply {
                     if (contains(statusId)) {
                         remove(statusId)
                     } else {
@@ -107,8 +109,9 @@ class ThreadViewModel(
             combine(
                 threadType,
                 threadDataFlow,
-                postsIdsWithHiddenReplies
-            ) { threadType, threadData, postsIdsWithHiddenReplies ->
+                postIdsWithHiddenReplies,
+                postIdsIgnoringMaxReplyCount,
+            ) { threadType, threadData, postsIdsWithHiddenReplies, postIdsIgnoringMaxReplyCount ->
                 val threadResource = threadData.threadResource
                 threadResource.data ?: return@combine when (threadResource) {
                     is Resource.Loading -> Resource.Loading()
@@ -119,6 +122,7 @@ class ThreadViewModel(
                     threadType = threadType,
                     threadData = threadData,
                     postsIdsWithHiddenReplies = postsIdsWithHiddenReplies,
+                    postIdsIgnoringMaxReplyCount = postIdsIgnoringMaxReplyCount,
                 )
             }.collect {
                 _uiState.edit { it }
@@ -130,6 +134,7 @@ class ThreadViewModel(
         threadType: ThreadType,
         threadData: ThreadData,
         postsIdsWithHiddenReplies: List<String>,
+        postIdsIgnoringMaxReplyCount: List<String>,
     ): Resource<ThreadPostCardCollection> {
         val thread = threadData.threadResource.data!!
         return when (threadType) {
@@ -174,31 +179,50 @@ class ThreadViewModel(
                 val descendants = threadData.repliesTree?.toDepthList(
                     shouldIgnoreChildren = {
                         postsIdsWithHiddenReplies.contains(it.statusId)
-                    }
+                    },
+                    shouldAddAllChildrenBeyondLimit = {
+                        postIdsIgnoringMaxReplyCount.contains(it.statusId)
+                    },
+                    childLimit = MAX_REPLY_COUNT,
                 )?.drop(1)?.filter {
                     it.depth <= MAX_DEPTH
-                }?.map { statusWithDepth ->
-                    val isAtMaxDepth = statusWithDepth.depth == MAX_DEPTH
-                    val hasReplies = statusWithDepth.hasReplies
-                    ThreadDescendant.PostCard(
-                        statusWithDepth.value.toPostCardUiState(
-                            currentUserAccountId = loggedInAccountId,
-                            postCardInteractions = postCardDelegate,
-                            depthLinesUiState = DepthLinesUiState(
-                                postDepth = statusWithDepth.depth,
-                                depthLines = statusWithDepth.depthLines,
-                                showViewMoreRepliesText = isAtMaxDepth && hasReplies,
-                                expandRepliesButtonUiState = when {
-                                    !hasReplies || isAtMaxDepth -> ExpandRepliesButtonUiState.HIDDEN
-                                    postsIdsWithHiddenReplies.contains(
-                                        statusWithDepth.value.statusId
-                                    ) -> ExpandRepliesButtonUiState.PLUS
-                                    else -> ExpandRepliesButtonUiState.MINUS
-                                },
-                            ),
-                            showTopRowMetaData = false,
+                }?.map { depthItem ->
+                    if (depthItem.hiddenRepliesCount == -1) {
+                        val status = depthItem.value
+                        val isAtMaxDepth = depthItem.depth == MAX_DEPTH
+                        val hasReplies = depthItem.hasReplies
+                        ThreadDescendant.PostCard(
+                            status.toPostCardUiState(
+                                currentUserAccountId = loggedInAccountId,
+                                postCardInteractions = postCardDelegate,
+                                depthLinesUiState = DepthLinesUiState(
+                                    postDepth = depthItem.depth,
+                                    depthLines = depthItem.depthLines,
+                                    showViewMoreRepliesText = isAtMaxDepth && hasReplies,
+                                    expandRepliesButtonUiState = when {
+                                        !hasReplies || isAtMaxDepth -> ExpandRepliesButtonUiState.HIDDEN
+                                        postsIdsWithHiddenReplies.contains(
+                                            status.statusId
+                                        ) -> ExpandRepliesButtonUiState.PLUS
+                                        else -> ExpandRepliesButtonUiState.MINUS
+                                    },
+                                ),
+                                showTopRowMetaData = false,
+                            )
                         )
-                    )
+                    } else {
+                        ThreadDescendant.ViewMore(
+                            depthLinesUiState = DepthLinesUiState(
+                                postDepth = depthItem.depth,
+                                depthLines = depthItem.depthLines,
+                                showViewMoreRepliesText = false,
+                                expandRepliesButtonUiState = ExpandRepliesButtonUiState.HIDDEN,
+                                showViewMoreRepliesWithPlusButton = true,
+                            ),
+                            count = depthItem.hiddenRepliesCount,
+                            statusId = depthItem.value.statusId,
+                        )
+                    }
                 } ?: emptyList()
 
                 val mapToPostCardUiState =
@@ -235,12 +259,21 @@ class ThreadViewModel(
         }
     }
 
+    override fun onShowAllRepliesClicked(statusId: String) {
+        postIdsIgnoringMaxReplyCount.update {
+            postIdsIgnoringMaxReplyCount.value.toMutableList().apply {
+                add(statusId)
+            }
+        }
+    }
+
     override fun onsScreenViewed() {
         analytics.threadScreenViewed()
     }
 
     companion object {
         private const val MAX_DEPTH = 6
+        private const val MAX_REPLY_COUNT = 2
     }
 
     private data class ThreadData(

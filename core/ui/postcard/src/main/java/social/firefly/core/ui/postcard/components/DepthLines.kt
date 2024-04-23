@@ -22,7 +22,7 @@ import social.firefly.core.ui.postcard.ExpandRepliesButtonUiState
  */
 @Suppress("LongMethod")
 @Composable
-internal fun DepthLines(
+fun DepthLines(
     depthLinesUiState: DepthLinesUiState,
 ) {
     val spacingWidth = 12
@@ -70,11 +70,11 @@ internal fun DepthLines(
                 }
             }
 
-            // curved line leading into the avatar
-            if (postDepth > startingDepth) {
+            if (depthLinesUiState.showViewMoreRepliesWithPlusButton) {
                 val drawDepth = postDepth - startingDepth
                 val x = (spacingWidth * drawDepth).toFloat() + 1
-                val curveStartY = avatarCenterYPx - spacingWidth.toFloat().toPx(context)
+                val yEnd = height / 2
+                val curveStartY = yEnd - spacingWidth.toFloat().toPx(context)
 
                 val path = Path().apply {
                     moveTo(
@@ -87,9 +87,13 @@ internal fun DepthLines(
                     )
                     quadraticBezierTo(
                         x1 = x.toPx(context),
-                        y1 = avatarCenterYPx,
+                        y1 = yEnd,
                         x2 = (x + spacingWidth).toPx(context),
-                        y2 = avatarCenterYPx,
+                        y2 = yEnd,
+                    )
+                    lineTo(
+                        x = (x + spacingWidth + 40).toPx(context),
+                        y = yEnd
                     )
                 }
                 drawPath(
@@ -99,6 +103,37 @@ internal fun DepthLines(
                         width = strokeWidthPx,
                     )
                 )
+            } else {
+                // curved line leading into the avatar
+                if (postDepth > startingDepth) {
+                    val drawDepth = postDepth - startingDepth
+                    val x = (spacingWidth * drawDepth).toFloat() + 1
+                    val curveStartY = avatarCenterYPx - spacingWidth.toFloat().toPx(context)
+
+                    val path = Path().apply {
+                        moveTo(
+                            x = x.toPx(context),
+                            y = 0f.toPx(context)
+                        )
+                        lineTo(
+                            x = x.toPx(context),
+                            y = curveStartY
+                        )
+                        quadraticBezierTo(
+                            x1 = x.toPx(context),
+                            y1 = avatarCenterYPx,
+                            x2 = (x + spacingWidth).toPx(context),
+                            y2 = avatarCenterYPx,
+                        )
+                    }
+                    drawPath(
+                        path = path,
+                        color = lineColor,
+                        style = Stroke(
+                            width = strokeWidthPx,
+                        )
+                    )
+                }
             }
 
             // new depth line coming out of avatar

@@ -1,5 +1,6 @@
 package social.firefly.feature.thread
 
+import social.firefly.core.ui.postcard.DepthLinesUiState
 import social.firefly.core.ui.postcard.PostCardUiState
 
 data class ThreadPostCardCollection(
@@ -16,6 +17,7 @@ sealed class ThreadDescendant(
     ) : ThreadDescendant(uiState.statusId)
 
     data class ViewMore(
+        val depthLinesUiState: DepthLinesUiState,
         val count: Int,
         val statusId: String,
     ) : ThreadDescendant("$statusId - view more")

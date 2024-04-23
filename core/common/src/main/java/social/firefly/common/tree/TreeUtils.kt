@@ -1,9 +1,12 @@
 package social.firefly.common.tree
 
+@Suppress("ComplexCondition")
 fun <T> TreeNode<T>.toDepthList(
     depth: Int = 0,
     depthLines: List<Int> = listOf(),
     shouldIgnoreChildren: (T) -> Boolean,
+    shouldAddAllChildrenBeyondLimit: (T) -> Boolean,
+    childLimit: Int,
 ): List<DepthItem<T>> = buildList {
     var newDepthLines = buildList {
         addAll(depthLines)
@@ -21,18 +24,35 @@ fun <T> TreeNode<T>.toDepthList(
     )
     if (!shouldIgnoreChildren(value)) {
         branches.forEachIndexed { index, treeNode ->
-            if (index == branches.size - 1) {
+            val isLastBranch = index == branches.size - 1
+            if (isLastBranch) {
                 newDepthLines = newDepthLines.toMutableList().apply {
                     remove(depth)
                 }
             }
-            addAll(
-                treeNode.toDepthList(
-                    depth + 1,
-                    newDepthLines,
-                    shouldIgnoreChildren,
+            if (shouldAddAllChildrenBeyondLimit(value) || index < childLimit || depth == 0) {
+                addAll(
+                    treeNode.toDepthList(
+                        depth + 1,
+                        newDepthLines,
+                        shouldIgnoreChildren,
+                        shouldAddAllChildrenBeyondLimit,
+                        childLimit,
+                    )
                 )
-            )
+            }
+            // add depth item that represents a view more button
+            if (isLastBranch && index >= childLimit && !shouldAddAllChildrenBeyondLimit(value) && depth != 0) {
+                add(
+                    DepthItem(
+                        value,
+                        depth + 1,
+                        newDepthLines,
+                        hasReplies = false,
+                        hiddenRepliesCount = index - childLimit
+                    )
+                )
+            }
         }
     }
 }
@@ -42,6 +62,7 @@ data class DepthItem<T>(
     val depth: Int,
     val depthLines: List<Int>,
     val hasReplies: Boolean,
+    val hiddenRepliesCount: Int = -1,
 )
 
 fun <T> List<T>.toTree(

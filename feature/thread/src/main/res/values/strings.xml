@@ -7,4 +7,8 @@
     <string name="tree_view">Tree view</string>
 
     <string name="replies">Replies</string>
+    <plurals name="show_more_replies">
+        <item quantity="one">%d more reply</item>
+        <item quantity="other">%d more replies</item>
+    </plurals>
 </resources>
