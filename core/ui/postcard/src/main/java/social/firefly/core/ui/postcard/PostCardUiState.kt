@@ -13,9 +13,6 @@ data class PostCardUiState(
     val isClickable: Boolean = true,
 )
 
-/**
- * @param isUsersPost true if the this status belongs to the logged in user
- */
 data class MainPostCardUiState(
     val url: String?,
     val username: String,
@@ -31,7 +28,7 @@ data class MainPostCardUiState(
     val accountId: String,
     val isBeingDeleted: Boolean,
     val postContentUiState: PostContentUiState,
-    val dropDownOptions: List<DropDownOption>
+    val overflowDropDownType: OverflowDropDownType,
 )
 
 data class DropDownOption(
@@ -71,6 +68,11 @@ enum class ExpandRepliesButtonUiState {
 enum class TopRowIconType {
     REPLY,
     BOOSTED,
+}
+
+enum class OverflowDropDownType {
+    USER,
+    NOT_USER,
 }
 
 data class PreviewCard(

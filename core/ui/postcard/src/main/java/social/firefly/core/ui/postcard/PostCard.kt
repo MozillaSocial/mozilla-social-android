@@ -4,7 +4,6 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,13 +17,11 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -147,6 +144,7 @@ private fun Post(
         Column {
             MetaData(
                 post = post,
+                postCardInteractions = postCardInteractions,
             )
 
             PostContent(
@@ -208,7 +206,7 @@ private fun PostCardPreview() {
                         previewCard = null,
                         contentWarning = "",
                     ),
-                    dropDownOptions = listOf(),
+                    overflowDropDownType = OverflowDropDownType.USER,
                 ),
                 depthLinesUiState = null,
             ),
@@ -251,7 +249,7 @@ private fun PostCardWithContentWarningPreview() {
                         previewCard = null,
                         contentWarning = "Micky mouse spoilers!",
                     ),
-                    dropDownOptions = listOf(),
+                    overflowDropDownType = OverflowDropDownType.USER,
                 ),
                 depthLinesUiState = null,
             ),
@@ -291,7 +289,7 @@ private fun PostCardPreviewWithDepth() {
                         previewCard = null,
                         contentWarning = "",
                     ),
-                    dropDownOptions = listOf(),
+                    overflowDropDownType = OverflowDropDownType.USER,
                 ),
                 depthLinesUiState = DepthLinesUiState(
                     postDepth = 2,
@@ -340,7 +338,7 @@ private fun PostCardPreviewWithHighDepth() {
                         previewCard = null,
                         contentWarning = "",
                     ),
-                    dropDownOptions = listOf(),
+                    overflowDropDownType = OverflowDropDownType.USER,
                 ),
                 depthLinesUiState = DepthLinesUiState(
                     postDepth = 15,
@@ -388,7 +386,7 @@ private fun PostCardPreviewWithMinusButton() {
                         previewCard = null,
                         contentWarning = "",
                     ),
-                    dropDownOptions = listOf(),
+                    overflowDropDownType = OverflowDropDownType.USER,
                 ),
                 depthLinesUiState = DepthLinesUiState(
                     postDepth = 2,
@@ -436,7 +434,7 @@ private fun PostCardPreviewWithPlusButton() {
                         previewCard = null,
                         contentWarning = "",
                     ),
-                    dropDownOptions = listOf(),
+                    overflowDropDownType = OverflowDropDownType.USER,
                 ),
                 depthLinesUiState = DepthLinesUiState(
                     postDepth = 2,

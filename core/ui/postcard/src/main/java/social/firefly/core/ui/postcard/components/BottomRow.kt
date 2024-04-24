@@ -24,6 +24,7 @@ import social.firefly.core.ui.common.utils.PreviewTheme
 import social.firefly.core.ui.common.utils.getMaxWidth
 import social.firefly.core.ui.common.utils.shareUrl
 import social.firefly.core.ui.postcard.MainPostCardUiState
+import social.firefly.core.ui.postcard.OverflowDropDownType
 import social.firefly.core.ui.postcard.PostCardInteractions
 import social.firefly.core.ui.postcard.PostCardInteractionsNoOp
 import social.firefly.core.ui.postcard.PostContentUiState
@@ -199,7 +200,7 @@ private fun BottomRowPreview() {
                         previewCard = null,
                         contentWarning = "",
                     ),
-                    dropDownOptions = listOf(),
+                    overflowDropDownType = OverflowDropDownType.USER,
                 ),
                 postCardInteractions = PostCardInteractionsNoOp,
             )
@@ -238,7 +239,7 @@ private fun BottomRowLargePreview() {
                         previewCard = null,
                         contentWarning = "",
                     ),
-                    dropDownOptions = listOf(),
+                    overflowDropDownType = OverflowDropDownType.USER,
                 ),
                 postCardInteractions = PostCardInteractionsNoOp,
             )
@@ -277,7 +278,7 @@ private fun BottomRowSmallPreview() {
                         previewCard = null,
                         contentWarning = "",
                     ),
-                    dropDownOptions = listOf(),
+                    overflowDropDownType = OverflowDropDownType.USER,
                 ),
                 postCardInteractions = PostCardInteractionsNoOp,
             )

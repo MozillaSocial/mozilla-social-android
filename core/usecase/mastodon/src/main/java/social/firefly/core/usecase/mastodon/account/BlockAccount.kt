@@ -39,9 +39,7 @@ class BlockAccount(
                     text = StringFactory.resource(R.string.error_blocking_account),
                     isError = true,
                 )
-                throw social.firefly.core.usecase.mastodon.account.BlockAccount.BlockFailedException(
-                    e
-                )
+                throw BlockFailedException(e)
             }
         }.await()
 

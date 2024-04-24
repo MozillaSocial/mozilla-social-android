@@ -142,7 +142,6 @@ class ThreadViewModel(
                 val mapToPostCardUiState =
                     fun Status.(): PostCardUiState = toPostCardUiState(
                         currentUserAccountId = loggedInAccountId,
-                        postCardInteractions = postCardDelegate,
                         isClickable = statusId != mainStatusId,
                     )
                 Resource.Loaded(
@@ -160,7 +159,6 @@ class ThreadViewModel(
                 val mapToPostCardUiState =
                     fun Status.(): PostCardUiState = toPostCardUiState(
                         currentUserAccountId = loggedInAccountId,
-                        postCardInteractions = postCardDelegate,
                         showTopRowMetaData = false,
                         isClickable = statusId != mainStatusId,
                     )
@@ -194,7 +192,6 @@ class ThreadViewModel(
                         ThreadDescendant.PostCard(
                             status.toPostCardUiState(
                                 currentUserAccountId = loggedInAccountId,
-                                postCardInteractions = postCardDelegate,
                                 depthLinesUiState = DepthLinesUiState(
                                     postDepth = depthItem.depth,
                                     depthLines = depthItem.depthLines,
@@ -228,7 +225,6 @@ class ThreadViewModel(
                 val mapToPostCardUiState =
                     fun Status.(): PostCardUiState = toPostCardUiState(
                         currentUserAccountId = loggedInAccountId,
-                        postCardInteractions = postCardDelegate,
                         showTopRowMetaData = false,
                         isClickable = statusId != mainStatusId,
                     )

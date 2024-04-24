@@ -31,7 +31,7 @@ class FavoritesViewModel(
         remoteMediator = favoritesRemoteMediator,
     ).map { pagingData ->
         pagingData.map {
-            it.toPostCardUiState(userAccountId(), postCardDelegate)
+            it.toPostCardUiState(userAccountId())
         }
     }.cachedIn(viewModelScope)
 }

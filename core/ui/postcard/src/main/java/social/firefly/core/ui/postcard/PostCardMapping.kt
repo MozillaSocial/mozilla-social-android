@@ -13,7 +13,6 @@ import social.firefly.core.ui.poll.toPollUiState
  */
 fun Status.toPostCardUiState(
     currentUserAccountId: String,
-    postCardInteractions: PostCardInteractions,
     depthLinesUiState: DepthLinesUiState? = null,
     showTopRowMetaData: Boolean = true,
     isClickable: Boolean = true,
@@ -25,15 +24,14 @@ fun Status.toPostCardUiState(
         } else {
             null
         },
-        mainPostCardUiState = boostedStatus?.toMainPostCardUiState(currentUserAccountId, postCardInteractions)
-                ?: toMainPostCardUiState(currentUserAccountId, postCardInteractions),
+        mainPostCardUiState = boostedStatus?.toMainPostCardUiState(currentUserAccountId)
+                ?: toMainPostCardUiState(currentUserAccountId),
         depthLinesUiState = depthLinesUiState,
         isClickable = isClickable,
     )
 
 private fun Status.toMainPostCardUiState(
     currentUserAccountId: String,
-    postCardInteractions: PostCardInteractions
 ): MainPostCardUiState =
     MainPostCardUiState(
         url = url,
@@ -50,10 +48,10 @@ private fun Status.toMainPostCardUiState(
         accountId = account.accountId,
         isBeingDeleted = isBeingDeleted,
         postContentUiState = toPostContentUiState(currentUserAccountId),
-        dropDownOptions = toDropDownOptions(
-            isUsersPost = currentUserAccountId == account.accountId,
-            postCardInteractions = postCardInteractions
-        )
+        overflowDropDownType = when {
+            currentUserAccountId == account.accountId -> OverflowDropDownType.USER
+            else -> OverflowDropDownType.NOT_USER
+        }
     )
 
 fun Status.toDropDownOptions(

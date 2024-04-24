@@ -1,18 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="media_uploading">Uploading…</string>
-    <string name="media_upload_failed">Failed to upload media</string>
-
+    <string name="cancel">Cancel</string>
     <string name="retry">Retry</string>
     <string name="ok">OK</string>
     <string name="search">Search</string>
+
+    <string name="media_uploading">Uploading…</string>
+    <string name="media_upload_failed">Failed to upload media</string>
 
     <string name="error_oops">Oops, something went wrong</string>
 
     <string name="mute_user">Mute %s</string>
     <string name="unmute_user">Unmute %s</string>
-    <string name="block_user">Block %s</string>
-    <string name="unblock_user">Unblock %s</string>
     <string name="report_user">Report %s</string>
     <string name="delete_post">Delete</string>
 
@@ -40,4 +39,8 @@
     <string name="play">play</string>
     <string name="mute">mute</string>
 
+    <string name="block_user_confirmation">Are you sure you want to block %s?</string>
+    <string name="block_user_confirmed">Block</string>
+    <string name="block_user">Block %s</string>
+    <string name="unblock_user">Unblock %s</string>
 </resources>

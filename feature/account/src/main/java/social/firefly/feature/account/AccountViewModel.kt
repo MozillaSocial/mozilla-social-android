@@ -106,7 +106,7 @@ class AccountViewModel(
         remoteMediator = postsRemoteMediator,
     ).map { pagingData ->
         pagingData.map {
-            it.toPostCardUiState(usersAccountId, postCardDelegate)
+            it.toPostCardUiState(usersAccountId)
         }
     }.cachedIn(viewModelScope)
 
@@ -117,7 +117,7 @@ class AccountViewModel(
         remoteMediator = postsAndRepliesRemoteMediator,
     ).map { pagingData ->
         pagingData.map {
-            it.toPostCardUiState(usersAccountId, postCardDelegate)
+            it.toPostCardUiState(usersAccountId)
         }
     }.cachedIn(viewModelScope)
 
@@ -128,7 +128,7 @@ class AccountViewModel(
         remoteMediator = mediaRemoteMediator,
     ).map { pagingData ->
         pagingData.map {
-            it.toPostCardUiState(usersAccountId, postCardDelegate)
+            it.toPostCardUiState(usersAccountId)
         }
     }.cachedIn(viewModelScope)
 
