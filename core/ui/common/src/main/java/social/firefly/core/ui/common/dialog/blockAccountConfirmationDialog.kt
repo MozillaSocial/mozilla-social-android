@@ -1,15 +1,15 @@
 package social.firefly.core.ui.common.dialog
 
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import social.firefly.core.ui.common.text.FfTextButton
 
 @Composable
-fun BlockAccountConfirmationDialog(
+fun blockAccountConfirmationDialog(
     onConfirmation: () -> Unit
 ) : DialogOpener {
     var isOpen by remember { mutableStateOf(false) }
@@ -18,7 +18,7 @@ fun BlockAccountConfirmationDialog(
         FfAlertDialog(
             onDismissRequest = { isOpen = false },
             confirmButton = {
-                TextButton(onClick = { onConfirmation()  }) {
+                FfTextButton(onClick = { onConfirmation()  }) {
                     Text(text = "Blocky!")
                 }
             },
@@ -26,7 +26,7 @@ fun BlockAccountConfirmationDialog(
                 Text(text = "Blocky?")
             },
             dismissButton = {
-                TextButton(onClick = { isOpen = false  }) {
+                FfTextButton(onClick = { isOpen = false  }) {
                     Text(text = "Cancel")
                 }
             }

@@ -14,6 +14,7 @@ import androidx.compose.ui.unit.dp
 import social.firefly.common.utils.StringFactory
 import social.firefly.core.designsystem.icon.FfIcons
 import social.firefly.core.designsystem.theme.FfTheme
+import social.firefly.core.ui.common.dialog.blockAccountConfirmationDialog
 import social.firefly.core.ui.common.dropdown.FfDropDownItem
 import social.firefly.core.ui.common.dropdown.FfIconButtonDropDownMenu
 import social.firefly.core.ui.common.loading.FfCircularProgressIndicator
@@ -61,6 +62,13 @@ private fun OverflowMenu(
     val overflowMenuExpanded = remember { mutableStateOf(false) }
     val context = LocalContext.current
 
+    val blockDialog = blockAccountConfirmationDialog {
+        postCardInteractions.onOverflowBlockClicked(
+            accountId = post.accountId,
+            statusId = post.statusId,
+        )
+    }
+
     FfIconButtonDropDownMenu(
         expanded = overflowMenuExpanded,
         dropDownMenuContent = {
@@ -97,12 +105,7 @@ private fun OverflowMenu(
                             post.username
                         ).build(context),
                         expanded = overflowMenuExpanded,
-                        onClick = {
-                            postCardInteractions.onOverflowBlockClicked(
-                                accountId = post.accountId,
-                                statusId = post.statusId,
-                            )
-                        },
+                        onClick = { blockDialog.open() },
                     )
                     FfDropDownItem(
                         text = StringFactory.resource(
