@@ -14,9 +14,6 @@ import social.firefly.core.share.ShareInfo
 import social.firefly.core.usecase.mastodon.auth.IsSignedInFlow
 import social.firefly.ui.AppState
 
-/**
- * Main view model- handles login logic and logout navigation
- */
 class MainViewModel(
     private val navigateTo: NavigateTo,
     private val isSignedInFlow: IsSignedInFlow,
