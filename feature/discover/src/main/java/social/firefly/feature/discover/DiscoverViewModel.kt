@@ -59,7 +59,6 @@ class DiscoverViewModel(
                 pagingData.map { status ->
                     status.toPostCardUiState(
                         currentUserAccountId = usersAccountId,
-                        postCardInteractions = postCardDelegate,
                     )
                 }
             }

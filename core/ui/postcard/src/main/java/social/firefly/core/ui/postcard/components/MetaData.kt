@@ -11,17 +11,22 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import social.firefly.common.utils.StringFactory
 import social.firefly.core.designsystem.icon.FfIcons
 import social.firefly.core.designsystem.theme.FfTheme
 import social.firefly.core.ui.common.dropdown.FfDropDownItem
 import social.firefly.core.ui.common.dropdown.FfIconButtonDropDownMenu
 import social.firefly.core.ui.common.loading.FfCircularProgressIndicator
 import social.firefly.core.ui.postcard.MainPostCardUiState
+import social.firefly.core.ui.postcard.OverflowDropDownType
+import social.firefly.core.ui.postcard.PostCardInteractions
+import social.firefly.core.ui.postcard.R
 
 @Composable
 internal fun MetaData(
     modifier: Modifier = Modifier,
     post: MainPostCardUiState,
+    postCardInteractions: PostCardInteractions,
 ) {
     val context = LocalContext.current
 
@@ -43,6 +48,7 @@ internal fun MetaData(
         }
         OverflowMenu(
             post = post,
+            postCardInteractions = postCardInteractions,
         )
     }
 }
@@ -50,6 +56,7 @@ internal fun MetaData(
 @Composable
 private fun OverflowMenu(
     post: MainPostCardUiState,
+    postCardInteractions: PostCardInteractions,
 ) {
     val overflowMenuExpanded = remember { mutableStateOf(false) }
     val context = LocalContext.current
@@ -57,12 +64,61 @@ private fun OverflowMenu(
     FfIconButtonDropDownMenu(
         expanded = overflowMenuExpanded,
         dropDownMenuContent = {
-            for (dropDownOption in post.dropDownOptions) {
-                FfDropDownItem(
-                    text = dropDownOption.text.build(context),
-                    expanded = overflowMenuExpanded,
-                    onClick = dropDownOption.onOptionClicked,
-                )
+            when (post.overflowDropDownType) {
+                OverflowDropDownType.USER -> {
+                    FfDropDownItem(
+                        text = StringFactory.resource(resId = R.string.edit_post).build(context),
+                        expanded = overflowMenuExpanded,
+                        onClick = { postCardInteractions.onOverflowEditClicked(post.statusId) },
+                    )
+                    FfDropDownItem(
+                        text = StringFactory.resource(resId = R.string.delete_post).build(context),
+                        expanded = overflowMenuExpanded,
+                        onClick = { postCardInteractions.onOverflowDeleteClicked(post.statusId) }
+                    )
+                }
+                OverflowDropDownType.NOT_USER -> {
+                    FfDropDownItem(
+                        text = StringFactory.resource(
+                            R.string.mute_user,
+                            post.username
+                        ).build(context),
+                        expanded = overflowMenuExpanded,
+                        onClick = {
+                            postCardInteractions.onOverflowMuteClicked(
+                                accountId = post.accountId,
+                                statusId = post.statusId,
+                            )
+                        },
+                    )
+                    FfDropDownItem(
+                        text = StringFactory.resource(
+                            R.string.block_user,
+                            post.username
+                        ).build(context),
+                        expanded = overflowMenuExpanded,
+                        onClick = {
+                            postCardInteractions.onOverflowBlockClicked(
+                                accountId = post.accountId,
+                                statusId = post.statusId,
+                            )
+                        },
+                    )
+                    FfDropDownItem(
+                        text = StringFactory.resource(
+                            R.string.report_user,
+                            post.username
+                        ).build(context),
+                        expanded = overflowMenuExpanded,
+                        onClick = {
+                            postCardInteractions.onOverflowReportClicked(
+                                accountId = post.accountId,
+                                accountHandle = post.accountName.build(context),
+                                statusId = post.statusId,
+                            )
+                        }
+                    )
+                }
             }
         }
     ) {
