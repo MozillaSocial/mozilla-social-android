@@ -15,6 +15,8 @@ import social.firefly.common.utils.StringFactory
 import social.firefly.core.designsystem.icon.FfIcons
 import social.firefly.core.designsystem.theme.FfTheme
 import social.firefly.core.ui.common.dialog.blockAccountConfirmationDialog
+import social.firefly.core.ui.common.dialog.deleteStatusConfirmationDialog
+import social.firefly.core.ui.common.dialog.muteAccountConfirmationDialog
 import social.firefly.core.ui.common.dropdown.FfDropDownItem
 import social.firefly.core.ui.common.dropdown.FfIconButtonDropDownMenu
 import social.firefly.core.ui.common.loading.FfCircularProgressIndicator
@@ -62,13 +64,22 @@ private fun OverflowMenu(
     val overflowMenuExpanded = remember { mutableStateOf(false) }
     val context = LocalContext.current
 
-    val blockDialog = blockAccountConfirmationDialog(
-        userName = post.username
-    ) {
+    val blockDialog = blockAccountConfirmationDialog(userName = post.username) {
         postCardInteractions.onOverflowBlockClicked(
             accountId = post.accountId,
             statusId = post.statusId,
         )
+    }
+
+    val muteDialog = muteAccountConfirmationDialog(userName = post.username) {
+        postCardInteractions.onOverflowMuteClicked(
+            accountId = post.accountId,
+            statusId = post.statusId,
+        )
+    }
+
+    val deleteStatusDialog = deleteStatusConfirmationDialog {
+        postCardInteractions.onOverflowDeleteClicked(post.statusId)
     }
 
     FfIconButtonDropDownMenu(
@@ -84,7 +95,7 @@ private fun OverflowMenu(
                     FfDropDownItem(
                         text = StringFactory.resource(resId = R.string.delete_post).build(context),
                         expanded = overflowMenuExpanded,
-                        onClick = { postCardInteractions.onOverflowDeleteClicked(post.statusId) }
+                        onClick = { deleteStatusDialog.open() }
                     )
                 }
                 OverflowDropDownType.NOT_USER -> {
@@ -94,12 +105,7 @@ private fun OverflowMenu(
                             post.username
                         ).build(context),
                         expanded = overflowMenuExpanded,
-                        onClick = {
-                            postCardInteractions.onOverflowMuteClicked(
-                                accountId = post.accountId,
-                                statusId = post.statusId,
-                            )
-                        },
+                        onClick = { muteDialog.open() },
                     )
                     FfDropDownItem(
                         text = StringFactory.resource(

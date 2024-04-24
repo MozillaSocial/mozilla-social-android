@@ -10,10 +10,7 @@
 
     <string name="error_oops">Oops, something went wrong</string>
 
-    <string name="mute_user">Mute %s</string>
-    <string name="unmute_user">Unmute %s</string>
     <string name="report_user">Report %s</string>
-    <string name="delete_post">Delete</string>
 
     <string name="feed_recommendations_why_am_i_seeing_this">Why am I seeing this?</string>
     <string name="feed_recommendations_reason_you_are_seeing_this">You\'re seeing this because it\'s the same thing we show to everyone.</string>
@@ -43,4 +40,13 @@
     <string name="block_user_confirmed">Block</string>
     <string name="block_user">Block %s</string>
     <string name="unblock_user">Unblock %s</string>
+
+    <string name="mute_user_confirmation">Are you sure you want to mute %s?</string>
+    <string name="mute_user_confirmed">Mute</string>
+    <string name="mute_user">Mute %s</string>
+    <string name="unmute_user">Unmute %s</string>
+
+    <string name="delete_post_confirmation">Are you sure you want to delete this post?</string>
+    <string name="delete_post_confirmed">Delete</string>
+    <string name="delete_post">Delete</string>
 </resources>

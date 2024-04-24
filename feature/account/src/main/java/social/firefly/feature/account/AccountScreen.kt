@@ -72,6 +72,7 @@ import social.firefly.core.ui.common.button.FfButtonSecondary
 import social.firefly.core.ui.common.button.FfToggleButton
 import social.firefly.core.ui.common.button.ToggleButtonState
 import social.firefly.core.ui.common.dialog.blockAccountConfirmationDialog
+import social.firefly.core.ui.common.dialog.muteAccountConfirmationDialog
 import social.firefly.core.ui.common.dropdown.FfDropDownItem
 import social.firefly.core.ui.common.dropdown.FfIconButtonDropDownMenu
 import social.firefly.core.ui.common.error.GenericError
@@ -359,10 +360,12 @@ private fun OverflowMenu(
     val overflowMenuExpanded = remember { mutableStateOf(false) }
     val context = LocalContext.current
 
-    val blockDialog = blockAccountConfirmationDialog(
-        userName = account.displayName
-    ) {
+    val blockDialog = blockAccountConfirmationDialog(userName = account.displayName) {
         overflowInteractions.onOverflowBlockClicked()
+    }
+
+    val muteDialog = muteAccountConfirmationDialog(userName = account.displayName) {
+        overflowInteractions.onOverflowMuteClicked()
     }
 
     FfIconButtonDropDownMenu(
@@ -413,7 +416,7 @@ private fun OverflowMenu(
                             account.username,
                         ),
                         expanded = overflowMenuExpanded,
-                        onClick = { overflowInteractions.onOverflowMuteClicked() },
+                        onClick = { muteDialog.open() },
                     )
                 }
 
