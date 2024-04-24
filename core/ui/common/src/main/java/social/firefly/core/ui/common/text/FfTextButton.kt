@@ -47,8 +47,8 @@ object FfTextButtonDefaults {
     @Composable
     fun colors(): ButtonColors = ButtonColors(
         containerColor = Color.Transparent,
-        contentColor = FfTheme.colors.textActionPrimary,
+        contentColor = FfTheme.colors.textPrimary,
         disabledContainerColor = Color.Transparent,
-        disabledContentColor = FfTheme.colors.textActionDisabled,
+        disabledContentColor = FfTheme.colors.textPrimary,
     )
 }

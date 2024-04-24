@@ -20,7 +20,7 @@ fun FfAlertDialog(
     title: @Composable (() -> Unit)? = null,
     text: @Composable (() -> Unit)? = null,
     shape: Shape = AlertDialogDefaults.shape,
-    containerColor: Color = FfTheme.colors.layer2,
+    containerColor: Color = FfTheme.colors.layer1,
     iconContentColor: Color = FfTheme.colors.iconPrimary,
     titleContentColor: Color = FfTheme.colors.textPrimary,
     textContentColor: Color = FfTheme.colors.textPrimary,
