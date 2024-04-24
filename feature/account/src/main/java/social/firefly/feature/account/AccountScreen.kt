@@ -71,6 +71,7 @@ import social.firefly.core.ui.common.button.FfButtonContentPadding
 import social.firefly.core.ui.common.button.FfButtonSecondary
 import social.firefly.core.ui.common.button.FfToggleButton
 import social.firefly.core.ui.common.button.ToggleButtonState
+import social.firefly.core.ui.common.dialog.blockAccountConfirmationDialog
 import social.firefly.core.ui.common.dropdown.FfDropDownItem
 import social.firefly.core.ui.common.dropdown.FfIconButtonDropDownMenu
 import social.firefly.core.ui.common.error.GenericError
@@ -358,6 +359,12 @@ private fun OverflowMenu(
     val overflowMenuExpanded = remember { mutableStateOf(false) }
     val context = LocalContext.current
 
+    val blockDialog = blockAccountConfirmationDialog(
+        userName = account.displayName
+    ) {
+        overflowInteractions.onOverflowBlockClicked()
+    }
+
     FfIconButtonDropDownMenu(
         expanded = overflowMenuExpanded,
         dropDownMenuContent = {
@@ -392,8 +399,7 @@ private fun OverflowMenu(
             if (!isUsersProfile) {
                 if (account.isMuted) {
                     FfDropDownItem(
-                        text =
-                        stringResource(
+                        text = stringResource(
                             id = social.firefly.core.ui.common.R.string.unmute_user,
                             account.username,
                         ),
@@ -402,8 +408,7 @@ private fun OverflowMenu(
                     )
                 } else {
                     FfDropDownItem(
-                        text =
-                        stringResource(
+                        text = stringResource(
                             id = social.firefly.core.ui.common.R.string.mute_user,
                             account.username,
                         ),
@@ -414,8 +419,7 @@ private fun OverflowMenu(
 
                 if (account.isBlocked) {
                     FfDropDownItem(
-                        text =
-                        stringResource(
+                        text = stringResource(
                             id = social.firefly.core.ui.common.R.string.unblock_user,
                             account.username,
                         ),
@@ -424,19 +428,17 @@ private fun OverflowMenu(
                     )
                 } else {
                     FfDropDownItem(
-                        text =
-                        stringResource(
+                        text = stringResource(
                             id = social.firefly.core.ui.common.R.string.block_user,
                             account.username,
                         ),
                         expanded = overflowMenuExpanded,
-                        onClick = { overflowInteractions.onOverflowBlockClicked() },
+                        onClick = { blockDialog.open() },
                     )
                 }
 
                 FfDropDownItem(
-                    text =
-                    stringResource(
+                    text = stringResource(
                         id = social.firefly.core.ui.common.R.string.report_user,
                         account.username,
                     ),

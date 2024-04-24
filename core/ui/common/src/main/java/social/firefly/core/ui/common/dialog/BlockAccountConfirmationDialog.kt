@@ -29,7 +29,12 @@ fun blockAccountConfirmationDialog(
                 )
             },
             confirmButton = {
-                FfTextButton(onClick = { onConfirmation()  }) {
+                FfTextButton(
+                    onClick = {
+                        onConfirmation()
+                        isOpen = false
+                    }
+                ) {
                     Text(text = stringResource(id = R.string.block_user_confirmed))
                 }
             },
