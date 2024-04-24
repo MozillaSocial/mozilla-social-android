@@ -62,7 +62,9 @@ private fun OverflowMenu(
     val overflowMenuExpanded = remember { mutableStateOf(false) }
     val context = LocalContext.current
 
-    val blockDialog = blockAccountConfirmationDialog {
+    val blockDialog = blockAccountConfirmationDialog(
+        userName = post.username
+    ) {
         postCardInteractions.onOverflowBlockClicked(
             accountId = post.accountId,
             statusId = post.statusId,
