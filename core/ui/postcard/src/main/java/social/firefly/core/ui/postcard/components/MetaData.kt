@@ -15,6 +15,7 @@ import social.firefly.common.utils.StringFactory
 import social.firefly.core.designsystem.icon.FfIcons
 import social.firefly.core.designsystem.theme.FfTheme
 import social.firefly.core.ui.common.dialog.blockAccountConfirmationDialog
+import social.firefly.core.ui.common.dialog.deleteStatusConfirmationDialog
 import social.firefly.core.ui.common.dialog.muteAccountConfirmationDialog
 import social.firefly.core.ui.common.dropdown.FfDropDownItem
 import social.firefly.core.ui.common.dropdown.FfIconButtonDropDownMenu
@@ -77,6 +78,10 @@ private fun OverflowMenu(
         )
     }
 
+    val deleteStatusDialog = deleteStatusConfirmationDialog {
+        postCardInteractions.onOverflowDeleteClicked(post.statusId)
+    }
+
     FfIconButtonDropDownMenu(
         expanded = overflowMenuExpanded,
         dropDownMenuContent = {
@@ -90,7 +95,7 @@ private fun OverflowMenu(
                     FfDropDownItem(
                         text = StringFactory.resource(resId = R.string.delete_post).build(context),
                         expanded = overflowMenuExpanded,
-                        onClick = { postCardInteractions.onOverflowDeleteClicked(post.statusId) }
+                        onClick = { deleteStatusDialog.open() }
                     )
                 }
                 OverflowDropDownType.NOT_USER -> {
