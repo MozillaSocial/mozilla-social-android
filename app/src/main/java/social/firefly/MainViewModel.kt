@@ -27,7 +27,8 @@ class MainViewModel(
     private val userPreferencesDatastore: UserPreferencesDatastore,
     private val timelineRepository: TimelineRepository,
 ) : ViewModel() {
-    init {
+
+    fun initialize(intent: Intent) {
         viewModelScope.launch {
             // We restore the user's place in their timeline by removing items in the database
             // above their last seen item.  This needs to happen before we start observing the
@@ -52,6 +53,7 @@ class MainViewModel(
                         navigateTo(NavigationDestination.Auth)
                     } else {
                         navigateTo(NavigationDestination.Tabs)
+                        handleIntent(intent)
                     }
                 }
             }
@@ -67,7 +69,19 @@ class MainViewModel(
         userPreferencesDatastore.preloadData()
     }
 
-    fun handleSendTextIntentReceived(intent: Intent) {
+    fun handleIntent(intent: Intent) {
+        when {
+            intent.action == Intent.ACTION_SEND -> {
+                when {
+                    intent.type == "text/plain" -> {
+                        handleSendTextIntentReceived(intent)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun handleSendTextIntentReceived(intent: Intent) {
         intent.getStringExtra(Intent.EXTRA_TEXT)?.let { sharedText ->
             ShareInfo.sharedText = sharedText
             navigateTo(NavigationDestination.NewPost())

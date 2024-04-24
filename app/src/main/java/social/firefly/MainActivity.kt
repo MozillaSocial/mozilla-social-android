@@ -43,6 +43,7 @@ class MainActivity : ComponentActivity() {
         }
 
         DatabasePurgeWorker.setupPurgeWork(this, lifecycleScope)
+        viewModel.initialize(intent)
     }
 
     override fun onResume() {
@@ -57,15 +58,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
-        when {
-            intent.action == Intent.ACTION_SEND -> {
-                when {
-                    intent.type == "text/plain" -> {
-                        viewModel.handleSendTextIntentReceived(intent)
-                    }
-                }
-            }
-        }
+        viewModel.handleIntent(intent)
         try {
             viewModel.onNewIntentReceived(intent)
         } catch (exception: Exception) {
