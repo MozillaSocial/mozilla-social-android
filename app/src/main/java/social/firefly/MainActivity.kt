@@ -18,7 +18,6 @@ import social.firefly.core.designsystem.theme.FfTheme
 import social.firefly.core.ui.common.FfSurface
 import social.firefly.core.workmanager.DatabasePurgeWorker
 import social.firefly.ui.MainActivityScreen
-import timber.log.Timber
 
 class MainActivity : ComponentActivity() {
     private val viewModel: MainViewModel by viewModel()
@@ -59,10 +58,5 @@ class MainActivity : ComponentActivity() {
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         viewModel.handleIntent(intent)
-        try {
-            viewModel.onNewIntentReceived(intent)
-        } catch (exception: Exception) {
-            Timber.e("caught exception: $exception")
-        }
     }
 }

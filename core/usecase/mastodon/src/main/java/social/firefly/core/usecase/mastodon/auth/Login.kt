@@ -77,7 +77,7 @@ class Login(
     }
 
     @OptIn(PreferUseCase::class)
-    private suspend fun onUserCodeReceived(code: String) {
+    suspend fun onUserCodeReceived(code: String) {
         try {
             Timber.tag(TAG).d("user code received")
             val token =

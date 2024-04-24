@@ -5,4 +5,5 @@ interface LoginInteractions {
     fun onSignInClicked() = Unit
     fun onChooseServerClicked() = Unit
     fun onSignInToStagingClicked() = Unit
+    fun onUserCodeReceived(code: String) = Unit
 }

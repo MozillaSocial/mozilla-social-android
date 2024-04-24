@@ -46,6 +46,7 @@ import social.firefly.core.ui.common.text.MediumTextLabel
 import social.firefly.core.ui.common.utils.getWindowHeightClass
 import social.firefly.core.ui.common.utils.getWindowWidthClass
 import social.firefly.feature.auth.BuildConfig
+import social.firefly.feature.auth.LoginIntentListener
 import social.firefly.feature.auth.R
 
 @Composable
@@ -59,6 +60,8 @@ internal fun LoginScreen(viewModel: LoginViewModel = koinViewModel()) {
     LaunchedEffect(Unit) {
         viewModel.onScreenViewed()
     }
+
+    LoginIntentListener { viewModel.onUserCodeReceived(it) }
 }
 
 @Composable
