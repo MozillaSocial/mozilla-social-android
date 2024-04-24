@@ -1,7 +1,3 @@
-@file:OptIn(
-    ExperimentalComposeUiApi::class,
-)
-
 package social.firefly.post
 
 import androidx.compose.foundation.LocalIndication

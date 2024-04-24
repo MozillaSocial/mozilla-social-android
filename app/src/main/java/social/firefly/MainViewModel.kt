@@ -12,6 +12,7 @@ import social.firefly.core.datastore.UserPreferencesDatastore
 import social.firefly.core.navigation.NavigationDestination
 import social.firefly.core.navigation.usecases.NavigateTo
 import social.firefly.core.repository.mastodon.TimelineRepository
+import social.firefly.core.share.ShareInfo
 import social.firefly.core.usecase.mastodon.auth.IsSignedInFlow
 import social.firefly.core.usecase.mastodon.auth.Login
 import social.firefly.ui.AppState
@@ -64,5 +65,12 @@ class MainViewModel(
 
     suspend fun preloadData() {
         userPreferencesDatastore.preloadData()
+    }
+
+    fun handleSendTextIntentReceived(intent: Intent) {
+        intent.getStringExtra(Intent.EXTRA_TEXT)?.let { sharedText ->
+            ShareInfo.sharedText = sharedText
+            navigateTo(NavigationDestination.NewPost())
+        }
     }
 }

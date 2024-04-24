@@ -155,13 +155,18 @@ sealed class NavigationDestination(
         }
     }
 
-    data class NewPost(val replyStatusId: String? = null, val editStatusId: String? = null) :
-        NavigationDestination(
-            route = ROUTE,
-        ) {
-        fun NavController.navigateToNewPost(navOptions: NavOptions? = null) {
-            navigate(route(replyStatusId, editStatusId), navOptions)
-        }
+    data class NewPost(
+        val replyStatusId: String? = null,
+        val editStatusId: String? = null,
+    ) : NavigationDestination(
+        route = ROUTE,
+    ) {
+
+        fun NavController.navigateToNewPost(navOptions: NavOptions? = null) =
+            navigate(
+                route(replyStatusId, editStatusId),
+                navOptions,
+            )
 
         companion object {
             private const val ROUTE = "newPost"
@@ -171,7 +176,10 @@ sealed class NavigationDestination(
                     "$NAV_PARAM_REPLY_STATUS_ID={$NAV_PARAM_REPLY_STATUS_ID}" +
                     "&$NAV_PARAM_EDIT_STATUS_ID={$NAV_PARAM_EDIT_STATUS_ID}"
 
-            fun route(replyStatusId: String? = null, editStatusId: String? = null): String {
+            fun route(
+                replyStatusId: String? = null,
+                editStatusId: String? = null,
+            ): String {
                 return when {
                     replyStatusId != null -> "$ROUTE?$NAV_PARAM_REPLY_STATUS_ID=$replyStatusId"
                     editStatusId != null -> "$ROUTE?$NAV_PARAM_EDIT_STATUS_ID=$editStatusId"
