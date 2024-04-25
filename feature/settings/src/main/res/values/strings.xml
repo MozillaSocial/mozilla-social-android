@@ -35,4 +35,10 @@
     <string name="open_source_licenses">Open Source Licenses</string>
 
     <string name="license_okay_button">OK</string>
+
+    <string name="appearance_group_title">Appearance</string>
+    <string name="change_theme_title">Theme</string>
+    <string name="theme_option_system">Same as system</string>
+    <string name="theme_option_light">Light</string>
+    <string name="theme_option_dark">Dark</string>
 </resources>
