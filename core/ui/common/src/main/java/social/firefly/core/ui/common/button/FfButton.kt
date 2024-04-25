@@ -19,6 +19,7 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import social.firefly.core.designsystem.theme.FfTheme
+import social.firefly.core.designsystem.theme.ThemeOption
 
 @Composable
 fun FfButton(
@@ -199,7 +200,7 @@ private fun ButtonPreview() {
         }
 
         FfTheme(
-            darkTheme = true,
+            ThemeOption.DARK,
         ) {
             FfButton(onClick = { /*TODO*/ }) {
                 Text(text = "Dark mode Primary")

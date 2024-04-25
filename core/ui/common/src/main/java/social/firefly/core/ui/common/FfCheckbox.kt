@@ -10,6 +10,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import social.firefly.core.designsystem.theme.FfTheme
+import social.firefly.core.designsystem.theme.ThemeOption
 
 @Composable
 fun FfCheckBox(
@@ -60,7 +61,7 @@ private fun Preview() {
 @Composable
 private fun PreviewDarkMode() {
     FfTheme(
-        darkTheme = true,
+        themeOption = ThemeOption.DARK,
     ) {
         FfSurface {
             Column {

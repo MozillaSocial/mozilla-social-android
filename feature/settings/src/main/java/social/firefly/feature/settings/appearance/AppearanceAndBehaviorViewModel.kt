@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.launch
 import social.firefly.core.datastore.AppPreferences.ThemeType
 import social.firefly.core.datastore.AppPreferencesDatastore
+import social.firefly.core.designsystem.theme.ThemeOption
 
 class AppearanceAndBehaviorViewModel(
     private val appPreferencesDatastore: AppPreferencesDatastore,

@@ -9,6 +9,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import social.firefly.core.designsystem.theme.FfTheme
+import social.firefly.core.designsystem.theme.ThemeOption
 import social.firefly.core.ui.common.FfSurface
 
 @Composable
@@ -55,7 +56,7 @@ private fun Preview() {
 @Composable
 private fun PreviewDarkMode() {
     FfTheme(
-        darkTheme = true,
+        ThemeOption.DARK,
     ) {
         FfSurface {
             FfRadioButton(selected = true, onClick = null)

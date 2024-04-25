@@ -7,6 +7,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.ui.Modifier
 import androidx.core.view.WindowCompat
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
@@ -15,6 +16,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.annotation.KoinExperimentalAPI
 import social.firefly.core.analytics.AppAnalytics
 import social.firefly.core.designsystem.theme.FfTheme
+import social.firefly.core.designsystem.theme.ThemeOption
 import social.firefly.core.ui.common.FfSurface
 import social.firefly.core.workmanager.DatabasePurgeWorker
 import social.firefly.ui.MainActivityScreen
@@ -29,7 +31,11 @@ class MainActivity : ComponentActivity() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
         setContent {
-            FfTheme {
+            val themeOption = viewModel.themeOption.collectAsStateWithLifecycle(initialValue = ThemeOption.SYSTEM).value
+
+            FfTheme(
+                themeOption = themeOption,
+            ) {
                 FfSurface(modifier = Modifier.fillMaxSize()) {
                     KoinAndroidContext {
                         MainActivityScreen()

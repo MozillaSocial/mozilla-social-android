@@ -1,4 +1,4 @@
-package social.firefly.feature.settings.appearance
+package social.firefly.core.designsystem.theme
 
 enum class ThemeOption {
     SYSTEM,

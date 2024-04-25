@@ -23,14 +23,24 @@ import androidx.core.view.WindowCompat
 
 @Composable
 fun FfTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
+    themeOption: ThemeOption = ThemeOption.SYSTEM,
     content: @Composable () -> Unit,
 ) {
-    val colors =
-        when (darkTheme) {
-            false -> lightColorPalette
-            true -> darkColorPalette
-        }
+    val colors = when {
+        themeOption == ThemeOption.SYSTEM && isSystemInDarkTheme() -> darkColorPalette
+        themeOption == ThemeOption.SYSTEM && !isSystemInDarkTheme() -> lightColorPalette
+        themeOption == ThemeOption.LIGHT -> lightColorPalette
+        themeOption == ThemeOption.DARK -> darkColorPalette
+        else -> lightColorPalette
+    }
+
+    val darkTheme = when {
+        themeOption == ThemeOption.SYSTEM && isSystemInDarkTheme() -> true
+        themeOption == ThemeOption.SYSTEM && !isSystemInDarkTheme() -> false
+        themeOption == ThemeOption.LIGHT -> false
+        themeOption == ThemeOption.DARK -> true
+        else -> false
+    }
 
     val view = LocalView.current
     if (!view.isInEditMode) {
