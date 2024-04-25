@@ -3,6 +3,7 @@ package social.firefly
 import android.content.Intent
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.navOptions
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -72,7 +73,17 @@ class MainViewModel(
     private fun handleSendTextIntentReceived(intent: Intent) {
         intent.getStringExtra(Intent.EXTRA_TEXT)?.let { sharedText ->
             ShareInfo.sharedText = sharedText
-            navigateTo(NavigationDestination.NewPost())
+            navigateTo(
+                NavigationDestination.NewPost(
+                    navOptions = navOptions {
+                        // pop up to tabs because we could be anywhere when another app
+                        // shares something with this app.
+                        popUpTo(
+                            NavigationDestination.Tabs.route
+                        )
+                    }
+                )
+            )
         }
     }
 }

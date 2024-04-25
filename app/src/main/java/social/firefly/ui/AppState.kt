@@ -239,13 +239,7 @@ class AppState(
 
                 is NavigationDestination.NewPost -> {
                     mainNavController.navigateToNewPost(
-                        navOptions {
-                            // pop up to tabs because we could be anywhere when another app
-                            // shares something with this app.
-                            popUpTo(
-                                NavigationDestination.Tabs.route
-                            )
-                        }
+                        navOptions = navOptions,
                     )
                 }
 
