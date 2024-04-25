@@ -24,6 +24,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.PopupProperties
 import kotlinx.coroutines.delay
@@ -84,6 +85,7 @@ fun FfDropDownMenu(
     modifier: Modifier = Modifier,
     expanded: MutableState<Boolean>,
     properties: PopupProperties = PopupProperties(focusable = false),
+    padding: Dp = 4.dp,
     dropDownMenuContent: @Composable ColumnScope.() -> Unit,
     content: @Composable RowScope.() -> Unit,
 ) {
@@ -111,7 +113,7 @@ fun FfDropDownMenu(
                 .clickable { if (canExpand) expanded.value = true },
         ) {
             // padding is for the ripple
-            Row(modifier = Modifier.padding(4.dp)) {
+            Row(modifier = Modifier.padding(padding)) {
                 content()
                 Spacer(modifier = Modifier.padding(start = 8.dp))
                 Icon(
