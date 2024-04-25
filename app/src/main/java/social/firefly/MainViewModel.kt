@@ -26,21 +26,9 @@ class MainViewModel(
 
     fun initialize(intent: Intent) {
         viewModelScope.launch {
-            // We restore the user's place in their timeline by removing items in the database
-            // above their last seen item.  This needs to happen before we start observing the
-            // home timeline.
-            //TODO maybe restore this if we want to restore a user's place in their timeline
-            // I ran into bugs so disabling for now
-//            val lastSeenId = CompletableDeferred<String>()
-//            launch {
-//                userPreferencesDatastore.lastSeenHomeStatusId.collectLatest {
-//                    lastSeenId.complete(it)
-//                    cancel()
-//                }
-//            }
-//            timelineRepository.deleteHomeStatusesBeforeId(lastSeenId.await())
-            //TODO delete this line if you uncomment the above lines
+            // Do any cleanup necessary before navigating away from the splash screen
             timelineRepository.deleteHomeTimeline()
+            userPreferencesDatastore.preloadData()
 
             AppState.navigationCollectionCompletable.await()
             launch(Dispatchers.Main) {
@@ -54,10 +42,6 @@ class MainViewModel(
                 }
             }
         }
-    }
-
-    suspend fun preloadData() {
-        userPreferencesDatastore.preloadData()
     }
 
     fun handleIntent(intent: Intent) {
