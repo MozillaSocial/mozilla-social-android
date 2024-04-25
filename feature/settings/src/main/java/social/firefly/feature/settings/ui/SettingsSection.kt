@@ -30,8 +30,7 @@ internal fun SettingsSection(
     onClick: () -> Unit,
 ) {
     Row(
-        modifier =
-        Modifier
+        modifier = Modifier
             .padding(FfSpacing.md)
             .fillMaxWidth()
             .wrapContentHeight()
