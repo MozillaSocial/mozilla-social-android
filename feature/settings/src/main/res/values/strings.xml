@@ -3,6 +3,7 @@
     <string name="settings_title">Settings</string>
 
     <string name="account_settings_title">Account</string>
+    <string name="appearance_and_behavior_title">Appearance and Behavior</string>
     <string name="content_preferences_title">Content Preferences</string>
     <string name="muted_users_title">Muted Users</string>
     <string name="blocked_users_title">Blocked Users</string>

@@ -7,6 +7,7 @@ import social.firefly.core.navigation.NavigationDestination
 import social.firefly.core.navigation.SettingsNavigationDestination
 import social.firefly.feature.settings.about.AboutSettingsScreen
 import social.firefly.feature.settings.account.AccountSettingsScreen
+import social.firefly.feature.settings.appearance.AppearanceAndBehaviorScreen
 import social.firefly.feature.settings.contentpreferences.ContentPreferencesSettingsScreen
 import social.firefly.feature.settings.contentpreferences.blockedusers.BlockedUsersSettingsScreen
 import social.firefly.feature.settings.contentpreferences.mutedusers.MutedUsersSettingsScreen
@@ -28,6 +29,7 @@ fun NavGraphBuilder.settingsFlow() {
         aboutSettingsScreen()
         openSourceLicensesScreen()
         developerOptionsScreen()
+        appearanceAndBehaviorScreen()
     }
 }
 
@@ -82,5 +84,11 @@ fun NavGraphBuilder.openSourceLicensesScreen() {
 fun NavGraphBuilder.developerOptionsScreen() {
     composable(route = SettingsNavigationDestination.DeveloperOptions.route) {
         DeveloperOptionsScreen()
+    }
+}
+
+fun NavGraphBuilder.appearanceAndBehaviorScreen() {
+    composable(route = SettingsNavigationDestination.AppearanceAndBehaviorOptions.route) {
+        AppearanceAndBehaviorScreen()
     }
 }

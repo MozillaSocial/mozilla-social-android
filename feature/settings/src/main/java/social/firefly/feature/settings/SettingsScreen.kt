@@ -35,7 +35,7 @@ fun SettingsScreen(
 
 @Composable
 fun SettingsScreen(
-    settingsInteractions: social.firefly.feature.settings.SettingsInteractions,
+    settingsInteractions: SettingsInteractions,
 ) {
     FfSurface {
         Box(
@@ -50,6 +50,11 @@ fun SettingsScreen(
                     title = stringResource(id = R.string.account_settings_title),
                     iconPainter = FfIcons.identificationCard(),
                     onClick = settingsInteractions::onAccountClicked,
+                )
+                SettingsSection(
+                    title = stringResource(id = R.string.appearance_and_behavior_title),
+                    iconPainter = FfIcons.palette(),
+                    onClick = settingsInteractions::onAppearanceAndBehaviorClicked,
                 )
                 SettingsSection(
                     title = stringResource(id = R.string.content_preferences_title),
@@ -102,15 +107,7 @@ private fun SettingsScreenPreview() {
         modules = listOf(navigationModule)
     ) {
         SettingsScreen(
-            settingsInteractions = object : social.firefly.feature.settings.SettingsInteractions {
-                override fun onScreenViewed() = Unit
-                override fun onAboutClicked() = Unit
-                override fun onAccountClicked() = Unit
-                override fun onContentPreferencesClicked() = Unit
-                override fun onPrivacyClicked() = Unit
-                override fun onDeveloperOptionsClicked() = Unit
-                override fun onOpenSourceLicensesClicked() = Unit
-            }
+            settingsInteractions = SettingsInteractionsNoOp
         )
     }
 }
