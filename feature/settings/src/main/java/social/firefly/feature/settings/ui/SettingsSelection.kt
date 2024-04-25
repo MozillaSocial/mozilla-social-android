@@ -1,8 +1,9 @@
 package social.firefly.feature.settings.ui
 
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -38,7 +39,8 @@ internal fun SettingsSelection(
                 Column(
                     modifier = Modifier
                         .weight(1f)
-                        .padding(bottom = 8.dp),
+                        .padding(bottom = 8.dp)
+                        .align(Alignment.CenterVertically),
                 ) {
                     Text(
                         modifier = Modifier
@@ -57,7 +59,9 @@ internal fun SettingsSelection(
                     }
                 }
                 Spacer(modifier = Modifier.width(16.dp))
-                selector()
+                Box(modifier = Modifier.align(Alignment.CenterVertically)) {
+                    selector()
+                }
             }
             FfDivider()
         }
