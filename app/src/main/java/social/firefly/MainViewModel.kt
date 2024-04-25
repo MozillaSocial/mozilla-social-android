@@ -1,6 +1,8 @@
 package social.firefly
 
 import android.content.Intent
+import android.net.Uri
+import android.os.Parcelable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.navOptions
@@ -65,6 +67,12 @@ class MainViewModel(
                     intent.type == "text/plain" -> {
                         handleSendTextIntentReceived(intent)
                     }
+                    intent.type?.contains("image") == true -> {
+                        handleSendImageIntentReceived(intent)
+                    }
+                    intent.type?.contains("video") == true -> {
+                        handleSendVideoIntentReceived(intent)
+                    }
                 }
             }
         }
@@ -76,8 +84,36 @@ class MainViewModel(
             navigateTo(
                 NavigationDestination.NewPost(
                     navOptions = navOptions {
-                        // pop up to tabs because we could be anywhere when another app
-                        // shares something with this app.
+                        popUpTo(
+                            NavigationDestination.Tabs.route
+                        )
+                    }
+                )
+            )
+        }
+    }
+
+    private fun handleSendImageIntentReceived(intent: Intent) {
+        (intent.getParcelableExtra<Parcelable>(Intent.EXTRA_STREAM) as? Uri)?.let { sharedUri ->
+            ShareInfo.sharedImageUri = sharedUri
+            navigateTo(
+                NavigationDestination.NewPost(
+                    navOptions = navOptions {
+                        popUpTo(
+                            NavigationDestination.Tabs.route
+                        )
+                    }
+                )
+            )
+        }
+    }
+
+    private fun handleSendVideoIntentReceived(intent: Intent) {
+        (intent.getParcelableExtra<Parcelable>(Intent.EXTRA_STREAM) as? Uri)?.let { sharedUri ->
+            ShareInfo.sharedVideoUri = sharedUri
+            navigateTo(
+                NavigationDestination.NewPost(
+                    navOptions = navOptions {
                         popUpTo(
                             NavigationDestination.Tabs.route
                         )

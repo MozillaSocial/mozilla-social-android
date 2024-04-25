@@ -1,5 +1,6 @@
 package social.firefly.post
 
+import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 import social.firefly.common.commonModule
@@ -63,6 +64,7 @@ val newPostModule = module {
             editStatusId = parametersHolder[1],
             mediaRepository = get(),
             statusRepository = get(),
+            context = androidContext(),
         )
     }
 }

@@ -1,5 +1,6 @@
 package social.firefly.post.media
 
+import android.content.Context
 import android.net.Uri
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -10,10 +11,12 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import social.firefly.common.LoadState
 import social.firefly.common.utils.FileType
+import social.firefly.common.utils.toFile
 import social.firefly.core.model.Attachment
 import social.firefly.core.model.ImageState
 import social.firefly.core.repository.mastodon.MediaRepository
 import social.firefly.core.repository.mastodon.StatusRepository
+import social.firefly.core.share.ShareInfo
 import social.firefly.post.NewPostViewModel
 import timber.log.Timber
 import java.io.File
@@ -23,6 +26,7 @@ class MediaDelegate(
     private val editStatusId: String?,
     private val mediaRepository: MediaRepository,
     private val statusRepository: StatusRepository,
+    private val context: Context,
 ) : MediaInteractions {
     private val _imageStates = MutableStateFlow<List<ImageState>>(emptyList())
     val imageStates: StateFlow<List<ImageState>> = _imageStates.asStateFlow()
@@ -30,7 +34,27 @@ class MediaDelegate(
     private val uploadJobs = mutableMapOf<Uri, Job>()
 
     init {
-        coroutineScope.launch { editStatusId?.let { populateEditStatus(it) } }
+        coroutineScope.launch {
+            editStatusId?.let { populateEditStatus(it) }
+            populateSharedMedia()
+        }
+    }
+
+    private fun populateSharedMedia() {
+        ShareInfo.sharedImageUri?.let {  imageUri ->
+            uploadMedia(
+                imageUri,
+                imageUri.toFile(context),
+                FileType.IMAGE,
+            )
+        }
+        ShareInfo.sharedVideoUri?.let {  imageUri ->
+            uploadMedia(
+                imageUri,
+                imageUri.toFile(context),
+                FileType.VIDEO,
+            )
+        }
     }
 
     private suspend fun populateEditStatus(editStatusId: String) {
