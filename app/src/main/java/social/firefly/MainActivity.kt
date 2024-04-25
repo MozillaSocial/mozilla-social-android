@@ -26,9 +26,6 @@ class MainActivity : ComponentActivity() {
     @OptIn(KoinExperimentalAPI::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        lifecycleScope.launch {
-            viewModel.preloadData()
-        }
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
         setContent {
