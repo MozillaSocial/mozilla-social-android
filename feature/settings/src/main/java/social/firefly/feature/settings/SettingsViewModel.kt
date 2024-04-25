@@ -8,7 +8,7 @@ import social.firefly.core.navigation.usecases.NavigateTo
 class SettingsViewModel(
     private val analytics: SettingsAnalytics,
     private val navigateTo: NavigateTo,
-) : ViewModel(), social.firefly.feature.settings.SettingsInteractions {
+) : ViewModel(), SettingsInteractions {
 
     override fun onAboutClicked() {
         navigateTo(SettingsNavigationDestination.AboutSettings)
@@ -32,6 +32,10 @@ class SettingsViewModel(
 
     override fun onOpenSourceLicensesClicked() {
         navigateTo(SettingsNavigationDestination.OpenSourceLicensesSettings)
+    }
+
+    override fun onAppearanceAndBehaviorClicked() {
+        navigateTo(SettingsNavigationDestination.AppearanceAndBehaviorOptions)
     }
 
     override fun onScreenViewed() {

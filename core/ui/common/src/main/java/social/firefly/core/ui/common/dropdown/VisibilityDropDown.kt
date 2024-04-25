@@ -19,6 +19,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import social.firefly.core.designsystem.icon.FfIcons
 import social.firefly.core.designsystem.theme.FfTheme
+import social.firefly.core.designsystem.theme.ThemeOption
 import social.firefly.core.model.StatusVisibility
 import social.firefly.core.ui.common.R
 
@@ -141,7 +142,7 @@ private fun VisibilityDropDownItem(
 @Composable
 private fun VisibilityDropDownPreview() {
     FfTheme(
-        true,
+        ThemeOption.DARK,
     ) {
         VisibilityDropDownButton(
             visibility = StatusVisibility.Private,

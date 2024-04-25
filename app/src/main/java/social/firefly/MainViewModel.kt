@@ -7,9 +7,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.navOptions
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.launch
+import social.firefly.core.datastore.AppPreferences
+import social.firefly.core.datastore.AppPreferencesDatastore
 import social.firefly.core.datastore.UserPreferencesDatastore
+import social.firefly.core.designsystem.theme.ThemeOption
 import social.firefly.core.navigation.NavigationDestination
 import social.firefly.core.navigation.usecases.NavigateTo
 import social.firefly.core.repository.mastodon.TimelineRepository
@@ -22,7 +27,17 @@ class MainViewModel(
     private val isSignedInFlow: IsSignedInFlow,
     private val userPreferencesDatastore: UserPreferencesDatastore,
     private val timelineRepository: TimelineRepository,
+    appPreferencesDatastore: AppPreferencesDatastore,
 ) : ViewModel() {
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val themeOption = appPreferencesDatastore.themeType.mapLatest {
+        when (it) {
+            AppPreferences.ThemeType.LIGHT -> ThemeOption.LIGHT
+            AppPreferences.ThemeType.DARK -> ThemeOption.DARK
+            else -> ThemeOption.SYSTEM
+        }
+    }
 
     fun initialize(intent: Intent) {
         viewModelScope.launch {

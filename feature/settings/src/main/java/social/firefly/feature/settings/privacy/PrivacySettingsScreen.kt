@@ -53,8 +53,8 @@ private fun AllowAnalyticsSwitch(
     Column {
         SettingsGroup(name = R.string.data_collection_and_use) {
             SettingsSwitch(
-                title = R.string.data_collection_title,
-                description = R.string.data_collection_description,
+                title = stringResource(id = R.string.data_collection_title),
+                description = stringResource(id = R.string.data_collection_description),
                 checked = initialAllowAnalytics,
                 onCheckedChanged = onAllowAnalyticsSwitchToggled,
             )

@@ -3,6 +3,7 @@
     <string name="settings_title">Settings</string>
 
     <string name="account_settings_title">Account</string>
+    <string name="appearance_and_behavior_title">Appearance and Behavior</string>
     <string name="content_preferences_title">Content Preferences</string>
     <string name="muted_users_title">Muted Users</string>
     <string name="blocked_users_title">Blocked Users</string>
@@ -34,4 +35,10 @@
     <string name="open_source_licenses">Open Source Licenses</string>
 
     <string name="license_okay_button">OK</string>
+
+    <string name="appearance_group_title">Appearance</string>
+    <string name="change_theme_title">Theme</string>
+    <string name="theme_option_system">Same as system</string>
+    <string name="theme_option_light">Light</string>
+    <string name="theme_option_dark">Dark</string>
 </resources>

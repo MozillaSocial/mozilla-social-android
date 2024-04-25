@@ -33,6 +33,7 @@ import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.KoinApplication
 import org.koin.core.parameter.parametersOf
 import social.firefly.core.designsystem.theme.FfTheme
+import social.firefly.core.designsystem.theme.ThemeOption
 import social.firefly.core.designsystem.utils.NoRipple
 import social.firefly.core.model.InstanceRule
 import social.firefly.core.navigation.navigationModule
@@ -497,7 +498,7 @@ private fun ReportScreenPreviewDarkMode() {
         modules(navigationModule)
     }) {
         FfTheme(
-            darkTheme = true,
+            ThemeOption.DARK,
         ) {
             ReportScreen1(
                 reportTarget = ReportTarget.POST,

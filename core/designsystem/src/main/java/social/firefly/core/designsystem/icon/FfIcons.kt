@@ -149,6 +149,9 @@ object FfIcons {
     fun note() = painterResource(id = R.drawable.note)
 
     @Composable
+    fun palette() = painterResource(id = R.drawable.palette)
+
+    @Composable
     fun pause() = painterResource(id = R.drawable.pause)
 
     @Composable

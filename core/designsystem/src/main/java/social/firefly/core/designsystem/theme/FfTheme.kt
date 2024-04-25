@@ -23,27 +23,23 @@ import androidx.core.view.WindowCompat
 
 @Composable
 fun FfTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
+    themeOption: ThemeOption = ThemeOption.SYSTEM,
     content: @Composable () -> Unit,
 ) {
-    val colors =
-        when (darkTheme) {
-            false -> lightColorPalette
-            true -> darkColorPalette
-        }
+    val colors = getPalette(themeOption = themeOption)
+    val isDarkTheme = colors.isThemeDark()
 
     val view = LocalView.current
     if (!view.isInEditMode) {
         SideEffect {
             val window = (view.context as Activity).window
             window.statusBarColor = Color.Transparent.toArgb()
-            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars =
-                !darkTheme
+            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = !isDarkTheme
         }
     }
 
     MaterialTheme(
-        colorScheme = if (darkTheme) MaterialDarkColorScheme else MaterialLightColorScheme,
+        colorScheme = if (isDarkTheme) MaterialDarkColorScheme else MaterialLightColorScheme,
     ) {
         ProvideFfColors(colors = colors) {
             val textSelectionColors = TextSelectionColors(
@@ -59,6 +55,21 @@ fun FfTheme(
             )
         }
     }
+}
+
+@Composable
+private fun getPalette(themeOption: ThemeOption): FfColors = when {
+    themeOption == ThemeOption.SYSTEM && isSystemInDarkTheme() -> darkColorPalette
+    themeOption == ThemeOption.SYSTEM && !isSystemInDarkTheme() -> lightColorPalette
+    themeOption == ThemeOption.LIGHT -> lightColorPalette
+    themeOption == ThemeOption.DARK -> darkColorPalette
+    else -> lightColorPalette
+}
+
+private fun FfColors.isThemeDark(): Boolean = when {
+    this == lightColorPalette -> false
+    this == darkColorPalette -> true
+    else -> true
 }
 
 object FfTheme {

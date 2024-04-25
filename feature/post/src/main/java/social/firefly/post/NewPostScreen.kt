@@ -543,9 +543,7 @@ private fun AttachmentMediaBox(
 @Preview
 @Composable
 private fun NewPostScreenPreview() {
-    FfTheme(
-        false,
-    ) {
+    FfTheme {
         NewPostScreen(
             statusUiState = StatusUiState(
                 statusText = TextFieldValue(),
@@ -575,9 +573,7 @@ private fun NewPostScreenPreview() {
 @Preview
 @Composable
 private fun NewPostScreenWithPollPreview() {
-    FfTheme(
-        false,
-    ) {
+    FfTheme {
         NewPostScreen(
             statusUiState = StatusUiState(
                 statusText = TextFieldValue(),
@@ -613,9 +609,7 @@ private fun NewPostScreenWithPollPreview() {
 @Preview
 @Composable
 private fun NewPostScreenWithContentWarningPreview() {
-    FfTheme(
-        false,
-    ) {
+    FfTheme {
         NewPostScreen(
             statusUiState = StatusUiState(
                 statusText = TextFieldValue(),
@@ -645,9 +639,7 @@ private fun NewPostScreenWithContentWarningPreview() {
 @Preview
 @Composable
 private fun EditPostScreenPreview() {
-    FfTheme(
-        false,
-    ) {
+    FfTheme {
         NewPostScreen(
             statusUiState = StatusUiState(
                 statusText = TextFieldValue(),

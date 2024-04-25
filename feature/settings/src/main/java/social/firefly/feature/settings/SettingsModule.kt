@@ -14,6 +14,7 @@ import social.firefly.core.usecase.mastodon.mastodonUsecaseModule
 import social.firefly.core.workmanager.workManagerModule
 import social.firefly.feature.settings.about.AboutSettingsViewModel
 import social.firefly.feature.settings.account.AccountSettingsViewModel
+import social.firefly.feature.settings.appearance.AppearanceAndBehaviorViewModel
 import social.firefly.feature.settings.contentpreferences.ContentPreferencesSettingsViewModel
 import social.firefly.feature.settings.contentpreferences.blockedusers.BlockedUsersViewModel
 import social.firefly.feature.settings.contentpreferences.mutedusers.MutedUsersSettingsViewModel
@@ -41,5 +42,6 @@ val settingsModule =
         viewModelOf(::BlockedUsersViewModel)
         viewModelOf(::MutedUsersSettingsViewModel)
         viewModelOf(::OpenSourceLicensesViewModel)
+        viewModelOf(::AppearanceAndBehaviorViewModel)
         singleOf(::DefaultHtmlInteractions)
     }
