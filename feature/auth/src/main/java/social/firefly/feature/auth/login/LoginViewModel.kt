@@ -63,6 +63,12 @@ class LoginViewModel(
         }
     }
 
+    override fun onUserCodeReceived(code: String) {
+        viewModelScope.launch {
+            login.onUserCodeReceived(code)
+        }
+    }
+
     override fun onScreenViewed() {
         analytics.loginScreenViewed()
     }

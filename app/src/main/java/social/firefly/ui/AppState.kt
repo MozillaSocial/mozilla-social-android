@@ -238,7 +238,9 @@ class AppState(
                 }
 
                 is NavigationDestination.NewPost -> {
-                    mainNavController.navigateToNewPost()
+                    mainNavController.navigateToNewPost(
+                        navOptions = navOptions,
+                    )
                 }
 
                 is NavigationDestination.Report -> {

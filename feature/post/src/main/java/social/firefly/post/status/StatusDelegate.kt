@@ -18,6 +18,7 @@ import social.firefly.common.utils.replaceHashtag
 import social.firefly.core.analytics.NewPostAnalytics
 import social.firefly.core.repository.mastodon.SearchRepository
 import social.firefly.core.repository.mastodon.StatusRepository
+import social.firefly.core.share.ShareInfo
 import social.firefly.core.ui.htmlcontent.htmlToStringWithExpandedMentions
 import social.firefly.core.usecase.mastodon.account.GetDomain
 import social.firefly.post.NewPostViewModel
@@ -42,6 +43,18 @@ class StatusDelegate(
         coroutineScope.launch {
             inReplyToId?.let { populateReply(it) }
             editStatusId?.let { populateEditStatus(it) }
+            populateSharedText()
+        }
+    }
+
+    private fun populateSharedText() {
+        ShareInfo.sharedText?.let { sharedText ->
+            _uiState.edit { copy(
+                statusText = TextFieldValue(
+                    text = sharedText,
+                    selection = TextRange((sharedText.length))
+                )
+            ) }
         }
     }
 

@@ -85,6 +85,7 @@ dependencies {
     implementation(project(":feature:notifications"))
     implementation(project(":feature:media"))
     implementation(project(":core:push"))
+    implementation(project(":core:share"))
 
     implementation(kotlin("reflect"))
 

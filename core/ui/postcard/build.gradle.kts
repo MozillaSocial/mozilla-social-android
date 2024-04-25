@@ -19,6 +19,7 @@ dependencies {
     api(project(":core:ui:htmlcontent"))
     api(project(":core:ui:poll"))
 
+    implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.paging.compose)
     implementation(libs.koin.core)
     implementation(libs.koin.androidx.compose)

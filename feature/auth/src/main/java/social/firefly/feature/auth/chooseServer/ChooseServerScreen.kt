@@ -38,6 +38,7 @@ import social.firefly.core.ui.common.appbar.FfCloseableTopAppBar
 import social.firefly.core.ui.common.button.FfButton
 import social.firefly.core.ui.common.loading.FfCircularProgressIndicator
 import social.firefly.core.ui.common.text.FfTextField
+import social.firefly.feature.auth.LoginIntentListener
 import social.firefly.feature.auth.R
 
 @Composable
@@ -51,6 +52,8 @@ internal fun ChooseServerScreen(viewModel: ChooseServerViewModel = koinViewModel
     LaunchedEffect(Unit) {
         viewModel.onScreenViewed()
     }
+
+    LoginIntentListener { viewModel.onUserCodeReceived(it) }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
