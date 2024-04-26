@@ -5,4 +5,11 @@
     <string name="tab_federated">Federated</string>
     <string name="mozilla" translatable="false">Mozilla</string>
     <string name="scroll_to_top_content_description">scroll to top</string>
+
+    <string name="empty_home_title">Welcome to the Fediverse!</string>
+    <string name="empty_home_body">You\'re not following any accounts or hashtags yet! You can discover trending content or search for something in particular.</string>
+    <string name="empty_home_body_2">You can also view new content from your local server or the wider fediverse.</string>
+    <string name="empty_home_local_button">Local server</string>
+    <string name="empty_home_fediverse_button">Fediverse</string>
+    <string name="empty_home_trending_and_search">Discover content</string>
 </resources>
