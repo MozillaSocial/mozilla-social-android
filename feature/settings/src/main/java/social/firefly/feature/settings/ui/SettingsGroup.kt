@@ -20,11 +20,16 @@ fun SettingsGroup(
     content: @Composable ColumnScope.() -> Unit,
 ) {
     Column(
-        modifier =
-        Modifier
-            .padding(start = 16.dp, top = 16.dp, bottom = 8.dp, end = 16.dp),
+        modifier = Modifier
+            .padding(
+                top = 16.dp,
+                bottom = 8.dp,
+            ),
     ) {
-        Text(text = stringResource(id = name), style = FfTheme.typography.titleMedium)
+        Text(
+            text = stringResource(id = name),
+            style = FfTheme.typography.titleMedium,
+        )
         Spacer(modifier = Modifier.height(8.dp))
         content()
     }

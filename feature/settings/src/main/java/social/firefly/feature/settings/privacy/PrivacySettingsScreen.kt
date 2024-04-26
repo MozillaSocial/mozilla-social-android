@@ -1,13 +1,16 @@
 package social.firefly.feature.settings.privacy
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.koin.androidx.compose.koinViewModel
+import social.firefly.core.designsystem.theme.FfSpacing
 import social.firefly.core.navigation.navigationModule
 import social.firefly.core.ui.common.FfSurface
 import social.firefly.core.ui.common.utils.PreviewTheme
@@ -36,7 +39,11 @@ private fun PrivacySettingsScreen(
     toggleAnalyticsSwitch: () -> Unit,
 ) {
     FfSurface {
-        SettingsColumn(title = stringResource(id = R.string.privacy_settings_title)) {
+        SettingsColumn(
+            modifier = Modifier
+                .padding(horizontal = FfSpacing.md),
+            title = stringResource(id = R.string.privacy_settings_title)
+        ) {
             AllowAnalyticsSwitch(
                 initialAllowAnalytics = isAnalyticsToggledOn,
                 onAllowAnalyticsSwitchToggled = toggleAnalyticsSwitch,

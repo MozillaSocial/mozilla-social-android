@@ -28,7 +28,6 @@ fun <A : Any> PullRefreshLazyColumn(
                 refreshing = refreshing,
                 state = state
             )
-
         },
     listState: LazyListState = rememberLazyListState(),
     emptyListState: LazyListState = rememberLazyListState(),
@@ -43,6 +42,7 @@ fun <A : Any> PullRefreshLazyColumn(
         PagingLazyColumn(
             lazyPagingItems = lazyPagingItems,
             listState = listState,
+            showLoadingSpinnerOnRefresh = false,
             emptyListState = emptyListState,
             headerContent = headerContent,
             content = content,

@@ -4,6 +4,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -18,6 +19,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import org.koin.androidx.compose.koinViewModel
 import social.firefly.common.Version
 import social.firefly.core.designsystem.icon.FfIcons
+import social.firefly.core.designsystem.theme.FfSpacing
 import social.firefly.core.navigation.navigationModule
 import social.firefly.core.ui.common.FfSurface
 import social.firefly.core.ui.common.utils.PreviewTheme
@@ -44,6 +46,8 @@ fun SettingsScreen(
                 .systemBarsPadding()
         ) {
             SettingsColumn(
+                modifier = Modifier
+                    .padding(horizontal = FfSpacing.md),
                 title = stringResource(id = R.string.settings_title)
             ) {
                 SettingsSection(

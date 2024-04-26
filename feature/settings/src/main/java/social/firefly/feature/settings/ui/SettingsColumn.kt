@@ -23,8 +23,7 @@ internal fun SettingsColumn(
     Column {
         FfCloseableTopAppBar(title = title)
         Column(
-            modifier = modifier
-                .padding(FfSpacing.sm),
+            modifier = modifier,
             verticalArrangement = verticalArrangement,
             horizontalAlignment = horizontalAlignment,
         ) { content() }

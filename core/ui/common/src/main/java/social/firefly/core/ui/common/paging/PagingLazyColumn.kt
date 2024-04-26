@@ -12,6 +12,10 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -29,11 +33,14 @@ fun <A : Any> PagingLazyColumn(
     lazyPagingItems: LazyPagingItems<A>,
     modifier: Modifier = Modifier,
     noResultText: String = stringResource(id = R.string.theres_nothing_here),
+    showLoadingSpinnerOnRefresh: Boolean = true,
     listState: LazyListState = rememberLazyListState(),
     emptyListState: LazyListState = rememberLazyListState(),
     headerContent: LazyListScope.() -> Unit = {},
     content: LazyListScope.() -> Unit,
 ) {
+    var isRetryingAfterError by remember { mutableStateOf(false) }
+
     Box(
         modifier = modifier
             .fillMaxSize(),
@@ -50,16 +57,19 @@ fun <A : Any> PagingLazyColumn(
             when (lazyPagingItems.loadState.refresh) {
                 is LoadState.Error -> {} // handle the error outside the lazy column
                 is LoadState.Loading -> {
-                    content()
-                    item {
-                        DelayedVisibility {
-                            FfCircularProgressIndicator(
-                                modifier =
-                                Modifier
-                                    .fillMaxWidth()
-                                    .wrapContentWidth(Alignment.CenterHorizontally)
-                                    .padding(16.dp),
-                            )
+                    if (!isRetryingAfterError) {
+                        content()
+                    }
+                    if (showLoadingSpinnerOnRefresh) {
+                        item {
+                            DelayedVisibility {
+                                FfCircularProgressIndicator(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .wrapContentWidth(Alignment.CenterHorizontally)
+                                        .padding(16.dp),
+                                )
+                            }
                         }
                     }
                 }
@@ -87,8 +97,7 @@ fun <A : Any> PagingLazyColumn(
                 is LoadState.Loading -> {
                     item {
                         FfCircularProgressIndicator(
-                            modifier =
-                            Modifier
+                            modifier = Modifier
                                 .fillMaxWidth()
                                 .wrapContentWidth(Alignment.CenterHorizontally)
                                 .padding(16.dp),
@@ -113,8 +122,13 @@ fun <A : Any> PagingLazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(FfTheme.colors.layer1),
-                onRetryClicked = { lazyPagingItems.refresh() },
+                onRetryClicked = {
+                    isRetryingAfterError = true
+                    lazyPagingItems.refresh()
+                },
             )
+        } else if (lazyPagingItems.loadState.refresh is LoadState.NotLoading) {
+            isRetryingAfterError = false
         }
     }
 }

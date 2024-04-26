@@ -104,7 +104,7 @@ private fun LoadedScreen(
     Column(
         modifier = Modifier
             .verticalScroll(rememberScrollState())
-            .padding(FfSpacing.lg)
+            .padding(FfSpacing.md)
     ) {
         AsyncImage(
             modifier =

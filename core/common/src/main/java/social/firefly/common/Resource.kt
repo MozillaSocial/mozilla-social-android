@@ -1,9 +1,7 @@
 package social.firefly.common
 
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import social.firefly.common.Resource.Error
 import social.firefly.common.Resource.Loaded
@@ -36,9 +34,9 @@ sealed class Resource<T> {
 }
 
 fun <T> MutableStateFlow<Resource<T>>.updateData(block: T.() -> T) {
-    with(value as? Resource.Loaded ?: return) {
+    with(value as? Loaded ?: return) {
         update {
-            Resource.Loaded(
+            Loaded(
                 data = data.block(),
             )
         }
@@ -47,23 +45,11 @@ fun <T> MutableStateFlow<Resource<T>>.updateData(block: T.() -> T) {
 
 fun <T> loadResource(block: suspend () -> T) =
     flow {
-        this.emit(Resource.Loading())
+        emit(Loading())
         try {
-            this.emit(Resource.Loaded(block()))
+            emit(Loaded(block()))
         } catch (e: Exception) {
             Timber.e(e)
-            this.emit(Resource.Error(e))
+            emit(Error(e))
         }
     }
-
-fun <I, O> Resource<I>.mapData(transform: (I) -> O): Resource<O> {
-    return when (this) {
-        is Resource.Error -> Resource.Error(exception)
-        is Resource.Loaded -> Resource.Loaded(transform(data))
-        is Resource.Loading -> Resource.Loading()
-    }
-}
-
-fun <I, O> Flow<Resource<I>>.mapData(transform: (I) -> O): Flow<Resource<O>> {
-    return this.map { it.mapData(transform = transform) }
-}

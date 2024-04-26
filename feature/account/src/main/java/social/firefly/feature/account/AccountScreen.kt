@@ -106,7 +106,6 @@ internal fun AccountScreen(
         postCardInteractions = viewModel.postCardDelegate,
         accountInteractions = viewModel,
         windowInsets = windowInsets,
-        navigateToSettings = viewModel::onSettingsClicked,
     )
 
     LaunchedEffect(Unit) {
@@ -117,7 +116,6 @@ internal fun AccountScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun AccountScreen(
-    navigateToSettings: () -> Unit,
     uiState: Resource<AccountUiState>,
     closeButtonVisible: Boolean,
     isUsersProfile: Boolean,
@@ -129,16 +127,22 @@ private fun AccountScreen(
 ) {
     FfSurface {
         Column(
-            modifier =
-            Modifier
+            modifier = Modifier
                 .windowInsetsPadding(windowInsets),
         ) {
             when (uiState) {
                 is Resource.Loading -> {
-                    FfCloseableTopAppBar(showCloseButton = closeButtonVisible)
+                    FfCloseableTopAppBar(
+                        showCloseButton = closeButtonVisible,
+                        actions = {
+                            SettingsTopBarActions(
+                                accountInteractions = accountInteractions,
+                                isUsersProfile = isUsersProfile
+                            )
+                        },
+                    )
                     Box(
-                        modifier =
-                        Modifier
+                        modifier = Modifier
                             .fillMaxSize()
                             .wrapContentSize(
                                 align = Alignment.Center,
@@ -153,17 +157,10 @@ private fun AccountScreen(
                         title = uiState.data.displayName,
                         showCloseButton = closeButtonVisible,
                         actions = {
-                            if (isUsersProfile) {
-                                IconButton(
-                                    modifier = Modifier.width(IntrinsicSize.Max),
-                                    onClick = navigateToSettings,
-                                ) {
-                                    Icon(
-                                        painter = FfIcons.gear(),
-                                        contentDescription = "Settings"
-                                    )
-                                }
-                            }
+                            SettingsTopBarActions(
+                                accountInteractions = accountInteractions,
+                                isUsersProfile = isUsersProfile
+                            )
                         },
                         showDivider = false,
                     )
@@ -179,10 +176,17 @@ private fun AccountScreen(
                 }
 
                 is Resource.Error -> {
-                    FfCloseableTopAppBar(showCloseButton = closeButtonVisible)
+                    FfCloseableTopAppBar(
+                        showCloseButton = closeButtonVisible,
+                        actions = {
+                            SettingsTopBarActions(
+                                accountInteractions = accountInteractions,
+                                isUsersProfile = isUsersProfile
+                            )
+                        },
+                    )
                     Box(
-                        modifier =
-                        Modifier
+                        modifier = Modifier
                             .fillMaxSize()
                             .wrapContentSize(
                                 align = Alignment.Center,
@@ -201,6 +205,24 @@ private fun AccountScreen(
 }
 
 @Composable
+private fun SettingsTopBarActions(
+    accountInteractions: AccountInteractions,
+    isUsersProfile: Boolean,
+) {
+    if (isUsersProfile) {
+        IconButton(
+            modifier = Modifier.width(IntrinsicSize.Max),
+            onClick = accountInteractions::onSettingsClicked,
+        ) {
+            Icon(
+                painter = FfIcons.gear(),
+                contentDescription = "Settings"
+            )
+        }
+    }
+}
+
+@Composable
 private fun MainContent(
     account: AccountUiState,
     isUsersProfile: Boolean,
@@ -210,8 +232,7 @@ private fun MainContent(
     accountInteractions: AccountInteractions,
 ) {
     Column(
-        modifier =
-        Modifier
+        modifier = Modifier
             .fillMaxSize(),
     ) {
         val postsFeed = timeline.postsFeed.collectAsLazyPagingItems()
@@ -706,7 +727,32 @@ fun AccountScreenPreview() {
             postCardInteractions = PostCardInteractionsNoOp,
             accountInteractions = object : AccountInteractions {},
             windowInsets = WindowInsets.systemBars,
-            navigateToSettings = {},
+        )
+    }
+}
+
+@Suppress("MagicNumber")
+@Preview
+@Composable
+fun AccountScreenErrorPreview() {
+    PreviewTheme(modules = listOf(navigationModule)) {
+        AccountScreen(
+            uiState =
+            Resource.Error(
+                exception = Exception("")
+            ),
+            closeButtonVisible = true,
+            isUsersProfile = false,
+            timeline = Timeline(
+                type = AccountTimelineType.POSTS,
+                postsFeed = flowOf(),
+                postsAndRepliesFeed = flowOf(),
+                mediaFeed = flowOf(),
+            ),
+            htmlContentInteractions = object : HtmlContentInteractions {},
+            postCardInteractions = PostCardInteractionsNoOp,
+            accountInteractions = object : AccountInteractions {},
+            windowInsets = WindowInsets.systemBars,
         )
     }
 }

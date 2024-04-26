@@ -62,42 +62,46 @@ private fun AccountSettingsScreen(
     accountSettingsInteractions: AccountSettingsInteractions,
 ) {
     FfSurface {
-        SettingsColumn(title = stringResource(id = R.string.account_settings_title)) {
-            when (userHeader) {
-                is Resource.Error -> {}
-                is Resource.Loading -> {}
-                is Resource.Loaded -> {
-                    UserHeader(userHeader = userHeader.data)
+        SettingsColumn(
+            modifier = Modifier
+                .padding(horizontal = FfSpacing.md),
+            title = stringResource(id = R.string.account_settings_title)
+        ) {
+            UserHeader(userHeader = userHeader.data)
 
-                    ManageAccount(
-                        subtitle = subtitle,
-                        onClick = accountSettingsInteractions::onManageAccountClicked
-                    )
+            ManageAccount(
+                subtitle = subtitle,
+                onClick = accountSettingsInteractions::onManageAccountClicked
+            )
 
-                    SignoutButton(onLogoutClicked = accountSettingsInteractions::onLogoutClicked)
-                }
-            }
+            SignoutButton(onLogoutClicked = accountSettingsInteractions::onLogoutClicked)
         }
     }
 }
 
 @Composable
-private fun UserHeader(userHeader: UserHeader) {
+private fun UserHeader(
+    userHeader: UserHeader?,
+) {
     Row(
         modifier = Modifier.padding(FfSpacing.sm),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Avatar(userHeader.avatarUrl)
+        Avatar(userHeader?.avatarUrl)
         Spacer(modifier = Modifier.width(8.dp))
-        Text(text = userHeader.accountName, style = FfTheme.typography.labelLarge)
+        Text(
+            text = userHeader?.accountName ?: "",
+            style = FfTheme.typography.labelLarge,
+        )
     }
 }
 
 @Composable
-private fun Avatar(avatarUrl: String) {
+private fun Avatar(
+    avatarUrl: String?,
+) {
     AsyncImage(
-        modifier =
-        Modifier
+        modifier = Modifier
             .size(40.dp)
             .clip(CircleShape)
             .background(FfTheme.colors.layer2),
@@ -107,7 +111,10 @@ private fun Avatar(avatarUrl: String) {
 }
 
 @Composable
-private fun ManageAccount(subtitle: StringFactory?, onClick: () -> Unit) {
+private fun ManageAccount(
+    subtitle: StringFactory?,
+    onClick: () -> Unit,
+) {
     SettingsSection(
         title = stringResource(id = R.string.manage_account),
         subtitle = subtitle?.build(LocalContext.current),
@@ -116,7 +123,9 @@ private fun ManageAccount(subtitle: StringFactory?, onClick: () -> Unit) {
 }
 
 @Composable
-private fun SignoutButton(onLogoutClicked: () -> Unit) {
+private fun SignoutButton(
+    onLogoutClicked: () -> Unit,
+) {
     FfButtonSecondary(
         modifier =
         Modifier
@@ -138,7 +147,6 @@ private fun AccountSettingsScreenPreview() {
                 UserHeader(
                     avatarUrl = "",
                     accountName = "account",
-                    url = ""
                 )
             ),
             subtitle = StringFactory.literal("subtitle"),
