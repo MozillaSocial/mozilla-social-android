@@ -6,14 +6,23 @@ import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideIn
 import androidx.compose.animation.slideOut
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.scrollable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -27,7 +36,9 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -43,6 +54,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
+import social.firefly.common.utils.painterResourceFactory
 import social.firefly.core.designsystem.font.FfFonts
 import social.firefly.core.designsystem.icon.FfIcons
 import social.firefly.core.designsystem.theme.FfTheme
@@ -50,11 +62,14 @@ import social.firefly.core.designsystem.theme.ThemeOption
 import social.firefly.core.push.PushRegistration
 import social.firefly.core.ui.common.FfSurface
 import social.firefly.core.ui.common.appbar.FfTopBar
+import social.firefly.core.ui.common.button.FfButtonSecondary
 import social.firefly.core.ui.common.button.FfFloatingActionButton
 import social.firefly.core.ui.common.pullrefresh.PullRefreshLazyColumn
 import social.firefly.core.ui.common.tabs.FfTab
 import social.firefly.core.ui.common.tabs.FfTabRow
 import social.firefly.core.ui.common.text.LargeTextTitle
+import social.firefly.core.ui.common.text.MediumTextBody
+import social.firefly.core.ui.common.text.MediumTextLabel
 import social.firefly.core.ui.postcard.PostCardInteractions
 import social.firefly.core.ui.postcard.PostCardInteractionsNoOp
 import social.firefly.core.ui.postcard.PostCardUiState
@@ -175,6 +190,7 @@ private fun TabbedContent(
         homePostCardInteractions = homePostCardInteractions,
         localPostCardInteractions = localPostCardInteractions,
         federatedPostCardInteractions = federatedPostCardInteractions,
+        feedInteractions = feedInteractions,
     )
 }
 
@@ -187,6 +203,7 @@ private fun MainContent(
     homePostCardInteractions: PostCardInteractions,
     localPostCardInteractions: PostCardInteractions,
     federatedPostCardInteractions: PostCardInteractions,
+    feedInteractions: FeedInteractions,
 ) {
     val forYouScrollState = rememberLazyListState()
     val localScrollState = rememberLazyListState()
@@ -197,30 +214,46 @@ private fun MainContent(
     val federatedPagingItems = federatedFeed.collectAsLazyPagingItems()
 
     Box {
-        PullRefreshLazyColumn(
-            lazyPagingItems = when (uiState.timelineType) {
-                TimelineType.FOR_YOU -> homeFeedPagingItems
-                TimelineType.LOCAL -> localFeedPagingItems
-                TimelineType.FEDERATED -> federatedPagingItems
-            },
-            listState = when (uiState.timelineType) {
-                TimelineType.FOR_YOU -> forYouScrollState
-                TimelineType.LOCAL -> localScrollState
-                TimelineType.FEDERATED -> federatedScrollState
-            },
-        ) {
-            postListContent(
-                lazyPagingItems = when (uiState.timelineType) {
-                    TimelineType.FOR_YOU -> homeFeedPagingItems
-                    TimelineType.LOCAL -> localFeedPagingItems
-                    TimelineType.FEDERATED -> federatedPagingItems
-                },
-                postCardInteractions = when (uiState.timelineType) {
-                    TimelineType.FOR_YOU -> homePostCardInteractions
-                    TimelineType.LOCAL -> localPostCardInteractions
-                    TimelineType.FEDERATED -> federatedPostCardInteractions
-                },
-            )
+        when (uiState.timelineType) {
+            TimelineType.FOR_YOU -> {
+                PullRefreshLazyColumn(
+                    lazyPagingItems = homeFeedPagingItems,
+                    emptyListContent = {
+                        ForYouEmptyState(
+                            feedInteractions = feedInteractions,
+                        )
+                    },
+                    listState = forYouScrollState,
+                ) {
+                    postListContent(
+                        lazyPagingItems = homeFeedPagingItems,
+                        postCardInteractions = homePostCardInteractions,
+                    )
+                }
+            }
+
+            TimelineType.LOCAL -> {
+                PullRefreshLazyColumn(
+                    lazyPagingItems = localFeedPagingItems,
+                    listState = localScrollState,
+                ) {
+                    postListContent(
+                        lazyPagingItems = localFeedPagingItems,
+                        postCardInteractions = localPostCardInteractions,
+                    )
+                }
+            }
+            TimelineType.FEDERATED -> {
+                PullRefreshLazyColumn(
+                    lazyPagingItems = federatedPagingItems,
+                    listState = federatedScrollState,
+                ) {
+                    postListContent(
+                        lazyPagingItems = federatedPagingItems,
+                        postCardInteractions = federatedPostCardInteractions,
+                    )
+                }
+            }
         }
 
         //TODO maybe try enabling this again some day.  Seems to be some weird bugs with
@@ -231,6 +264,65 @@ private fun MainContent(
 //            homeFeedPagingItems = homeFeedPagingItems,
 //            feedInteractions = feedInteractions
 //        )
+    }
+}
+
+@Composable
+private fun ForYouEmptyState(
+    feedInteractions: FeedInteractions,
+) {
+    Box(modifier = Modifier.fillMaxSize()) {
+        Column(
+            modifier = Modifier
+                .align(Alignment.Center)
+                .width(400.dp)
+                .padding(16.dp),
+        ) {
+            LargeTextTitle(
+                modifier = Modifier.align(Alignment.CenterHorizontally),
+                text = stringResource(id = R.string.empty_home_title)
+            )
+
+            Image(
+                modifier = Modifier.fillMaxWidth(),
+                painter = painterResource(R.drawable.tree),
+                contentDescription = null,
+                contentScale = ContentScale.FillWidth,
+            )
+
+            MediumTextBody(text = stringResource(id = R.string.empty_home_body))
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            FfButtonSecondary(
+                modifier = Modifier.fillMaxWidth(),
+                onClick = { feedInteractions.onGoToDiscoverClicked() }
+            ) {
+                MediumTextLabel(text = stringResource(id = R.string.empty_home_trending_and_search))
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            MediumTextBody(text = stringResource(id = R.string.empty_home_body_2))
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            FfButtonSecondary(
+                modifier = Modifier.fillMaxWidth(),
+                onClick = { feedInteractions.onTabClicked(TimelineType.LOCAL) }
+            ) {
+                MediumTextLabel(text = stringResource(id = R.string.empty_home_local_button))
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            FfButtonSecondary(
+                modifier = Modifier.fillMaxWidth(),
+                onClick = { feedInteractions.onTabClicked(TimelineType.FEDERATED) }
+            ) {
+                MediumTextLabel(text = stringResource(id = R.string.empty_home_fediverse_button))
+            }
+        }
     }
 }
 

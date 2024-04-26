@@ -17,6 +17,7 @@ import social.firefly.core.ui.common.paging.PagingLazyColumn
 fun <A : Any> PullRefreshLazyColumn(
     lazyPagingItems: LazyPagingItems<A>,
     modifier: Modifier = Modifier,
+    emptyListContent: (@Composable () -> Unit)? = null,
     pullRefreshState: PullRefreshState = rememberPullRefreshState(
         refreshing = lazyPagingItems.loadState.refresh == LoadState.Loading,
         onRefresh = { lazyPagingItems.refresh() },
@@ -39,14 +40,26 @@ fun <A : Any> PullRefreshLazyColumn(
             .pullRefresh(pullRefreshState)
             .fillMaxSize(),
     ) {
-        PagingLazyColumn(
-            lazyPagingItems = lazyPagingItems,
-            listState = listState,
-            showLoadingSpinnerOnRefresh = false,
-            emptyListState = emptyListState,
-            headerContent = headerContent,
-            content = content,
-        )
+        if (emptyListContent == null) {
+            PagingLazyColumn(
+                lazyPagingItems = lazyPagingItems,
+                listState = listState,
+                showLoadingSpinnerOnRefresh = false,
+                emptyListState = emptyListState,
+                headerContent = headerContent,
+                content = content,
+            )
+        } else {
+            PagingLazyColumn(
+                lazyPagingItems = lazyPagingItems,
+                listState = listState,
+                emptyListContent = emptyListContent,
+                showLoadingSpinnerOnRefresh = false,
+                emptyListState = emptyListState,
+                headerContent = headerContent,
+                content = content,
+            )
+        }
 
         pullRefreshIndicator(
             lazyPagingItems.loadState.refresh == LoadState.Loading,

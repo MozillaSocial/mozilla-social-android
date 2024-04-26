@@ -39,6 +39,37 @@ fun <A : Any> PagingLazyColumn(
     headerContent: LazyListScope.() -> Unit = {},
     content: LazyListScope.() -> Unit,
 ) {
+    PagingLazyColumn(
+        lazyPagingItems = lazyPagingItems,
+        modifier = modifier,
+        emptyListContent = {
+            Text(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentWidth(Alignment.CenterHorizontally)
+                    .padding(16.dp),
+                text = noResultText,
+            )
+        },
+        showLoadingSpinnerOnRefresh = showLoadingSpinnerOnRefresh,
+        listState = listState,
+        emptyListState = emptyListState,
+        headerContent = headerContent,
+        content = content
+    )
+}
+
+@Composable
+fun <A : Any> PagingLazyColumn(
+    lazyPagingItems: LazyPagingItems<A>,
+    modifier: Modifier = Modifier,
+    emptyListContent: @Composable () -> Unit,
+    showLoadingSpinnerOnRefresh: Boolean = true,
+    listState: LazyListState = rememberLazyListState(),
+    emptyListState: LazyListState = rememberLazyListState(),
+    headerContent: LazyListScope.() -> Unit = {},
+    content: LazyListScope.() -> Unit,
+) {
     var isRetryingAfterError by remember { mutableStateOf(false) }
 
     Box(
@@ -80,13 +111,7 @@ fun <A : Any> PagingLazyColumn(
                             key = lazyPagingItems.itemCount,
                             visible = lazyPagingItems.itemCount == 0
                         ) {
-                            Text(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .wrapContentWidth(Alignment.CenterHorizontally)
-                                    .padding(16.dp),
-                                text = noResultText,
-                            )
+                            emptyListContent()
                         }
                     }
                     content()

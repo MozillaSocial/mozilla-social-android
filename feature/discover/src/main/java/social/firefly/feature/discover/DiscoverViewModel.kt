@@ -66,8 +66,8 @@ class DiscoverViewModel(
 
     private val _uiState = MutableStateFlow(
         DiscoverUiState(
-            selectedTab = hashtags,
-            tabs = listOf(hashtags, posts)
+            selectedTab = posts,
+            tabs = listOf(posts, hashtags)
         )
     )
     val uiState = _uiState.asStateFlow()

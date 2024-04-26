@@ -17,6 +17,8 @@ import social.firefly.common.utils.edit
 import social.firefly.core.analytics.FeedAnalytics
 import social.firefly.core.analytics.FeedLocation
 import social.firefly.core.datastore.UserPreferencesDatastore
+import social.firefly.core.navigation.BottomBarNavigationDestination
+import social.firefly.core.navigation.usecases.NavigateTo
 import social.firefly.core.repository.mastodon.TimelineRepository
 import social.firefly.core.repository.paging.remotemediators.FederatedTimelineRemoteMediator
 import social.firefly.core.repository.paging.remotemediators.HomeTimelineRemoteMediator
@@ -34,6 +36,7 @@ class FeedViewModel(
     federatedTimelineRemoteMediator: FederatedTimelineRemoteMediator,
     private val timelineRepository: TimelineRepository,
     getLoggedInUserAccountId: GetLoggedInUserAccountId,
+    private val navigateTo: NavigateTo,
 ) : ViewModel(), FeedInteractions {
     private val userAccountId: String = getLoggedInUserAccountId()
 
@@ -138,6 +141,10 @@ class FeedViewModel(
         _uiState.edit { copy(
             scrollUpButtonVisible = visible,
         ) }
+    }
+
+    override fun onGoToDiscoverClicked() {
+        navigateTo(BottomBarNavigationDestination.Discover)
     }
 
     companion object {

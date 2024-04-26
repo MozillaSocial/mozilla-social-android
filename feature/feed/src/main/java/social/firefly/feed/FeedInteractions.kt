@@ -9,4 +9,5 @@ interface FeedInteractions {
         statusId: String,
     ) = Unit
     fun onHomePrependEndReached(reached: Boolean) = Unit
+    fun onGoToDiscoverClicked() = Unit
 }
