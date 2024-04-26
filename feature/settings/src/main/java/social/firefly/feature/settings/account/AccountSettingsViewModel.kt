@@ -22,21 +22,30 @@ class AccountSettingsViewModel(
     private val logout: Logout,
     private val openLink: OpenLink,
     private val analytics: SettingsAnalytics,
-    private val getDomain: GetDomain,
+    getDomain: GetDomain,
     getLoggedInUserAccountId: GetLoggedInUserAccountId,
     accountRepository: AccountRepository,
 ) : ViewModel(), AccountSettingsInteractions {
 
     private val userAccountId: String = getLoggedInUserAccountId()
-    private val domain = getDomain().stateIn(viewModelScope, SharingStarted.Eagerly, null)
+    private val domain = getDomain()
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.Eagerly,
+            initialValue = null,
+        )
+
     val subtitle: StateFlow<StringFactory?> = domain.map { domain ->
         domain?.let { StringFactory.resource(R.string.manage_your_account, it) }
-    }.stateIn(viewModelScope, SharingStarted.Eagerly, null)
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.Eagerly,
+        initialValue = null,
+    )
 
-    val userHeader =
-        loadResource {
-            accountRepository.getAccount(userAccountId).toUserHeader()
-        }
+    val userHeader = loadResource {
+        accountRepository.getAccount(userAccountId).toUserHeader()
+    }
 
 
     override fun onLogoutClicked() {
@@ -56,11 +65,14 @@ class AccountSettingsViewModel(
     }
 }
 
-data class UserHeader(val avatarUrl: String, val accountName: String, val url: String)
+data class UserHeader(
+    val avatarUrl: String,
+    val accountName: String,
+    val url: String,
+)
 
-fun Account.toUserHeader() =
-    UserHeader(
-        avatarUrl = avatarUrl,
-        accountName = acct,
-        url = url,
-    )
+fun Account.toUserHeader() = UserHeader(
+    avatarUrl = avatarUrl,
+    accountName = acct,
+    url = url,
+)
