@@ -12,7 +12,7 @@ import social.firefly.core.designsystem.theme.FfTheme
 @Composable
 fun FfCircularProgressIndicator(
     modifier: Modifier = Modifier,
-    color: Color = FfTheme.colors.actionPrimary,
+    color: Color = FfTheme.colors.borderAccent,
     strokeWidth: Dp = ProgressIndicatorDefaults.CircularStrokeWidth,
     trackColor: Color = ProgressIndicatorDefaults.circularTrackColor,
     strokeCap: StrokeCap = ProgressIndicatorDefaults.CircularIndeterminateStrokeCap,
