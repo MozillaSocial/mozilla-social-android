@@ -31,7 +31,7 @@ internal fun SettingsSection(
 ) {
     Row(
         modifier = Modifier
-            .padding(FfSpacing.md)
+            .padding(vertical = FfSpacing.md)
             .fillMaxWidth()
             .wrapContentHeight()
             .clickable { onClick() }

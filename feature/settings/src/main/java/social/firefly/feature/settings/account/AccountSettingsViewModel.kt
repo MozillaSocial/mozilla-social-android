@@ -68,11 +68,9 @@ class AccountSettingsViewModel(
 data class UserHeader(
     val avatarUrl: String,
     val accountName: String,
-    val url: String,
 )
 
 fun Account.toUserHeader() = UserHeader(
     avatarUrl = avatarUrl,
     accountName = acct,
-    url = url,
 )

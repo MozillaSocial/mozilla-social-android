@@ -11,6 +11,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.koin.androidx.compose.koinViewModel
+import social.firefly.core.designsystem.theme.FfSpacing
 import social.firefly.core.designsystem.theme.ThemeOption
 import social.firefly.core.ui.common.FfSurface
 import social.firefly.core.ui.common.dropdown.FfDropDownItem
@@ -43,7 +44,11 @@ private fun AppearanceAndBehaviorScreen(
             .fillMaxSize()
             .systemBarsPadding(),
     ) {
-        SettingsColumn(title = stringResource(id = R.string.appearance_and_behavior_title)) {
+        SettingsColumn(
+            modifier = Modifier
+                .padding(horizontal = FfSpacing.md),
+            title = stringResource(id = R.string.appearance_and_behavior_title)
+        ) {
             SettingsGroup(name = R.string.appearance_group_title) {
                 SettingsSelection(
                     title = stringResource(id = R.string.change_theme_title),
