@@ -6,6 +6,7 @@ import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideIn
 import androidx.compose.animation.slideOut
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
@@ -35,7 +36,9 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -51,6 +54,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
+import social.firefly.common.utils.painterResourceFactory
 import social.firefly.core.designsystem.font.FfFonts
 import social.firefly.core.designsystem.icon.FfIcons
 import social.firefly.core.designsystem.theme.FfTheme
@@ -271,7 +275,7 @@ private fun ForYouEmptyState(
         Column(
             modifier = Modifier
                 .align(Alignment.Center)
-                .width(500.dp)
+                .width(400.dp)
                 .padding(16.dp),
         ) {
             LargeTextTitle(
@@ -279,7 +283,12 @@ private fun ForYouEmptyState(
                 text = stringResource(id = R.string.empty_home_title)
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Image(
+                modifier = Modifier.fillMaxWidth(),
+                painter = painterResource(R.drawable.tree),
+                contentDescription = null,
+                contentScale = ContentScale.FillWidth,
+            )
 
             MediumTextBody(text = stringResource(id = R.string.empty_home_body))
 
