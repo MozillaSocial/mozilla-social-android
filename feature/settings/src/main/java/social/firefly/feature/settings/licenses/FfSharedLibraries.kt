@@ -38,12 +38,10 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import com.mikepenz.aboutlibraries.Libs
 import com.mikepenz.aboutlibraries.entity.Library
-import com.mikepenz.aboutlibraries.ui.compose.util.StableLibrary
-import com.mikepenz.aboutlibraries.ui.compose.util.StableLibs
 import com.mikepenz.aboutlibraries.ui.compose.util.author
 import com.mikepenz.aboutlibraries.ui.compose.util.htmlReadyLicenseContent
-import com.mikepenz.aboutlibraries.ui.compose.util.stable
 import social.firefly.core.designsystem.theme.FfTheme
 import social.firefly.core.designsystem.theme.FfTypography
 import social.firefly.core.ui.common.FfBadge
@@ -52,7 +50,7 @@ import java.net.MalformedURLException
 
 @Composable
 fun FfLibrariesContainer(
-    libraries: StableLibs?,
+    libraries: Libs?,
     modifier: Modifier = Modifier,
     lazyListState: LazyListState = rememberLazyListState(),
     contentPadding: PaddingValues = PaddingValues(0.dp),
@@ -64,14 +62,14 @@ fun FfLibrariesContainer(
     itemContentPadding: PaddingValues = FfLibraryDefaults.ContentPadding,
     itemSpacing: Dp = FfLibraryDefaults.LibraryItemSpacing,
     header: (LazyListScope.() -> Unit)? = null,
-    onLibraryClick: ((StableLibrary) -> Unit)? = null,
-    licenseDialogBody: (@Composable (StableLibrary) -> Unit)? = null,
+    onLibraryClick: ((Library) -> Unit)? = null,
+    licenseDialogBody: (@Composable (Library) -> Unit)? = null,
     licenseDialogConfirmText: String = stringResource(id = R.string.license_okay_button),
 ) {
     val uriHandler = LocalUriHandler.current
 
-    val libs = libraries?.libraries ?: emptyList<Library>().stable
-    val openDialog = remember { mutableStateOf<StableLibrary?>(null) }
+    val libs = libraries?.libraries ?: emptyList()
+    val openDialog = remember { mutableStateOf<Library?>(null) }
 
     Libraries(
         libraries = libs,
@@ -87,7 +85,7 @@ fun FfLibrariesContainer(
         itemSpacing = itemSpacing,
         header = header,
     ) { library ->
-        val license = library.library.licenses.firstOrNull()
+        val license = library.licenses.firstOrNull()
         if (onLibraryClick != null) {
             onLibraryClick(library)
         } else if (!license?.htmlReadyLicenseContent.isNullOrBlank()) {
@@ -114,10 +112,10 @@ fun FfLibrariesContainer(
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun LicenseDialog(
-    library: StableLibrary,
+    library: Library,
     colors: FfLibraryColors = FfLibraryDefaults.FfLibraryColors(),
     confirmText: String = stringResource(id = R.string.license_okay_button),
-    body: @Composable (StableLibrary) -> Unit,
+    body: @Composable (Library) -> Unit,
     onDismiss: () -> Unit,
 ) {
     val scrollState = rememberScrollState()
@@ -165,7 +163,7 @@ fun LicenseDialog(
  */
 @Composable
 fun Libraries(
-    libraries: List<StableLibrary>,
+    libraries: List<Library>,
     modifier: Modifier = Modifier,
     lazyListState: LazyListState = rememberLazyListState(),
     contentPadding: PaddingValues = PaddingValues(0.dp),
@@ -177,7 +175,7 @@ fun Libraries(
     itemContentPadding: PaddingValues = FfLibraryDefaults.ContentPadding,
     itemSpacing: Dp = FfLibraryDefaults.LibraryItemSpacing,
     header: (LazyListScope.() -> Unit)? = null,
-    onLibraryClick: ((StableLibrary) -> Unit)? = null,
+    onLibraryClick: ((Library) -> Unit)? = null,
 ) {
     val uriHandler = LocalUriHandler.current
 
@@ -197,7 +195,7 @@ fun Libraries(
             padding,
             itemContentPadding
         ) { library ->
-            val license = library.library.licenses.firstOrNull()
+            val license = library.licenses.firstOrNull()
             if (onLibraryClick != null) {
                 onLibraryClick.invoke(library)
             } else if (!license?.url.isNullOrBlank()) {
@@ -214,14 +212,14 @@ fun Libraries(
 }
 
 internal inline fun LazyListScope.libraryItems(
-    libraries: List<StableLibrary>,
+    libraries: List<Library>,
     showAuthor: Boolean = true,
     showVersion: Boolean = true,
     showLicenseBadges: Boolean = true,
     colors: FfLibraryColors,
     padding: FfLibraryPadding,
     itemContentPadding: PaddingValues = FfLibraryDefaults.ContentPadding,
-    crossinline onLibraryClick: ((StableLibrary) -> Unit),
+    crossinline onLibraryClick: ((Library) -> Unit),
 ) {
     items(libraries) { library ->
         Library(
@@ -240,7 +238,7 @@ internal inline fun LazyListScope.libraryItems(
 
 @Composable
 internal fun Library(
-    library: StableLibrary,
+    library: Library,
     showAuthor: Boolean = true,
     showVersion: Boolean = true,
     showLicenseBadges: Boolean = true,
@@ -262,14 +260,14 @@ internal fun Library(
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             Text(
-                text = library.library.name,
+                text = library.name,
                 modifier = Modifier
                     .padding(padding.namePadding)
                     .weight(1f),
                 style = typography.titleSmall,
                 color = colors.contentColor,
             )
-            val version = library.library.artifactVersion
+            val version = library.artifactVersion
             if (version != null && showVersion) {
                 Text(
                     version,
@@ -280,7 +278,7 @@ internal fun Library(
                 )
             }
         }
-        val author = library.library.author
+        val author = library.author
         if (showAuthor && author.isNotBlank()) {
             Text(
                 text = author,
@@ -288,8 +286,8 @@ internal fun Library(
                 color = colors.contentColor
             )
         }
-        if (showLicenseBadges && library.library.licenses.isNotEmpty()) {
-            library.library.licenses.forEach {
+        if (showLicenseBadges && library.licenses.isNotEmpty()) {
+            library.licenses.forEach {
                 Row(
                     modifier = Modifier
                         .padding(2.dp)

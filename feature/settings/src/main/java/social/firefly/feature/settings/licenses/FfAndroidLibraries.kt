@@ -19,10 +19,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.text.HtmlCompat
 import com.mikepenz.aboutlibraries.Libs
+import com.mikepenz.aboutlibraries.entity.Library
 import com.mikepenz.aboutlibraries.ui.compose.LibraryDefaults
-import com.mikepenz.aboutlibraries.ui.compose.util.StableLibrary
 import com.mikepenz.aboutlibraries.ui.compose.util.htmlReadyLicenseContent
-import com.mikepenz.aboutlibraries.ui.compose.util.stable
 import com.mikepenz.aboutlibraries.util.withContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -47,7 +46,7 @@ fun FfLibrariesContainer(
     itemContentPadding: PaddingValues = LibraryDefaults.ContentPadding,
     itemSpacing: Dp = FfLibraryDefaults.LibraryItemSpacing,
     header: (LazyListScope.() -> Unit)? = null,
-    onLibraryClick: ((StableLibrary) -> Unit)? = null,
+    onLibraryClick: ((Library) -> Unit)? = null,
 ) {
     val context = LocalContext.current
 
@@ -57,7 +56,7 @@ fun FfLibrariesContainer(
         }
     }
     FfLibrariesContainer(
-        libraries.value?.stable,
+        libraries.value,
         modifier,
         lazyListState,
         contentPadding,
@@ -72,7 +71,7 @@ fun FfLibrariesContainer(
         onLibraryClick,
         licenseDialogBody = { library ->
             HtmlText(
-                html = library.library.licenses.firstOrNull()?.htmlReadyLicenseContent.orEmpty(),
+                html = library.licenses.firstOrNull()?.htmlReadyLicenseContent.orEmpty(),
                 color = colors.contentColor,
             )
         }
@@ -97,7 +96,7 @@ fun HtmlText(
 fun PreviewLibraries() {
     FfTheme {
         Surface {
-            Libraries(fakeData.libraries.stable)
+            Libraries(fakeData.libraries)
         }
     }
 }
