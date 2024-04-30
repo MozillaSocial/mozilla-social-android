@@ -20,7 +20,6 @@ koin = "3.5.6"
 koin-compose = "1.1.5"
 kotlin = "1.9.23"
 kotlin-ksp = "1.9.23-1.0.20" # Used only once, but keeping this definition makes the KSP version check at ci/verify-ksp-version.sh simpler.
-kotlinx-collections-immutable = "0.3.7"
 kotlinx-coroutines = "1.8.0"
 okhttp = "4.12.0"
 protobuf = "4.26.1"
@@ -85,7 +84,6 @@ kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-t
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version = "0.5.0" }
 kotlinx-serialization-converter = { module = "com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter", version = "1.0.0" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version = "1.6.3" }
-kotlinx-collections-immutable = { module = "org.jetbrains.kotlinx:kotlinx-collections-immutable", version.ref = "kotlinx-collections-immutable" }
 mockk = { module = "io.mockk:mockk", version = "1.13.10" }
 mozilla-components-service-glean = { module = "org.mozilla.components:service-glean", version = "118.0" }
 protobuf-kotlin-lite = { module = "com.google.protobuf:protobuf-kotlin-lite", version.ref = "protobuf" }
