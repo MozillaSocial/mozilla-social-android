@@ -7,6 +7,7 @@ import androidx.paging.PagingData
 import androidx.paging.RemoteMediator
 import androidx.paging.map
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
 import retrofit2.HttpException
 import retrofit2.Response
@@ -33,17 +34,18 @@ class BlocksRepository(private val api: BlocksApi, private val dao: BlocksDao) {
         remoteMediator: RemoteMediator<Int, BlockWrapper>,
         pageSize: Int = 40,
         initialLoadSize: Int = 40,
-    ): Flow<PagingData<BlockedUser>> {
-        return Pager(
-            config =
-            PagingConfig(
-                pageSize = pageSize,
-                initialLoadSize = initialLoadSize,
-            ),
-            remoteMediator = remoteMediator,
-        ) {
-            dao.pagingSource()
-        }.flow.mapLatest { it.map { it.toBlockedUser() } }
+    ): Flow<PagingData<BlockedUser>> = Pager(
+        config = PagingConfig(
+            pageSize = pageSize,
+            initialLoadSize = initialLoadSize,
+        ),
+        remoteMediator = remoteMediator,
+    ) {
+        dao.pagingSource()
+    }.flow.map { pagingData ->
+        pagingData.map{
+            it.toBlockedUser()
+        }
     }
 
 
