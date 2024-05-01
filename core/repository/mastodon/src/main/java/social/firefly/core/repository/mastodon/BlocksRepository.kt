@@ -7,6 +7,7 @@ import androidx.paging.PagingData
 import androidx.paging.RemoteMediator
 import androidx.paging.map
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
 import retrofit2.HttpException
 import retrofit2.Response
@@ -21,6 +22,9 @@ import social.firefly.core.model.BlockedUser
 import social.firefly.core.model.paging.AccountPagingWrapper
 import social.firefly.core.network.mastodon.BlocksApi
 import social.firefly.core.network.mastodon.model.NetworkAccount
+import social.firefly.core.repository.mastodon.model.block.toAccountsList
+import social.firefly.core.repository.mastodon.model.block.toBlockedUser
+import social.firefly.core.repository.mastodon.model.block.toPagingLinks
 import social.firefly.core.repository.mastodon.model.status.toExternalModel
 
 class BlocksRepository(private val api: BlocksApi, private val dao: BlocksDao) {
@@ -30,17 +34,18 @@ class BlocksRepository(private val api: BlocksApi, private val dao: BlocksDao) {
         remoteMediator: RemoteMediator<Int, BlockWrapper>,
         pageSize: Int = 40,
         initialLoadSize: Int = 40,
-    ): Flow<PagingData<BlockedUser>> {
-        return Pager(
-            config =
-            PagingConfig(
-                pageSize = pageSize,
-                initialLoadSize = initialLoadSize,
-            ),
-            remoteMediator = remoteMediator,
-        ) {
-            dao.pagingSource()
-        }.flow.mapLatest { it.map { it.toBlockedUser() } }
+    ): Flow<PagingData<BlockedUser>> = Pager(
+        config = PagingConfig(
+            pageSize = pageSize,
+            initialLoadSize = initialLoadSize,
+        ),
+        remoteMediator = remoteMediator,
+    ) {
+        dao.pagingSource()
+    }.flow.map { pagingData ->
+        pagingData.map{
+            it.toBlockedUser()
+        }
     }
 
 
@@ -74,14 +79,3 @@ class BlocksRepository(private val api: BlocksApi, private val dao: BlocksDao) {
 
     suspend fun deleteAll() = dao.deleteAll()
 }
-
-private fun BlockWrapper.toBlockedUser() = BlockedUser(
-    isBlocked = databaseRelationship.isBlocking,
-    account = account.toExternalModel(),
-)
-
-fun Response<List<NetworkAccount>>.toAccountsList() =
-    body()?.map { it.toExternalModel() } ?: emptyList()
-
-fun Response<List<NetworkAccount>>.toPagingLinks() =
-    headers().get("link")?.parseMastodonLinkHeader()

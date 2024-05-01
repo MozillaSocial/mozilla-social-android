@@ -35,6 +35,7 @@ import social.firefly.core.navigation.NavigationDestination
 import social.firefly.core.navigation.NavigationDestination.Auth.navigateToAuthFlow
 import social.firefly.core.navigation.NavigationDestination.EditAccount.navigateToEditAccount
 import social.firefly.core.navigation.NavigationDestination.Favorites.navigateToFavorites
+import social.firefly.core.navigation.NavigationDestination.FollowedHashTags.navigateToFollowedHashTags
 import social.firefly.core.navigation.NavigationDestination.Search.navigateToSearch
 import social.firefly.core.navigation.NavigationDestination.Settings.navigateToSettings
 import social.firefly.core.navigation.NavigationDestination.Tabs.navigateToTabs
@@ -224,6 +225,10 @@ class AppState(
 
                 NavigationDestination.Favorites -> {
                     mainNavController.navigateToFavorites()
+                }
+
+                NavigationDestination.FollowedHashTags -> {
+                    mainNavController.navigateToFollowedHashTags()
                 }
 
                 is NavigationDestination.Followers -> {

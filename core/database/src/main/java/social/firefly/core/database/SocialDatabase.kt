@@ -20,6 +20,7 @@ import social.firefly.core.database.dao.AccountsDao
 import social.firefly.core.database.dao.BlocksDao
 import social.firefly.core.database.dao.FavoritesTimelineStatusDao
 import social.firefly.core.database.dao.FederatedTimelineStatusDao
+import social.firefly.core.database.dao.FollowedHashTagsDao
 import social.firefly.core.database.dao.FollowersDao
 import social.firefly.core.database.dao.FollowingsDao
 import social.firefly.core.database.dao.HashTagTimelineStatusDao
@@ -47,6 +48,7 @@ import social.firefly.core.database.model.entities.accountCollections.DatabaseMu
 import social.firefly.core.database.model.entities.accountCollections.Followee
 import social.firefly.core.database.model.entities.accountCollections.Follower
 import social.firefly.core.database.model.entities.accountCollections.SearchedAccount
+import social.firefly.core.database.model.entities.hashtagCollections.FollowedHashTag
 import social.firefly.core.database.model.entities.hashtagCollections.SearchedHashTag
 import social.firefly.core.database.model.entities.hashtagCollections.TrendingHashTag
 import social.firefly.core.database.model.entities.notificationCollections.FollowListNotification
@@ -89,10 +91,12 @@ import social.firefly.core.database.model.entities.statusCollections.DbTrendingS
         TrendingLink::class,
         DbTrendingStatus::class,
         TrendingHashTag::class,
+        FollowedHashTag::class,
     ],
-    version = 2,
+    version = 3,
     autoMigrations = [
-        AutoMigration (from = 1, to = 2)
+        AutoMigration (from = 1, to = 2),
+        AutoMigration (from = 2, to = 3),
     ],
     exportSchema = true,
 )
@@ -111,42 +115,24 @@ import social.firefly.core.database.model.entities.statusCollections.DbTrendingS
 )
 abstract class SocialDatabase : RoomDatabase() {
     abstract fun statusDao(): StatusDao
-
     abstract fun accountsDao(): AccountsDao
-
     abstract fun blocksDao(): BlocksDao
-
     abstract fun mutesDao(): MutesDao
-
     abstract fun homeTimelineDao(): HomeTimelineStatusDao
-
     abstract fun pollDao(): PollsDao
-
     abstract fun hashTagTimelineDao(): HashTagTimelineStatusDao
-
     abstract fun accountTimelineDao(): AccountTimelineStatusDao
-
     abstract fun relationshipsDao(): RelationshipsDao
-
     abstract fun localTimelineDao(): LocalTimelineStatusDao
-
     abstract fun federatedTimelineDao(): FederatedTimelineStatusDao
-
     abstract fun followersDao(): FollowersDao
-
     abstract fun followingsDao(): FollowingsDao
-
     abstract fun favoritesDao(): FavoritesTimelineStatusDao
-
     abstract fun hashTagsDao(): HashTagsDao
-
     abstract fun searchDao(): SearchDao
-
     abstract fun trendingLinkDao(): TrendingLinkDao
-
     abstract fun trendingHashtagDao(): TrendingHashTagDao
-
     abstract fun trendingStatusDao(): TrendingStatusDao
-
     abstract fun notificationsDao(): NotificationsDao
+    abstract fun followedHashTagsDao(): FollowedHashTagsDao
 }

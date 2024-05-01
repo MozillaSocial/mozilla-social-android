@@ -49,21 +49,19 @@ class FavoritesRepository(
         remoteMediator: RemoteMediator<Int, FavoritesTimelineStatusWrapper>,
         pageSize: Int = 20,
         initialLoadSize: Int = 40,
-    ): Flow<PagingData<Status>> =
-        Pager(
-            config =
-            PagingConfig(
-                pageSize = pageSize,
-                initialLoadSize = initialLoadSize,
-            ),
-            remoteMediator = remoteMediator,
-        ) {
-            dao.favoritesTimelinePagingSource()
-        }.flow.map { pagingData ->
-            pagingData.map {
-                it.status.toExternalModel()
-            }
+    ): Flow<PagingData<Status>> = Pager(
+        config = PagingConfig(
+            pageSize = pageSize,
+            initialLoadSize = initialLoadSize,
+        ),
+        remoteMediator = remoteMediator,
+    ) {
+        dao.favoritesTimelinePagingSource()
+    }.flow.map { pagingData ->
+        pagingData.map {
+            it.status.toExternalModel()
         }
+    }
 
     suspend fun deleteFavoritesTimeline() {
         dao.deleteFavoritesTimelines()

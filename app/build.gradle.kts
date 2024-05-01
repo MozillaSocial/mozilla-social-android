@@ -86,6 +86,7 @@ dependencies {
     implementation(project(":feature:media"))
     implementation(project(":core:push"))
     implementation(project(":core:share"))
+    implementation(project(":feature:followedHashTags"))
 
     implementation(kotlin("reflect"))
 

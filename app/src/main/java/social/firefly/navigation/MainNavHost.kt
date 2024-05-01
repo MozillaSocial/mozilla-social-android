@@ -11,6 +11,7 @@ import social.firefly.feature.account.accountScreen
 import social.firefly.feature.account.edit.editAccountScreen
 import social.firefly.feature.auth.authFlow
 import social.firefly.feature.favorites.favoritesScreen
+import social.firefly.feature.followedHashTags.followedHashTagsScreen
 import social.firefly.feature.followers.followersScreen
 import social.firefly.feature.hashtag.hashTagScreen
 import social.firefly.feature.media.mediaScreen
@@ -51,6 +52,7 @@ fun MainNavHost(
         favoritesScreen()
         searchScreen()
         mediaScreen()
+        followedHashTagsScreen()
     }
 }
 

@@ -42,4 +42,5 @@ val mastodonRepositoryModule =
         singleOf(::TrendingHashtagRepository)
         factoryOf(::TrendingStatusRepository)
         singleOf(::PushRepository)
+        singleOf(::FollowedHashTagsRepository)
     }
