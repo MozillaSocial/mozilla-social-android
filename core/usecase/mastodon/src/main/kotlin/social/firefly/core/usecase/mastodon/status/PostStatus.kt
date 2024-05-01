@@ -4,6 +4,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.MutableSharedFlow
 import social.firefly.common.annotations.PreferUseCase
 import social.firefly.common.utils.StringFactory
 import social.firefly.core.model.ImageState
@@ -16,6 +17,7 @@ import social.firefly.core.repository.mastodon.MediaRepository
 import social.firefly.core.repository.mastodon.StatusRepository
 import social.firefly.core.repository.mastodon.TimelineRepository
 import social.firefly.core.usecase.mastodon.R
+import social.firefly.core.usecase.mastodon.thread.GetThread
 
 class PostStatus internal constructor(
     private val externalScope: CoroutineScope,
@@ -23,6 +25,7 @@ class PostStatus internal constructor(
     private val statusRepository: StatusRepository,
     private val saveStatusToDatabase: SaveStatusToDatabase,
     private val timelineRepository: TimelineRepository,
+    private val getThread: GetThread,
     private val showSnackbar: ShowSnackbar,
     private val dispatcherIo: CoroutineDispatcher = Dispatchers.IO,
 ) {
@@ -76,6 +79,7 @@ class PostStatus internal constructor(
                     ),
                 )
             saveStatusToDatabase(status)
+            getThread.pushNewStatus(status)
             timelineRepository.insertStatusIntoTimelines(status)
         } catch (e: Exception) {
             showSnackbar(
