@@ -134,6 +134,7 @@ val mastodonUsecaseModule =
                 mediaApi = get(),
                 statusRepository = get(),
                 saveStatusToDatabase = get(),
+                getThread = get(),
                 timelineRepository = get(),
                 showSnackbar = get(),
             )
