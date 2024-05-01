@@ -305,6 +305,10 @@ class AccountViewModel(
         analytics.editAccountClicked()
         navigateTo(NavigationDestination.EditAccount)
     }
+
+    override fun onOverflowFollowedHashTagsClicked() {
+        navigateTo(NavigationDestination.FollowedHashTags)
+    }
 }
 
 private fun AccountTimelineType.toAnalyticsTimelineType(): AccountAnalytics.TimelineType =

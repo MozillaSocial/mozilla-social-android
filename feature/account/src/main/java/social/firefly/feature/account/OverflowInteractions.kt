@@ -8,4 +8,5 @@ interface OverflowInteractions {
     fun onOverflowBlockClicked() = Unit
     fun onOverflowUnblockClicked() = Unit
     fun onOverflowReportClicked() = Unit
+    fun onOverflowFollowedHashTagsClicked() = Unit
 }

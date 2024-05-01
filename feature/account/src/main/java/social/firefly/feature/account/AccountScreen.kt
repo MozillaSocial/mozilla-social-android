@@ -398,6 +398,11 @@ private fun OverflowMenu(
                     expanded = overflowMenuExpanded,
                     onClick = { overflowInteractions.onOverflowFavoritesClicked() }
                 )
+                FfDropDownItem(
+                    text = stringResource(id = R.string.followed_hash_tags_option),
+                    expanded = overflowMenuExpanded,
+                    onClick = { overflowInteractions.onOverflowFollowedHashTagsClicked() }
+                )
             }
 
             FfDropDownItem(
