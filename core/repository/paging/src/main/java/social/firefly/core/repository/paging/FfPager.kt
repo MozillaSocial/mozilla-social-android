@@ -10,6 +10,8 @@ import androidx.paging.map
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import social.firefly.core.model.PageItem
+import social.firefly.core.model.paging.MastodonPagedResponse
+import social.firefly.core.repository.paging.remotemediators.generic.IdBasedRemoteMediator
 import social.firefly.core.repository.paging.remotemediators.generic.IndexBasedRemoteMediator
 
 interface FfPager<T : Any, KEY: Any, DBO: Any> {
@@ -42,6 +44,17 @@ interface IndexBasedPager<T : Any, DBO: Any> : FfPager<T, Int, DBO> {
 
     @OptIn(ExperimentalPagingApi::class)
     override fun getRemoteMediator(): RemoteMediator<Int, DBO> = IndexBasedRemoteMediator(
+        saveLocally = ::saveLocally,
+        getRemotely = ::getRemotely,
+    )
+}
+
+interface IdBasedPager<T : Any, DBO: Any> : FfPager<T, Int, DBO> {
+    suspend fun saveLocally(items: List<PageItem<T>>)
+    suspend fun getRemotely(limit: Int, nextKey: String?): MastodonPagedResponse<T>
+
+    @OptIn(ExperimentalPagingApi::class)
+    override fun getRemoteMediator(): RemoteMediator<Int, DBO> = IdBasedRemoteMediator(
         saveLocally = ::saveLocally,
         getRemotely = ::getRemotely,
     )
