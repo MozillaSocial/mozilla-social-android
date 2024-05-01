@@ -60,6 +60,14 @@ sealed class NavigationDestination(
         }
     }
 
+    data object FollowedHashTags : NavigationDestination(
+        route = "followedHashTags"
+    ) {
+        fun NavController.navigateToFollowedHashTags(navOptions: NavOptions? = null) {
+            navigate(route, navOptions)
+        }
+    }
+
     data class Followers(
         val accountId: String,
         val displayName: String,
