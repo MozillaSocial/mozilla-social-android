@@ -125,39 +125,3 @@ class StatusRepository(
         dao.upsertAll(statuses.map { it.toDatabaseModel() })
     }
 }
-
- fun Status.toDatabaseModel(): DatabaseStatus =
-    DatabaseStatus(
-        statusId = statusId,
-        uri = uri,
-        createdAt = createdAt,
-        accountId = account.accountId,
-        content = content,
-        visibility = visibility.toDatabaseModel(),
-        isSensitive = isSensitive,
-        contentWarningText = contentWarningText,
-        mediaAttachments = mediaAttachments.map { it.toDatabaseModel() },
-        mentions = mentions.map { it.toDatabaseModel() },
-        hashTags = hashTags.map { it.toDatabaseModel() },
-        emojis = emojis.map { it.toDatabaseModel() },
-        boostsCount = boostsCount,
-        favouritesCount = favouritesCount,
-        repliesCount = repliesCount,
-        application = application?.toDatabaseModel(),
-        url = url,
-        inReplyToId = inReplyToId,
-        inReplyToAccountId = inReplyToAccountId,
-        inReplyToAccountName = inReplyToAccountName,
-        boostedStatusId = boostedStatus?.statusId,
-        boostedStatusAccountId = boostedStatus?.account?.accountId,
-        pollId = poll?.pollId,
-        card = card?.toDatabaseModel(),
-        language = language,
-        plainText = plainText,
-        isFavorited = isFavourited,
-        isBoosted = isBoosted,
-        isMuted = isMuted,
-        isBookmarked = isBookmarked,
-        isPinned = isPinned,
-        isBeingDeleted = isBeingDeleted,
-    )

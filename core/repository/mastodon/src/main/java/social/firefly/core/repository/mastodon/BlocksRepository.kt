@@ -21,6 +21,9 @@ import social.firefly.core.model.BlockedUser
 import social.firefly.core.model.paging.AccountPagingWrapper
 import social.firefly.core.network.mastodon.BlocksApi
 import social.firefly.core.network.mastodon.model.NetworkAccount
+import social.firefly.core.repository.mastodon.model.block.toAccountsList
+import social.firefly.core.repository.mastodon.model.block.toBlockedUser
+import social.firefly.core.repository.mastodon.model.block.toPagingLinks
 import social.firefly.core.repository.mastodon.model.status.toExternalModel
 
 class BlocksRepository(private val api: BlocksApi, private val dao: BlocksDao) {
@@ -74,14 +77,3 @@ class BlocksRepository(private val api: BlocksApi, private val dao: BlocksDao) {
 
     suspend fun deleteAll() = dao.deleteAll()
 }
-
-private fun BlockWrapper.toBlockedUser() = BlockedUser(
-    isBlocked = databaseRelationship.isBlocking,
-    account = account.toExternalModel(),
-)
-
-fun Response<List<NetworkAccount>>.toAccountsList() =
-    body()?.map { it.toExternalModel() } ?: emptyList()
-
-fun Response<List<NetworkAccount>>.toPagingLinks() =
-    headers().get("link")?.parseMastodonLinkHeader()

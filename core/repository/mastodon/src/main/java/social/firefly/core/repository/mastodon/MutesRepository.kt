@@ -18,6 +18,9 @@ import social.firefly.core.database.model.entities.accountCollections.MuteWrappe
 import social.firefly.core.model.MutedUser
 import social.firefly.core.model.paging.AccountPagingWrapper
 import social.firefly.core.network.mastodon.MutesApi
+import social.firefly.core.repository.mastodon.model.block.toAccountsList
+import social.firefly.core.repository.mastodon.model.block.toMutedUser
+import social.firefly.core.repository.mastodon.model.block.toPagingLinks
 import social.firefly.core.repository.mastodon.model.status.toExternalModel
 
 class MutesRepository(private val api: MutesApi, private val dao: MutesDao) {
@@ -69,8 +72,3 @@ class MutesRepository(private val api: MutesApi, private val dao: MutesDao) {
 
     suspend fun deleteAll() = dao.deleteAll()
 }
-
-private fun MuteWrapper.toMutedUser() = MutedUser(
-    isMuted = databaseRelationship.isMuting,
-    account = account.toExternalModel(),
-)

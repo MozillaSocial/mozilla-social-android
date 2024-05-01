@@ -55,7 +55,7 @@ data class Account(
      *
      * If none, an empty array will be returned.
      */
-    val emojis: List<social.firefly.core.model.Emoji>,
+    val emojis: List<Emoji>,
     /**
      * Date at which the account was created.
      */
