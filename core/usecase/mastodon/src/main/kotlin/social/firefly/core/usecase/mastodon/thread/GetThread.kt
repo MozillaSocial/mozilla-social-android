@@ -4,9 +4,17 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.emitAll
+import kotlinx.coroutines.flow.flatMapConcat
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.mapLatest
+import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.flow.transform
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import social.firefly.common.Resource
 import social.firefly.common.utils.edit
@@ -20,13 +28,13 @@ class GetThread internal constructor(
     private val statusRepository: StatusRepository,
     private val saveStatusToDatabase: SaveStatusToDatabase,
 ) {
-    private val postedStatusesSharedFlow = MutableSharedFlow<Status>()
+    private val postedStatusesSharedFlow = MutableSharedFlow<String>()
 
     /**
      * Used to add new statuses to a thread, like when the user posts a reply in a thread.
      */
-    internal suspend fun pushNewStatus(status: Status) {
-        postedStatusesSharedFlow.emit(status)
+    internal suspend fun pushNewStatus(statusId: String) {
+        postedStatusesSharedFlow.emit(statusId)
     }
 
     operator fun invoke(
@@ -53,17 +61,21 @@ class GetThread internal constructor(
                 )
 
                 // must be inside the invoke function because GetThread is a singleton
-                val postedStatusesFlow = MutableStateFlow<List<Status>>(emptyList())
+                val postedStatusesFlow = MutableStateFlow<List<String>>(emptyList())
 
                 coroutineScope.launch {
-                    postedStatusesSharedFlow.collect { status ->
-                        postedStatusesFlow.edit {
-                            buildList {
-                                addAll(postedStatusesFlow.value)
-                                add(status)
+                    postedStatusesSharedFlow.collect { statusId ->
+                        postedStatusesFlow.update {
+                            val newList = it.toMutableList().apply {
+                                add(statusId)
                             }
+                            newList
                         }
                     }
+                }
+
+                val flattenedFlow: Flow<List<Status>> = postedStatusesFlow.flatMapLatest {
+                    statusRepository.getStatusesFlow(it)
                 }
 
                 emitAll(
@@ -71,7 +83,7 @@ class GetThread internal constructor(
                         statusRepository.getStatusesFlow(listOf(statusId)),
                         statusRepository.getStatusesFlow(context.ancestors.map { it.statusId }),
                         statusRepository.getStatusesFlow(context.descendants.map { it.statusId }),
-                        postedStatusesFlow,
+                        flattenedFlow,
                     ) { rootStatus, ancestors, descendants, postedStatuses ->
                         Resource.Loaded(
                             Thread(

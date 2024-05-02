@@ -79,7 +79,7 @@ class PostStatus internal constructor(
                     ),
                 )
             saveStatusToDatabase(status)
-            getThread.pushNewStatus(status)
+            getThread.pushNewStatus(status.statusId)
             timelineRepository.insertStatusIntoTimelines(status)
         } catch (e: Exception) {
             showSnackbar(
