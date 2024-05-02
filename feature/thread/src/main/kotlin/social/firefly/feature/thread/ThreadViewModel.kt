@@ -90,7 +90,7 @@ class ThreadViewModel(
     private fun loadThread() {
         getThreadJob?.cancel()
         getThreadJob = viewModelScope.launch {
-            val threadDataFlow = getThread(mainStatusId, viewModelScope).map { threadResource ->
+            val threadDataFlow = getThread(mainStatusId).map { threadResource ->
                 when (threadResource) {
                     is Resource.Loading -> ThreadData(threadResource)
                     is Resource.Error -> ThreadData(threadResource)

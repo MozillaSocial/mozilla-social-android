@@ -1,15 +1,14 @@
 package social.firefly.core.usecase.mastodon.thread
 
-import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.emitAll
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.scan
 import social.firefly.common.Resource
-import social.firefly.common.utils.edit
 import social.firefly.core.model.Context
 import social.firefly.core.model.Status
 import social.firefly.core.model.Thread
@@ -20,18 +19,18 @@ class GetThread internal constructor(
     private val statusRepository: StatusRepository,
     private val saveStatusToDatabase: SaveStatusToDatabase,
 ) {
-    private val postedStatusesSharedFlow = MutableSharedFlow<Status>()
+    private val postedStatusesSharedFlow = MutableSharedFlow<String>()
 
     /**
      * Used to add new statuses to a thread, like when the user posts a reply in a thread.
      */
-    internal suspend fun pushNewStatus(status: Status) {
-        postedStatusesSharedFlow.emit(status)
+    internal suspend fun pushNewStatus(statusId: String) {
+        postedStatusesSharedFlow.emit(statusId)
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     operator fun invoke(
         statusId: String,
-        coroutineScope: CoroutineScope,
     ): Flow<Resource<Thread>> =
         flow {
             emit(Resource.Loading())
@@ -52,19 +51,12 @@ class GetThread internal constructor(
                     }
                 )
 
-                // must be inside the invoke function because GetThread is a singleton
-                val postedStatusesFlow = MutableStateFlow<List<Status>>(emptyList())
-
-                coroutineScope.launch {
-                    postedStatusesSharedFlow.collect { status ->
-                        postedStatusesFlow.edit {
-                            buildList {
-                                addAll(postedStatusesFlow.value)
-                                add(status)
-                            }
-                        }
-                    }
-                }
+                // flow of all statuses that have been created while this GetThread flow exists.
+                // Allows us to show new posts from the user in threads
+                val postedStatusesFlow: Flow<List<Status>> = postedStatusesSharedFlow
+                    .scan(emptyList()) { accumulatedList: List<String>, newStatusId: String ->
+                        accumulatedList + newStatusId
+                    }.flatMapLatest { statusRepository.getStatusesFlow(it) }
 
                 emitAll(
                     combine(
