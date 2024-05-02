@@ -66,6 +66,7 @@ val mastodonNetworkModule =
         single { get<Retrofit>().create(TrendsApi::class.java) }
         single { get<Retrofit>().create(PushApi::class.java) }
         single { get<Retrofit>().create(FollowedTagsApi::class.java) }
+        single { get<Retrofit>().create(BookmarksApi::class.java) }
     }
 
 private var json: Json = Json { ignoreUnknownKeys = true }

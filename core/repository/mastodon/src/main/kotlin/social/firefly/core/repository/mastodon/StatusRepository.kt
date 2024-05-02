@@ -127,4 +127,14 @@ class StatusRepository(
     suspend fun insertAll(statuses: List<Status>) {
         dao.upsertAll(statuses.map { it.toDatabaseModel() })
     }
+
+    @PreferUseCase
+    suspend fun bookmarkStatus(
+        statusId: String,
+    ) = api.bookmarkStatus(statusId)
+
+    @PreferUseCase
+    suspend fun unbookmarkStatus(
+        statusId: String,
+    ) = api.unbookmarkStatus(statusId)
 }

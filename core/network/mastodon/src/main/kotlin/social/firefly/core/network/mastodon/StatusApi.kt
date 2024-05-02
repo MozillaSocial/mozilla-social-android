@@ -64,4 +64,14 @@ interface StatusApi {
     suspend fun deleteStatus(
         @Path("statusId") statusId: String,
     )
+
+    @POST("/api/v1/statuses/{statusId}/bookmark")
+    suspend fun bookmarkStatus(
+        @Path("statusId") statusId: String,
+    ): NetworkStatus
+
+    @POST("/api/v1/statuses/{statusId}/unbookmark")
+    suspend fun unbookmarkStatus(
+        @Path("statusId") statusId: String,
+    ): NetworkStatus
 }
