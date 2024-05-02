@@ -124,7 +124,12 @@ class ThreadViewModel(
                         cachedData?.let { Resource.Loading(cachedData) } ?: Resource.Loading()
                     }
                     is Resource.Error -> {
-                        Resource.Error(threadResource.exception)
+                        cachedData?.let {
+                            Resource.Error(
+                                threadResource.exception,
+                                cachedData,
+                            )
+                        } ?: Resource.Error(threadResource.exception)
                     }
                     is Resource.Loaded -> {
                         val data = generateThreadPostCardCollection(

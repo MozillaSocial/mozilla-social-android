@@ -32,6 +32,7 @@ sealed class Resource<T> {
 
     data class Error<T>(
         val exception: Exception,
+        override val data: T? = null,
     ) : Resource<T>()
 }
 

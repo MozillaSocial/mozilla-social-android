@@ -101,30 +101,19 @@ private fun ThreadScreen(
                     .pullRefresh(refreshState)
                     .fillMaxSize(),
             ) {
-                when (uiState) {
-                    is Resource.Loading -> {
-                        uiState.data?.let {
-                            ThreadList(
-                                threadType = threadType,
-                                statuses = it,
-                                postCardDelegate = postCardDelegate,
-                                threadInteractions = threadInteractions,
-                            )
-                        }
-                    }
-                    is Resource.Error -> {
-                        GenericError(
-                            onRetryClicked = { threadInteractions.onRetryClicked() }
-                        )
-                    }
-                    is Resource.Loaded -> {
-                        ThreadList(
-                            threadType = threadType,
-                            statuses = uiState.data,
-                            postCardDelegate = postCardDelegate,
-                            threadInteractions = threadInteractions,
-                        )
-                    }
+                if (uiState.data == null && uiState is Resource.Error) {
+                    GenericError(
+                        onRetryClicked = { threadInteractions.onRetryClicked() }
+                    )
+                }
+
+                uiState.data?.let {
+                    ThreadList(
+                        threadType = threadType,
+                        statuses = it,
+                        postCardDelegate = postCardDelegate,
+                        threadInteractions = threadInteractions,
+                    )
                 }
 
                 PullRefreshIndicator(
