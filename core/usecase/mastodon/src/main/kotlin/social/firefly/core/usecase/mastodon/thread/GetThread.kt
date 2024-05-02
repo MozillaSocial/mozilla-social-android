@@ -1,6 +1,8 @@
 package social.firefly.core.usecase.mastodon.thread
 
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.combine
@@ -8,6 +10,7 @@ import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.scan
+import kotlinx.coroutines.withContext
 import social.firefly.common.Resource
 import social.firefly.core.model.Context
 import social.firefly.core.model.Status
@@ -36,6 +39,26 @@ class GetThread internal constructor(
             emit(Resource.Loading())
 
             try {
+                withContext(Dispatchers.IO) {
+                    val mainStatusJob = async { statusRepository.getStatus(statusId) }
+                    val contextJob = async { statusRepository.getStatusContext(statusId) }
+                    val mainStatus = mainStatusJob.await()
+                    val context = contextJob.await()
+                    val allStatuses = buildList {
+                        add(mainStatus)
+                        addAll(context.ancestors)
+                        addAll(context.descendants)
+                    }
+                    saveStatusToDatabase(
+                        allStatuses.map { status ->
+                            status.copy(
+                                inReplyToAccountName = allStatuses.find {
+                                    it.account.accountId == status.inReplyToAccountId
+                                }?.account?.displayName
+                            )
+                        }
+                    )
+                }
                 val mainStatus = statusRepository.getStatus(statusId)
                 val context = statusRepository.getStatusContext(statusId)
                 val allStatuses = buildList {
