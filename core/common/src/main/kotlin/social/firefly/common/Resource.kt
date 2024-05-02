@@ -22,7 +22,9 @@ import timber.log.Timber
 sealed class Resource<T> {
     open val data: T? = null
 
-    class Loading<T> : Resource<T>()
+    class Loading<T>(
+        override val data: T? = null,
+    ) : Resource<T>()
 
     data class Loaded<T>(
         override val data: T,
@@ -30,6 +32,7 @@ sealed class Resource<T> {
 
     data class Error<T>(
         val exception: Exception,
+        override val data: T? = null,
     ) : Resource<T>()
 }
 
