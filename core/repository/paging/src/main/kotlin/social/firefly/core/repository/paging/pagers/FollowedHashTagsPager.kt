@@ -20,8 +20,9 @@ class FollowedHashTagsPager(
     override fun mapDbObjectToExternalModel(dbo: FollowedHashTagWrapper): HashTag =
         dbo.hashTag.toExternalModel()
 
-    override suspend fun saveLocally(items: List<PageItem<HashTag>>) {
+    override suspend fun saveLocally(items: List<PageItem<HashTag>>, isRefresh: Boolean) {
         databaseDelegate.withTransaction {
+            if (isRefresh) followedHashTagsRepository.deleteAll()
             hashtagRepository.insertAll(items.map { it.item })
             followedHashTagsRepository.insertAll(
                 items.map { item ->

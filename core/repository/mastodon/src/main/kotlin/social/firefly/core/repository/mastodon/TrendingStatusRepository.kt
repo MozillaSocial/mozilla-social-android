@@ -34,4 +34,8 @@ class TrendingStatusRepository(
             )
         }
     )
+
+    suspend fun deleteAll() {
+        dao.deleteAll()
+    }
 }

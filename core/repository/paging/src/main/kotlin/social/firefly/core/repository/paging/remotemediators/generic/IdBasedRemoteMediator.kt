@@ -15,6 +15,7 @@ import timber.log.Timber
 class IdBasedRemoteMediator<T : Any, DBO : Any>(
     private val saveLocally: suspend (
         items: List<PageItem<T>>,
+        isRefresh: Boolean,
     ) -> Unit,
     private val getRemotely: suspend (
         limit: Int,
@@ -63,7 +64,7 @@ class IdBasedRemoteMediator<T : Any, DBO : Any>(
                 nextPositionIndex = 0
             }
 
-            saveLocally(currentPage)
+            saveLocally(currentPage, loadType == LoadType.REFRESH)
 
             nextKey = response.pagingLinks?.getMaxIdValue()
             nextPositionIndex += currentPage.size

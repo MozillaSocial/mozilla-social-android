@@ -17,5 +17,5 @@ interface TrendingHashTagDao: BaseDao<TrendingHashTag> {
     fun pagingSource(): PagingSource<Int, TrendingHashTagWrapper>
 
     @Query("DELETE FROM trendingHashTags")
-    fun deleteAll()
+    suspend fun deleteAll()
 }

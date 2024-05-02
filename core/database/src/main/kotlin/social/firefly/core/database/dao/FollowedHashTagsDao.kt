@@ -18,5 +18,5 @@ interface FollowedHashTagsDao: BaseDao<FollowedHashTag> {
     fun pagingSource(): PagingSource<Int, FollowedHashTagWrapper>
 
     @Query("DELETE FROM followedHashTags")
-    fun deleteAll()
+    suspend fun deleteAll()
 }

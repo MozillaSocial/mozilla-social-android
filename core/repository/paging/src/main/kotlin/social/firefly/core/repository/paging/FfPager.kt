@@ -39,7 +39,7 @@ interface FfPager<T : Any, KEY: Any, DBO: Any> {
 }
 
 interface IndexBasedPager<T : Any, DBO: Any> : FfPager<T, Int, DBO> {
-    suspend fun saveLocally(items: List<PageItem<T>>)
+    suspend fun saveLocally(items: List<PageItem<T>>, isRefresh: Boolean)
     suspend fun getRemotely(limit: Int, offset: Int): List<T>
 
     @OptIn(ExperimentalPagingApi::class)
@@ -50,7 +50,7 @@ interface IndexBasedPager<T : Any, DBO: Any> : FfPager<T, Int, DBO> {
 }
 
 interface IdBasedPager<T : Any, DBO: Any> : FfPager<T, Int, DBO> {
-    suspend fun saveLocally(items: List<PageItem<T>>)
+    suspend fun saveLocally(items: List<PageItem<T>>, isRefresh: Boolean)
     suspend fun getRemotely(limit: Int, nextKey: String?): MastodonPagedResponse<T>
 
     @OptIn(ExperimentalPagingApi::class)

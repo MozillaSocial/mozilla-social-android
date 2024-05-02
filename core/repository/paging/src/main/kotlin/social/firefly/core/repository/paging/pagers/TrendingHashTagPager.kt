@@ -23,8 +23,9 @@ class TrendingHashTagPager(
     override fun pagingSource(): PagingSource<Int, TrendingHashTagWrapper> =
         trendingHashtagRepository.pagingSource()
 
-    override suspend fun saveLocally(items: List<PageItem<HashTag>>) {
+    override suspend fun saveLocally(items: List<PageItem<HashTag>>, isRefresh: Boolean) {
         databaseDelegate.withTransaction {
+            if (isRefresh) trendingHashtagRepository.deleteAll()
             hashtagRepository.insertAll(items.map { it.item })
             trendingHashtagRepository.insertAll(
                 items.map { item ->

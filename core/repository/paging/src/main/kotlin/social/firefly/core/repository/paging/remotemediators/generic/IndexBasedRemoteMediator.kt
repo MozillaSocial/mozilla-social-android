@@ -10,8 +10,14 @@ import timber.log.Timber
 
 @OptIn(ExperimentalPagingApi::class)
 class IndexBasedRemoteMediator<T : Any, DBO : Any>(
-    private val saveLocally: suspend (items: List<PageItem<T>>) -> Unit,
-    private val getRemotely: suspend (limit: Int, offset: Int) -> List<T>
+    private val saveLocally: suspend (
+        items: List<PageItem<T>>,
+        isRefresh: Boolean,
+    ) -> Unit,
+    private val getRemotely: suspend (
+        limit: Int,
+        offset: Int,
+    ) -> List<T>
 ) : RemoteMediator<Int, DBO>() {
 
     private var nextPositionIndex = 0
@@ -56,7 +62,7 @@ class IndexBasedRemoteMediator<T : Any, DBO : Any>(
                 nextPositionIndex = 0
             }
 
-            saveLocally(currentPage)
+            saveLocally(currentPage, loadType == LoadType.REFRESH)
 
             nextPositionIndex += currentPage.size
 

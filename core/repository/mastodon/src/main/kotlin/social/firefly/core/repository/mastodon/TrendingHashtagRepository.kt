@@ -20,7 +20,7 @@ class TrendingHashtagRepository internal constructor(
         offset = offset
     ).map { it.toExternalModel() }
 
-    fun deleteAll() {
+    suspend fun deleteAll() {
         dao.deleteAll()
     }
 
