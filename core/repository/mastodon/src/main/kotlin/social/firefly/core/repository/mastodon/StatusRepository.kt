@@ -20,6 +20,9 @@ class StatusRepository(
     private val api: StatusApi,
     private val dao: StatusDao,
 ) {
+    suspend fun getStatus(statusId: String): Status =
+        api.getStatus(statusId).toExternalModel()
+
     @PreferUseCase
     suspend fun postStatus(statusCreate: StatusCreate): Status =
         api.postStatus(statusCreate.toNetworkModel()).toExternalModel()

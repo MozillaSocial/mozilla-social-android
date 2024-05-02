@@ -13,6 +13,11 @@ import social.firefly.core.network.mastodon.model.request.NetworkPollVote
 import social.firefly.core.network.mastodon.model.request.NetworkStatusCreate
 
 interface StatusApi {
+    @GET("/api/v1/statuses/{statusId}")
+    suspend fun getStatus(
+        @Path("statusId") statusId: String,
+    ): NetworkStatus
+
     @POST("api/v1/statuses")
     suspend fun postStatus(
         @Body status: NetworkStatusCreate,

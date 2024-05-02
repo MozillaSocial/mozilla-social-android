@@ -36,8 +36,10 @@ class GetThread internal constructor(
             emit(Resource.Loading())
 
             try {
+                val mainStatus = statusRepository.getStatus(statusId)
                 val context = statusRepository.getStatusContext(statusId)
                 val allStatuses = buildList {
+                    add(mainStatus)
                     addAll(context.ancestors)
                     addAll(context.descendants)
                 }
