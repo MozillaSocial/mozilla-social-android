@@ -17,10 +17,11 @@ val mastodonRepositoryModule =
             databaseModule,
         )
 
+        single { TimelineRepository(get(), get(), get(), get(), get(), get()) }
+
         singleOf(::AuthCredentialObserver)
         singleOf(::StatusRepository)
         singleOf(::AccountRepository)
-        singleOf(::TimelineRepository)
         singleOf(::OauthRepository)
         singleOf(::MediaRepository)
         singleOf(::SearchRepository)

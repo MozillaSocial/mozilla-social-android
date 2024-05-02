@@ -18,6 +18,7 @@ import social.firefly.core.database.converters.PollOptionConverter
 import social.firefly.core.database.dao.AccountTimelineStatusDao
 import social.firefly.core.database.dao.AccountsDao
 import social.firefly.core.database.dao.BlocksDao
+import social.firefly.core.database.dao.BookmarksDao
 import social.firefly.core.database.dao.FavoritesTimelineStatusDao
 import social.firefly.core.database.dao.FederatedTimelineStatusDao
 import social.firefly.core.database.dao.FollowedHashTagsDao
@@ -55,6 +56,7 @@ import social.firefly.core.database.model.entities.notificationCollections.Follo
 import social.firefly.core.database.model.entities.notificationCollections.MainNotification
 import social.firefly.core.database.model.entities.notificationCollections.MentionListNotification
 import social.firefly.core.database.model.entities.statusCollections.AccountTimelineStatus
+import social.firefly.core.database.model.entities.statusCollections.BookmarksTimelineStatus
 import social.firefly.core.database.model.entities.statusCollections.FavoritesTimelineStatus
 import social.firefly.core.database.model.entities.statusCollections.FederatedTimelineStatus
 import social.firefly.core.database.model.entities.statusCollections.HashTagTimelineStatus
@@ -92,11 +94,13 @@ import social.firefly.core.database.model.entities.statusCollections.DbTrendingS
         DbTrendingStatus::class,
         TrendingHashTag::class,
         FollowedHashTag::class,
+        BookmarksTimelineStatus::class,
     ],
-    version = 3,
+    version = 4,
     autoMigrations = [
         AutoMigration (from = 1, to = 2),
         AutoMigration (from = 2, to = 3),
+        AutoMigration (from = 3, to = 4),
     ],
     exportSchema = true,
 )
@@ -135,4 +139,5 @@ abstract class SocialDatabase : RoomDatabase() {
     abstract fun trendingStatusDao(): TrendingStatusDao
     abstract fun notificationsDao(): NotificationsDao
     abstract fun followedHashTagsDao(): FollowedHashTagsDao
+    abstract fun bookmarksDao(): BookmarksDao
 }
