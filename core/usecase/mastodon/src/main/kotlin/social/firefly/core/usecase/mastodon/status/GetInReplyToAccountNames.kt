@@ -3,6 +3,7 @@ package social.firefly.core.usecase.mastodon.status
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import social.firefly.core.model.Status
+import social.firefly.core.model.paging.MastodonPagedResponse
 import social.firefly.core.repository.mastodon.AccountRepository
 import social.firefly.core.repository.mastodon.exceptions.AccountNotFoundException
 import timber.log.Timber
@@ -32,4 +33,14 @@ class GetInReplyToAccountNames internal constructor(
                 it.await()
             }
         }
+
+    suspend operator fun invoke(
+        mastodonPagedResponse: MastodonPagedResponse<Status>
+    ): MastodonPagedResponse<Status> {
+        val newStatuses = invoke(mastodonPagedResponse.items)
+        return MastodonPagedResponse(
+            items = newStatuses,
+            pagingLinks = mastodonPagedResponse.pagingLinks,
+        )
+    }
 }

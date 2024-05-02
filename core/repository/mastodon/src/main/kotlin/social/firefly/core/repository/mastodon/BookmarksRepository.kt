@@ -1,7 +1,9 @@
 package social.firefly.core.repository.mastodon
 
+import androidx.paging.PagingSource
 import social.firefly.core.database.dao.BookmarksDao
 import social.firefly.core.database.model.entities.statusCollections.BookmarksTimelineStatus
+import social.firefly.core.database.model.entities.statusCollections.BookmarksTimelineStatusWrapper
 import social.firefly.core.model.Status
 import social.firefly.core.model.paging.MastodonPagedResponse
 import social.firefly.core.network.mastodon.BookmarksApi
@@ -12,6 +14,9 @@ class BookmarksRepository(
     private val api: BookmarksApi,
     private val dao: BookmarksDao,
 ) {
+    fun pagingSource(): PagingSource<Int, BookmarksTimelineStatusWrapper> =
+        dao.bookmarksTimelinePagingSource()
+
     suspend fun getBookmarksPage(
         maxId: String? = null,
         sinceId: String? = null,

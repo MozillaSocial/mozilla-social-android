@@ -1,6 +1,5 @@
 package social.firefly.core.repository.mastodon
 
-import androidx.paging.ExperimentalPagingApi
 import social.firefly.core.database.dao.TrendingStatusDao
 import social.firefly.core.database.model.entities.statusCollections.DbTrendingStatus
 import social.firefly.core.model.Status
@@ -8,7 +7,6 @@ import social.firefly.core.network.mastodon.TrendsApi
 import social.firefly.core.model.PageItem
 import social.firefly.core.repository.mastodon.model.status.toExternalModel
 
-@ExperimentalPagingApi
 class TrendingStatusRepository(
     private val api: TrendsApi,
     private val dao: TrendingStatusDao,
