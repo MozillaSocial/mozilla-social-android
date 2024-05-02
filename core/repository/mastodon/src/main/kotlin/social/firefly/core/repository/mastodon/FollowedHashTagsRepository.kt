@@ -41,4 +41,8 @@ class FollowedHashTagsRepository(
     suspend fun insertAll(data: List<FollowedHashTag>) {
         dao.upsertAll(data)
     }
+
+    suspend fun deleteAll() {
+        dao.deleteAll()
+    }
 }

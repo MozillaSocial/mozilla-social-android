@@ -25,8 +25,9 @@ class TrendingStatusPager(
     override fun pagingSource(): PagingSource<Int, TrendingStatusWrapper> =
         trendingStatusRepository.pagingSource()
 
-    override suspend fun saveLocally(items: List<PageItem<Status>>) {
+    override suspend fun saveLocally(items: List<PageItem<Status>>, isRefresh: Boolean) {
         databaseDelegate.withTransaction {
+            if (isRefresh) trendingStatusRepository.deleteAll()
             saveStatusToDatabase(items.map { it.item })
             trendingStatusRepository.saveLocally(items)
         }

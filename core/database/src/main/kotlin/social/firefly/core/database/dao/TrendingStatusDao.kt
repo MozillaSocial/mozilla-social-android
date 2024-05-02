@@ -17,5 +17,5 @@ interface TrendingStatusDao: BaseDao<DbTrendingStatus> {
     fun pagingSource(): PagingSource<Int, TrendingStatusWrapper>
 
     @Query("DELETE FROM trendingStatuses")
-    fun deleteAll()
+    suspend fun deleteAll()
 }
