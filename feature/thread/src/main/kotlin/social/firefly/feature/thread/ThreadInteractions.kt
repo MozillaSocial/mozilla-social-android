@@ -5,4 +5,5 @@ interface ThreadInteractions {
     fun onThreadTypeSelected(threadType: ThreadType) = Unit
     fun onRetryClicked() = Unit
     fun onShowAllRepliesClicked(statusId: String) = Unit
+    fun onPulledToRefresh() = Unit
 }

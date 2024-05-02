@@ -2,6 +2,7 @@ package social.firefly.feature.thread
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -28,6 +29,7 @@ import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.paging.LoadState
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 import social.firefly.common.Resource
@@ -39,6 +41,9 @@ import social.firefly.core.ui.common.dropdown.FfDropDownItem
 import social.firefly.core.ui.common.dropdown.FfIconButtonDropDownMenu
 import social.firefly.core.ui.common.error.GenericError
 import social.firefly.core.ui.common.loading.MaxSizeLoading
+import social.firefly.core.ui.common.pullrefresh.PullRefreshIndicator
+import social.firefly.core.ui.common.pullrefresh.pullRefresh
+import social.firefly.core.ui.common.pullrefresh.rememberPullRefreshState
 import social.firefly.core.ui.common.text.MediumTextLabel
 import social.firefly.core.ui.postcard.PostCardInteractions
 import social.firefly.core.ui.postcard.PostCardListItem
@@ -86,23 +91,47 @@ private fun ThreadScreen(
                 }
             )
 
-            when (uiState) {
-                is Resource.Loading -> {
-                    MaxSizeLoading()
+            val refreshState = rememberPullRefreshState(
+                refreshing = uiState is Resource.Loading,
+                onRefresh = { threadInteractions.onPulledToRefresh() },
+            )
+
+            Box(
+                modifier = Modifier
+                    .pullRefresh(refreshState)
+                    .fillMaxSize(),
+            ) {
+                when (uiState) {
+                    is Resource.Loading -> {
+                        uiState.data?.let {
+                            ThreadList(
+                                threadType = threadType,
+                                statuses = it,
+                                postCardDelegate = postCardDelegate,
+                                threadInteractions = threadInteractions,
+                            )
+                        }
+                    }
+                    is Resource.Error -> {
+                        GenericError(
+                            onRetryClicked = { threadInteractions.onRetryClicked() }
+                        )
+                    }
+                    is Resource.Loaded -> {
+                        ThreadList(
+                            threadType = threadType,
+                            statuses = uiState.data,
+                            postCardDelegate = postCardDelegate,
+                            threadInteractions = threadInteractions,
+                        )
+                    }
                 }
-                is Resource.Error -> {
-                    GenericError(
-                        onRetryClicked = { threadInteractions.onRetryClicked() }
-                    )
-                }
-                is Resource.Loaded -> {
-                    ThreadList(
-                        threadType = threadType,
-                        statuses = uiState.data,
-                        postCardDelegate = postCardDelegate,
-                        threadInteractions = threadInteractions,
-                    )
-                }
+
+                PullRefreshIndicator(
+                    modifier = Modifier.align(Alignment.TopCenter),
+                    refreshing = uiState is Resource.Loading,
+                    state = refreshState
+                )
             }
         }
     }
