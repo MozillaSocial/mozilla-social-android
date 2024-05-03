@@ -22,6 +22,8 @@ class FavoritesViewModel(
     userAccountId: GetLoggedInUserAccountId,
 ) : ViewModel(), KoinComponent {
 
+    private val loggedInUserId = userAccountId()
+
     val postCardDelegate by inject<PostCardDelegate> {
         parametersOf(FeedLocation.FAVORITES)
     }
@@ -31,7 +33,7 @@ class FavoritesViewModel(
         remoteMediator = favoritesRemoteMediator,
     ).map { pagingData ->
         pagingData.map {
-            it.toPostCardUiState(userAccountId())
+            it.toPostCardUiState(loggedInUserId)
         }
     }.cachedIn(viewModelScope)
 }
