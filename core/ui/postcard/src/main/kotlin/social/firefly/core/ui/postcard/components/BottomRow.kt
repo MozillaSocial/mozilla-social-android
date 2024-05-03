@@ -20,6 +20,9 @@ import social.firefly.common.utils.timeSinceNow
 import social.firefly.common.utils.toPxInt
 import social.firefly.core.designsystem.icon.FfIcons
 import social.firefly.core.designsystem.theme.FfTheme
+import social.firefly.core.ui.common.dialog.deleteStatusConfirmationDialog
+import social.firefly.core.ui.common.dialog.unbookmarkAccountConfirmationDialog
+import social.firefly.core.ui.common.dialog.unfavoriteAccountConfirmationDialog
 import social.firefly.core.ui.common.utils.PreviewTheme
 import social.firefly.core.ui.common.utils.getMaxWidth
 import social.firefly.core.ui.common.utils.shareUrl
@@ -28,8 +31,9 @@ import social.firefly.core.ui.postcard.OverflowDropDownType
 import social.firefly.core.ui.postcard.PostCardInteractions
 import social.firefly.core.ui.postcard.PostCardInteractionsNoOp
 import social.firefly.core.ui.postcard.PostContentUiState
+import social.firefly.core.ui.postcard.postCardUiStatePreview
 
-@Suppress("MagicNumber")
+@Suppress("MagicNumber", "LongMethod")
 @Composable
 internal fun BottomRow(
     modifier: Modifier = Modifier,
@@ -39,6 +43,14 @@ internal fun BottomRow(
     val context = LocalContext.current
 
     val width = getMaxWidth()
+
+    val unfavoriteStatusDialog = unfavoriteAccountConfirmationDialog {
+        postCardInteractions.onFavoriteClicked(post.statusId, false)
+    }
+
+    val unbookmarkStatusDialog = unbookmarkAccountConfirmationDialog {
+        postCardInteractions.onBookmarkClicked(post.statusId, false)
+    }
 
     Layout(
         modifier = modifier,
@@ -55,11 +67,29 @@ internal fun BottomRow(
                 highlighted = post.userBoosted,
             )
             BottomIconButton(
-                onClick = { postCardInteractions.onFavoriteClicked(post.statusId, !post.isFavorited) },
+                onClick = {
+                    if (post.shouldShowUnfavoriteConfirmation && post.isFavorited) {
+                        unfavoriteStatusDialog.open()
+                    } else {
+                        postCardInteractions.onFavoriteClicked(post.statusId, !post.isFavorited)
+                    }
+                },
                 painter = if (post.isFavorited) FfIcons.heartFilled() else FfIcons.heart(),
                 count = post.favoriteCount,
                 highlighted = post.isFavorited,
-                highlightColor = FfTheme.colors.textWarning,
+                highlightColor = FfTheme.colors.iconFavorite,
+            )
+            BottomIconButton(
+                onClick = {
+                    if (post.shouldShowUnbookmarkConfirmation && post.isBookmarked) {
+                        unbookmarkStatusDialog.open()
+                    } else {
+                        postCardInteractions.onBookmarkClicked(post.statusId, !post.isBookmarked)
+                    }
+                },
+                painter = if (post.isBookmarked) FfIcons.bookmarkFill() else FfIcons.bookmark(),
+                highlighted = post.isBookmarked,
+                highlightColor = FfTheme.colors.iconBookmark,
             )
             BottomIconButton(
                 onClick = {
@@ -83,7 +113,8 @@ internal fun BottomRow(
         val replyPlaceable = placeables[0]
         val repostPlaceable = placeables[1]
         val likePlaceable = placeables[2]
-        val sharePlaceable = placeables[3]
+        val bookmarkPlaceable = placeables[3]
+        val sharePlaceable = placeables[4]
         val iconWidth = sharePlaceable.width
         layout(
             width = width.toPx().toInt(),
@@ -94,11 +125,15 @@ internal fun BottomRow(
                 0,
             )
             repostPlaceable.placeRelative(
-                (constraints.maxWidth / 3) - (iconWidth / 2),
+                (constraints.maxWidth / 4) - (iconWidth / 2),
                 0
             )
             likePlaceable.placeRelative(
-                (constraints.maxWidth / 3 * 2) - (iconWidth / 2),
+                (constraints.maxWidth / 4 * 2) - (iconWidth / 2),
+                0
+            )
+            bookmarkPlaceable.placeRelative(
+                (constraints.maxWidth / 4 * 3) - (iconWidth / 2),
                 0
             )
             sharePlaceable.placeRelative(
@@ -178,30 +213,7 @@ private fun BottomRowPreview() {
             modifier = Modifier.width(250.dp)
         ) {
             BottomRow(
-                post = MainPostCardUiState(
-                    url = "",
-                    username = "Cool guy",
-                    profilePictureUrl = "",
-                    postTimeSince = Instant.fromEpochMilliseconds(1695308821000L).timeSinceNow(),
-                    accountName = StringFactory.literal("coolguy"),
-                    replyCount = "4",
-                    boostCount = "300k",
-                    favoriteCount = "4.4m",
-                    statusId = "",
-                    userBoosted = false,
-                    isFavorited = false,
-                    accountId = "",
-                    isBeingDeleted = false,
-                    postContentUiState = PostContentUiState(
-                        pollUiState = null,
-                        statusTextHtml = "<p><span class=\"h-card\"><a href=\"https://mozilla.social/@obez\" class=\"u-url mention\" rel=\"nofollow noopener noreferrer\" target=\"_blank\">@<span>obez</span></a></span> This is a text status.  Here is the text and that is all I have to say about that.</p>",
-                        mediaAttachments = emptyList(),
-                        mentions = emptyList(),
-                        previewCard = null,
-                        contentWarning = "",
-                    ),
-                    overflowDropDownType = OverflowDropDownType.USER,
-                ),
+                post = postCardUiStatePreview,
                 postCardInteractions = PostCardInteractionsNoOp,
             )
         }
@@ -217,30 +229,7 @@ private fun BottomRowLargePreview() {
             modifier = Modifier.width(500.dp)
         ) {
             BottomRow(
-                post = MainPostCardUiState(
-                    url = "",
-                    username = "Cool guy",
-                    profilePictureUrl = "",
-                    postTimeSince = Instant.fromEpochMilliseconds(1695308821000L).timeSinceNow(),
-                    accountName = StringFactory.literal("coolguy"),
-                    replyCount = "4",
-                    boostCount = "300k",
-                    favoriteCount = "4.4m",
-                    statusId = "",
-                    userBoosted = false,
-                    isFavorited = false,
-                    accountId = "",
-                    isBeingDeleted = false,
-                    postContentUiState = PostContentUiState(
-                        pollUiState = null,
-                        statusTextHtml = "<p><span class=\"h-card\"><a href=\"https://mozilla.social/@obez\" class=\"u-url mention\" rel=\"nofollow noopener noreferrer\" target=\"_blank\">@<span>obez</span></a></span> This is a text status.  Here is the text and that is all I have to say about that.</p>",
-                        mediaAttachments = emptyList(),
-                        mentions = emptyList(),
-                        previewCard = null,
-                        contentWarning = "",
-                    ),
-                    overflowDropDownType = OverflowDropDownType.USER,
-                ),
+                post = postCardUiStatePreview,
                 postCardInteractions = PostCardInteractionsNoOp,
             )
         }
@@ -256,30 +245,7 @@ private fun BottomRowSmallPreview() {
             modifier = Modifier.width(150.dp)
         ) {
             BottomRow(
-                post = MainPostCardUiState(
-                    url = "",
-                    username = "Cool guy",
-                    profilePictureUrl = "",
-                    postTimeSince = Instant.fromEpochMilliseconds(1695308821000L).timeSinceNow(),
-                    accountName = StringFactory.literal("coolguy"),
-                    replyCount = "4",
-                    boostCount = "300k",
-                    favoriteCount = "4.4m",
-                    statusId = "",
-                    userBoosted = false,
-                    isFavorited = false,
-                    accountId = "",
-                    isBeingDeleted = false,
-                    postContentUiState = PostContentUiState(
-                        pollUiState = null,
-                        statusTextHtml = "<p><span class=\"h-card\"><a href=\"https://mozilla.social/@obez\" class=\"u-url mention\" rel=\"nofollow noopener noreferrer\" target=\"_blank\">@<span>obez</span></a></span> This is a text status.  Here is the text and that is all I have to say about that.</p>",
-                        mediaAttachments = emptyList(),
-                        mentions = emptyList(),
-                        previewCard = null,
-                        contentWarning = "",
-                    ),
-                    overflowDropDownType = OverflowDropDownType.USER,
-                ),
+                post = postCardUiStatePreview,
                 postCardInteractions = PostCardInteractionsNoOp,
             )
         }

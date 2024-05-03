@@ -118,6 +118,11 @@ class StatusRepository(
         dao.updateFavorited(statusId, isFavorited)
     }
 
+    suspend fun updateBookmarked(
+        statusId: String,
+        isBookmarked: Boolean,
+    ) = dao.updateBookmarked(statusId, isBookmarked)
+
     /**
      * Using this method outside of the use case is dangerous because polls and accounts
      * must be inserted into the database before the status is due to the foreign keys
@@ -131,10 +136,10 @@ class StatusRepository(
     @PreferUseCase
     suspend fun bookmarkStatus(
         statusId: String,
-    ) = api.bookmarkStatus(statusId)
+    ): Status = api.bookmarkStatus(statusId).toExternalModel()
 
     @PreferUseCase
     suspend fun unbookmarkStatus(
         statusId: String,
-    ) = api.unbookmarkStatus(statusId)
+    ): Status = api.unbookmarkStatus(statusId).toExternalModel()
 }

@@ -1,6 +1,8 @@
 package social.firefly.core.ui.postcard
 
+import kotlinx.datetime.Instant
 import social.firefly.common.utils.StringFactory
+import social.firefly.common.utils.timeSinceNow
 import social.firefly.core.model.Attachment
 import social.firefly.core.model.Mention
 import social.firefly.core.ui.poll.PollUiState
@@ -25,10 +27,13 @@ data class MainPostCardUiState(
     val statusId: String,
     val userBoosted: Boolean,
     val isFavorited: Boolean,
+    val isBookmarked: Boolean,
     val accountId: String,
     val isBeingDeleted: Boolean,
     val postContentUiState: PostContentUiState,
     val overflowDropDownType: OverflowDropDownType,
+    val shouldShowUnfavoriteConfirmation: Boolean,
+    val shouldShowUnbookmarkConfirmation: Boolean,
 )
 
 data class DropDownOption(
@@ -80,4 +85,33 @@ data class PreviewCard(
     val title: String,
     val imageUrl: String,
     val providerName: String?,
+)
+
+@Suppress("MagicNumber", "MaxLineLength")
+internal val postCardUiStatePreview = MainPostCardUiState(
+    url = "",
+    username = "Cool guy",
+    profilePictureUrl = "",
+    postTimeSince = Instant.fromEpochMilliseconds(1695308821000L).timeSinceNow(),
+    accountName = StringFactory.literal("coolguy"),
+    replyCount = "4",
+    boostCount = "300k",
+    favoriteCount = "4.4m",
+    statusId = "",
+    userBoosted = false,
+    isFavorited = false,
+    isBookmarked = false,
+    accountId = "",
+    isBeingDeleted = false,
+    postContentUiState = PostContentUiState(
+        pollUiState = null,
+        statusTextHtml = "<p><span class=\"h-card\"><a href=\"https://mozilla.social/@obez\" class=\"u-url mention\" rel=\"nofollow noopener noreferrer\" target=\"_blank\">@<span>obez</span></a></span> This is a text status.  Here is the text and that is all I have to say about that.</p>",
+        mediaAttachments = emptyList(),
+        mentions = emptyList(),
+        previewCard = null,
+        contentWarning = "",
+    ),
+    overflowDropDownType = OverflowDropDownType.USER,
+    shouldShowUnfavoriteConfirmation = false,
+    shouldShowUnbookmarkConfirmation = false,
 )

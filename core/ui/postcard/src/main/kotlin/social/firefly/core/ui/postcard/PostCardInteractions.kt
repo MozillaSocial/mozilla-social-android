@@ -17,6 +17,11 @@ interface PostCardInteractions : PollInteractions, HtmlContentInteractions {
         isFavoriting: Boolean,
     )
 
+    fun onBookmarkClicked(
+        statusId: String,
+        isBookmarking: Boolean,
+    )
+
     fun onPostCardClicked(statusId: String)
 
     fun onOverflowMuteClicked(
@@ -57,6 +62,8 @@ object PostCardInteractionsNoOp: PostCardInteractions {
     override fun onBoostClicked(statusId: String, isBoosting: Boolean) = Unit
 
     override fun onFavoriteClicked(statusId: String, isFavoriting: Boolean) = Unit
+
+    override fun onBookmarkClicked(statusId: String, isBookmarking: Boolean) = Unit
 
     override fun onPostCardClicked(statusId: String) = Unit
 

@@ -28,7 +28,10 @@ class BookmarksViewModel(
     val feed = bookmarksPager.build()
         .map { pagingData ->
             pagingData.map { status ->
-                status.toPostCardUiState(loggedInUserId)
+                status.toPostCardUiState(
+                    currentUserAccountId = loggedInUserId,
+                    shouldShowUnbookmarkConfirmation = true,
+                )
             }
         }
 }

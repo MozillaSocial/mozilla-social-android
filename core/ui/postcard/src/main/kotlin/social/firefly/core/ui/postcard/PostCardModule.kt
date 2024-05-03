@@ -32,6 +32,8 @@ val postCardModule =
                 favoriteStatus = get(),
                 undoFavoriteStatus = get(),
                 deleteStatus = get(),
+                bookmarkStatus = get(),
+                undoBookmarkStatus = get(),
                 analytics = get(),
             )
         }
