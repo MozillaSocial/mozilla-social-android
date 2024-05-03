@@ -1,4 +1,4 @@
-package social.firefly.core.ui.postcard
+package social.firefly.core.ui.postcard.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -20,6 +20,7 @@ import social.firefly.core.designsystem.theme.FfRadius
 import social.firefly.core.designsystem.theme.FfTheme
 import social.firefly.core.ui.common.utils.media
 import social.firefly.core.ui.htmlcontent.HtmlContentInteractions
+import social.firefly.core.ui.postcard.PreviewCard
 
 @Composable
 fun PreviewCard(

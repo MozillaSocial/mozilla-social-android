@@ -196,6 +196,7 @@ private fun PostCardPreview() {
                     statusId = "",
                     userBoosted = false,
                     isFavorited = false,
+                    isBookmarked = false,
                     accountId = "",
                     isBeingDeleted = false,
                     postContentUiState = PostContentUiState(
@@ -239,6 +240,7 @@ private fun PostCardWithContentWarningPreview() {
                     statusId = "",
                     userBoosted = false,
                     isFavorited = false,
+                    isBookmarked = false,
                     accountId = "",
                     isBeingDeleted = false,
                     postContentUiState = PostContentUiState(
@@ -279,6 +281,7 @@ private fun PostCardPreviewWithDepth() {
                     statusId = "",
                     userBoosted = false,
                     isFavorited = false,
+                    isBookmarked = false,
                     accountId = "",
                     isBeingDeleted = false,
                     postContentUiState = PostContentUiState(
@@ -328,6 +331,7 @@ private fun PostCardPreviewWithHighDepth() {
                     statusId = "",
                     userBoosted = false,
                     isFavorited = false,
+                    isBookmarked = false,
                     accountId = "",
                     isBeingDeleted = false,
                     postContentUiState = PostContentUiState(
@@ -376,6 +380,7 @@ private fun PostCardPreviewWithMinusButton() {
                     statusId = "",
                     userBoosted = false,
                     isFavorited = false,
+                    isBookmarked = false,
                     accountId = "",
                     isBeingDeleted = false,
                     postContentUiState = PostContentUiState(
@@ -424,6 +429,7 @@ private fun PostCardPreviewWithPlusButton() {
                     statusId = "",
                     userBoosted = false,
                     isFavorited = false,
+                    isBookmarked = false,
                     accountId = "",
                     isBeingDeleted = false,
                     postContentUiState = PostContentUiState(

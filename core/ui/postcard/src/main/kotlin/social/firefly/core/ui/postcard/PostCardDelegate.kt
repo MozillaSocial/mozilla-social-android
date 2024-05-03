@@ -101,6 +101,10 @@ class PostCardDelegate(
         }
     }
 
+    override fun onBookmarkClicked(statusId: String, isBookmarking: Boolean) {
+        TODO("Not yet implemented")
+    }
+
     override fun onPostCardClicked(statusId: String) {
         navigateTo(NavigationDestination.Thread(threadStatusId = statusId))
     }

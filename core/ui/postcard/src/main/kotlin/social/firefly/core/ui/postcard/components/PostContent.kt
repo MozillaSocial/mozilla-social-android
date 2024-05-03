@@ -38,7 +38,6 @@ import social.firefly.core.ui.htmlcontent.HtmlContent
 import social.firefly.core.ui.poll.Poll
 import social.firefly.core.ui.postcard.PostCardInteractions
 import social.firefly.core.ui.postcard.PostContentUiState
-import social.firefly.core.ui.postcard.PreviewCard
 import social.firefly.core.ui.postcard.R
 
 @Composable

@@ -59,7 +59,13 @@ internal fun BottomRow(
                 painter = if (post.isFavorited) FfIcons.heartFilled() else FfIcons.heart(),
                 count = post.favoriteCount,
                 highlighted = post.isFavorited,
-                highlightColor = FfTheme.colors.textWarning,
+                highlightColor = FfTheme.colors.iconFavorite,
+            )
+            BottomIconButton(
+                onClick = { postCardInteractions.onBookmarkClicked(post.statusId, !post.isBookmarked) },
+                painter = if (post.isBookmarked) FfIcons.bookmarkFill() else FfIcons.bookmark(),
+                highlighted = post.isBookmarked,
+                highlightColor = FfTheme.colors.iconBookmark,
             )
             BottomIconButton(
                 onClick = {
@@ -83,7 +89,8 @@ internal fun BottomRow(
         val replyPlaceable = placeables[0]
         val repostPlaceable = placeables[1]
         val likePlaceable = placeables[2]
-        val sharePlaceable = placeables[3]
+        val bookmarkPlaceable = placeables[3]
+        val sharePlaceable = placeables[4]
         val iconWidth = sharePlaceable.width
         layout(
             width = width.toPx().toInt(),
@@ -94,11 +101,15 @@ internal fun BottomRow(
                 0,
             )
             repostPlaceable.placeRelative(
-                (constraints.maxWidth / 3) - (iconWidth / 2),
+                (constraints.maxWidth / 4) - (iconWidth / 2),
                 0
             )
             likePlaceable.placeRelative(
-                (constraints.maxWidth / 3 * 2) - (iconWidth / 2),
+                (constraints.maxWidth / 4 * 2) - (iconWidth / 2),
+                0
+            )
+            bookmarkPlaceable.placeRelative(
+                (constraints.maxWidth / 4 * 3) - (iconWidth / 2),
                 0
             )
             sharePlaceable.placeRelative(
@@ -190,6 +201,7 @@ private fun BottomRowPreview() {
                     statusId = "",
                     userBoosted = false,
                     isFavorited = false,
+                    isBookmarked = false,
                     accountId = "",
                     isBeingDeleted = false,
                     postContentUiState = PostContentUiState(
@@ -229,6 +241,7 @@ private fun BottomRowLargePreview() {
                     statusId = "",
                     userBoosted = false,
                     isFavorited = false,
+                    isBookmarked = false,
                     accountId = "",
                     isBeingDeleted = false,
                     postContentUiState = PostContentUiState(
@@ -268,6 +281,7 @@ private fun BottomRowSmallPreview() {
                     statusId = "",
                     userBoosted = false,
                     isFavorited = false,
+                    isBookmarked = false,
                     accountId = "",
                     isBeingDeleted = false,
                     postContentUiState = PostContentUiState(

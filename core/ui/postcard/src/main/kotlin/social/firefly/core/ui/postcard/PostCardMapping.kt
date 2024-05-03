@@ -45,6 +45,7 @@ private fun Status.toMainPostCardUiState(
         statusId = statusId,
         userBoosted = isBoosted ?: false,
         isFavorited = isFavourited ?: false,
+        isBookmarked = isBookmarked ?: false,
         accountId = account.accountId,
         isBeingDeleted = isBeingDeleted,
         postContentUiState = toPostContentUiState(currentUserAccountId),
