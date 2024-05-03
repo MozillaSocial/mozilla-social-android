@@ -10,9 +10,11 @@ import social.firefly.core.navigation.usecases.NavigateTo
 import social.firefly.core.navigation.usecases.OpenLink
 import social.firefly.core.usecase.mastodon.account.BlockAccount
 import social.firefly.core.usecase.mastodon.account.MuteAccount
+import social.firefly.core.usecase.mastodon.status.BookmarkStatus
 import social.firefly.core.usecase.mastodon.status.BoostStatus
 import social.firefly.core.usecase.mastodon.status.DeleteStatus
 import social.firefly.core.usecase.mastodon.status.FavoriteStatus
+import social.firefly.core.usecase.mastodon.status.UndoBookmarkStatus
 import social.firefly.core.usecase.mastodon.status.UndoBoostStatus
 import social.firefly.core.usecase.mastodon.status.UndoFavoriteStatus
 import social.firefly.core.usecase.mastodon.status.VoteOnPoll
@@ -32,6 +34,8 @@ class PostCardDelegate(
     private val favoriteStatus: FavoriteStatus,
     private val undoFavoriteStatus: UndoFavoriteStatus,
     private val deleteStatus: DeleteStatus,
+    private val bookmarkStatus: BookmarkStatus,
+    private val undoBookmarkStatus: UndoBookmarkStatus,
     private val analytics: PostCardAnalytics,
 ) : PostCardInteractions {
 
@@ -102,7 +106,21 @@ class PostCardDelegate(
     }
 
     override fun onBookmarkClicked(statusId: String, isBookmarking: Boolean) {
-        TODO("Not yet implemented")
+        appScope.launch {
+            if (isBookmarking) {
+                try {
+                    bookmarkStatus(statusId)
+                } catch (e: BookmarkStatus.BookmarkStatusFailedException) {
+                    Timber.e(e)
+                }
+            } else {
+                try {
+                    undoBookmarkStatus(statusId)
+                } catch (e: UndoBookmarkStatus.UndoBookmarkStatusFailedException) {
+                    Timber.e(e)
+                }
+            }
+        }
     }
 
     override fun onPostCardClicked(statusId: String) {

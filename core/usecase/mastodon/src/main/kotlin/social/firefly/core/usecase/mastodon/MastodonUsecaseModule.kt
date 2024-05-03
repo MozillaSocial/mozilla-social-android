@@ -27,6 +27,7 @@ import social.firefly.core.usecase.mastodon.hashtag.UnfollowHashTag
 import social.firefly.core.usecase.mastodon.notification.SaveNotificationsToDatabase
 import social.firefly.core.usecase.mastodon.report.Report
 import social.firefly.core.usecase.mastodon.search.SearchAll
+import social.firefly.core.usecase.mastodon.status.BookmarkStatus
 import social.firefly.core.usecase.mastodon.status.BoostStatus
 import social.firefly.core.usecase.mastodon.status.DeleteStatus
 import social.firefly.core.usecase.mastodon.status.EditStatus
@@ -34,6 +35,7 @@ import social.firefly.core.usecase.mastodon.status.FavoriteStatus
 import social.firefly.core.usecase.mastodon.status.GetInReplyToAccountNames
 import social.firefly.core.usecase.mastodon.status.PostStatus
 import social.firefly.core.usecase.mastodon.status.SaveStatusToDatabase
+import social.firefly.core.usecase.mastodon.status.UndoBookmarkStatus
 import social.firefly.core.usecase.mastodon.status.UndoBoostStatus
 import social.firefly.core.usecase.mastodon.status.UndoFavoriteStatus
 import social.firefly.core.usecase.mastodon.status.VoteOnPoll
@@ -168,6 +170,15 @@ val mastodonUsecaseModule =
             )
         }
         single {
+            BookmarkStatus(
+                externalScope = get<AppScope>(),
+                statusRepository = get(),
+                showSnackbar = get(),
+                saveStatusToDatabase = get(),
+                databaseDelegate = get(),
+            )
+        }
+        single {
             UndoBoostStatus(
                 externalScope = get<AppScope>(),
                 statusRepository = get(),
@@ -184,6 +195,16 @@ val mastodonUsecaseModule =
                 saveStatusToDatabase = get(),
                 databaseDelegate = get(),
                 favoritesRepository = get(),
+            )
+        }
+        single {
+            UndoBookmarkStatus(
+                externalScope = get<AppScope>(),
+                statusRepository = get(),
+                showSnackbar = get(),
+                saveStatusToDatabase = get(),
+                databaseDelegate = get(),
+                bookmarksRepository = get(),
             )
         }
         single {

@@ -55,6 +55,16 @@ interface StatusDao : BaseDao<DatabaseStatus> {
 
     @Query(
         "UPDATE statuses " +
+        "SET isBookmarked = :isBookmarked " +
+        "WHERE statusId = :statusId",
+    )
+    suspend fun updateBookmarked(
+        statusId: String,
+        isBookmarked: Boolean,
+    )
+
+    @Query(
+        "UPDATE statuses " +
                 "SET favouritesCount = favouritesCount + :valueChange " +
                 "WHERE statusId = :statusId",
     )

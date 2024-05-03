@@ -5,6 +5,8 @@
     <string name="error_undoing_repost">Error undoing repost</string>
     <string name="error_adding_favorite">Error adding favorite</string>
     <string name="error_removing_favorite">Error removing favorite</string>
+    <string name="error_adding_bookmark">Error adding bookmark</string>
+    <string name="error_removing_bookmark">Error removing bookmark</string>
     <string name="error_muting_account">Error muting account</string>
     <string name="error_unmuting_account">Error unmuting account</string>
     <string name="error_blocking_account">Error blocking account</string>
