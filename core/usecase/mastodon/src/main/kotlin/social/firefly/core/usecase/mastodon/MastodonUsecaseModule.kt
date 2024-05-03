@@ -51,6 +51,8 @@ val mastodonUsecaseModule =
         )
 
         single { GetThread(get(), get()) }
+
+        // factory because it holds global variables
         factoryOf(::Login)
         single {
             Logout(

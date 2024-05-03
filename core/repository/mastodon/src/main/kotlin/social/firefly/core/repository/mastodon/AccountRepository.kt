@@ -42,10 +42,6 @@ class AccountRepository internal constructor(
     fun getAccountFlow(accountId: String): Flow<Account> =
         dao.getAccountFlow(accountId).map { it.toExternalModel() }
 
-    suspend fun verifyUserCredentials(): Account {
-        return api.verifyCredentials().toExternalModel()
-    }
-
     suspend fun getAccountFollowers(
         accountId: String,
         olderThanId: String? = null,

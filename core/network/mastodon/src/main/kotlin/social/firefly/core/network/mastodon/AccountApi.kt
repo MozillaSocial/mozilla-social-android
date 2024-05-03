@@ -6,6 +6,7 @@ import retrofit2.Response
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
+import retrofit2.http.Header
 import retrofit2.http.Multipart
 import retrofit2.http.PATCH
 import retrofit2.http.POST
@@ -21,9 +22,6 @@ interface AccountApi {
     suspend fun getAccount(
         @Path("id") accountId: String,
     ): NetworkAccount
-
-    @GET("/api/v1/accounts/verify_credentials")
-    suspend fun verifyCredentials(): NetworkAccount
 
     @GET("/api/v1/accounts/{id}/followers")
     suspend fun getAccountFollowers(

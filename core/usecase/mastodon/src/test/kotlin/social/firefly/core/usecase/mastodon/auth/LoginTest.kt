@@ -11,7 +11,6 @@ import social.firefly.core.analytics.AppAnalytics
 import social.firefly.core.datastore.UserPreferencesDatastoreManager
 import social.firefly.core.navigation.usecases.OpenLink
 import social.firefly.core.repository.mastodon.AccountRepository
-import social.firefly.core.repository.mastodon.AppRepository
 import social.firefly.core.repository.mastodon.OauthRepository
 import social.firefly.core.test.TestUtils
 import social.firefly.core.test.fakes.fakeApplication

@@ -2,14 +2,15 @@ package social.firefly.core.usecase.mastodon.auth
 
 import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrl
+import org.koin.core.component.KoinComponent
+import org.koin.core.parameter.parametersOf
 import social.firefly.common.annotations.PreferUseCase
 import social.firefly.core.analytics.AppAnalytics
 import social.firefly.core.datastore.UserPreferencesDatastoreManager
 import social.firefly.core.model.Account
 import social.firefly.core.navigation.usecases.OpenLink
-import social.firefly.core.repository.mastodon.AccountRepository
-import social.firefly.core.repository.mastodon.AppRepository
 import social.firefly.core.repository.mastodon.OauthRepository
+import social.firefly.core.repository.mastodon.VerificationRepository
 import timber.log.Timber
 
 /**
@@ -17,17 +18,16 @@ import timber.log.Timber
  */
 class Login(
     private val oauthRepository: OauthRepository,
-    private val accountRepository: AccountRepository,
     private val userPreferencesDatastoreManager: UserPreferencesDatastoreManager,
-    private val appRepository: AppRepository,
     private val analytics: AppAnalytics,
     private val openLink: OpenLink,
     private val logout: Logout,
-) {
-    private var clientId: String? = null
-    private var clientSecret: String? = null
-    private var host: String? = null
+): KoinComponent {
+    private lateinit var clientId: String
+    private lateinit var clientSecret: String
+    private lateinit var host: String
 
+    private lateinit var verificationRepository: VerificationRepository
     /**
      * When a logging in by registering this client with the given domain
      */
@@ -35,18 +35,20 @@ class Login(
     suspend operator fun invoke(url: String) {
         try {
             host = extractHost(url)
-            val application =
-                appRepository.createApplication(
-                    clientName = CLIENT_NAME,
-                    redirectUris = REDIRECT_URI,
-                    scopes = SCOPES,
-                )
+            verificationRepository = getKoin().get<VerificationRepository> {
+                parametersOf(host)
+            }
+            val application = verificationRepository.createApplication(
+                clientName = CLIENT_NAME,
+                redirectUris = REDIRECT_URI,
+                scopes = SCOPES,
+            )
             clientId = application.clientId!!
             clientSecret = application.clientSecret!!
             openLink(
                 HttpUrl.Builder()
                     .scheme(HTTPS)
-                    .host(host!!)
+                    .host(host)
                     .addPathSegments(OAUTH_AUTHORIZE)
                     .addQueryParameter(RESPONSE_TYPE_QUERY_PARAM, CODE)
                     .addQueryParameter(REDIRECT_URI_QUERY_PARAM, AUTH_SCHEME)
@@ -67,8 +69,8 @@ class Login(
             Timber.tag(TAG).d("user code received")
             val token =
                 oauthRepository.fetchOAuthToken(
-                    clientId = clientId!!,
-                    clientSecret = clientSecret!!,
+                    clientId = clientId,
+                    clientSecret = clientSecret,
                     redirectUri = REDIRECT_URI,
                     code = code,
                     grantType = AUTHORIZATION_CODE,
@@ -82,9 +84,9 @@ class Login(
 
     private suspend fun onOAuthTokenReceived(accessToken: String) {
         Timber.tag(TAG).d("access token received")
-        val account: Account = accountRepository.verifyUserCredentials()
+        val account: Account = verificationRepository.verifyUserCredentials(accessToken)
         userPreferencesDatastoreManager.createNewUserDatastore(
-            domain = host!!,
+            domain = host,
             accessToken = accessToken,
             accountId = account.accountId
         )

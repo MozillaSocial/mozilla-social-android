@@ -14,7 +14,6 @@ import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import social.firefly.core.navigation.usecases.ShowSnackbar
 import social.firefly.core.repository.mastodon.AccountRepository
-import social.firefly.core.repository.mastodon.AppRepository
 import social.firefly.core.repository.mastodon.DatabaseDelegate
 import social.firefly.core.repository.mastodon.FavoritesRepository
 import social.firefly.core.repository.mastodon.HashtagRepository
