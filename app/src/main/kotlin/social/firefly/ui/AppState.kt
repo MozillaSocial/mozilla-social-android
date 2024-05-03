@@ -33,6 +33,7 @@ import social.firefly.core.navigation.BottomBarNavigationDestination
 import social.firefly.core.navigation.Event
 import social.firefly.core.navigation.NavigationDestination
 import social.firefly.core.navigation.NavigationDestination.Auth.navigateToAuthFlow
+import social.firefly.core.navigation.NavigationDestination.Bookmarks.navigateToBookmarks
 import social.firefly.core.navigation.NavigationDestination.EditAccount.navigateToEditAccount
 import social.firefly.core.navigation.NavigationDestination.Favorites.navigateToFavorites
 import social.firefly.core.navigation.NavigationDestination.FollowedHashTags.navigateToFollowedHashTags
@@ -217,6 +218,10 @@ class AppState(
                 NavigationDestination.Auth -> {
                     clearBackstack()
                     mainNavController.navigateToAuthFlow()
+                }
+
+                NavigationDestination.Bookmarks -> {
+                    mainNavController.navigateToBookmarks()
                 }
 
                 NavigationDestination.EditAccount -> {

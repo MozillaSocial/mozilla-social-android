@@ -44,6 +44,14 @@ sealed class NavigationDestination(
         }
     }
 
+    data object Bookmarks : NavigationDestination(
+        route = "bookmarks"
+    ) {
+        fun NavController.navigateToBookmarks(navOptions: NavOptions? = null) {
+            navigate(route, navOptions)
+        }
+    }
+
     data object Tabs : NavigationDestination(
         route = "tabs",
     ) {

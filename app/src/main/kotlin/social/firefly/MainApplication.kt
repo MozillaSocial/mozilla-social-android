@@ -38,6 +38,7 @@ import social.firefly.post.newPostModule
 import social.firefly.search.searchModule
 import social.firefly.BuildConfig
 import social.firefly.core.push.pushModule
+import social.firefly.feature.bookmarks.bookmarksModule
 import social.firefly.feature.followedHashTags.followedHashTagsModule
 import timber.log.Timber
 
@@ -129,6 +130,7 @@ val featureModules =
         includes(
             accountModule,
             authModule,
+            bookmarksModule,
             discoverModule,
             favoritesModule,
             feedModule,
