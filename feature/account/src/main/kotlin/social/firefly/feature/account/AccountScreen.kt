@@ -372,6 +372,7 @@ private fun MainAccount(
     }
 }
 
+@Suppress("LongMethod")
 @Composable
 private fun OverflowMenu(
     account: AccountUiState,
