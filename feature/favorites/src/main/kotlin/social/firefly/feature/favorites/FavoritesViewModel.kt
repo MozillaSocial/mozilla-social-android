@@ -33,7 +33,10 @@ class FavoritesViewModel(
         remoteMediator = favoritesRemoteMediator,
     ).map { pagingData ->
         pagingData.map {
-            it.toPostCardUiState(loggedInUserId)
+            it.toPostCardUiState(
+                currentUserAccountId = loggedInUserId,
+                shouldShowUnfavoriteConfirmation = true,
+            )
         }
     }.cachedIn(viewModelScope)
 }

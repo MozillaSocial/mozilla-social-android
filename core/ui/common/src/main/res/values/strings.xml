@@ -49,4 +49,10 @@
     <string name="delete_post_confirmation">Are you sure you want to delete this post?</string>
     <string name="delete_post_confirmed">Delete</string>
     <string name="delete_post">Delete</string>
+
+    <string name="unfavorite_post_confirmation">Are you sure you want to unfavorite this post?</string>
+    <string name="unfavorite_post_confirmed">Unfavorite</string>
+
+    <string name="unbookmark_post_confirmation">Are you sure you want to unbookmark this post?</string>
+    <string name="unbookmark_post_confirmed">Unbookmark</string>
 </resources>

@@ -16,6 +16,8 @@ fun Status.toPostCardUiState(
     depthLinesUiState: DepthLinesUiState? = null,
     showTopRowMetaData: Boolean = true,
     isClickable: Boolean = true,
+    shouldShowUnfavoriteConfirmation: Boolean = false,
+    shouldShowUnbookmarkConfirmation: Boolean = false,
 ): PostCardUiState =
     PostCardUiState(
         statusId = statusId,
@@ -24,14 +26,23 @@ fun Status.toPostCardUiState(
         } else {
             null
         },
-        mainPostCardUiState = boostedStatus?.toMainPostCardUiState(currentUserAccountId)
-                ?: toMainPostCardUiState(currentUserAccountId),
+        mainPostCardUiState = boostedStatus?.toMainPostCardUiState(
+            currentUserAccountId = currentUserAccountId,
+            shouldShowUnbookmarkConfirmation = shouldShowUnbookmarkConfirmation,
+            shouldShowUnfavoriteConfirmation = shouldShowUnfavoriteConfirmation,
+        ) ?: toMainPostCardUiState(
+            currentUserAccountId = currentUserAccountId,
+            shouldShowUnbookmarkConfirmation = shouldShowUnbookmarkConfirmation,
+            shouldShowUnfavoriteConfirmation = shouldShowUnfavoriteConfirmation,
+        ),
         depthLinesUiState = depthLinesUiState,
         isClickable = isClickable,
     )
 
 private fun Status.toMainPostCardUiState(
     currentUserAccountId: String,
+    shouldShowUnfavoriteConfirmation: Boolean = false,
+    shouldShowUnbookmarkConfirmation: Boolean = false,
 ): MainPostCardUiState =
     MainPostCardUiState(
         url = url,
@@ -52,7 +63,9 @@ private fun Status.toMainPostCardUiState(
         overflowDropDownType = when {
             currentUserAccountId == account.accountId -> OverflowDropDownType.USER
             else -> OverflowDropDownType.NOT_USER
-        }
+        },
+        shouldShowUnbookmarkConfirmation = shouldShowUnbookmarkConfirmation,
+        shouldShowUnfavoriteConfirmation = shouldShowUnfavoriteConfirmation,
     )
 
 fun Status.toDropDownOptions(
