@@ -309,6 +309,10 @@ class AccountViewModel(
     override fun onOverflowFollowedHashTagsClicked() {
         navigateTo(NavigationDestination.FollowedHashTags)
     }
+
+    override fun onOverflowBookmarksClicked() {
+        navigateTo(NavigationDestination.Bookmarks)
+    }
 }
 
 private fun AccountTimelineType.toAnalyticsTimelineType(): AccountAnalytics.TimelineType =

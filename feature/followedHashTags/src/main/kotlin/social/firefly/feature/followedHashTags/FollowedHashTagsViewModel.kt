@@ -13,7 +13,7 @@ import social.firefly.core.ui.hashtagcard.HashTagCardDelegate
 import social.firefly.core.ui.hashtagcard.quickview.toHashTagQuickViewUiState
 
 class FollowedHashTagsViewModel(
-    private val followedHashTagsPager: FollowedHashTagsPager,
+    followedHashTagsPager: FollowedHashTagsPager,
 ) : ViewModel(), KoinComponent {
 
     val hashTagCardDelegate: HashTagCardDelegate by inject {

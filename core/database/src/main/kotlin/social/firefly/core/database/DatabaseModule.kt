@@ -38,4 +38,5 @@ val databaseModule =
         single { get<SocialDatabase>().trendingHashtagDao() }
         single { get<SocialDatabase>().trendingLinkDao() }
         single { get<SocialDatabase>().trendingStatusDao() }
+        single { get<SocialDatabase>().bookmarksDao() }
     }

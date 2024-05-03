@@ -10,6 +10,7 @@ import social.firefly.common.utils.ffFadeOut
 import social.firefly.feature.account.accountScreen
 import social.firefly.feature.account.edit.editAccountScreen
 import social.firefly.feature.auth.authFlow
+import social.firefly.feature.bookmarks.bookmarksScreen
 import social.firefly.feature.favorites.favoritesScreen
 import social.firefly.feature.followedHashTags.followedHashTagsScreen
 import social.firefly.feature.followers.followersScreen
@@ -53,6 +54,7 @@ fun MainNavHost(
         searchScreen()
         mediaScreen()
         followedHashTagsScreen()
+        bookmarksScreen()
     }
 }
 

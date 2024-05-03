@@ -3,7 +3,6 @@
 package social.firefly.core.repository.mastodon
 
 import androidx.paging.ExperimentalPagingApi
-import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 import social.firefly.core.database.databaseModule
@@ -18,18 +17,19 @@ val mastodonRepositoryModule =
             databaseModule,
         )
 
-        single { AuthCredentialObserver(get(), get()) }
+        single { TimelineRepository(get(), get(), get(), get(), get(), get()) }
+
+        singleOf(::AuthCredentialObserver)
         singleOf(::StatusRepository)
         singleOf(::AccountRepository)
-        single { TimelineRepository(get(), get(), get(), get(), get(), get()) }
-        single { OauthRepository(get()) }
-        single { MediaRepository(get()) }
+        singleOf(::OauthRepository)
+        singleOf(::MediaRepository)
         singleOf(::SearchRepository)
-        single { AppRepository(get()) }
-        single { InstanceRepository(get()) }
-        single { ReportRepository(get()) }
-        single { DatabaseDelegate(get()) }
-        single { PollRepository(get()) }
+        singleOf(::AppRepository)
+        singleOf(::InstanceRepository)
+        singleOf(::ReportRepository)
+        singleOf(::DatabaseDelegate)
+        singleOf(::PollRepository)
         singleOf(::FollowersRepository)
         singleOf(::FollowingsRepository)
         singleOf(::RelationshipRepository)
@@ -40,7 +40,8 @@ val mastodonRepositoryModule =
         singleOf(::NotificationsRepository)
         singleOf(::FollowRequestRepository)
         singleOf(::TrendingHashtagRepository)
-        factoryOf(::TrendingStatusRepository)
+        singleOf(::TrendingStatusRepository)
         singleOf(::PushRepository)
         singleOf(::FollowedHashTagsRepository)
+        singleOf(::BookmarksRepository)
     }

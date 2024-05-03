@@ -372,6 +372,7 @@ private fun MainAccount(
     }
 }
 
+@Suppress("LongMethod")
 @Composable
 private fun OverflowMenu(
     account: AccountUiState,
@@ -393,6 +394,11 @@ private fun OverflowMenu(
         expanded = overflowMenuExpanded,
         dropDownMenuContent = {
             if (isUsersProfile) {
+                FfDropDownItem(
+                    text = stringResource(id = R.string.bookmarks_option),
+                    expanded = overflowMenuExpanded,
+                    onClick = { overflowInteractions.onOverflowBookmarksClicked() }
+                )
                 FfDropDownItem(
                     text = stringResource(id = R.string.favorites_option),
                     expanded = overflowMenuExpanded,

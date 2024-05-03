@@ -11,6 +11,7 @@
     <string name="following">Following</string>
     <string name="followers">Followers</string>
 
+    <string name="bookmarks_option">Bookmarks</string>
     <string name="favorites_option">Favorites</string>
     <string name="followed_hash_tags_option">Followed Hash Tags</string>
     <string name="share_option">Share</string>

@@ -119,4 +119,5 @@ enum class FeedLocation(val baseAnalyticsIdentifier: String) {
     FAVORITES("favorites"),
     SEARCH("search"),
     NOTIFICATIONS("notifications"),
+    BOOKMARKS("bookmarks"),
 }
