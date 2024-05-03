@@ -1,10 +1,10 @@
 package social.firefly.core.repository.paging
 
-import androidx.paging.ExperimentalPagingApi
 import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.module
 import social.firefly.core.datastore.dataStoreModule
 import social.firefly.core.repository.mastodon.mastodonRepositoryModule
+import social.firefly.core.repository.paging.pagers.BookmarksPager
 import social.firefly.core.repository.paging.pagers.FollowedHashTagsPager
 import social.firefly.core.repository.paging.pagers.TrendingHashTagPager
 import social.firefly.core.repository.paging.pagers.TrendingStatusPager
@@ -26,7 +26,6 @@ import social.firefly.core.repository.paging.remotemediators.SearchStatusesRemot
 import social.firefly.core.repository.paging.remotemediators.SearchedHashTagsRemoteMediator
 import social.firefly.core.usecase.mastodon.mastodonUsecaseModule
 
-@OptIn(ExperimentalPagingApi::class)
 val pagingModule = module {
     includes(
         mastodonRepositoryModule,
@@ -118,4 +117,5 @@ val pagingModule = module {
     factoryOf(::TrendingStatusPager)
     factoryOf(::TrendingHashTagPager)
     factoryOf(::FollowedHashTagsPager)
+    factoryOf(::BookmarksPager)
 }
