@@ -1,7 +1,14 @@
 package social.firefly.core.usecase.mastodon.auth
 
-import social.firefly.core.datastore.UserPreferencesDatastore
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.flatMapLatest
+import social.firefly.core.datastore.UserPreferencesDatastoreManager
 
-class IsSignedInFlow(private val userPreferencesDatastore: UserPreferencesDatastore) {
-    operator fun invoke() = userPreferencesDatastore.isSignedIn
+class IsSignedInFlow(
+    private val userPreferencesDatastoreManager: UserPreferencesDatastoreManager
+) {
+    @OptIn(ExperimentalCoroutinesApi::class)
+    operator fun invoke() = userPreferencesDatastoreManager.activeUserDatastore.flatMapLatest {
+        it.isSignedIn
+    }
 }

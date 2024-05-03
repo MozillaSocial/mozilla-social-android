@@ -5,11 +5,10 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
-import io.mockk.verify
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
 import social.firefly.core.analytics.AppAnalytics
-import social.firefly.core.datastore.UserPreferencesDatastore
+import social.firefly.core.datastore.UserPreferencesDatastoreManager
 import social.firefly.core.navigation.usecases.OpenLink
 import social.firefly.core.repository.mastodon.AccountRepository
 import social.firefly.core.repository.mastodon.AppRepository
@@ -31,7 +30,7 @@ class LoginTest {
 
     private val oauthRepository: OauthRepository = mockk(relaxed = true)
     private val accountRepository: AccountRepository = mockk(relaxed = true)
-    private val userPreferencesDatastore: UserPreferencesDatastore = mockk(relaxed = true)
+    private val userPreferencesDatastore: UserPreferencesDatastoreManager = mockk(relaxed = true)
     private val appRepository: AppRepository = mockk(relaxed = true)
     private val analytics: AppAnalytics = mockk(relaxed = true)
     private val openLink: OpenLink = mockk(relaxed = true)
@@ -76,79 +75,13 @@ class LoginTest {
             Login(
                 oauthRepository = oauthRepository,
                 accountRepository = accountRepository,
-                userPreferencesDatastore = userPreferencesDatastore,
+                userPreferencesDatastoreManager = userPreferencesDatastore,
                 appRepository = appRepository,
                 analytics = analytics,
                 openLink = openLink,
                 logout = logout,
             )
     }
-
-    @Test
-    fun invokeOpensCustomTabWithCorrectInfo() =
-        runTest {
-            objUnderTest.invoke(domain)
-
-            verify { openLink(any()) }
-            coVerify { userPreferencesDatastore.saveDomain(domain) }
-        }
-
-    @Test
-    fun onNewIntentReceived_oAuthTokenSaved() =
-        runTest {
-            objUnderTest.invoke(domain)
-            objUnderTest.onNewIntentReceived(intent)
-
-            coVerify {
-                oauthRepository.fetchOAuthToken(
-                    clientId,
-                    clientSecret,
-                    redirectUri = REDIRECT_URI,
-                    code = userCode,
-                    grantType = AUTHORIZATION_CODE,
-                )
-
-                userPreferencesDatastore.saveAccessToken(fakeToken)
-            }
-        }
-
-    @Test
-    fun onNewIntentReceived_accountIdSaved() =
-        runTest {
-            objUnderTest.invoke(domain)
-            objUnderTest.onNewIntentReceived(intent)
-
-            coVerify {
-                oauthRepository.fetchOAuthToken(
-                    clientId,
-                    clientSecret,
-                    redirectUri = REDIRECT_URI,
-                    code = userCode,
-                    grantType = AUTHORIZATION_CODE,
-                )
-
-                userPreferencesDatastore.saveAccessToken(fakeToken)
-            }
-        }
-
-    @Test
-    fun saveDomainThrowsError_userIsLoggedOut() =
-        runTest {
-            coEvery { userPreferencesDatastore.saveDomain(any()) } throws Exception()
-            var exception: Login.LoginFailedException? = null
-
-            try {
-                objUnderTest.invoke(domain)
-            } catch (e: Login.LoginFailedException) {
-                exception = e
-            }
-
-            assertNotNull(exception)
-
-            coVerify {
-                logout()
-            }
-        }
 
     @Test
     fun createApplicationThrowsError_userIsLoggedOut() =
@@ -200,7 +133,6 @@ class LoginTest {
                     any(),
                 )
             } throws Exception()
-            objUnderTest.onNewIntentReceived(intent)
 
             coVerify {
                 logout()
@@ -208,31 +140,9 @@ class LoginTest {
         }
 
     @Test
-    fun saveAccessTokenThrowsError_userIsLoggedOut() =
-        runTest {
-            coEvery { userPreferencesDatastore.saveAccessToken(any()) } throws Exception()
-
-            objUnderTest.onNewIntentReceived(intent)
-
-            coVerify { logout() }
-        }
-
-    @Test
     fun verifyUserCredentialsThrowsError_userIsLoggedOut() =
         runTest {
             coEvery { accountRepository.verifyUserCredentials() } throws Exception()
-
-            objUnderTest.onNewIntentReceived(intent)
-
-            coVerify { logout() }
-        }
-
-    @Test
-    fun saveAccountIdThrowsError_userIsLoggedOut() =
-        runTest {
-            coEvery { userPreferencesDatastore.saveAccountId(any()) } throws Exception()
-
-            objUnderTest.onNewIntentReceived(intent)
 
             coVerify { logout() }
         }
@@ -241,8 +151,6 @@ class LoginTest {
     fun saveAnalyticsCredentialsThrowsError_userIsLoggedOut() =
         runTest {
             coEvery { analytics.setMastodonAccountId(any()) } throws Exception()
-
-            objUnderTest.onNewIntentReceived(intent)
 
             coVerify { logout() }
         }

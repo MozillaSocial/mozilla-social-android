@@ -16,11 +16,6 @@ class AppPreferencesDatastore(context: Context) {
             it.trackAnalytics
         }.distinctUntilChanged()
 
-    val themeType: Flow<ThemeType> =
-        dataStore.data.mapLatest {
-            it.themeType
-        }.distinctUntilChanged()
-
     suspend fun allowAnalytics(allowAnalytics: Boolean) {
         dataStore.updateData {
             it.toBuilder()
@@ -29,10 +24,28 @@ class AppPreferencesDatastore(context: Context) {
         }
     }
 
+    val themeType: Flow<ThemeType> =
+        dataStore.data.mapLatest {
+            it.themeType
+        }.distinctUntilChanged()
+
     suspend fun saveThemeType(themeType: ThemeType) {
         dataStore.updateData {
             it.toBuilder()
                 .setThemeType(themeType)
+                .build()
+        }
+    }
+
+    val activeUserDatastoreFilename: Flow<String> =
+        dataStore.data.mapLatest {
+            it.activeUserDatastoreFilename
+        }.distinctUntilChanged()
+
+    suspend fun saveActiveUserDatastoreFilename(filename: String) {
+        dataStore.updateData {
+            it.toBuilder()
+                .setActiveUserDatastoreFilename(filename)
                 .build()
         }
     }

@@ -5,8 +5,7 @@ import okhttp3.Response
 
 class AuthCredentialInterceptor : Interceptor {
     var accessToken: String? = null
-    var domain: String =
-        DEFAULT_HOST // only non-null if different domain
+    var domain: String = DEFAULT_HOST
 
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()

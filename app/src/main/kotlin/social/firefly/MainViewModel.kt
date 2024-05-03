@@ -13,7 +13,6 @@ import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.launch
 import social.firefly.core.datastore.AppPreferences
 import social.firefly.core.datastore.AppPreferencesDatastore
-import social.firefly.core.datastore.UserPreferencesDatastore
 import social.firefly.core.designsystem.theme.ThemeOption
 import social.firefly.core.navigation.NavigationDestination
 import social.firefly.core.navigation.usecases.NavigateTo
@@ -25,7 +24,6 @@ import social.firefly.ui.AppState
 class MainViewModel(
     private val navigateTo: NavigateTo,
     private val isSignedInFlow: IsSignedInFlow,
-    private val userPreferencesDatastore: UserPreferencesDatastore,
     private val timelineRepository: TimelineRepository,
     appPreferencesDatastore: AppPreferencesDatastore,
 ) : ViewModel() {
@@ -43,7 +41,6 @@ class MainViewModel(
         viewModelScope.launch {
             // Do any cleanup necessary before navigating away from the splash screen
             timelineRepository.deleteHomeTimeline()
-            userPreferencesDatastore.preloadData()
 
             AppState.navigationCollectionCompletable.await()
             launch(Dispatchers.Main) {

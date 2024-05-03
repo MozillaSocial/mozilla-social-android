@@ -1,17 +1,15 @@
 package social.firefly.core.usecase.mastodon.auth
 
-import android.content.Intent
 import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import social.firefly.common.annotations.PreferUseCase
 import social.firefly.core.analytics.AppAnalytics
-import social.firefly.core.datastore.UserPreferencesDatastore
+import social.firefly.core.datastore.UserPreferencesDatastoreManager
 import social.firefly.core.model.Account
 import social.firefly.core.navigation.usecases.OpenLink
 import social.firefly.core.repository.mastodon.AccountRepository
 import social.firefly.core.repository.mastodon.AppRepository
 import social.firefly.core.repository.mastodon.OauthRepository
-import social.firefly.core.usecase.mastodon.auth.Login.Companion.AUTH_SCHEME
 import timber.log.Timber
 
 /**
@@ -20,7 +18,7 @@ import timber.log.Timber
 class Login(
     private val oauthRepository: OauthRepository,
     private val accountRepository: AccountRepository,
-    private val userPreferencesDatastore: UserPreferencesDatastore,
+    private val userPreferencesDatastoreManager: UserPreferencesDatastoreManager,
     private val appRepository: AppRepository,
     private val analytics: AppAnalytics,
     private val openLink: OpenLink,
@@ -28,6 +26,7 @@ class Login(
 ) {
     private var clientId: String? = null
     private var clientSecret: String? = null
+    private var host: String? = null
 
     /**
      * When a logging in by registering this client with the given domain
@@ -35,8 +34,7 @@ class Login(
     @OptIn(PreferUseCase::class)
     suspend operator fun invoke(url: String) {
         try {
-            val host = extractHost(url)
-            userPreferencesDatastore.saveDomain(host)
+            host = extractHost(url)
             val application =
                 appRepository.createApplication(
                     clientName = CLIENT_NAME,
@@ -48,7 +46,7 @@ class Login(
             openLink(
                 HttpUrl.Builder()
                     .scheme(HTTPS)
-                    .host(host)
+                    .host(host!!)
                     .addPathSegments(OAUTH_AUTHORIZE)
                     .addQueryParameter(RESPONSE_TYPE_QUERY_PARAM, CODE)
                     .addQueryParameter(REDIRECT_URI_QUERY_PARAM, AUTH_SCHEME)
@@ -60,19 +58,6 @@ class Login(
         } catch (exception: Exception) {
             logout()
             throw LoginFailedException(exception)
-        }
-    }
-
-    /**
-     * Proceeds through the login flow if the intent fits the [AUTH_SCHEME] and contains a user code
-     */
-    suspend fun onNewIntentReceived(intent: Intent) {
-        intent.data?.let { data ->
-            if (data.toString().startsWith(AUTH_SCHEME)) {
-                data.getQueryParameter(CODE)?.let { userCode ->
-                    onUserCodeReceived(userCode)
-                }
-            }
         }
     }
 
@@ -97,12 +82,13 @@ class Login(
 
     private suspend fun onOAuthTokenReceived(accessToken: String) {
         Timber.tag(TAG).d("access token received")
-        userPreferencesDatastore.saveAccessToken(accessToken)
         val account: Account = accountRepository.verifyUserCredentials()
-        userPreferencesDatastore.saveAccountId(accountId = account.accountId)
+        userPreferencesDatastoreManager.createNewUserDatastore(
+            domain = host!!,
+            accessToken = accessToken,
+            accountId = account.accountId
+        )
         analytics.setMastodonAccountId(account.accountId)
-        clientId = null
-        clientSecret = null
     }
 
     private fun extractHost(domain: String): String {

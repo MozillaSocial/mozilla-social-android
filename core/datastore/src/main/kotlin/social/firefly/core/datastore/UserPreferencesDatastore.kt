@@ -1,64 +1,54 @@
 package social.firefly.core.datastore
 
-import android.content.Context
+import androidx.datastore.core.DataStore
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.mapLatest
+import kotlinx.coroutines.launch
 import social.firefly.core.datastore.UserPreferences.ThreadType
 import timber.log.Timber
 import java.io.IOException
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class UserPreferencesDatastore(context: Context) {
-    private val dataStore = context.userPreferencesDataStore
+class UserPreferencesDatastore(
+    private val dataStore: DataStore<UserPreferences>,
+    val fileName: String,
+) {
 
-    val accessToken: Flow<String?> =
-        dataStore.data.mapLatest {
-            it.accessToken
-        }
-
-    val domain: Flow<String> =
-        dataStore.data.mapLatest {
-            it.domain
-        }
-
-    val accountId: Flow<String> =
-        dataStore.data.mapLatest {
-            it.accountId
-        }
-
-    val isSignedIn: Flow<Boolean> =
-        dataStore.data.mapLatest {
-            !it.accountId.isNullOrBlank() && !it.accessToken.isNullOrBlank()
-        }.distinctUntilChanged()
-
-    val serializedPushKeys: Flow<String> =
-        dataStore.data.mapLatest {
-            it.serializedPushKeys
-        }.distinctUntilChanged()
-
-    val lastSeenHomeStatusId: Flow<String> =
-        dataStore.data.mapLatest {
-            it.lastSeenHomeStatusId
-        }.distinctUntilChanged()
-
-    val threadType: Flow<ThreadType> =
-        dataStore.data.mapLatest {
-            it.threadType
-        }.distinctUntilChanged()
-
-    /**
-     * Preload the data so that it's available in the cache
-     */
-    suspend fun preloadData() {
+    private suspend fun preloadData() {
         try {
             dataStore.data.first()
         } catch (ioException: IOException) {
             Timber.e(t = ioException, message = "Problem preloading data")
         }
     }
+
+    init {
+        GlobalScope.launch {
+            preloadData()
+        }
+    }
+
+    val isSignedIn: Flow<Boolean> =
+        dataStore.data.mapLatest {
+            !it.accountId.isNullOrBlank() && !it.accessToken.isNullOrBlank()
+        }.distinctUntilChanged()
+
+    suspend fun clearData() {
+        dataStore.updateData {
+            it.toBuilder()
+                .clear()
+                .build()
+        }
+    }
+
+    val accessToken: Flow<String?> =
+        dataStore.data.mapLatest {
+            it.accessToken
+        }
 
     suspend fun saveAccessToken(accessToken: String) {
         dataStore.updateData {
@@ -68,13 +58,10 @@ class UserPreferencesDatastore(context: Context) {
         }
     }
 
-    suspend fun saveAccountId(accountId: String) {
-        dataStore.updateData {
-            it.toBuilder()
-                .setAccountId(accountId)
-                .build()
+    val domain: Flow<String> =
+        dataStore.data.mapLatest {
+            it.domain
         }
-    }
 
     /**
      * @throws [IllegalArgumentException] if the domain is bad
@@ -86,6 +73,24 @@ class UserPreferencesDatastore(context: Context) {
         }
     }
 
+    val accountId: Flow<String> =
+        dataStore.data.mapLatest {
+            it.accountId
+        }
+
+    suspend fun saveAccountId(accountId: String) {
+        dataStore.updateData {
+            it.toBuilder()
+                .setAccountId(accountId)
+                .build()
+        }
+    }
+
+    val serializedPushKeys: Flow<String> =
+        dataStore.data.mapLatest {
+            it.serializedPushKeys
+        }.distinctUntilChanged()
+
     suspend fun saveSerializedPushKeyPair(serializedPushKeyPair: String) {
         dataStore.updateData {
             it.toBuilder()
@@ -93,6 +98,11 @@ class UserPreferencesDatastore(context: Context) {
                 .build()
         }
     }
+
+    val lastSeenHomeStatusId: Flow<String> =
+        dataStore.data.mapLatest {
+            it.lastSeenHomeStatusId
+        }.distinctUntilChanged()
 
     suspend fun saveLastSeenHomeStatusId(statusId: String) {
         dataStore.updateData {
@@ -102,18 +112,15 @@ class UserPreferencesDatastore(context: Context) {
         }
     }
 
+    val threadType: Flow<ThreadType> =
+        dataStore.data.mapLatest {
+            it.threadType
+        }.distinctUntilChanged()
+
     suspend fun saveThreadType(threadType: ThreadType) {
         dataStore.updateData {
             it.toBuilder()
                 .setThreadType(threadType)
-                .build()
-        }
-    }
-
-    suspend fun clearData() {
-        dataStore.updateData {
-            it.toBuilder()
-                .clear()
                 .build()
         }
     }

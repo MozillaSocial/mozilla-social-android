@@ -7,6 +7,8 @@ import androidx.datastore.dataStore
 import java.io.InputStream
 import java.io.OutputStream
 
+const val APP_PREFERENCES_DATASTORE_FILENAME = "appPreferences.pb"
+
 internal object AppPreferencesSerializer : Serializer<AppPreferences> {
     override val defaultValue: AppPreferences = AppPreferences
         .getDefaultInstance()
@@ -26,6 +28,6 @@ internal object AppPreferencesSerializer : Serializer<AppPreferences> {
 }
 
 internal val Context.appPreferencesDataStore: DataStore<AppPreferences> by dataStore(
-    fileName = "appPreferences.pb",
+    fileName = APP_PREFERENCES_DATASTORE_FILENAME,
     serializer = AppPreferencesSerializer,
 )

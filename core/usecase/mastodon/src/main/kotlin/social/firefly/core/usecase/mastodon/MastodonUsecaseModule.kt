@@ -1,5 +1,6 @@
 package social.firefly.core.usecase.mastodon
 
+import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 import social.firefly.common.appscope.AppScope
@@ -50,10 +51,10 @@ val mastodonUsecaseModule =
         )
 
         single { GetThread(get(), get()) }
-        single { Login(get(), get(), get(), get(), get(), get(), get()) }
+        factoryOf(::Login)
         single {
             Logout(
-                userPreferencesDatastore = get(),
+                userPreferencesDatastoreManager = get(),
                 analytics = get(),
                 appScope = get(),
                 databaseDelegate = get(),
