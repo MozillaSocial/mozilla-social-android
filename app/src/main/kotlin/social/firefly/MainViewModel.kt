@@ -52,6 +52,7 @@ class MainViewModel(
     }
 
     fun handleIntent(intent: Intent) {
+        if (!userPreferencesDatastoreManager.hasDataStores) return
         when {
             intent.action == Intent.ACTION_SEND -> {
                 when {
