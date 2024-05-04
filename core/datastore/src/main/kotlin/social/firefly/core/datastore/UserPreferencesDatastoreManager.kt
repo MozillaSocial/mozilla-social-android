@@ -2,6 +2,7 @@ package social.firefly.core.datastore
 
 import android.content.Context
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 import java.io.File
 
@@ -10,6 +11,15 @@ class UserPreferencesDatastoreManager(
     private val appPreferencesDatastore: AppPreferencesDatastore,
 ) {
     private val dataStores: MutableList<UserPreferencesDatastore> = mutableListOf()
+    val hasDataStores: Boolean
+        get() = dataStores.isNotEmpty()
+
+    // counter exists to ensure we don't create a datastore preferences with a name that already exists.
+    // this could happen if the user logs out and logs back in with the same account.
+    // That would cause a crash becauses two datastores with the same name can't exist at the same time,
+    // and even though we delete the datastore, it might be lurking in memory somewhere until
+    // the user logs in.
+    private var counter = 0
 
     init {
         val dataStoreFileNames = DatastoreUtils.getAllUserPreferencesDatastoreFilesNames(context)
@@ -24,16 +34,10 @@ class UserPreferencesDatastoreManager(
         }
     }
 
-    private val dummyDataStore = UserPreferencesDatastore(
-        DUMMY_FILENAME,
-        EmptyUserPreferencesSerializer,
-        context
-    )
-
     val activeUserDatastore: Flow<UserPreferencesDatastore> =
         appPreferencesDatastore.activeUserDatastoreFilename.map { activeDatastoreId ->
-            dataStores.find { it.fileName == activeDatastoreId } ?: dummyDataStore
-        }
+            dataStores.find { it.fileName == activeDatastoreId }
+        }.filterNotNull()
 
     suspend fun createNewUserDatastore(
         domain: String,
@@ -41,7 +45,11 @@ class UserPreferencesDatastoreManager(
         accountId: String,
     ) {
         require(UserPreferencesDatastore.HOST_NAME_REGEX.toRegex().matches(domain))
-        val fileName = "$accountId-prefs.pb"
+        val fileName = "$domain-$accountId-$counter-prefs.pb"
+        counter++
+
+        if (dataStores.find { it.fileName == fileName } != null)
+            throw Exception("prefs file already exists")
 
         dataStores.add(
             UserPreferencesDatastore(
@@ -61,14 +69,10 @@ class UserPreferencesDatastoreManager(
     fun deleteDataStore(
         dataStore: UserPreferencesDatastore,
     ) {
-        if (dataStore.fileName == DUMMY_FILENAME) return
         val datastoreDir = File(context.filesDir, "datastore")
         val dataStoreFile = File(datastoreDir, dataStore.fileName)
         dataStoreFile.delete()
-    }
-
-    companion object {
-        const val DUMMY_FILENAME = "dummy.pb"
+        dataStores.remove(dataStore)
     }
 }
 

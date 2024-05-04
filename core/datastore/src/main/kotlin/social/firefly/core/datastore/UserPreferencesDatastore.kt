@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.core.Serializer
 import androidx.datastore.dataStore
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.Flow
@@ -12,11 +13,10 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.launch
 import social.firefly.core.datastore.UserPreferences.ThreadType
-import social.firefly.core.datastore.UserPreferencesDatastoreManager.Companion.DUMMY_FILENAME
 import timber.log.Timber
 import java.io.IOException
 
-@OptIn(ExperimentalCoroutinesApi::class)
+@OptIn(ExperimentalCoroutinesApi::class, DelicateCoroutinesApi::class)
 class UserPreferencesDatastore internal constructor(
     val fileName: String,
     serializer: Serializer<UserPreferences>,
@@ -40,31 +40,16 @@ class UserPreferencesDatastore internal constructor(
 
     init {
         GlobalScope.launch {
-            if (fileName != DUMMY_FILENAME) {
-                // This forces a write to disk.  Just creating the datastore with default values
-                // does not cause the data store to persist to disk.  A filed must be updated.
-                dataStore.updateData {
-                    it.toBuilder().setDummyValue(true).build()
-                }
+            // This forces a write to disk.  Just creating the datastore with default values
+            // does not cause the data store to persist to disk.  A filed must be updated.
+            dataStore.updateData {
+                it.toBuilder().setDummyValue(true).build()
             }
             preloadData()
         }
     }
 
-    val isSignedIn: Flow<Boolean> =
-        dataStore.data.mapLatest {
-            !it.accountId.isNullOrBlank() && !it.accessToken.isNullOrBlank()
-        }.distinctUntilChanged()
-
-    suspend fun clearData() {
-        dataStore.updateData {
-            it.toBuilder()
-                .clear()
-                .build()
-        }
-    }
-
-    val accessToken: Flow<String?> =
+    val accessToken: Flow<String> =
         dataStore.data.mapLatest {
             it.accessToken
         }

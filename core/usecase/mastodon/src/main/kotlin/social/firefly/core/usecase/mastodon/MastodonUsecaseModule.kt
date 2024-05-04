@@ -17,7 +17,6 @@ import social.firefly.core.usecase.mastodon.account.UnblockAccount
 import social.firefly.core.usecase.mastodon.account.UnfollowAccount
 import social.firefly.core.usecase.mastodon.account.UnmuteAccount
 import social.firefly.core.usecase.mastodon.account.UpdateMyAccount
-import social.firefly.core.usecase.mastodon.auth.IsSignedInFlow
 import social.firefly.core.usecase.mastodon.auth.Login
 import social.firefly.core.usecase.mastodon.auth.Logout
 import social.firefly.core.usecase.mastodon.followRequest.AcceptFollowRequest
@@ -57,12 +56,11 @@ val mastodonUsecaseModule =
         single {
             Logout(
                 userPreferencesDatastoreManager = get(),
-                analytics = get(),
                 appScope = get(),
                 databaseDelegate = get(),
+                navigateTo = get(),
             )
         }
-        single { IsSignedInFlow(get()) }
         singleOf(::GetDetailedAccount)
         single { GetLoggedInUserAccountId(get()) }
 

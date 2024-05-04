@@ -5,9 +5,10 @@ import okhttp3.HttpUrl.Companion.toHttpUrl
 import org.koin.core.component.KoinComponent
 import org.koin.core.parameter.parametersOf
 import social.firefly.common.annotations.PreferUseCase
-import social.firefly.core.analytics.AppAnalytics
 import social.firefly.core.datastore.UserPreferencesDatastoreManager
 import social.firefly.core.model.Account
+import social.firefly.core.navigation.NavigationDestination
+import social.firefly.core.navigation.usecases.NavigateTo
 import social.firefly.core.navigation.usecases.OpenLink
 import social.firefly.core.repository.mastodon.VerificationRepository
 import timber.log.Timber
@@ -17,9 +18,8 @@ import timber.log.Timber
  */
 class Login(
     private val userPreferencesDatastoreManager: UserPreferencesDatastoreManager,
-    private val analytics: AppAnalytics,
     private val openLink: OpenLink,
-    private val logout: Logout,
+    private val navigateTo: NavigateTo,
 ): KoinComponent {
     private lateinit var clientId: String
     private lateinit var clientSecret: String
@@ -56,7 +56,6 @@ class Login(
                     .toString(),
             )
         } catch (exception: Exception) {
-            logout()
             throw LoginFailedException(exception)
         }
     }
@@ -81,9 +80,8 @@ class Login(
                 accessToken = accessToken,
                 accountId = account.accountId
             )
-            analytics.setMastodonAccountId(account.accountId)
+            navigateTo(NavigationDestination.Tabs)
         } catch (exception: Exception) {
-            logout()
             Timber.e(exception)
         }
     }
