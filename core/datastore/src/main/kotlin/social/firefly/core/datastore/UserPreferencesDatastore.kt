@@ -1,26 +1,49 @@
 package social.firefly.core.datastore
 
+import android.content.Context
+import androidx.annotation.GuardedBy
 import androidx.datastore.core.DataStore
+import androidx.datastore.core.DataStoreFactory
+import androidx.datastore.core.Serializer
+import androidx.datastore.core.okio.OkioSerializer
+import androidx.datastore.core.okio.OkioStorage
+import androidx.datastore.dataStore
+import androidx.datastore.dataStoreFile
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.launch
+import okio.BufferedSink
+import okio.BufferedSource
+import okio.FileSystem
+import okio.Path.Companion.toPath
 import social.firefly.core.datastore.UserPreferences.ThreadType
 import timber.log.Timber
 import java.io.IOException
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class UserPreferencesDatastore(
-    private val dataStore: DataStore<UserPreferences>,
+class UserPreferencesDatastore internal constructor(
     val fileName: String,
+    serializer: Serializer<UserPreferences>,
+    context: Context,
 ) {
+    private val Context.dataStore: DataStore<UserPreferences> by dataStore(
+        fileName = fileName,
+        serializer = serializer
+    )
+
+    private val dataStore = context.dataStore
 
     private suspend fun preloadData() {
         try {
-            dataStore.data.first()
+            val data = dataStore.data.first()
+            println(data)
         } catch (ioException: IOException) {
             Timber.e(t = ioException, message = "Problem preloading data")
         }
@@ -50,41 +73,15 @@ class UserPreferencesDatastore(
             it.accessToken
         }
 
-    suspend fun saveAccessToken(accessToken: String) {
-        dataStore.updateData {
-            it.toBuilder()
-                .setAccessToken(accessToken)
-                .build()
-        }
-    }
-
     val domain: Flow<String> =
         dataStore.data.mapLatest {
             it.domain
         }
 
-    /**
-     * @throws [IllegalArgumentException] if the domain is bad
-     */
-    suspend fun saveDomain(domain: String) {
-        require(HOST_NAME_REGEX.toRegex().matches(domain))
-        dataStore.updateData {
-            it.toBuilder().setDomain(domain).build()
-        }
-    }
-
     val accountId: Flow<String> =
         dataStore.data.mapLatest {
             it.accountId
         }
-
-    suspend fun saveAccountId(accountId: String) {
-        dataStore.updateData {
-            it.toBuilder()
-                .setAccountId(accountId)
-                .build()
-        }
-    }
 
     val serializedPushKeys: Flow<String> =
         dataStore.data.mapLatest {

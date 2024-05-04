@@ -26,8 +26,7 @@ internal class UserPreferencesSerializer(
 }
 
 internal object EmptyUserPreferencesSerializer : Serializer<UserPreferences> {
-    override val defaultValue: UserPreferences = UserPreferences.newBuilder()
-        .build()
+    override val defaultValue: UserPreferences = UserPreferences.getDefaultInstance()
 
     override suspend fun readFrom(input: InputStream): UserPreferences =
         UserPreferences.parseFrom(input)

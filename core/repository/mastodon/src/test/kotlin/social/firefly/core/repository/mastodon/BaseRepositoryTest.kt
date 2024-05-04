@@ -16,7 +16,6 @@ import social.firefly.core.network.mastodon.AccountApi
 import social.firefly.core.network.mastodon.AppApi
 import social.firefly.core.network.mastodon.InstanceApi
 import social.firefly.core.network.mastodon.MediaApi
-import social.firefly.core.network.mastodon.OauthApi
 import social.firefly.core.network.mastodon.ReportApi
 import social.firefly.core.network.mastodon.SearchApi
 import social.firefly.core.network.mastodon.StatusApi
@@ -28,7 +27,6 @@ open class BaseRepositoryTest {
     protected val appApi = mockk<AppApi>(relaxed = true)
     protected val instanceApi = mockk<InstanceApi>(relaxed = true)
     protected val mediaApi = mockk<MediaApi>(relaxed = true)
-    protected val oauthApi = mockk<OauthApi>(relaxed = true)
     protected val reportApi = mockk<ReportApi>(relaxed = true)
     protected val searchApi = mockk<SearchApi>(relaxed = true)
     protected val statusApi = mockk<StatusApi>(relaxed = true)

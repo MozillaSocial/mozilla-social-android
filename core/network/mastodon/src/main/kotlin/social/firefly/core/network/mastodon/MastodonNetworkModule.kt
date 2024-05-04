@@ -54,7 +54,6 @@ val mastodonNetworkModule =
         single { get<Retrofit>(qualifier = named(AUTHORIZED_CLIENT)).create(InstanceApi::class.java) }
         single { get<Retrofit>(qualifier = named(AUTHORIZED_CLIENT)).create(MediaApi::class.java) }
         single { get<Retrofit>(qualifier = named(AUTHORIZED_CLIENT)).create(MutesApi::class.java) }
-        single { get<Retrofit>(qualifier = named(AUTHORIZED_CLIENT)).create(OauthApi::class.java) }
         single { get<Retrofit>(qualifier = named(AUTHORIZED_CLIENT)).create(ReportApi::class.java) }
         single { get<Retrofit>(qualifier = named(AUTHORIZED_CLIENT)).create(SearchApi::class.java) }
         single { get<Retrofit>(qualifier = named(AUTHORIZED_CLIENT)).create(StatusApi::class.java) }

@@ -9,7 +9,6 @@ import social.firefly.core.analytics.AppAnalytics
 import social.firefly.core.datastore.UserPreferencesDatastoreManager
 import social.firefly.core.model.Account
 import social.firefly.core.navigation.usecases.OpenLink
-import social.firefly.core.repository.mastodon.OauthRepository
 import social.firefly.core.repository.mastodon.VerificationRepository
 import timber.log.Timber
 
@@ -17,7 +16,6 @@ import timber.log.Timber
  * This use case handles all logic related to logging in
  */
 class Login(
-    private val oauthRepository: OauthRepository,
     private val userPreferencesDatastoreManager: UserPreferencesDatastoreManager,
     private val analytics: AppAnalytics,
     private val openLink: OpenLink,
@@ -36,7 +34,7 @@ class Login(
         try {
             host = extractHost(url)
             verificationRepository = getKoin().get<VerificationRepository> {
-                parametersOf(host)
+                parametersOf("https://$host")
             }
             val application = verificationRepository.createApplication(
                 clientName = CLIENT_NAME,
@@ -67,30 +65,27 @@ class Login(
     suspend fun onUserCodeReceived(code: String) {
         try {
             Timber.tag(TAG).d("user code received")
-            val token =
-                oauthRepository.fetchOAuthToken(
-                    clientId = clientId,
-                    clientSecret = clientSecret,
-                    redirectUri = REDIRECT_URI,
-                    code = code,
-                    grantType = AUTHORIZATION_CODE,
-                )
-            onOAuthTokenReceived(token)
+            val accessToken = verificationRepository.fetchOAuthToken(
+                clientId = clientId,
+                clientSecret = clientSecret,
+                redirectUri = REDIRECT_URI,
+                code = code,
+                grantType = AUTHORIZATION_CODE,
+            )
+
+            Timber.tag(TAG).d("access token received")
+
+            val account: Account = verificationRepository.verifyUserCredentials(accessToken)
+            userPreferencesDatastoreManager.createNewUserDatastore(
+                domain = host,
+                accessToken = accessToken,
+                accountId = account.accountId
+            )
+            analytics.setMastodonAccountId(account.accountId)
         } catch (exception: Exception) {
             logout()
             Timber.e(exception)
         }
-    }
-
-    private suspend fun onOAuthTokenReceived(accessToken: String) {
-        Timber.tag(TAG).d("access token received")
-        val account: Account = verificationRepository.verifyUserCredentials(accessToken)
-        userPreferencesDatastoreManager.createNewUserDatastore(
-            domain = host,
-            accessToken = accessToken,
-            accountId = account.accountId
-        )
-        analytics.setMastodonAccountId(account.accountId)
     }
 
     private fun extractHost(domain: String): String {

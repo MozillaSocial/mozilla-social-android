@@ -43,8 +43,8 @@ class MainViewModel(
             timelineRepository.deleteHomeTimeline()
 
             AppState.navigationCollectionCompletable.await()
-            launch(Dispatchers.Main) {
-                isSignedInFlow().collectLatest {
+            isSignedInFlow().collectLatest {
+                launch(Dispatchers.Main) {
                     if (!it) {
                         navigateTo(NavigationDestination.Auth)
                     } else {

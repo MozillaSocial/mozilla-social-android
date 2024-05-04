@@ -31,7 +31,6 @@ val mastodonRepositoryModule =
         singleOf(::AuthCredentialObserver)
         singleOf(::StatusRepository)
         singleOf(::AccountRepository)
-        singleOf(::OauthRepository)
         singleOf(::MediaRepository)
         singleOf(::SearchRepository)
         singleOf(::InstanceRepository)
