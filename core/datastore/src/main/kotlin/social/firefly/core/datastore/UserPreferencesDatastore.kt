@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.launch
 import social.firefly.core.datastore.UserPreferences.ThreadType
+import social.firefly.core.datastore.UserPreferencesDatastoreManager.Companion.DUMMY_FILENAME
 import timber.log.Timber
 import java.io.IOException
 
@@ -39,6 +40,13 @@ class UserPreferencesDatastore internal constructor(
 
     init {
         GlobalScope.launch {
+            if (fileName != DUMMY_FILENAME) {
+                // This forces a write to disk.  Just creating the datastore with default values
+                // does not cause the data store to persist to disk.  A filed must be updated.
+                dataStore.updateData {
+                    it.toBuilder().setDummyValue(true).build()
+                }
+            }
             preloadData()
         }
     }
