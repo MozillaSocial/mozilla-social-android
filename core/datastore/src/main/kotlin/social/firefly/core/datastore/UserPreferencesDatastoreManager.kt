@@ -9,18 +9,7 @@ class UserPreferencesDatastoreManager(
     private val context: Context,
     private val appPreferencesDatastore: AppPreferencesDatastore,
 ) {
-    private val dummyDataStore = UserPreferencesDatastore(
-        DUMMY_FILENAME,
-        EmptyUserPreferencesSerializer,
-        context
-    )
-
     private val dataStores: MutableList<UserPreferencesDatastore> = mutableListOf()
-
-    val activeUserDatastore: Flow<UserPreferencesDatastore> =
-        appPreferencesDatastore.activeUserDatastoreFilename.map { activeDatastoreId ->
-            dataStores.find { it.fileName == activeDatastoreId } ?: dummyDataStore
-        }
 
     init {
         val dataStoreFileNames = DatastoreUtils.getAllUserPreferencesDatastoreFilesNames(context)
@@ -34,6 +23,17 @@ class UserPreferencesDatastoreManager(
             )
         }
     }
+
+    private val dummyDataStore = UserPreferencesDatastore(
+        DUMMY_FILENAME,
+        EmptyUserPreferencesSerializer,
+        context
+    )
+
+    val activeUserDatastore: Flow<UserPreferencesDatastore> =
+        appPreferencesDatastore.activeUserDatastoreFilename.map { activeDatastoreId ->
+            dataStores.find { it.fileName == activeDatastoreId } ?: dummyDataStore
+        }
 
     suspend fun createNewUserDatastore(
         domain: String,
