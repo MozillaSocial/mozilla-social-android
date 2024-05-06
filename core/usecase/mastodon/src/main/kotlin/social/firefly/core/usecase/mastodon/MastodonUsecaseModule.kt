@@ -1,5 +1,6 @@
 package social.firefly.core.usecase.mastodon
 
+import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 import social.firefly.common.appscope.AppScope
@@ -16,7 +17,6 @@ import social.firefly.core.usecase.mastodon.account.UnblockAccount
 import social.firefly.core.usecase.mastodon.account.UnfollowAccount
 import social.firefly.core.usecase.mastodon.account.UnmuteAccount
 import social.firefly.core.usecase.mastodon.account.UpdateMyAccount
-import social.firefly.core.usecase.mastodon.auth.IsSignedInFlow
 import social.firefly.core.usecase.mastodon.auth.Login
 import social.firefly.core.usecase.mastodon.auth.Logout
 import social.firefly.core.usecase.mastodon.followRequest.AcceptFollowRequest
@@ -50,16 +50,17 @@ val mastodonUsecaseModule =
         )
 
         single { GetThread(get(), get()) }
-        single { Login(get(), get(), get(), get(), get(), get(), get()) }
+
+        // factory because it holds global variables
+        factoryOf(::Login)
         single {
             Logout(
-                userPreferencesDatastore = get(),
-                analytics = get(),
+                userPreferencesDatastoreManager = get(),
                 appScope = get(),
                 databaseDelegate = get(),
+                navigateTo = get(),
             )
         }
-        single { IsSignedInFlow(get()) }
         singleOf(::GetDetailedAccount)
         single { GetLoggedInUserAccountId(get()) }
 

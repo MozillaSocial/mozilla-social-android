@@ -1,15 +1,16 @@
 complexity:
   LongParameterList:
-    active: false # Carried over from Pocket configuration.
-    # Relaxing this to a smaller degree is recommended for Compose anyway.
+    active: false
   TooManyFunctions:
-    active: false # Carried over from Pocket configuration.
+    active: false
   LongMethod:
     threshold: 100 # Increasing from 60 to 100 because I find compose methods can run long sometimes.
 
 exceptions:
   TooGenericExceptionCaught:
-    active: false # Carried over from Pocket configuration.
+    active: false
+  TooGenericExceptionThrown:
+    active: false
 
 naming:
   FunctionNaming:
@@ -23,7 +24,7 @@ naming:
 
 performance:
   SpreadOperator:
-    active: false # Carried over from Pocket configuration.
+    active: false
 
 style:
   MagicNumber:
@@ -37,6 +38,6 @@ style:
     ignoreAnnotated:
     - 'Preview' # Recommended configuration for Compose.
   WildcardImport:
-    active: false # Carried over from Pocket configuration.
+    active: false
   ReturnCount:
     active: false

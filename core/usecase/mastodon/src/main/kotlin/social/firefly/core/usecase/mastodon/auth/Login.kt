@@ -1,48 +1,46 @@
 package social.firefly.core.usecase.mastodon.auth
 
-import android.content.Intent
 import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrl
+import org.koin.core.component.KoinComponent
+import org.koin.core.parameter.parametersOf
 import social.firefly.common.annotations.PreferUseCase
-import social.firefly.core.analytics.AppAnalytics
-import social.firefly.core.datastore.UserPreferencesDatastore
+import social.firefly.core.datastore.UserPreferencesDatastoreManager
 import social.firefly.core.model.Account
+import social.firefly.core.navigation.NavigationDestination
+import social.firefly.core.navigation.usecases.NavigateTo
 import social.firefly.core.navigation.usecases.OpenLink
-import social.firefly.core.repository.mastodon.AccountRepository
-import social.firefly.core.repository.mastodon.AppRepository
-import social.firefly.core.repository.mastodon.OauthRepository
-import social.firefly.core.usecase.mastodon.auth.Login.Companion.AUTH_SCHEME
+import social.firefly.core.repository.mastodon.VerificationRepository
 import timber.log.Timber
 
 /**
  * This use case handles all logic related to logging in
  */
 class Login(
-    private val oauthRepository: OauthRepository,
-    private val accountRepository: AccountRepository,
-    private val userPreferencesDatastore: UserPreferencesDatastore,
-    private val appRepository: AppRepository,
-    private val analytics: AppAnalytics,
+    private val userPreferencesDatastoreManager: UserPreferencesDatastoreManager,
     private val openLink: OpenLink,
-    private val logout: Logout,
-) {
-    private var clientId: String? = null
-    private var clientSecret: String? = null
+    private val navigateTo: NavigateTo,
+): KoinComponent {
+    private lateinit var clientId: String
+    private lateinit var clientSecret: String
+    private lateinit var host: String
 
+    private lateinit var verificationRepository: VerificationRepository
     /**
      * When a logging in by registering this client with the given domain
      */
     @OptIn(PreferUseCase::class)
     suspend operator fun invoke(url: String) {
         try {
-            val host = extractHost(url)
-            userPreferencesDatastore.saveDomain(host)
-            val application =
-                appRepository.createApplication(
-                    clientName = CLIENT_NAME,
-                    redirectUris = REDIRECT_URI,
-                    scopes = SCOPES,
-                )
+            host = extractHost(url)
+            verificationRepository = getKoin().get<VerificationRepository> {
+                parametersOf("https://$host")
+            }
+            val application = verificationRepository.createApplication(
+                clientName = CLIENT_NAME,
+                redirectUris = REDIRECT_URI,
+                scopes = SCOPES,
+            )
             clientId = application.clientId!!
             clientSecret = application.clientSecret!!
             openLink(
@@ -58,21 +56,7 @@ class Login(
                     .toString(),
             )
         } catch (exception: Exception) {
-            logout()
             throw LoginFailedException(exception)
-        }
-    }
-
-    /**
-     * Proceeds through the login flow if the intent fits the [AUTH_SCHEME] and contains a user code
-     */
-    suspend fun onNewIntentReceived(intent: Intent) {
-        intent.data?.let { data ->
-            if (data.toString().startsWith(AUTH_SCHEME)) {
-                data.getQueryParameter(CODE)?.let { userCode ->
-                    onUserCodeReceived(userCode)
-                }
-            }
         }
     }
 
@@ -80,29 +64,26 @@ class Login(
     suspend fun onUserCodeReceived(code: String) {
         try {
             Timber.tag(TAG).d("user code received")
-            val token =
-                oauthRepository.fetchOAuthToken(
-                    clientId = clientId!!,
-                    clientSecret = clientSecret!!,
-                    redirectUri = REDIRECT_URI,
-                    code = code,
-                    grantType = AUTHORIZATION_CODE,
-                )
-            onOAuthTokenReceived(token)
+            val accessToken = verificationRepository.fetchOAuthToken(
+                clientId = clientId,
+                clientSecret = clientSecret,
+                redirectUri = REDIRECT_URI,
+                code = code,
+                grantType = AUTHORIZATION_CODE,
+            )
+
+            Timber.tag(TAG).d("access token received")
+
+            val account: Account = verificationRepository.verifyUserCredentials(accessToken)
+            userPreferencesDatastoreManager.createNewUserDatastore(
+                domain = host,
+                accessToken = accessToken,
+                accountId = account.accountId
+            )
+            navigateTo(NavigationDestination.Tabs)
         } catch (exception: Exception) {
-            logout()
             Timber.e(exception)
         }
-    }
-
-    private suspend fun onOAuthTokenReceived(accessToken: String) {
-        Timber.tag(TAG).d("access token received")
-        userPreferencesDatastore.saveAccessToken(accessToken)
-        val account: Account = accountRepository.verifyUserCredentials()
-        userPreferencesDatastore.saveAccountId(accountId = account.accountId)
-        analytics.setMastodonAccountId(account.accountId)
-        clientId = null
-        clientSecret = null
     }
 
     private fun extractHost(domain: String): String {

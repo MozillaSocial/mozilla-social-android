@@ -12,4 +12,5 @@ message AppPreferences {
 
   bool track_analytics = 1;
   ThemeType theme_type = 2;
+  string active_user_datastore_filename = 3;
 }

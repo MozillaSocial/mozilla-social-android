@@ -1,20 +1,55 @@
 package social.firefly.core.datastore
 
 import android.content.Context
+import androidx.datastore.core.DataStore
+import androidx.datastore.core.Serializer
+import androidx.datastore.dataStore
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.mapLatest
+import kotlinx.coroutines.launch
 import social.firefly.core.datastore.UserPreferences.ThreadType
 import timber.log.Timber
 import java.io.IOException
 
-@OptIn(ExperimentalCoroutinesApi::class)
-class UserPreferencesDatastore(context: Context) {
-    private val dataStore = context.userPreferencesDataStore
+@OptIn(ExperimentalCoroutinesApi::class, DelicateCoroutinesApi::class)
+class UserPreferencesDatastore internal constructor(
+    val fileName: String,
+    serializer: Serializer<UserPreferences>,
+    context: Context,
+) {
+    private val Context.dataStore: DataStore<UserPreferences> by dataStore(
+        fileName = fileName,
+        serializer = serializer
+    )
 
-    val accessToken: Flow<String?> =
+    private val dataStore = context.dataStore
+
+    private suspend fun preloadData() {
+        try {
+            val data = dataStore.data.first()
+            println(data)
+        } catch (ioException: IOException) {
+            Timber.e(t = ioException, message = "Problem preloading data")
+        }
+    }
+
+    init {
+        GlobalScope.launch {
+            // This forces a write to disk.  Just creating the datastore with default values
+            // does not cause the data store to persist to disk.  A filed must be updated.
+            dataStore.updateData {
+                it.toBuilder().setDummyValue(true).build()
+            }
+            preloadData()
+        }
+    }
+
+    val accessToken: Flow<String> =
         dataStore.data.mapLatest {
             it.accessToken
         }
@@ -29,62 +64,10 @@ class UserPreferencesDatastore(context: Context) {
             it.accountId
         }
 
-    val isSignedIn: Flow<Boolean> =
-        dataStore.data.mapLatest {
-            !it.accountId.isNullOrBlank() && !it.accessToken.isNullOrBlank()
-        }.distinctUntilChanged()
-
     val serializedPushKeys: Flow<String> =
         dataStore.data.mapLatest {
             it.serializedPushKeys
         }.distinctUntilChanged()
-
-    val lastSeenHomeStatusId: Flow<String> =
-        dataStore.data.mapLatest {
-            it.lastSeenHomeStatusId
-        }.distinctUntilChanged()
-
-    val threadType: Flow<ThreadType> =
-        dataStore.data.mapLatest {
-            it.threadType
-        }.distinctUntilChanged()
-
-    /**
-     * Preload the data so that it's available in the cache
-     */
-    suspend fun preloadData() {
-        try {
-            dataStore.data.first()
-        } catch (ioException: IOException) {
-            Timber.e(t = ioException, message = "Problem preloading data")
-        }
-    }
-
-    suspend fun saveAccessToken(accessToken: String) {
-        dataStore.updateData {
-            it.toBuilder()
-                .setAccessToken(accessToken)
-                .build()
-        }
-    }
-
-    suspend fun saveAccountId(accountId: String) {
-        dataStore.updateData {
-            it.toBuilder()
-                .setAccountId(accountId)
-                .build()
-        }
-    }
-
-    /**
-     * @throws [IllegalArgumentException] if the domain is bad
-     */
-    suspend fun saveDomain(domain: String) {
-        require(HOST_NAME_REGEX.toRegex().matches(domain))
-        dataStore.updateData {
-            it.toBuilder().setDomain(domain).build()
-        }
-    }
 
     suspend fun saveSerializedPushKeyPair(serializedPushKeyPair: String) {
         dataStore.updateData {
@@ -94,6 +77,11 @@ class UserPreferencesDatastore(context: Context) {
         }
     }
 
+    val lastSeenHomeStatusId: Flow<String> =
+        dataStore.data.mapLatest {
+            it.lastSeenHomeStatusId
+        }.distinctUntilChanged()
+
     suspend fun saveLastSeenHomeStatusId(statusId: String) {
         dataStore.updateData {
             it.toBuilder()
@@ -102,18 +90,15 @@ class UserPreferencesDatastore(context: Context) {
         }
     }
 
+    val threadType: Flow<ThreadType> =
+        dataStore.data.mapLatest {
+            it.threadType
+        }.distinctUntilChanged()
+
     suspend fun saveThreadType(threadType: ThreadType) {
         dataStore.updateData {
             it.toBuilder()
                 .setThreadType(threadType)
-                .build()
-        }
-    }
-
-    suspend fun clearData() {
-        dataStore.updateData {
-            it.toBuilder()
-                .clear()
                 .build()
         }
     }

@@ -6,26 +6,22 @@ import android.os.Parcelable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.navOptions
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.launch
 import social.firefly.core.datastore.AppPreferences
 import social.firefly.core.datastore.AppPreferencesDatastore
-import social.firefly.core.datastore.UserPreferencesDatastore
+import social.firefly.core.datastore.UserPreferencesDatastoreManager
 import social.firefly.core.designsystem.theme.ThemeOption
 import social.firefly.core.navigation.NavigationDestination
 import social.firefly.core.navigation.usecases.NavigateTo
 import social.firefly.core.repository.mastodon.TimelineRepository
 import social.firefly.core.share.ShareInfo
-import social.firefly.core.usecase.mastodon.auth.IsSignedInFlow
 import social.firefly.ui.AppState
 
 class MainViewModel(
     private val navigateTo: NavigateTo,
-    private val isSignedInFlow: IsSignedInFlow,
-    private val userPreferencesDatastore: UserPreferencesDatastore,
+    private val userPreferencesDatastoreManager: UserPreferencesDatastoreManager,
     private val timelineRepository: TimelineRepository,
     appPreferencesDatastore: AppPreferencesDatastore,
 ) : ViewModel() {
@@ -43,23 +39,20 @@ class MainViewModel(
         viewModelScope.launch {
             // Do any cleanup necessary before navigating away from the splash screen
             timelineRepository.deleteHomeTimeline()
-            userPreferencesDatastore.preloadData()
 
             AppState.navigationCollectionCompletable.await()
-            launch(Dispatchers.Main) {
-                isSignedInFlow().collectLatest {
-                    if (!it) {
-                        navigateTo(NavigationDestination.Auth)
-                    } else {
-                        navigateTo(NavigationDestination.Tabs)
-                        handleIntent(intent)
-                    }
-                }
+
+            if (userPreferencesDatastoreManager.isLoggedInToAtLeastOneAccount) {
+                navigateTo(NavigationDestination.Tabs)
+                handleIntent(intent)
+            } else {
+                navigateTo(NavigationDestination.Auth)
             }
         }
     }
 
     fun handleIntent(intent: Intent) {
+        if (!userPreferencesDatastoreManager.isLoggedInToAtLeastOneAccount) return
         when {
             intent.action == Intent.ACTION_SEND -> {
                 when {

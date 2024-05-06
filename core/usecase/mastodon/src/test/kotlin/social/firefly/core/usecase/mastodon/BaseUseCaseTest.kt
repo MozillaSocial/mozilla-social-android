@@ -14,13 +14,11 @@ import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import social.firefly.core.navigation.usecases.ShowSnackbar
 import social.firefly.core.repository.mastodon.AccountRepository
-import social.firefly.core.repository.mastodon.AppRepository
 import social.firefly.core.repository.mastodon.DatabaseDelegate
 import social.firefly.core.repository.mastodon.FavoritesRepository
 import social.firefly.core.repository.mastodon.HashtagRepository
 import social.firefly.core.repository.mastodon.InstanceRepository
 import social.firefly.core.repository.mastodon.MediaRepository
-import social.firefly.core.repository.mastodon.OauthRepository
 import social.firefly.core.repository.mastodon.PollRepository
 import social.firefly.core.repository.mastodon.RelationshipRepository
 import social.firefly.core.repository.mastodon.ReportRepository
@@ -34,10 +32,8 @@ import kotlin.test.fail
 
 open class BaseUseCaseTest {
     protected val accountRepository = mockk<AccountRepository>(relaxed = true)
-    protected val appRepository = mockk<AppRepository>(relaxed = true)
     protected val instanceRepository = mockk<InstanceRepository>(relaxed = true)
     protected val mediaRepository = mockk<MediaRepository>(relaxed = true)
-    protected val oauthRepository = mockk<OauthRepository>(relaxed = true)
     protected val relationshipRepository = mockk<RelationshipRepository>(relaxed = true)
     protected val reportRepository = mockk<ReportRepository>(relaxed = true)
     protected val searchRepository = mockk<SearchRepository>(relaxed = true)

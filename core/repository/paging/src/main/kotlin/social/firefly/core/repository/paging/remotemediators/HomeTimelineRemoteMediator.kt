@@ -6,13 +6,15 @@ import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
 import social.firefly.common.Rel
 import social.firefly.core.database.model.entities.statusCollections.HomeTimelineStatusWrapper
-import social.firefly.core.datastore.UserPreferencesDatastore
+import social.firefly.core.datastore.UserPreferencesDatastoreManager
 import social.firefly.core.model.paging.StatusPagingWrapper
 import social.firefly.core.repository.mastodon.DatabaseDelegate
 import social.firefly.core.repository.mastodon.TimelineRepository
@@ -27,7 +29,7 @@ class HomeTimelineRemoteMediator(
     private val saveStatusToDatabase: SaveStatusToDatabase,
     private val databaseDelegate: DatabaseDelegate,
     private val getInReplyToAccountNames: GetInReplyToAccountNames,
-    private val userPreferencesDatastore: UserPreferencesDatastore,
+    private val userPreferencesDatastoreManager: UserPreferencesDatastoreManager,
 ) : RemoteMediator<Int, HomeTimelineStatusWrapper>() {
 
     private var firstRefreshHasHappened = false
@@ -107,6 +109,7 @@ class HomeTimelineRemoteMediator(
         }
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     private suspend fun fetchRefresh(
         state: PagingState<Int, HomeTimelineStatusWrapper>,
     ): StatusPagingWrapper {
@@ -119,7 +122,9 @@ class HomeTimelineRemoteMediator(
             val lastSeenId = CompletableDeferred<String>()
             with(CoroutineScope(coroutineContext)) {
                 launch {
-                    userPreferencesDatastore.lastSeenHomeStatusId.collectLatest {
+                    userPreferencesDatastoreManager.activeUserDatastore.flatMapLatest {
+                        it.lastSeenHomeStatusId
+                    }.collectLatest {
                         lastSeenId.complete(it)
                         cancel()
                     }

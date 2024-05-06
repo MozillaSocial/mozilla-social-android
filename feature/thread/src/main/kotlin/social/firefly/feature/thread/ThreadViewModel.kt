@@ -8,6 +8,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.update
@@ -22,7 +24,7 @@ import social.firefly.common.utils.edit
 import social.firefly.core.analytics.FeedLocation
 import social.firefly.core.analytics.ThreadAnalytics
 import social.firefly.core.datastore.UserPreferences
-import social.firefly.core.datastore.UserPreferencesDatastore
+import social.firefly.core.datastore.UserPreferencesDatastoreManager
 import social.firefly.core.model.Status
 import social.firefly.core.model.Thread
 import social.firefly.core.ui.postcard.DepthLinesUiState
@@ -38,7 +40,7 @@ class ThreadViewModel(
     private val getThread: GetThread,
     private val mainStatusId: String,
     getLoggedInUserAccountId: GetLoggedInUserAccountId,
-    private val userPreferences: UserPreferencesDatastore,
+    private val userPreferencesDatastoreManager: UserPreferencesDatastoreManager,
 ) : ViewModel(), ThreadInteractions {
 
     private val loggedInAccountId = getLoggedInUserAccountId()
@@ -70,7 +72,9 @@ class ThreadViewModel(
     private var cachedData: ThreadPostCardCollection? = null
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    val threadType = userPreferences.threadType.mapLatest {
+    val threadType = userPreferencesDatastoreManager.activeUserDatastore.flatMapLatest {
+        it.threadType
+    }.mapLatest {
         when (it) {
             social.firefly.core.datastore.UserPreferences.ThreadType.LIST -> {
                 ThreadType.LIST
@@ -254,7 +258,7 @@ class ThreadViewModel(
 
     override fun onThreadTypeSelected(threadType: ThreadType) {
         viewModelScope.launch {
-            userPreferences.saveThreadType(
+            userPreferencesDatastoreManager.activeUserDatastore.first().saveThreadType(
                 when (threadType) {
                     ThreadType.LIST -> UserPreferences.ThreadType.LIST
                     ThreadType.DIRECT_REPLIES -> UserPreferences.ThreadType.DIRECT_REPLIES_LIST
