@@ -42,7 +42,7 @@ class MainViewModel(
 
             AppState.navigationCollectionCompletable.await()
 
-            if (userPreferencesDatastoreManager.hasDataStores) {
+            if (userPreferencesDatastoreManager.isLoggedInToAtLeastOneAccount) {
                 navigateTo(NavigationDestination.Tabs)
                 handleIntent(intent)
             } else {
@@ -52,7 +52,7 @@ class MainViewModel(
     }
 
     fun handleIntent(intent: Intent) {
-        if (!userPreferencesDatastoreManager.hasDataStores) return
+        if (!userPreferencesDatastoreManager.isLoggedInToAtLeastOneAccount) return
         when {
             intent.action == Intent.ACTION_SEND -> {
                 when {

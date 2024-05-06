@@ -3,6 +3,7 @@ package social.firefly.core.datastore
 import android.content.Context
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import java.io.File
 
@@ -11,7 +12,7 @@ class UserPreferencesDatastoreManager(
     private val appPreferencesDatastore: AppPreferencesDatastore,
 ) {
     private val dataStores: MutableList<UserPreferencesDatastore> = mutableListOf()
-    val hasDataStores: Boolean
+    val isLoggedInToAtLeastOneAccount: Boolean
         get() = dataStores.isNotEmpty()
 
     // counter exists to ensure we don't create a datastore preferences with a name that already exists.
@@ -22,6 +23,7 @@ class UserPreferencesDatastoreManager(
     private var counter = 0
 
     init {
+        removeLegacyUserPreferences()
         val dataStoreFileNames = DatastoreUtils.getAllUserPreferencesDatastoreFilesNames(context)
         dataStoreFileNames.forEach { fileName ->
             dataStores.add(
@@ -66,13 +68,27 @@ class UserPreferencesDatastoreManager(
         appPreferencesDatastore.saveActiveUserDatastoreFilename(fileName)
     }
 
-    fun deleteDataStore(
+    suspend fun deleteDataStore(
         dataStore: UserPreferencesDatastore,
     ) {
+        // if we are deleting the current user account, update the active user
+        if (appPreferencesDatastore.activeUserDatastoreFilename.first() == dataStore.fileName) {
+            dataStores.filterNot { it == dataStore }.firstOrNull()?.let {
+                appPreferencesDatastore.saveActiveUserDatastoreFilename(it.fileName)
+            } ?: appPreferencesDatastore.saveActiveUserDatastoreFilename("")
+        }
         val datastoreDir = File(context.filesDir, "datastore")
         val dataStoreFile = File(datastoreDir, dataStore.fileName)
         dataStoreFile.delete()
         dataStores.remove(dataStore)
+    }
+
+    private fun removeLegacyUserPreferences() {
+        val datastoreDir = File(context.filesDir, "datastore")
+        val dataStoreFile = File(datastoreDir, "userPreferences.pb")
+        if (dataStoreFile.exists()) {
+            dataStoreFile.delete()
+        }
     }
 }
 

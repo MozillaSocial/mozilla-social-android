@@ -25,11 +25,13 @@ class Logout(
     @OptIn(DelicateCoroutinesApi::class)
     operator fun invoke() =
         GlobalScope.launch(ioDispatcher) {
-            navigateTo(NavigationDestination.Auth)
             appScope.reset()
             userPreferencesDatastoreManager.deleteDataStore(
                 userPreferencesDatastoreManager.activeUserDatastore.first()
             )
+            if (!userPreferencesDatastoreManager.isLoggedInToAtLeastOneAccount) {
+                navigateTo(NavigationDestination.Auth)
+            }
             databaseDelegate.clearAllTables()
         }
 }
