@@ -10,6 +10,7 @@ import kotlinx.coroutines.launch
 import social.firefly.common.loadResource
 import social.firefly.common.utils.StringFactory
 import social.firefly.core.analytics.SettingsAnalytics
+import social.firefly.core.datastore.UserPreferencesDatastoreManager
 import social.firefly.core.model.Account
 import social.firefly.core.navigation.usecases.OpenLink
 import social.firefly.core.repository.mastodon.AccountRepository
@@ -25,6 +26,7 @@ class AccountSettingsViewModel(
     getDomain: GetDomain,
     getLoggedInUserAccountId: GetLoggedInUserAccountId,
     accountRepository: AccountRepository,
+    userPreferencesDatastoreManager: UserPreferencesDatastoreManager,
 ) : ViewModel(), AccountSettingsInteractions {
 
     private val userAccountId: String = getLoggedInUserAccountId()
@@ -47,6 +49,10 @@ class AccountSettingsViewModel(
         accountRepository.getAccount(userAccountId).toUserHeader()
     }
 
+    val otherAccounts = userPreferencesDatastoreManager.dataStores.map {
+        //TODO get other accounts
+//        accountRepository.getAccount()
+    }
 
     override fun onLogoutClicked() {
         analytics.logoutClicked()

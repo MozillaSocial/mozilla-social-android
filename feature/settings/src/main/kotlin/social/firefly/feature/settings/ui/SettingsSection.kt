@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -17,10 +18,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.semantics.isTraversalGroup
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import social.firefly.core.designsystem.icon.FfIcons
 import social.firefly.core.designsystem.theme.FfSpacing
 import social.firefly.core.designsystem.theme.FfTheme
+import social.firefly.core.ui.common.utils.PreviewTheme
 
 @Composable
 internal fun SettingsSection(
@@ -46,9 +49,10 @@ internal fun SettingsSection(
                 painter = iconPainter,
                 contentDescription = null,
             )
+            Spacer(modifier = Modifier.width(FfSpacing.sm))
         }
         Column(
-            modifier = Modifier.padding(FfSpacing.sm),
+            modifier = Modifier.padding(end = FfSpacing.sm),
         ) {
             Text(
                 text = title,
@@ -64,5 +68,28 @@ internal fun SettingsSection(
         }
         Spacer(modifier = Modifier.weight(1f))
         Icon(painter = FfIcons.chevronRight(), contentDescription = null)
+    }
+}
+
+@Preview
+@Composable
+private fun SettingsSectionPreview() {
+    PreviewTheme {
+        SettingsSection(
+            title = "title",
+            subtitle = "subtitle",
+            iconPainter = FfIcons.bookmark()
+        ) {}
+    }
+}
+
+@Preview
+@Composable
+private fun SettingsSectionPreviewNoIcon() {
+    PreviewTheme {
+        SettingsSection(
+            title = "title",
+            subtitle = "subtitle",
+        ) {}
     }
 }

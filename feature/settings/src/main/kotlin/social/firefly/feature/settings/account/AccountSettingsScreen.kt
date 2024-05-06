@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -69,12 +70,18 @@ private fun AccountSettingsScreen(
         ) {
             UserHeader(userHeader = userHeader.data)
 
+            Spacer(modifier = Modifier.height(FfSpacing.md))
+
             ManageAccount(
                 subtitle = subtitle,
                 onClick = accountSettingsInteractions::onManageAccountClicked
             )
 
             SignoutButton(onLogoutClicked = accountSettingsInteractions::onLogoutClicked)
+
+            Spacer(modifier = Modifier.height(FfSpacing.md))
+
+            AddAccount()
         }
     }
 }
@@ -84,7 +91,6 @@ private fun UserHeader(
     userHeader: UserHeader?,
 ) {
     Row(
-        modifier = Modifier.padding(FfSpacing.sm),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Avatar(userHeader?.avatarUrl)
@@ -127,13 +133,18 @@ private fun SignoutButton(
     onLogoutClicked: () -> Unit,
 ) {
     FfButtonSecondary(
-        modifier =
-        Modifier
+        modifier = Modifier
             .wrapContentHeight()
-            .fillMaxWidth()
-            .padding(8.dp),
+            .fillMaxWidth(),
         onClick = onLogoutClicked,
     ) { Text(text = stringResource(id = R.string.sign_out)) }
+}
+
+@Composable
+private fun AddAccount() {
+    FfButtonSecondary(onClick = { /*TODO*/ }) {
+        Text(text = stringResource(id = R.string.add_account))
+    }
 }
 
 @Preview

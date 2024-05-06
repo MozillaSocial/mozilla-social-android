@@ -2,18 +2,22 @@ package social.firefly.core.datastore
 
 import android.content.Context
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.update
 import java.io.File
 
 class UserPreferencesDatastoreManager(
     private val context: Context,
     private val appPreferencesDatastore: AppPreferencesDatastore,
 ) {
-    private val dataStores: MutableList<UserPreferencesDatastore> = mutableListOf()
+    private val _dataStores = MutableStateFlow<List<UserPreferencesDatastore>>(emptyList())
+    val dataStores = _dataStores.asStateFlow()
     val isLoggedInToAtLeastOneAccount: Boolean
-        get() = dataStores.isNotEmpty()
+        get() = dataStores.value.isNotEmpty()
 
     // counter exists to ensure we don't create a datastore preferences with a name that already exists.
     // this could happen if the user logs out and logs back in with the same account.
@@ -26,19 +30,19 @@ class UserPreferencesDatastoreManager(
         removeLegacyUserPreferences()
         val dataStoreFileNames = DatastoreUtils.getAllUserPreferencesDatastoreFilesNames(context)
         dataStoreFileNames.forEach { fileName ->
-            dataStores.add(
-                UserPreferencesDatastore(
+            _dataStores.update {
+                it + UserPreferencesDatastore(
                     fileName = fileName,
                     EmptyUserPreferencesSerializer,
                     context = context,
                 )
-            )
+            }
         }
     }
 
     val activeUserDatastore: Flow<UserPreferencesDatastore> =
         appPreferencesDatastore.activeUserDatastoreFilename.map { activeDatastoreId ->
-            dataStores.find { it.fileName == activeDatastoreId }
+            dataStores.value.find { it.fileName == activeDatastoreId }
         }.filterNotNull()
 
     suspend fun createNewUserDatastore(
@@ -50,11 +54,11 @@ class UserPreferencesDatastoreManager(
         val fileName = "$domain-$accountId-$counter-prefs.pb"
         counter++
 
-        if (dataStores.find { it.fileName == fileName } != null)
+        if (dataStores.value.find { it.fileName == fileName } != null)
             throw Exception("prefs file already exists")
 
-        dataStores.add(
-            UserPreferencesDatastore(
+        _dataStores.update {
+            it + UserPreferencesDatastore(
                 fileName = fileName,
                 serializer = UserPreferencesSerializer(
                     domain = domain,
@@ -63,7 +67,7 @@ class UserPreferencesDatastoreManager(
                 ),
                 context = context,
             )
-        )
+        }
 
         appPreferencesDatastore.saveActiveUserDatastoreFilename(fileName)
     }
@@ -73,14 +77,16 @@ class UserPreferencesDatastoreManager(
     ) {
         // if we are deleting the current user account, update the active user
         if (appPreferencesDatastore.activeUserDatastoreFilename.first() == dataStore.fileName) {
-            dataStores.filterNot { it == dataStore }.firstOrNull()?.let {
+            dataStores.value.filterNot { it == dataStore }.firstOrNull()?.let {
                 appPreferencesDatastore.saveActiveUserDatastoreFilename(it.fileName)
             } ?: appPreferencesDatastore.saveActiveUserDatastoreFilename("")
         }
         val datastoreDir = File(context.filesDir, "datastore")
         val dataStoreFile = File(datastoreDir, dataStore.fileName)
         dataStoreFile.delete()
-        dataStores.remove(dataStore)
+        _dataStores.update {
+            it - dataStore
+        }
     }
 
     private fun removeLegacyUserPreferences() {
