@@ -40,6 +40,7 @@ class Login(
                 clientName = CLIENT_NAME,
                 redirectUris = REDIRECT_URI,
                 scopes = SCOPES,
+                baseUrl = host,
             )
             clientId = application.clientId!!
             clientSecret = application.clientSecret!!
@@ -70,6 +71,7 @@ class Login(
                 redirectUri = REDIRECT_URI,
                 code = code,
                 grantType = AUTHORIZATION_CODE,
+                baseUrl = host,
             )
 
             Timber.tag(TAG).d("access token received")

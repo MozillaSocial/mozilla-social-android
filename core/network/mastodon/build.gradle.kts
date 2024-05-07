@@ -19,6 +19,11 @@ dependencies {
     implementation(libs.square.okhttp)
     implementation(libs.square.okhttp.logging)
 
+    implementation(libs.ktor.core)
+    implementation(libs.ktor.okhttp)
+    implementation(libs.ktor.content.negotiation)
+    implementation(libs.ktor.json)
+
     implementation(libs.kotlinx.datetime)
 
     implementation(libs.androidx.navigation.compose)
