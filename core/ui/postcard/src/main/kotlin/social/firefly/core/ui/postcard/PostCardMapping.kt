@@ -59,7 +59,10 @@ private fun Status.toMainPostCardUiState(
         isBookmarked = isBookmarked ?: false,
         accountId = account.accountId,
         isBeingDeleted = isBeingDeleted,
-        postContentUiState = toPostContentUiState(currentUserAccountId),
+        postContentUiState = toPostContentUiState(
+            statusId = statusId,
+            currentUserAccountId = currentUserAccountId
+        ),
         overflowDropDownType = when {
             currentUserAccountId == account.accountId -> OverflowDropDownType.USER
             else -> OverflowDropDownType.NOT_USER
@@ -68,78 +71,13 @@ private fun Status.toMainPostCardUiState(
         shouldShowUnfavoriteConfirmation = shouldShowUnfavoriteConfirmation,
     )
 
-fun Status.toDropDownOptions(
-    isUsersPost: Boolean,
-    postCardInteractions: PostCardInteractions
-): List<DropDownOption> {
-    return buildList {
-        if (isUsersPost) {
-            add(
-                DropDownOption(
-                    text = StringFactory.resource(resId = social.firefly.core.ui.postcard.R.string.edit_post),
-                    onOptionClicked = { postCardInteractions.onOverflowEditClicked(statusId) },
-                )
-            )
-            add(
-                DropDownOption(
-                    text = StringFactory.resource(resId = R.string.delete_post),
-                    onOptionClicked = { postCardInteractions.onOverflowDeleteClicked(statusId) }
-                )
-            )
-        } else {
-            add(
-                DropDownOption(
-                    text = StringFactory.resource(
-                        R.string.mute_user,
-                        account.displayName
-                    ),
-                    onOptionClicked = {
-                        postCardInteractions.onOverflowMuteClicked(
-                            accountId = account.accountId,
-                            statusId = statusId,
-                        )
-                    },
-                )
-            )
-
-            add(
-                DropDownOption(
-                    text = StringFactory.resource(
-                        R.string.block_user,
-                        account.displayName
-                    ),
-                    onOptionClicked = {
-                        postCardInteractions.onOverflowBlockClicked(
-                            accountId = account.accountId,
-                            statusId = statusId,
-                        )
-                    },
-                )
-            )
-            add(
-                DropDownOption(
-                    text = StringFactory.resource(
-                        R.string.report_user,
-                        account.displayName
-                    ),
-                    onOptionClicked = {
-                        postCardInteractions.onOverflowReportClicked(
-                            accountId = account.accountId,
-                            accountHandle = account.acct,
-                            statusId = statusId,
-                        )
-                    }
-                ),
-            )
-        }
-    }
-}
-
 fun Status.toPostContentUiState(
+    statusId: String,
     currentUserAccountId: String,
     contentWarningOverride: String? = null,
     onlyShowPreviewOfText: Boolean = false,
 ): PostContentUiState = PostContentUiState(
+    statusId = statusId,
     pollUiState = poll?.toPollUiState(
         isUserCreatedPoll = currentUserAccountId == account.accountId,
     ),

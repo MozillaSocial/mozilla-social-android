@@ -134,40 +134,30 @@ sealed class NavigationDestination(
     }
 
     data class Media(
-        val attachments: List<Attachment>,
+        val statusId: String,
         val startIndex: Int = 0,
     ) : NavigationDestination(
         route = ROUTE,
     ) {
         fun NavController.navigateToMedia(navOptions: NavOptions? = null) {
-            val mediaBundle = MediaBundle(
-                // remove blur hashes because the characters in the hash can mess up serialization
-                attachments = attachments.map {
-                    when (it) {
-                        is Attachment.Image -> it.copy(blurHash = null)
-                        is Attachment.Audio -> it.copy(blurHash = null)
-                        is Attachment.Gifv -> it.copy(blurHash = null)
-                        is Attachment.Video -> it.copy(blurHash = null)
-                        is Attachment.Unknown -> it.copy(blurHash = null)
-                    }
-                },
-                startIndex = startIndex,
-            )
-            navigate(route(Json.encodeToString(mediaBundle)), navOptions)
+            navigate(route(statusId, startIndex.toString()), navOptions)
         }
-
-        @Serializable
-        data class MediaBundle(
-            val attachments: List<Attachment>,
-            val startIndex: Int = 0,
-        )
 
         companion object {
             private const val ROUTE = "media"
-            const val NAV_PARAM_BUNDLE = "bundle"
-            val fullRoute = route("{$NAV_PARAM_BUNDLE}")
+            const val NAV_PARAM_STATUS_ID = "statusId"
+            const val NAV_PARAM_START_INDEX = "startIndex"
+            val fullRoute = route(
+                statusId = "{$NAV_PARAM_STATUS_ID}",
+                startIndex = "{$NAV_PARAM_START_INDEX}"
+            )
 
-            private fun route(paramValue: String) = "$ROUTE?$NAV_PARAM_BUNDLE=$paramValue"
+            private fun route(
+                statusId: String,
+                startIndex: String,
+            ) = "$ROUTE?" +
+                    "$NAV_PARAM_STATUS_ID=$statusId" +
+                    "&$NAV_PARAM_START_INDEX=$startIndex"
         }
     }
 

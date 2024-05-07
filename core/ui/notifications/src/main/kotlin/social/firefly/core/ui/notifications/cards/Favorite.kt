@@ -34,6 +34,7 @@ private fun FavoriteNotificationPreview() {
                 title = StringFactory.literal("John favorited your post:"),
                 avatarUrl = "",
                 postContentUiState = PostContentUiState(
+                    statusId = "",
                     pollUiState = null,
                     statusTextHtml = "this is a status",
                     mediaAttachments = emptyList(),
