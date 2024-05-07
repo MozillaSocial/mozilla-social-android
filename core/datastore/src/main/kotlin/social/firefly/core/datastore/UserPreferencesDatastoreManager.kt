@@ -49,6 +49,8 @@ class UserPreferencesDatastoreManager(
         domain: String,
         accessToken: String,
         accountId: String,
+        userName: String,
+        avatarUrl: String,
     ) {
         require(UserPreferencesDatastore.HOST_NAME_REGEX.toRegex().matches(domain))
         val fileName = "$domain-$accountId-$counter-prefs.pb"
@@ -57,17 +59,20 @@ class UserPreferencesDatastoreManager(
         if (dataStores.value.find { it.fileName == fileName } != null)
             throw Exception("prefs file already exists")
 
-        _dataStores.update {
-            it + UserPreferencesDatastore(
-                fileName = fileName,
-                serializer = UserPreferencesSerializer(
-                    domain = domain,
-                    accessToken = accessToken,
-                    accountId = accountId,
-                ),
-                context = context,
-            )
+        val newDataStore = UserPreferencesDatastore(
+            fileName = fileName,
+            serializer = UserPreferencesSerializer(
+                domain = domain,
+                accessToken = accessToken,
+                accountId = accountId,
+            ),
+            context = context,
+        ).apply {
+            saveUserName(userName)
+            saveAvatarUrl(avatarUrl)
         }
+
+        _dataStores.update { it + newDataStore }
 
         appPreferencesDatastore.saveActiveUserDatastoreFilename(fileName)
     }

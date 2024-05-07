@@ -40,34 +40,34 @@ class UserPreferencesDatastore internal constructor(
 
     init {
         GlobalScope.launch {
-            // This forces a write to disk.  Just creating the datastore with default values
-            // does not cause the data store to persist to disk.  A filed must be updated.
-            dataStore.updateData {
-                it.toBuilder().setDummyValue(true).build()
-            }
             preloadData()
         }
     }
 
-    val accessToken: Flow<String> =
-        dataStore.data.mapLatest {
-            it.accessToken
-        }
+    val accessToken: Flow<String> = dataStore.data.mapLatest { it.accessToken }
+    val domain: Flow<String> = dataStore.data.mapLatest { it.domain }
+    val accountId: Flow<String> = dataStore.data.mapLatest { it.accountId }
+    val avatarUrl: Flow<String> = dataStore.data.mapLatest { it.avatarUrl }
+    val userName: Flow<String> = dataStore.data.mapLatest { it.userName }
+    val serializedPushKeys: Flow<String> = dataStore.data.mapLatest { it.serializedPushKeys }
+    val lastSeenHomeStatusId: Flow<String> = dataStore.data.mapLatest { it.lastSeenHomeStatusId }
+    val threadType: Flow<ThreadType> = dataStore.data.mapLatest { it.threadType }.distinctUntilChanged()
 
-    val domain: Flow<String> =
-        dataStore.data.mapLatest {
-            it.domain
+    suspend fun saveAvatarUrl(url: String) {
+        dataStore.updateData {
+            it.toBuilder()
+                .setAvatarUrl(url)
+                .build()
         }
+    }
 
-    val accountId: Flow<String> =
-        dataStore.data.mapLatest {
-            it.accountId
+    suspend fun saveUserName(userName: String) {
+        dataStore.updateData {
+            it.toBuilder()
+                .setUserName(userName)
+                .build()
         }
-
-    val serializedPushKeys: Flow<String> =
-        dataStore.data.mapLatest {
-            it.serializedPushKeys
-        }.distinctUntilChanged()
+    }
 
     suspend fun saveSerializedPushKeyPair(serializedPushKeyPair: String) {
         dataStore.updateData {
@@ -77,11 +77,6 @@ class UserPreferencesDatastore internal constructor(
         }
     }
 
-    val lastSeenHomeStatusId: Flow<String> =
-        dataStore.data.mapLatest {
-            it.lastSeenHomeStatusId
-        }.distinctUntilChanged()
-
     suspend fun saveLastSeenHomeStatusId(statusId: String) {
         dataStore.updateData {
             it.toBuilder()
@@ -89,11 +84,6 @@ class UserPreferencesDatastore internal constructor(
                 .build()
         }
     }
-
-    val threadType: Flow<ThreadType> =
-        dataStore.data.mapLatest {
-            it.threadType
-        }.distinctUntilChanged()
 
     suspend fun saveThreadType(threadType: ThreadType) {
         dataStore.updateData {

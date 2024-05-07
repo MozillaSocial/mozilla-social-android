@@ -83,7 +83,9 @@ class Login(
             userPreferencesDatastoreManager.createNewUserDatastore(
                 domain = host,
                 accessToken = accessToken,
-                accountId = account.accountId
+                accountId = account.accountId,
+                userName = account.displayName,
+                avatarUrl = account.avatarUrl,
             )
             navigateTo(NavigationDestination.Tabs)
         } catch (exception: Exception) {

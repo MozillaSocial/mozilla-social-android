@@ -17,7 +17,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -40,14 +39,17 @@ import social.firefly.feature.settings.ui.SettingsSection
 internal fun AccountSettingsScreen(
     viewModel: AccountSettingsViewModel = koinViewModel()
 ) {
-    val userHeader by viewModel.userHeader.collectAsStateWithLifecycle(
-        initialValue = Resource.Loading(),
+    val activeAccount: LoggedInAccount by viewModel.activeAccount.collectAsStateWithLifecycle(
+        initialValue = LoggedInAccount()
     )
-    val subtitle: StringFactory? by viewModel.subtitle.collectAsStateWithLifecycle(initialValue = null)
+
+    val otherAccounts: List<LoggedInAccount> by viewModel.otherAccounts.collectAsStateWithLifecycle(
+        initialValue = emptyList()
+    )
 
     AccountSettingsScreen(
-        userHeader = userHeader,
-        subtitle = subtitle,
+        activeAccount = activeAccount,
+        otherAccounts = otherAccounts,
         accountSettingsInteractions = viewModel,
     )
 
@@ -58,8 +60,8 @@ internal fun AccountSettingsScreen(
 
 @Composable
 private fun AccountSettingsScreen(
-    userHeader: Resource<UserHeader>,
-    subtitle: StringFactory?,
+    activeAccount: LoggedInAccount,
+    otherAccounts: List<LoggedInAccount>,
     accountSettingsInteractions: AccountSettingsInteractions,
 ) {
     FfSurface {
@@ -68,13 +70,13 @@ private fun AccountSettingsScreen(
                 .padding(horizontal = FfSpacing.md),
             title = stringResource(id = R.string.account_settings_title)
         ) {
-            UserHeader(userHeader = userHeader.data)
+            UserHeader(account = activeAccount)
 
             Spacer(modifier = Modifier.height(FfSpacing.md))
 
             ManageAccount(
-                subtitle = subtitle,
-                onClick = accountSettingsInteractions::onManageAccountClicked
+                account = activeAccount,
+                onClick = { accountSettingsInteractions.onManageAccountClicked(activeAccount.domain) }
             )
 
             SignoutButton(onLogoutClicked = accountSettingsInteractions::onLogoutClicked)
@@ -88,15 +90,15 @@ private fun AccountSettingsScreen(
 
 @Composable
 private fun UserHeader(
-    userHeader: UserHeader?,
+    account: LoggedInAccount,
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Avatar(userHeader?.avatarUrl)
+        Avatar(account.avatarUrl)
         Spacer(modifier = Modifier.width(8.dp))
         Text(
-            text = userHeader?.accountName ?: "",
+            text = account.userName,
             style = FfTheme.typography.labelLarge,
         )
     }
@@ -118,12 +120,12 @@ private fun Avatar(
 
 @Composable
 private fun ManageAccount(
-    subtitle: StringFactory?,
+    account: LoggedInAccount,
     onClick: () -> Unit,
 ) {
     SettingsSection(
         title = stringResource(id = R.string.manage_account),
-        subtitle = subtitle?.build(LocalContext.current),
+        subtitle = stringResource(id = R.string.manage_your_account, account.domain),
         onClick = onClick,
     )
 }
@@ -154,18 +156,9 @@ private fun AccountSettingsScreenPreview() {
         modules = listOf(navigationModule)
     ) {
         AccountSettingsScreen(
-            userHeader = Resource.Loaded(
-                UserHeader(
-                    avatarUrl = "",
-                    accountName = "account",
-                )
-            ),
-            subtitle = StringFactory.literal("subtitle"),
-            accountSettingsInteractions = object : AccountSettingsInteractions {
-                override fun onScreenViewed() = Unit
-                override fun onLogoutClicked() = Unit
-                override fun onManageAccountClicked() = Unit
-            }
+            activeAccount = LoggedInAccount(),
+            otherAccounts = emptyList(),
+            accountSettingsInteractions = AccountSettingsInteractionsNoOp
         )
     }
 }
