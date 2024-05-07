@@ -5,6 +5,7 @@ import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
+import retrofit2.http.Url
 import social.firefly.core.network.mastodon.model.NetworkAccessToken
 import social.firefly.core.network.mastodon.model.NetworkAccount
 import social.firefly.core.network.mastodon.model.NetworkApplication
@@ -22,6 +23,7 @@ interface AppApi {
     @GET("/api/v1/accounts/verify_credentials")
     suspend fun verifyCredentials(
         @Header("Authorization") authHeader: String,
+        @Url baseUrl: String,
     ): NetworkAccount
 
     @FormUrlEncoded

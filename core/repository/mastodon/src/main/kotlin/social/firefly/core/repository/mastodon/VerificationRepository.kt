@@ -37,7 +37,9 @@ class VerificationRepository(
 
     suspend fun verifyUserCredentials(
         accessToken: String,
+        baseUrl: String,
     ): Account = appApi.verifyCredentials(
-        authHeader = "Bearer $accessToken"
+        authHeader = "Bearer $accessToken",
+        baseUrl = baseUrl,
     ).toExternalModel()
 }

@@ -74,7 +74,10 @@ class Login(
 
             Timber.tag(TAG).d("access token received")
 
-            val account: Account = verificationRepository.verifyUserCredentials(accessToken)
+            val account: Account = verificationRepository.verifyUserCredentials(
+                accessToken = accessToken,
+                baseUrl = host,
+            )
             userPreferencesDatastoreManager.createNewUserDatastore(
                 domain = host,
                 accessToken = accessToken,
