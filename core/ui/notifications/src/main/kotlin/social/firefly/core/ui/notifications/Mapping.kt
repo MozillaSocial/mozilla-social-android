@@ -6,7 +6,7 @@ import social.firefly.core.model.Notification
 import social.firefly.core.ui.postcard.toPostContentUiState
 import java.lang.RuntimeException
 
-@Suppress("TooGenericExceptionThrown")
+@Suppress("TooGenericExceptionThrown", "LongMethod")
 fun Notification.toUiState(
     currentUserAccountId: String,
 ): NotificationUiState = when (this) {
