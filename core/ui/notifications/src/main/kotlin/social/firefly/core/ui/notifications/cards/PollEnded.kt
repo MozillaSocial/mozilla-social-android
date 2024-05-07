@@ -36,6 +36,7 @@ private fun PollEndedNotificationPreview() {
                 title = StringFactory.literal("A poll ended:"),
                 avatarUrl = "",
                 postContentUiState = PostContentUiState(
+                    statusId = "",
                     pollUiState = PollUiState(
                         pollOptions =
                         listOf(

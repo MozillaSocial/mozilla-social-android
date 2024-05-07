@@ -34,6 +34,7 @@ private fun NewStatusNotificationPreview() {
                 title = StringFactory.literal("John created a new post:"),
                 avatarUrl = "",
                 postContentUiState = PostContentUiState(
+                    statusId = "",
                     pollUiState = null,
                     statusTextHtml = "this is a status",
                     mediaAttachments = emptyList(),

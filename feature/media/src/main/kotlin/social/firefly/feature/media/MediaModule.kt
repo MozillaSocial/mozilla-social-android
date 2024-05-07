@@ -12,7 +12,9 @@ val mediaModule = module {
     viewModel { parameters ->
         MediaViewModel(
             showSnackbar = get(),
-            startIndex = parameters[0]
+            statusRepository = get(),
+            statusId = parameters[0],
+            startIndex = parameters[1]
         )
     }
 }

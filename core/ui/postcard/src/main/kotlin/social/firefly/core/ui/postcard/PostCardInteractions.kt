@@ -47,7 +47,7 @@ interface PostCardInteractions : PollInteractions, HtmlContentInteractions {
     fun onAccountImageClicked(accountId: String)
 
     fun onMediaClicked(
-        attachments: List<Attachment>,
+        statusId: String,
         index: Int,
     )
 
@@ -83,7 +83,7 @@ object PostCardInteractionsNoOp: PostCardInteractions {
 
     override fun onAccountImageClicked(accountId: String) = Unit
 
-    override fun onMediaClicked(attachments: List<Attachment>, index: Int) = Unit
+    override fun onMediaClicked(statusId: String, index: Int) = Unit
 
     override fun onHideRepliesClicked(statusId: String) = Unit
 }

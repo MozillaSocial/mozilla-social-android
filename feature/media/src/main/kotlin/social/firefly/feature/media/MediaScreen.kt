@@ -67,13 +67,20 @@ import kotlin.math.max
 
 @Composable
 internal fun MediaScreen(
-    mediaBundle: NavigationDestination.Media.MediaBundle,
-    viewModel: MediaViewModel = koinViewModel(parameters = { parametersOf(mediaBundle.startIndex) })
+    statusId: String,
+    startIndex: Int,
+    viewModel: MediaViewModel = koinViewModel(parameters = {
+        parametersOf(
+            statusId,
+            startIndex,
+        )
+    })
 ) {
     val index by viewModel.index.collectAsStateWithLifecycle()
+    val attachments by viewModel.attachments.collectAsStateWithLifecycle()
 
     MediaScreen(
-        attachments = mediaBundle.attachments,
+        attachments = attachments,
         selectedIndex = index,
         mediaInteractions = viewModel,
     )
@@ -86,7 +93,7 @@ private fun MediaScreen(
     selectedIndex: Int,
     mediaInteractions: MediaInteractions,
 ) {
-    val attachment = attachments[selectedIndex]
+    val attachment = attachments.getOrNull(selectedIndex)
     val context = LocalContext.current
     var altTextVisible by remember {
         mutableStateOf(false)
@@ -140,7 +147,7 @@ private fun MediaScreen(
                     containerColor = FfTheme.colors.layer1.copy(alpha = 0.5f)
                 ),
                 actions = {
-                    attachments[pagerState.currentPage].description?.let {
+                    attachments.getOrNull(pagerState.currentPage)?.description?.let {
                         IconButton(onClick = { altTextVisible = !altTextVisible }) {
                             MediumTextLabel(
                                 text = stringResource(id = R.string.alt_text_label)
@@ -150,7 +157,8 @@ private fun MediaScreen(
 
                     IconButton(
                         onClick = {
-                            val uri = Uri.parse(attachments[pagerState.currentPage].url)
+                            val url = attachments.getOrNull(pagerState.currentPage)?.url ?: return@IconButton
+                            val uri = Uri.parse(url)
                             val fileName = uri.lastPathSegment
 
                             DownloadManager.Request(uri).apply {
@@ -177,7 +185,7 @@ private fun MediaScreen(
     }
 
 
-    attachments[pagerState.currentPage].description?.let { description ->
+    attachments.getOrNull(pagerState.currentPage)?.description?.let { description ->
         AltText(
             description = description,
             visible = altTextVisible,

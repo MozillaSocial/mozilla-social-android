@@ -34,6 +34,7 @@ private fun StatusUpdatedNotificationPreview() {
                 title = StringFactory.literal("John has updated their post:"),
                 avatarUrl = "",
                 postContentUiState = PostContentUiState(
+                    statusId = "",
                     pollUiState = null,
                     statusTextHtml = "this is a status",
                     mediaAttachments = emptyList(),

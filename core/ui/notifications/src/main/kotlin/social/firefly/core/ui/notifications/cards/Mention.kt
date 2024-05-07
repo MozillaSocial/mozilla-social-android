@@ -34,6 +34,7 @@ private fun MentionNotificationPreview() {
                 title = StringFactory.literal("John mentioned you:"),
                 avatarUrl = "",
                 postContentUiState = PostContentUiState(
+                    statusId = "",
                     pollUiState = null,
                     statusTextHtml = "this is a status",
                     mediaAttachments = emptyList(),
