@@ -42,6 +42,7 @@ data class DropDownOption(
 )
 
 data class PostContentUiState(
+    val statusId: String,
     val pollUiState: PollUiState?,
     val statusTextHtml: String,
     val mediaAttachments: List<Attachment>,
@@ -104,6 +105,7 @@ internal val postCardUiStatePreview = MainPostCardUiState(
     accountId = "",
     isBeingDeleted = false,
     postContentUiState = PostContentUiState(
+        statusId = "",
         pollUiState = null,
         statusTextHtml = "<p><span class=\"h-card\"><a href=\"https://mozilla.social/@obez\" class=\"u-url mention\" rel=\"nofollow noopener noreferrer\" target=\"_blank\">@<span>obez</span></a></span> This is a text status.  Here is the text and that is all I have to say about that.</p>",
         mediaAttachments = emptyList(),

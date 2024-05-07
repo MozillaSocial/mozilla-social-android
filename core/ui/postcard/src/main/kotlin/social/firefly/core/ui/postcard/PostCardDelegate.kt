@@ -208,10 +208,13 @@ class PostCardDelegate(
         navigateTo(NavigationDestination.HashTag(hashTag))
     }
 
-    override fun onMediaClicked(attachments: List<Attachment>, index: Int) {
+    override fun onMediaClicked(
+        statusId: String,
+        index: Int,
+    ) {
         navigateTo(
             NavigationDestination.Media(
-                attachments = attachments,
+                statusId = statusId,
                 startIndex = index,
             )
         )

@@ -10,19 +10,25 @@ fun NavGraphBuilder.mediaScreen() {
     composable(
         route = NavigationDestination.Media.fullRoute,
         arguments = listOf(
-            navArgument(NavigationDestination.Media.NAV_PARAM_BUNDLE) {
+            navArgument(NavigationDestination.Media.NAV_PARAM_STATUS_ID) {
+                nullable = false
+            },
+            navArgument(NavigationDestination.Media.NAV_PARAM_START_INDEX) {
                 nullable = false
             },
         ),
     ) {
-        val bundle: String =
-            it.arguments?.getString(
-                NavigationDestination.Media.NAV_PARAM_BUNDLE,
-            )!!
+        val statusId: String = it.arguments?.getString(
+            NavigationDestination.Media.NAV_PARAM_STATUS_ID
+        )!!
 
-        val deserializedBundle: NavigationDestination.Media.MediaBundle =
-            Json.decodeFromString(bundle)
+        val startIndex: Int = it.arguments?.getString(
+            NavigationDestination.Media.NAV_PARAM_START_INDEX
+        )!!.toInt()
 
-        MediaScreen(mediaBundle = deserializedBundle)
+        MediaScreen(
+            statusId = statusId,
+            startIndex = startIndex,
+        )
     }
 }

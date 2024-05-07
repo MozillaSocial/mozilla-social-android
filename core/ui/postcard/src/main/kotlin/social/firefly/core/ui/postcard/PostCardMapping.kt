@@ -59,7 +59,10 @@ private fun Status.toMainPostCardUiState(
         isBookmarked = isBookmarked ?: false,
         accountId = account.accountId,
         isBeingDeleted = isBeingDeleted,
-        postContentUiState = toPostContentUiState(currentUserAccountId),
+        postContentUiState = toPostContentUiState(
+            statusId = statusId,
+            currentUserAccountId = currentUserAccountId
+        ),
         overflowDropDownType = when {
             currentUserAccountId == account.accountId -> OverflowDropDownType.USER
             else -> OverflowDropDownType.NOT_USER
@@ -136,10 +139,12 @@ fun Status.toDropDownOptions(
 }
 
 fun Status.toPostContentUiState(
+    statusId: String,
     currentUserAccountId: String,
     contentWarningOverride: String? = null,
     onlyShowPreviewOfText: Boolean = false,
 ): PostContentUiState = PostContentUiState(
+    statusId = statusId,
     pollUiState = poll?.toPollUiState(
         isUserCreatedPoll = currentUserAccountId == account.accountId,
     ),

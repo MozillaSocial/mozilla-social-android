@@ -34,6 +34,7 @@ private fun RepostNotificationPreview() {
                 title = StringFactory.literal("John reposted your post:"),
                 avatarUrl = "",
                 postContentUiState = PostContentUiState(
+                    statusId = "",
                     pollUiState = null,
                     statusTextHtml = "this is a status",
                     mediaAttachments = emptyList(),

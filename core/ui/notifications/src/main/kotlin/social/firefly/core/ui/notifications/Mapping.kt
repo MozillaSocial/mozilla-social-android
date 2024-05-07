@@ -15,7 +15,10 @@ fun Notification.toUiState(
         timeStamp = createdAt.timeSinceNow(),
         title = StringFactory.resource(resId = R.string.mention_title, account.displayName),
         avatarUrl = account.avatarUrl,
-        postContentUiState = status.toPostContentUiState(currentUserAccountId),
+        postContentUiState = status.toPostContentUiState(
+            statusId = status.statusId,
+            currentUserAccountId = currentUserAccountId,
+        ),
         accountId = account.accountId,
         statusId = status.statusId,
         accountName = account.displayName,
@@ -29,6 +32,7 @@ fun Notification.toUiState(
         accountId = account.accountId,
         accountName = account.displayName,
         postContentUiState = status.toPostContentUiState(
+            statusId = status.statusId,
             currentUserAccountId = currentUserAccountId,
         ),
         statusId = status.statusId,
@@ -42,6 +46,7 @@ fun Notification.toUiState(
         accountId = account.accountId,
         accountName = account.displayName,
         postContentUiState = status.toPostContentUiState(
+            statusId = status.statusId,
             currentUserAccountId = currentUserAccountId,
             contentWarningOverride = "",
             onlyShowPreviewOfText = true,
@@ -75,6 +80,7 @@ fun Notification.toUiState(
         accountId = account.accountId,
         accountName = account.displayName,
         postContentUiState = status.toPostContentUiState(
+            statusId = status.statusId,
             currentUserAccountId = currentUserAccountId,
             contentWarningOverride = "",
             onlyShowPreviewOfText = true,
@@ -90,6 +96,7 @@ fun Notification.toUiState(
         accountId = account.accountId,
         accountName = account.displayName,
         postContentUiState = status.toPostContentUiState(
+            statusId = status.statusId,
             currentUserAccountId = currentUserAccountId,
         ),
         statusId = status.statusId,
@@ -103,6 +110,7 @@ fun Notification.toUiState(
         accountId = account.accountId,
         accountName = account.displayName,
         postContentUiState = status.toPostContentUiState(
+            statusId = status.statusId,
             currentUserAccountId = currentUserAccountId,
         ),
         statusId = status.statusId,
