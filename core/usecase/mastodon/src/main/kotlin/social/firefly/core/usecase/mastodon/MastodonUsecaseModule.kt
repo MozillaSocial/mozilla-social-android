@@ -19,6 +19,7 @@ import social.firefly.core.usecase.mastodon.account.UnmuteAccount
 import social.firefly.core.usecase.mastodon.account.UpdateMyAccount
 import social.firefly.core.usecase.mastodon.auth.Login
 import social.firefly.core.usecase.mastodon.auth.Logout
+import social.firefly.core.usecase.mastodon.auth.LogoutOfAllAccounts
 import social.firefly.core.usecase.mastodon.auth.SwitchActiveAccount
 import social.firefly.core.usecase.mastodon.auth.UpdateAllLoggedInAccounts
 import social.firefly.core.usecase.mastodon.followRequest.AcceptFollowRequest
@@ -57,6 +58,14 @@ val mastodonUsecaseModule =
         factoryOf(::Login)
         single {
             Logout(
+                userPreferencesDatastoreManager = get(),
+                appScope = get(),
+                databaseDelegate = get(),
+                navigateTo = get(),
+            )
+        }
+        single {
+            LogoutOfAllAccounts(
                 userPreferencesDatastoreManager = get(),
                 appScope = get(),
                 databaseDelegate = get(),

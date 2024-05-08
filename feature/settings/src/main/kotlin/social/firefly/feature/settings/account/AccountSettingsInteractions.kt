@@ -6,6 +6,7 @@ interface AccountSettingsInteractions {
     fun onManageAccountClicked(domain: String)
     fun onAddAccountClicked()
     fun onSetAccountAsActiveClicked(accountId: String, domain: String)
+    fun onLogoutOfAllAccountsClicked()
 }
 
 data object AccountSettingsInteractionsNoOp : AccountSettingsInteractions {
@@ -14,4 +15,5 @@ data object AccountSettingsInteractionsNoOp : AccountSettingsInteractions {
     override fun onManageAccountClicked(domain: String) = Unit
     override fun onAddAccountClicked() = Unit
     override fun onSetAccountAsActiveClicked(accountId: String, domain: String) = Unit
+    override fun onLogoutOfAllAccountsClicked() = Unit
 }

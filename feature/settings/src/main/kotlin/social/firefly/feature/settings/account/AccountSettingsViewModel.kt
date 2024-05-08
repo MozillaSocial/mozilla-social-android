@@ -12,6 +12,7 @@ import social.firefly.core.navigation.AuthNavigationDestination
 import social.firefly.core.navigation.usecases.NavigateTo
 import social.firefly.core.navigation.usecases.OpenLink
 import social.firefly.core.usecase.mastodon.auth.Logout
+import social.firefly.core.usecase.mastodon.auth.LogoutOfAllAccounts
 import social.firefly.core.usecase.mastodon.auth.SwitchActiveAccount
 import social.firefly.core.usecase.mastodon.auth.UpdateAllLoggedInAccounts
 import timber.log.Timber
@@ -22,7 +23,8 @@ class AccountSettingsViewModel(
     private val analytics: SettingsAnalytics,
     private val navigateTo: NavigateTo,
     private val switchActiveAccount: SwitchActiveAccount,
-    private val userPreferencesDatastoreManager: UserPreferencesDatastoreManager,
+    private val logoutOfAllAccounts: LogoutOfAllAccounts,
+    userPreferencesDatastoreManager: UserPreferencesDatastoreManager,
     updateAllLoggedInAccounts: UpdateAllLoggedInAccounts,
 ) : ViewModel(), AccountSettingsInteractions {
 
@@ -81,6 +83,12 @@ class AccountSettingsViewModel(
     override fun onSetAccountAsActiveClicked(accountId: String, domain: String) {
         viewModelScope.launch {
             switchActiveAccount(accountId, domain)
+        }
+    }
+
+    override fun onLogoutOfAllAccountsClicked() {
+        viewModelScope.launch {
+            logoutOfAllAccounts()
         }
     }
 

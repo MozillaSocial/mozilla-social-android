@@ -42,6 +42,7 @@ import social.firefly.core.ui.common.button.FfButton
 import social.firefly.core.ui.common.button.FfButtonSecondary
 import social.firefly.core.ui.common.dialog.blockAccountConfirmationDialog
 import social.firefly.core.ui.common.dialog.logoutConfirmationDialog
+import social.firefly.core.ui.common.dialog.logoutOfAllAccountsConfirmationDialog
 import social.firefly.core.ui.common.dropdown.FfDropDownItem
 import social.firefly.core.ui.common.dropdown.FfIconButtonDropDownMenu
 import social.firefly.core.ui.common.text.MediumTextLabel
@@ -118,13 +119,10 @@ private fun AccountSettingsScreen(
                 Spacer(modifier = Modifier.height(FfSpacing.md))
 
                 SignOutButton(
-                    activeUserAccount = activeAccount,
                     accountSettingsInteractions = accountSettingsInteractions,
                 )
 
                 Spacer(modifier = Modifier.height(FfSpacing.md))
-
-
             }
         }
     }
@@ -219,16 +217,10 @@ private fun Avatar(
 
 @Composable
 private fun SignOutButton(
-    activeUserAccount: LoggedInAccount,
     accountSettingsInteractions: AccountSettingsInteractions,
 ) {
-    val logoutDialog = logoutConfirmationDialog(
-        accountName = "${activeUserAccount.userName}@${activeUserAccount.domain}"
-    ) {
-        accountSettingsInteractions.onLogoutClicked(
-            accountId = activeUserAccount.accountId,
-            domain = activeUserAccount.domain,
-        )
+    val logoutDialog = logoutOfAllAccountsConfirmationDialog {
+        accountSettingsInteractions.onLogoutOfAllAccountsClicked()
     }
 
     FfButton(
@@ -263,11 +255,13 @@ private fun AccountSettingsScreenPreview() {
     ) {
         AccountSettingsScreen(
             activeAccount = LoggedInAccount(
-                userName = "John"
+                userName = "John",
+                domain = "mozilla.social"
             ),
             otherAccounts = listOf(
                 LoggedInAccount(
-                    userName = "Birdman"
+                    userName = "Birdman",
+                    domain = "mozilla.social"
                 )
             ),
             accountSettingsInteractions = AccountSettingsInteractionsNoOp
