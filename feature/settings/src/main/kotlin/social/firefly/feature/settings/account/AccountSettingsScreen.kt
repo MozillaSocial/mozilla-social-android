@@ -1,6 +1,7 @@
 package social.firefly.feature.settings.account
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -9,7 +10,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -23,16 +29,19 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import org.koin.androidx.compose.koinViewModel
-import social.firefly.common.Resource
-import social.firefly.common.utils.StringFactory
+import social.firefly.core.designsystem.icon.FfIcons
 import social.firefly.core.designsystem.theme.FfSpacing
 import social.firefly.core.designsystem.theme.FfTheme
 import social.firefly.core.navigation.navigationModule
+import social.firefly.core.ui.common.FfBadge
 import social.firefly.core.ui.common.FfSurface
+import social.firefly.core.ui.common.appbar.FfCloseableTopAppBar
+import social.firefly.core.ui.common.button.FfButton
 import social.firefly.core.ui.common.button.FfButtonSecondary
+import social.firefly.core.ui.common.text.MediumTextLabel
+import social.firefly.core.ui.common.text.SmallTextLabel
 import social.firefly.core.ui.common.utils.PreviewTheme
 import social.firefly.feature.settings.R
-import social.firefly.feature.settings.ui.SettingsColumn
 import social.firefly.feature.settings.ui.SettingsSection
 
 @Composable
@@ -58,6 +67,7 @@ internal fun AccountSettingsScreen(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun AccountSettingsScreen(
     activeAccount: LoggedInAccount,
@@ -65,25 +75,48 @@ private fun AccountSettingsScreen(
     accountSettingsInteractions: AccountSettingsInteractions,
 ) {
     FfSurface {
-        SettingsColumn(
-            modifier = Modifier
-                .padding(horizontal = FfSpacing.md),
-            title = stringResource(id = R.string.account_settings_title)
-        ) {
-            UserHeader(account = activeAccount)
-
-            Spacer(modifier = Modifier.height(FfSpacing.md))
-
-            ManageAccount(
-                account = activeAccount,
-                onClick = { accountSettingsInteractions.onManageAccountClicked(activeAccount.domain) }
+        Column {
+            FfCloseableTopAppBar(
+                title = stringResource(id = R.string.account_settings_title),
+                actions = {
+                    AddAccount(
+                        accountSettingsInteractions = accountSettingsInteractions,
+                    )
+                },
+                showDivider = true
             )
 
-            SignoutButton(onLogoutClicked = accountSettingsInteractions::onLogoutClicked)
+            Column(
+                modifier = Modifier
+                    .padding(FfSpacing.md)
+                    .verticalScroll(rememberScrollState()),
+            ) {
+                UserHeader(
+                    account = activeAccount,
+                    isTheActiveAccount = true,
+                    accountSettingsInteractions = accountSettingsInteractions,
+                )
 
-            Spacer(modifier = Modifier.height(FfSpacing.md))
+                Spacer(modifier = Modifier.height(FfSpacing.md))
 
-            AddAccount()
+                otherAccounts.forEach {
+                    UserHeader(
+                        account = it,
+                        isTheActiveAccount = false,
+                        accountSettingsInteractions = accountSettingsInteractions,
+                    )
+
+                    Spacer(modifier = Modifier.height(FfSpacing.md))
+                }
+
+                Spacer(modifier = Modifier.height(FfSpacing.md))
+
+                SignOutButton(onLogoutClicked = accountSettingsInteractions::onLogoutClicked)
+
+                Spacer(modifier = Modifier.height(FfSpacing.md))
+
+
+            }
         }
     }
 }
@@ -91,6 +124,8 @@ private fun AccountSettingsScreen(
 @Composable
 private fun UserHeader(
     account: LoggedInAccount,
+    isTheActiveAccount: Boolean,
+    accountSettingsInteractions: AccountSettingsInteractions,
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -98,9 +133,21 @@ private fun UserHeader(
         Avatar(account.avatarUrl)
         Spacer(modifier = Modifier.width(8.dp))
         Text(
+            modifier = Modifier.weight(1f),
             text = account.userName,
             style = FfTheme.typography.labelLarge,
         )
+        if (isTheActiveAccount) {
+            FfBadge {
+                SmallTextLabel(text = stringResource(id = R.string.active_account_label))
+            }
+            Spacer(modifier = Modifier.width(FfSpacing.md))
+        }
+        FfButtonSecondary(
+            onClick = { accountSettingsInteractions.onManageAccountClicked(account.domain) }
+        ) {
+            MediumTextLabel(text = stringResource(id = R.string.manage_account))
+        }
     }
 }
 
@@ -119,22 +166,10 @@ private fun Avatar(
 }
 
 @Composable
-private fun ManageAccount(
-    account: LoggedInAccount,
-    onClick: () -> Unit,
-) {
-    SettingsSection(
-        title = stringResource(id = R.string.manage_account),
-        subtitle = stringResource(id = R.string.manage_your_account, account.domain),
-        onClick = onClick,
-    )
-}
-
-@Composable
-private fun SignoutButton(
+private fun SignOutButton(
     onLogoutClicked: () -> Unit,
 ) {
-    FfButtonSecondary(
+    FfButton(
         modifier = Modifier
             .wrapContentHeight()
             .fillMaxWidth(),
@@ -143,9 +178,16 @@ private fun SignoutButton(
 }
 
 @Composable
-private fun AddAccount() {
-    FfButtonSecondary(onClick = { /*TODO*/ }) {
-        Text(text = stringResource(id = R.string.add_account))
+private fun AddAccount(
+    accountSettingsInteractions: AccountSettingsInteractions,
+) {
+    IconButton(
+        onClick = { accountSettingsInteractions.onAddAccountClicked() }
+    ) {
+        Icon(
+            painter = FfIcons.plus(),
+            contentDescription = stringResource(id = R.string.add_account)
+        )
     }
 }
 
@@ -156,8 +198,14 @@ private fun AccountSettingsScreenPreview() {
         modules = listOf(navigationModule)
     ) {
         AccountSettingsScreen(
-            activeAccount = LoggedInAccount(),
-            otherAccounts = emptyList(),
+            activeAccount = LoggedInAccount(
+                userName = "John"
+            ),
+            otherAccounts = listOf(
+                LoggedInAccount(
+                    userName = "Birdman"
+                )
+            ),
             accountSettingsInteractions = AccountSettingsInteractionsNoOp
         )
     }

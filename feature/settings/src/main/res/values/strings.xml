@@ -18,7 +18,8 @@
     <string name="contact_email">Contact: %s</string>
 
     <string name="profile_settings_title">Profile settings</string>
-    <string name="manage_account">Manage Account</string>
+    <string name="manage_account">Manage</string>
+    <string name="active_account_label">Active</string>
     <string name="manage_your_account">Manage your account on %1$s</string>
 
     <string name="data_collection_and_use">Data collection and use</string>
