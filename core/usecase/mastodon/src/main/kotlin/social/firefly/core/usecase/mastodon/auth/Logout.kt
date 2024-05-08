@@ -37,6 +37,8 @@ class Logout(
             if (isDeletingActiveUserDataStore) {
                 if (!userPreferencesDatastoreManager.isLoggedInToAtLeastOneAccount) {
                     navigateTo(NavigationDestination.Auth)
+                } else {
+                    navigateTo(NavigationDestination.Tabs)
                 }
                 databaseDelegate.clearAllTables()
             }
