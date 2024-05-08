@@ -77,11 +77,26 @@ class UserPreferencesDatastoreManager(
         appPreferencesDatastore.saveActiveUserDatastoreFilename(fileName)
     }
 
+    suspend fun setActiveUser(
+        accountId: String,
+        domain: String,
+    ) {
+        dataStores.value.find {
+            it.accountId.first() == accountId && it.domain.first() == domain
+        }?.let {
+            appPreferencesDatastore.saveActiveUserDatastoreFilename(it.fileName)
+        }
+    }
+
+    /**
+     * @return true if we are deleting the active user's datastore
+     */
     suspend fun deleteDataStore(
         dataStore: UserPreferencesDatastore,
-    ) {
+    ): Boolean {
         // if we are deleting the current user account, update the active user
-        if (appPreferencesDatastore.activeUserDatastoreFilename.first() == dataStore.fileName) {
+        val isDeletingActiveUser = appPreferencesDatastore.activeUserDatastoreFilename.first() == dataStore.fileName
+        if (isDeletingActiveUser) {
             dataStores.value.filterNot { it == dataStore }.firstOrNull()?.let {
                 appPreferencesDatastore.saveActiveUserDatastoreFilename(it.fileName)
             } ?: appPreferencesDatastore.saveActiveUserDatastoreFilename("")
@@ -92,6 +107,7 @@ class UserPreferencesDatastoreManager(
         _dataStores.update {
             it - dataStore
         }
+        return isDeletingActiveUser
     }
 
     private fun removeLegacyUserPreferences() {

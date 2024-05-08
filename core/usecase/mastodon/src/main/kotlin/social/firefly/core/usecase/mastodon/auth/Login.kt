@@ -1,5 +1,7 @@
 package social.firefly.core.usecase.mastodon.auth
 
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import org.koin.core.component.KoinComponent
@@ -10,6 +12,7 @@ import social.firefly.core.model.Account
 import social.firefly.core.navigation.NavigationDestination
 import social.firefly.core.navigation.usecases.NavigateTo
 import social.firefly.core.navigation.usecases.OpenLink
+import social.firefly.core.repository.mastodon.DatabaseDelegate
 import social.firefly.core.repository.mastodon.VerificationRepository
 import timber.log.Timber
 
@@ -20,6 +23,7 @@ class Login(
     private val userPreferencesDatastoreManager: UserPreferencesDatastoreManager,
     private val openLink: OpenLink,
     private val navigateTo: NavigateTo,
+    private val databaseDelegate: DatabaseDelegate,
 ): KoinComponent {
     private lateinit var clientId: String
     private lateinit var clientSecret: String
@@ -87,6 +91,9 @@ class Login(
                 userName = account.displayName,
                 avatarUrl = account.avatarUrl,
             )
+            withContext(Dispatchers.IO) {
+                databaseDelegate.clearAllTables()
+            }
             navigateTo(NavigationDestination.Tabs)
         } catch (exception: Exception) {
             Timber.e(exception)

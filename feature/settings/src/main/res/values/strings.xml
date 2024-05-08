@@ -17,10 +17,14 @@
     <string name="decentralized_social_media_powered_by_mastodon">Decentralized social media powered by Mastodon</string>
     <string name="contact_email">Contact: %s</string>
 
+    <string name="overflow_button">More Options</string>
+
     <string name="profile_settings_title">Profile settings</string>
-    <string name="manage_account">Manage</string>
     <string name="active_account_label">Active</string>
     <string name="manage_your_account">Manage your account on %1$s</string>
+    <string name="activate_account_option">Set active</string>
+    <string name="manage_account_option">Manage account</string>
+    <string name="remove_account">Remove account</string>
 
     <string name="data_collection_and_use">Data collection and use</string>
     <string name="data_collection_title">Help improve Mozilla Social</string>

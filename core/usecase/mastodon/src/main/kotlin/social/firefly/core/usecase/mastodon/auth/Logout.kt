@@ -23,15 +23,22 @@ class Logout(
     private val navigateTo: NavigateTo,
 ) {
     @OptIn(DelicateCoroutinesApi::class)
-    operator fun invoke() =
+    operator fun invoke(accountId: String, domain: String) =
         GlobalScope.launch(ioDispatcher) {
             appScope.reset()
-            userPreferencesDatastoreManager.deleteDataStore(
-                userPreferencesDatastoreManager.activeUserDatastore.first()
-            )
-            if (!userPreferencesDatastoreManager.isLoggedInToAtLeastOneAccount) {
-                navigateTo(NavigationDestination.Auth)
+            val accountToDelete = userPreferencesDatastoreManager.dataStores.value.find {
+                it.accountId.first() == accountId && it.domain.first() == domain
             }
-            databaseDelegate.clearAllTables()
+            if (accountToDelete == null) return@launch
+
+            val isDeletingActiveUserDataStore = userPreferencesDatastoreManager.deleteDataStore(accountToDelete)
+
+            // logging out of active account
+            if (isDeletingActiveUserDataStore) {
+                if (!userPreferencesDatastoreManager.isLoggedInToAtLeastOneAccount) {
+                    navigateTo(NavigationDestination.Auth)
+                }
+                databaseDelegate.clearAllTables()
+            }
         }
 }

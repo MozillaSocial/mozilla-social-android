@@ -20,6 +20,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -38,6 +40,8 @@ import social.firefly.core.ui.common.FfSurface
 import social.firefly.core.ui.common.appbar.FfCloseableTopAppBar
 import social.firefly.core.ui.common.button.FfButton
 import social.firefly.core.ui.common.button.FfButtonSecondary
+import social.firefly.core.ui.common.dropdown.FfDropDownItem
+import social.firefly.core.ui.common.dropdown.FfIconButtonDropDownMenu
 import social.firefly.core.ui.common.text.MediumTextLabel
 import social.firefly.core.ui.common.text.SmallTextLabel
 import social.firefly.core.ui.common.utils.PreviewTheme
@@ -111,7 +115,10 @@ private fun AccountSettingsScreen(
 
                 Spacer(modifier = Modifier.height(FfSpacing.md))
 
-                SignOutButton(onLogoutClicked = accountSettingsInteractions::onLogoutClicked)
+                SignOutButton(
+                    activeUserAccount = activeAccount,
+                    accountSettingsInteractions = accountSettingsInteractions,
+                )
 
                 Spacer(modifier = Modifier.height(FfSpacing.md))
 
@@ -138,15 +145,42 @@ private fun UserHeader(
             style = FfTheme.typography.labelLarge,
         )
         if (isTheActiveAccount) {
-            FfBadge {
-                SmallTextLabel(text = stringResource(id = R.string.active_account_label))
+            FfBadge(
+                modifier = Modifier.padding(horizontal = FfSpacing.md)
+            ) {
+                SmallTextLabel(
+                    modifier = Modifier.padding(horizontal = FfSpacing.sm),
+                    text = stringResource(id = R.string.active_account_label)
+                )
             }
-            Spacer(modifier = Modifier.width(FfSpacing.md))
         }
         FfButtonSecondary(
             onClick = { accountSettingsInteractions.onManageAccountClicked(account.domain) }
         ) {
-            MediumTextLabel(text = stringResource(id = R.string.manage_account))
+            MediumTextLabel(text = stringResource(id = R.string.manage_account_option))
+        }
+
+        val overflowMenuExpanded = remember { mutableStateOf(false) }
+
+        FfIconButtonDropDownMenu(
+            expanded = overflowMenuExpanded,
+            dropDownMenuContent = {
+                FfDropDownItem(
+                    text = stringResource(id = R.string.manage_account_option),
+                    expanded = overflowMenuExpanded,
+                    onClick = { accountSettingsInteractions.onManageAccountClicked(account.domain) }
+                )
+                FfDropDownItem(
+                    text = stringResource(id = R.string.remove_account),
+                    expanded = overflowMenuExpanded,
+                    onClick = {  }
+                )
+            }
+        ) {
+            Icon(
+                painter = FfIcons.moreVertical(),
+                contentDescription = stringResource(R.string.overflow_button)
+            )
         }
     }
 }
@@ -167,13 +201,19 @@ private fun Avatar(
 
 @Composable
 private fun SignOutButton(
-    onLogoutClicked: () -> Unit,
+    activeUserAccount: LoggedInAccount,
+    accountSettingsInteractions: AccountSettingsInteractions,
 ) {
     FfButton(
         modifier = Modifier
             .wrapContentHeight()
             .fillMaxWidth(),
-        onClick = onLogoutClicked,
+        onClick = {
+            accountSettingsInteractions.onLogoutClicked(
+                accountId = activeUserAccount.accountId,
+                domain = activeUserAccount.domain,
+            )
+        },
     ) { Text(text = stringResource(id = R.string.sign_out)) }
 }
 

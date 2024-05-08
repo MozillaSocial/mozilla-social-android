@@ -20,7 +20,7 @@ class AccountSettingsViewModel(
     private val openLink: OpenLink,
     private val analytics: SettingsAnalytics,
     private val navigateTo: NavigateTo,
-    userPreferencesDatastoreManager: UserPreferencesDatastoreManager,
+    private val userPreferencesDatastoreManager: UserPreferencesDatastoreManager,
     updateAllLoggedInAccounts: UpdateAllLoggedInAccounts,
 ) : ViewModel(), AccountSettingsInteractions {
 
@@ -58,10 +58,13 @@ class AccountSettingsViewModel(
         }
     }
 
-    override fun onLogoutClicked() {
+    override fun onLogoutClicked(accountId: String, domain: String) {
         analytics.logoutClicked()
         viewModelScope.launch {
-            logout()
+            logout(
+                accountId = accountId,
+                domain = domain,
+            )
         }
     }
 
@@ -71,6 +74,12 @@ class AccountSettingsViewModel(
 
     override fun onAddAccountClicked() {
         navigateTo(AuthNavigationDestination.ChooseServer)
+    }
+
+    override fun onSetAccountAsActiveClicked(accountId: String, domain: String) {
+        viewModelScope.launch {
+            userPreferencesDatastoreManager.setActiveUser(accountId, domain)
+        }
     }
 
     override fun onScreenViewed() {
