@@ -143,8 +143,8 @@ private fun UserHeader(
         Spacer(modifier = Modifier.width(8.dp))
         Text(
             modifier = Modifier.weight(1f),
-            text = account.userName,
-            style = FfTheme.typography.labelLarge,
+            text = "${account.userName}@${account.domain}",
+            style = FfTheme.typography.labelSmall,
         )
         if (isTheActiveAccount) {
             FfBadge(
@@ -157,6 +157,7 @@ private fun UserHeader(
             }
         } else {
             FfButtonSecondary(
+                modifier = Modifier.padding(start = FfSpacing.md),
                 onClick = {
                     accountSettingsInteractions.onSetAccountAsActiveClicked(
                         accountId = account.accountId,

@@ -28,7 +28,7 @@ class UpdateAllLoggedInAccounts(
                 it.accountId.first() == account.accountId
             }?.apply {
                 saveAvatarUrl(account.avatarUrl)
-                saveUserName(account.displayName)
+                saveUserName(account.username)
             }
         }
     }
