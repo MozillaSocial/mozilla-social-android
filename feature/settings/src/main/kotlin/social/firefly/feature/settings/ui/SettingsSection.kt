@@ -10,11 +10,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.semantics.isTraversalGroup
 import androidx.compose.ui.semantics.semantics
@@ -34,10 +36,11 @@ internal fun SettingsSection(
 ) {
     Row(
         modifier = Modifier
-            .padding(vertical = FfSpacing.md)
             .fillMaxWidth()
             .wrapContentHeight()
+            .clip(RoundedCornerShape(8.dp))
             .clickable { onClick() }
+            .padding(vertical = FfSpacing.md)
             .semantics(mergeDescendants = true) {
                 isTraversalGroup = true
             },
