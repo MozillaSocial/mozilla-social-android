@@ -77,17 +77,6 @@ class UserPreferencesDatastoreManager(
         appPreferencesDatastore.saveActiveUserDatastoreFilename(fileName)
     }
 
-    suspend fun setActiveUser(
-        accountId: String,
-        domain: String,
-    ) {
-        dataStores.value.find {
-            it.accountId.first() == accountId && it.domain.first() == domain
-        }?.let {
-            appPreferencesDatastore.saveActiveUserDatastoreFilename(it.fileName)
-        }
-    }
-
     /**
      * @return true if we are deleting the active user's datastore
      */

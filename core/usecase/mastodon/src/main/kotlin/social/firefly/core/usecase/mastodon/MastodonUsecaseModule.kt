@@ -19,6 +19,7 @@ import social.firefly.core.usecase.mastodon.account.UnmuteAccount
 import social.firefly.core.usecase.mastodon.account.UpdateMyAccount
 import social.firefly.core.usecase.mastodon.auth.Login
 import social.firefly.core.usecase.mastodon.auth.Logout
+import social.firefly.core.usecase.mastodon.auth.SwitchActiveAccount
 import social.firefly.core.usecase.mastodon.auth.UpdateAllLoggedInAccounts
 import social.firefly.core.usecase.mastodon.followRequest.AcceptFollowRequest
 import social.firefly.core.usecase.mastodon.followRequest.DenyFollowRequest
@@ -270,6 +271,7 @@ val mastodonUsecaseModule =
         singleOf(::GetInReplyToAccountNames)
         singleOf(::SaveNotificationsToDatabase)
         singleOf(::UpdateAllLoggedInAccounts)
+        singleOf(::SwitchActiveAccount)
 
         single {
             GetHashTag(

@@ -40,6 +40,8 @@ import social.firefly.core.ui.common.FfSurface
 import social.firefly.core.ui.common.appbar.FfCloseableTopAppBar
 import social.firefly.core.ui.common.button.FfButton
 import social.firefly.core.ui.common.button.FfButtonSecondary
+import social.firefly.core.ui.common.dialog.blockAccountConfirmationDialog
+import social.firefly.core.ui.common.dialog.logoutConfirmationDialog
 import social.firefly.core.ui.common.dropdown.FfDropDownItem
 import social.firefly.core.ui.common.dropdown.FfIconButtonDropDownMenu
 import social.firefly.core.ui.common.text.MediumTextLabel
@@ -153,14 +155,29 @@ private fun UserHeader(
                     text = stringResource(id = R.string.active_account_label)
                 )
             }
-        }
-        FfButtonSecondary(
-            onClick = { accountSettingsInteractions.onManageAccountClicked(account.domain) }
-        ) {
-            MediumTextLabel(text = stringResource(id = R.string.manage_account_option))
+        } else {
+            FfButtonSecondary(
+                onClick = {
+                    accountSettingsInteractions.onSetAccountAsActiveClicked(
+                        accountId = account.accountId,
+                        domain = account.domain,
+                    )
+                }
+            ) {
+                MediumTextLabel(text = stringResource(id = R.string.activate_account_button))
+            }
         }
 
         val overflowMenuExpanded = remember { mutableStateOf(false) }
+
+        val logoutDialog = logoutConfirmationDialog(
+            accountName = "${account.userName}@${account.domain}"
+        ) {
+            accountSettingsInteractions.onLogoutClicked(
+                accountId = account.accountId,
+                domain = account.domain,
+            )
+        }
 
         FfIconButtonDropDownMenu(
             expanded = overflowMenuExpanded,
@@ -173,7 +190,7 @@ private fun UserHeader(
                 FfDropDownItem(
                     text = stringResource(id = R.string.remove_account),
                     expanded = overflowMenuExpanded,
-                    onClick = {  }
+                    onClick = { logoutDialog.open() }
                 )
             }
         ) {
@@ -204,15 +221,21 @@ private fun SignOutButton(
     activeUserAccount: LoggedInAccount,
     accountSettingsInteractions: AccountSettingsInteractions,
 ) {
+    val logoutDialog = logoutConfirmationDialog(
+        accountName = "${activeUserAccount.userName}@${activeUserAccount.domain}"
+    ) {
+        accountSettingsInteractions.onLogoutClicked(
+            accountId = activeUserAccount.accountId,
+            domain = activeUserAccount.domain,
+        )
+    }
+
     FfButton(
         modifier = Modifier
             .wrapContentHeight()
             .fillMaxWidth(),
         onClick = {
-            accountSettingsInteractions.onLogoutClicked(
-                accountId = activeUserAccount.accountId,
-                domain = activeUserAccount.domain,
-            )
+            logoutDialog.open()
         },
     ) { Text(text = stringResource(id = R.string.sign_out)) }
 }

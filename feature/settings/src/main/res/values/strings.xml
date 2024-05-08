@@ -22,7 +22,7 @@
     <string name="profile_settings_title">Profile settings</string>
     <string name="active_account_label">Active</string>
     <string name="manage_your_account">Manage your account on %1$s</string>
-    <string name="activate_account_option">Set active</string>
+    <string name="activate_account_button">Set active</string>
     <string name="manage_account_option">Manage account</string>
     <string name="remove_account">Remove account</string>
 

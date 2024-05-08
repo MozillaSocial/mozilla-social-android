@@ -55,4 +55,7 @@
 
     <string name="unbookmark_post_confirmation">Are you sure you want to unbookmark this post?</string>
     <string name="unbookmark_post_confirmed">Unbookmark</string>
+
+    <string name="logout_of_account_confirmation">Are you sure you want to logout from account: %s?</string>
+    <string name="logout_of_account_confirmed">Logout</string>
 </resources>
