@@ -2,7 +2,7 @@
 <resources>
     <string name="settings_title">Settings</string>
 
-    <string name="account_settings_title">Account</string>
+    <string name="account_settings_title">Accounts</string>
     <string name="appearance_and_behavior_title">Appearance and Behavior</string>
     <string name="content_preferences_title">Content Preferences</string>
     <string name="muted_users_title">Muted Users</string>
@@ -32,6 +32,7 @@
 
     <string name="sign_out">Sign out of all accounts</string>
     <string name="add_account">Add account</string>
+    <string name="accounts_settings_description">Add, remove and manage your accounts</string>
 
     <string name="unblock">Unblock</string>
     <string name="block">Block</string>
