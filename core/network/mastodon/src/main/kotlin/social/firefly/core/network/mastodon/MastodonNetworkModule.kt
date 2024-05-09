@@ -2,7 +2,13 @@ package social.firefly.core.network.mastodon
 
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import io.ktor.client.HttpClient
+import io.ktor.client.HttpClientConfig
+import io.ktor.client.engine.HttpClientEngine
+import io.ktor.client.engine.HttpClientEngineConfig
+import io.ktor.client.engine.HttpClientEngineFactory
 import io.ktor.client.engine.okhttp.OkHttp
+import io.ktor.client.engine.okhttp.OkHttpConfig
+import io.ktor.client.engine.okhttp.OkHttpEngine
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
@@ -72,30 +78,44 @@ val mastodonNetworkModule =
         single { get<Retrofit>(qualifier = named(AUTHORIZED_CLIENT)).create(FollowedTagsApi::class.java) }
         single { get<Retrofit>(qualifier = named(AUTHORIZED_CLIENT)).create(BookmarksApi::class.java) }
 
-        single {
-            HttpClient(OkHttp) {
-                engine {
-                    config {
-                        readTimeout(OKHTTP_TIMEOUT, TimeUnit.SECONDS)
-                        connectTimeout(OKHTTP_TIMEOUT, TimeUnit.SECONDS)
-                    }
+        single<HttpClientEngineFactory<OkHttpConfig>> {
+            OkHttp
+        }
 
-                    addNetworkInterceptor(
-                        HttpLoggingInterceptor().apply {
-                            level = if (BuildConfig.DEBUG) {
-                                HttpLoggingInterceptor.Level.BASIC
-                            } else {
-                                HttpLoggingInterceptor.Level.NONE
-                            }
-                        }
-                    )
-                }
+        single<HttpClientConfig<HttpClientEngineConfig>> {
+            HttpClientConfig<HttpClientEngineConfig>().apply {
                 install(ContentNegotiation) {
                     json(Json {
                         ignoreUnknownKeys = true
                     })
                 }
             }
+        }
+
+        single<HttpClientEngine> {
+            get<HttpClientEngineFactory<OkHttpConfig>>().create {
+                config {
+                    readTimeout(OKHTTP_TIMEOUT, TimeUnit.SECONDS)
+                    connectTimeout(OKHTTP_TIMEOUT, TimeUnit.SECONDS)
+                }
+
+                addNetworkInterceptor(
+                    HttpLoggingInterceptor().apply {
+                        level = if (BuildConfig.DEBUG) {
+                            HttpLoggingInterceptor.Level.BASIC
+                        } else {
+                            HttpLoggingInterceptor.Level.NONE
+                        }
+                    }
+                )
+            }
+        }
+
+        single {
+            HttpClient(
+                get<HttpClientEngine>(),
+                get<HttpClientConfig<HttpClientEngineConfig>>(),
+            )
         }
 
         single<AppApi> {
