@@ -19,8 +19,8 @@ import social.firefly.feature.media.mediaScreen
 import social.firefly.feature.report.reportFlow
 import social.firefly.feature.settings.settingsFlow
 import social.firefly.feature.thread.threadScreen
-import social.firefly.post.newPostScreen
-import social.firefly.search.searchScreen
+import social.firefly.feature.post.newPostScreen
+import social.firefly.feature.search.searchScreen
 import social.firefly.ui.AppState
 import social.firefly.ui.bottombar.Routes
 import social.firefly.ui.bottombar.bottomTabScreen

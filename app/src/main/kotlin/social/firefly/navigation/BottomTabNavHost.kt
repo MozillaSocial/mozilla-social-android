@@ -10,7 +10,7 @@ import social.firefly.core.navigation.BottomBarNavigationDestination
 import social.firefly.feature.account.myAccountScreen
 import social.firefly.feature.discover.discoverScreen
 import social.firefly.feature.notifications.notificationsScreen
-import social.firefly.feed.feedScreen
+import social.firefly.feature.feed.feedScreen
 
 @Composable
 fun BottomTabNavHost(

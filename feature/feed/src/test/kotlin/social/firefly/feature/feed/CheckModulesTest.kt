@@ -8,7 +8,7 @@ import org.koin.test.KoinTest
 import org.koin.test.verify.verify
 import social.firefly.core.analytics.FeedLocation
 import social.firefly.core.model.AccountTimelineType
-import social.firefly.feed.feedModule
+import social.firefly.feature.feed.feedModule
 import kotlin.test.Test
 
 class CheckModulesTest : KoinTest {
