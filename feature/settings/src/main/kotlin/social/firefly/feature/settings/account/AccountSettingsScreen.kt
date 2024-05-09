@@ -46,6 +46,7 @@ import social.firefly.core.ui.common.dialog.logoutOfAllAccountsConfirmationDialo
 import social.firefly.core.ui.common.dropdown.FfDropDownItem
 import social.firefly.core.ui.common.dropdown.FfIconButtonDropDownMenu
 import social.firefly.core.ui.common.text.MediumTextLabel
+import social.firefly.core.ui.common.text.MediumTextTitle
 import social.firefly.core.ui.common.text.SmallTextLabel
 import social.firefly.core.ui.common.utils.PreviewTheme
 import social.firefly.feature.settings.R
@@ -98,6 +99,13 @@ private fun AccountSettingsScreen(
                     .padding(FfSpacing.md)
                     .verticalScroll(rememberScrollState()),
             ) {
+
+                MediumTextLabel(
+                    text = stringResource(id = R.string.accounts_settings_description)
+                )
+
+                Spacer(modifier = Modifier.height(FfSpacing.md))
+
                 UserHeader(
                     account = activeAccount,
                     isTheActiveAccount = true,
