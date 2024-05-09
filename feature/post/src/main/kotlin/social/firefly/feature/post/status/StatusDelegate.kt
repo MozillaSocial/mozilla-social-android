@@ -2,7 +2,6 @@ package social.firefly.feature.post.status
 
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.core.text.HtmlCompat
 import androidx.core.text.trimmedLength
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -21,7 +20,7 @@ import social.firefly.core.repository.mastodon.StatusRepository
 import social.firefly.core.share.ShareInfo
 import social.firefly.core.ui.htmlcontent.htmlToStringWithExpandedMentions
 import social.firefly.core.usecase.mastodon.account.GetDomain
-import social.firefly.post.NewPostViewModel
+import social.firefly.feature.post.NewPostViewModel
 import timber.log.Timber
 
 class StatusDelegate(

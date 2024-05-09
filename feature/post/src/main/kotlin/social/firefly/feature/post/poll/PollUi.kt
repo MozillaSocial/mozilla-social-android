@@ -36,7 +36,7 @@ import social.firefly.core.ui.common.text.FfTextField
 import social.firefly.core.ui.common.text.SmallTextLabel
 import social.firefly.core.ui.common.utils.PreviewTheme
 import social.firefly.feature.post.R
-import social.firefly.post.NewPostViewModel
+import social.firefly.feature.post.NewPostViewModel
 
 @Composable
 internal fun Poll(

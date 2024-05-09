@@ -1,6 +1,6 @@
 package social.firefly.feature.post.bottombar
 
-import social.firefly.post.NewPostViewModel
+import social.firefly.feature.post.NewPostViewModel
 
 data class BottomBarState(
     val imageButtonEnabled: Boolean = false,

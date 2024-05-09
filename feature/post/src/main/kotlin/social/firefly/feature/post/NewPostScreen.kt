@@ -57,7 +57,6 @@ import social.firefly.core.designsystem.theme.FfTheme
 import social.firefly.core.designsystem.utils.NoIndication
 import social.firefly.core.model.ImageState
 import social.firefly.core.model.StatusVisibility
-import social.firefly.core.ui.common.FfSurface
 import social.firefly.core.ui.common.TransparentNoTouchOverlay
 import social.firefly.core.ui.common.appbar.FfCloseableTopAppBar
 import social.firefly.core.ui.common.button.FfButton
@@ -68,21 +67,20 @@ import social.firefly.core.ui.common.text.FfTextFieldNoBorder
 import social.firefly.core.ui.common.text.SmallTextLabel
 import social.firefly.core.ui.common.transparentTextFieldColors
 import social.firefly.core.ui.common.utils.getWindowHeightClass
-import social.firefly.feature.post.R
-import social.firefly.post.bottombar.BottomBar
-import social.firefly.post.bottombar.BottomBarState
-import social.firefly.post.media.MediaInteractions
-import social.firefly.post.poll.Poll
-import social.firefly.post.poll.PollBar
-import social.firefly.post.poll.PollDuration
-import social.firefly.post.poll.PollInteractions
-import social.firefly.post.poll.PollStyle
-import social.firefly.post.poll.PollUiState
-import social.firefly.post.status.AccountSearchBar
-import social.firefly.post.status.ContentWarningInteractions
-import social.firefly.post.status.HashtagSearchBar
-import social.firefly.post.status.StatusInteractions
-import social.firefly.post.status.StatusUiState
+import social.firefly.feature.post.bottombar.BottomBar
+import social.firefly.feature.post.bottombar.BottomBarState
+import social.firefly.feature.post.media.MediaInteractions
+import social.firefly.feature.post.poll.Poll
+import social.firefly.feature.post.poll.PollBar
+import social.firefly.feature.post.poll.PollDuration
+import social.firefly.feature.post.poll.PollInteractions
+import social.firefly.feature.post.poll.PollStyle
+import social.firefly.feature.post.poll.PollUiState
+import social.firefly.feature.post.status.AccountSearchBar
+import social.firefly.feature.post.status.ContentWarningInteractions
+import social.firefly.feature.post.status.HashtagSearchBar
+import social.firefly.feature.post.status.StatusInteractions
+import social.firefly.feature.post.status.StatusUiState
 
 @Composable
 internal fun NewPostScreen(

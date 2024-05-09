@@ -24,12 +24,11 @@ import social.firefly.core.repository.mastodon.AccountRepository
 import social.firefly.core.usecase.mastodon.account.GetLoggedInUserAccountId
 import social.firefly.core.usecase.mastodon.status.EditStatus
 import social.firefly.core.usecase.mastodon.status.PostStatus
-import social.firefly.feature.post.R
-import social.firefly.post.bottombar.BottomBarState
-import social.firefly.post.media.MediaDelegate
-import social.firefly.post.poll.PollDelegate
-import social.firefly.post.poll.PollStyle
-import social.firefly.post.status.StatusDelegate
+import social.firefly.feature.post.bottombar.BottomBarState
+import social.firefly.feature.post.media.MediaDelegate
+import social.firefly.feature.post.poll.PollDelegate
+import social.firefly.feature.post.poll.PollStyle
+import social.firefly.feature.post.status.StatusDelegate
 import timber.log.Timber
 
 class NewPostViewModel(

@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Icon
@@ -35,9 +34,9 @@ import social.firefly.core.model.StatusVisibility
 import social.firefly.core.ui.common.divider.FfDivider
 import social.firefly.core.ui.common.dropdown.VisibilityDropDownButton
 import social.firefly.feature.post.R
-import social.firefly.post.NewPostViewModel
-import social.firefly.post.poll.PollInteractions
-import social.firefly.post.status.ContentWarningInteractions
+import social.firefly.feature.post.NewPostViewModel
+import social.firefly.feature.post.poll.PollInteractions
+import social.firefly.feature.post.status.ContentWarningInteractions
 import java.io.File
 
 @Composable

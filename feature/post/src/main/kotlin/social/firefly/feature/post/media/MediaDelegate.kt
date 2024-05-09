@@ -17,7 +17,7 @@ import social.firefly.core.model.ImageState
 import social.firefly.core.repository.mastodon.MediaRepository
 import social.firefly.core.repository.mastodon.StatusRepository
 import social.firefly.core.share.ShareInfo
-import social.firefly.post.NewPostViewModel
+import social.firefly.feature.post.NewPostViewModel
 import timber.log.Timber
 import java.io.File
 

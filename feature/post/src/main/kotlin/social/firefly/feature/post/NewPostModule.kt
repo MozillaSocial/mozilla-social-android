@@ -9,9 +9,9 @@ import social.firefly.core.datastore.dataStoreModule
 import social.firefly.core.navigation.navigationModule
 import social.firefly.core.repository.mastodon.mastodonRepositoryModule
 import social.firefly.core.usecase.mastodon.mastodonUsecaseModule
-import social.firefly.post.media.MediaDelegate
-import social.firefly.post.poll.PollDelegate
-import social.firefly.post.status.StatusDelegate
+import social.firefly.feature.post.media.MediaDelegate
+import social.firefly.feature.post.poll.PollDelegate
+import social.firefly.feature.post.status.StatusDelegate
 
 val newPostModule = module {
     includes(

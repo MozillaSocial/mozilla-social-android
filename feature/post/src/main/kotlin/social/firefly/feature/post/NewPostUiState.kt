@@ -1,7 +1,7 @@
 package social.firefly.feature.post
 
 import social.firefly.core.model.StatusVisibility
-import social.firefly.post.bottombar.BottomBarState
+import social.firefly.feature.post.bottombar.BottomBarState
 
 data class NewPostUiState(
     val visibility: StatusVisibility = StatusVisibility.Public,
