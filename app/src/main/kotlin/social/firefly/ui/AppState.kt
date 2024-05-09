@@ -21,6 +21,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.mapLatest
+import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onSubscription
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -104,6 +105,9 @@ class AppState(
         coroutineScope.launch(Dispatchers.Main) {
             navigationEventFlow().onSubscription {
                 navigationCollectionCompletable.complete(Unit)
+            }.onCompletion {
+                // reset when the app is closed via the back button
+                navigationCollectionCompletable = CompletableDeferred()
             }.collectLatest {
                 Timber.d("NAVIGATION consuming event $it")
                 when (it) {
@@ -361,6 +365,7 @@ class AppState(
         private const val HTTPS_SCHEME = "https"
 
         // complete when the navigation event flow has started
-        val navigationCollectionCompletable = CompletableDeferred<Unit>()
+        var navigationCollectionCompletable = CompletableDeferred<Unit>()
+            private set
     }
 }
