@@ -1,8 +1,6 @@
 package social.firefly.core.network.mastodon
 
 import android.content.Context
-import io.ktor.client.HttpClientConfig
-import io.ktor.client.engine.HttpClientEngine
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import org.koin.core.annotation.KoinExperimentalAPI
@@ -19,8 +17,6 @@ class CheckModulesTest : KoinTest {
                 Context::class,
                 CoroutineDispatcher::class,
                 CoroutineScope::class,
-                HttpClientEngine::class,
-                HttpClientConfig::class,
             ),
         )
     }
