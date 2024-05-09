@@ -10,7 +10,7 @@ message UserPreferences {
     TREE = 2;
   }
 
-  reserved 4, 5, 7;
+  reserved 4, 5, 7, 10;
   reserved "client_id", "client_secret";
   string access_token = 1;
   string account_id = 2;
@@ -18,5 +18,6 @@ message UserPreferences {
   string serialized_push_keys = 6;
   string last_seen_home_status_id = 8;
   ThreadType thread_type = 9;
-  bool dummy_value = 10; // must keep dummy value.  We update this to force a write to disk.
+  string avatar_url = 11;
+  string user_name = 12;
 }

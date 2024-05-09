@@ -14,10 +14,12 @@ class VerificationRepository(
         clientName: String,
         redirectUris: String,
         scopes: String,
+        baseUrl: String,
     ): Application = appApi.createApplication(
         clientName = clientName,
         redirectUris = redirectUris,
         scopes = scopes,
+        baseUrl = baseUrl,
     ).toExternalModel()
 
     @PreferUseCase
@@ -27,17 +29,21 @@ class VerificationRepository(
         redirectUri: String,
         code: String,
         grantType: String,
+        baseUrl: String,
     ): String = appApi.fetchOAuthToken(
         clientId = clientId,
         clientSecret = clientSecret,
         redirectUri = redirectUri,
         code = code,
         grantType = grantType,
+        baseUrl = baseUrl,
     ).accessToken
 
     suspend fun verifyUserCredentials(
         accessToken: String,
+        baseUrl: String,
     ): Account = appApi.verifyCredentials(
-        authHeader = "Bearer $accessToken"
+        authHeader = "Bearer $accessToken",
+        baseUrl = baseUrl,
     ).toExternalModel()
 }

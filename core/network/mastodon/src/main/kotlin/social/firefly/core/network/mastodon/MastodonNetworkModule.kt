@@ -1,15 +1,27 @@
 package social.firefly.core.network.mastodon
 
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
+import io.ktor.client.HttpClient
+import io.ktor.client.HttpClientConfig
+import io.ktor.client.engine.HttpClientEngine
+import io.ktor.client.engine.HttpClientEngineConfig
+import io.ktor.client.engine.HttpClientEngineFactory
+import io.ktor.client.engine.okhttp.OkHttp
+import io.ktor.client.engine.okhttp.OkHttpConfig
+import io.ktor.client.engine.okhttp.OkHttpEngine
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import org.koin.core.module.dsl.singleOf
 import org.koin.core.parameter.parametersOf
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import social.firefly.core.network.mastodon.interceptors.AuthCredentialInterceptor
+import social.firefly.core.network.mastodon.ktor.AppApiImpl
 import java.util.concurrent.TimeUnit
 
 val mastodonNetworkModule =
@@ -66,49 +78,51 @@ val mastodonNetworkModule =
         single { get<Retrofit>(qualifier = named(AUTHORIZED_CLIENT)).create(FollowedTagsApi::class.java) }
         single { get<Retrofit>(qualifier = named(AUTHORIZED_CLIENT)).create(BookmarksApi::class.java) }
 
-        factory(
-            named(VERIFICATION_CLIENT),
-        ) {
-            OkHttpClient.Builder()
-                .readTimeout(OKHTTP_TIMEOUT, TimeUnit.SECONDS)
-                .connectTimeout(OKHTTP_TIMEOUT, TimeUnit.SECONDS)
-                .addNetworkInterceptor(
+        single<HttpClientEngineFactory<OkHttpConfig>> {
+            OkHttp
+        }
+
+        single<HttpClientConfig<HttpClientEngineConfig>> {
+            HttpClientConfig<HttpClientEngineConfig>().apply {
+                install(ContentNegotiation) {
+                    json(Json {
+                        ignoreUnknownKeys = true
+                    })
+                }
+            }
+        }
+
+        single<HttpClientEngine> {
+            get<HttpClientEngineFactory<OkHttpConfig>>().create {
+                config {
+                    readTimeout(OKHTTP_TIMEOUT, TimeUnit.SECONDS)
+                    connectTimeout(OKHTTP_TIMEOUT, TimeUnit.SECONDS)
+                }
+
+                addNetworkInterceptor(
                     HttpLoggingInterceptor().apply {
                         level = if (BuildConfig.DEBUG) {
                             HttpLoggingInterceptor.Level.BASIC
                         } else {
                             HttpLoggingInterceptor.Level.NONE
                         }
-                    },
+                    }
                 )
-                .build()
-        }
-        factory(
-            named(VERIFICATION_CLIENT)
-        ) { parametersHolder ->
-            Retrofit.Builder()
-                .baseUrl(parametersHolder.get<String>())
-                .client(get(qualifier = named(VERIFICATION_CLIENT)))
-                .addConverterFactory(
-                    json.asConverterFactory(
-                        contentType = "application/json".toMediaType()
-                    )
-                )
-                .build()
+            }
         }
 
-        factory(
-            named(VERIFICATION_CLIENT)
-        ) { parametersHolder ->
-            get<Retrofit>(qualifier = named(VERIFICATION_CLIENT)) {
-                parametersOf(
-                    parametersHolder.get<String>()
-                )
-            }.create(AppApi::class.java)
+        single {
+            HttpClient(
+                get<HttpClientEngine>(),
+                get<HttpClientConfig<HttpClientEngineConfig>>(),
+            )
+        }
+
+        single<AppApi> {
+            AppApiImpl(get())
         }
     }
 
 private var json: Json = Json { ignoreUnknownKeys = true }
 private const val AUTHORIZED_CLIENT = "authorizedClient"
 private const val OKHTTP_TIMEOUT = 30L
-const val VERIFICATION_CLIENT = "verificationClient"

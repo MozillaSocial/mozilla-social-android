@@ -1,12 +1,9 @@
 package social.firefly.core.repository.mastodon
 
 import org.koin.core.module.dsl.singleOf
-import org.koin.core.parameter.parametersOf
-import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import social.firefly.core.database.databaseModule
 import social.firefly.core.datastore.dataStoreModule
-import social.firefly.core.network.mastodon.VERIFICATION_CLIENT
 import social.firefly.core.network.mastodon.mastodonNetworkModule
 
 val mastodonRepositoryModule =
@@ -18,16 +15,8 @@ val mastodonRepositoryModule =
         )
 
         single { TimelineRepository(get(), get(), get(), get(), get(), get()) }
-        factory { parametersHolder ->
-            VerificationRepository(
-                appApi = get(
-                    qualifier = named(VERIFICATION_CLIENT)
-                ) {
-                    parametersOf(parametersHolder.get<String>())
-                },
-            )
-        }
 
+        singleOf(::VerificationRepository)
         singleOf(::AuthCredentialObserver)
         singleOf(::StatusRepository)
         singleOf(::AccountRepository)
