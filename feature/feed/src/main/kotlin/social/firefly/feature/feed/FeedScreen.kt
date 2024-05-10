@@ -7,9 +7,6 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideIn
 import androidx.compose.animation.slideOut
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.scrollable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
@@ -22,7 +19,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -31,11 +27,14 @@ import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -55,7 +54,6 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
-import social.firefly.common.utils.painterResourceFactory
 import social.firefly.core.designsystem.font.FfFonts
 import social.firefly.core.designsystem.icon.FfIcons
 import social.firefly.core.designsystem.theme.FfTheme
@@ -75,7 +73,7 @@ import social.firefly.core.ui.postcard.PostCardInteractions
 import social.firefly.core.ui.postcard.PostCardInteractionsNoOp
 import social.firefly.core.ui.postcard.PostCardUiState
 import social.firefly.core.ui.postcard.postListContent
-import social.firefly.feature.feed.R
+import kotlin.math.max
 
 @Composable
 internal fun FeedScreen(viewModel: FeedViewModel = koinViewModel()) {
@@ -119,19 +117,13 @@ private fun FeedScreen(
 ) {
     FfSurface {
         Column(
-            modifier =
-            Modifier
+            modifier = Modifier
                 .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
         ) {
             FfTopBar(
                 scrollBehavior = topAppBarScrollBehavior,
                 title = {
-                    LargeTextTitle(
-                        text = stringResource(id = R.string.mozilla),
-                        fontSize = 24.sp,
-                        fontWeight = FontWeight.W700,
-                        fontFamily = FfFonts.zillaSlab,
-                    )
+                    TitleBar(topAppBarScrollBehavior = topAppBarScrollBehavior)
                 },
             )
 
@@ -147,6 +139,24 @@ private fun FeedScreen(
             )
         }
     }
+}
+
+@Composable
+private fun TitleBar(
+    topAppBarScrollBehavior: TopAppBarScrollBehavior,
+) {
+    val alpha by remember {
+        derivedStateOf {
+            max(0f, (1 - (topAppBarScrollBehavior.state.collapsedFraction * 1.5f)))
+        }
+    }
+    LargeTextTitle(
+        modifier = Modifier.alpha(alpha),
+        text = stringResource(id = R.string.mozilla),
+        fontSize = 24.sp,
+        fontWeight = FontWeight.W700,
+        fontFamily = FfFonts.zillaSlab,
+    )
 }
 
 @Composable
