@@ -147,8 +147,7 @@ private fun HeaderLayout(
         val rightSideContentPlaceable = placeables[2]
         layout(
             width = constraints.maxWidth,
-            height =
-            headerImagePlaceable.height +
+            height = headerImagePlaceable.height +
                     max(avatarImagePlaceable.height / 2, rightSideContentPlaceable.height),
         ) {
             headerImagePlaceable.placeRelative(
