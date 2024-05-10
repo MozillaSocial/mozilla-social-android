@@ -35,20 +35,20 @@ class AccountSettingsViewModel(
             it == activeDataStore
         }.map { dataStore ->
             LoggedInAccount(
-                accountId = dataStore.accountId.first(),
-                userName = dataStore.userName.first(),
-                domain = dataStore.domain.first(),
-                avatarUrl = dataStore.avatarUrl.first(),
+                accountId = dataStore.accountId,
+                userName = dataStore.userName,
+                domain = dataStore.domain,
+                avatarUrl = dataStore.avatarUrl,
             )
         }
     }
 
     val activeAccount = userPreferencesDatastoreManager.activeUserDatastore.map { dataStore ->
         LoggedInAccount(
-            accountId = dataStore.accountId.first(),
-            userName = dataStore.userName.first(),
-            domain = dataStore.domain.first(),
-            avatarUrl = dataStore.avatarUrl.first(),
+            accountId = dataStore.accountId,
+            userName = dataStore.userName,
+            domain = dataStore.domain,
+            avatarUrl = dataStore.avatarUrl,
         )
     }
 

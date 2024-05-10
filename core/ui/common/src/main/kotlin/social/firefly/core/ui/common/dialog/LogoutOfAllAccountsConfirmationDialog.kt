@@ -22,7 +22,7 @@ fun logoutOfAllAccountsConfirmationDialog(
             title = {
                 Text(
                     text = stringResource(
-                        id = R.string.logout_of_account_confirmation,
+                        id = R.string.logout_of_all_accounts_confirmation,
                     )
                 )
             },
