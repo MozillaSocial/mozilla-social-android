@@ -31,13 +31,12 @@ fun MainActivityScreen() {
         val currentDestination by appState.currentNavigationDestination.collectAsStateWithLifecycle()
 
         FfSnackbarHost(
-            modifier =
-                Modifier
-                    .align(Alignment.BottomStart)
-                    .systemBarsPadding()
-                    .padding(bottom = 16.dp)
-                    .padding(horizontal = 16.dp)
-                    .bottomBarPadding(currentDestination),
+            modifier = Modifier
+                .align(Alignment.BottomStart)
+                .systemBarsPadding()
+                .padding(bottom = 16.dp)
+                .padding(horizontal = 16.dp)
+                .bottomBarPadding(currentDestination),
             hostState = appState.snackbarHostState,
         ) { snackbarData, snackbarType ->
             FfSnackbar(snackbarData = snackbarData, snackbarType = snackbarType)
