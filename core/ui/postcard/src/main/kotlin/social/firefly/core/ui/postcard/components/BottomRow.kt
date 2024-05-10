@@ -1,11 +1,13 @@
 package social.firefly.core.ui.postcard.components
 
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalContentColor
@@ -52,7 +54,9 @@ internal fun BottomRow(
     }
 
     Row(
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier
+            .fillMaxWidth()
+            .horizontalScroll(rememberScrollState()),
         horizontalArrangement = object : Arrangement.Horizontal {
             override fun Density.arrange(
                 totalSize: Int,
@@ -72,7 +76,7 @@ internal fun BottomRow(
                     currentPosition += gapSize
                 }
             }
-        }
+        },
     ) {
         BottomIconButton(
             onClick = { postCardInteractions.onReplyClicked(post.statusId) },
@@ -130,9 +134,25 @@ private fun BottomIconButton(
     highlighted: Boolean = false,
     highlightColor: Color = FfTheme.colors.iconAccent,
 ) {
+    val context = LocalContext.current
     Row(
         modifier = modifier,
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = object : Arrangement.Horizontal {
+            override fun Density.arrange(
+                totalSize: Int,
+                sizes: IntArray,
+                layoutDirection: LayoutDirection,
+                outPositions: IntArray
+            ) {
+                if (sizes.isEmpty()) return
+
+                outPositions[0] = 0
+                if (outPositions.size >= 2) {
+                outPositions[1] = 40f.toPxInt(context)
+                    }
+            }
+        }
     ) {
         IconButton(
             onClick = onClick,
@@ -147,13 +167,13 @@ private fun BottomIconButton(
                 },
             )
         }
-        Text(
-            modifier = Modifier
-                .offset(x = (-8).dp),
-            text = count ?: "",
-            style = FfTheme.typography.labelXSmall,
-            maxLines = 1,
-        )
+        count?.let {
+            Text(
+                text = it,
+                style = FfTheme.typography.labelXSmall,
+                maxLines = 1,
+            )
+        }
     }
 }
 
