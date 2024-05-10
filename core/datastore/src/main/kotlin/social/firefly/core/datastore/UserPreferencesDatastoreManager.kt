@@ -10,6 +10,10 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import java.io.File
 
+/**
+ * Manages multiple [UserPreferencesDatastore] instances and works in conjunction with
+ * [AppPreferencesDatastore] to determine which logged in account is active.
+ */
 class UserPreferencesDatastoreManager(
     private val context: Context,
     private val appPreferencesDatastore: AppPreferencesDatastore,
