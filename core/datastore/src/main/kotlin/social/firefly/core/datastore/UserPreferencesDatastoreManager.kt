@@ -30,6 +30,12 @@ class UserPreferencesDatastoreManager(
         removeLegacyUserPreferences()
         val dataStoreFileNames = DatastoreUtils.getAllUserPreferencesDatastoreFilesNames(context)
         dataStoreFileNames.forEach { fileName ->
+            val fileCounter = fileName.split("-").getOrNull(2)?.toIntOrNull()
+            fileCounter?.let {
+                if (fileCounter >= counter) {
+                    counter = fileCounter + 1
+                }
+            }
             _dataStores.update {
                 it + UserPreferencesDatastore(
                     fileName = fileName,
@@ -38,6 +44,7 @@ class UserPreferencesDatastoreManager(
                 )
             }
         }
+        println("johnny $counter")
     }
 
     val activeUserDatastore: Flow<UserPreferencesDatastore> =
