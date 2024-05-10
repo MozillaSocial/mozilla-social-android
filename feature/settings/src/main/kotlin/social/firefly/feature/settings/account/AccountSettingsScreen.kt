@@ -30,6 +30,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
+import kotlinx.coroutines.flow.flowOf
 import org.koin.androidx.compose.koinViewModel
 import social.firefly.core.designsystem.icon.FfIcons
 import social.firefly.core.designsystem.theme.FfSpacing
@@ -56,8 +57,8 @@ import social.firefly.feature.settings.ui.SettingsSection
 internal fun AccountSettingsScreen(
     viewModel: AccountSettingsViewModel = koinViewModel()
 ) {
-    val activeAccount: LoggedInAccount by viewModel.activeAccount.collectAsStateWithLifecycle(
-        initialValue = LoggedInAccount()
+    val activeAccount: LoggedInAccount? by viewModel.activeAccount.collectAsStateWithLifecycle(
+        initialValue = null
     )
 
     val otherAccounts: List<LoggedInAccount> by viewModel.otherAccounts.collectAsStateWithLifecycle(
@@ -78,7 +79,7 @@ internal fun AccountSettingsScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun AccountSettingsScreen(
-    activeAccount: LoggedInAccount,
+    activeAccount: LoggedInAccount?,
     otherAccounts: List<LoggedInAccount>,
     accountSettingsInteractions: AccountSettingsInteractions,
 ) {
@@ -106,11 +107,13 @@ private fun AccountSettingsScreen(
 
                 Spacer(modifier = Modifier.height(FfSpacing.md))
 
-                UserHeader(
-                    account = activeAccount,
-                    isTheActiveAccount = true,
-                    accountSettingsInteractions = accountSettingsInteractions,
-                )
+                activeAccount?.let {
+                    UserHeader(
+                        account = activeAccount,
+                        isTheActiveAccount = true,
+                        accountSettingsInteractions = accountSettingsInteractions,
+                    )
+                }
 
                 Spacer(modifier = Modifier.height(FfSpacing.md))
 
@@ -142,14 +145,19 @@ private fun UserHeader(
     isTheActiveAccount: Boolean,
     accountSettingsInteractions: AccountSettingsInteractions,
 ) {
+    val avatarUrl by account.avatarUrl.collectAsStateWithLifecycle(initialValue = "")
+    val accountId by account.accountId.collectAsStateWithLifecycle(initialValue = "")
+    val domain by account.domain.collectAsStateWithLifecycle(initialValue = "")
+    val userName by account.userName.collectAsStateWithLifecycle(initialValue = "")
+
     Row(
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Avatar(account.avatarUrl)
+        Avatar(avatarUrl)
         Spacer(modifier = Modifier.width(8.dp))
         Text(
             modifier = Modifier.weight(1f),
-            text = "${account.userName}@${account.domain}",
+            text = "${userName}@${domain}",
             style = FfTheme.typography.labelSmall,
         )
         if (isTheActiveAccount) {
@@ -166,8 +174,8 @@ private fun UserHeader(
                 modifier = Modifier.padding(start = FfSpacing.md),
                 onClick = {
                     accountSettingsInteractions.onSetAccountAsActiveClicked(
-                        accountId = account.accountId,
-                        domain = account.domain,
+                        accountId = accountId,
+                        domain = domain,
                     )
                 }
             ) {
@@ -178,11 +186,11 @@ private fun UserHeader(
         val overflowMenuExpanded = remember { mutableStateOf(false) }
 
         val logoutDialog = logoutConfirmationDialog(
-            accountName = "${account.userName}@${account.domain}"
+            accountName = "${userName}@${domain}"
         ) {
             accountSettingsInteractions.onLogoutClicked(
-                accountId = account.accountId,
-                domain = account.domain,
+                accountId = accountId,
+                domain = domain,
             )
         }
 
@@ -192,7 +200,7 @@ private fun UserHeader(
                 FfDropDownItem(
                     text = stringResource(id = R.string.manage_account_option),
                     expanded = overflowMenuExpanded,
-                    onClick = { accountSettingsInteractions.onManageAccountClicked(account.domain) }
+                    onClick = { accountSettingsInteractions.onManageAccountClicked(domain) }
                 )
                 FfDropDownItem(
                     text = stringResource(id = R.string.remove_account),
@@ -263,13 +271,17 @@ private fun AccountSettingsScreenPreview() {
     ) {
         AccountSettingsScreen(
             activeAccount = LoggedInAccount(
-                userName = "John",
-                domain = "mozilla.social"
+                userName = flowOf("John"),
+                domain = flowOf("mozilla.social"),
+                avatarUrl = flowOf(),
+                accountId = flowOf(),
             ),
             otherAccounts = listOf(
                 LoggedInAccount(
-                    userName = "Birdman",
-                    domain = "mozilla.social"
+                    userName = flowOf("Birdman"),
+                    domain = flowOf("mozilla.social"),
+                    avatarUrl = flowOf(),
+                    accountId = flowOf(),
                 )
             ),
             accountSettingsInteractions = AccountSettingsInteractionsNoOp

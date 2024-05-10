@@ -10,6 +10,10 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import java.io.File
 
+/**
+ * Manages multiple [UserPreferencesDatastore] instances and works in conjunction with
+ * [AppPreferencesDatastore] to determine which logged in account is active.
+ */
 class UserPreferencesDatastoreManager(
     private val context: Context,
     private val appPreferencesDatastore: AppPreferencesDatastore,
@@ -30,6 +34,12 @@ class UserPreferencesDatastoreManager(
         removeLegacyUserPreferences()
         val dataStoreFileNames = DatastoreUtils.getAllUserPreferencesDatastoreFilesNames(context)
         dataStoreFileNames.forEach { fileName ->
+            val fileCounter = fileName.split("-").getOrNull(2)?.toIntOrNull()
+            fileCounter?.let {
+                if (fileCounter >= counter) {
+                    counter = fileCounter + 1
+                }
+            }
             _dataStores.update {
                 it + UserPreferencesDatastore(
                     fileName = fileName,
@@ -38,6 +48,7 @@ class UserPreferencesDatastoreManager(
                 )
             }
         }
+        println("johnny $counter")
     }
 
     val activeUserDatastore: Flow<UserPreferencesDatastore> =
