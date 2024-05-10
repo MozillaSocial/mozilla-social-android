@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Icon
@@ -54,67 +55,70 @@ internal fun BottomRow(
     }
 
     Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .horizontalScroll(rememberScrollState()),
-        horizontalArrangement = object : Arrangement.Horizontal {
-            override fun Density.arrange(
-                totalSize: Int,
-                sizes: IntArray,
-                layoutDirection: LayoutDirection,
-                outPositions: IntArray
-            ) {
-                if (sizes.isEmpty()) return
-
-                val iconSize = 50f.toPx(context)
-                val noOfGaps = maxOf(sizes.lastIndex, 1)
-                val gapSize = ((totalSize - iconSize) / noOfGaps) + 4f.toPxInt(context)
-
-                var currentPosition = (-8f).toPx(context)
-                sizes.forEachIndexed { index, _ ->
-                    outPositions[index] = currentPosition.roundToInt()
-                    currentPosition += gapSize
-                }
-            }
-        },
+        modifier = Modifier.fillMaxWidth()
     ) {
-        BottomIconButton(
-            onClick = { postCardInteractions.onReplyClicked(post.statusId) },
-            painter = FfIcons.chatBubbles(),
-            count = post.replyCount,
-        )
-        BottomIconButton(
-            onClick = { postCardInteractions.onBoostClicked(post.statusId, !post.userBoosted) },
-            painter = FfIcons.boost(),
-            count = post.boostCount,
-            highlighted = post.userBoosted,
-        )
-        BottomIconButton(
-            onClick = {
-                if (post.shouldShowUnfavoriteConfirmation && post.isFavorited) {
-                    unfavoriteStatusDialog.open()
-                } else {
-                    postCardInteractions.onFavoriteClicked(post.statusId, !post.isFavorited)
+        Row(
+            modifier = Modifier.weight(1f),
+            horizontalArrangement = object : Arrangement.Horizontal {
+                override fun Density.arrange(
+                    totalSize: Int,
+                    sizes: IntArray,
+                    layoutDirection: LayoutDirection,
+                    outPositions: IntArray
+                ) {
+                    if (sizes.isEmpty()) return
+
+                    val iconSize = 50f.toPx(context)
+                    val noOfGaps = maxOf(sizes.lastIndex, 1)
+                    val gapSize = ((totalSize - iconSize) / noOfGaps) + 6f.toPxInt(context)
+
+                    var currentPosition = (-6f).toPx(context)
+                    sizes.forEachIndexed { index, _ ->
+                        outPositions[index] = currentPosition.roundToInt()
+                        currentPosition += gapSize
+                    }
                 }
             },
-            painter = if (post.isFavorited) FfIcons.heartFilled() else FfIcons.heart(),
-            count = post.favoriteCount,
-            highlighted = post.isFavorited,
-            highlightColor = FfTheme.colors.iconFavorite,
-        )
+        ) {
+            BottomIconButton(
+                onClick = { postCardInteractions.onReplyClicked(post.statusId) },
+                painter = FfIcons.chatBubbles(),
+                count = post.replyCount,
+            )
+            BottomIconButton(
+                onClick = { postCardInteractions.onBoostClicked(post.statusId, !post.userBoosted) },
+                painter = FfIcons.boost(),
+                count = post.boostCount,
+                highlighted = post.userBoosted,
+            )
+            BottomIconButton(
+                onClick = {
+                    if (post.shouldShowUnfavoriteConfirmation && post.isFavorited) {
+                        unfavoriteStatusDialog.open()
+                    } else {
+                        postCardInteractions.onFavoriteClicked(post.statusId, !post.isFavorited)
+                    }
+                },
+                painter = if (post.isFavorited) FfIcons.heartFilled() else FfIcons.heart(),
+                count = post.favoriteCount,
+                highlighted = post.isFavorited,
+                highlightColor = FfTheme.colors.iconFavorite,
+            )
+            BottomIconButton(
+                onClick = {
+                    if (post.shouldShowUnbookmarkConfirmation && post.isBookmarked) {
+                        unbookmarkStatusDialog.open()
+                    } else {
+                        postCardInteractions.onBookmarkClicked(post.statusId, !post.isBookmarked)
+                    }
+                },
+                painter = if (post.isBookmarked) FfIcons.bookmarkFill() else FfIcons.bookmark(),
+                highlighted = post.isBookmarked,
+                highlightColor = FfTheme.colors.iconBookmark,
+            )
+        }
         BottomIconButton(
-            onClick = {
-                if (post.shouldShowUnbookmarkConfirmation && post.isBookmarked) {
-                    unbookmarkStatusDialog.open()
-                } else {
-                    postCardInteractions.onBookmarkClicked(post.statusId, !post.isBookmarked)
-                }
-            },
-            painter = if (post.isBookmarked) FfIcons.bookmarkFill() else FfIcons.bookmark(),
-            highlighted = post.isBookmarked,
-            highlightColor = FfTheme.colors.iconBookmark,
-        )
-        BottomIconButton(
+            modifier = Modifier.width(28.dp),
             onClick = {
                 post.url?.let { url ->
                     shareUrl(url, context)
@@ -149,12 +153,13 @@ private fun BottomIconButton(
 
                 outPositions[0] = 0
                 if (outPositions.size >= 2) {
-                outPositions[1] = 40f.toPxInt(context)
-                    }
+                    outPositions[1] = 32f.toPxInt(context)
+                }
             }
         }
     ) {
         IconButton(
+            modifier = Modifier.width(36.dp),
             onClick = onClick,
         ) {
             Icon(
