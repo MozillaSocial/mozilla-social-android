@@ -35,6 +35,7 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -151,7 +152,9 @@ private fun TitleBar(
         }
     }
     LargeTextTitle(
-        modifier = Modifier.alpha(alpha),
+        modifier = Modifier.graphicsLayer {
+            this.alpha = alpha
+        },
         text = stringResource(id = R.string.mozilla),
         fontSize = 24.sp,
         fontWeight = FontWeight.W700,

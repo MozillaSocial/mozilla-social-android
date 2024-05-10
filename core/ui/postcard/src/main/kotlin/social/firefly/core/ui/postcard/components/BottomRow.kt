@@ -1,37 +1,41 @@
 package social.firefly.core.ui.postcard.components
 
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Density
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
-import kotlinx.datetime.Instant
-import social.firefly.common.utils.StringFactory
-import social.firefly.common.utils.timeSinceNow
+import social.firefly.common.utils.toPx
 import social.firefly.common.utils.toPxInt
 import social.firefly.core.designsystem.icon.FfIcons
 import social.firefly.core.designsystem.theme.FfTheme
-import social.firefly.core.ui.common.dialog.deleteStatusConfirmationDialog
 import social.firefly.core.ui.common.dialog.unbookmarkAccountConfirmationDialog
 import social.firefly.core.ui.common.dialog.unfavoriteAccountConfirmationDialog
 import social.firefly.core.ui.common.utils.PreviewTheme
-import social.firefly.core.ui.common.utils.getMaxWidth
 import social.firefly.core.ui.common.utils.shareUrl
 import social.firefly.core.ui.postcard.MainPostCardUiState
-import social.firefly.core.ui.postcard.OverflowDropDownType
 import social.firefly.core.ui.postcard.PostCardInteractions
 import social.firefly.core.ui.postcard.PostCardInteractionsNoOp
-import social.firefly.core.ui.postcard.PostContentUiState
 import social.firefly.core.ui.postcard.postCardUiStatePreview
+import kotlin.math.roundToInt
 
 @Suppress("MagicNumber", "LongMethod")
 @Composable
@@ -42,8 +46,6 @@ internal fun BottomRow(
 ) {
     val context = LocalContext.current
 
-    val width = getMaxWidth()
-
     val unfavoriteStatusDialog = unfavoriteAccountConfirmationDialog {
         postCardInteractions.onFavoriteClicked(post.statusId, false)
     }
@@ -52,9 +54,32 @@ internal fun BottomRow(
         postCardInteractions.onBookmarkClicked(post.statusId, false)
     }
 
-    Layout(
-        modifier = modifier,
-        content = {
+    Row(
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Row(
+            modifier = Modifier.weight(1f),
+            horizontalArrangement = object : Arrangement.Horizontal {
+                override fun Density.arrange(
+                    totalSize: Int,
+                    sizes: IntArray,
+                    layoutDirection: LayoutDirection,
+                    outPositions: IntArray
+                ) {
+                    if (sizes.isEmpty()) return
+
+                    val iconSize = 50f.toPx(context)
+                    val noOfGaps = maxOf(sizes.lastIndex, 1)
+                    val gapSize = ((totalSize - iconSize) / noOfGaps) + 6f.toPxInt(context)
+
+                    var currentPosition = (-6f).toPx(context)
+                    sizes.forEachIndexed { index, _ ->
+                        outPositions[index] = currentPosition.roundToInt()
+                        currentPosition += gapSize
+                    }
+                }
+            },
+        ) {
             BottomIconButton(
                 onClick = { postCardInteractions.onReplyClicked(post.statusId) },
                 painter = FfIcons.chatBubbles(),
@@ -91,56 +116,16 @@ internal fun BottomRow(
                 highlighted = post.isBookmarked,
                 highlightColor = FfTheme.colors.iconBookmark,
             )
-            BottomIconButton(
-                onClick = {
-                    post.url?.let { url ->
-                        shareUrl(url, context)
-                    }
-                },
-                painter = FfIcons.share(),
-            )
         }
-    ) {measurables, constraints ->
-        val placeables =
-            measurables.map {
-                it.measure(
-                    constraints.copy(
-                        minWidth = 0,
-                        minHeight = 0,
-                    ),
-                )
-            }
-        val replyPlaceable = placeables[0]
-        val repostPlaceable = placeables[1]
-        val likePlaceable = placeables[2]
-        val bookmarkPlaceable = placeables[3]
-        val sharePlaceable = placeables[4]
-        val iconWidth = sharePlaceable.width
-        layout(
-            width = width.toPx().toInt(),
-            height = replyPlaceable.height,
-        ) {
-            replyPlaceable.placeRelative(
-                -iconWidth / 4,
-                0,
-            )
-            repostPlaceable.placeRelative(
-                (constraints.maxWidth / 4) - (iconWidth / 2),
-                0
-            )
-            likePlaceable.placeRelative(
-                (constraints.maxWidth / 4 * 2) - (iconWidth / 2),
-                0
-            )
-            bookmarkPlaceable.placeRelative(
-                (constraints.maxWidth / 4 * 3) - (iconWidth / 2),
-                0
-            )
-            sharePlaceable.placeRelative(
-                constraints.maxWidth - iconWidth / 4 * 3,
-                0
-            )
-        }
+        BottomIconButton(
+            modifier = Modifier.width(28.dp),
+            onClick = {
+                post.url?.let { url ->
+                    shareUrl(url, context)
+                }
+            },
+            painter = FfIcons.share(),
+        )
     }
 }
 
@@ -154,51 +139,44 @@ private fun BottomIconButton(
     highlightColor: Color = FfTheme.colors.iconAccent,
 ) {
     val context = LocalContext.current
-    Layout(
+    Row(
         modifier = modifier,
-        content = {
-            IconButton(
-                onClick = onClick,
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = object : Arrangement.Horizontal {
+            override fun Density.arrange(
+                totalSize: Int,
+                sizes: IntArray,
+                layoutDirection: LayoutDirection,
+                outPositions: IntArray
             ) {
-                Icon(
-                    painter = painter,
-                    contentDescription = "",
-                    tint = if (highlighted) {
-                        highlightColor
-                    } else {
-                        LocalContentColor.current
-                    },
-                )
+                if (sizes.isEmpty()) return
+
+                outPositions[0] = 0
+                if (outPositions.size >= 2) {
+                    outPositions[1] = 32f.toPxInt(context)
+                }
             }
-            Text(
-                text = count ?: "",
-                style = FfTheme.typography.labelXSmall,
-                maxLines = 1,
+        }
+    ) {
+        IconButton(
+            modifier = Modifier.width(36.dp),
+            onClick = onClick,
+        ) {
+            Icon(
+                painter = painter,
+                contentDescription = "",
+                tint = if (highlighted) {
+                    highlightColor
+                } else {
+                    LocalContentColor.current
+                },
             )
         }
-    ) {measurables, constraints ->
-        val placeables =
-            measurables.map {
-                it.measure(
-                    constraints.copy(
-                        minWidth = 0,
-                        minHeight = 0,
-                    ),
-                )
-            }
-        val iconButtonPlaceable = placeables[0]
-        val textPlaceable = placeables[1]
-        layout(
-            width = iconButtonPlaceable.width + textPlaceable.width,
-            height = iconButtonPlaceable.height,
-        ) {
-            iconButtonPlaceable.placeRelative(
-                x = 0,
-                y = (constraints.maxHeight / 2) - (iconButtonPlaceable.height / 2),
-            )
-            textPlaceable.placeRelative(
-                x = iconButtonPlaceable.width - 8f.toPxInt(context),
-                y = (constraints.maxHeight / 2) - (textPlaceable.height / 2),
+        count?.let {
+            Text(
+                text = it,
+                style = FfTheme.typography.labelXSmall,
+                maxLines = 1,
             )
         }
     }

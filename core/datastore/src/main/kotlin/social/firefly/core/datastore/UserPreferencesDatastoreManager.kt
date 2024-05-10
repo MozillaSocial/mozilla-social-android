@@ -48,7 +48,6 @@ class UserPreferencesDatastoreManager(
                 )
             }
         }
-        println("johnny $counter")
     }
 
     val activeUserDatastore: Flow<UserPreferencesDatastore> =
