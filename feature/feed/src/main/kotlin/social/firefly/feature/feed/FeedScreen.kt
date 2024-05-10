@@ -4,6 +4,8 @@ package social.firefly.feature.feed
 
 import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideIn
 import androidx.compose.animation.slideOut
 import androidx.compose.foundation.Image
@@ -31,11 +33,14 @@ import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -76,6 +81,7 @@ import social.firefly.core.ui.postcard.PostCardInteractionsNoOp
 import social.firefly.core.ui.postcard.PostCardUiState
 import social.firefly.core.ui.postcard.postListContent
 import social.firefly.feature.feed.R
+import kotlin.math.max
 
 @Composable
 internal fun FeedScreen(viewModel: FeedViewModel = koinViewModel()) {
@@ -119,14 +125,19 @@ private fun FeedScreen(
 ) {
     FfSurface {
         Column(
-            modifier =
-            Modifier
+            modifier = Modifier
                 .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
         ) {
             FfTopBar(
                 scrollBehavior = topAppBarScrollBehavior,
                 title = {
+                    val alpha by remember {
+                        derivedStateOf {
+                            max(0f, (1 - (topAppBarScrollBehavior.state.collapsedFraction * 1.5f)))
+                        }
+                    }
                     LargeTextTitle(
+                        modifier = Modifier.alpha(alpha),
                         text = stringResource(id = R.string.mozilla),
                         fontSize = 24.sp,
                         fontWeight = FontWeight.W700,
