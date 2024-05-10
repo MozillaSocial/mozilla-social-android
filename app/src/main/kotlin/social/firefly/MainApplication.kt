@@ -33,9 +33,9 @@ import social.firefly.feature.notifications.notificationsModule
 import social.firefly.feature.report.reportModule
 import social.firefly.feature.settings.settingsModule
 import social.firefly.feature.thread.threadModule
-import social.firefly.feed.feedModule
-import social.firefly.post.newPostModule
-import social.firefly.search.searchModule
+import social.firefly.feature.feed.feedModule
+import social.firefly.feature.post.newPostModule
+import social.firefly.feature.search.searchModule
 import social.firefly.BuildConfig
 import social.firefly.core.push.pushModule
 import social.firefly.feature.bookmarks.bookmarksModule
@@ -138,7 +138,7 @@ val featureModules =
             followersModule,
             hashTagModule,
             mediaModule,
-            newPostModule,
+            social.firefly.feature.post.newPostModule,
             notificationsModule,
             reportModule,
             searchModule,

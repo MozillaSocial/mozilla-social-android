@@ -19,6 +19,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -54,10 +55,10 @@ internal fun ThreadScreen(
     threadStatusId: String,
     viewModel: ThreadViewModel = koinViewModel(parameters = { parametersOf(threadStatusId) }),
 ) {
-    val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
-    val threadType = viewModel.threadType.collectAsStateWithLifecycle(
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val threadType by viewModel.threadType.collectAsStateWithLifecycle(
         initialValue = ThreadType.TREE
-    ).value
+    )
 
     ThreadScreen(
         threadType = threadType,
