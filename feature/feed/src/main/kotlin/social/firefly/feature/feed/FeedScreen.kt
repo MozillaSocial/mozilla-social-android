@@ -123,18 +123,7 @@ private fun FeedScreen(
             FfTopBar(
                 scrollBehavior = topAppBarScrollBehavior,
                 title = {
-                    val alpha by remember {
-                        derivedStateOf {
-                            max(0f, (1 - (topAppBarScrollBehavior.state.collapsedFraction * 1.5f)))
-                        }
-                    }
-                    LargeTextTitle(
-                        modifier = Modifier.alpha(alpha),
-                        text = stringResource(id = R.string.mozilla),
-                        fontSize = 24.sp,
-                        fontWeight = FontWeight.W700,
-                        fontFamily = FfFonts.zillaSlab,
-                    )
+                    TitleBar(topAppBarScrollBehavior = topAppBarScrollBehavior)
                 },
             )
 
@@ -150,6 +139,24 @@ private fun FeedScreen(
             )
         }
     }
+}
+
+@Composable
+private fun TitleBar(
+    topAppBarScrollBehavior: TopAppBarScrollBehavior,
+) {
+    val alpha by remember {
+        derivedStateOf {
+            max(0f, (1 - (topAppBarScrollBehavior.state.collapsedFraction * 1.5f)))
+        }
+    }
+    LargeTextTitle(
+        modifier = Modifier.alpha(alpha),
+        text = stringResource(id = R.string.mozilla),
+        fontSize = 24.sp,
+        fontWeight = FontWeight.W700,
+        fontFamily = FfFonts.zillaSlab,
+    )
 }
 
 @Composable
