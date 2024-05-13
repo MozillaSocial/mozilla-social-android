@@ -53,4 +53,6 @@ sealed class Event {
 
     data class NavigateToLoginDestination(val destination: AuthNavigationDestination) :
         Event()
+
+    data object ChooseAccountForSharing : Event()
 }

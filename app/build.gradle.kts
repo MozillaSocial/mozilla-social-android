@@ -88,6 +88,7 @@ dependencies {
     implementation(project(":core:share"))
     implementation(project(":feature:followedHashTags"))
     implementation(project(":feature:bookmarks"))
+    implementation(project(":core:ui:chooseAccount"))
 
     implementation(kotlin("reflect"))
 

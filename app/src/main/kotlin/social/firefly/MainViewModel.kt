@@ -5,7 +5,6 @@ import android.net.Uri
 import android.os.Parcelable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.navOptions
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.launch
@@ -13,6 +12,8 @@ import social.firefly.core.datastore.AppPreferences
 import social.firefly.core.datastore.AppPreferencesDatastore
 import social.firefly.core.datastore.UserPreferencesDatastoreManager
 import social.firefly.core.designsystem.theme.ThemeOption
+import social.firefly.core.navigation.Event
+import social.firefly.core.navigation.EventRelay
 import social.firefly.core.navigation.NavigationDestination
 import social.firefly.core.navigation.usecases.NavigateTo
 import social.firefly.core.repository.mastodon.TimelineRepository
@@ -23,6 +24,7 @@ class MainViewModel(
     private val navigateTo: NavigateTo,
     private val userPreferencesDatastoreManager: UserPreferencesDatastoreManager,
     private val timelineRepository: TimelineRepository,
+    private val eventRelay: EventRelay,
     appPreferencesDatastore: AppPreferencesDatastore,
 ) : ViewModel() {
 
@@ -73,45 +75,21 @@ class MainViewModel(
     private fun handleSendTextIntentReceived(intent: Intent) {
         intent.getStringExtra(Intent.EXTRA_TEXT)?.let { sharedText ->
             ShareInfo.sharedText = sharedText
-            navigateTo(
-                NavigationDestination.NewPost(
-                    navOptions = navOptions {
-                        popUpTo(
-                            NavigationDestination.Tabs.route
-                        )
-                    }
-                )
-            )
+            eventRelay.emitEvent(Event.ChooseAccountForSharing)
         }
     }
 
     private fun handleSendImageIntentReceived(intent: Intent) {
         (intent.getParcelableExtra<Parcelable>(Intent.EXTRA_STREAM) as? Uri)?.let { sharedUri ->
             ShareInfo.sharedImageUri = sharedUri
-            navigateTo(
-                NavigationDestination.NewPost(
-                    navOptions = navOptions {
-                        popUpTo(
-                            NavigationDestination.Tabs.route
-                        )
-                    }
-                )
-            )
+            eventRelay.emitEvent(Event.ChooseAccountForSharing)
         }
     }
 
     private fun handleSendVideoIntentReceived(intent: Intent) {
         (intent.getParcelableExtra<Parcelable>(Intent.EXTRA_STREAM) as? Uri)?.let { sharedUri ->
             ShareInfo.sharedVideoUri = sharedUri
-            navigateTo(
-                NavigationDestination.NewPost(
-                    navOptions = navOptions {
-                        popUpTo(
-                            NavigationDestination.Tabs.route
-                        )
-                    }
-                )
-            )
+            eventRelay.emitEvent(Event.ChooseAccountForSharing)
         }
     }
 }

@@ -10,6 +10,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import social.firefly.core.ui.chooseAccount.ChooseAccountDialog
 import social.firefly.core.ui.common.snackbar.FfSnackbar
 import social.firefly.core.ui.common.snackbar.FfSnackbarHost
 import social.firefly.navigation.MainNavHost
@@ -42,4 +43,6 @@ fun MainActivityScreen() {
             FfSnackbar(snackbarData = snackbarData, snackbarType = snackbarType)
         }
     }
+
+    ChooseAccountDialog()
 }

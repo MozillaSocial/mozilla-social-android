@@ -10,6 +10,12 @@ android {
 dependencies {
     implementation(project(":core:designsystem"))
     implementation(project(":core:ui:common"))
+    implementation(project(":core:datastore"))
+    implementation(project(":core:navigation"))
+    implementation(project(":core:usecase:mastodon"))
 
     implementation(libs.coil)
+    implementation(libs.koin.core)
+    implementation(libs.koin.androidx.compose)
+    implementation(libs.androidx.navigation.compose)
 }
