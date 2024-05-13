@@ -38,6 +38,7 @@ import social.firefly.feature.post.newPostModule
 import social.firefly.feature.search.searchModule
 import social.firefly.BuildConfig
 import social.firefly.core.push.pushModule
+import social.firefly.core.ui.chooseAccount.chooseAccountModule
 import social.firefly.feature.bookmarks.bookmarksModule
 import social.firefly.feature.followedHashTags.followedHashTagsModule
 import timber.log.Timber
@@ -92,6 +93,7 @@ class MainApplication : Application(), ImageLoaderFactory {
                 mainModule,
                 workManagerModule,
                 pushModule,
+                chooseAccountModule,
             )
         }
     }

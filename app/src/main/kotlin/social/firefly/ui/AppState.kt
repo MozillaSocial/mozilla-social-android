@@ -138,6 +138,10 @@ class AppState(
                     is Event.NavigateToLoginDestination -> {
                         navigateToAuthDestination(it.destination)
                     }
+
+                    is Event.ChooseAccountForSharing -> {
+                        // Handled in ChooseAccountDialogViewModel
+                    }
                 }
             }
         }
