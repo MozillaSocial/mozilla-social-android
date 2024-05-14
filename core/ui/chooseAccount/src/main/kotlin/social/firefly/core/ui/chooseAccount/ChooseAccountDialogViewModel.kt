@@ -16,7 +16,7 @@ import social.firefly.core.navigation.usecases.NavigateTo
 import social.firefly.core.usecase.mastodon.auth.SwitchActiveAccount
 
 class ChooseAccountDialogViewModel(
-    userPreferencesDatastoreManager: UserPreferencesDatastoreManager,
+    private val userPreferencesDatastoreManager: UserPreferencesDatastoreManager,
     eventRelay: EventRelay,
     private val navigateTo: NavigateTo,
     private val switchActiveAccount: SwitchActiveAccount,
@@ -41,7 +41,19 @@ class ChooseAccountDialogViewModel(
             eventRelay.navigationEvents.collect { event ->
                 when (event) {
                     is Event.ChooseAccountForSharing -> {
-                        _isOpen.update { true }
+                        if (userPreferencesDatastoreManager.isLoggedInToMultipleAccounts) {
+                            _isOpen.update { true }
+                        } else {
+                            navigateTo(
+                                NavigationDestination.NewPost(
+                                    navOptions = navOptions {
+                                        popUpTo(
+                                            NavigationDestination.Tabs.route
+                                        )
+                                    }
+                                )
+                            )
+                        }
                     }
                     else -> {}
                 }
