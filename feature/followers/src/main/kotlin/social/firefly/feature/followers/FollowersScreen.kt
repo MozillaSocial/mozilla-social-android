@@ -1,11 +1,14 @@
 package social.firefly.feature.followers
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -16,6 +19,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -34,6 +38,7 @@ import social.firefly.core.navigation.navigationModule
 import social.firefly.core.ui.accountfollower.AccountFollower
 import social.firefly.core.ui.accountfollower.AccountFollowerUiState
 import social.firefly.core.ui.common.FfSurface
+import social.firefly.core.ui.common.UiConstants
 import social.firefly.core.ui.common.account.quickview.AccountQuickViewUiState
 import social.firefly.core.ui.common.appbar.FfCloseableTopAppBar
 import social.firefly.core.ui.common.following.FollowStatus
@@ -81,8 +86,7 @@ private fun FollowersScreen(
 ) {
     FfSurface {
         Column(
-            modifier =
-            Modifier
+            modifier = Modifier
                 .fillMaxSize()
                 .systemBarsPadding(),
         ) {
@@ -94,51 +98,58 @@ private fun FollowersScreen(
                 mutableStateOf(startingTab)
             }
 
-            FfTabRow(
-                selectedTabIndex = selectedTab.ordinal,
+            Box(
+                modifier = Modifier.fillMaxWidth()
             ) {
-                FollowType.entries.forEach { tabType ->
-                    FfTab(
-                        modifier =
-                        Modifier
-                            .height(40.dp),
-                        selected = selectedTab == tabType,
-                        onClick = {
-                            followersInteractions.onTabClicked(tabType)
-                            selectedTab = tabType
-                        },
-                        content = {
-                            Text(
-                                text =
-                                when (tabType) {
-                                    FollowType.FOLLOWERS ->
-                                        stringResource(id = R.string.followers)
-
-                                    FollowType.FOLLOWING ->
-                                        stringResource(id = R.string.following)
+                Column(
+                    modifier = Modifier
+                        .widthIn(max = UiConstants.MAX_WIDTH)
+                        .align(Alignment.TopCenter),
+                ) {
+                    FfTabRow(
+                        selectedTabIndex = selectedTab.ordinal,
+                    ) {
+                        FollowType.entries.forEach { tabType ->
+                            FfTab(
+                                modifier = Modifier
+                                    .height(40.dp),
+                                selected = selectedTab == tabType,
+                                onClick = {
+                                    followersInteractions.onTabClicked(tabType)
+                                    selectedTab = tabType
                                 },
-                                style = FfTheme.typography.labelMedium,
+                                content = {
+                                    Text(
+                                        text = when (tabType) {
+                                            FollowType.FOLLOWERS ->
+                                                stringResource(id = R.string.followers)
+
+                                            FollowType.FOLLOWING ->
+                                                stringResource(id = R.string.following)
+                                        },
+                                        style = FfTheme.typography.labelMedium,
+                                    )
+                                },
                             )
+                        }
+                    }
+
+                    val followersListState = rememberLazyListState()
+                    val followingListState = rememberLazyListState()
+
+                    FollowersList(
+                        list = when (selectedTab) {
+                            FollowType.FOLLOWERS -> followers
+                            FollowType.FOLLOWING -> following
                         },
+                        listState = when (selectedTab) {
+                            FollowType.FOLLOWERS -> followersListState
+                            FollowType.FOLLOWING -> followingListState
+                        },
+                        followersInteractions = followersInteractions,
                     )
                 }
             }
-
-            val followersListState = rememberLazyListState()
-            val followingListState = rememberLazyListState()
-
-            FollowersList(
-                list =
-                when (selectedTab) {
-                    FollowType.FOLLOWERS -> followers
-                    FollowType.FOLLOWING -> following
-                },
-                listState = when (selectedTab) {
-                    FollowType.FOLLOWERS -> followersListState
-                    FollowType.FOLLOWING -> followingListState
-                },
-                followersInteractions = followersInteractions,
-            )
         }
     }
 }
@@ -165,31 +176,30 @@ private fun FollowersList(
     ) {
         when (lazyPagingItems.loadState.refresh) {
             is LoadState.Error -> {} // handle the error outside the lazy column
-            else ->
-                items(
-                    count = lazyPagingItems.itemCount,
-                    key = lazyPagingItems.itemKey { it.accountQuickViewUiState.accountId },
-                ) { index ->
-                    lazyPagingItems[index]?.let { uiState ->
-                        AccountFollower(
-                            uiState = uiState,
-                            onButtonClicked = {
-                                followersInteractions.onFollowClicked(
-                                    uiState.accountQuickViewUiState.accountId,
-                                    followStatus = uiState.followStatus,
-                                )
+            else -> items(
+                count = lazyPagingItems.itemCount,
+                key = lazyPagingItems.itemKey { it.accountQuickViewUiState.accountId },
+            ) { index ->
+                lazyPagingItems[index]?.let { uiState ->
+                    AccountFollower(
+                        uiState = uiState,
+                        onButtonClicked = {
+                            followersInteractions.onFollowClicked(
+                                uiState.accountQuickViewUiState.accountId,
+                                followStatus = uiState.followStatus,
+                            )
+                        },
+                        modifier = Modifier
+                            .padding(FfSpacing.md)
+                            .clickable {
+                                followersInteractions
+                                    .onAccountClicked(
+                                        accountId = uiState.accountQuickViewUiState.accountId
+                                    )
                             },
-                            modifier = Modifier
-                                .padding(FfSpacing.md)
-                                .clickable {
-                                    followersInteractions
-                                        .onAccountClicked(
-                                            accountId = uiState.accountQuickViewUiState.accountId
-                                        )
-                                },
-                        )
-                    }
+                    )
                 }
+            }
         }
     }
 }
@@ -203,8 +213,7 @@ private fun FollowersScreenPreview() {
         FollowersScreen(
             displayName = "Person",
             startingTab = FollowType.FOLLOWERS,
-            followers =
-            flowOf(
+            followers = flowOf(
                 PagingData.from(
                     listOf(
                         AccountFollowerUiState(

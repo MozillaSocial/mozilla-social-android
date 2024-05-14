@@ -1,13 +1,17 @@
 package social.firefly.feature.hashtag
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -19,6 +23,7 @@ import org.koin.core.parameter.parametersOf
 import social.firefly.common.Resource
 import social.firefly.core.model.HashTag
 import social.firefly.core.ui.common.FfSurface
+import social.firefly.core.ui.common.UiConstants
 import social.firefly.core.ui.common.appbar.FfCloseableTopAppBar
 import social.firefly.core.ui.common.error.GenericError
 import social.firefly.core.ui.common.following.FollowStatus
@@ -94,13 +99,20 @@ private fun HashTagScreen(
                 is Resource.Loaded -> {
                     val feedListState = feed.collectAsLazyPagingItems()
 
-                    PullRefreshLazyColumn(
-                        lazyPagingItems = feedListState,
+                    Box(
+                        modifier = Modifier.fillMaxWidth()
                     ) {
-                        postListContent(
+                        PullRefreshLazyColumn(
+                            modifier = Modifier
+                                .widthIn(max = UiConstants.MAX_WIDTH)
+                                .align(Alignment.TopCenter),
                             lazyPagingItems = feedListState,
-                            postCardInteractions = postCardInteractions,
-                        )
+                        ) {
+                            postListContent(
+                                lazyPagingItems = feedListState,
+                                postCardInteractions = postCardInteractions,
+                            )
+                        }
                     }
                 }
 

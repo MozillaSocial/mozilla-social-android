@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -58,6 +59,7 @@ import social.firefly.core.designsystem.utils.NoIndication
 import social.firefly.core.model.ImageState
 import social.firefly.core.model.StatusVisibility
 import social.firefly.core.ui.common.TransparentNoTouchOverlay
+import social.firefly.core.ui.common.UiConstants
 import social.firefly.core.ui.common.appbar.FfCloseableTopAppBar
 import social.firefly.core.ui.common.button.FfButton
 import social.firefly.core.ui.common.button.FfButtonContentPadding
@@ -221,7 +223,7 @@ private fun NewPostScreenContent(
     mediaInteractions: MediaInteractions,
     pollInteractions: PollInteractions,
     contentWarningInteractions: ContentWarningInteractions,
-    newPostInteractions: social.firefly.feature.post.NewPostInteractions,
+    newPostInteractions: NewPostInteractions,
 ) {
     Column {
         TopBar(
@@ -235,7 +237,9 @@ private fun NewPostScreenContent(
 
         Row(
             modifier = Modifier
-                .weight(1f),
+                .weight(1f)
+                .widthIn(max = UiConstants.MAX_WIDTH)
+                .align(Alignment.CenterHorizontally),
         ) {
             newPostUiState.userHeaderState?.let { userHeaderState ->
                 UserHeader(
