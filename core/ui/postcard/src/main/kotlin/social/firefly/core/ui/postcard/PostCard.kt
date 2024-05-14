@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
@@ -25,9 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import kotlinx.datetime.Instant
 import social.firefly.common.utils.StringFactory
-import social.firefly.common.utils.timeSinceNow
 import social.firefly.core.designsystem.icon.FfIcons
 import social.firefly.core.designsystem.theme.FfTheme
 import social.firefly.core.designsystem.utils.NoRipple
@@ -56,6 +55,8 @@ fun PostCard(
             ) {
                 if (post.depthLinesUiState != null) {
                     DepthLines(
+                        modifier = Modifier
+                            .fillMaxHeight(),
                         depthLinesUiState = post.depthLinesUiState,
                     )
                 } else {

@@ -24,6 +24,7 @@ import social.firefly.core.ui.postcard.ExpandRepliesButtonUiState
 @Composable
 fun DepthLines(
     depthLinesUiState: DepthLinesUiState,
+    modifier: Modifier = Modifier,
 ) {
     val spacingWidth = 12
 
@@ -39,8 +40,7 @@ fun DepthLines(
     }
 
     Canvas(
-        modifier = Modifier
-            .fillMaxHeight()
+        modifier = modifier
             .width(width.dp),
     ) {
         val height = size.height
