@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -30,6 +31,7 @@ import org.koin.androidx.compose.koinViewModel
 import social.firefly.core.designsystem.theme.FfSpacing
 import social.firefly.core.designsystem.utils.NoRipple
 import social.firefly.core.ui.common.FfSurface
+import social.firefly.core.ui.common.UiConstants
 import social.firefly.core.ui.common.appbar.FfTopBar
 import social.firefly.core.ui.hashtagcard.HashTagInteractions
 import social.firefly.core.ui.hashtagcard.hashTagListItems
@@ -75,6 +77,8 @@ private fun DiscoverScreen(
         Column {
             Box(
                 modifier = Modifier
+                    .widthIn(max = UiConstants.MAX_WIDTH)
+                    .align(Alignment.CenterHorizontally)
                     .fillMaxWidth()
                     .height(IntrinsicSize.Max),
             ) {
@@ -124,8 +128,14 @@ private fun MainContent(
     postCardInteractions: PostCardInteractions,
     hashtagInteractions: HashTagInteractions,
 ) {
-    Box {
-        Column {
+    Box(
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Column(
+            modifier = Modifier
+                .widthIn(max = UiConstants.MAX_WIDTH)
+                .align(Alignment.TopCenter)
+        ) {
             Tabs(
                 uiState = uiState,
                 discoverInteractions = discoverInteractions,

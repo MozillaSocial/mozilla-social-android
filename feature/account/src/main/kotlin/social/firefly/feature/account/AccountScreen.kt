@@ -25,6 +25,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -47,6 +48,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.font.FontWeight.Companion.W700
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -66,6 +68,7 @@ import social.firefly.core.designsystem.utils.NoRipple
 import social.firefly.core.model.AccountTimelineType
 import social.firefly.core.navigation.navigationModule
 import social.firefly.core.ui.common.FfSurface
+import social.firefly.core.ui.common.UiConstants
 import social.firefly.core.ui.common.appbar.FfCloseableTopAppBar
 import social.firefly.core.ui.common.button.FfButtonContentPadding
 import social.firefly.core.ui.common.button.FfButtonSecondary
@@ -166,6 +169,10 @@ private fun AccountScreen(
                     )
 
                     MainContent(
+                        modifier = Modifier
+                            .widthIn(max = UiConstants.MAX_WIDTH)
+                            .align(Alignment.CenterHorizontally)
+                            .fillMaxSize(),
                         account = uiState.data,
                         isUsersProfile = isUsersProfile,
                         htmlContentInteractions = htmlContentInteractions,
@@ -230,10 +237,10 @@ private fun MainContent(
     htmlContentInteractions: HtmlContentInteractions,
     postCardInteractions: PostCardInteractions,
     accountInteractions: AccountInteractions,
+    modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = Modifier
-            .fillMaxSize(),
+        modifier = modifier,
     ) {
         val postsFeed = timeline.postsFeed.collectAsLazyPagingItems()
         val postsAndRepliesFeed = timeline.postsAndRepliesFeed.collectAsLazyPagingItems()
@@ -694,7 +701,7 @@ private fun UserLabel(
 private const val BIO_MAX_LINES_NOT_EXPANDED = 3
 
 @Suppress("MagicNumber")
-@Preview
+@PreviewScreenSizes
 @Composable
 fun AccountScreenPreview() {
     PreviewTheme(modules = listOf(navigationModule)) {

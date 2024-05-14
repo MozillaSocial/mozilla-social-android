@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -61,6 +62,7 @@ import social.firefly.core.designsystem.theme.FfTheme
 import social.firefly.core.designsystem.theme.ThemeOption
 import social.firefly.core.push.PushRegistration
 import social.firefly.core.ui.common.FfSurface
+import social.firefly.core.ui.common.UiConstants
 import social.firefly.core.ui.common.appbar.FfTopBar
 import social.firefly.core.ui.common.button.FfButtonSecondary
 import social.firefly.core.ui.common.button.FfFloatingActionButton
@@ -117,27 +119,33 @@ private fun FeedScreen(
         ),
 ) {
     FfSurface {
-        Column(
-            modifier = Modifier
-                .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
+        Box(
+            modifier = Modifier.fillMaxWidth()
         ) {
-            FfTopBar(
-                scrollBehavior = topAppBarScrollBehavior,
-                title = {
-                    TitleBar(topAppBarScrollBehavior = topAppBarScrollBehavior)
-                },
-            )
+            Column(
+                modifier = Modifier
+                    .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection)
+                    .widthIn(max = UiConstants.MAX_WIDTH)
+                    .align(Alignment.TopCenter),
+            ) {
+                FfTopBar(
+                    scrollBehavior = topAppBarScrollBehavior,
+                    title = {
+                        TitleBar(topAppBarScrollBehavior = topAppBarScrollBehavior)
+                    },
+                )
 
-            TabbedContent(
-                uiState = uiState,
-                homeFeed = homeFeed,
-                localFeed = localFeed,
-                federatedFeed = federatedFeed,
-                homePostCardInteractions = homePostCardInteractions,
-                localPostCardInteractions = localPostCardInteractions,
-                federatedPostCardInteractions = federatedPostCardInteractions,
-                feedInteractions = feedInteractions,
-            )
+                TabbedContent(
+                    uiState = uiState,
+                    homeFeed = homeFeed,
+                    localFeed = localFeed,
+                    federatedFeed = federatedFeed,
+                    homePostCardInteractions = homePostCardInteractions,
+                    localPostCardInteractions = localPostCardInteractions,
+                    federatedPostCardInteractions = federatedPostCardInteractions,
+                    feedInteractions = feedInteractions,
+                )
+            }
         }
     }
 }

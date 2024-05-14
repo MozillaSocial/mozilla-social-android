@@ -1,6 +1,7 @@
 package social.firefly.ui.bottombar
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.WindowInsets
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.material3.Icon
@@ -19,6 +21,7 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemColors
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
@@ -33,6 +36,7 @@ import social.firefly.core.designsystem.theme.FfTheme
 import social.firefly.core.navigation.BottomBarNavigationDestination
 import social.firefly.core.navigation.NavigationDestination
 import social.firefly.core.ui.common.FfSurface
+import social.firefly.core.ui.common.UiConstants
 import social.firefly.ui.bottombar.Destination.Main
 
 @Composable
@@ -109,16 +113,21 @@ private fun FfNavigationBar(
         tonalElevation = tonalElevation,
         modifier = modifier,
     ) {
-        Row(
-            modifier =
-            Modifier
-                .fillMaxWidth()
-                .windowInsetsPadding(windowInsets)
-                .height(height)
-                .selectableGroup(),
-            horizontalArrangement = Arrangement.SpaceEvenly,
-            content = content,
-        )
+        Box(
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Row(
+                modifier = Modifier
+                    .widthIn(max = UiConstants.MAX_WIDTH)
+                    .align(Alignment.Center)
+                    .fillMaxWidth()
+                    .windowInsetsPadding(windowInsets)
+                    .height(height)
+                    .selectableGroup(),
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                content = content,
+            )
+        }
     }
 }
 

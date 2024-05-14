@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.LazyListState
@@ -37,6 +38,7 @@ import social.firefly.common.Resource
 import social.firefly.core.designsystem.icon.FfIcons
 import social.firefly.core.designsystem.theme.FfTheme
 import social.firefly.core.ui.common.FfSurface
+import social.firefly.core.ui.common.UiConstants
 import social.firefly.core.ui.common.appbar.FfCloseableTopAppBar
 import social.firefly.core.ui.common.dropdown.FfDropDownItem
 import social.firefly.core.ui.common.dropdown.FfIconButtonDropDownMenu
@@ -110,6 +112,9 @@ private fun ThreadScreen(
 
                 uiState.data?.let {
                     ThreadList(
+                        modifier = Modifier
+                            .widthIn(max = UiConstants.MAX_WIDTH)
+                            .align(Alignment.TopCenter),
                         threadType = threadType,
                         statuses = it,
                         postCardDelegate = postCardDelegate,
@@ -133,6 +138,7 @@ private fun ThreadList(
     statuses: ThreadPostCardCollection,
     postCardDelegate: PostCardInteractions,
     threadInteractions: ThreadInteractions,
+    modifier: Modifier = Modifier,
 ) {
     if (statuses.mainPost == null) return
 
@@ -147,7 +153,7 @@ private fun ThreadList(
     }
 
     LazyColumn(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize(),
         state = listState,
     ) {

@@ -1,10 +1,13 @@
 package social.firefly.feature.notifications
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -13,6 +16,7 @@ import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
@@ -30,6 +34,7 @@ import kotlinx.coroutines.flow.flowOf
 import org.koin.androidx.compose.koinViewModel
 import social.firefly.core.designsystem.theme.FfSpacing
 import social.firefly.core.ui.common.FfSurface
+import social.firefly.core.ui.common.UiConstants
 import social.firefly.core.ui.common.appbar.FfTopBar
 import social.firefly.core.ui.common.divider.FfDivider
 import social.firefly.core.ui.common.pullrefresh.PullRefreshLazyColumn
@@ -93,33 +98,44 @@ private fun NotificationsScreen(
                 onIconClicked = {},
                 showDivider = false,
             )
-            Tabs(
-                uiState = uiState,
-                notificationsInteractions = notificationsInteractions
-            )
 
-            val all = feed.collectAsLazyPagingItems()
-            val mentions = mentionFeed.collectAsLazyPagingItems()
-            val follows = followsFeed.collectAsLazyPagingItems()
+            Box(
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Column(
+                    modifier = Modifier
+                        .widthIn(max = UiConstants.MAX_WIDTH)
+                        .align(Alignment.TopCenter),
+                ) {
+                    Tabs(
+                        uiState = uiState,
+                        notificationsInteractions = notificationsInteractions
+                    )
 
-            val allListState = rememberLazyListState()
-            val mentionsListState = rememberLazyListState()
-            val followsListState = rememberLazyListState()
+                    val all = feed.collectAsLazyPagingItems()
+                    val mentions = mentionFeed.collectAsLazyPagingItems()
+                    val follows = followsFeed.collectAsLazyPagingItems()
 
-            NotificationsList(
-                lazyPagingItems = when (uiState.selectedTab) {
-                    NotificationsTab.ALL -> all
-                    NotificationsTab.MENTIONS -> mentions
-                    NotificationsTab.REQUESTS -> follows
-                },
-                listState = when (uiState.selectedTab) {
-                    NotificationsTab.ALL -> allListState
-                    NotificationsTab.MENTIONS -> mentionsListState
-                    NotificationsTab.REQUESTS -> followsListState
-                },
-                postCardInteractions = postCardInteractions,
-                notificationInteractions = notificationInteractions,
-            )
+                    val allListState = rememberLazyListState()
+                    val mentionsListState = rememberLazyListState()
+                    val followsListState = rememberLazyListState()
+
+                    NotificationsList(
+                        lazyPagingItems = when (uiState.selectedTab) {
+                            NotificationsTab.ALL -> all
+                            NotificationsTab.MENTIONS -> mentions
+                            NotificationsTab.REQUESTS -> follows
+                        },
+                        listState = when (uiState.selectedTab) {
+                            NotificationsTab.ALL -> allListState
+                            NotificationsTab.MENTIONS -> mentionsListState
+                            NotificationsTab.REQUESTS -> followsListState
+                        },
+                        postCardInteractions = postCardInteractions,
+                        notificationInteractions = notificationInteractions,
+                    )
+                }
+            }
         }
     }
 }
