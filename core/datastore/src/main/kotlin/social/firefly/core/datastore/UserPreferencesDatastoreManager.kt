@@ -23,6 +23,9 @@ class UserPreferencesDatastoreManager(
     val isLoggedInToAtLeastOneAccount: Boolean
         get() = dataStores.value.isNotEmpty()
 
+    val isLoggedInToMultipleAccounts: Boolean
+        get() = dataStores.value.size > 1
+
     // counter exists to ensure we don't create a datastore preferences with a name that already exists.
     // this could happen if the user logs out and logs back in with the same account.
     // That would cause a crash becauses two datastores with the same name can't exist at the same time,
