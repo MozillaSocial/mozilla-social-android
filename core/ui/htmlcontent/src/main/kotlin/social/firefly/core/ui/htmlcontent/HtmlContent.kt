@@ -34,20 +34,18 @@ fun HtmlContent(
     linkColor: Color = FfTheme.colors.textLink,
     clickableLinks: Boolean = true,
 ) {
-    val textContent =
-        remember(htmlText) {
-            val spannable =
-                htmlText.reduceHtmlLinks().htmlToSpannable(
-                    mentions = mentions,
-                    linkColor = linkColor,
-                    onLinkClick = htmlContentInteractions::onLinkClicked,
-                    onHashTagClicked = htmlContentInteractions::onHashTagClicked,
-                    onAccountClicked = htmlContentInteractions::onAccountClicked,
-                )
-            mutableStateOf(
-                spannable,
-            )
-        }
+    val textContent = remember(htmlText) {
+        val spannable = htmlText.reduceHtmlLinks().htmlToSpannable(
+            mentions = mentions,
+            linkColor = linkColor,
+            onLinkClick = htmlContentInteractions::onLinkClicked,
+            onHashTagClicked = htmlContentInteractions::onHashTagClicked,
+            onAccountClicked = htmlContentInteractions::onAccountClicked,
+        )
+        mutableStateOf(
+            spannable,
+        )
+    }
 
     AndroidView(
         modifier = modifier,

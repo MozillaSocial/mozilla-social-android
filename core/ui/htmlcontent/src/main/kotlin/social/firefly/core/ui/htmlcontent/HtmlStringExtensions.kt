@@ -18,12 +18,13 @@ fun String.htmlToSpannable(
     onAccountClicked: (accountName: String) -> Unit,
 ): Spannable {
     // the html must be wrapped in a <p> tag in order for it to be parsed by HtmlCompat.fromHtml
-    val html =
-        if (!startsWith("<p>")) {
-            "<p>$this</p>"
-        } else {
-            this
-        }
+    val html = if (!startsWith("<p>")) {
+        "<p>$this</p>"
+    } else {
+        this
+    }
+        .replace(" ", "<br><br>") // paragraph separators
+        .replace(" ", "<br>") // line separators
     return HtmlCompat.fromHtml(html, 0)
         .trim('\n')
         .toSpannable()
