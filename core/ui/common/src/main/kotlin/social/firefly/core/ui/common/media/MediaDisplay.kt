@@ -76,11 +76,13 @@ private fun SingleAttachment(
 ) {
     when (attachment) {
         is Attachment.Image -> {
+            val aspectRatio by remember {
+                mutableFloatStateOf(attachment.meta?.calculateAspectRatio() ?: 1f)
+            }
             Attachment(
-                modifier =
-                Modifier
+                modifier = Modifier
                     .fillMaxWidth()
-                    .aspectRatio(attachment.meta?.calculateAspectRatio() ?: 1f),
+                    .aspectRatio(aspectRatio),
                 attachment = attachment,
                 onAttachmentClicked = onAttachmentClicked,
             )

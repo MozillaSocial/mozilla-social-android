@@ -54,7 +54,6 @@ internal fun BottomRow(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .height(40.dp)
     ) {
         Row(
             modifier = Modifier.weight(1f),
