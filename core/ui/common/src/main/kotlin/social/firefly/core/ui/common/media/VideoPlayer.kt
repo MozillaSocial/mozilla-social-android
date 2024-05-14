@@ -39,14 +39,12 @@ private const val TAG = "VideoPlayer"
 @Composable
 fun VideoPlayer(
     uri: Uri,
+    modifier: Modifier = Modifier,
     loadState: LoadState = LoadState.LOADED,
-    aspectRatio: Float = 1f,
     onVideoClicked: (() -> Unit)? = null,
 ) {
     Box(
-        modifier =
-        Modifier
-            .aspectRatio(aspectRatio)
+        modifier = modifier
             .clip(RoundedCornerShape(FfRadius.media))
             .clickable(
                 enabled = onVideoClicked != null,
