@@ -283,6 +283,7 @@ private fun NewPostScreenContent(
             contentWarningInteractions = contentWarningInteractions,
             onUploadImageClicked = newPostInteractions::onUploadImageClicked,
             onUploadMediaClicked = newPostInteractions::onUploadMediaClicked,
+            onLanguageSelected = newPostInteractions::onLanguageSelected,
         )
     }
 }

@@ -8,7 +8,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
@@ -29,7 +28,6 @@ import social.firefly.core.repository.mastodon.AccountRepository
 import social.firefly.core.usecase.mastodon.account.GetLoggedInUserAccountId
 import social.firefly.core.usecase.mastodon.status.EditStatus
 import social.firefly.core.usecase.mastodon.status.PostStatus
-import social.firefly.feature.post.bottombar.BottomBarState
 import social.firefly.feature.post.bottombar.LocaleUiState
 import social.firefly.feature.post.media.MediaDelegate
 import social.firefly.feature.post.poll.PollDelegate
@@ -147,7 +145,7 @@ class NewPostViewModel(
         }
 
         viewModelScope.launch {
-            val defaultLanguage = userPreferencesDatastoreManager
+            val defaultLanguageCode = userPreferencesDatastoreManager
                 .activeUserDatastore
                 .flatMapLatest { it.defaultLanguage }
                 .first()
@@ -164,19 +162,29 @@ class NewPostViewModel(
                     locale.displayName
                 }.map { locale ->
                     LocaleUiState(
-                        displayName = locale.displayName,
-                        code = locale.isO3Language
+                        displayName = "${locale.displayName} (${locale.getDisplayName(locale)})",
+                        code = locale.language
                     )
                 }
 
             _newPostUiState.edit {
                 copy(
                     bottomBarState = newPostUiState.value.bottomBarState.copy(
-                        language = defaultLanguage,
+                        language = defaultLanguageCode,
                         availableLocales = availableLocales,
                     )
                 )
             }
+        }
+    }
+
+    override fun onLanguageSelected(code: String) {
+        _newPostUiState.edit {
+            copy(
+                bottomBarState = newPostUiState.value.bottomBarState.copy(
+                    language = code,
+                )
+            )
         }
     }
 

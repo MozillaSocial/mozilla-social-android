@@ -37,6 +37,7 @@ internal fun LanguageDropDown(
                         )
                     },
                     onClick = {
+                        expanded.value = false
                         onLanguageClicked(locale.code)
                     }
                 )

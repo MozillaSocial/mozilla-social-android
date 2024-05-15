@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Icon
@@ -31,7 +30,6 @@ import social.firefly.common.utils.toFile
 import social.firefly.core.designsystem.icon.FfIcons
 import social.firefly.core.designsystem.theme.FfSpacing
 import social.firefly.core.designsystem.theme.FfTheme
-import social.firefly.core.model.StatusVisibility
 import social.firefly.core.ui.common.divider.FfDivider
 import social.firefly.feature.post.R
 import social.firefly.feature.post.NewPostViewModel
@@ -47,6 +45,7 @@ internal fun BottomBar(
     onMediaInserted: (Uri, File, FileType) -> Unit,
     onUploadImageClicked: () -> Unit,
     onUploadMediaClicked: () -> Unit,
+    onLanguageSelected: (code: String) -> Unit,
 ) {
     val context = LocalContext.current
 
@@ -95,6 +94,7 @@ internal fun BottomBar(
         },
         pollInteractions = pollInteractions,
         contentWarningInteractions = contentWarningInteractions,
+        onLanguageSelected = onLanguageSelected,
     )
 }
 
@@ -105,6 +105,7 @@ private fun BottomBar(
     onUploadVideoClicked: () -> Unit,
     pollInteractions: PollInteractions,
     contentWarningInteractions: ContentWarningInteractions,
+    onLanguageSelected: (code: String) -> Unit,
 ) {
     Column {
         FfDivider(
@@ -152,9 +153,7 @@ private fun BottomBar(
 
             LanguageDropDown(
                 bottomBarState = bottomBarState,
-                onLanguageClicked = {
-
-                }
+                onLanguageClicked = onLanguageSelected,
             )
 
             CharacterCountLabel(characterCountText = bottomBarState.characterCountText)

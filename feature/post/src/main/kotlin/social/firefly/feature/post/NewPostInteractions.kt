@@ -9,6 +9,7 @@ interface NewPostInteractions {
     fun onPostClicked()
     fun onEditClicked()
     fun onVisibilitySelected(statusVisibility: StatusVisibility)
+    fun onLanguageSelected(code: String)
 }
 
 object NewPostInteractionsNoOp : NewPostInteractions {
@@ -18,4 +19,5 @@ object NewPostInteractionsNoOp : NewPostInteractions {
     override fun onPostClicked() = Unit
     override fun onEditClicked() = Unit
     override fun onVisibilitySelected(statusVisibility: StatusVisibility) = Unit
+    override fun onLanguageSelected(code: String) = Unit
 }
