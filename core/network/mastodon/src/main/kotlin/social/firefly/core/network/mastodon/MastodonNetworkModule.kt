@@ -8,20 +8,20 @@ import io.ktor.client.engine.HttpClientEngineConfig
 import io.ktor.client.engine.HttpClientEngineFactory
 import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.engine.okhttp.OkHttpConfig
-import io.ktor.client.engine.okhttp.OkHttpEngine
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import org.koin.core.module.dsl.bind
 import org.koin.core.module.dsl.singleOf
-import org.koin.core.parameter.parametersOf
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import social.firefly.core.network.mastodon.interceptors.AuthCredentialInterceptor
 import social.firefly.core.network.mastodon.ktor.AppApiImpl
+import social.firefly.core.network.mastodon.ktor.DomainBlocksApiImpl
 import java.util.concurrent.TimeUnit
 
 val mastodonNetworkModule =
@@ -92,7 +92,9 @@ val mastodonNetworkModule =
             }
         }
 
-        single<HttpClientEngine> {
+        single<HttpClientEngine>(
+            named(UNAUTHORIZED_CLIENT)
+        ) {
             get<HttpClientEngineFactory<OkHttpConfig>>().create {
                 config {
                     readTimeout(OKHTTP_TIMEOUT, TimeUnit.SECONDS)
@@ -111,7 +113,40 @@ val mastodonNetworkModule =
             }
         }
 
-        single {
+        single(
+            named(UNAUTHORIZED_CLIENT)
+        ) {
+            HttpClient(
+                get<HttpClientEngine>(),
+                get<HttpClientConfig<HttpClientEngineConfig>>(),
+            )
+        }
+
+        single<HttpClientEngine>(
+            named(AUTHORIZED_CLIENT)
+        ) {
+            get<HttpClientEngineFactory<OkHttpConfig>>().create {
+                config {
+                    readTimeout(OKHTTP_TIMEOUT, TimeUnit.SECONDS)
+                    connectTimeout(OKHTTP_TIMEOUT, TimeUnit.SECONDS)
+                }
+
+                addNetworkInterceptor(
+                    HttpLoggingInterceptor().apply {
+                        level = if (BuildConfig.DEBUG) {
+                            HttpLoggingInterceptor.Level.BASIC
+                        } else {
+                            HttpLoggingInterceptor.Level.NONE
+                        }
+                    }
+                )
+                addInterceptor(get<AuthCredentialInterceptor>())
+            }
+        }
+
+        single(
+            named(AUTHORIZED_CLIENT)
+        ) {
             HttpClient(
                 get<HttpClientEngine>(),
                 get<HttpClientConfig<HttpClientEngineConfig>>(),
@@ -119,10 +154,13 @@ val mastodonNetworkModule =
         }
 
         single<AppApi> {
-            AppApiImpl(get())
+            AppApiImpl(get(qualifier = named(UNAUTHORIZED_CLIENT)))
         }
+
+        singleOf(::DomainBlocksApiImpl) { bind<DomainBlocksApi>() }
     }
 
 private var json: Json = Json { ignoreUnknownKeys = true }
 private const val AUTHORIZED_CLIENT = "authorizedClient"
+private const val UNAUTHORIZED_CLIENT = "unauthorizedClient"
 private const val OKHTTP_TIMEOUT = 30L
