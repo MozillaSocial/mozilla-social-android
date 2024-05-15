@@ -47,8 +47,6 @@ internal fun BottomBar(
     onMediaInserted: (Uri, File, FileType) -> Unit,
     onUploadImageClicked: () -> Unit,
     onUploadMediaClicked: () -> Unit,
-    visibility: StatusVisibility,
-    onVisibilitySelected: (StatusVisibility) -> Unit,
 ) {
     val context = LocalContext.current
 
@@ -97,8 +95,6 @@ internal fun BottomBar(
         },
         pollInteractions = pollInteractions,
         contentWarningInteractions = contentWarningInteractions,
-        visibility = visibility,
-        onVisibilitySelected = onVisibilitySelected,
     )
 }
 
@@ -109,8 +105,6 @@ private fun BottomBar(
     onUploadVideoClicked: () -> Unit,
     pollInteractions: PollInteractions,
     contentWarningInteractions: ContentWarningInteractions,
-    visibility: StatusVisibility,
-    onVisibilitySelected: (StatusVisibility) -> Unit,
 ) {
     Column {
         FfDivider(
@@ -161,13 +155,6 @@ private fun BottomBar(
                 onLanguageClicked = {
 
                 }
-            )
-
-            Spacer(modifier = Modifier.width(4.dp))
-
-            VisibilityDropDownButton(
-                visibility = visibility,
-                onVisibilitySelected = onVisibilitySelected,
             )
 
             CharacterCountLabel(characterCountText = bottomBarState.characterCountText)

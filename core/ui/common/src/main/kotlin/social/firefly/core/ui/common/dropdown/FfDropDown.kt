@@ -110,7 +110,8 @@ fun FfDropDownMenu(
         Box(
             modifier = Modifier
                 .clip(RoundedCornerShape(8.dp)) // rounded corner is for the ripple
-                .clickable { if (canExpand) expanded.value = true },
+                .clickable { if (canExpand) expanded.value = true }
+                .padding(8.dp),
         ) {
             // padding is for the ripple
             Row(modifier = Modifier.padding(padding)) {
