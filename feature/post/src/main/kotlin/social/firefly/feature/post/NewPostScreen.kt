@@ -127,7 +127,7 @@ private fun NewPostScreen(
     mediaInteractions: MediaInteractions,
     pollInteractions: PollInteractions,
     contentWarningInteractions: ContentWarningInteractions,
-    newPostInteractions: social.firefly.feature.post.NewPostInteractions,
+    newPostInteractions: NewPostInteractions,
 ) {
     Box(
         modifier =
@@ -183,7 +183,7 @@ private fun CompactNewPostScreenContent(
     mediaInteractions: MediaInteractions,
     pollInteractions: PollInteractions,
     contentWarningInteractions: ContentWarningInteractions,
-    newPostInteractions: social.firefly.feature.post.NewPostInteractions,
+    newPostInteractions: NewPostInteractions,
 ) {
     Row {
         Box(
@@ -339,7 +339,6 @@ private fun SubmitButton(
     }
 }
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 private fun MainBox(
     statusUiState: StatusUiState,

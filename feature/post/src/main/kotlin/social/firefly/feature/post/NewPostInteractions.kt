@@ -11,7 +11,7 @@ interface NewPostInteractions {
     fun onVisibilitySelected(statusVisibility: StatusVisibility)
 }
 
-object NewPostInteractionsNoOp : social.firefly.feature.post.NewPostInteractions {
+object NewPostInteractionsNoOp : NewPostInteractions {
     override fun onScreenViewed() = Unit
     override fun onUploadImageClicked() = Unit
     override fun onUploadMediaClicked() = Unit

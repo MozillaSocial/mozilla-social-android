@@ -86,6 +86,9 @@ object FfIcons {
     fun gear() = painterResource(id = R.drawable.gear)
 
     @Composable
+    fun globe() = painterResource(id = R.drawable.globe)
+
+    @Composable
     fun globeHemisphereWest() = painterResource(id = R.drawable.globe_hemisphere_west)
 
     @Composable

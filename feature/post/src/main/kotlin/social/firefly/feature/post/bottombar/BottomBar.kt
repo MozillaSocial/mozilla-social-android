@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Icon
@@ -32,7 +33,6 @@ import social.firefly.core.designsystem.theme.FfSpacing
 import social.firefly.core.designsystem.theme.FfTheme
 import social.firefly.core.model.StatusVisibility
 import social.firefly.core.ui.common.divider.FfDivider
-import social.firefly.core.ui.common.dropdown.VisibilityDropDownButton
 import social.firefly.feature.post.R
 import social.firefly.feature.post.NewPostViewModel
 import social.firefly.feature.post.poll.PollInteractions
@@ -103,41 +103,12 @@ internal fun BottomBar(
 }
 
 @Composable
-internal fun BottomBar(
+private fun BottomBar(
     bottomBarState: BottomBarState,
     onUploadImageClicked: () -> Unit,
     onUploadVideoClicked: () -> Unit,
     pollInteractions: PollInteractions,
     contentWarningInteractions: ContentWarningInteractions,
-    visibility: StatusVisibility,
-    onVisibilitySelected: (StatusVisibility) -> Unit,
-) {
-    BottomBar(
-        onUploadImageClicked = onUploadImageClicked,
-        onUploadVideoClicked = onUploadVideoClicked,
-        imageButtonEnabled = bottomBarState.imageButtonEnabled,
-        videoButtonEnabled = bottomBarState.videoButtonEnabled,
-        pollButtonEnabled = bottomBarState.pollButtonEnabled,
-        contentWarningText = bottomBarState.contentWarningText,
-        characterCountText = bottomBarState.characterCountText,
-        pollInteractions = pollInteractions,
-        contentWarningInteractions = contentWarningInteractions,
-        visibility = visibility,
-        onVisibilitySelected = onVisibilitySelected,
-    )
-}
-
-@Composable
-internal fun BottomBar(
-    onUploadImageClicked: () -> Unit,
-    onUploadVideoClicked: () -> Unit,
-    imageButtonEnabled: Boolean,
-    contentWarningText: String?,
-    pollInteractions: PollInteractions,
-    pollButtonEnabled: Boolean,
-    contentWarningInteractions: ContentWarningInteractions,
-    characterCountText: String,
-    videoButtonEnabled: Boolean,
     visibility: StatusVisibility,
     onVisibilitySelected: (StatusVisibility) -> Unit,
 ) {
@@ -155,7 +126,7 @@ internal fun BottomBar(
         ) {
             IconButton(
                 onClick = onUploadImageClicked,
-                enabled = imageButtonEnabled,
+                enabled = bottomBarState.imageButtonEnabled,
             ) {
                 Icon(
                     FfIcons.image(),
@@ -165,7 +136,7 @@ internal fun BottomBar(
 
             IconButton(
                 onClick = onUploadVideoClicked,
-                enabled = videoButtonEnabled,
+                enabled = bottomBarState.videoButtonEnabled,
             ) {
                 Icon(
                     FfIcons.monitorPlay(),
@@ -175,22 +146,31 @@ internal fun BottomBar(
 
             AddPollButton(
                 pollInteractions = pollInteractions,
-                pollButtonEnabled = pollButtonEnabled,
+                pollButtonEnabled = bottomBarState.pollButtonEnabled,
             )
 
             ContentWarningButton(
                 contentWarningInteractions = contentWarningInteractions,
-                contentWarningText = contentWarningText,
+                contentWarningText = bottomBarState.contentWarningText,
             )
 
             Spacer(modifier = Modifier.weight(1f))
+
+            LanguageDropDown(
+                bottomBarState = bottomBarState,
+                onLanguageClicked = {
+
+                }
+            )
+
+            Spacer(modifier = Modifier.width(4.dp))
 
             VisibilityDropDownButton(
                 visibility = visibility,
                 onVisibilitySelected = onVisibilitySelected,
             )
 
-            CharacterCountLabel(characterCountText = characterCountText)
+            CharacterCountLabel(characterCountText = bottomBarState.characterCountText)
         }
     }
 }
