@@ -84,12 +84,14 @@ class Login(
                 accessToken = accessToken,
                 baseUrl = host,
             )
+            val defaultLanguage = account.source?.defaultLanguage ?: ""
             userPreferencesDatastoreManager.createNewUserDatastore(
                 domain = host,
                 accessToken = accessToken,
                 accountId = account.accountId,
                 userName = account.displayName,
                 avatarUrl = account.avatarUrl,
+                defaultLanguage = defaultLanguage,
             )
             withContext(Dispatchers.IO) {
                 databaseDelegate.clearAllTables()

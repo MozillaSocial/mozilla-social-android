@@ -30,9 +30,7 @@ import social.firefly.common.utils.toFile
 import social.firefly.core.designsystem.icon.FfIcons
 import social.firefly.core.designsystem.theme.FfSpacing
 import social.firefly.core.designsystem.theme.FfTheme
-import social.firefly.core.model.StatusVisibility
 import social.firefly.core.ui.common.divider.FfDivider
-import social.firefly.core.ui.common.dropdown.VisibilityDropDownButton
 import social.firefly.feature.post.R
 import social.firefly.feature.post.NewPostViewModel
 import social.firefly.feature.post.poll.PollInteractions
@@ -47,8 +45,7 @@ internal fun BottomBar(
     onMediaInserted: (Uri, File, FileType) -> Unit,
     onUploadImageClicked: () -> Unit,
     onUploadMediaClicked: () -> Unit,
-    visibility: StatusVisibility,
-    onVisibilitySelected: (StatusVisibility) -> Unit,
+    onLanguageSelected: (code: String) -> Unit,
 ) {
     val context = LocalContext.current
 
@@ -97,49 +94,18 @@ internal fun BottomBar(
         },
         pollInteractions = pollInteractions,
         contentWarningInteractions = contentWarningInteractions,
-        visibility = visibility,
-        onVisibilitySelected = onVisibilitySelected,
+        onLanguageSelected = onLanguageSelected,
     )
 }
 
 @Composable
-internal fun BottomBar(
+private fun BottomBar(
     bottomBarState: BottomBarState,
     onUploadImageClicked: () -> Unit,
     onUploadVideoClicked: () -> Unit,
     pollInteractions: PollInteractions,
     contentWarningInteractions: ContentWarningInteractions,
-    visibility: StatusVisibility,
-    onVisibilitySelected: (StatusVisibility) -> Unit,
-) {
-    BottomBar(
-        onUploadImageClicked = onUploadImageClicked,
-        onUploadVideoClicked = onUploadVideoClicked,
-        imageButtonEnabled = bottomBarState.imageButtonEnabled,
-        videoButtonEnabled = bottomBarState.videoButtonEnabled,
-        pollButtonEnabled = bottomBarState.pollButtonEnabled,
-        contentWarningText = bottomBarState.contentWarningText,
-        characterCountText = bottomBarState.characterCountText,
-        pollInteractions = pollInteractions,
-        contentWarningInteractions = contentWarningInteractions,
-        visibility = visibility,
-        onVisibilitySelected = onVisibilitySelected,
-    )
-}
-
-@Composable
-internal fun BottomBar(
-    onUploadImageClicked: () -> Unit,
-    onUploadVideoClicked: () -> Unit,
-    imageButtonEnabled: Boolean,
-    contentWarningText: String?,
-    pollInteractions: PollInteractions,
-    pollButtonEnabled: Boolean,
-    contentWarningInteractions: ContentWarningInteractions,
-    characterCountText: String,
-    videoButtonEnabled: Boolean,
-    visibility: StatusVisibility,
-    onVisibilitySelected: (StatusVisibility) -> Unit,
+    onLanguageSelected: (code: String) -> Unit,
 ) {
     Column {
         FfDivider(
@@ -155,7 +121,7 @@ internal fun BottomBar(
         ) {
             IconButton(
                 onClick = onUploadImageClicked,
-                enabled = imageButtonEnabled,
+                enabled = bottomBarState.imageButtonEnabled,
             ) {
                 Icon(
                     FfIcons.image(),
@@ -165,7 +131,7 @@ internal fun BottomBar(
 
             IconButton(
                 onClick = onUploadVideoClicked,
-                enabled = videoButtonEnabled,
+                enabled = bottomBarState.videoButtonEnabled,
             ) {
                 Icon(
                     FfIcons.monitorPlay(),
@@ -175,22 +141,22 @@ internal fun BottomBar(
 
             AddPollButton(
                 pollInteractions = pollInteractions,
-                pollButtonEnabled = pollButtonEnabled,
+                pollButtonEnabled = bottomBarState.pollButtonEnabled,
             )
 
             ContentWarningButton(
                 contentWarningInteractions = contentWarningInteractions,
-                contentWarningText = contentWarningText,
+                contentWarningText = bottomBarState.contentWarningText,
             )
 
             Spacer(modifier = Modifier.weight(1f))
 
-            VisibilityDropDownButton(
-                visibility = visibility,
-                onVisibilitySelected = onVisibilitySelected,
+            LanguageDropDown(
+                bottomBarState = bottomBarState,
+                onLanguageClicked = onLanguageSelected,
             )
 
-            CharacterCountLabel(characterCountText = characterCountText)
+            CharacterCountLabel(characterCountText = bottomBarState.characterCountText)
         }
     }
 }

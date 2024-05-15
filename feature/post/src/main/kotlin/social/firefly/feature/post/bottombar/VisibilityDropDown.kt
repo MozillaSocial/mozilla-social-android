@@ -1,4 +1,4 @@
-package social.firefly.core.ui.common.dropdown
+package social.firefly.feature.post.bottombar
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
@@ -21,10 +21,12 @@ import social.firefly.core.designsystem.icon.FfIcons
 import social.firefly.core.designsystem.theme.FfTheme
 import social.firefly.core.designsystem.theme.ThemeOption
 import social.firefly.core.model.StatusVisibility
-import social.firefly.core.ui.common.R
+import social.firefly.core.ui.common.dropdown.FfDropDownMenu
+import social.firefly.core.ui.common.dropdown.FfDropdownMenuItem
+import social.firefly.feature.post.R
 
 @Composable
-fun VisibilityDropDownButton(
+internal fun VisibilityDropDownButton(
     modifier: Modifier = Modifier,
     visibility: StatusVisibility,
     onVisibilitySelected: (StatusVisibility) -> Unit,

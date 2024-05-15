@@ -20,4 +20,5 @@ message UserPreferences {
   ThreadType thread_type = 9;
   string avatar_url = 11;
   string user_name = 12;
+  string default_language = 13;
 }

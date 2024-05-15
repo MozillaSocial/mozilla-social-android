@@ -24,7 +24,7 @@ val newPostModule = module {
     )
 
     viewModel { parametersHolder ->
-        social.firefly.feature.post.NewPostViewModel(
+        NewPostViewModel(
             analytics = get(),
             replyStatusId = parametersHolder[0],
             editStatusId = parametersHolder[1],
@@ -34,6 +34,7 @@ val newPostModule = module {
             showSnackbar = get(),
             getLoggedInUserAccountId = get(),
             accountRepository = get(),
+            userPreferencesDatastoreManager = get(),
         )
     }
 

@@ -18,6 +18,7 @@ import social.firefly.core.navigation.NavigationDestination
 import social.firefly.core.navigation.usecases.NavigateTo
 import social.firefly.core.repository.mastodon.TimelineRepository
 import social.firefly.core.share.ShareInfo
+import social.firefly.core.usecase.mastodon.auth.UpdateAllLoggedInAccounts
 import social.firefly.ui.AppState
 
 class MainViewModel(
@@ -25,6 +26,7 @@ class MainViewModel(
     private val userPreferencesDatastoreManager: UserPreferencesDatastoreManager,
     private val timelineRepository: TimelineRepository,
     private val eventRelay: EventRelay,
+    private val updateAllLoggedInAccounts: UpdateAllLoggedInAccounts,
     appPreferencesDatastore: AppPreferencesDatastore,
 ) : ViewModel() {
 
@@ -47,6 +49,7 @@ class MainViewModel(
             if (userPreferencesDatastoreManager.isLoggedInToAtLeastOneAccount) {
                 navigateTo(NavigationDestination.Tabs)
                 handleIntent(intent)
+                updateAllLoggedInAccounts()
             } else {
                 navigateTo(NavigationDestination.Auth)
             }

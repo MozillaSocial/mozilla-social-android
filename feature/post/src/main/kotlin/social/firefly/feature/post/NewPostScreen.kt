@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
@@ -71,6 +72,7 @@ import social.firefly.core.ui.common.transparentTextFieldColors
 import social.firefly.core.ui.common.utils.getWindowHeightClass
 import social.firefly.feature.post.bottombar.BottomBar
 import social.firefly.feature.post.bottombar.BottomBarState
+import social.firefly.feature.post.bottombar.VisibilityDropDownButton
 import social.firefly.feature.post.media.MediaInteractions
 import social.firefly.feature.post.poll.Poll
 import social.firefly.feature.post.poll.PollBar
@@ -127,7 +129,7 @@ private fun NewPostScreen(
     mediaInteractions: MediaInteractions,
     pollInteractions: PollInteractions,
     contentWarningInteractions: ContentWarningInteractions,
-    newPostInteractions: social.firefly.feature.post.NewPostInteractions,
+    newPostInteractions: NewPostInteractions,
 ) {
     Box(
         modifier =
@@ -183,7 +185,7 @@ private fun CompactNewPostScreenContent(
     mediaInteractions: MediaInteractions,
     pollInteractions: PollInteractions,
     contentWarningInteractions: ContentWarningInteractions,
-    newPostInteractions: social.firefly.feature.post.NewPostInteractions,
+    newPostInteractions: NewPostInteractions,
 ) {
     Row {
         Box(
@@ -231,6 +233,8 @@ private fun NewPostScreenContent(
             onPostClicked = newPostInteractions::onPostClicked,
             onEditClicked = newPostInteractions::onEditClicked,
             sendButtonEnabled = newPostUiState.sendButtonEnabled,
+            visibility = newPostUiState.visibility,
+            newPostInteractions = newPostInteractions,
         )
 
         Spacer(modifier = Modifier.height(FfSpacing.sm))
@@ -279,8 +283,7 @@ private fun NewPostScreenContent(
             contentWarningInteractions = contentWarningInteractions,
             onUploadImageClicked = newPostInteractions::onUploadImageClicked,
             onUploadMediaClicked = newPostInteractions::onUploadMediaClicked,
-            visibility = newPostUiState.visibility,
-            onVisibilitySelected = newPostInteractions::onVisibilitySelected,
+            onLanguageSelected = newPostInteractions::onLanguageSelected,
         )
     }
 }
@@ -306,9 +309,16 @@ private fun TopBar(
     onPostClicked: () -> Unit,
     onEditClicked: () -> Unit,
     sendButtonEnabled: Boolean,
+    visibility: StatusVisibility,
+    newPostInteractions: NewPostInteractions,
 ) {
     FfCloseableTopAppBar(
         actions = {
+            VisibilityDropDownButton(
+                visibility = visibility,
+                onVisibilitySelected = newPostInteractions::onVisibilitySelected,
+            )
+            Spacer(modifier = Modifier.width(8.dp))
             SubmitButton(
                 modifier = Modifier.padding(end = 16.dp),
                 onPostClicked = if (!statusUiState.editStatusId.isNullOrBlank())
@@ -339,7 +349,6 @@ private fun SubmitButton(
     }
 }
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 private fun MainBox(
     statusUiState: StatusUiState,

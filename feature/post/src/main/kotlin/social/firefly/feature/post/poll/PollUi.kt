@@ -155,21 +155,19 @@ internal fun PollBar(
                     )
                 }
 
-                Spacer(modifier = Modifier.width(24.dp))
+                Spacer(modifier = Modifier.width(4.dp))
 
                 PollDurationDropDown(
                     pollUiState = pollUiState,
                     pollInteractions = pollInteractions,
                 )
 
-                Spacer(modifier = Modifier.width(32.dp))
-
                 PollStyleDropDown(
                     pollUiState = pollUiState,
                     pollInteractions = pollInteractions,
                 )
 
-                Spacer(modifier = Modifier.width(32.dp))
+                Spacer(modifier = Modifier.width(8.dp))
 
                 HideUntilEndCheckbox(pollUiState = pollUiState, pollInteractions = pollInteractions)
 

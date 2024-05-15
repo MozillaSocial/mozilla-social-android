@@ -45,4 +45,9 @@
 
     <string name="your_post_was_published">Your post was published</string>
     <string name="your_edit_was_published">Your edit was published</string>
+
+    <string name="visibility_public">Public</string>
+    <string name="visibility_unlisted">Unlisted</string>
+    <string name="visibility_private">Private</string>
+    <string name="visibility_direct">Direct</string>
 </resources>

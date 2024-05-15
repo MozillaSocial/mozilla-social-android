@@ -29,6 +29,8 @@ class UpdateAllLoggedInAccounts(
             }?.apply {
                 saveAvatarUrl(account.avatarUrl)
                 saveUserName(account.username)
+                val defaultLanguage = account.source?.defaultLanguage ?: ""
+                saveDefaultLanguage(defaultLanguage)
             }
         }
     }

@@ -64,6 +64,7 @@ class UserPreferencesDatastoreManager(
         accountId: String,
         userName: String,
         avatarUrl: String,
+        defaultLanguage: String,
     ) {
         require(UserPreferencesDatastore.HOST_NAME_REGEX.toRegex().matches(domain))
         val fileName = "$domain-$accountId-$counter-prefs.pb"
@@ -83,6 +84,7 @@ class UserPreferencesDatastoreManager(
         ).apply {
             saveUserName(userName)
             saveAvatarUrl(avatarUrl)
+            saveDefaultLanguage(defaultLanguage)
         }
 
         _dataStores.update { it + newDataStore }

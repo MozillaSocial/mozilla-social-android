@@ -9,4 +9,11 @@ data class BottomBarState(
     val contentWarningText: String? = null,
     val characterCountText: String = "",
     val maxImages: Int = NewPostViewModel.MAX_IMAGES,
+    val language: String = "",
+    val availableLocales: List<LocaleUiState> = emptyList(),
+)
+
+data class LocaleUiState(
+    val displayName: String,
+    val code: String,
 )
