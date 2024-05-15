@@ -37,6 +37,7 @@ class PostStatus internal constructor(
         pollCreate: PollCreate?,
         contentWarningText: String?,
         inReplyToId: String?,
+        languageCode: String?,
     ) = externalScope.async(dispatcherIo) {
         try {
             // asynchronously update all attachment descriptions before sending post
@@ -76,6 +77,7 @@ class PostStatus internal constructor(
                             contentWarningText
                         },
                         inReplyToId = inReplyToId,
+                        language = languageCode,
                     ),
                 )
             saveStatusToDatabase(status)

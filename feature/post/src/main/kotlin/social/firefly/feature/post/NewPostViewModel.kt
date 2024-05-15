@@ -219,6 +219,7 @@ class NewPostViewModel(
                     },
                     contentWarningText = statusDelegate.uiState.value.contentWarningText,
                     inReplyToId = replyStatusId,
+                    languageCode = newPostUiState.value.bottomBarState.language,
                 )
 
                 onStatusPosted()
