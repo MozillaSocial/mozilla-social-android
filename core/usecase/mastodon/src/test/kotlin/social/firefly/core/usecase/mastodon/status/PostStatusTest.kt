@@ -46,6 +46,7 @@ class PostStatusTest : BaseUseCaseTest() {
                     pollCreate = null,
                     contentWarningText = null,
                     inReplyToId = null,
+                    languageCode = null,
                 )
             },
             verifyBlock = {
@@ -68,6 +69,7 @@ class PostStatusTest : BaseUseCaseTest() {
                     pollCreate = null,
                     contentWarningText = null,
                     inReplyToId = null,
+                    languageCode = null
                 )
             },
             verifyBlock = {
