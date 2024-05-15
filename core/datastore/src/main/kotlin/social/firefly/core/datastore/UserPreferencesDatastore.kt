@@ -52,6 +52,7 @@ class UserPreferencesDatastore internal constructor(
     val serializedPushKeys: Flow<String> = dataStore.data.mapLatest { it.serializedPushKeys }
     val lastSeenHomeStatusId: Flow<String> = dataStore.data.mapLatest { it.lastSeenHomeStatusId }
     val threadType: Flow<ThreadType> = dataStore.data.mapLatest { it.threadType }.distinctUntilChanged()
+    val defaultLanguage: Flow<String> = dataStore.data.mapLatest { it.defaultLanguage }
 
     suspend fun saveAvatarUrl(url: String) {
         dataStore.updateData {
@@ -89,6 +90,14 @@ class UserPreferencesDatastore internal constructor(
         dataStore.updateData {
             it.toBuilder()
                 .setThreadType(threadType)
+                .build()
+        }
+    }
+
+    suspend fun saveDefaultLanguage(language: String) {
+        dataStore.updateData {
+            it.toBuilder()
+                .setDefaultLanguage(language)
                 .build()
         }
     }
