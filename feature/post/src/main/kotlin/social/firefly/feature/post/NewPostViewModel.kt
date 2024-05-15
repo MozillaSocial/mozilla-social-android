@@ -150,7 +150,7 @@ class NewPostViewModel(
                 .flatMapLatest { it.defaultLanguage }
                 .first()
                 .ifBlank {
-                    "en"
+                    Locale.getDefault().language
                 }
 
             val availableLocales = Locale.getAvailableLocales()
