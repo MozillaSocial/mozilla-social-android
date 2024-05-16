@@ -111,6 +111,9 @@ class TimelineRepository internal constructor(
 
     suspend fun removePostInLocalTimelineForAccount(accountId: String) =
         localTimelineStatusDao.removePostsFromAccount(accountId)
+
+    suspend fun removePostsInLocalTimelineForDomain(domain: String) =
+        localTimelineStatusDao.removePostsFromDomain(domain)
     //endregion
 
     //region Federated timeline
@@ -142,6 +145,9 @@ class TimelineRepository internal constructor(
 
     suspend fun removePostsFromFederatedTimelineForAccount(accountId: String) =
         federatedTimelineStatusDao.removePostsFromAccount(accountId)
+
+    suspend fun removePostsFromFederatedTimelineForDomain(domain: String) =
+        federatedTimelineStatusDao.removePostsFromDomain(domain)
     //endregion
 
     //region Home timeline
@@ -204,6 +210,9 @@ class TimelineRepository internal constructor(
 
     suspend fun removePostInHomeTimelineForAccount(accountId: String) =
         homeTimelineStatusDao.removePostsFromAccount(accountId)
+
+    suspend fun removePostsInHomeTimelineForDomain(domain: String) =
+        homeTimelineStatusDao.removePostsFromDomain(domain)
     //endregion
 
     //region Hashtag timeline

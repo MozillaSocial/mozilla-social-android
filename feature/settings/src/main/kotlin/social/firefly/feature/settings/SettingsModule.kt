@@ -16,6 +16,7 @@ import social.firefly.feature.settings.about.AboutSettingsViewModel
 import social.firefly.feature.settings.account.AccountSettingsViewModel
 import social.firefly.feature.settings.appearance.AppearanceAndBehaviorViewModel
 import social.firefly.feature.settings.contentpreferences.ContentPreferencesSettingsViewModel
+import social.firefly.feature.settings.contentpreferences.blockedDomains.BlockedDomainsViewModel
 import social.firefly.feature.settings.contentpreferences.blockedusers.BlockedUsersViewModel
 import social.firefly.feature.settings.contentpreferences.mutedusers.MutedUsersSettingsViewModel
 import social.firefly.feature.settings.licenses.OpenSourceLicensesViewModel
@@ -43,5 +44,6 @@ val settingsModule =
         viewModelOf(::MutedUsersSettingsViewModel)
         viewModelOf(::OpenSourceLicensesViewModel)
         viewModelOf(::AppearanceAndBehaviorViewModel)
+        viewModelOf(::BlockedDomainsViewModel)
         singleOf(::DefaultHtmlInteractions)
     }

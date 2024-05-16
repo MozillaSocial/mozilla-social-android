@@ -24,6 +24,7 @@ import social.firefly.core.repository.paging.remotemediators.MutesListRemoteMedi
 import social.firefly.core.repository.paging.remotemediators.SearchAccountsRemoteMediator
 import social.firefly.core.repository.paging.remotemediators.SearchStatusesRemoteMediator
 import social.firefly.core.repository.paging.remotemediators.SearchedHashTagsRemoteMediator
+import social.firefly.core.repository.paging.sources.DomainBlocksPagingSource
 import social.firefly.core.usecase.mastodon.mastodonUsecaseModule
 
 val pagingModule = module {
@@ -118,4 +119,5 @@ val pagingModule = module {
     factoryOf(::TrendingHashTagPager)
     factoryOf(::FollowedHashTagsPager)
     factoryOf(::BookmarksPager)
+    factoryOf(::DomainBlocksPagingSource)
 }

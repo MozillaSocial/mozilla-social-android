@@ -9,12 +9,16 @@ class ContentPreferencesSettingsViewModel(
     private val navigateTo: NavigateTo,
     private val analytics: SettingsAnalytics,
 ) : ViewModel(), ContentPreferencesSettingsInteractions {
-    fun onMutedUsersClicked() {
+    override fun onMutedUsersClicked() {
         navigateTo(SettingsNavigationDestination.MutedUsersSettings)
     }
 
-    fun onBlockedUsersClicked() {
+    override fun onBlockedUsersClicked() {
         navigateTo(SettingsNavigationDestination.BlockedUsersSettings)
+    }
+
+    override fun onBlockedDomainsClicked() {
+        navigateTo(SettingsNavigationDestination.BlockedDomains)
     }
 
     override fun onScreenViewed() {

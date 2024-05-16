@@ -37,6 +37,22 @@ interface HomeTimelineStatusDao : BaseDao<HomeTimelineStatus> {
     )
     suspend fun removePostsFromAccount(accountId: String)
 
+    @Query(
+        "DELETE FROM homeTimeline " +
+                "WHERE statusId IN " +
+                "(" +
+                    "SELECT statusId FROM statuses " +
+                    "WHERE accountId IN " +
+                        "(" +
+                            "SELECT accountId FROM accounts " +
+                            "WHERE acct LIKE '%' + :domain + '%' " +
+                        ")" +
+                ")"
+    )
+    suspend fun removePostsFromDomain(
+        domain: String
+    )
+
     @Transaction
     @Query(
         "SELECT * FROM homeTimeline " +

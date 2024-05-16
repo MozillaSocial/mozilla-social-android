@@ -8,12 +8,14 @@ import social.firefly.core.analytics.analyticsModule
 import social.firefly.core.navigation.navigationModule
 import social.firefly.core.repository.mastodon.mastodonRepositoryModule
 import social.firefly.core.usecase.mastodon.account.BlockAccount
+import social.firefly.core.usecase.mastodon.account.BlockDomain
 import social.firefly.core.usecase.mastodon.account.FollowAccount
 import social.firefly.core.usecase.mastodon.account.GetDetailedAccount
 import social.firefly.core.usecase.mastodon.account.GetDomain
 import social.firefly.core.usecase.mastodon.account.GetLoggedInUserAccountId
 import social.firefly.core.usecase.mastodon.account.MuteAccount
 import social.firefly.core.usecase.mastodon.account.UnblockAccount
+import social.firefly.core.usecase.mastodon.account.UnblockDomain
 import social.firefly.core.usecase.mastodon.account.UnfollowAccount
 import social.firefly.core.usecase.mastodon.account.UnmuteAccount
 import social.firefly.core.usecase.mastodon.account.UpdateMyAccount
@@ -52,10 +54,20 @@ val mastodonUsecaseModule =
             navigationModule,
         )
 
-        single { GetThread(get(), get()) }
-
         // factory because it holds global variables
         factoryOf(::Login)
+
+        singleOf(::SaveStatusToDatabase)
+        singleOf(::GetDomain)
+        singleOf(::SearchAll)
+        singleOf(::GetInReplyToAccountNames)
+        singleOf(::SaveNotificationsToDatabase)
+        singleOf(::UpdateAllLoggedInAccounts)
+        singleOf(::SwitchActiveAccount)
+        singleOf(::GetThread)
+        singleOf(::GetDetailedAccount)
+        singleOf(::GetLoggedInUserAccountId)
+
         single {
             Logout(
                 userPreferencesDatastoreManager = get(),
@@ -72,8 +84,6 @@ val mastodonUsecaseModule =
                 navigateTo = get(),
             )
         }
-        singleOf(::GetDetailedAccount)
-        single { GetLoggedInUserAccountId(get()) }
 
         single {
             BlockAccount(
@@ -273,18 +283,28 @@ val mastodonUsecaseModule =
             )
         }
 
-        singleOf(::SaveStatusToDatabase)
-
-        singleOf(::GetDomain)
-        singleOf(::SearchAll)
-        singleOf(::GetInReplyToAccountNames)
-        singleOf(::SaveNotificationsToDatabase)
-        singleOf(::UpdateAllLoggedInAccounts)
-        singleOf(::SwitchActiveAccount)
-
         single {
             GetHashTag(
                 hashtagRepository = get(),
+            )
+        }
+
+        single {
+            BlockDomain(
+                externalScope = get<AppScope>(),
+                showSnackbar = get(),
+                domainBlocksRepository = get(),
+                relationshipRepository = get(),
+                timelineRepository = get(),
+            )
+        }
+
+        single {
+            UnblockDomain(
+                externalScope = get<AppScope>(),
+                showSnackbar = get(),
+                domainBlocksRepository = get(),
+                relationshipRepository = get(),
             )
         }
     }

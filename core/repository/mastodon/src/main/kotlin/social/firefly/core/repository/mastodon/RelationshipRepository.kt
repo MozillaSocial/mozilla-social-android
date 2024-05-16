@@ -46,4 +46,12 @@ class RelationshipRepository(
         accountId = accountId,
         isFollowing = isFollowing,
     )
+
+    suspend fun updateDomainBlocked(
+        domain: String,
+        blocked: Boolean
+    ) = dao.updateDomainBlocking(
+        domain = domain,
+        isDomainBlocking = blocked
+    )
 }

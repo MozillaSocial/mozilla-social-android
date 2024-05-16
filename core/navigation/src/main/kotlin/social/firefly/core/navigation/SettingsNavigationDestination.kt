@@ -27,6 +27,14 @@ sealed class SettingsNavigationDestination(val route: String) {
         }
     }
 
+    data object BlockedDomains : SettingsNavigationDestination(
+        route = "blockedDomains",
+    ) {
+        fun NavController.navigateToBlockedDomains() {
+            navigate(route = route)
+        }
+    }
+
     data object BlockedUsersSettings : SettingsNavigationDestination(
         route = "blockedUsersSettings",
     ) {
