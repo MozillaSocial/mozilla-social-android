@@ -157,7 +157,9 @@ val mastodonNetworkModule =
             AppApiImpl(get(qualifier = named(UNAUTHORIZED_CLIENT)))
         }
 
-        singleOf(::DomainBlocksApiImpl) { bind<DomainBlocksApi>() }
+        single<DomainBlocksApi> {
+            DomainBlocksApiImpl(get(qualifier = named(AUTHORIZED_CLIENT)))
+        }
     }
 
 private var json: Json = Json { ignoreUnknownKeys = true }
