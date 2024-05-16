@@ -29,9 +29,7 @@ class DomainBlocksApiImpl(
             protocol = URLProtocol.HTTPS
             path("api/v1/domain_blocks")
         }
-    }.toMastodonPagedResponse<String, String> {
-        it
-    }
+    }.toMastodonPagedResponse<String, String> { it }
 
     override suspend fun blockDomain(
         domain: String
