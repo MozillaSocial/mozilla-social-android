@@ -10,6 +10,8 @@
     <string name="error_muting_account">Error muting account</string>
     <string name="error_unmuting_account">Error unmuting account</string>
     <string name="error_blocking_account">Error blocking account</string>
+    <string name="error_blocking_domain">Error blocking domain</string>
+    <string name="error_unblocking_domain">Error unblocking domain</string>
     <string name="error_unblocking_account">Error unblocking account</string>
     <string name="error_following_account">Error following account</string>
     <string name="error_unfollowing_account">Error unfollowing account</string>

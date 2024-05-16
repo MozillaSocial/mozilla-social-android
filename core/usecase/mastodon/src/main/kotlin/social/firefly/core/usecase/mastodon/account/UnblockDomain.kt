@@ -9,46 +9,41 @@ import social.firefly.common.utils.StringFactory
 import social.firefly.core.navigation.usecases.ShowSnackbar
 import social.firefly.core.repository.mastodon.DomainBlocksRepository
 import social.firefly.core.repository.mastodon.RelationshipRepository
-import social.firefly.core.repository.mastodon.TimelineRepository
 import social.firefly.core.usecase.mastodon.R
 
-class BlockDomain(
+class UnblockDomain(
     private val externalScope: CoroutineScope,
     private val showSnackbar: ShowSnackbar,
     private val domainBlocksRepository: DomainBlocksRepository,
     private val relationshipRepository: RelationshipRepository,
-    private val timelineRepository: TimelineRepository,
     private val dispatcherIo: CoroutineDispatcher = Dispatchers.IO,
 ) {
     /**
-     * @throws BlockDomainFailedException if any error occurred
+     * @throws UnblockDomainFailedException if any error occurred
      */
     @OptIn(PreferUseCase::class)
     suspend operator fun invoke(domain: String) =
         externalScope.async(dispatcherIo) {
             try {
-                timelineRepository.removePostsInHomeTimelineForDomain(domain)
-                timelineRepository.removePostsInLocalTimelineForDomain(domain)
-                timelineRepository.removePostsFromFederatedTimelineForDomain(domain)
                 relationshipRepository.updateDomainBlocked(
                     domain = domain,
-                    blocked = true,
+                    blocked = false,
                 )
-                domainBlocksRepository.blockDomain(
+                domainBlocksRepository.unblockDomain(
                     domain = domain,
                 )
             } catch (e: Exception) {
                 relationshipRepository.updateDomainBlocked(
                     domain = domain,
-                    blocked = false,
+                    blocked = true,
                 )
                 showSnackbar(
-                    text = StringFactory.resource(R.string.error_blocking_domain),
+                    text = StringFactory.resource(R.string.error_unblocking_domain),
                     isError = true,
                 )
-                throw BlockDomainFailedException(e)
+                throw UnblockDomainFailedException(e)
             }
         }.await()
 
-    class BlockDomainFailedException(e: Exception) : Exception(e)
+    class UnblockDomainFailedException(e: Exception) : Exception(e)
 }
