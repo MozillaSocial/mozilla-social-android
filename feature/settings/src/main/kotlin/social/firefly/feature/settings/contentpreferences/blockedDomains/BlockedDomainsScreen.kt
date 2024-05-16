@@ -27,7 +27,7 @@ internal fun BlockedDomainsScreen (
 
 @Composable
 private fun BlockedDomainsScreen(
-    feed: Flow<PagingData<String>>
+    feed: Flow<PagingData<BlockedDomainState>>
 ) {
     FfSurface {
         SettingsColumn(
@@ -44,7 +44,7 @@ private fun BlockedDomainsScreen(
                     key = lazyPagingItems.itemKey { it },
                 ) { index ->
                     lazyPagingItems[index]?.let { item ->
-                        Text(text = item)
+                        Text(text = item.domain)
                     }
                 }
             }
