@@ -28,7 +28,7 @@ class DomainBlocksPagingSource(
                 nextKey = response.pagingLinks?.getMaxIdValue()
             )
         } catch (e: Exception) {
-            throw e
+            return LoadResult.Error(e)
         }
     }
 }
