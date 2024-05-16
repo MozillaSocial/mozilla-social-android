@@ -16,8 +16,7 @@ import social.firefly.feature.settings.ui.SettingsSection
 @Composable
 internal fun ContentPreferencesSettingsScreen(viewModel: ContentPreferencesSettingsViewModel = koinViewModel()) {
     ContentPreferencesSettingsScreen(
-        onBlockedUsersClicked = viewModel::onBlockedUsersClicked,
-        onMutedUsersClicked = viewModel::onMutedUsersClicked,
+        contentPreferencesSettingsInteractions = viewModel,
     )
 
     LaunchedEffect(Unit) {
@@ -27,8 +26,7 @@ internal fun ContentPreferencesSettingsScreen(viewModel: ContentPreferencesSetti
 
 @Composable
 private fun ContentPreferencesSettingsScreen(
-    onMutedUsersClicked: () -> Unit,
-    onBlockedUsersClicked: () -> Unit,
+    contentPreferencesSettingsInteractions: ContentPreferencesSettingsInteractions,
 ) {
     FfSurface {
         SettingsColumn(
@@ -39,13 +37,19 @@ private fun ContentPreferencesSettingsScreen(
             SettingsSection(
                 title = stringResource(id = R.string.muted_users_title),
                 iconPainter = FfIcons.speakerX(),
-                onClick = onMutedUsersClicked,
+                onClick = contentPreferencesSettingsInteractions::onMutedUsersClicked,
             )
 
             SettingsSection(
                 title = stringResource(id = R.string.blocked_users_title),
                 iconPainter = FfIcons.prohibit(),
-                onClick = onBlockedUsersClicked,
+                onClick = contentPreferencesSettingsInteractions::onBlockedUsersClicked,
+            )
+
+            SettingsSection(
+                title = stringResource(id = R.string.blocked_domains_title),
+                iconPainter = FfIcons.globeX(),
+                onClick = contentPreferencesSettingsInteractions::onBlockedDomainsClicked,
             )
         }
     }
