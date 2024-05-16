@@ -117,7 +117,7 @@ val mastodonNetworkModule =
             named(UNAUTHORIZED_CLIENT)
         ) {
             HttpClient(
-                get<HttpClientEngine>(),
+                get<HttpClientEngine>(qualifier = named(UNAUTHORIZED_CLIENT)),
                 get<HttpClientConfig<HttpClientEngineConfig>>(),
             )
         }
@@ -148,7 +148,7 @@ val mastodonNetworkModule =
             named(AUTHORIZED_CLIENT)
         ) {
             HttpClient(
-                get<HttpClientEngine>(),
+                get<HttpClientEngine>(qualifier = named(AUTHORIZED_CLIENT)),
                 get<HttpClientConfig<HttpClientEngineConfig>>(),
             )
         }
