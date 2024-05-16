@@ -46,6 +46,7 @@ import social.firefly.core.navigation.SettingsNavigationDestination
 import social.firefly.core.navigation.SettingsNavigationDestination.AboutSettings.navigateToAboutSettings
 import social.firefly.core.navigation.SettingsNavigationDestination.AccountSettings.navigateToAccountSettings
 import social.firefly.core.navigation.SettingsNavigationDestination.AppearanceAndBehaviorOptions.navigateToAppearanceAndBehaviorOptions
+import social.firefly.core.navigation.SettingsNavigationDestination.BlockedDomains.navigateToBlockedDomains
 import social.firefly.core.navigation.SettingsNavigationDestination.BlockedUsersSettings.navigateToBlockedUsers
 import social.firefly.core.navigation.SettingsNavigationDestination.ContentPreferencesSettings.navigateToContentPreferencesSettings
 import social.firefly.core.navigation.SettingsNavigationDestination.DeveloperOptions.navigateToDeveloperOptions
@@ -302,6 +303,10 @@ class AppState(
 
             SettingsNavigationDestination.MainSettings -> {
                 mainNavController.navigateToMainSettings()
+            }
+
+            SettingsNavigationDestination.BlockedDomains -> {
+                mainNavController.navigateToBlockedDomains()
             }
 
             SettingsNavigationDestination.BlockedUsersSettings -> {

@@ -7,6 +7,7 @@
     <string name="content_preferences_title">Content Preferences</string>
     <string name="muted_users_title">Muted Users</string>
     <string name="blocked_users_title">Blocked Users</string>
+    <string name="blocked_domains_title">Blocked Domains</string>
     <string name="privacy_settings_title">Privacy</string>
     <string name="about_settings_title">About</string>
     <string name="about_settings_open_source_libraries">Open Source Libraries</string>

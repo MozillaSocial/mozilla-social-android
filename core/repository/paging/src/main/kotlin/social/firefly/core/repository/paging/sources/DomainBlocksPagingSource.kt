@@ -18,9 +18,9 @@ class DomainBlocksPagingSource(
 
     override suspend fun load(params: LoadParams<String>): LoadResult<String, String> {
         try {
-            val nextPageNumber = params.key
             val response = domainBlocksRepository.getDomainBlocks(
-                maxId = nextPageNumber
+                maxId = params.key,
+                limit = params.loadSize,
             )
             return LoadResult.Page(
                 data = response.items,
