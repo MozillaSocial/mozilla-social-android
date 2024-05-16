@@ -1,5 +1,7 @@
 package social.firefly.core.network.mastodon
 
+import social.firefly.core.model.paging.MastodonPagedResponse
+
 interface DomainBlocksApi {
 
     suspend fun getBlockedDomains(
@@ -7,5 +9,5 @@ interface DomainBlocksApi {
         sinceId: String? = null,
         minId: String? = null,
         limit: Int? = null,
-    ): List<String>
+    ): MastodonPagedResponse<String>
 }

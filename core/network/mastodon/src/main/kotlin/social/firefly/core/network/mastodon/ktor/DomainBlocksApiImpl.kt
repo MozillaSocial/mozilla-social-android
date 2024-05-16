@@ -4,7 +4,9 @@ import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.http.path
+import social.firefly.core.model.paging.MastodonPagedResponse
 import social.firefly.core.network.mastodon.DomainBlocksApi
+import social.firefly.core.network.mastodon.utils.toMastodonPagedResponse
 
 class DomainBlocksApiImpl(
     private val client: HttpClient,
@@ -15,9 +17,11 @@ class DomainBlocksApiImpl(
         sinceId: String?,
         minId: String?,
         limit: Int?,
-    ): List<String> = client.get {
+    ): MastodonPagedResponse<String> = client.get {
         url {
             path("api/v1/domain_blocks")
         }
-    }.body()
+    }.toMastodonPagedResponse<String, String> {
+        it
+    }
 }
