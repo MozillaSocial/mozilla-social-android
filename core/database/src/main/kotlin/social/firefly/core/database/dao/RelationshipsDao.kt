@@ -53,4 +53,18 @@ interface RelationshipsDao : BaseDao<DatabaseRelationship> {
                 "WHERE accountId NOT IN (SELECT accountId FROM accounts)"
     )
     suspend fun deleteOldRelationships()
+
+    @Query(
+        "UPDATE relationships " +
+                "SET isDomainBlocking = :isDomainBlocking " +
+                "WHERE accountId IN " +
+                "( " +
+                    "SELECT accountId from accounts " +
+                    "WHERE acct LIKE '%' + :domain + '%' " +
+                ")"
+    )
+    suspend fun updateDomainBlocking(
+        domain: String,
+        isDomainBlocking: Boolean,
+    )
 }

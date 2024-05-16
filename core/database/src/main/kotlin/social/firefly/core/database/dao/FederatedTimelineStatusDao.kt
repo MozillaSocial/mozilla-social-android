@@ -29,4 +29,20 @@ interface FederatedTimelineStatusDao : BaseDao<FederatedTimelineStatus> {
                 ")",
     )
     suspend fun removePostsFromAccount(accountId: String)
+
+    @Query(
+        "DELETE FROM federatedTimeline " +
+                "WHERE statusId IN " +
+                "(" +
+                "SELECT statusId FROM statuses " +
+                "WHERE accountId IN " +
+                "(" +
+                "SELECT accountId FROM accounts " +
+                "WHERE acct LIKE '%' + :domain + '%' " +
+                ")" +
+                ")"
+    )
+    suspend fun removePostsFromDomain(
+        domain: String
+    )
 }

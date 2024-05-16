@@ -2,7 +2,11 @@ package social.firefly.core.network.mastodon.ktor
 
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
+import io.ktor.client.request.forms.formData
+import io.ktor.client.request.forms.submitForm
 import io.ktor.client.request.get
+import io.ktor.client.request.url
+import io.ktor.http.HttpMethod
 import io.ktor.http.URLProtocol
 import io.ktor.http.path
 import social.firefly.core.model.paging.MastodonPagedResponse
@@ -25,5 +29,33 @@ class DomainBlocksApiImpl(
         }
     }.toMastodonPagedResponse<String, String> {
         it
+    }
+
+    override suspend fun blockDomain(
+        domain: String
+    ) {
+        client.submitForm {
+            method = HttpMethod.Post
+            url {
+                protocol = URLProtocol.HTTPS
+                path("api/v1/domain_blocks")
+            }
+            formData {
+                append("domain", domain)
+            }
+        }
+    }
+
+    override suspend fun unblockDomain(domain: String) {
+        client.submitForm {
+            method = HttpMethod.Delete
+            url {
+                protocol = URLProtocol.HTTPS
+                path("api/v1/domain_blocks")
+            }
+            formData {
+                append("domain", domain)
+            }
+        }
     }
 }

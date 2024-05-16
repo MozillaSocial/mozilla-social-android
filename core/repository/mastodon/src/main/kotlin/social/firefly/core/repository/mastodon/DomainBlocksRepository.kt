@@ -1,5 +1,6 @@
 package social.firefly.core.repository.mastodon
 
+import social.firefly.common.annotations.PreferUseCase
 import social.firefly.core.model.paging.MastodonPagedResponse
 import social.firefly.core.network.mastodon.DomainBlocksApi
 
@@ -18,4 +19,14 @@ class DomainBlocksRepository(
         minId = minId,
         limit = limit,
     )
+
+    @PreferUseCase
+    suspend fun blockDomain(
+        domain: String,
+    ) = api.blockDomain(domain)
+
+    @PreferUseCase
+    suspend fun unblockDomain(
+        domain: String
+    ) = api.unblockDomain(domain)
 }

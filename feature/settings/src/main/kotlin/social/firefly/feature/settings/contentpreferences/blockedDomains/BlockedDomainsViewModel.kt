@@ -12,9 +12,7 @@ import social.firefly.core.repository.paging.sources.DomainBlocksPagingSource
 
 class BlockedDomainsViewModel(
     private val domainBlocksRepository: DomainBlocksRepository,
-) : ViewModel() {
-
-    private val toggledDomains: List<String> = emptyList()
+) : ViewModel(), BlockedDomainInteractions {
 
     val blockedDomains = Pager(
         config = PagingConfig(
@@ -27,8 +25,15 @@ class BlockedDomainsViewModel(
         it.map { domain ->
             BlockedDomainState(
                 domain = domain,
-                isBlocked = !toggledDomains.contains(domain)
             )
         }
     }.cachedIn(viewModelScope)
+
+    override fun onUnblockClicked(domain: String) {
+
+    }
+
+    override fun onBlockClicked(domain: String) {
+
+    }
 }

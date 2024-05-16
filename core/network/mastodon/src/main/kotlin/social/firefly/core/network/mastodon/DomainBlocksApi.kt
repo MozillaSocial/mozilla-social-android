@@ -10,4 +10,12 @@ interface DomainBlocksApi {
         minId: String? = null,
         limit: Int? = null,
     ): MastodonPagedResponse<String>
+
+    suspend fun blockDomain(
+        domain: String,
+    )
+
+    suspend fun unblockDomain(
+        domain: String,
+    )
 }
