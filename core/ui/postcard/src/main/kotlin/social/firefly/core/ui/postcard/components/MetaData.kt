@@ -15,6 +15,7 @@ import social.firefly.common.utils.StringFactory
 import social.firefly.core.designsystem.icon.FfIcons
 import social.firefly.core.designsystem.theme.FfTheme
 import social.firefly.core.ui.common.dialog.blockAccountConfirmationDialog
+import social.firefly.core.ui.common.dialog.blockDomainConfirmationDialog
 import social.firefly.core.ui.common.dialog.deleteStatusConfirmationDialog
 import social.firefly.core.ui.common.dialog.muteAccountConfirmationDialog
 import social.firefly.core.ui.common.dropdown.FfDropDownItem
@@ -78,6 +79,10 @@ private fun OverflowMenu(
         )
     }
 
+    val blockDomainDialog = blockDomainConfirmationDialog(domain = post.domain) {
+        postCardInteractions.onOverflowBlockDomainClicked(post.domain)
+    }
+
     val deleteStatusDialog = deleteStatusConfirmationDialog {
         postCardInteractions.onOverflowDeleteClicked(post.statusId)
     }
@@ -136,9 +141,7 @@ private fun OverflowMenu(
                                 post.domain
                             ).build(context),
                             expanded = overflowMenuExpanded,
-                            onClick = {
-                                postCardInteractions.onOverflowBlockDomainClicked(post.domain)
-                            }
+                            onClick = { blockDomainDialog.open() }
                         )
                     }
                 }
