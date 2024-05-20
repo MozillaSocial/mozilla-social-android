@@ -11,6 +11,10 @@ fun Account.toUiState(relationship: Relationship) =
     AccountUiState(
         accountId = accountId,
         username = username,
+        domain = acct.substringAfter(
+            delimiter = "@",
+            missingDelimiterValue = ""
+        ),
         webFinger = acct,
         displayName = displayName,
         accountUrl = url,
@@ -29,6 +33,7 @@ fun Account.toUiState(relationship: Relationship) =
         },
         isMuted = relationship.isMuting,
         isBlocked = relationship.isBlocking,
+        isDomainBlocked = relationship.isDomainBlocking,
         joinDate = createdAt.toLocalDateTime(TimeZone.currentSystemDefault()),
     )
 
