@@ -18,58 +18,56 @@ fun Status.toPostCardUiState(
     isClickable: Boolean = true,
     shouldShowUnfavoriteConfirmation: Boolean = false,
     shouldShowUnbookmarkConfirmation: Boolean = false,
-): PostCardUiState =
-    PostCardUiState(
-        statusId = statusId,
-        topRowMetaDataUiState = if (showTopRowMetaData) {
-            toTopRowMetaDataUiState()
-        } else {
-            null
-        },
-        mainPostCardUiState = boostedStatus?.toMainPostCardUiState(
-            currentUserAccountId = currentUserAccountId,
-            shouldShowUnbookmarkConfirmation = shouldShowUnbookmarkConfirmation,
-            shouldShowUnfavoriteConfirmation = shouldShowUnfavoriteConfirmation,
-        ) ?: toMainPostCardUiState(
-            currentUserAccountId = currentUserAccountId,
-            shouldShowUnbookmarkConfirmation = shouldShowUnbookmarkConfirmation,
-            shouldShowUnfavoriteConfirmation = shouldShowUnfavoriteConfirmation,
-        ),
-        depthLinesUiState = depthLinesUiState,
-        isClickable = isClickable,
-    )
+): PostCardUiState = PostCardUiState(
+    statusId = statusId,
+    topRowMetaDataUiState = if (showTopRowMetaData) {
+        toTopRowMetaDataUiState()
+    } else {
+        null
+    },
+    mainPostCardUiState = boostedStatus?.toMainPostCardUiState(
+        currentUserAccountId = currentUserAccountId,
+        shouldShowUnbookmarkConfirmation = shouldShowUnbookmarkConfirmation,
+        shouldShowUnfavoriteConfirmation = shouldShowUnfavoriteConfirmation,
+    ) ?: toMainPostCardUiState(
+        currentUserAccountId = currentUserAccountId,
+        shouldShowUnbookmarkConfirmation = shouldShowUnbookmarkConfirmation,
+        shouldShowUnfavoriteConfirmation = shouldShowUnfavoriteConfirmation,
+    ),
+    depthLinesUiState = depthLinesUiState,
+    isClickable = isClickable,
+)
 
 private fun Status.toMainPostCardUiState(
     currentUserAccountId: String,
     shouldShowUnfavoriteConfirmation: Boolean = false,
     shouldShowUnbookmarkConfirmation: Boolean = false,
-): MainPostCardUiState =
-    MainPostCardUiState(
-        url = url,
-        profilePictureUrl = account.avatarStaticUrl,
-        postTimeSince = createdAt.timeSinceNow(),
-        accountName = StringFactory.literal(account.acct),
-        replyCount = repliesCount.toShortenedStringValue(),
-        boostCount = boostsCount.toShortenedStringValue(),
-        favoriteCount = favouritesCount.toShortenedStringValue(),
-        username = account.displayName,
+): MainPostCardUiState = MainPostCardUiState(
+    url = url,
+    profilePictureUrl = account.avatarStaticUrl,
+    postTimeSince = createdAt.timeSinceNow(),
+    accountName = StringFactory.literal(account.acct),
+    replyCount = repliesCount.toShortenedStringValue(),
+    boostCount = boostsCount.toShortenedStringValue(),
+    favoriteCount = favouritesCount.toShortenedStringValue(),
+    username = account.displayName,
+    statusId = statusId,
+    userBoosted = isBoosted ?: false,
+    isFavorited = isFavourited ?: false,
+    isBookmarked = isBookmarked ?: false,
+    accountId = account.accountId,
+    isBeingDeleted = isBeingDeleted,
+    postContentUiState = toPostContentUiState(
         statusId = statusId,
-        userBoosted = isBoosted ?: false,
-        isFavorited = isFavourited ?: false,
-        isBookmarked = isBookmarked ?: false,
-        accountId = account.accountId,
-        isBeingDeleted = isBeingDeleted,
-        postContentUiState = toPostContentUiState(
-            statusId = statusId,
-            currentUserAccountId = currentUserAccountId
-        ),
-        overflowDropDownType = when {
-            currentUserAccountId == account.accountId -> OverflowDropDownType.USER
-            else -> OverflowDropDownType.NOT_USER
-        },
-        shouldShowUnbookmarkConfirmation = shouldShowUnbookmarkConfirmation,
-        shouldShowUnfavoriteConfirmation = shouldShowUnfavoriteConfirmation,
-    )
+        currentUserAccountId = currentUserAccountId
+    ),
+    overflowDropDownType = when {
+        currentUserAccountId == account.accountId -> OverflowDropDownType.USER
+        else -> OverflowDropDownType.NOT_USER
+    },
+    shouldShowUnbookmarkConfirmation = shouldShowUnbookmarkConfirmation,
+    shouldShowUnfavoriteConfirmation = shouldShowUnfavoriteConfirmation,
+)
 
 fun Status.toPostContentUiState(
     statusId: String,
