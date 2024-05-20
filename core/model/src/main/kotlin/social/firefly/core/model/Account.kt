@@ -79,7 +79,7 @@ data class Account(
     /**
      * Indicates that the profile is currently inactive and that its user has moved to a new account.
      */
-    val movedTo: social.firefly.core.model.Account? = null,
+    val movedTo: Account? = null,
     /**
      * Whether this account represents a group.
      */
@@ -87,7 +87,7 @@ data class Account(
     /**
      * Additional metadata attached to a profile as name-value pairs.
      */
-    val fields: List<social.firefly.core.model.Field>? = null,
+    val fields: List<Field>? = null,
     /**
      * Whether this account is a robot.
      *
@@ -98,7 +98,7 @@ data class Account(
     /**
      * An entity to be used with API methods to verify and update credentials.
      */
-    val source: social.firefly.core.model.Source? = null,
+    val source: Source? = null,
     /**
      * Whether the account is suspended.
      */

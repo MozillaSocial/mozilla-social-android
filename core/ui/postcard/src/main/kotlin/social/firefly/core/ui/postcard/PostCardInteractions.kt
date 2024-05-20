@@ -40,6 +40,10 @@ interface PostCardInteractions : PollInteractions, HtmlContentInteractions {
         statusId: String,
     )
 
+    fun onOverflowBlockDomainClicked(
+        domain: String,
+    )
+
     fun onOverflowDeleteClicked(statusId: String)
 
     fun onOverflowEditClicked(statusId: String)
@@ -76,6 +80,8 @@ object PostCardInteractionsNoOp: PostCardInteractions {
         accountHandle: String,
         statusId: String
     ) = Unit
+
+    override fun onOverflowBlockDomainClicked(domain: String) = Unit
 
     override fun onOverflowDeleteClicked(statusId: String) = Unit
 

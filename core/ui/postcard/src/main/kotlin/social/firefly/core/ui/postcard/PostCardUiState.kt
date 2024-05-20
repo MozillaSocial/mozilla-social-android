@@ -18,9 +18,10 @@ data class PostCardUiState(
 data class MainPostCardUiState(
     val url: String?,
     val username: String,
+    val domain: String, // if the domain is the user's domain, value will be blank
     val profilePictureUrl: String,
     val postTimeSince: StringFactory,
-    val accountName: StringFactory,
+    val accountName: String,
     val replyCount: String?,
     val boostCount: String?,
     val favoriteCount: String?,
@@ -34,11 +35,6 @@ data class MainPostCardUiState(
     val overflowDropDownType: OverflowDropDownType,
     val shouldShowUnfavoriteConfirmation: Boolean,
     val shouldShowUnbookmarkConfirmation: Boolean,
-)
-
-data class DropDownOption(
-    val text: StringFactory,
-    val onOptionClicked: () -> Unit,
 )
 
 data class PostContentUiState(
@@ -92,9 +88,10 @@ data class PreviewCard(
 internal val postCardUiStatePreview = MainPostCardUiState(
     url = "",
     username = "Cool guy",
+    domain = "mozilla.social",
     profilePictureUrl = "",
     postTimeSince = Instant.fromEpochMilliseconds(1695308821000L).timeSinceNow(),
-    accountName = StringFactory.literal("coolguy"),
+    accountName = "coolguy",
     replyCount = "4",
     boostCount = "300k",
     favoriteCount = "4.4m",

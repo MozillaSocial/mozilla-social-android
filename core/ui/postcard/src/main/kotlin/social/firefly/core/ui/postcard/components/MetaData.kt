@@ -44,7 +44,7 @@ internal fun MetaData(
                 style = FfTheme.typography.labelMedium,
             )
             Text(
-                text = "${post.postTimeSince.build(context)} - @${post.accountName.build(context)}",
+                text = "${post.postTimeSince.build(context)} - @${post.accountName}",
                 style = FfTheme.typography.bodyMedium,
                 color = FfTheme.colors.textSecondary,
             )
@@ -124,11 +124,23 @@ private fun OverflowMenu(
                         onClick = {
                             postCardInteractions.onOverflowReportClicked(
                                 accountId = post.accountId,
-                                accountHandle = post.accountName.build(context),
+                                accountHandle = post.accountName,
                                 statusId = post.statusId,
                             )
                         }
                     )
+                    if (post.domain.isNotBlank()) {
+                        FfDropDownItem(
+                            text = StringFactory.resource(
+                                R.string.block_domain,
+                                post.domain
+                            ).build(context),
+                            expanded = overflowMenuExpanded,
+                            onClick = {
+                                postCardInteractions.onOverflowBlockDomainClicked(post.domain)
+                            }
+                        )
+                    }
                 }
             }
         }

@@ -35,6 +35,7 @@ val postCardModule =
                 bookmarkStatus = get(),
                 undoBookmarkStatus = get(),
                 analytics = get(),
+                blockDomain = get(),
             )
         }
     }
