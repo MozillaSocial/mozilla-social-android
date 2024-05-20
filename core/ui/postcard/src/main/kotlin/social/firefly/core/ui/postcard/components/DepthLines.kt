@@ -41,6 +41,7 @@ fun DepthLines(
 
     Canvas(
         modifier = modifier
+            .fillMaxHeight() // must fill max height or some lines will not be in correct place
             .width(width.dp),
     ) {
         val height = size.height
@@ -75,6 +76,8 @@ fun DepthLines(
                 val x = (spacingWidth * drawDepth).toFloat() + 1
                 val yEnd = height / 2
                 val curveStartY = yEnd - spacingWidth.toFloat().toPx(context)
+
+                println("johnny height $height")
 
                 val path = Path().apply {
                     moveTo(
