@@ -30,6 +30,7 @@ interface FederatedTimelineStatusDao : BaseDao<FederatedTimelineStatus> {
     )
     suspend fun removePostsFromAccount(accountId: String)
 
+    @Transaction
     @Query(
         "DELETE FROM federatedTimeline " +
                 "WHERE statusId IN " +
@@ -38,7 +39,7 @@ interface FederatedTimelineStatusDao : BaseDao<FederatedTimelineStatus> {
                 "WHERE accountId IN " +
                 "(" +
                 "SELECT accountId FROM accounts " +
-                "WHERE acct LIKE '%' + :domain + '%' " +
+                "WHERE acct LIKE '%' || :domain || '%' " +
                 ")" +
                 ")"
     )
