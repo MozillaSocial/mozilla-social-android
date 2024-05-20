@@ -12,6 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
 import androidx.paging.PagingData
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
@@ -58,6 +59,7 @@ private fun BlockedDomainsScreen(
                 ) { index ->
                     lazyPagingItems[index]?.let { item ->
                         Domain(
+                            modifier = Modifier.padding(vertical = 4.dp),
                             uiState = item,
                             blockedDomainInteractions = blockedDomainInteractions,
                         )

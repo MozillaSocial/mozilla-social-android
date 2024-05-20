@@ -11,6 +11,7 @@ data class AccountUiState(
     val accountId: String,
     val username: String,
     val webFinger: String,
+    val domain: String, // if the domain is the user's domain, value will be blank
     val displayName: String,
     val accountUrl: String,
     val bio: String,
@@ -24,6 +25,7 @@ data class AccountUiState(
     val followStatus: FollowStatus,
     val isMuted: Boolean,
     val isBlocked: Boolean,
+    val isDomainBlocked: Boolean,
     val joinDate: LocalDateTime,
 )
 

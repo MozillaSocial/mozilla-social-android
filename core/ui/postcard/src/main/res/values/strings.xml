@@ -8,6 +8,7 @@
     <string name="mute_user">Mute %s</string>
     <string name="block_user">Block %s</string>
     <string name="report_user">Report %s</string>
+    <string name="block_domain">Block domain %s</string>
 
     <string name="view_more_replies">View more replies</string>
 </resources>

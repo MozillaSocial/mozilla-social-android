@@ -37,6 +37,11 @@
     <string name="block_user">Block %s</string>
     <string name="unblock_user">Unblock %s</string>
 
+    <string name="block_domain_confirmation">Are you sure you want to block the entire domain %s?</string>
+    <string name="block_domain_confirmed">Block</string>
+    <string name="block_domain">Block domain %s</string>
+    <string name="unblock_domain">Unblock domain %s</string>
+
     <string name="mute_user_confirmation">Are you sure you want to mute %s?</string>
     <string name="mute_user_confirmed">Mute</string>
     <string name="mute_user">Mute %s</string>

@@ -45,7 +45,7 @@ interface HomeTimelineStatusDao : BaseDao<HomeTimelineStatus> {
                     "WHERE accountId IN " +
                         "(" +
                             "SELECT accountId FROM accounts " +
-                            "WHERE acct LIKE '%' + :domain + '%' " +
+                            "WHERE acct LIKE '%' || :domain || '%' " +
                         ")" +
                 ")"
     )

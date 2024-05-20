@@ -25,11 +25,13 @@ import social.firefly.core.repository.paging.remotemediators.AccountTimelineRemo
 import social.firefly.core.ui.postcard.PostCardDelegate
 import social.firefly.core.ui.postcard.toPostCardUiState
 import social.firefly.core.usecase.mastodon.account.BlockAccount
+import social.firefly.core.usecase.mastodon.account.BlockDomain
 import social.firefly.core.usecase.mastodon.account.FollowAccount
 import social.firefly.core.usecase.mastodon.account.GetDetailedAccount
 import social.firefly.core.usecase.mastodon.account.GetLoggedInUserAccountId
 import social.firefly.core.usecase.mastodon.account.MuteAccount
 import social.firefly.core.usecase.mastodon.account.UnblockAccount
+import social.firefly.core.usecase.mastodon.account.UnblockDomain
 import social.firefly.core.usecase.mastodon.account.UnfollowAccount
 import social.firefly.core.usecase.mastodon.account.UnmuteAccount
 import timber.log.Timber
@@ -46,6 +48,8 @@ class AccountViewModel(
     private val unblockAccount: UnblockAccount,
     private val muteAccount: MuteAccount,
     private val unmuteAccount: UnmuteAccount,
+    private val blockDomain: BlockDomain,
+    private val unblockDomain: UnblockDomain,
     initialAccountId: String?,
 ) : ViewModel(), AccountInteractions, KoinComponent {
 
@@ -216,6 +220,30 @@ class AccountViewModel(
                 unblockAccount(accountId)
             } catch (e: UnblockAccount.UnblockFailedException) {
                 Timber.e(e)
+            }
+        }
+    }
+
+    override fun onOverflowBlockDomainClicked() {
+        viewModelScope.launch {
+            (uiState.value as? Resource.Loaded)?.data?.domain?.let { domain ->
+                try {
+                    blockDomain(domain)
+                } catch (e: BlockDomain.BlockDomainFailedException) {
+                    Timber.e(e)
+                }
+            }
+        }
+    }
+
+    override fun onOverflowUnblockDomainClicked() {
+        viewModelScope.launch {
+            (uiState.value as? Resource.Loaded)?.data?.domain?.let { domain ->
+                try {
+                    unblockDomain(domain)
+                } catch (e: UnblockDomain.UnblockDomainFailedException) {
+                    Timber.e(e)
+                }
             }
         }
     }

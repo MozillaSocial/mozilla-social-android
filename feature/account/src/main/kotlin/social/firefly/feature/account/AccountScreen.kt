@@ -75,6 +75,7 @@ import social.firefly.core.ui.common.button.FfButtonSecondary
 import social.firefly.core.ui.common.button.FfToggleButton
 import social.firefly.core.ui.common.button.ToggleButtonState
 import social.firefly.core.ui.common.dialog.blockAccountConfirmationDialog
+import social.firefly.core.ui.common.dialog.blockDomainConfirmationDialog
 import social.firefly.core.ui.common.dialog.muteAccountConfirmationDialog
 import social.firefly.core.ui.common.dropdown.FfDropDownItem
 import social.firefly.core.ui.common.dropdown.FfIconButtonDropDownMenu
@@ -397,6 +398,10 @@ private fun OverflowMenu(
         overflowInteractions.onOverflowMuteClicked()
     }
 
+    val blockDomainDialog = blockDomainConfirmationDialog(domain = account.domain) {
+        overflowInteractions.onOverflowBlockDomainClicked()
+    }
+
     FfIconButtonDropDownMenu(
         expanded = overflowMenuExpanded,
         dropDownMenuContent = {
@@ -487,6 +492,28 @@ private fun OverflowMenu(
                     expanded = overflowMenuExpanded,
                     onClick = { overflowInteractions.onOverflowReportClicked() },
                 )
+
+                if (account.domain.isNotBlank()) {
+                    if (account.isDomainBlocked) {
+                        FfDropDownItem(
+                            text = stringResource(
+                                id = social.firefly.core.ui.common.R.string.unblock_domain,
+                                account.domain,
+                            ),
+                            expanded = overflowMenuExpanded,
+                            onClick = { overflowInteractions.onOverflowUnblockDomainClicked() },
+                        )
+                    } else {
+                        FfDropDownItem(
+                            text = stringResource(
+                                id = social.firefly.core.ui.common.R.string.block_domain,
+                                account.domain,
+                            ),
+                            expanded = overflowMenuExpanded,
+                            onClick = { blockDomainDialog.open() },
+                        )
+                    }
+                }
             }
         }
     ) {
@@ -713,6 +740,7 @@ fun AccountScreenPreview() {
                     accountId = "",
                     username = "Coolguy",
                     webFinger = "coolguy",
+                    domain = "",
                     displayName = "Cool Guy",
                     accountUrl = "",
                     bio = "I'm pretty cool",
@@ -726,8 +754,8 @@ fun AccountScreenPreview() {
                     followStatus = FollowStatus.NOT_FOLLOWING,
                     isMuted = false,
                     isBlocked = false,
-                    joinDate =
-                    LocalDateTime(
+                    isDomainBlocked = false,
+                    joinDate = LocalDateTime(
                         LocalDate(2023, 7, 3),
                         LocalTime(0, 0, 0),
                     ),

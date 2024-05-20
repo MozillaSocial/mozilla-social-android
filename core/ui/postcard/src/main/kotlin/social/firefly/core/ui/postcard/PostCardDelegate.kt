@@ -9,6 +9,7 @@ import social.firefly.core.navigation.NavigationDestination
 import social.firefly.core.navigation.usecases.NavigateTo
 import social.firefly.core.navigation.usecases.OpenLink
 import social.firefly.core.usecase.mastodon.account.BlockAccount
+import social.firefly.core.usecase.mastodon.account.BlockDomain
 import social.firefly.core.usecase.mastodon.account.MuteAccount
 import social.firefly.core.usecase.mastodon.status.BookmarkStatus
 import social.firefly.core.usecase.mastodon.status.BoostStatus
@@ -37,6 +38,7 @@ class PostCardDelegate(
     private val bookmarkStatus: BookmarkStatus,
     private val undoBookmarkStatus: UndoBookmarkStatus,
     private val analytics: PostCardAnalytics,
+    private val blockDomain: BlockDomain,
 ) : PostCardInteractions {
 
     private val baseAnalyticsIdentifier: String = feedLocation.baseAnalyticsIdentifier
@@ -171,6 +173,16 @@ class PostCardDelegate(
                 reportStatusId = statusId,
             ),
         )
+    }
+
+    override fun onOverflowBlockDomainClicked(domain: String) {
+        appScope.launch {
+            try {
+                blockDomain(domain)
+            } catch (e: BlockDomain.BlockDomainFailedException) {
+                Timber.e(e)
+            }
+        }
     }
 
     override fun onOverflowDeleteClicked(statusId: String) {

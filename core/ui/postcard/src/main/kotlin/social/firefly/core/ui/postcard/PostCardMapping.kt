@@ -46,11 +46,15 @@ private fun Status.toMainPostCardUiState(
     url = url,
     profilePictureUrl = account.avatarStaticUrl,
     postTimeSince = createdAt.timeSinceNow(),
-    accountName = StringFactory.literal(account.acct),
+    accountName = account.acct,
     replyCount = repliesCount.toShortenedStringValue(),
     boostCount = boostsCount.toShortenedStringValue(),
     favoriteCount = favouritesCount.toShortenedStringValue(),
     username = account.displayName,
+    domain = account.acct.substringAfter(
+        delimiter = "@",
+        missingDelimiterValue = ""
+    ),
     statusId = statusId,
     userBoosted = isBoosted ?: false,
     isFavorited = isFavourited ?: false,

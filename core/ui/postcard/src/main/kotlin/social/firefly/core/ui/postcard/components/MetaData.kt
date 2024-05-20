@@ -15,6 +15,7 @@ import social.firefly.common.utils.StringFactory
 import social.firefly.core.designsystem.icon.FfIcons
 import social.firefly.core.designsystem.theme.FfTheme
 import social.firefly.core.ui.common.dialog.blockAccountConfirmationDialog
+import social.firefly.core.ui.common.dialog.blockDomainConfirmationDialog
 import social.firefly.core.ui.common.dialog.deleteStatusConfirmationDialog
 import social.firefly.core.ui.common.dialog.muteAccountConfirmationDialog
 import social.firefly.core.ui.common.dropdown.FfDropDownItem
@@ -44,7 +45,7 @@ internal fun MetaData(
                 style = FfTheme.typography.labelMedium,
             )
             Text(
-                text = "${post.postTimeSince.build(context)} - @${post.accountName.build(context)}",
+                text = "${post.postTimeSince.build(context)} - @${post.accountName}",
                 style = FfTheme.typography.bodyMedium,
                 color = FfTheme.colors.textSecondary,
             )
@@ -76,6 +77,10 @@ private fun OverflowMenu(
             accountId = post.accountId,
             statusId = post.statusId,
         )
+    }
+
+    val blockDomainDialog = blockDomainConfirmationDialog(domain = post.domain) {
+        postCardInteractions.onOverflowBlockDomainClicked(post.domain)
     }
 
     val deleteStatusDialog = deleteStatusConfirmationDialog {
@@ -124,11 +129,21 @@ private fun OverflowMenu(
                         onClick = {
                             postCardInteractions.onOverflowReportClicked(
                                 accountId = post.accountId,
-                                accountHandle = post.accountName.build(context),
+                                accountHandle = post.accountName,
                                 statusId = post.statusId,
                             )
                         }
                     )
+                    if (post.domain.isNotBlank()) {
+                        FfDropDownItem(
+                            text = StringFactory.resource(
+                                R.string.block_domain,
+                                post.domain
+                            ).build(context),
+                            expanded = overflowMenuExpanded,
+                            onClick = { blockDomainDialog.open() }
+                        )
+                    }
                 }
             }
         }

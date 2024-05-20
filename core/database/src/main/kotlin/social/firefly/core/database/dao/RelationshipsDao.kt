@@ -60,7 +60,7 @@ interface RelationshipsDao : BaseDao<DatabaseRelationship> {
                 "WHERE accountId IN " +
                 "( " +
                     "SELECT accountId from accounts " +
-                    "WHERE acct LIKE '%' + :domain + '%' " +
+                    "WHERE acct LIKE '%' || :domain || '%' " +
                 ")"
     )
     suspend fun updateDomainBlocking(

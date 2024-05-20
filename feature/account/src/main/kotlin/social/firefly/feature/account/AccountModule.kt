@@ -39,6 +39,8 @@ val accountModule =
                 muteAccount = get(),
                 unmuteAccount = get(),
                 timelineRepository = get(),
+                blockDomain = get(),
+                unblockDomain = get(),
             )
         }
 
