@@ -30,4 +30,6 @@ dependencies {
     implementation(libs.androidx.datastore)
     implementation(libs.protobuf.kotlin.lite)
     implementation(libs.jakewharton.timber)
+
+    implementation(libs.kotlinx.serialization.json)
 }

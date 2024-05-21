@@ -5,4 +5,5 @@ data class ChooseServerUiState(
     val nextButtonEnabled: Boolean = false,
     val loginFailed: Boolean = false,
     val isLoading: Boolean = false,
+    val suggestedServers: List<String> = emptyList(),
 )

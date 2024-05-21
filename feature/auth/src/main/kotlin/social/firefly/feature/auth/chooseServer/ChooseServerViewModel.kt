@@ -17,12 +17,20 @@ class ChooseServerViewModel(
     private val _uiState = MutableStateFlow(ChooseServerUiState())
     val uiState = _uiState.asStateFlow()
 
+    private var servers: List<String> = emptyList()
+
     override fun onServerTextChanged(text: String) {
         val isUrl = URL_REGEX.toRegex().matches(text)
+        val suggestions = if (text.length > 2) {
+            servers.filter { it.startsWith(text) }.take(2)
+        } else {
+            emptyList()
+        }
         _uiState.edit {
             copy(
                 serverText = text,
                 nextButtonEnabled = isUrl,
+                suggestedServers = suggestions,
             )
         }
     }
@@ -59,6 +67,14 @@ class ChooseServerViewModel(
         viewModelScope.launch {
             login.onUserCodeReceived(code)
         }
+    }
+
+    override fun onServerListLoaded(servers: List<String>) {
+        this.servers = servers
+    }
+
+    override fun onServerSuggestionClicked(server: String) {
+        onServerTextChanged(server)
     }
 
     override fun onScreenViewed() {
