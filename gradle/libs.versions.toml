@@ -1,11 +1,11 @@
 [versions]
-about-libraries = "11.1.3"
-android-gradle-plugin = "8.4.0"
+about-libraries = "11.1.4"
+android-gradle-plugin = "8.4.1"
 android-secrets-plugin = "2.0.1"
 androidx-lifecycle = "2.7.0"
 androidx-media3 = "1.3.1"
 androidx-navigation = "2.7.7"
-androidx-paging = "3.2.1"
+androidx-paging = "3.3.0"
 androidx-room = "2.6.1"
 androidx-test-ext-junit = "1.1.5"
 androidx-work = "2.9.0"
@@ -20,8 +20,8 @@ koin = "3.5.6"
 koin-compose = "1.1.5"
 kotlin = "1.9.23"
 kotlin-ksp = "1.9.23-1.0.20" # Used only once, but keeping this definition makes the KSP version check at ci/verify-ksp-version.sh simpler.
-kotlinx-coroutines = "1.8.0"
-ktor = "2.3.10"
+kotlinx-coroutines = "1.8.1"
+ktor = "2.3.11"
 okhttp = "4.12.0"
 protobuf = "4.26.1"
 
@@ -82,14 +82,14 @@ kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test-common", version.ref 
 kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
 kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinx-coroutines" }
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
-kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version = "0.5.0" }
+kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version = "0.6.0" }
 kotlinx-serialization-converter = { module = "com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter", version = "1.0.0" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version = "1.6.3" }
 ktor-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
 ktor-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
 ktor-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
 ktor-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
-mockk = { module = "io.mockk:mockk", version = "1.13.10" }
+mockk = { module = "io.mockk:mockk", version = "1.13.11" }
 mozilla-components-service-glean = { module = "org.mozilla.components:service-glean", version = "118.0" }
 protobuf-kotlin-lite = { module = "com.google.protobuf:protobuf-kotlin-lite", version.ref = "protobuf" }
 protobuf-protoc = { module = "com.google.protobuf:protoc", version.ref = "protobuf" }
@@ -116,4 +116,4 @@ kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-ksp = { id = "com.google.devtools.ksp", version.ref = "kotlin-ksp" }
 kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin"}
 protobuf = { id = "com.google.protobuf", version = "0.9.4" }
-sentry = { id = "io.sentry.android.gradle", version = "4.5.0" }
+sentry = { id = "io.sentry.android.gradle", version = "4.6.0" }
