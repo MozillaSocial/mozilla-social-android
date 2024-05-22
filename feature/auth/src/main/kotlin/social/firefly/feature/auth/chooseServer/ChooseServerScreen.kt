@@ -30,6 +30,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
@@ -231,7 +232,7 @@ private fun ChooseServerScreenPreview() {
         FfTheme {
             ChooseServerScreen(
                 uiState = ChooseServerUiState(
-                    serverText = "firefly.firefly",
+                    serverText = TextFieldValue("firefly.firefly"),
                     nextButtonEnabled = true,
                 ),
                 chooseServerInteractions = object : ChooseServerInteractions {},
@@ -246,7 +247,7 @@ private fun ChooseServerScreenLoadingPreview() {
     FfTheme {
         ChooseServerScreen(
             uiState = ChooseServerUiState(
-                serverText = "firefly.firefly",
+                serverText = TextFieldValue("firefly.firefly"),
                 nextButtonEnabled = true,
                 isLoading = true,
             ),
@@ -262,7 +263,7 @@ private fun ChooseServerScreenErrorPreview() {
         ChooseServerScreen(
             uiState =
             ChooseServerUiState(
-                serverText = "firefly.firefly",
+                serverText = TextFieldValue("firefly.firefly"),
                 nextButtonEnabled = true,
                 loginFailed = true,
             ),
@@ -277,7 +278,7 @@ private fun ChooseServerScreenSuggestionsPreview() {
     FfTheme {
         ChooseServerScreen(
             uiState = ChooseServerUiState(
-                serverText = "firefly.firefly",
+                serverText = TextFieldValue("firefly.firefly"),
                 nextButtonEnabled = true,
                 suggestedServers = listOf(
                     Server(

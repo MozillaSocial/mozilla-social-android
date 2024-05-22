@@ -1,7 +1,9 @@
 package social.firefly.feature.auth.chooseServer
 
+import androidx.compose.ui.text.input.TextFieldValue
+
 internal interface ChooseServerInteractions {
-    fun onServerTextChanged(text: String) = Unit
+    fun onServerTextChanged(textFieldValue: TextFieldValue) = Unit
     fun onNextClicked() = Unit
     fun onScreenViewed() = Unit
     fun onUserCodeReceived(code: String) = Unit
