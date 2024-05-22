@@ -65,7 +65,7 @@ internal fun ChooseServerScreen(
 
     LaunchedEffect(Unit) {
         viewModel.onServerListLoaded(
-            Json.decodeFromString<List<String>>(
+            Json.decodeFromString<List<Server>>(
                 context.resources.openRawResource(R.raw.nodes).bufferedReader().use {
                     it.readText()
                 }
@@ -172,7 +172,7 @@ private fun Content(
 
 @Composable
 private fun SuggestedServers(
-    servers: List<String>,
+    servers: List<Server>,
     chooseServerInteractions: ChooseServerInteractions,
 ) {
     Column(
@@ -184,9 +184,9 @@ private fun SuggestedServers(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(8.dp))
-                    .clickable { chooseServerInteractions.onServerSuggestionClicked(server) }
+                    .clickable { chooseServerInteractions.onServerSuggestionClicked(server.name) }
                     .padding(16.dp),
-                text = server
+                text = server.name
             )
         }
     }
@@ -273,8 +273,10 @@ private fun ChooseServerScreenSuggestionsPreview() {
                 serverText = "firefly.firefly",
                 nextButtonEnabled = true,
                 suggestedServers = listOf(
-                    "mozilla.social",
-                    "other.server"
+                    Server(
+                        name = "mozilla.social",
+                        monthlyActiveUsers = 23,
+                    )
                 )
             ),
             chooseServerInteractions = object : ChooseServerInteractions {},

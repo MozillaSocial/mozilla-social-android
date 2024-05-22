@@ -17,12 +17,16 @@ class ChooseServerViewModel(
     private val _uiState = MutableStateFlow(ChooseServerUiState())
     val uiState = _uiState.asStateFlow()
 
-    private var servers: List<String> = emptyList()
+    private var servers: List<Server> = emptyList()
 
     override fun onServerTextChanged(text: String) {
         val isUrl = URL_REGEX.toRegex().matches(text)
         val suggestions = if (text.length > 2) {
-            servers.filter { it.startsWith(text) }.take(2)
+            servers.filter {
+                it.name.startsWith(text)
+            }.sortedByDescending {
+                it.monthlyActiveUsers
+            }.take(2)
         } else {
             emptyList()
         }
@@ -69,7 +73,7 @@ class ChooseServerViewModel(
         }
     }
 
-    override fun onServerListLoaded(servers: List<String>) {
+    override fun onServerListLoaded(servers: List<Server>) {
         this.servers = servers
     }
 

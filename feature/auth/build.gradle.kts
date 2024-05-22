@@ -2,6 +2,7 @@ plugins {
     id("social.firefly.android.library")
     id("social.firefly.android.library.compose")
     id("social.firefly.android.library.secrets")
+    alias(libs.plugins.kotlinx.serialization)
 }
 
 android {

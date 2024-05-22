@@ -5,6 +5,6 @@ internal interface ChooseServerInteractions {
     fun onNextClicked() = Unit
     fun onScreenViewed() = Unit
     fun onUserCodeReceived(code: String) = Unit
-    fun onServerListLoaded(servers: List<String>) = Unit
+    fun onServerListLoaded(servers: List<Server>) = Unit
     fun onServerSuggestionClicked(server: String) = Unit
 }
