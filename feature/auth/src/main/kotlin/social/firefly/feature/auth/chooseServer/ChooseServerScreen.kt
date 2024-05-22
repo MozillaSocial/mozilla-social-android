@@ -1,6 +1,7 @@
 package social.firefly.feature.auth.chooseServer
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Box
@@ -30,6 +31,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.serialization.json.Json
@@ -43,6 +45,7 @@ import social.firefly.core.navigation.navigationModule
 import social.firefly.core.ui.common.FfSurface
 import social.firefly.core.ui.common.appbar.FfCloseableTopAppBar
 import social.firefly.core.ui.common.button.FfButton
+import social.firefly.core.ui.common.button.FfButtonSecondary
 import social.firefly.core.ui.common.loading.FfCircularProgressIndicator
 import social.firefly.core.ui.common.text.FfTextField
 import social.firefly.core.ui.common.text.LargeTextLabel
@@ -180,14 +183,18 @@ private fun SuggestedServers(
             .fillMaxWidth()
     ) {
         servers.forEach { server ->
-            LargeTextLabel(
+            FfButtonSecondary(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .clip(RoundedCornerShape(8.dp))
-                    .clickable { chooseServerInteractions.onServerSuggestionClicked(server.name) }
-                    .padding(16.dp),
-                text = server.name
-            )
+                    .padding(vertical = 8.dp)
+                    .fillMaxWidth(),
+                onClick = { chooseServerInteractions.onServerSuggestionClicked(server.name) }
+            ) {
+                LargeTextLabel(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    text = server.name
+                )
+            }
         }
     }
 }
@@ -264,7 +271,7 @@ private fun ChooseServerScreenErrorPreview() {
     }
 }
 
-@Preview
+@PreviewScreenSizes
 @Composable
 private fun ChooseServerScreenSuggestionsPreview() {
     FfTheme {

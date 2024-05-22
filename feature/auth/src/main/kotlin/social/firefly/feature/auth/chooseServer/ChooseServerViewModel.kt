@@ -23,7 +23,7 @@ class ChooseServerViewModel(
         val isUrl = URL_REGEX.toRegex().matches(text)
         val suggestions = if (text.length > 2) {
             servers.filter {
-                it.name.startsWith(text)
+                it.name.startsWith(text) && it.name != text
             }.sortedByDescending {
                 it.monthlyActiveUsers
             }.take(2)
