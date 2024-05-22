@@ -1,5 +1,7 @@
 package social.firefly.feature.auth.chooseServer
 
+import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,12 +19,24 @@ class ChooseServerViewModel(
     private val _uiState = MutableStateFlow(ChooseServerUiState())
     val uiState = _uiState.asStateFlow()
 
-    override fun onServerTextChanged(text: String) {
-        val isUrl = URL_REGEX.toRegex().matches(text)
+    private var servers: List<Server> = emptyList()
+
+    override fun onServerTextChanged(textFieldValue: TextFieldValue) {
+        val isUrl = URL_REGEX.toRegex().matches(textFieldValue.text)
+        val suggestions = if (textFieldValue.text.length > 2) {
+            servers.filter {
+                it.name.startsWith(textFieldValue.text) && it.name != textFieldValue.text
+            }.sortedByDescending {
+                it.monthlyActiveUsers
+            }.take(2)
+        } else {
+            emptyList()
+        }
         _uiState.edit {
             copy(
-                serverText = text,
+                serverText = textFieldValue,
                 nextButtonEnabled = isUrl,
+                suggestedServers = suggestions,
             )
         }
     }
@@ -34,10 +48,9 @@ class ChooseServerViewModel(
                 loginFailed = false,
             )
         }
-        analytics.chooseServerSubmitted(uiState.value.serverText)
         viewModelScope.launch {
             try {
-                login(uiState.value.serverText)
+                login(uiState.value.serverText.text)
             } catch (e: Login.LoginFailedException) {
                 _uiState.edit {
                     copy(
@@ -59,6 +72,14 @@ class ChooseServerViewModel(
         viewModelScope.launch {
             login.onUserCodeReceived(code)
         }
+    }
+
+    override fun onServerListLoaded(servers: List<Server>) {
+        this.servers = servers
+    }
+
+    override fun onServerSuggestionClicked(server: String) {
+        onServerTextChanged(TextFieldValue(text = server, selection = TextRange(server.length)))
     }
 
     override fun onScreenViewed() {
