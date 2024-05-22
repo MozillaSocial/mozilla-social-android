@@ -22,4 +22,4 @@ runs:
       # See: https://github.com/actions/setup-java/blob/main/docs/advanced-usage.md#Hosted-Tool-Cache
   - name: Set up Gradle
     if: ${{ inputs.gradle }}
-    uses: gradle/actions/setup-gradle@db19848a5fa7950289d3668fb053140cf3028d43 # v3
+    uses: gradle/actions/setup-gradle@v3
