@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# This script takes a json file that is a list of servers (as strings) and checks the monthly
+# active user count.  It then outputs a new json file with the information
+
+# get the original nodes.json file from https://nodes.fediverse.party/
+
 if [ -z "$1" ]; then
   echo "provide the nodes.json file as an argument"
   exit 1
