@@ -272,7 +272,7 @@ private fun ChooseServerScreenErrorPreview() {
     }
 }
 
-@PreviewScreenSizes
+@Preview
 @Composable
 private fun ChooseServerScreenSuggestionsPreview() {
     FfTheme {
