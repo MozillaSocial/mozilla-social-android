@@ -43,7 +43,7 @@ jobs:
         # Using 'temurin' speeds up the job, because this distribution is cached by the runner.
         # See: https://github.com/actions/setup-java/blob/main/docs/advanced-usage.md#Hosted-Tool-Cache
     - name: Set up Gradle
-      uses: gradle/gradle-build-action@v3
+      uses: gradle/gradle-build-action@4c39dd82cd5e1ec7c6fa0173bb41b4b6bb3b86ff # v3
     - name: Set up Homebrew
       run: .github/workflows/setup-homebrew.sh
     - name: Set up Ruby
