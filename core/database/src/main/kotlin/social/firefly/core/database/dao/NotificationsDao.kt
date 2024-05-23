@@ -103,6 +103,7 @@ interface NotificationsDao : BaseDao<DatabaseNotification> {
         notificationId: Int,
     )
 
+    @Transaction
     @Query(
         "SELECT * FROM notifications " +
                 "WHERE id = :notificationId",

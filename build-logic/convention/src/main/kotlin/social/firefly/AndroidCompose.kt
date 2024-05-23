@@ -25,8 +25,8 @@ internal fun Project.configureAndroidCompose(commonExtension: CommonExtension<*,
         buildFeatures {
             compose = true
         }
-        composeOptions {
-            kotlinCompilerExtensionVersion = libs.findLibrary("androidx-compose-compiler").get().get().version
+        with(pluginManager) {
+            apply("org.jetbrains.kotlin.plugin.compose")
         }
 
         dependencies {
