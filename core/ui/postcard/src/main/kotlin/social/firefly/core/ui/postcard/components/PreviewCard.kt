@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -20,7 +19,6 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import social.firefly.core.designsystem.theme.FfRadius
 import social.firefly.core.designsystem.theme.FfTheme
-import social.firefly.core.ui.common.utils.getMaxWidth
 import social.firefly.core.ui.common.utils.media
 import social.firefly.core.ui.htmlcontent.HtmlContentInteractions
 import social.firefly.core.ui.postcard.PreviewCard
@@ -44,12 +42,6 @@ fun PreviewCard(
                 htmlContentInteractions.onLinkClicked(previewCard.url)
             },
     ) {
-
-        // For some reason, just using fillMaxWidth causes issues on some posts
-        // in conjunction with aspect ratio.  It has something to do with using
-        // .height(IntrinsicSize.Min) in PostCard.kt
-//        val width = getMaxWidth()
-
         AsyncImage(
             modifier = Modifier
                 .fillMaxWidth()

@@ -5,9 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -21,7 +19,6 @@ import androidx.core.net.toUri
 import coil.compose.AsyncImage
 import social.firefly.core.designsystem.theme.FfRadius
 import social.firefly.core.model.Attachment
-import social.firefly.core.ui.common.utils.getMaxWidth
 import social.firefly.core.ui.common.utils.media
 import kotlin.math.roundToInt
 
@@ -86,10 +83,6 @@ private fun SingleAttachment(
             val aspectRatio by remember {
                 mutableFloatStateOf(attachment.meta?.calculateAspectRatio() ?: 1f)
             }
-            // For some reason, just using fillMaxWidth causes issues on some posts
-            // in conjunction with aspect ratio.  It has something to do with using
-            // .height(IntrinsicSize.Min) in PostCard.kt
-//            val width = getMaxWidth()
             Attachment(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -103,10 +96,6 @@ private fun SingleAttachment(
             val aspectRatio by remember {
                 mutableFloatStateOf(attachment.meta?.calculateAspectRatio() ?: 1f)
             }
-            // For some reason, just using fillMaxWidth causes issues on some posts
-            // in conjunction with aspect ratio.  It has something to do with using
-            // .height(IntrinsicSize.Min) in PostCard.kt
-//            val width = getMaxWidth()
             attachment.url?.toUri()?.let {
                 VideoPlayer(
                     modifier = Modifier
@@ -122,10 +111,6 @@ private fun SingleAttachment(
             val aspectRatio by remember {
                 mutableFloatStateOf(attachment.meta?.calculateAspectRatio() ?: 1f)
             }
-            // For some reason, just using fillMaxWidth causes issues on some posts
-            // in conjunction with aspect ratio.  It has something to do with using
-            // .height(IntrinsicSize.Min) in PostCard.kt
-//            val width = getMaxWidth()
             attachment.url?.toUri()?.let {
                 VideoPlayer(
                     modifier = Modifier
