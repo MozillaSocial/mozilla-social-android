@@ -6,6 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -47,11 +48,11 @@ fun PreviewCard(
         // For some reason, just using fillMaxWidth causes issues on some posts
         // in conjunction with aspect ratio.  It has something to do with using
         // .height(IntrinsicSize.Min) in PostCard.kt
-        val width = getMaxWidth()
+//        val width = getMaxWidth()
 
         AsyncImage(
             modifier = Modifier
-                .width(width)
+                .fillMaxWidth()
                 .aspectRatio(2f)
                 .background(FfTheme.colors.layer2),
             model = previewCard.imageUrl,

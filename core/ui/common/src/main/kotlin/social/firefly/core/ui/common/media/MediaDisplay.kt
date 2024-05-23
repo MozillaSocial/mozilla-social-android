@@ -1,6 +1,7 @@
 package social.firefly.core.ui.common.media
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -30,45 +31,47 @@ fun MediaDisplay(
     attachments: List<Attachment>,
     onAttachmentClicked: (attachment: Attachment) -> Unit = {},
 ) {
-    when (attachments.size) {
-        1 -> {
-            SingleAttachment(
-                attachment = attachments.first(),
-                onAttachmentClicked = onAttachmentClicked,
-            )
-        }
+    Column {
+        when (attachments.size) {
+            1 -> {
+                SingleAttachment(
+                    attachment = attachments.first(),
+                    onAttachmentClicked = onAttachmentClicked,
+                )
+            }
 
-        2 -> {
-            AttachmentRow(
-                attachment1 = attachments.first(),
-                attachment2 = attachments[1],
-                onAttachmentClicked = onAttachmentClicked,
-            )
-        }
+            2 -> {
+                AttachmentRow(
+                    attachment1 = attachments.first(),
+                    attachment2 = attachments[1],
+                    onAttachmentClicked = onAttachmentClicked,
+                )
+            }
 
-        3 -> {
-            SingleAttachment(
-                attachment = attachments.first(),
-                onAttachmentClicked = onAttachmentClicked,
-            )
-            AttachmentRow(
-                attachment1 = attachments[1],
-                attachment2 = attachments[2],
-                onAttachmentClicked = onAttachmentClicked,
-            )
-        }
+            3 -> {
+                SingleAttachment(
+                    attachment = attachments.first(),
+                    onAttachmentClicked = onAttachmentClicked,
+                )
+                AttachmentRow(
+                    attachment1 = attachments[1],
+                    attachment2 = attachments[2],
+                    onAttachmentClicked = onAttachmentClicked,
+                )
+            }
 
-        4 -> {
-            AttachmentRow(
-                attachment1 = attachments.first(),
-                attachment2 = attachments[1],
-                onAttachmentClicked = onAttachmentClicked,
-            )
-            AttachmentRow(
-                attachment1 = attachments[2],
-                attachment2 = attachments[3],
-                onAttachmentClicked = onAttachmentClicked,
-            )
+            4 -> {
+                AttachmentRow(
+                    attachment1 = attachments.first(),
+                    attachment2 = attachments[1],
+                    onAttachmentClicked = onAttachmentClicked,
+                )
+                AttachmentRow(
+                    attachment1 = attachments[2],
+                    attachment2 = attachments[3],
+                    onAttachmentClicked = onAttachmentClicked,
+                )
+            }
         }
     }
 }
@@ -86,10 +89,10 @@ private fun SingleAttachment(
             // For some reason, just using fillMaxWidth causes issues on some posts
             // in conjunction with aspect ratio.  It has something to do with using
             // .height(IntrinsicSize.Min) in PostCard.kt
-            val width = getMaxWidth()
+//            val width = getMaxWidth()
             Attachment(
                 modifier = Modifier
-                    .width(width)
+                    .fillMaxWidth()
                     .aspectRatio(aspectRatio),
                 attachment = attachment,
                 onAttachmentClicked = onAttachmentClicked,
@@ -103,11 +106,11 @@ private fun SingleAttachment(
             // For some reason, just using fillMaxWidth causes issues on some posts
             // in conjunction with aspect ratio.  It has something to do with using
             // .height(IntrinsicSize.Min) in PostCard.kt
-            val width = getMaxWidth()
+//            val width = getMaxWidth()
             attachment.url?.toUri()?.let {
                 VideoPlayer(
                     modifier = Modifier
-                        .width(width)
+                        .fillMaxWidth()
                         .aspectRatio(aspectRatio),
                     uri = it,
                     onVideoClicked = { onAttachmentClicked(attachment) },
@@ -122,11 +125,11 @@ private fun SingleAttachment(
             // For some reason, just using fillMaxWidth causes issues on some posts
             // in conjunction with aspect ratio.  It has something to do with using
             // .height(IntrinsicSize.Min) in PostCard.kt
-            val width = getMaxWidth()
+//            val width = getMaxWidth()
             attachment.url?.toUri()?.let {
                 VideoPlayer(
                     modifier = Modifier
-                        .width(width)
+                        .fillMaxWidth()
                         .aspectRatio(aspectRatio),
                     uri = it,
                     onVideoClicked = { onAttachmentClicked(attachment) },
@@ -193,16 +196,14 @@ private fun AttachmentRow(
 ) {
     Row {
         Attachment(
-            modifier =
-            Modifier
+            modifier = Modifier
                 .weight(1f)
                 .aspectRatio(1f),
             attachment = attachment1,
             onAttachmentClicked = onAttachmentClicked,
         )
         Attachment(
-            modifier =
-            Modifier
+            modifier = Modifier
                 .weight(1f)
                 .aspectRatio(1f),
             attachment = attachment2,
