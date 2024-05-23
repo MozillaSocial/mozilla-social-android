@@ -5,6 +5,7 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -50,7 +51,11 @@ fun PostContent(
         modifier = modifier,
         contentWarningText = uiState.contentWarning,
     ) {
-        Column {
+        Column(
+            verticalArrangement = Arrangement.spacedBy(
+                space = 8.dp
+            )
+        ) {
             HtmlContent(
                 mentions = uiState.mentions,
                 htmlText = uiState.statusTextHtml,
@@ -66,7 +71,6 @@ fun PostContent(
                     FfTheme.colors.textPrimary
                 }
             )
-            Spacer(modifier = Modifier.padding(top = 8.dp))
 
             MediaDisplay(
                 attachments = uiState.mediaAttachments,
