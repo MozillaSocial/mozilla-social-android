@@ -1,12 +1,11 @@
 package social.firefly.core.ui.common.media
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -20,7 +19,6 @@ import androidx.core.net.toUri
 import coil.compose.AsyncImage
 import social.firefly.core.designsystem.theme.FfRadius
 import social.firefly.core.model.Attachment
-import social.firefly.core.ui.common.utils.getMaxWidth
 import social.firefly.core.ui.common.utils.media
 import kotlin.math.roundToInt
 
@@ -30,45 +28,47 @@ fun MediaDisplay(
     attachments: List<Attachment>,
     onAttachmentClicked: (attachment: Attachment) -> Unit = {},
 ) {
-    when (attachments.size) {
-        1 -> {
-            SingleAttachment(
-                attachment = attachments.first(),
-                onAttachmentClicked = onAttachmentClicked,
-            )
-        }
+    Column {
+        when (attachments.size) {
+            1 -> {
+                SingleAttachment(
+                    attachment = attachments.first(),
+                    onAttachmentClicked = onAttachmentClicked,
+                )
+            }
 
-        2 -> {
-            AttachmentRow(
-                attachment1 = attachments.first(),
-                attachment2 = attachments[1],
-                onAttachmentClicked = onAttachmentClicked,
-            )
-        }
+            2 -> {
+                AttachmentRow(
+                    attachment1 = attachments.first(),
+                    attachment2 = attachments[1],
+                    onAttachmentClicked = onAttachmentClicked,
+                )
+            }
 
-        3 -> {
-            SingleAttachment(
-                attachment = attachments.first(),
-                onAttachmentClicked = onAttachmentClicked,
-            )
-            AttachmentRow(
-                attachment1 = attachments[1],
-                attachment2 = attachments[2],
-                onAttachmentClicked = onAttachmentClicked,
-            )
-        }
+            3 -> {
+                SingleAttachment(
+                    attachment = attachments.first(),
+                    onAttachmentClicked = onAttachmentClicked,
+                )
+                AttachmentRow(
+                    attachment1 = attachments[1],
+                    attachment2 = attachments[2],
+                    onAttachmentClicked = onAttachmentClicked,
+                )
+            }
 
-        4 -> {
-            AttachmentRow(
-                attachment1 = attachments.first(),
-                attachment2 = attachments[1],
-                onAttachmentClicked = onAttachmentClicked,
-            )
-            AttachmentRow(
-                attachment1 = attachments[2],
-                attachment2 = attachments[3],
-                onAttachmentClicked = onAttachmentClicked,
-            )
+            4 -> {
+                AttachmentRow(
+                    attachment1 = attachments.first(),
+                    attachment2 = attachments[1],
+                    onAttachmentClicked = onAttachmentClicked,
+                )
+                AttachmentRow(
+                    attachment1 = attachments[2],
+                    attachment2 = attachments[3],
+                    onAttachmentClicked = onAttachmentClicked,
+                )
+            }
         }
     }
 }
@@ -83,13 +83,9 @@ private fun SingleAttachment(
             val aspectRatio by remember {
                 mutableFloatStateOf(attachment.meta?.calculateAspectRatio() ?: 1f)
             }
-            // For some reason, just using fillMaxWidth causes issues on some posts
-            // in conjunction with aspect ratio.  It has something to do with using
-            // .height(IntrinsicSize.Min) in PostCard.kt
-            val width = getMaxWidth()
             Attachment(
                 modifier = Modifier
-                    .width(width)
+                    .fillMaxWidth()
                     .aspectRatio(aspectRatio),
                 attachment = attachment,
                 onAttachmentClicked = onAttachmentClicked,
@@ -100,14 +96,10 @@ private fun SingleAttachment(
             val aspectRatio by remember {
                 mutableFloatStateOf(attachment.meta?.calculateAspectRatio() ?: 1f)
             }
-            // For some reason, just using fillMaxWidth causes issues on some posts
-            // in conjunction with aspect ratio.  It has something to do with using
-            // .height(IntrinsicSize.Min) in PostCard.kt
-            val width = getMaxWidth()
             attachment.url?.toUri()?.let {
                 VideoPlayer(
                     modifier = Modifier
-                        .width(width)
+                        .fillMaxWidth()
                         .aspectRatio(aspectRatio),
                     uri = it,
                     onVideoClicked = { onAttachmentClicked(attachment) },
@@ -119,14 +111,10 @@ private fun SingleAttachment(
             val aspectRatio by remember {
                 mutableFloatStateOf(attachment.meta?.calculateAspectRatio() ?: 1f)
             }
-            // For some reason, just using fillMaxWidth causes issues on some posts
-            // in conjunction with aspect ratio.  It has something to do with using
-            // .height(IntrinsicSize.Min) in PostCard.kt
-            val width = getMaxWidth()
             attachment.url?.toUri()?.let {
                 VideoPlayer(
                     modifier = Modifier
-                        .width(width)
+                        .fillMaxWidth()
                         .aspectRatio(aspectRatio),
                     uri = it,
                     onVideoClicked = { onAttachmentClicked(attachment) },
@@ -193,16 +181,14 @@ private fun AttachmentRow(
 ) {
     Row {
         Attachment(
-            modifier =
-            Modifier
+            modifier = Modifier
                 .weight(1f)
                 .aspectRatio(1f),
             attachment = attachment1,
             onAttachmentClicked = onAttachmentClicked,
         )
         Attachment(
-            modifier =
-            Modifier
+            modifier = Modifier
                 .weight(1f)
                 .aspectRatio(1f),
             attachment = attachment2,
