@@ -3,6 +3,7 @@ package social.firefly.core.ui.poll
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -40,7 +41,9 @@ fun Poll(
     pollUiState: PollUiState,
     pollInteractions: PollInteractions,
 ) {
-    Column {
+    Column(
+        verticalArrangement = Arrangement.spacedBy(4.dp)
+    ) {
         val userVotes = rememberSaveable(pollUiState) { mutableStateOf(pollUiState.usersVotes) }
         pollUiState.pollOptions.forEachIndexed { index, pollOptionUiState ->
             PollOption(
@@ -65,7 +68,6 @@ fun Poll(
                         }
                 },
             )
-            Spacer(modifier = Modifier.padding(top = 4.dp))
         }
         Text(
             text = pollUiState.pollInfoText.build(LocalContext.current),
@@ -73,8 +75,7 @@ fun Poll(
         )
         if (pollUiState.canVote) {
             FfButton(
-                modifier =
-                Modifier
+                modifier = Modifier
                     .fillMaxWidth(),
                 onClick = { pollInteractions.onVoteClicked(pollUiState.pollId, userVotes.value) },
                 enabled = userVotes.value.isNotEmpty(),
