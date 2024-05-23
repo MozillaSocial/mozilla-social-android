@@ -11,4 +11,5 @@ plugins {
     alias(libs.plugins.glean) apply false
     alias(libs.plugins.jetbrains.python) apply false
     alias(libs.plugins.detekt) apply false
+    alias(libs.plugins.compose.compiler) apply false
 }
