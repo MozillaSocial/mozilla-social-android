@@ -68,12 +68,6 @@ class AccountRepository internal constructor(
         excludeBoosts = excludeBoosts,
     ).toMastodonPagedResponse { it.toExternalModel() }
 
-    suspend fun getAccountBookmarks(): List<Status> =
-        api.getAccountBookmarks().map { it.toExternalModel() }
-
-    suspend fun getAccountFavourites(): List<Status> =
-        api.getAccountFavourites().map { it.toExternalModel() }
-
     @PreferUseCase
     suspend fun followAccount(accountId: String): Relationship =
         api.followAccount(accountId = accountId).toExternal()

@@ -110,20 +110,6 @@ class AccountApiImpl(
         }
     }.toResponse()
 
-    override suspend fun getAccountBookmarks(): List<NetworkStatus> = client.get {
-        url {
-            protocol = URLProtocol.HTTPS
-            path("api/v1/bookmarks")
-        }
-    }.body()
-
-    override suspend fun getAccountFavourites(): List<NetworkStatus> = client.get {
-        url {
-            protocol = URLProtocol.HTTPS
-            path("api/v1/favourites")
-        }
-    }.body()
-
     override suspend fun followAccount(accountId: String): NetworkRelationship = client.post {
         url {
             protocol = URLProtocol.HTTPS

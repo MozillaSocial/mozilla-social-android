@@ -38,10 +38,6 @@ interface AccountApi {
         excludeBoosts: Boolean = false,
     ): Response<List<NetworkStatus>>
 
-    suspend fun getAccountBookmarks(): List<NetworkStatus>
-
-    suspend fun getAccountFavourites(): List<NetworkStatus>
-
     suspend fun followAccount(
         accountId: String,
     ): NetworkRelationship
