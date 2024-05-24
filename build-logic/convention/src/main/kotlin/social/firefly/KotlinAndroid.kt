@@ -49,4 +49,4 @@ private fun Project.configureKotlin() {
 }
 
 const val COMPILE_SDK = 34
-const val MIN_SDK = 27
+const val MIN_SDK = 28
