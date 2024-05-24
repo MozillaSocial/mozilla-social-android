@@ -10,7 +10,6 @@ class BaselineProfileConventionPlugin : Plugin<Project> {
             with(pluginManager) {
                 apply("com.android.test")
                 apply("org.jetbrains.kotlin.android")
-                apply("social.firefly.detekt")
                 apply("androidx.baselineprofile")
             }
 
