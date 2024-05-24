@@ -61,7 +61,7 @@ class FollowersRemoteMediator(
                     }
                 }
 
-            val relationships = response.accounts.getRelationships(accountRepository)
+            val relationships = response.items.getRelationships(accountRepository)
 
             databaseDelegate.withTransaction {
                 if (loadType == LoadType.REFRESH) {
@@ -69,10 +69,10 @@ class FollowersRemoteMediator(
                     nextPositionIndex = 0
                 }
 
-                accountRepository.insertAll(response.accounts)
+                accountRepository.insertAll(response.items)
                 relationshipRepository.insertAll(relationships)
                 followersRepository.insertAll(
-                    response.accounts.mapIndexed { index, account ->
+                    response.items.mapIndexed { index, account ->
                         Follower(
                             accountId = accountId,
                             followerAccountId = account.accountId,
@@ -83,7 +83,7 @@ class FollowersRemoteMediator(
             }
 
             nextKey = response.pagingLinks?.getMaxIdValue()
-            nextPositionIndex += response.accounts.size
+            nextPositionIndex += response.items.size
 
             // There seems to be some race condition for refreshes.  Subsequent pages do
             // not get loaded because once we return a mediator result, the next append

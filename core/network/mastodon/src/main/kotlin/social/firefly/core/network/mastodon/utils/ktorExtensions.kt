@@ -15,5 +15,6 @@ fun HttpRequestBuilder.path(path: String) {
 
 suspend inline fun <reified BODY> HttpResponse.toExternal(): Response<BODY> = Response(
     body = body(),
-    code = status.value
+    code = status.value,
+    headers = headers
 )
