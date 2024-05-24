@@ -161,14 +161,11 @@ class AccountApiImpl(
         }
     }.body()
 
-    //TODO make sure this one works, not sure about parameters
     override suspend fun getRelationships(ids: List<String>): List<NetworkRelationship> = client.get {
         url {
             protocol = URLProtocol.HTTPS
             path("api/v1/accounts/relationships")
-            parameters {
-                appendAll("id[]", ids)
-            }
+            parameters.appendAll("id[]", ids)
         }
     }.body()
 
