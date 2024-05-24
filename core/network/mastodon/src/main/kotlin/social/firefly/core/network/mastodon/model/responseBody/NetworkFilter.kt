@@ -15,7 +15,7 @@ data class NetworkFilter(
     /**
      * The contexts in which the filter should be applied.
      */
-    val context: List<social.firefly.core.network.mastodon.model.responseBody.NetworkFilterContext>,
+    val context: List<NetworkFilterContext>,
     /**
      * Should matching entities in home and notifications be dropped by the server?
      */

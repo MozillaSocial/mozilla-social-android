@@ -14,10 +14,10 @@ data class NetworkContext(
      * Parent statuses in the thread.
      */
     @SerialName("ancestors")
-    val ancestors: List<social.firefly.core.network.mastodon.model.responseBody.NetworkStatus>,
+    val ancestors: List<NetworkStatus>,
     /**
      * Children statuses in the thread.
      */
     @SerialName("descendants")
-    val descendants: List<social.firefly.core.network.mastodon.model.responseBody.NetworkStatus>,
+    val descendants: List<NetworkStatus>,
 )

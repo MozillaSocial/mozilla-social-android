@@ -30,12 +30,12 @@ data class NetworkPoll(
      * The list of options available in this poll.
      */
     @SerialName("options")
-    val options: List<social.firefly.core.network.mastodon.model.responseBody.NetworkPollOption>,
+    val options: List<NetworkPollOption>,
     /**
      * Custom emoji to be used for rendering poll options.
      */
     @SerialName("emojis")
-    val emojis: List<social.firefly.core.network.mastodon.model.responseBody.NetworkEmoji>,
+    val emojis: List<NetworkEmoji>,
     /**
      * Time at which the poll will expire.
      */

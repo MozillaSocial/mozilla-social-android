@@ -38,13 +38,13 @@ data class NetworkInstance(
     /**
      * URL of a banner image for the instance.
      */
-    val thumbnail: social.firefly.core.network.mastodon.model.responseBody.NetworkInstanceThumbnail,
+    val thumbnail: NetworkInstanceThumbnail,
     /**
      * A staff user that can be contacted, as an alternative to [email].
      */
-    val contact: social.firefly.core.network.mastodon.model.responseBody.NetworkInstanceContact? = null,
+    val contact: NetworkInstanceContact? = null,
 
-    val rules: List<social.firefly.core.network.mastodon.model.responseBody.NetworkInstanceRule>
+    val rules: List<NetworkInstanceRule>
 )
 
 @Serializable
@@ -55,5 +55,5 @@ data class NetworkInstanceThumbnail(
 @Serializable
 data class NetworkInstanceContact(
     val email: String,
-    val account: social.firefly.core.network.mastodon.model.responseBody.NetworkAccount,
+    val account: NetworkAccount,
 )

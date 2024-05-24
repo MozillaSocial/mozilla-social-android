@@ -8,7 +8,7 @@ data class NetworkConversation(
     /**
      * Participants in the conversation.
      */
-    val participants: List<social.firefly.core.network.mastodon.model.responseBody.NetworkAccount>,
+    val participants: List<NetworkAccount>,
     /**
      * Is the conversation currently marked as unread?
      */
@@ -16,5 +16,5 @@ data class NetworkConversation(
     /**
      * The last status in the conversation, optionally used for display.
      */
-    val lastStatus: social.firefly.core.network.mastodon.model.responseBody.NetworkStatus? = null,
+    val lastStatus: NetworkStatus? = null,
 )

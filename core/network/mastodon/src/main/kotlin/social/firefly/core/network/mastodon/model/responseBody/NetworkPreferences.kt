@@ -6,7 +6,7 @@ data class NetworkPreferences(
      *
      * Equivalent to [NetworkSource.defaultPrivacy].
      */
-    val defaultVisibility: social.firefly.core.network.mastodon.model.responseBody.NetworkStatusVisibility,
+    val defaultVisibility: NetworkStatusVisibility,
     /**
      * Default sensitivity flag for new posts.
      */
@@ -20,7 +20,7 @@ data class NetworkPreferences(
     /**
      * Whether media attachments should be automatically displayed or blurred/hidden.
      */
-    val defaultMediaVisibility: social.firefly.core.network.mastodon.model.responseBody.NetworkMediaVisibility,
+    val defaultMediaVisibility: NetworkMediaVisibility,
     /**
      * Whether statuses behind a content warning should be expanded by default.
      */

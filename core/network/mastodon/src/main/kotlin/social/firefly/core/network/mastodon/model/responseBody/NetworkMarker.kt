@@ -13,10 +13,10 @@ data class NetworkMarker(
      * Home timeline marker.
      */
     @SerialName("home")
-    val home: social.firefly.core.network.mastodon.model.responseBody.NetworkMarkerProperties,
+    val home: NetworkMarkerProperties,
     /**
      * Notifications timeline marker.
      */
     @SerialName("notifications")
-    val notifications: social.firefly.core.network.mastodon.model.responseBody.NetworkMarkerProperties,
+    val notifications: NetworkMarkerProperties,
 )

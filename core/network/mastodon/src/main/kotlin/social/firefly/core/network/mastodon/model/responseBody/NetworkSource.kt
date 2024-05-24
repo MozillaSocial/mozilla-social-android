@@ -19,12 +19,12 @@ data class NetworkSource(
      * Metadata about the account as a list of name/values.
      */
     @SerialName("fields")
-    val fields: List<social.firefly.core.network.mastodon.model.responseBody.NetworkField>,
+    val fields: List<NetworkField>,
     /**
      * The default post privacy to be used for new statuses.
      */
     @SerialName("privacy")
-    val defaultPrivacy: social.firefly.core.network.mastodon.model.responseBody.NetworkStatusVisibility? = null,
+    val defaultPrivacy: NetworkStatusVisibility? = null,
     /**
      * Whether new statuses should be marked sensitive by default.
      */

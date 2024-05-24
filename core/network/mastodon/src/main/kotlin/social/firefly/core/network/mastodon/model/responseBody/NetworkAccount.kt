@@ -70,7 +70,7 @@ data class NetworkAccount(
      * If none, an empty array will be returned.
      */
     @SerialName("emojis")
-    val emojis: List<social.firefly.core.network.mastodon.model.responseBody.NetworkEmoji>,
+    val emojis: List<NetworkEmoji>,
     /**
      * Date at which the account was created.
      */
@@ -100,7 +100,7 @@ data class NetworkAccount(
      * Indicates that the profile is currently inactive and that its user has moved to a new account.
      */
     @SerialName("moved")
-    val movedTo: social.firefly.core.network.mastodon.model.responseBody.NetworkAccount? = null,
+    val movedTo: NetworkAccount? = null,
     /**
      * Whether this account represents a group.
      */
@@ -110,7 +110,7 @@ data class NetworkAccount(
      * Additional metadata attached to a profile as name-value pairs.
      */
     @SerialName("fields")
-    val fields: List<social.firefly.core.network.mastodon.model.responseBody.NetworkField>? = null,
+    val fields: List<NetworkField>? = null,
     /**
      * Whether this account is a robot.
      *
@@ -123,7 +123,7 @@ data class NetworkAccount(
      * An entity to be used with API methods to verify and update credentials.
      */
     @SerialName("source")
-    val source: social.firefly.core.network.mastodon.model.responseBody.NetworkSource? = null,
+    val source: NetworkSource? = null,
     /**
      * Whether the account is suspended.
      */

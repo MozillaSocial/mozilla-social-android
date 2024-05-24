@@ -38,7 +38,7 @@ data class NetworkAdminAccount(
     /**
      * The current role of the account.
      */
-    val role: social.firefly.core.network.mastodon.model.responseBody.NetworkAccountRole,
+    val role: NetworkAccountRole,
     /**
      * Whether the account has confirmed their email address.
      */
@@ -62,7 +62,7 @@ data class NetworkAdminAccount(
     /**
      * User-level information about the account.
      */
-    val account: social.firefly.core.network.mastodon.model.responseBody.NetworkAccount,
+    val account: NetworkAccount,
     /**
      * The ID of the application that created this account.
      */

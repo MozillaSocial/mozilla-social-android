@@ -8,7 +8,7 @@ import kotlinx.serialization.Serializable
 sealed class NetworkNotification {
     abstract val id: String
     abstract val createdAt: Instant
-    abstract val account: social.firefly.core.network.mastodon.model.responseBody.NetworkAccount
+    abstract val account: NetworkAccount
 
     /**
      * Someone mentioned you in their status
@@ -21,10 +21,10 @@ sealed class NetworkNotification {
         @SerialName("created_at")
         override val createdAt: Instant,
         @SerialName("account")
-        override val account: social.firefly.core.network.mastodon.model.responseBody.NetworkAccount,
+        override val account: NetworkAccount,
         @SerialName("status")
-        val status: social.firefly.core.network.mastodon.model.responseBody.NetworkStatus,
-    ) : social.firefly.core.network.mastodon.model.responseBody.NetworkNotification()
+        val status: NetworkStatus,
+    ) : NetworkNotification()
 
     /**
      * Someone you enabled notifications for has posted a status
@@ -37,10 +37,10 @@ sealed class NetworkNotification {
         @SerialName("created_at")
         override val createdAt: Instant,
         @SerialName("account")
-        override val account: social.firefly.core.network.mastodon.model.responseBody.NetworkAccount,
+        override val account: NetworkAccount,
         @SerialName("status")
-        val status: social.firefly.core.network.mastodon.model.responseBody.NetworkStatus,
-    ) : social.firefly.core.network.mastodon.model.responseBody.NetworkNotification()
+        val status: NetworkStatus,
+    ) : NetworkNotification()
 
     /**
      * Someone boosted one of your statuses
@@ -53,10 +53,10 @@ sealed class NetworkNotification {
         @SerialName("created_at")
         override val createdAt: Instant,
         @SerialName("account")
-        override val account: social.firefly.core.network.mastodon.model.responseBody.NetworkAccount,
+        override val account: NetworkAccount,
         @SerialName("status")
-        val status: social.firefly.core.network.mastodon.model.responseBody.NetworkStatus,
-    ) : social.firefly.core.network.mastodon.model.responseBody.NetworkNotification()
+        val status: NetworkStatus,
+    ) : NetworkNotification()
 
     /**
      * Someone followed you
@@ -69,8 +69,8 @@ sealed class NetworkNotification {
         @SerialName("created_at")
         override val createdAt: Instant,
         @SerialName("account")
-        override val account: social.firefly.core.network.mastodon.model.responseBody.NetworkAccount,
-    ) : social.firefly.core.network.mastodon.model.responseBody.NetworkNotification()
+        override val account: NetworkAccount,
+    ) : NetworkNotification()
 
     /**
      * Someone requested to follow you
@@ -83,8 +83,8 @@ sealed class NetworkNotification {
         @SerialName("created_at")
         override val createdAt: Instant,
         @SerialName("account")
-        override val account: social.firefly.core.network.mastodon.model.responseBody.NetworkAccount,
-    ) : social.firefly.core.network.mastodon.model.responseBody.NetworkNotification()
+        override val account: NetworkAccount,
+    ) : NetworkNotification()
 
     /**
      * Someone favourited one of your statuses
@@ -97,10 +97,10 @@ sealed class NetworkNotification {
         @SerialName("created_at")
         override val createdAt: Instant,
         @SerialName("account")
-        override val account: social.firefly.core.network.mastodon.model.responseBody.NetworkAccount,
+        override val account: NetworkAccount,
         @SerialName("status")
-        val status: social.firefly.core.network.mastodon.model.responseBody.NetworkStatus,
-    ) : social.firefly.core.network.mastodon.model.responseBody.NetworkNotification()
+        val status: NetworkStatus,
+    ) : NetworkNotification()
 
     /**
      * A poll you have voted in or created has ended
@@ -113,10 +113,10 @@ sealed class NetworkNotification {
         @SerialName("created_at")
         override val createdAt: Instant,
         @SerialName("account")
-        override val account: social.firefly.core.network.mastodon.model.responseBody.NetworkAccount,
+        override val account: NetworkAccount,
         @SerialName("status")
-        val status: social.firefly.core.network.mastodon.model.responseBody.NetworkStatus,
-    ) : social.firefly.core.network.mastodon.model.responseBody.NetworkNotification()
+        val status: NetworkStatus,
+    ) : NetworkNotification()
 
     /**
      * A status you interacted with has been edited
@@ -129,10 +129,10 @@ sealed class NetworkNotification {
         @SerialName("created_at")
         override val createdAt: Instant,
         @SerialName("account")
-        override val account: social.firefly.core.network.mastodon.model.responseBody.NetworkAccount,
+        override val account: NetworkAccount,
         @SerialName("status")
-        val status: social.firefly.core.network.mastodon.model.responseBody.NetworkStatus,
-    ) : social.firefly.core.network.mastodon.model.responseBody.NetworkNotification()
+        val status: NetworkStatus,
+    ) : NetworkNotification()
 
     @Serializable
     @SerialName("admin.sign_up")
@@ -142,8 +142,8 @@ sealed class NetworkNotification {
         @SerialName("created_at")
         override val createdAt: Instant,
         @SerialName("account")
-        override val account: social.firefly.core.network.mastodon.model.responseBody.NetworkAccount,
-    ) : social.firefly.core.network.mastodon.model.responseBody.NetworkNotification()
+        override val account: NetworkAccount,
+    ) : NetworkNotification()
 
     @Serializable
     @SerialName("admin.report")
@@ -153,10 +153,10 @@ sealed class NetworkNotification {
         @SerialName("created_at")
         override val createdAt: Instant,
         @SerialName("account")
-        override val account: social.firefly.core.network.mastodon.model.responseBody.NetworkAccount,
+        override val account: NetworkAccount,
         @SerialName("report")
-        val report: social.firefly.core.network.mastodon.model.responseBody.NetworkAdminReport,
-    ) : social.firefly.core.network.mastodon.model.responseBody.NetworkNotification()
+        val report: NetworkAdminReport,
+    ) : NetworkNotification()
 
     @Serializable
     @SerialName("severed_relationships")
@@ -166,8 +166,8 @@ sealed class NetworkNotification {
         @SerialName("created_at")
         override val createdAt: Instant,
         @SerialName("account")
-        override val account: social.firefly.core.network.mastodon.model.responseBody.NetworkAccount,
+        override val account: NetworkAccount,
         @SerialName("relationship_severance_event")
-        val severanceEvent: social.firefly.core.network.mastodon.model.responseBody.NetworkRelationshipSeveranceEvent,
-    ) : social.firefly.core.network.mastodon.model.responseBody.NetworkNotification()
+        val severanceEvent: NetworkRelationshipSeveranceEvent,
+    ) : NetworkNotification()
 }

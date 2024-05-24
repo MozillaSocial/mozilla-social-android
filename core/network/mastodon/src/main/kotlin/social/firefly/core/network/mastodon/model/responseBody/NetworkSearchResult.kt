@@ -12,15 +12,15 @@ data class NetworkSearchResult(
      * Accounts which matched the query.
      */
     @SerialName("accounts")
-    val accounts: List<social.firefly.core.network.mastodon.model.responseBody.NetworkAccount>,
+    val accounts: List<NetworkAccount>,
     /**
      * Statuses which matched the query.
      */
     @SerialName("statuses")
-    val statuses: List<social.firefly.core.network.mastodon.model.responseBody.NetworkStatus>,
+    val statuses: List<NetworkStatus>,
     /**
      * Hashtags which matched the query.
      */
     @SerialName("hashtags")
-    val hashtags: List<social.firefly.core.network.mastodon.model.responseBody.NetworkHashTag>,
+    val hashtags: List<NetworkHashTag>,
 )

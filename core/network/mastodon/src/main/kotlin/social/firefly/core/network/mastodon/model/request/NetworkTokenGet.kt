@@ -31,7 +31,7 @@ data class NetworkTokenGet(
      * Otherwise, set equal to [NetworkGrantType.ClientCredentials] to
      * obtain app-level access only.
      */
-    val grantType: social.firefly.core.network.mastodon.model.responseBody.NetworkGrantType,
+    val grantType: NetworkGrantType,
     /**
      * List of requested OAuth scopes, separated by spaces.
      *

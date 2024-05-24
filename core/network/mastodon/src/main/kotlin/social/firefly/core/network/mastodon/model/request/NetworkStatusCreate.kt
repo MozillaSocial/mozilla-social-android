@@ -48,7 +48,7 @@ data class NetworkStatusCreate(
      * Visibility of the posted status.
      */
     @SerialName("visibility")
-    val visibility: social.firefly.core.network.mastodon.model.responseBody.NetworkStatusVisibility? = null,
+    val visibility: NetworkStatusVisibility? = null,
     /**
      * ISO 639-1 language code for this status.
      */

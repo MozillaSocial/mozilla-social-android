@@ -10,7 +10,7 @@ data class NetworkAccountAction(
     /**
      * The type of action to be taken.
      */
-    val type: social.firefly.core.network.mastodon.model.responseBody.NetworkActionType? = null,
+    val type: NetworkActionType? = null,
     /**
      * ID of an associated report that caused this action to be taken.
      */

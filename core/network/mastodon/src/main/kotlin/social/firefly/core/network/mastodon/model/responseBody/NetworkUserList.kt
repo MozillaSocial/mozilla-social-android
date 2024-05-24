@@ -12,5 +12,5 @@ data class NetworkUserList(
     /**
      * The reply policy of this list.
      */
-    val replyPolicy: social.firefly.core.network.mastodon.model.responseBody.NetworkListReplyPolicy,
+    val replyPolicy: NetworkListReplyPolicy,
 )

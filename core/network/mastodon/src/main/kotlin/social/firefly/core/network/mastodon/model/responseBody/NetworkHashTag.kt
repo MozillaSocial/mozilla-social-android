@@ -24,5 +24,5 @@ data class NetworkHashTag(
      * Hashtag usage statistics for given days.
      */
     @SerialName("history")
-    val history: List<social.firefly.core.network.mastodon.model.responseBody.NetworkHistory>? = null,
+    val history: List<NetworkHistory>? = null,
 )

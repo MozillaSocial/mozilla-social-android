@@ -25,7 +25,7 @@ data class NetworkStatus(
      * The account that authored this status.
      */
     @SerialName("account")
-    val account: social.firefly.core.network.mastodon.model.responseBody.NetworkAccount,
+    val account: NetworkAccount,
     /**
      * HTML-encoded status content.
      */
@@ -35,7 +35,7 @@ data class NetworkStatus(
      * Visibility of this status.
      */
     @SerialName("visibility")
-    val visibility: social.firefly.core.network.mastodon.model.responseBody.NetworkStatusVisibility,
+    val visibility: NetworkStatusVisibility,
     /**
      * Is this status marked as sensitive content?
      */
@@ -50,22 +50,22 @@ data class NetworkStatus(
      * Media that is attached to this status.
      */
     @SerialName("media_attachments")
-    val mediaAttachments: List<social.firefly.core.network.mastodon.model.responseBody.NetworkAttachment>,
+    val mediaAttachments: List<NetworkAttachment>,
     /**
      * Mentions of users within the status content.
      */
     @SerialName("mentions")
-    val mentions: List<social.firefly.core.network.mastodon.model.responseBody.NetworkMention>,
+    val mentions: List<NetworkMention>,
     /**
      * Hashtags used within the status content.
      */
     @SerialName("tags")
-    val hashTags: List<social.firefly.core.network.mastodon.model.responseBody.NetworkBasicHashTag>,
+    val hashTags: List<NetworkBasicHashTag>,
     /**
      * Custom emoji to be used when rendering status content.
      */
     @SerialName("emojis")
-    val emojis: List<social.firefly.core.network.mastodon.model.responseBody.NetworkEmoji>,
+    val emojis: List<NetworkEmoji>,
     /**
      * How many boosts this status has received.
      */
@@ -85,7 +85,7 @@ data class NetworkStatus(
      * The application used to post this status.
      */
     @SerialName("application")
-    val application: social.firefly.core.network.mastodon.model.responseBody.NetworkApplication? = null,
+    val application: NetworkApplication? = null,
     /**
      * A link to the status's HTML representation.
      */
@@ -105,17 +105,17 @@ data class NetworkStatus(
      * The status being boosted.
      */
     @SerialName("reblog")
-    val boostedStatus: social.firefly.core.network.mastodon.model.responseBody.NetworkStatus? = null,
+    val boostedStatus: NetworkStatus? = null,
     /**
      * The poll attached to the status.
      */
     @SerialName("poll")
-    val poll: social.firefly.core.network.mastodon.model.responseBody.NetworkPoll? = null,
+    val poll: NetworkPoll? = null,
     /**
      * Preview card for links included within status content.
      */
     @SerialName("card")
-    val card: social.firefly.core.network.mastodon.model.responseBody.NetworkCard? = null,
+    val card: NetworkCard? = null,
     /**
      * Primary language of this status.
      *

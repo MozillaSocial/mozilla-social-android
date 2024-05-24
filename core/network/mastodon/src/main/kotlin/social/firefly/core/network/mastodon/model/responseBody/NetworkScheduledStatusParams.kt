@@ -13,7 +13,7 @@ data class NetworkScheduledStatusParams(
     /**
      * Visibility of this status.
      */
-    val visibility: social.firefly.core.network.mastodon.model.responseBody.NetworkStatusVisibility,
+    val visibility: NetworkStatusVisibility,
     /**
      * The ID of the application that created this status.
      */

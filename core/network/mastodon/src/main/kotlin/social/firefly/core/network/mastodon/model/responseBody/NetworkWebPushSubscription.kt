@@ -12,7 +12,7 @@ data class NetworkWebPushSubscription(
     @SerialName("server_key")
     val serverKey: String,
     @SerialName("alerts")
-    val alerts: social.firefly.core.network.mastodon.model.responseBody.NetworkAlerts,
+    val alerts: NetworkAlerts,
 )
 
 @Serializable

@@ -25,5 +25,5 @@ data class NetworkAdminReport(
     @SerialName("rule_ids")
     val ruleIds: List<String>?,
     @SerialName("target_account")
-    val targetAccount: social.firefly.core.network.mastodon.model.responseBody.NetworkAccount,
+    val targetAccount: NetworkAccount,
 )

@@ -34,7 +34,7 @@ data class NetworkAnnouncement(
     /**
      * Emoji reactions attached to the announcement.
      */
-    val reactions: List<social.firefly.core.network.mastodon.model.responseBody.NetworkAnnouncementReaction>,
+    val reactions: List<NetworkAnnouncementReaction>,
     /**
      * Time at which a scheduled announcement was scheduled.
      */

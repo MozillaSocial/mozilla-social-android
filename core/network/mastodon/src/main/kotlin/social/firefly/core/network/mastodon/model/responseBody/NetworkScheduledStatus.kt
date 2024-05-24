@@ -14,9 +14,9 @@ data class NetworkScheduledStatus(
     /**
      * Status details.
      */
-    val params: social.firefly.core.network.mastodon.model.responseBody.NetworkScheduledStatusParams,
+    val params: NetworkScheduledStatusParams,
     /**
      * Media attached to this status.
      */
-    val mediaAttachments: List<social.firefly.core.network.mastodon.model.responseBody.NetworkAttachment>,
+    val mediaAttachments: List<NetworkAttachment>,
 )

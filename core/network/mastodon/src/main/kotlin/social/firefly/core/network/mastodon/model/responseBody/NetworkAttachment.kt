@@ -68,16 +68,16 @@ sealed class NetworkAttachment {
         @SerialName("blurhash")
         override val blurHash: String? = null,
         @SerialName("meta")
-        val meta: social.firefly.core.network.mastodon.model.responseBody.NetworkAttachment.Image.Meta? = null,
-    ) : social.firefly.core.network.mastodon.model.responseBody.NetworkAttachment() {
+        val meta: Meta? = null,
+    ) : NetworkAttachment() {
         @Serializable
         data class Meta(
             @SerialName("focus")
-            val focalPoint: social.firefly.core.network.mastodon.model.responseBody.NetworkFocalPoint? = null,
+            val focalPoint: NetworkFocalPoint? = null,
             @SerialName("original")
-            val original: social.firefly.core.network.mastodon.model.responseBody.NetworkAttachment.Image.Meta.ImageInfo? = null,
+            val original: ImageInfo? = null,
             @SerialName("small")
-            val small: social.firefly.core.network.mastodon.model.responseBody.NetworkAttachment.Image.Meta.ImageInfo? = null,
+            val small: ImageInfo? = null,
         ) {
             @Serializable
             data class ImageInfo(
@@ -113,8 +113,8 @@ sealed class NetworkAttachment {
         @SerialName("blurhash")
         override val blurHash: String? = null,
         @SerialName("meta")
-        val meta: social.firefly.core.network.mastodon.model.responseBody.NetworkAttachment.Video.Meta? = null,
-    ) : social.firefly.core.network.mastodon.model.responseBody.NetworkAttachment() {
+        val meta: Meta? = null,
+    ) : NetworkAttachment() {
         @Serializable
         data class Meta(
             @SerialName("aspect")
@@ -130,9 +130,9 @@ sealed class NetworkAttachment {
             @SerialName("audio_channels")
             val audioChannels: String? = null,
             @SerialName("original")
-            val original: social.firefly.core.network.mastodon.model.responseBody.NetworkAttachment.Video.Meta.VideoInfo? = null,
+            val original: VideoInfo? = null,
             @SerialName("small")
-            val small: social.firefly.core.network.mastodon.model.responseBody.NetworkAttachment.Video.Meta.VideoInfo? = null,
+            val small: VideoInfo? = null,
         ) {
             @Serializable
             data class VideoInfo(
@@ -166,8 +166,8 @@ sealed class NetworkAttachment {
         @SerialName("blurhash")
         override val blurHash: String? = null,
         @SerialName("meta")
-        val meta: social.firefly.core.network.mastodon.model.responseBody.NetworkAttachment.Gifv.Meta? = null,
-    ) : social.firefly.core.network.mastodon.model.responseBody.NetworkAttachment() {
+        val meta: Meta? = null,
+    ) : NetworkAttachment() {
         @Serializable
         data class Meta(
             @SerialName("aspect")
@@ -179,9 +179,9 @@ sealed class NetworkAttachment {
             @SerialName("bitrate")
             val bitrate: Long? = null,
             @SerialName("original")
-            val original: social.firefly.core.network.mastodon.model.responseBody.NetworkAttachment.Gifv.Meta.GifvInfo? = null,
+            val original: GifvInfo? = null,
             @SerialName("small")
-            val small: social.firefly.core.network.mastodon.model.responseBody.NetworkAttachment.Gifv.Meta.GifvInfo? = null,
+            val small: GifvInfo? = null,
         ) {
             @Serializable
             data class GifvInfo(
@@ -215,8 +215,8 @@ sealed class NetworkAttachment {
         @SerialName("blurhash")
         override val blurHash: String? = null,
         @SerialName("meta")
-        val meta: social.firefly.core.network.mastodon.model.responseBody.NetworkAttachment.Audio.Meta? = null,
-    ) : social.firefly.core.network.mastodon.model.responseBody.NetworkAttachment() {
+        val meta: Meta? = null,
+    ) : NetworkAttachment() {
         @Serializable
         data class Meta(
             @SerialName("duration")
@@ -228,7 +228,7 @@ sealed class NetworkAttachment {
             @SerialName("audio_channels")
             val audioChannels: String? = null,
             @SerialName("original")
-            val original: social.firefly.core.network.mastodon.model.responseBody.NetworkAttachment.Audio.Meta.AudioInfo? = null,
+            val original: AudioInfo? = null,
         ) {
             @Serializable
             data class AudioInfo(
@@ -257,5 +257,5 @@ sealed class NetworkAttachment {
         override val description: String? = null,
         @SerialName("blurhash")
         override val blurHash: String? = null,
-    ) : social.firefly.core.network.mastodon.model.responseBody.NetworkAttachment()
+    ) : NetworkAttachment()
 }
