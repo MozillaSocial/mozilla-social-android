@@ -5,22 +5,24 @@ import social.firefly.core.model.WebPushSubscription
 import social.firefly.core.network.mastodon.model.responseBody.NetworkAlerts
 import social.firefly.core.network.mastodon.model.responseBody.NetworkWebPushSubscription
 
-fun social.firefly.core.network.mastodon.model.responseBody.NetworkWebPushSubscription.toExternal(): WebPushSubscription = WebPushSubscription(
-    id = id,
-    endpoint = endpoint,
-    serverKey = serverKey,
-    alerts = alerts.toExternal(),
-)
+fun NetworkWebPushSubscription.toExternal(): WebPushSubscription =
+    WebPushSubscription(
+        id = id,
+        endpoint = endpoint,
+        serverKey = serverKey,
+        alerts = alerts.toExternal(),
+    )
 
-fun social.firefly.core.network.mastodon.model.responseBody.NetworkAlerts.toExternal(): Alerts = Alerts(
-    mention = mention,
-    status = status,
-    reblog = reblog,
-    follow = follow,
-    followRequest = followRequest,
-    favorite = favorite,
-    poll = poll,
-    update = update,
-    adminSignUp = adminSignUp,
-    adminReport = adminReport
-)
+fun NetworkAlerts.toExternal(): Alerts =
+    Alerts(
+        mention = mention,
+        status = status,
+        reblog = reblog,
+        follow = follow,
+        followRequest = followRequest,
+        favorite = favorite,
+        poll = poll,
+        update = update,
+        adminSignUp = adminSignUp,
+        adminReport = adminReport
+    )

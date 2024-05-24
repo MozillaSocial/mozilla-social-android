@@ -5,8 +5,9 @@ import social.firefly.core.network.mastodon.model.responseBody.NetworkSearchResu
 import social.firefly.core.repository.mastodon.model.hashtag.toExternalModel
 import social.firefly.core.repository.mastodon.model.status.toExternalModel
 
-fun social.firefly.core.network.mastodon.model.responseBody.NetworkSearchResult.toExternal() = SearchResult(
-    accounts = accounts.map { it.toExternalModel() },
-    statuses = statuses.map { it.toExternalModel() },
-    hashtags = hashtags.map { it.toExternalModel() }
-)
+fun NetworkSearchResult.toExternal() =
+    SearchResult(
+        accounts = accounts.map { it.toExternalModel() },
+        statuses = statuses.map { it.toExternalModel() },
+        hashtags = hashtags.map { it.toExternalModel() }
+    )

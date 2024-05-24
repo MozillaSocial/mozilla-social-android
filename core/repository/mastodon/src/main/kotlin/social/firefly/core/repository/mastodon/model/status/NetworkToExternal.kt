@@ -31,7 +31,7 @@ import social.firefly.core.network.mastodon.model.responseBody.NetworkSource
 import social.firefly.core.network.mastodon.model.responseBody.NetworkStatus
 import social.firefly.core.network.mastodon.model.responseBody.NetworkStatusVisibility
 
-fun social.firefly.core.network.mastodon.model.responseBody.NetworkStatus.toExternalModel(): Status =
+fun NetworkStatus.toExternalModel(): Status =
     Status(
         statusId = statusId,
         uri = uri,
@@ -64,7 +64,7 @@ fun social.firefly.core.network.mastodon.model.responseBody.NetworkStatus.toExte
         isPinned = isPinned,
     )
 
-fun social.firefly.core.network.mastodon.model.responseBody.NetworkAccount.toExternalModel(): Account =
+fun NetworkAccount.toExternalModel(): Account =
     Account(
         accountId = accountId,
         username = username,
@@ -92,17 +92,17 @@ fun social.firefly.core.network.mastodon.model.responseBody.NetworkAccount.toExt
         muteExpiresAt = muteExpiresAt,
     )
 
-fun social.firefly.core.network.mastodon.model.responseBody.NetworkStatusVisibility.toExternalModel(): StatusVisibility =
+fun NetworkStatusVisibility.toExternalModel(): StatusVisibility =
     when (this) {
-        social.firefly.core.network.mastodon.model.responseBody.NetworkStatusVisibility.Direct -> StatusVisibility.Direct
-        social.firefly.core.network.mastodon.model.responseBody.NetworkStatusVisibility.Private -> StatusVisibility.Private
-        social.firefly.core.network.mastodon.model.responseBody.NetworkStatusVisibility.Public -> StatusVisibility.Public
-        social.firefly.core.network.mastodon.model.responseBody.NetworkStatusVisibility.Unlisted -> StatusVisibility.Unlisted
+        NetworkStatusVisibility.Direct -> StatusVisibility.Direct
+        NetworkStatusVisibility.Private -> StatusVisibility.Private
+        NetworkStatusVisibility.Public -> StatusVisibility.Public
+        NetworkStatusVisibility.Unlisted -> StatusVisibility.Unlisted
     }
 
-fun social.firefly.core.network.mastodon.model.responseBody.NetworkAttachment.toExternalModel(): Attachment =
+fun NetworkAttachment.toExternalModel(): Attachment =
     when (this) {
-        is social.firefly.core.network.mastodon.model.responseBody.NetworkAttachment.Image ->
+        is NetworkAttachment.Image ->
             Attachment.Image(
                 attachmentId = attachmentId,
                 url = url,
@@ -115,7 +115,7 @@ fun social.firefly.core.network.mastodon.model.responseBody.NetworkAttachment.to
                 meta = meta?.toExternalModel(),
             )
 
-        is social.firefly.core.network.mastodon.model.responseBody.NetworkAttachment.Gifv ->
+        is NetworkAttachment.Gifv ->
             Attachment.Gifv(
                 attachmentId = attachmentId,
                 url = url,
@@ -127,7 +127,7 @@ fun social.firefly.core.network.mastodon.model.responseBody.NetworkAttachment.to
                 meta = meta?.toExternalModel(),
             )
 
-        is social.firefly.core.network.mastodon.model.responseBody.NetworkAttachment.Video ->
+        is NetworkAttachment.Video ->
             Attachment.Video(
                 attachmentId = attachmentId,
                 url = url,
@@ -140,7 +140,7 @@ fun social.firefly.core.network.mastodon.model.responseBody.NetworkAttachment.to
                 meta = meta?.toExternalModel(),
             )
 
-        is social.firefly.core.network.mastodon.model.responseBody.NetworkAttachment.Audio ->
+        is NetworkAttachment.Audio ->
             Attachment.Audio(
                 attachmentId = attachmentId,
                 url = url,
@@ -153,7 +153,7 @@ fun social.firefly.core.network.mastodon.model.responseBody.NetworkAttachment.to
                 meta = meta?.toExternalModel(),
             )
 
-        is social.firefly.core.network.mastodon.model.responseBody.NetworkAttachment.Unknown ->
+        is NetworkAttachment.Unknown ->
             Attachment.Unknown(
                 attachmentId = attachmentId,
                 url = url,
@@ -166,7 +166,7 @@ fun social.firefly.core.network.mastodon.model.responseBody.NetworkAttachment.to
             )
     }
 
-fun social.firefly.core.network.mastodon.model.responseBody.NetworkAttachment.Audio.Meta.toExternalModel(): Attachment.Audio.Meta =
+fun NetworkAttachment.Audio.Meta.toExternalModel(): Attachment.Audio.Meta =
     Attachment.Audio.Meta(
         durationSeconds = durationSeconds,
         audioCodec = audioCodec,
@@ -175,12 +175,12 @@ fun social.firefly.core.network.mastodon.model.responseBody.NetworkAttachment.Au
         original = original?.toExternalModel(),
     )
 
-fun social.firefly.core.network.mastodon.model.responseBody.NetworkAttachment.Audio.Meta.AudioInfo.toExternalModel(): Attachment.Audio.Meta.AudioInfo =
+fun NetworkAttachment.Audio.Meta.AudioInfo.toExternalModel(): Attachment.Audio.Meta.AudioInfo =
     Attachment.Audio.Meta.AudioInfo(
         bitrate = bitrate,
     )
 
-fun social.firefly.core.network.mastodon.model.responseBody.NetworkAttachment.Video.Meta.toExternalModel(): Attachment.Video.Meta =
+fun NetworkAttachment.Video.Meta.toExternalModel(): Attachment.Video.Meta =
     Attachment.Video.Meta(
         aspectRatio = aspectRatio,
         durationSeconds = durationSeconds,
@@ -192,21 +192,21 @@ fun social.firefly.core.network.mastodon.model.responseBody.NetworkAttachment.Vi
         small = small?.toExternalModel(),
     )
 
-fun social.firefly.core.network.mastodon.model.responseBody.NetworkAttachment.Video.Meta.VideoInfo.toExternalModel(): Attachment.Video.Meta.VideoInfo =
+fun NetworkAttachment.Video.Meta.VideoInfo.toExternalModel(): Attachment.Video.Meta.VideoInfo =
     Attachment.Video.Meta.VideoInfo(
         width = width,
         height = height,
         bitrate = bitrate,
     )
 
-fun social.firefly.core.network.mastodon.model.responseBody.NetworkAttachment.Image.Meta.toExternalModel(): Attachment.Image.Meta =
+fun NetworkAttachment.Image.Meta.toExternalModel(): Attachment.Image.Meta =
     Attachment.Image.Meta(
         focalPoint = focalPoint?.toExternalModel(),
         original = original?.toExternalModel(),
         small = small?.toExternalModel(),
     )
 
-fun social.firefly.core.network.mastodon.model.responseBody.NetworkAttachment.Image.Meta.ImageInfo.toExternalModel(): Attachment.Image.Meta.ImageInfo =
+fun NetworkAttachment.Image.Meta.ImageInfo.toExternalModel(): Attachment.Image.Meta.ImageInfo =
     Attachment.Image.Meta.ImageInfo(
         width = width,
         height = height,
@@ -214,7 +214,7 @@ fun social.firefly.core.network.mastodon.model.responseBody.NetworkAttachment.Im
         aspectRatio = aspectRatio,
     )
 
-fun social.firefly.core.network.mastodon.model.responseBody.NetworkAttachment.Gifv.Meta.toExternalModel(): Attachment.Gifv.Meta =
+fun NetworkAttachment.Gifv.Meta.toExternalModel(): Attachment.Gifv.Meta =
     Attachment.Gifv.Meta(
         aspectRatio = aspectRatio,
         durationSeconds = durationSeconds,
@@ -224,20 +224,20 @@ fun social.firefly.core.network.mastodon.model.responseBody.NetworkAttachment.Gi
         small = small?.toExternalModel(),
     )
 
-fun social.firefly.core.network.mastodon.model.responseBody.NetworkAttachment.Gifv.Meta.GifvInfo.toExternalModel(): Attachment.Gifv.Meta.GifvInfo =
+fun NetworkAttachment.Gifv.Meta.GifvInfo.toExternalModel(): Attachment.Gifv.Meta.GifvInfo =
     Attachment.Gifv.Meta.GifvInfo(
         width = width,
         height = height,
         bitrate = bitrate,
     )
 
-fun social.firefly.core.network.mastodon.model.responseBody.NetworkFocalPoint.toExternalModel(): FocalPoint =
+fun NetworkFocalPoint.toExternalModel(): FocalPoint =
     FocalPoint(
         x = x,
         y = y,
     )
 
-fun social.firefly.core.network.mastodon.model.responseBody.NetworkMention.toExternalModel(): Mention =
+fun NetworkMention.toExternalModel(): Mention =
     Mention(
         accountId = accountId,
         username = username,
@@ -245,20 +245,20 @@ fun social.firefly.core.network.mastodon.model.responseBody.NetworkMention.toExt
         url = url,
     )
 
-fun social.firefly.core.network.mastodon.model.responseBody.NetworkBasicHashTag.toExternalModel(): BasicHashTag =
+fun NetworkBasicHashTag.toExternalModel(): BasicHashTag =
     BasicHashTag(
         name = name,
         url = url,
     )
 
-fun social.firefly.core.network.mastodon.model.responseBody.NetworkHistory.toExternalModel(): History =
+fun NetworkHistory.toExternalModel(): History =
     History(
         day = day,
         usageCount = usageCount,
         accountCount = accountCount,
     )
 
-fun social.firefly.core.network.mastodon.model.responseBody.NetworkEmoji.toExternalModel(): Emoji =
+fun NetworkEmoji.toExternalModel(): Emoji =
     Emoji(
         shortCode = shortCode,
         url = url,
@@ -267,7 +267,7 @@ fun social.firefly.core.network.mastodon.model.responseBody.NetworkEmoji.toExter
         category = category,
     )
 
-fun social.firefly.core.network.mastodon.model.responseBody.NetworkApplication.toExternalModel(): Application =
+fun NetworkApplication.toExternalModel(): Application =
     Application(
         name = name,
         website = website,
@@ -276,7 +276,7 @@ fun social.firefly.core.network.mastodon.model.responseBody.NetworkApplication.t
         clientSecret = clientSecret,
     )
 
-fun social.firefly.core.network.mastodon.model.responseBody.NetworkPoll.toExternalModel(): Poll =
+fun NetworkPoll.toExternalModel(): Poll =
     Poll(
         pollId = pollId,
         isExpired = isExpired,
@@ -290,20 +290,20 @@ fun social.firefly.core.network.mastodon.model.responseBody.NetworkPoll.toExtern
         ownVotes = ownVotes,
     )
 
-fun social.firefly.core.network.mastodon.model.responseBody.NetworkPollOption.toExternalModel(): PollOption =
+fun NetworkPollOption.toExternalModel(): PollOption =
     PollOption(
         title = title,
         votesCount = votesCount,
     )
 
-fun social.firefly.core.network.mastodon.model.responseBody.NetworkField.toExternalModel(): Field =
+fun NetworkField.toExternalModel(): Field =
     Field(
         name = name,
         value = value,
         verifiedAt = verifiedAt,
     )
 
-fun social.firefly.core.network.mastodon.model.responseBody.NetworkSource.toExternalModel(): Source =
+fun NetworkSource.toExternalModel(): Source =
     Source(
         bio = bio,
         fields = fields.map { it.toExternalModel() },
@@ -313,7 +313,7 @@ fun social.firefly.core.network.mastodon.model.responseBody.NetworkSource.toExte
         followRequestsCount = followRequestsCount,
     )
 
-fun social.firefly.core.network.mastodon.model.responseBody.NetworkCard.toExternalModel(): Card =
+fun NetworkCard.toExternalModel(): Card =
     when (type) {
         "video" ->
             Card.Video(

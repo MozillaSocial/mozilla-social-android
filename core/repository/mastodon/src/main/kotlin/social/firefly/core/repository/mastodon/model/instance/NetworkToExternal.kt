@@ -10,15 +10,16 @@ import social.firefly.core.network.mastodon.model.responseBody.NetworkInstanceSt
 import social.firefly.core.network.mastodon.model.responseBody.NetworkInstanceUrls
 import social.firefly.core.repository.mastodon.model.status.toExternalModel
 
-fun social.firefly.core.network.mastodon.model.responseBody.NetworkInstanceRule.toExternalModel(): InstanceRule =
+fun NetworkInstanceRule.toExternalModel(): InstanceRule =
     InstanceRule(
         id = id,
         text = text,
     )
 
-fun List<social.firefly.core.network.mastodon.model.responseBody.NetworkInstanceRule>.toExternalModel(): List<InstanceRule> = map { it.toExternalModel() }
+fun List<NetworkInstanceRule>.toExternalModel(): List<InstanceRule> =
+    map { it.toExternalModel() }
 
-fun social.firefly.core.network.mastodon.model.responseBody.NetworkInstance.toExternalModel(): Instance =
+fun NetworkInstance.toExternalModel(): Instance =
     Instance(
         uri = domain,
         title = title,
@@ -31,10 +32,10 @@ fun social.firefly.core.network.mastodon.model.responseBody.NetworkInstance.toEx
         rules = rules.toExternalModel(),
     )
 
-fun social.firefly.core.network.mastodon.model.responseBody.NetworkInstanceUrls.toExternalModel(): InstanceUrls =
+fun NetworkInstanceUrls.toExternalModel(): InstanceUrls =
     InstanceUrls(streamingApiUrl = streamingApiUrl)
 
-fun social.firefly.core.network.mastodon.model.responseBody.NetworkInstanceStats.toExternalModel() =
+fun NetworkInstanceStats.toExternalModel() =
     InstanceStats(
         userCount = userCount,
         statusCount = statusCount,

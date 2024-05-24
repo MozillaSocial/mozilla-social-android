@@ -13,12 +13,12 @@ import social.firefly.core.network.mastodon.model.request.NetworkPollVote
 import social.firefly.core.network.mastodon.model.request.NetworkReportCreate
 import social.firefly.core.network.mastodon.model.request.NetworkStatusCreate
 
-internal fun StatusVisibility.toNetworkModel(): social.firefly.core.network.mastodon.model.responseBody.NetworkStatusVisibility =
+internal fun StatusVisibility.toNetworkModel(): NetworkStatusVisibility =
     when (this) {
-        StatusVisibility.Direct -> social.firefly.core.network.mastodon.model.responseBody.NetworkStatusVisibility.Direct
-        StatusVisibility.Private -> social.firefly.core.network.mastodon.model.responseBody.NetworkStatusVisibility.Private
-        StatusVisibility.Public -> social.firefly.core.network.mastodon.model.responseBody.NetworkStatusVisibility.Public
-        StatusVisibility.Unlisted -> social.firefly.core.network.mastodon.model.responseBody.NetworkStatusVisibility.Unlisted
+        StatusVisibility.Direct -> NetworkStatusVisibility.Direct
+        StatusVisibility.Private -> NetworkStatusVisibility.Private
+        StatusVisibility.Public -> NetworkStatusVisibility.Public
+        StatusVisibility.Unlisted -> NetworkStatusVisibility.Unlisted
     }
 
 internal fun PollCreate.toNetworkModel(): NetworkPollCreate =
