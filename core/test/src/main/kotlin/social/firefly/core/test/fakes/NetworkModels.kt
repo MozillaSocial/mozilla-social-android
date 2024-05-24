@@ -7,12 +7,12 @@ import social.firefly.core.network.mastodon.model.responseBody.NetworkStatusVisi
 
 object NetworkModels {
     val networkStatus =
-        social.firefly.core.network.mastodon.model.responseBody.NetworkStatus(
+        NetworkStatus(
             statusId = "vivendo",
             uri = "est",
             createdAt = Instant.fromEpochMilliseconds(5000),
             account =
-            social.firefly.core.network.mastodon.model.responseBody.NetworkAccount(
+            NetworkAccount(
                 accountId = "nihil",
                 username = "Caroline Meadows",
                 acct = "legere",
@@ -66,7 +66,7 @@ object NetworkModels {
         )
 
     val networkAccount =
-        social.firefly.core.network.mastodon.model.responseBody.NetworkAccount(
+        NetworkAccount(
             accountId = "mediocritatem",
             username = "Rosie Small",
             acct = "eripuit",
