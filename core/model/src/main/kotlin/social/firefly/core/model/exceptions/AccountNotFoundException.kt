@@ -1,4 +1,4 @@
-package social.firefly.core.repository.mastodon.exceptions
+package social.firefly.core.model.exceptions
 
 class AccountNotFoundException(
     override val cause: Throwable? = null,

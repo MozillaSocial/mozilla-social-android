@@ -2,6 +2,7 @@ package social.firefly.core.network.mastodon.ktor
 
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
+import io.ktor.client.plugins.ClientRequestException
 import io.ktor.client.request.forms.MultiPartFormDataContent
 import io.ktor.client.request.forms.formData
 import io.ktor.client.request.forms.submitForm
@@ -13,26 +14,38 @@ import io.ktor.http.HttpMethod
 import io.ktor.http.URLProtocol
 import io.ktor.http.parameters
 import io.ktor.http.path
+import social.firefly.core.model.exceptions.AccountNotFoundException
 import social.firefly.core.network.mastodon.AccountApi
 import social.firefly.core.network.mastodon.model.Response
 import social.firefly.core.network.mastodon.model.responseBody.NetworkAccount
 import social.firefly.core.network.mastodon.model.responseBody.NetworkRelationship
 import social.firefly.core.network.mastodon.model.responseBody.NetworkStatus
-import social.firefly.core.network.mastodon.utils.toExternal
+import social.firefly.core.network.mastodon.utils.toResponse
 import java.io.File
 
 class AccountApiImpl(
     private val client: HttpClient,
 ) : AccountApi {
 
+    @Suppress("MagicNumber")
     override suspend fun getAccount(
         accountId: String
-    ): Response<NetworkAccount> = client.get {
-        url {
-            protocol = URLProtocol.HTTPS
-            path("api/v1/accounts/$accountId")
+    ): NetworkAccount {
+        try {
+            return client.get {
+                url {
+                    protocol = URLProtocol.HTTPS
+                    path("api/v1/accounts/$accountId")
+                }
+            }.body()
+        } catch (e: ClientRequestException) {
+            if (e.response.status.value == 404) {
+                throw AccountNotFoundException(e)
+            } else {
+                throw e
+            }
         }
-    }.toExternal()
+    }
 
     override suspend fun getAccountFollowers(
         accountId: String,
@@ -51,7 +64,7 @@ class AccountApiImpl(
                 limit?.let { append("limit", it.toString()) }
             }
         }
-    }.toExternal()
+    }.toResponse()
 
     override suspend fun getAccountFollowing(
         accountId: String,
@@ -70,7 +83,7 @@ class AccountApiImpl(
                 limit?.let { append("limit", it.toString()) }
             }
         }
-    }.toExternal()
+    }.toResponse()
 
     override suspend fun getAccountStatuses(
         accountId: String,
@@ -95,7 +108,7 @@ class AccountApiImpl(
                 append("exclude_reblogs", excludeBoosts.toString())
             }
         }
-    }.toExternal()
+    }.toResponse()
 
     override suspend fun getAccountBookmarks(): List<NetworkStatus> = client.get {
         url {

@@ -89,6 +89,7 @@ val mastodonNetworkModule =
                         ignoreUnknownKeys = true
                     })
                 }
+                expectSuccess = true
             }
         }
 

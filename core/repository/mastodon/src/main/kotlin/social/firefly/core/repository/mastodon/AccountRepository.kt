@@ -2,10 +2,6 @@ package social.firefly.core.repository.mastodon
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.MultipartBody
-import okhttp3.RequestBody.Companion.asRequestBody
-import okhttp3.RequestBody.Companion.toRequestBody
 import social.firefly.common.annotations.PreferUseCase
 import social.firefly.core.database.dao.AccountsDao
 import social.firefly.core.model.Account
@@ -13,10 +9,7 @@ import social.firefly.core.model.Relationship
 import social.firefly.core.model.Status
 import social.firefly.core.model.paging.MastodonPagedResponse
 import social.firefly.core.network.mastodon.AccountApi
-import social.firefly.core.network.mastodon.exceptions.HttpException
-import social.firefly.core.network.mastodon.model.isSuccessful
 import social.firefly.core.network.mastodon.utils.toMastodonPagedResponse
-import social.firefly.core.repository.mastodon.exceptions.AccountNotFoundException
 import social.firefly.core.repository.mastodon.model.account.toExternal
 import social.firefly.core.repository.mastodon.model.status.toDatabaseModel
 import social.firefly.core.repository.mastodon.model.status.toExternalModel
@@ -28,13 +21,7 @@ class AccountRepository internal constructor(
 ) {
 
     @Suppress("MagicNumber")
-    suspend fun getAccount(accountId: String): Account {
-        val response = api.getAccount(accountId)
-        if (response.code == 404) {
-            throw AccountNotFoundException()
-        }
-        return response.body.toExternalModel()
-    }
+    suspend fun getAccount(accountId: String): Account = api.getAccount(accountId).toExternalModel()
 
     fun getAccountFlow(accountId: String): Flow<Account> =
         dao.getAccountFlow(accountId).map { it.toExternalModel() }
@@ -44,38 +31,24 @@ class AccountRepository internal constructor(
         olderThanId: String? = null,
         newerThanId: String? = null,
         loadSize: Int? = null,
-    ): MastodonPagedResponse<Account> {
-        val response =
-            api.getAccountFollowers(
-                accountId = accountId,
-                olderThanId = olderThanId,
-                newerThanId = newerThanId,
-                limit = loadSize,
-            )
-        if (!response.isSuccessful()) {
-            throw HttpException(response.body.toString())
-        }
-        return response.toMastodonPagedResponse { it.toExternalModel() }
-    }
+    ): MastodonPagedResponse<Account> = api.getAccountFollowers(
+        accountId = accountId,
+        olderThanId = olderThanId,
+        newerThanId = newerThanId,
+        limit = loadSize,
+    ).toMastodonPagedResponse { it.toExternalModel() }
 
     suspend fun getAccountFollowing(
         accountId: String,
         olderThanId: String? = null,
         newerThanId: String? = null,
         loadSize: Int? = null,
-    ): MastodonPagedResponse<Account> {
-        val response =
-            api.getAccountFollowing(
-                accountId = accountId,
-                olderThanId = olderThanId,
-                newerThanId = newerThanId,
-                limit = loadSize,
-            )
-        if (!response.isSuccessful()) {
-            throw HttpException(response.body.toString())
-        }
-        return response.toMastodonPagedResponse { it.toExternalModel() }
-    }
+    ): MastodonPagedResponse<Account> = api.getAccountFollowing(
+        accountId = accountId,
+        olderThanId = olderThanId,
+        newerThanId = newerThanId,
+        limit = loadSize,
+    ).toMastodonPagedResponse { it.toExternalModel() }
 
     suspend fun getAccountStatuses(
         accountId: String,
@@ -85,23 +58,15 @@ class AccountRepository internal constructor(
         onlyMedia: Boolean = false,
         excludeReplies: Boolean = false,
         excludeBoosts: Boolean = false,
-    ): MastodonPagedResponse<Status> {
-        val response =
-            api.getAccountStatuses(
-                accountId = accountId,
-                olderThanId = olderThanId,
-                immediatelyNewerThanId = immediatelyNewerThanId,
-                limit = loadSize,
-                onlyMedia = onlyMedia,
-                excludeReplies = excludeReplies,
-                excludeBoosts = excludeBoosts,
-            )
-
-        if (!response.isSuccessful()) {
-            throw HttpException(response.body.toString())
-        }
-        return response.toMastodonPagedResponse { it.toExternalModel() }
-    }
+    ): MastodonPagedResponse<Status> = api.getAccountStatuses(
+        accountId = accountId,
+        olderThanId = olderThanId,
+        immediatelyNewerThanId = immediatelyNewerThanId,
+        limit = loadSize,
+        onlyMedia = onlyMedia,
+        excludeReplies = excludeReplies,
+        excludeBoosts = excludeBoosts,
+    ).toMastodonPagedResponse { it.toExternalModel() }
 
     suspend fun getAccountBookmarks(): List<Status> =
         api.getAccountBookmarks().map { it.toExternalModel() }

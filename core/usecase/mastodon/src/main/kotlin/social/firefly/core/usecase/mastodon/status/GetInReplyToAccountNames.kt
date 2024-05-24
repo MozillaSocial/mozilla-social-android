@@ -5,7 +5,7 @@ import kotlinx.coroutines.coroutineScope
 import social.firefly.core.model.Status
 import social.firefly.core.model.paging.MastodonPagedResponse
 import social.firefly.core.repository.mastodon.AccountRepository
-import social.firefly.core.repository.mastodon.exceptions.AccountNotFoundException
+import social.firefly.core.model.exceptions.AccountNotFoundException
 import timber.log.Timber
 
 class GetInReplyToAccountNames internal constructor(
