@@ -20,6 +20,7 @@ import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import social.firefly.core.network.mastodon.interceptors.AuthCredentialInterceptor
+import social.firefly.core.network.mastodon.ktor.AccountApiImpl
 import social.firefly.core.network.mastodon.ktor.AppApiImpl
 import social.firefly.core.network.mastodon.ktor.DomainBlocksApiImpl
 import java.util.concurrent.TimeUnit
@@ -59,7 +60,6 @@ val mastodonNetworkModule =
                 .build()
         }
 
-        single { get<Retrofit>(qualifier = named(AUTHORIZED_CLIENT)).create(AccountApi::class.java) }
         single { get<Retrofit>(qualifier = named(AUTHORIZED_CLIENT)).create(AppApi::class.java) }
         single { get<Retrofit>(qualifier = named(AUTHORIZED_CLIENT)).create(BlocksApi::class.java) }
         single { get<Retrofit>(qualifier = named(AUTHORIZED_CLIENT)).create(FavoritesApi::class.java) }
@@ -151,6 +151,10 @@ val mastodonNetworkModule =
                 get<HttpClientEngine>(qualifier = named(AUTHORIZED_CLIENT)),
                 get<HttpClientConfig<HttpClientEngineConfig>>(),
             )
+        }
+
+        single<AccountApi> {
+            AccountApiImpl(get(qualifier = named(AUTHORIZED_CLIENT)))
         }
 
         single<AppApi> {

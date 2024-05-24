@@ -134,7 +134,7 @@ class AccountRepository internal constructor(
         api.unmuteAccount(accountId = accountId).toExternal()
 
     suspend fun getAccountRelationships(accountIds: List<String>): List<Relationship> =
-        api.getRelationships(accountIds.toTypedArray()).map { it.toExternal() }
+        api.getRelationships(accountIds).map { it.toExternal() }
 
     suspend fun getAccountFromDatabase(accountId: String): Account? =
         dao.getAccount(accountId)?.toExternalModel()
@@ -158,34 +158,13 @@ class AccountRepository internal constructor(
         header: File? = null,
         fields: List<Pair<String, String>>? = null,
     ): Account = api.updateAccount(
-        displayName = displayName?.toRequestBody(MultipartBody.FORM),
-        bio = bio?.toRequestBody(MultipartBody.FORM),
-        locked = locked?.toString()?.toRequestBody(MultipartBody.FORM),
-        bot = bot?.toString()?.toRequestBody(MultipartBody.FORM),
-        avatar =
-        avatar?.let {
-            MultipartBody.Part.createFormData(
-                "avatar",
-                avatar.name,
-                avatar.asRequestBody("image/*".toMediaTypeOrNull()),
-            )
-        },
-        header =
-        header?.let {
-            MultipartBody.Part.createFormData(
-                "header",
-                header.name,
-                header.asRequestBody("image/*".toMediaTypeOrNull()),
-            )
-        },
-        fieldLabel0 = fields?.getOrNull(0)?.first?.toRequestBody(MultipartBody.FORM),
-        fieldContent0 = fields?.getOrNull(0)?.second?.toRequestBody(MultipartBody.FORM),
-        fieldLabel1 = fields?.getOrNull(1)?.first?.toRequestBody(MultipartBody.FORM),
-        fieldContent1 = fields?.getOrNull(1)?.second?.toRequestBody(MultipartBody.FORM),
-        fieldLabel2 = fields?.getOrNull(2)?.first?.toRequestBody(MultipartBody.FORM),
-        fieldContent2 = fields?.getOrNull(2)?.second?.toRequestBody(MultipartBody.FORM),
-        fieldLabel3 = fields?.getOrNull(3)?.first?.toRequestBody(MultipartBody.FORM),
-        fieldContent3 = fields?.getOrNull(3)?.second?.toRequestBody(MultipartBody.FORM),
+        displayName = displayName,
+        bio = bio,
+        locked = locked,
+        bot = bot,
+        avatar = avatar,
+        header = header,
+        fields = fields,
     ).toExternalModel()
 
     suspend fun insertAll(accounts: List<Account>) =
