@@ -6,19 +6,19 @@ import social.firefly.core.model.StatusVisibility
 import social.firefly.core.model.request.PollCreate
 import social.firefly.core.model.request.ReportCreate
 import social.firefly.core.model.request.StatusCreate
-import social.firefly.core.network.mastodon.model.NetworkStatusVisibility
+import social.firefly.core.network.mastodon.model.responseBody.NetworkStatusVisibility
 import social.firefly.core.network.mastodon.model.request.NetworkMediaUpdate
 import social.firefly.core.network.mastodon.model.request.NetworkPollCreate
 import social.firefly.core.network.mastodon.model.request.NetworkPollVote
 import social.firefly.core.network.mastodon.model.request.NetworkReportCreate
 import social.firefly.core.network.mastodon.model.request.NetworkStatusCreate
 
-internal fun StatusVisibility.toNetworkModel(): NetworkStatusVisibility =
+internal fun StatusVisibility.toNetworkModel(): social.firefly.core.network.mastodon.model.responseBody.NetworkStatusVisibility =
     when (this) {
-        StatusVisibility.Direct -> NetworkStatusVisibility.Direct
-        StatusVisibility.Private -> NetworkStatusVisibility.Private
-        StatusVisibility.Public -> NetworkStatusVisibility.Public
-        StatusVisibility.Unlisted -> NetworkStatusVisibility.Unlisted
+        StatusVisibility.Direct -> social.firefly.core.network.mastodon.model.responseBody.NetworkStatusVisibility.Direct
+        StatusVisibility.Private -> social.firefly.core.network.mastodon.model.responseBody.NetworkStatusVisibility.Private
+        StatusVisibility.Public -> social.firefly.core.network.mastodon.model.responseBody.NetworkStatusVisibility.Public
+        StatusVisibility.Unlisted -> social.firefly.core.network.mastodon.model.responseBody.NetworkStatusVisibility.Unlisted
     }
 
 internal fun PollCreate.toNetworkModel(): NetworkPollCreate =

@@ -2,26 +2,25 @@ package social.firefly.core.network.mastodon
 
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
-import retrofit2.Response
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
-import retrofit2.http.Header
 import retrofit2.http.Multipart
 import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.Part
 import retrofit2.http.Path
 import retrofit2.http.Query
-import social.firefly.core.network.mastodon.model.NetworkAccount
-import social.firefly.core.network.mastodon.model.NetworkRelationship
-import social.firefly.core.network.mastodon.model.NetworkStatus
+import social.firefly.core.network.mastodon.model.Response
+import social.firefly.core.network.mastodon.model.responseBody.NetworkAccount
+import social.firefly.core.network.mastodon.model.responseBody.NetworkRelationship
+import social.firefly.core.network.mastodon.model.responseBody.NetworkStatus
 
 interface AccountApi {
     @GET("/api/v1/accounts/{id}")
     suspend fun getAccount(
         @Path("id") accountId: String,
-    ): NetworkAccount
+    ): Response<NetworkAccount>
 
     @GET("/api/v1/accounts/{id}/followers")
     suspend fun getAccountFollowers(

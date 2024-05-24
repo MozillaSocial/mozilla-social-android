@@ -4,7 +4,7 @@ import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
-import social.firefly.core.network.mastodon.model.NetworkStatus
+import social.firefly.core.network.mastodon.model.responseBody.NetworkStatus
 
 interface TimelineApi {
     @GET("/api/v1/timelines/home")

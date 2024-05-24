@@ -6,9 +6,9 @@ import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
-import social.firefly.core.network.mastodon.model.NetworkContext
-import social.firefly.core.network.mastodon.model.NetworkPoll
-import social.firefly.core.network.mastodon.model.NetworkStatus
+import social.firefly.core.network.mastodon.model.responseBody.NetworkContext
+import social.firefly.core.network.mastodon.model.responseBody.NetworkPoll
+import social.firefly.core.network.mastodon.model.responseBody.NetworkStatus
 import social.firefly.core.network.mastodon.model.request.NetworkPollVote
 import social.firefly.core.network.mastodon.model.request.NetworkStatusCreate
 

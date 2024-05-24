@@ -1,8 +1,8 @@
 package social.firefly.core.network.mastodon
 
-import social.firefly.core.network.mastodon.model.NetworkAccessToken
-import social.firefly.core.network.mastodon.model.NetworkAccount
-import social.firefly.core.network.mastodon.model.NetworkApplication
+import social.firefly.core.network.mastodon.model.responseBody.NetworkAccessToken
+import social.firefly.core.network.mastodon.model.responseBody.NetworkAccount
+import social.firefly.core.network.mastodon.model.responseBody.NetworkApplication
 
 interface AppApi {
 

@@ -5,7 +5,7 @@ import retrofit2.http.FieldMap
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
 import retrofit2.http.POST
-import social.firefly.core.network.mastodon.model.NetworkWebPushSubscription
+import social.firefly.core.network.mastodon.model.responseBody.NetworkWebPushSubscription
 
 interface PushApi {
 

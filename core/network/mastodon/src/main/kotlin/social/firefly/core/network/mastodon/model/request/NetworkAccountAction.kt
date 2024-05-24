@@ -1,7 +1,7 @@
 package social.firefly.core.network.mastodon.model.request
 
-import social.firefly.core.network.mastodon.model.NetworkAccount
-import social.firefly.core.network.mastodon.model.NetworkActionType
+import social.firefly.core.network.mastodon.model.responseBody.NetworkAccount
+import social.firefly.core.network.mastodon.model.responseBody.NetworkActionType
 
 /**
  * Object to perform an action against an [NetworkAccount].
@@ -10,7 +10,7 @@ data class NetworkAccountAction(
     /**
      * The type of action to be taken.
      */
-    val type: NetworkActionType? = null,
+    val type: social.firefly.core.network.mastodon.model.responseBody.NetworkActionType? = null,
     /**
      * ID of an associated report that caused this action to be taken.
      */

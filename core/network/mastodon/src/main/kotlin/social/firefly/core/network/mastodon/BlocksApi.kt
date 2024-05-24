@@ -3,7 +3,7 @@ package social.firefly.core.network.mastodon
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
-import social.firefly.core.network.mastodon.model.NetworkAccount
+import social.firefly.core.network.mastodon.model.responseBody.NetworkAccount
 
 interface BlocksApi {
     @GET("/api/v1/blocks")

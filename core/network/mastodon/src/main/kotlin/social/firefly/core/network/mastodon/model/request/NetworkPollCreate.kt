@@ -2,7 +2,7 @@ package social.firefly.core.network.mastodon.model.request
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import social.firefly.core.network.mastodon.model.NetworkPoll
+import social.firefly.core.network.mastodon.model.responseBody.NetworkPoll
 
 /**
  * Object used to create a new [NetworkPoll].

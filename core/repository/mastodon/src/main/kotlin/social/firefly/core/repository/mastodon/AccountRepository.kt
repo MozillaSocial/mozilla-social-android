@@ -6,7 +6,6 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
-import retrofit2.HttpException
 import social.firefly.common.annotations.PreferUseCase
 import social.firefly.common.parseMastodonLinkHeader
 import social.firefly.core.database.dao.AccountsDao
@@ -16,6 +15,7 @@ import social.firefly.core.model.Status
 import social.firefly.core.model.paging.FollowersPagingWrapper
 import social.firefly.core.model.paging.StatusPagingWrapper
 import social.firefly.core.network.mastodon.AccountApi
+import social.firefly.core.network.mastodon.model.isSuccessful
 import social.firefly.core.repository.mastodon.exceptions.AccountNotFoundException
 import social.firefly.core.repository.mastodon.model.account.toExternal
 import social.firefly.core.repository.mastodon.model.status.toDatabaseModel
@@ -29,6 +29,14 @@ class AccountRepository internal constructor(
 
     @Suppress("MagicNumber")
     suspend fun getAccount(accountId: String): Account {
+        val response = api.getAccount(accountId)
+        if (response.isSuccessful()) {
+            return response.body.toExternalModel()
+        } else {
+            if (response.code == 404) {
+                throw AccountNotFoundException()
+            }
+        }
         try {
             return api.getAccount(accountId).toExternalModel()
         } catch (e: HttpException) {
@@ -55,7 +63,7 @@ class AccountRepository internal constructor(
                 newerThanId = newerThanId,
                 limit = loadSize,
             )
-        if (!response.isSuccessful) {
+        if (!response.isSuccessful()) {
             throw HttpException(response)
         }
         return FollowersPagingWrapper(

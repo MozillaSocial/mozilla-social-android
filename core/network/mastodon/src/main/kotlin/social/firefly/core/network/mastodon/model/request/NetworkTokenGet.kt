@@ -1,7 +1,7 @@
 package social.firefly.core.network.mastodon.model.request
 
-import social.firefly.core.network.mastodon.model.NetworkGrantType
-import social.firefly.core.network.mastodon.model.NetworkToken
+import social.firefly.core.network.mastodon.model.responseBody.NetworkGrantType
+import social.firefly.core.network.mastodon.model.responseBody.NetworkToken
 
 /**
  * Object used to get a new [NetworkToken].
@@ -31,7 +31,7 @@ data class NetworkTokenGet(
      * Otherwise, set equal to [NetworkGrantType.ClientCredentials] to
      * obtain app-level access only.
      */
-    val grantType: NetworkGrantType,
+    val grantType: social.firefly.core.network.mastodon.model.responseBody.NetworkGrantType,
     /**
      * List of requested OAuth scopes, separated by spaces.
      *

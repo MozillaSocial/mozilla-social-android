@@ -2,7 +2,7 @@ package social.firefly.core.network.mastodon
 
 import retrofit2.http.POST
 import retrofit2.http.Path
-import social.firefly.core.network.mastodon.model.NetworkRelationship
+import social.firefly.core.network.mastodon.model.responseBody.NetworkRelationship
 
 interface FollowRequestApi {
 

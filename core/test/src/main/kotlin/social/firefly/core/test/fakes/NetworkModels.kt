@@ -1,18 +1,18 @@
 package social.firefly.core.test.fakes
 
 import kotlinx.datetime.Instant
-import social.firefly.core.network.mastodon.model.NetworkAccount
-import social.firefly.core.network.mastodon.model.NetworkStatus
-import social.firefly.core.network.mastodon.model.NetworkStatusVisibility
+import social.firefly.core.network.mastodon.model.responseBody.NetworkAccount
+import social.firefly.core.network.mastodon.model.responseBody.NetworkStatus
+import social.firefly.core.network.mastodon.model.responseBody.NetworkStatusVisibility
 
 object NetworkModels {
     val networkStatus =
-        NetworkStatus(
+        social.firefly.core.network.mastodon.model.responseBody.NetworkStatus(
             statusId = "vivendo",
             uri = "est",
             createdAt = Instant.fromEpochMilliseconds(5000),
             account =
-            NetworkAccount(
+            social.firefly.core.network.mastodon.model.responseBody.NetworkAccount(
                 accountId = "nihil",
                 username = "Caroline Meadows",
                 acct = "legere",
@@ -39,7 +39,7 @@ object NetworkModels {
                 muteExpiresAt = null,
             ),
             content = "qui",
-            visibility = NetworkStatusVisibility.Public,
+            visibility = social.firefly.core.network.mastodon.model.responseBody.NetworkStatusVisibility.Public,
             isSensitive = false,
             contentWarningText = "conubia",
             mediaAttachments = listOf(),
@@ -66,7 +66,7 @@ object NetworkModels {
         )
 
     val networkAccount =
-        NetworkAccount(
+        social.firefly.core.network.mastodon.model.responseBody.NetworkAccount(
             accountId = "mediocritatem",
             username = "Rosie Small",
             acct = "eripuit",

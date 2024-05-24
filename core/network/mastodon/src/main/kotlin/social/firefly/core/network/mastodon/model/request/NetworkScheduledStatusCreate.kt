@@ -1,7 +1,7 @@
 package social.firefly.core.network.mastodon.model.request
 
 import kotlinx.datetime.Instant
-import social.firefly.core.network.mastodon.model.NetworkStatusVisibility
+import social.firefly.core.network.mastodon.model.responseBody.NetworkStatusVisibility
 
 /**
  * Object used to schedule a status.
@@ -44,7 +44,7 @@ data class NetworkScheduledStatusCreate(
     /**
      * Visibility of the posted status.
      */
-    val visibility: NetworkStatusVisibility? = null,
+    val visibility: social.firefly.core.network.mastodon.model.responseBody.NetworkStatusVisibility? = null,
     /**
      * ISO 639-1 language code for this status.
      */

@@ -1,7 +1,7 @@
 package social.firefly.core.network.mastodon.model.request
 
-import social.firefly.core.network.mastodon.model.NetworkFilter
-import social.firefly.core.network.mastodon.model.NetworkFilterContext
+import social.firefly.core.network.mastodon.model.responseBody.NetworkFilter
+import social.firefly.core.network.mastodon.model.responseBody.NetworkFilterContext
 
 /**
  * Object used to update an existing [NetworkFilter].
@@ -14,7 +14,7 @@ data class NetworkFilterUpdate(
     /**
      * Contexts to filter in. At least one context must be specified.
      */
-    val context: List<NetworkFilterContext>,
+    val context: List<social.firefly.core.network.mastodon.model.responseBody.NetworkFilterContext>,
     /**
      * Should the server irreversibly drop matching entities from home and notifications?
      */
