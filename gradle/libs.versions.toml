@@ -9,6 +9,8 @@ androidx-paging = "3.3.0"
 androidx-room = "2.6.1"
 androidx-test-ext-junit = "1.1.5"
 androidx-work = "2.9.0"
+baselineprofile = "1.2.4"
+benchmark-macro-junit4 = "1.2.4"
 coil = "2.6.0"
 detekt = "1.23.6"
 espresso-core = "3.5.1"
@@ -23,13 +25,16 @@ kotlin-ksp = "2.0.0-1.0.21" # Used only once, but keeping this definition makes 
 kotlinx-coroutines = "1.8.1"
 ktor = "2.3.11"
 okhttp = "4.12.0"
+profileinstaller = "1.3.1"
 protobuf = "4.26.1"
+uiautomator = "2.3.0"
 
 [libraries]
 about-libraries-core = { module = "com.mikepenz:aboutlibraries-core", version.ref = "about-libraries" }
 about-libraries-ui = { module = "com.mikepenz:aboutlibraries-compose", version.ref = "about-libraries" }
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version = "1.9.0" }
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version = "1.6.1" }
+androidx-benchmark-macro-junit4 = { group = "androidx.benchmark", name = "benchmark-macro-junit4", version.ref = "benchmark-macro-junit4" }
 androidx-browser = { module = "androidx.browser:browser", version = "1.8.0" }
 androidx-compose-bom = { module = "androidx.compose:compose-bom", version = "2024.05.00" }
 androidx-compose-material-iconsExtended = { module = "androidx.compose.material:material-icons-extended" }
@@ -55,11 +60,13 @@ androidx-navigation-compose = { module = "androidx.navigation:navigation-compose
 androidx-navigation-testing = { module = "androidx.navigation:navigation-testing", version.ref = "androidx-navigation" }
 androidx-paging-compose = { module = "androidx.paging:paging-compose", version.ref = "androidx-paging" }
 androidx-paging-runtime = { module = "androidx.paging:paging-runtime", version.ref = "androidx-paging" }
+androidx-profileinstaller = { group = "androidx.profileinstaller", name = "profileinstaller", version.ref = "profileinstaller" }
 androidx-room = { module = "androidx.room:room-ktx", version.ref = "androidx-room" }
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "androidx-room" }
 androidx-room-paging = { module = "androidx.room:room-paging", version.ref = "androidx-room" }
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "androidx-room" }
 androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidx-test-ext-junit" }
+androidx-uiautomator = { group = "androidx.test.uiautomator", name = "uiautomator", version.ref = "uiautomator" }
 androidx-work-runtime = { module = "androidx.work:work-runtime", version.ref = "androidx-work" }
 coil = { module = "io.coil-kt:coil-compose", version.ref = "coil" }
 coil-gif = { module = "io.coil-kt:coil-gif", version.ref = "coil" }
@@ -108,6 +115,8 @@ about-libraries-plugin = { id = "com.mikepenz.aboutlibraries.plugin", version.re
 android-application = { id = "com.android.application", version.ref = "android-gradle-plugin" }
 android-library = { id = "com.android.library", version.ref = "android-gradle-plugin" }
 android-secrets = { id = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin", version.ref = "android-secrets-plugin" }
+android-test = { id = "com.android.test", version.ref = "android-gradle-plugin" }
+baselineprofile = { id = "androidx.baselineprofile", version.ref = "baselineprofile" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 glean = { id = "org.mozilla.telemetry.glean-gradle-plugin", version.ref = "glean" }
