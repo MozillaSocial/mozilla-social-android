@@ -55,9 +55,5 @@ gradlePlugin {
             id = "social.firefly.android.library.compose"
             implementationClass = "AndroidLibraryComposeConventionPlugin"
         }
-        register("baselineProfile") {
-            id = "social.firefly.android.baselineProfile"
-            implementationClass = "BaselineProfileConventionPlugin"
-        }
     }
 }
