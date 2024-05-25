@@ -5,8 +5,11 @@ import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import kotlinx.coroutines.delay
+import social.firefly.common.getNext
+import social.firefly.common.getPrev
 import social.firefly.core.database.model.entities.accountCollections.BlockWrapper
-import social.firefly.core.model.paging.AccountPagingWrapper
+import social.firefly.core.model.Account
+import social.firefly.core.model.paging.MastodonPagedResponse
 import social.firefly.core.repository.mastodon.AccountRepository
 import social.firefly.core.repository.mastodon.BlocksRepository
 import social.firefly.core.repository.mastodon.DatabaseDelegate
@@ -31,7 +34,7 @@ class BlocksListRemoteMediator(
     ): MediatorResult {
         return try {
             var pageSize: Int = state.config.pageSize
-            val response: AccountPagingWrapper =
+            val response: MastodonPagedResponse<Account> =
                 when (loadType) {
                     LoadType.REFRESH -> {
                         pageSize = state.config.initialLoadSize
@@ -57,7 +60,7 @@ class BlocksListRemoteMediator(
                 }
 
             val relationships =
-                accountRepository.getAccountRelationships(response.accounts.map { it.accountId })
+                accountRepository.getAccountRelationships(response.items.map { it.accountId })
 
             databaseDelegate.withTransaction {
                 if (loadType == LoadType.REFRESH) {
@@ -65,17 +68,17 @@ class BlocksListRemoteMediator(
                     nextPositionIndex = 0
                 }
 
-                accountRepository.insertAll(response.accounts)
+                accountRepository.insertAll(response.items)
                 relationshipRepository.insertAll(relationships)
                 blocksRepository.insertAll(
-                    response.accounts.mapIndexed { index, account ->
+                    response.items.mapIndexed { index, account ->
                         account.toDatabaseBlock(position = nextPositionIndex + index)
                     },
                 )
             }
 
-            nextKey = response.nextPage?.maxId
-            nextPositionIndex += response.accounts.size
+            nextKey = response.pagingLinks?.getNext()?.link
+            nextPositionIndex += response.items.size
 
             // There seems to be some race condition for refreshes.  Subsequent pages do
             // not get loaded because once we return a mediator result, the next append
@@ -91,9 +94,9 @@ class BlocksListRemoteMediator(
             @Suppress("KotlinConstantConditions")
             (MediatorResult.Success(
                 endOfPaginationReached = when (loadType) {
-                    LoadType.PREPEND -> response.prevPage == null
+                    LoadType.PREPEND -> response.pagingLinks?.getPrev() == null
                     LoadType.REFRESH,
-                    LoadType.APPEND -> response.nextPage == null
+                    LoadType.APPEND -> response.pagingLinks?.getNext() == null
                 },
             ))
         } catch (e: Exception) {

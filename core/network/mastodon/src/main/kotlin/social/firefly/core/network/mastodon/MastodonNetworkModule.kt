@@ -14,14 +14,13 @@ import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
-import org.koin.core.module.dsl.bind
-import org.koin.core.module.dsl.singleOf
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import social.firefly.core.network.mastodon.interceptors.AuthCredentialInterceptor
 import social.firefly.core.network.mastodon.ktor.AccountApiImpl
 import social.firefly.core.network.mastodon.ktor.AppApiImpl
+import social.firefly.core.network.mastodon.ktor.BlocksApiImpl
 import social.firefly.core.network.mastodon.ktor.DomainBlocksApiImpl
 import java.util.concurrent.TimeUnit
 
@@ -60,8 +59,6 @@ val mastodonNetworkModule =
                 .build()
         }
 
-        single { get<Retrofit>(qualifier = named(AUTHORIZED_CLIENT)).create(AppApi::class.java) }
-        single { get<Retrofit>(qualifier = named(AUTHORIZED_CLIENT)).create(BlocksApi::class.java) }
         single { get<Retrofit>(qualifier = named(AUTHORIZED_CLIENT)).create(FavoritesApi::class.java) }
         single { get<Retrofit>(qualifier = named(AUTHORIZED_CLIENT)).create(InstanceApi::class.java) }
         single { get<Retrofit>(qualifier = named(AUTHORIZED_CLIENT)).create(MediaApi::class.java) }
@@ -154,17 +151,13 @@ val mastodonNetworkModule =
             )
         }
 
-        single<AccountApi> {
-            AccountApiImpl(get(qualifier = named(AUTHORIZED_CLIENT)))
-        }
+        // Unauthorized Apis
+        single<AppApi> { AppApiImpl(get(qualifier = named(UNAUTHORIZED_CLIENT))) }
 
-        single<AppApi> {
-            AppApiImpl(get(qualifier = named(UNAUTHORIZED_CLIENT)))
-        }
-
-        single<DomainBlocksApi> {
-            DomainBlocksApiImpl(get(qualifier = named(AUTHORIZED_CLIENT)))
-        }
+        // Authorized Apis
+        single<AccountApi> { AccountApiImpl(get(qualifier = named(AUTHORIZED_CLIENT))) }
+        single<BlocksApi> { BlocksApiImpl(get(qualifier = named(AUTHORIZED_CLIENT))) }
+        single<DomainBlocksApi> { DomainBlocksApiImpl(get(qualifier = named(AUTHORIZED_CLIENT))) }
     }
 
 private var json: Json = Json { ignoreUnknownKeys = true }
