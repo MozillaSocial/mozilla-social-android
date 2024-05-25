@@ -21,6 +21,7 @@ import social.firefly.core.network.mastodon.interceptors.AuthCredentialIntercept
 import social.firefly.core.network.mastodon.ktor.AccountApiImpl
 import social.firefly.core.network.mastodon.ktor.AppApiImpl
 import social.firefly.core.network.mastodon.ktor.BlocksApiImpl
+import social.firefly.core.network.mastodon.ktor.BookmarksApiImpl
 import social.firefly.core.network.mastodon.ktor.DomainBlocksApiImpl
 import java.util.concurrent.TimeUnit
 
@@ -73,7 +74,6 @@ val mastodonNetworkModule =
         single { get<Retrofit>(qualifier = named(AUTHORIZED_CLIENT)).create(TrendsApi::class.java) }
         single { get<Retrofit>(qualifier = named(AUTHORIZED_CLIENT)).create(PushApi::class.java) }
         single { get<Retrofit>(qualifier = named(AUTHORIZED_CLIENT)).create(FollowedTagsApi::class.java) }
-        single { get<Retrofit>(qualifier = named(AUTHORIZED_CLIENT)).create(BookmarksApi::class.java) }
 
         single<HttpClientEngineFactory<OkHttpConfig>> {
             OkHttp
@@ -157,6 +157,7 @@ val mastodonNetworkModule =
         // Authorized Apis
         single<AccountApi> { AccountApiImpl(get(qualifier = named(AUTHORIZED_CLIENT))) }
         single<BlocksApi> { BlocksApiImpl(get(qualifier = named(AUTHORIZED_CLIENT))) }
+        single<BookmarksApi> { BookmarksApiImpl(get(qualifier = named(AUTHORIZED_CLIENT))) }
         single<DomainBlocksApi> { DomainBlocksApiImpl(get(qualifier = named(AUTHORIZED_CLIENT))) }
     }
 

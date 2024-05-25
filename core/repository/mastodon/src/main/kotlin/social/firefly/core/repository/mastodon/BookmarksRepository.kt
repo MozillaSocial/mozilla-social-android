@@ -7,8 +7,8 @@ import social.firefly.core.database.model.entities.statusCollections.BookmarksTi
 import social.firefly.core.model.Status
 import social.firefly.core.model.paging.MastodonPagedResponse
 import social.firefly.core.network.mastodon.BookmarksApi
+import social.firefly.core.network.mastodon.utils.toMastodonPagedResponse
 import social.firefly.core.repository.mastodon.model.status.toExternalModel
-import social.firefly.core.repository.mastodon.model.toMastodonPagedResponse
 
 class BookmarksRepository(
     private val api: BookmarksApi,
