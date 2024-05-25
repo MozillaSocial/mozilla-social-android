@@ -20,8 +20,15 @@ class AccountRepository internal constructor(
     private val dao: AccountsDao,
 ) {
 
-    @Suppress("MagicNumber")
-    suspend fun getAccount(accountId: String): Account = api.getAccount(accountId).toExternalModel()
+    suspend fun getAccount(
+        accountId: String,
+    ): Account = api.getAccount(accountId).toExternalModel()
+
+    suspend fun getAccounts(
+        accountIds: List<String>,
+    ) : List<Account> = api.getAccounts(accountIds).map {
+        it.toExternalModel()
+    }
 
     fun getAccountFlow(accountId: String): Flow<Account> =
         dao.getAccountFlow(accountId).map { it.toExternalModel() }

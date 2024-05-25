@@ -1,11 +1,9 @@
 package social.firefly.core.usecase.mastodon.status
 
-import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import social.firefly.core.model.Status
 import social.firefly.core.model.paging.MastodonPagedResponse
 import social.firefly.core.repository.mastodon.AccountRepository
-import social.firefly.core.model.exceptions.AccountNotFoundException
 import timber.log.Timber
 
 class GetInReplyToAccountNames internal constructor(
@@ -16,21 +14,18 @@ class GetInReplyToAccountNames internal constructor(
         statuses: List<Status>
     ): List<Status> =
         coroutineScope {
+            val accounts = try {
+                accountRepository.getAccounts(statuses.mapNotNull { it.inReplyToAccountId })
+            } catch (e: Exception) {
+                Timber.e(e)
+                return@coroutineScope statuses
+            }
             statuses.map { status ->
-                async {
-                    try {
-                        status.copy(
-                            inReplyToAccountName = status.inReplyToAccountId?.let { accountId ->
-                                accountRepository.getAccount(accountId).displayName
-                            },
-                        )
-                    } catch (e: AccountNotFoundException) {
-                        Timber.e(e)
-                        return@async status
-                    }
-                }
-            }.map {
-                it.await()
+                status.copy(
+                    inReplyToAccountName = accounts.find {
+                        status.inReplyToAccountId == it.accountId
+                    }?.displayName,
+                )
             }
         }
 

@@ -16,7 +16,6 @@ import io.ktor.http.HttpMethod
 import io.ktor.http.URLProtocol
 import io.ktor.http.parameters
 import io.ktor.http.path
-import social.firefly.core.model.exceptions.AccountNotFoundException
 import social.firefly.core.network.mastodon.AccountApi
 import social.firefly.core.network.mastodon.model.Response
 import social.firefly.core.network.mastodon.model.responseBody.NetworkAccount
@@ -32,22 +31,20 @@ class AccountApiImpl(
     @Suppress("MagicNumber")
     override suspend fun getAccount(
         accountId: String
-    ): NetworkAccount {
-        try {
-            return client.get {
-                url {
-                    protocol = URLProtocol.HTTPS
-                    path("api/v1/accounts/$accountId")
-                }
-            }.body()
-        } catch (e: ClientRequestException) {
-            if (e.response.status.value == 404) {
-                throw AccountNotFoundException(e)
-            } else {
-                throw e
-            }
+    ): NetworkAccount = client.get {
+        url {
+            protocol = URLProtocol.HTTPS
+            path("api/v1/accounts/$accountId")
         }
-    }
+    }.body()
+
+    override suspend fun getAccounts(accountIds: List<String>): List<NetworkAccount> = client.get {
+        url {
+            protocol = URLProtocol.HTTPS
+            path("api/v1/accounts")
+            parameters.appendAll("id[]", accountIds)
+        }
+    }.body()
 
     override suspend fun getAccountFollowers(
         accountId: String,

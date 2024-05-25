@@ -11,6 +11,10 @@ interface AccountApi {
         accountId: String,
     ): NetworkAccount
 
+    suspend fun getAccounts(
+        accountIds: List<String>
+    ): List<NetworkAccount>
+
     suspend fun getAccountFollowers(
         accountId: String,
         olderThanId: String? = null,
