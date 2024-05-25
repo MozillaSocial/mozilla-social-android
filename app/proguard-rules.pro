@@ -31,3 +31,17 @@
 -keepclassmembers class * implements android.os.Parcelable {
         public static final ** CREATOR;
 }
+
+# Compose runtime tracing
+
+-assumenosideeffects public class androidx.compose.runtime.ComposerKt {
+
+   boolean isTraceInProgress();
+
+   void traceEventStart(int,int,int,java.lang.String);
+
+   void traceEventStart(int,java.lang.String);
+
+   void traceEventEnd();
+
+}
