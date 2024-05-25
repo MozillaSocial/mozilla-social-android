@@ -1,7 +1,7 @@
 package social.firefly.core.network.mastodon.model.request
 
-import social.firefly.core.network.mastodon.model.NetworkFilter
-import social.firefly.core.network.mastodon.model.NetworkFilterContext
+import social.firefly.core.network.mastodon.model.responseBody.NetworkFilter
+import social.firefly.core.network.mastodon.model.responseBody.NetworkFilterContext
 
 /**
  * Object used to update an existing [NetworkFilter].

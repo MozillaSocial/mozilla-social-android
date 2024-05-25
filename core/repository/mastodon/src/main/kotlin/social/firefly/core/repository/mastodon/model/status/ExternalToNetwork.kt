@@ -6,7 +6,7 @@ import social.firefly.core.model.StatusVisibility
 import social.firefly.core.model.request.PollCreate
 import social.firefly.core.model.request.ReportCreate
 import social.firefly.core.model.request.StatusCreate
-import social.firefly.core.network.mastodon.model.NetworkStatusVisibility
+import social.firefly.core.network.mastodon.model.responseBody.NetworkStatusVisibility
 import social.firefly.core.network.mastodon.model.request.NetworkMediaUpdate
 import social.firefly.core.network.mastodon.model.request.NetworkPollCreate
 import social.firefly.core.network.mastodon.model.request.NetworkPollVote

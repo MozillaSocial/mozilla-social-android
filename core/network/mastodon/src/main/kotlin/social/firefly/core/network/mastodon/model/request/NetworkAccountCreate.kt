@@ -1,6 +1,6 @@
 package social.firefly.core.network.mastodon.model.request
 
-import social.firefly.core.network.mastodon.model.NetworkAccount
+import social.firefly.core.network.mastodon.model.responseBody.NetworkAccount
 
 /**
  * Object to create a new [NetworkAccount].

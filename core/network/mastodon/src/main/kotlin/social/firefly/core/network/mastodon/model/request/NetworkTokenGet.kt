@@ -1,7 +1,7 @@
 package social.firefly.core.network.mastodon.model.request
 
-import social.firefly.core.network.mastodon.model.NetworkGrantType
-import social.firefly.core.network.mastodon.model.NetworkToken
+import social.firefly.core.network.mastodon.model.responseBody.NetworkGrantType
+import social.firefly.core.network.mastodon.model.responseBody.NetworkToken
 
 /**
  * Object used to get a new [NetworkToken].

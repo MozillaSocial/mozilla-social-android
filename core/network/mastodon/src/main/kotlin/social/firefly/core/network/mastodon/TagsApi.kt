@@ -3,7 +3,7 @@ package social.firefly.core.network.mastodon
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
-import social.firefly.core.network.mastodon.model.NetworkHashTag
+import social.firefly.core.network.mastodon.model.responseBody.NetworkHashTag
 
 interface TagsApi {
 

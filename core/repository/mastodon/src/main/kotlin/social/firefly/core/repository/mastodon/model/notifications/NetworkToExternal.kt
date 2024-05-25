@@ -3,9 +3,9 @@ package social.firefly.core.repository.mastodon.model.notifications
 import social.firefly.core.model.AdminReport
 import social.firefly.core.model.Notification
 import social.firefly.core.model.RelationshipSeveranceEvent
-import social.firefly.core.network.mastodon.model.NetworkAdminReport
-import social.firefly.core.network.mastodon.model.NetworkNotification
-import social.firefly.core.network.mastodon.model.NetworkRelationshipSeveranceEvent
+import social.firefly.core.network.mastodon.model.responseBody.NetworkAdminReport
+import social.firefly.core.network.mastodon.model.responseBody.NetworkNotification
+import social.firefly.core.network.mastodon.model.responseBody.NetworkRelationshipSeveranceEvent
 import social.firefly.core.repository.mastodon.model.status.toExternalModel
 
 fun NetworkNotification.toExternal(): Notification =
@@ -85,24 +85,26 @@ fun NetworkNotification.toExternal(): Notification =
         )
     }
 
-fun NetworkAdminReport.toExternal(): AdminReport = AdminReport(
-    id = id,
-    actionTaken = actionTaken,
-    actionTakenAt = actionTakenAt,
-    category = category,
-    comment = comment,
-    forwarded = forwarded,
-    createdAt = createdAt,
-    statusIds = statusIds,
-    ruleIds = ruleIds,
-    targetAccount = targetAccount.toExternalModel(),
-)
+fun NetworkAdminReport.toExternal(): AdminReport =
+    AdminReport(
+        id = id,
+        actionTaken = actionTaken,
+        actionTakenAt = actionTakenAt,
+        category = category,
+        comment = comment,
+        forwarded = forwarded,
+        createdAt = createdAt,
+        statusIds = statusIds,
+        ruleIds = ruleIds,
+        targetAccount = targetAccount.toExternalModel(),
+    )
 
-fun NetworkRelationshipSeveranceEvent.toExternal(): RelationshipSeveranceEvent = RelationshipSeveranceEvent(
-    id = id,
-    type = type,
-    purged = purged,
-    targetName = targetName,
-    relationshipsCount = relationshipsCount,
-    createdAt = createdAt,
-)
+fun NetworkRelationshipSeveranceEvent.toExternal(): RelationshipSeveranceEvent =
+    RelationshipSeveranceEvent(
+        id = id,
+        type = type,
+        purged = purged,
+        targetName = targetName,
+        relationshipsCount = relationshipsCount,
+        createdAt = createdAt,
+    )

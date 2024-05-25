@@ -2,7 +2,7 @@ package social.firefly.core.network.mastodon
 
 import retrofit2.http.GET
 import retrofit2.http.Query
-import social.firefly.core.network.mastodon.model.NetworkSearchResult
+import social.firefly.core.network.mastodon.model.responseBody.NetworkSearchResult
 
 interface SearchApi {
     @GET("/api/v2/search")

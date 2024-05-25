@@ -1,6 +1,6 @@
 package social.firefly.core.network.mastodon.model.request
 
-import social.firefly.core.network.mastodon.model.NetworkApplication
+import social.firefly.core.network.mastodon.model.responseBody.NetworkApplication
 
 /**
  * Object to register a new [NetworkApplication].

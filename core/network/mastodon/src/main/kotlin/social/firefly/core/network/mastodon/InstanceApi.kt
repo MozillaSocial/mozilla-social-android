@@ -1,9 +1,9 @@
 package social.firefly.core.network.mastodon
 
 import retrofit2.http.GET
-import social.firefly.core.network.mastodon.model.NetworkExtendedDescription
-import social.firefly.core.network.mastodon.model.NetworkInstance
-import social.firefly.core.network.mastodon.model.NetworkInstanceRule
+import social.firefly.core.network.mastodon.model.responseBody.NetworkExtendedDescription
+import social.firefly.core.network.mastodon.model.responseBody.NetworkInstance
+import social.firefly.core.network.mastodon.model.responseBody.NetworkInstanceRule
 
 interface InstanceApi {
     @GET("/api/v1/instance/rules")

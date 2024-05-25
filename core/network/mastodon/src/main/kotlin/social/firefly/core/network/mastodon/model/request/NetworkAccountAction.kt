@@ -1,7 +1,7 @@
 package social.firefly.core.network.mastodon.model.request
 
-import social.firefly.core.network.mastodon.model.NetworkAccount
-import social.firefly.core.network.mastodon.model.NetworkActionType
+import social.firefly.core.network.mastodon.model.responseBody.NetworkAccount
+import social.firefly.core.network.mastodon.model.responseBody.NetworkActionType
 
 /**
  * Object to perform an action against an [NetworkAccount].

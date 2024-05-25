@@ -4,10 +4,10 @@ import social.firefly.core.model.Instance
 import social.firefly.core.model.InstanceRule
 import social.firefly.core.model.InstanceStats
 import social.firefly.core.model.InstanceUrls
-import social.firefly.core.network.mastodon.model.NetworkInstance
-import social.firefly.core.network.mastodon.model.NetworkInstanceRule
-import social.firefly.core.network.mastodon.model.NetworkInstanceStats
-import social.firefly.core.network.mastodon.model.NetworkInstanceUrls
+import social.firefly.core.network.mastodon.model.responseBody.NetworkInstance
+import social.firefly.core.network.mastodon.model.responseBody.NetworkInstanceRule
+import social.firefly.core.network.mastodon.model.responseBody.NetworkInstanceStats
+import social.firefly.core.network.mastodon.model.responseBody.NetworkInstanceUrls
 import social.firefly.core.repository.mastodon.model.status.toExternalModel
 
 fun NetworkInstanceRule.toExternalModel(): InstanceRule =
@@ -16,7 +16,8 @@ fun NetworkInstanceRule.toExternalModel(): InstanceRule =
         text = text,
     )
 
-fun List<NetworkInstanceRule>.toExternalModel(): List<InstanceRule> = map { it.toExternalModel() }
+fun List<NetworkInstanceRule>.toExternalModel(): List<InstanceRule> =
+    map { it.toExternalModel() }
 
 fun NetworkInstance.toExternalModel(): Instance =
     Instance(

@@ -2,8 +2,8 @@ package social.firefly.core.network.mastodon.model.request
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import social.firefly.core.network.mastodon.model.NetworkStatus
-import social.firefly.core.network.mastodon.model.NetworkStatusVisibility
+import social.firefly.core.network.mastodon.model.responseBody.NetworkStatus
+import social.firefly.core.network.mastodon.model.responseBody.NetworkStatusVisibility
 
 /**
  * Object used to post a new [NetworkStatus].

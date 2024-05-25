@@ -1,7 +1,7 @@
 package social.firefly.core.repository.mastodon.model.account
 
 import social.firefly.core.model.Relationship
-import social.firefly.core.network.mastodon.model.NetworkRelationship
+import social.firefly.core.network.mastodon.model.responseBody.NetworkRelationship
 
 fun NetworkRelationship.toExternal(): Relationship =
     Relationship(

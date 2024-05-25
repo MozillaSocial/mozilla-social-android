@@ -1,6 +1,6 @@
 package social.firefly.core.network.mastodon.model.request
 
-import social.firefly.core.network.mastodon.model.NetworkMarker
+import social.firefly.core.network.mastodon.model.responseBody.NetworkMarker
 
 /**
  * Object used to create a new [NetworkMarker].

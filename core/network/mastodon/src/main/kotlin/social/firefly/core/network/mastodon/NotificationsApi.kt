@@ -3,7 +3,7 @@ package social.firefly.core.network.mastodon
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
-import social.firefly.core.network.mastodon.model.NetworkNotification
+import social.firefly.core.network.mastodon.model.responseBody.NetworkNotification
 
 interface NotificationsApi {
 

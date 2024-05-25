@@ -15,21 +15,21 @@ import social.firefly.core.model.PollOption
 import social.firefly.core.model.Source
 import social.firefly.core.model.Status
 import social.firefly.core.model.StatusVisibility
-import social.firefly.core.network.mastodon.model.NetworkAccount
-import social.firefly.core.network.mastodon.model.NetworkApplication
-import social.firefly.core.network.mastodon.model.NetworkAttachment
-import social.firefly.core.network.mastodon.model.NetworkBasicHashTag
-import social.firefly.core.network.mastodon.model.NetworkCard
-import social.firefly.core.network.mastodon.model.NetworkEmoji
-import social.firefly.core.network.mastodon.model.NetworkField
-import social.firefly.core.network.mastodon.model.NetworkFocalPoint
-import social.firefly.core.network.mastodon.model.NetworkHistory
-import social.firefly.core.network.mastodon.model.NetworkMention
-import social.firefly.core.network.mastodon.model.NetworkPoll
-import social.firefly.core.network.mastodon.model.NetworkPollOption
-import social.firefly.core.network.mastodon.model.NetworkSource
-import social.firefly.core.network.mastodon.model.NetworkStatus
-import social.firefly.core.network.mastodon.model.NetworkStatusVisibility
+import social.firefly.core.network.mastodon.model.responseBody.NetworkAccount
+import social.firefly.core.network.mastodon.model.responseBody.NetworkApplication
+import social.firefly.core.network.mastodon.model.responseBody.NetworkAttachment
+import social.firefly.core.network.mastodon.model.responseBody.NetworkBasicHashTag
+import social.firefly.core.network.mastodon.model.responseBody.NetworkCard
+import social.firefly.core.network.mastodon.model.responseBody.NetworkEmoji
+import social.firefly.core.network.mastodon.model.responseBody.NetworkField
+import social.firefly.core.network.mastodon.model.responseBody.NetworkFocalPoint
+import social.firefly.core.network.mastodon.model.responseBody.NetworkHistory
+import social.firefly.core.network.mastodon.model.responseBody.NetworkMention
+import social.firefly.core.network.mastodon.model.responseBody.NetworkPoll
+import social.firefly.core.network.mastodon.model.responseBody.NetworkPollOption
+import social.firefly.core.network.mastodon.model.responseBody.NetworkSource
+import social.firefly.core.network.mastodon.model.responseBody.NetworkStatus
+import social.firefly.core.network.mastodon.model.responseBody.NetworkStatusVisibility
 
 fun NetworkStatus.toExternalModel(): Status =
     Status(
