@@ -24,6 +24,7 @@ import social.firefly.core.network.mastodon.ktor.BlocksApiImpl
 import social.firefly.core.network.mastodon.ktor.BookmarksApiImpl
 import social.firefly.core.network.mastodon.ktor.DomainBlocksApiImpl
 import social.firefly.core.network.mastodon.ktor.FavoritesApiImpl
+import social.firefly.core.network.mastodon.ktor.FollowedTagsApiImpl
 import java.util.concurrent.TimeUnit
 
 val mastodonNetworkModule =
@@ -73,7 +74,6 @@ val mastodonNetworkModule =
         single { get<Retrofit>(qualifier = named(AUTHORIZED_CLIENT)).create(FollowRequestApi::class.java) }
         single { get<Retrofit>(qualifier = named(AUTHORIZED_CLIENT)).create(TrendsApi::class.java) }
         single { get<Retrofit>(qualifier = named(AUTHORIZED_CLIENT)).create(PushApi::class.java) }
-        single { get<Retrofit>(qualifier = named(AUTHORIZED_CLIENT)).create(FollowedTagsApi::class.java) }
 
         single<HttpClientEngineFactory<OkHttpConfig>> {
             OkHttp
@@ -160,6 +160,7 @@ val mastodonNetworkModule =
         single<BookmarksApi> { BookmarksApiImpl(get(qualifier = named(AUTHORIZED_CLIENT))) }
         single<DomainBlocksApi> { DomainBlocksApiImpl(get(qualifier = named(AUTHORIZED_CLIENT))) }
         single<FavoritesApi> { FavoritesApiImpl(get(qualifier = named(AUTHORIZED_CLIENT))) }
+        single<FollowedTagsApi> { FollowedTagsApiImpl(get(qualifier = named(AUTHORIZED_CLIENT))) }
     }
 
 private var json: Json = Json { ignoreUnknownKeys = true }
