@@ -38,6 +38,7 @@ internal fun Project.configureAndroidCompose(commonExtension: CommonExtension<*,
             add("implementation", libs.findLibrary("androidx-compose-ui-tooling").get())
             add("implementation", libs.findLibrary("androidx-compose-ui-test-manifest").get())
             add("implementation", libs.findLibrary("androidx-lifecycle-runtime-compose").get())
+            add("implementation", libs.findLibrary("androidx-compose-runtime-tracing").get())
         }
     }
 }
