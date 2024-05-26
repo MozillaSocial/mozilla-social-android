@@ -37,7 +37,7 @@ class FollowNotificationsRemoteMediator(
                         notificationsRepository.getNotifications(
                             maxId = null,
                             limit = pageSize,
-                            types = arrayOf(Notification.FollowRequest.VALUE),
+                            types = listOf(Notification.FollowRequest.VALUE),
                         )
                     }
 
@@ -52,7 +52,7 @@ class FollowNotificationsRemoteMediator(
                         notificationsRepository.getNotifications(
                             maxId = nextKey,
                             limit = pageSize,
-                            types = arrayOf(Notification.FollowRequest.VALUE),
+                            types = listOf(Notification.FollowRequest.VALUE),
                         )
                     }
                 }
@@ -62,9 +62,9 @@ class FollowNotificationsRemoteMediator(
                     notificationsRepository.deleteFollowNotificationsList()
                 }
 
-                saveNotificationsToDatabase(response.notifications)
+                saveNotificationsToDatabase(response.items)
                 notificationsRepository.insertFollowNotifications(
-                    response.notifications.map {
+                    response.items.map {
                         FollowListNotification(
                             id = it.id,
                         )

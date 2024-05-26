@@ -36,7 +36,7 @@ class AllNotificationsRemoteMediator(
                         notificationsRepository.getNotifications(
                             maxId = null,
                             limit = pageSize,
-                            excludeTypes = arrayOf(
+                            excludeTypes = listOf(
                                 "admin.sign_up",
                                 "admin.report",
                                 "severed_relationships",
@@ -55,7 +55,7 @@ class AllNotificationsRemoteMediator(
                         notificationsRepository.getNotifications(
                             maxId = nextKey,
                             limit = pageSize,
-                            excludeTypes = arrayOf(
+                            excludeTypes = listOf(
                                 "admin.sign_up",
                                 "admin.report",
                                 "severed_relationships",
@@ -69,9 +69,9 @@ class AllNotificationsRemoteMediator(
                     notificationsRepository.deleteMainNotificationsList()
                 }
 
-                saveNotificationsToDatabase(response.notifications)
+                saveNotificationsToDatabase(response.items)
                 notificationsRepository.insertAllMainNotifications(
-                    response.notifications.map {
+                    response.items.map {
                         MainNotification(
                             id = it.id,
                         )

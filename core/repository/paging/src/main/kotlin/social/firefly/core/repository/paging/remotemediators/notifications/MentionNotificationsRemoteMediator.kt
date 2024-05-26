@@ -37,7 +37,7 @@ class MentionNotificationsRemoteMediator(
                         notificationsRepository.getNotifications(
                             maxId = null,
                             limit = pageSize,
-                            types = arrayOf(Notification.Mention.VALUE),
+                            types = listOf(Notification.Mention.VALUE),
                         )
                     }
 
@@ -52,7 +52,7 @@ class MentionNotificationsRemoteMediator(
                         notificationsRepository.getNotifications(
                             maxId = nextKey,
                             limit = pageSize,
-                            types = arrayOf(Notification.Mention.VALUE),
+                            types = listOf(Notification.Mention.VALUE),
                         )
                     }
                 }
@@ -62,9 +62,9 @@ class MentionNotificationsRemoteMediator(
                     notificationsRepository.deleteMentionNotificationsList()
                 }
 
-                saveNotificationsToDatabase(response.notifications)
+                saveNotificationsToDatabase(response.items)
                 notificationsRepository.insertMentionNotifications(
-                    response.notifications.map {
+                    response.items.map {
                         MentionListNotification(
                             id = it.id,
                         )

@@ -8,9 +8,7 @@ import androidx.paging.RemoteMediator
 import androidx.paging.map
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import retrofit2.HttpException
 import social.firefly.common.annotations.PreferUseCase
-import social.firefly.common.parseMastodonLinkHeader
 import social.firefly.core.database.dao.NotificationsDao
 import social.firefly.core.database.model.entities.DatabaseNotification
 import social.firefly.core.database.model.entities.notificationCollections.FollowListNotification
@@ -20,8 +18,9 @@ import social.firefly.core.database.model.entities.notificationCollections.MainN
 import social.firefly.core.database.model.entities.notificationCollections.MentionListNotification
 import social.firefly.core.database.model.entities.notificationCollections.MentionListNotificationWrapper
 import social.firefly.core.model.Notification
-import social.firefly.core.model.paging.NotificationsPagingWrapper
+import social.firefly.core.model.paging.MastodonPagedResponse
 import social.firefly.core.network.mastodon.NotificationsApi
+import social.firefly.core.network.mastodon.utils.toMastodonPagedResponse
 import social.firefly.core.repository.mastodon.model.notifications.toDatabase
 import social.firefly.core.repository.mastodon.model.notifications.toExternal
 
@@ -35,30 +34,18 @@ class NotificationsRepository(
         sinceId: String? = null,
         minId: String? = null,
         limit: Int? = null,
-        types: Array<String>? = null,
-        excludeTypes: Array<String>? = null,
+        types: List<String>? = null,
+        excludeTypes: List<String>? = null,
         accountId: String? = null,
-    ): NotificationsPagingWrapper {
-
-        val response = api.getNotifications(
-            maxId = maxId,
-            sinceId = sinceId,
-            minId = minId,
-            limit = limit,
-            types = types,
-            excludeTypes = excludeTypes,
-            accountId = accountId
-        )
-
-        if (!response.isSuccessful) {
-            throw HttpException(response)
-        }
-
-        return NotificationsPagingWrapper(
-            notifications = response.body()?.map { it.toExternal() } ?: emptyList(),
-            pagingLinks = response.headers().get("link")?.parseMastodonLinkHeader(),
-        )
-    }
+    ): MastodonPagedResponse<Notification> = api.getNotifications(
+        maxId = maxId,
+        sinceId = sinceId,
+        minId = minId,
+        limit = limit,
+        types = types,
+        excludeTypes = excludeTypes,
+        accountId = accountId
+    ).toMastodonPagedResponse { it.toExternal() }
 
     @ExperimentalPagingApi
     fun getMainNotificationsPager(
