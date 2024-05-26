@@ -11,8 +11,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
-import retrofit2.HttpException
-import social.firefly.common.parseMastodonLinkHeader
 import social.firefly.core.database.dao.AccountTimelineStatusDao
 import social.firefly.core.database.dao.FederatedTimelineStatusDao
 import social.firefly.core.database.dao.HashTagTimelineStatusDao
@@ -26,8 +24,9 @@ import social.firefly.core.database.model.entities.statusCollections.LocalTimeli
 import social.firefly.core.model.AccountTimelineType
 import social.firefly.core.model.Status
 import social.firefly.core.model.StatusVisibility
-import social.firefly.core.model.paging.StatusPagingWrapper
+import social.firefly.core.model.paging.MastodonPagedResponse
 import social.firefly.core.network.mastodon.TimelineApi
+import social.firefly.core.network.mastodon.utils.toMastodonPagedResponse
 import social.firefly.core.repository.mastodon.model.status.toAccountTimelineStatus
 import social.firefly.core.repository.mastodon.model.status.toExternalModel
 import social.firefly.core.repository.mastodon.model.status.toFederatedTimelineStatus
@@ -52,26 +51,14 @@ class TimelineRepository internal constructor(
         olderThanId: String? = null,
         immediatelyNewerThanId: String? = null,
         loadSize: Int? = null,
-    ): StatusPagingWrapper {
-        val response =
-            timelineApi.getPublicTimeline(
-                localOnly = localOnly,
-                federatedOnly = federatedOnly,
-                mediaOnly = mediaOnly,
-                olderThanId = olderThanId,
-                newerThanId = immediatelyNewerThanId,
-                limit = loadSize,
-            )
-
-        if (!response.isSuccessful) {
-            throw HttpException(response)
-        }
-
-        return StatusPagingWrapper(
-            statuses = response.body()?.map { it.toExternalModel() } ?: emptyList(),
-            pagingLinks = response.headers().get("link")?.parseMastodonLinkHeader(),
-        )
-    }
+    ): MastodonPagedResponse<Status> = timelineApi.getPublicTimeline(
+        localOnly = localOnly,
+        federatedOnly = federatedOnly,
+        mediaOnly = mediaOnly,
+        maxId = olderThanId,
+        sinceId = immediatelyNewerThanId,
+        limit = loadSize,
+    ).toMastodonPagedResponse { it.toExternalModel() }
 
     suspend fun insertStatusIntoTimelines(status: Status) =
         withContext(ioDispatcher) {
@@ -155,23 +142,11 @@ class TimelineRepository internal constructor(
         olderThanId: String? = null,
         immediatelyNewerThanId: String? = null,
         loadSize: Int? = null,
-    ): StatusPagingWrapper {
-        val response =
-            timelineApi.getHomeTimeline(
-                olderThanId = olderThanId,
-                immediatelyNewerThanId = immediatelyNewerThanId,
-                limit = loadSize,
-            )
-
-        if (!response.isSuccessful) {
-            throw HttpException(response)
-        }
-
-        return StatusPagingWrapper(
-            statuses = response.body()?.map { it.toExternalModel() } ?: emptyList(),
-            pagingLinks = response.headers().get("link")?.parseMastodonLinkHeader(),
-        )
-    }
+    ): MastodonPagedResponse<Status> = timelineApi.getHomeTimeline(
+        maxId = olderThanId,
+        minId = immediatelyNewerThanId,
+        limit = loadSize,
+    ).toMastodonPagedResponse { it.toExternalModel() }
 
     @ExperimentalPagingApi
     fun getHomeTimelinePager(
@@ -221,24 +196,12 @@ class TimelineRepository internal constructor(
         olderThanId: String? = null,
         immediatelyNewerThanId: String? = null,
         loadSize: Int? = null,
-    ): StatusPagingWrapper {
-        val response =
-            timelineApi.getHashTagTimeline(
-                hashTag = hashTag,
-                olderThanId = olderThanId,
-                immediatelyNewerThanId = immediatelyNewerThanId,
-                limit = loadSize,
-            )
-
-        if (!response.isSuccessful) {
-            throw HttpException(response)
-        }
-
-        return StatusPagingWrapper(
-            statuses = response.body()?.map { it.toExternalModel() } ?: emptyList(),
-            pagingLinks = response.headers().get("link")?.parseMastodonLinkHeader(),
-        )
-    }
+    ): MastodonPagedResponse<Status> = timelineApi.getHashTagTimeline(
+        hashTag = hashTag,
+        maxId = olderThanId,
+        minId = immediatelyNewerThanId,
+        limit = loadSize,
+    ).toMastodonPagedResponse { it.toExternalModel() }
 
     @ExperimentalPagingApi
     fun getHashtagTimelinePager(

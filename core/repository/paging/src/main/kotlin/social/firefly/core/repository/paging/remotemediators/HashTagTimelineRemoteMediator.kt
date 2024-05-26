@@ -64,7 +64,7 @@ class HashTagTimelineRemoteMediator(
                     }
                 }
 
-            val result = getInReplyToAccountNames(response.statuses)
+            val result = getInReplyToAccountNames(response.items)
 
             databaseDelegate.withTransaction {
                 if (loadType == LoadType.REFRESH) {

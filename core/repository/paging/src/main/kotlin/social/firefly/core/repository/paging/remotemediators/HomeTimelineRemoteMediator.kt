@@ -15,7 +15,8 @@ import kotlinx.coroutines.launch
 import social.firefly.common.Rel
 import social.firefly.core.database.model.entities.statusCollections.HomeTimelineStatusWrapper
 import social.firefly.core.datastore.UserPreferencesDatastoreManager
-import social.firefly.core.model.paging.StatusPagingWrapper
+import social.firefly.core.model.Status
+import social.firefly.core.model.paging.MastodonPagedResponse
 import social.firefly.core.repository.mastodon.DatabaseDelegate
 import social.firefly.core.repository.mastodon.TimelineRepository
 import social.firefly.core.usecase.mastodon.status.GetInReplyToAccountNames
@@ -74,7 +75,7 @@ class HomeTimelineRemoteMediator(
                     }
                 }
 
-            val result = getInReplyToAccountNames(response.statuses)
+            val result = getInReplyToAccountNames(response.items)
 
             databaseDelegate.withTransaction {
                 if (loadType == LoadType.REFRESH) {
@@ -112,7 +113,7 @@ class HomeTimelineRemoteMediator(
     @OptIn(ExperimentalCoroutinesApi::class)
     private suspend fun fetchRefresh(
         state: PagingState<Int, HomeTimelineStatusWrapper>,
-    ): StatusPagingWrapper {
+    ): MastodonPagedResponse<Status> {
         var olderThanId: String? = null
         val pageSize = state.config.initialLoadSize
 
@@ -146,7 +147,7 @@ class HomeTimelineRemoteMediator(
         )
 
         val firstIdInMainList =
-            mainResponse.statuses.maxByOrNull { it.statusId }?.statusId
+            mainResponse.items.maxByOrNull { it.statusId }?.statusId
 
         val topStatusResponse = if (olderThanId != null) {
             timelineRepository.getHomeTimeline(
@@ -160,10 +161,10 @@ class HomeTimelineRemoteMediator(
 
         firstRefreshHasHappened = true
 
-        return StatusPagingWrapper(
-            statuses = buildList {
-                addAll(mainResponse.statuses)
-                topStatusResponse?.let { addAll(it.statuses) }
+        return MastodonPagedResponse(
+            items = buildList {
+                addAll(mainResponse.items)
+                topStatusResponse?.let { addAll(it.items) }
             },
             pagingLinks = buildList {
                 mainResponse.pagingLinks?.find { it.rel == Rel.NEXT }?.let {

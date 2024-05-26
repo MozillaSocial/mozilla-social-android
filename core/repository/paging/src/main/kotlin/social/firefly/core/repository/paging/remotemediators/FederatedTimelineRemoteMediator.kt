@@ -42,7 +42,7 @@ class FederatedTimelineRemoteMediator(
                     LoadType.PREPEND -> {
                         val firstItem =
                             state.firstItemOrNull()
-                                ?: return RemoteMediator.MediatorResult.Success(
+                                ?: return MediatorResult.Success(
                                     endOfPaginationReached = true
                                 )
                         timelineRepository.getPublicTimeline(
@@ -56,7 +56,7 @@ class FederatedTimelineRemoteMediator(
                     LoadType.APPEND -> {
                         val lastItem =
                             state.lastItemOrNull()
-                                ?: return RemoteMediator.MediatorResult.Success(
+                                ?: return MediatorResult.Success(
                                     endOfPaginationReached = true
                                 )
                         timelineRepository.getPublicTimeline(
@@ -68,7 +68,7 @@ class FederatedTimelineRemoteMediator(
                     }
                 }
 
-            val result = getInReplyToAccountNames(response.statuses)
+            val result = getInReplyToAccountNames(response.items)
 
             databaseDelegate.withTransaction {
                 if (loadType == LoadType.REFRESH) {
@@ -90,7 +90,7 @@ class FederatedTimelineRemoteMediator(
                 delay(REFRESH_DELAY)
             }
 
-            RemoteMediator.MediatorResult.Success(
+            MediatorResult.Success(
                 endOfPaginationReached =
                 when (loadType) {
                     LoadType.PREPEND -> response.pagingLinks?.find { it.rel == Rel.PREV } == null
@@ -101,7 +101,7 @@ class FederatedTimelineRemoteMediator(
             )
         } catch (e: Exception) {
             Timber.e(e)
-            RemoteMediator.MediatorResult.Error(e)
+            MediatorResult.Error(e)
         }
     }
 
