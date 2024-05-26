@@ -36,9 +36,9 @@ class FavoritesRemoteMediator(
                     LoadType.REFRESH -> {
                         pageSize = state.config.initialLoadSize
                         favoritesRepository.getFavorites(
-                            olderThanId = null,
-                            immediatelyNewerThanId = null,
-                            loadSize = pageSize,
+                            maxId = null,
+                            minId = null,
+                            limit = pageSize,
                         )
                     }
 
@@ -47,9 +47,9 @@ class FavoritesRemoteMediator(
                             state.firstItemOrNull()
                                 ?: return MediatorResult.Success(endOfPaginationReached = true)
                         favoritesRepository.getFavorites(
-                            olderThanId = null,
-                            immediatelyNewerThanId = firstItem.favoritesTimelineStatus.statusId,
-                            loadSize = pageSize,
+                            maxId = null,
+                            minId = firstItem.favoritesTimelineStatus.statusId,
+                            limit = pageSize,
                         )
                     }
 
@@ -58,14 +58,14 @@ class FavoritesRemoteMediator(
                             state.lastItemOrNull()
                                 ?: return MediatorResult.Success(endOfPaginationReached = true)
                         favoritesRepository.getFavorites(
-                            olderThanId = lastItem.favoritesTimelineStatus.statusId,
-                            immediatelyNewerThanId = null,
-                            loadSize = pageSize,
+                            maxId = lastItem.favoritesTimelineStatus.statusId,
+                            minId = null,
+                            limit = pageSize,
                         )
                     }
                 }
 
-            val result = getInReplyToAccountNames(response.statuses)
+            val result = getInReplyToAccountNames(response.items)
 
             databaseDelegate.withTransaction {
                 if (loadType == LoadType.REFRESH) {
@@ -84,7 +84,7 @@ class FavoritesRemoteMediator(
             }
 
             nextKey = response.pagingLinks?.getMaxIdValue()
-            nextPositionIndex += response.statuses.size
+            nextPositionIndex += response.items.size
 
             // There seems to be some race condition for refreshes.  Subsequent pages do
             // not get loaded because once we return a mediator result, the next append

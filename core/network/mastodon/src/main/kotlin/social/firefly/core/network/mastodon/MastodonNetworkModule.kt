@@ -23,6 +23,7 @@ import social.firefly.core.network.mastodon.ktor.AppApiImpl
 import social.firefly.core.network.mastodon.ktor.BlocksApiImpl
 import social.firefly.core.network.mastodon.ktor.BookmarksApiImpl
 import social.firefly.core.network.mastodon.ktor.DomainBlocksApiImpl
+import social.firefly.core.network.mastodon.ktor.FavoritesApiImpl
 import java.util.concurrent.TimeUnit
 
 val mastodonNetworkModule =
@@ -60,7 +61,6 @@ val mastodonNetworkModule =
                 .build()
         }
 
-        single { get<Retrofit>(qualifier = named(AUTHORIZED_CLIENT)).create(FavoritesApi::class.java) }
         single { get<Retrofit>(qualifier = named(AUTHORIZED_CLIENT)).create(InstanceApi::class.java) }
         single { get<Retrofit>(qualifier = named(AUTHORIZED_CLIENT)).create(MediaApi::class.java) }
         single { get<Retrofit>(qualifier = named(AUTHORIZED_CLIENT)).create(MutesApi::class.java) }
@@ -159,6 +159,7 @@ val mastodonNetworkModule =
         single<BlocksApi> { BlocksApiImpl(get(qualifier = named(AUTHORIZED_CLIENT))) }
         single<BookmarksApi> { BookmarksApiImpl(get(qualifier = named(AUTHORIZED_CLIENT))) }
         single<DomainBlocksApi> { DomainBlocksApiImpl(get(qualifier = named(AUTHORIZED_CLIENT))) }
+        single<FavoritesApi> { FavoritesApiImpl(get(qualifier = named(AUTHORIZED_CLIENT))) }
     }
 
 private var json: Json = Json { ignoreUnknownKeys = true }

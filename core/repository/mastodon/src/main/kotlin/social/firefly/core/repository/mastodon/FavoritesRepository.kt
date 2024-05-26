@@ -14,35 +14,28 @@ import social.firefly.core.database.dao.FavoritesTimelineStatusDao
 import social.firefly.core.database.model.entities.statusCollections.FavoritesTimelineStatus
 import social.firefly.core.database.model.entities.statusCollections.FavoritesTimelineStatusWrapper
 import social.firefly.core.model.Status
+import social.firefly.core.model.paging.MastodonPagedResponse
 import social.firefly.core.model.paging.StatusPagingWrapper
 import social.firefly.core.network.mastodon.FavoritesApi
+import social.firefly.core.network.mastodon.utils.toMastodonPagedResponse
 import social.firefly.core.repository.mastodon.model.status.toExternalModel
+import kotlin.math.min
 
 class FavoritesRepository(
     private val api: FavoritesApi,
     private val dao: FavoritesTimelineStatusDao,
 ) {
     suspend fun getFavorites(
-        olderThanId: String? = null,
-        immediatelyNewerThanId: String? = null,
-        loadSize: Int? = null,
-    ): StatusPagingWrapper {
-        val response =
-            api.getFavorites(
-                olderThanId = olderThanId,
-                newerThanId = immediatelyNewerThanId,
-                limit = loadSize,
-            )
-
-        if (!response.isSuccessful) {
-            throw HttpException(response)
-        }
-
-        return StatusPagingWrapper(
-            statuses = response.body()?.map { it.toExternalModel() } ?: emptyList(),
-            pagingLinks = response.headers().get("link")?.parseMastodonLinkHeader(),
-        )
-    }
+        maxId: String? = null,
+        sinceId: String? = null,
+        minId: String? = null,
+        limit: Int? = null,
+    ): MastodonPagedResponse<Status> = api.getFavorites(
+        maxId = maxId,
+        sinceId = sinceId,
+        minId = minId,
+        limit = limit,
+    ).toMastodonPagedResponse { it.toExternalModel() }
 
     @ExperimentalPagingApi
     fun getFavoritesPager(
