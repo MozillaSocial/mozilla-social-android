@@ -28,6 +28,12 @@ class DomainBlocksApiImpl(
         url {
             protocol = URLProtocol.HTTPS
             path("api/v1/domain_blocks")
+            parameters.apply {
+                maxId?.let { append("max_id", it) }
+                sinceId?.let { append("since_id", it) }
+                minId?.let { append("min_id", it) }
+                limit?.let { append("limit", it.toString()) }
+            }
         }
     }.toMastodonPagedResponse<String, String> { it }
 
