@@ -3,6 +3,7 @@ package social.firefly.core.network.mastodon.ktor
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.ClientRequestException
+import io.ktor.client.request.forms.FormDataContent
 import io.ktor.client.request.forms.MultiPartFormDataContent
 import io.ktor.client.request.forms.formData
 import io.ktor.client.request.forms.submitForm
@@ -140,16 +141,16 @@ class AccountApiImpl(
     override suspend fun muteAccount(
         accountId: String,
         duration: Int
-    ): NetworkRelationship = client.submitForm(
-        formParameters = parameters {
-            append("duration", duration.toString())
-        }
-    ) {
-        method = HttpMethod.Post
+    ): NetworkRelationship = client.post {
         url {
             protocol = URLProtocol.HTTPS
             path("api/v1/accounts/$accountId/mute")
         }
+        setBody(FormDataContent(
+            parameters {
+                append("duration", duration.toString())
+            }
+        ))
     }.body()
 
     override suspend fun unmuteAccount(accountId: String): NetworkRelationship = client.post {
