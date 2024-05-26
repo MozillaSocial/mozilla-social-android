@@ -3,7 +3,6 @@ package social.firefly.core.network.mastodon.ktor
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get
 import io.ktor.http.URLProtocol
-import io.ktor.http.append
 import io.ktor.http.path
 import social.firefly.core.network.mastodon.TimelineApi
 import social.firefly.core.network.mastodon.model.Response
