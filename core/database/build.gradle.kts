@@ -17,9 +17,7 @@ android {
 dependencies {
     implementation(project(":core:model"))
 
-    implementation(libs.androidx.navigation.compose)
-    implementation(libs.koin.core)
-    implementation(libs.koin.androidx.compose)
+    implementation(libs.koin.android)
 
     implementation(libs.androidx.room.runtime)
     ksp(libs.androidx.room.compiler)
@@ -29,5 +27,4 @@ dependencies {
     implementation(libs.kotlinx.datetime)
 
     implementation(libs.kotlinx.serialization.json)
-    implementation(libs.kotlinx.serialization.converter)
 }

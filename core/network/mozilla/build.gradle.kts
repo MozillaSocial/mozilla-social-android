@@ -24,11 +24,7 @@ dependencies {
 
     implementation(libs.kotlinx.datetime)
 
-    implementation(libs.androidx.navigation.compose)
     implementation(libs.koin.core)
-    implementation(libs.koin.androidx.compose)
-    implementation(libs.koin.android)
 
     implementation(libs.kotlinx.serialization.json)
-    implementation(libs.kotlinx.serialization.converter)
 }
