@@ -8,22 +8,15 @@ import androidx.paging.RemoteMediator
 import androidx.paging.map
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import retrofit2.HttpException
-import social.firefly.common.getNext
-import social.firefly.common.getPrev
-import social.firefly.common.toHeaderLink
 import social.firefly.core.database.dao.BlocksDao
 import social.firefly.core.database.model.entities.accountCollections.BlockWrapper
 import social.firefly.core.database.model.entities.accountCollections.DatabaseBlock
 import social.firefly.core.model.Account
 import social.firefly.core.model.BlockedUser
-import social.firefly.core.model.paging.AccountPagingWrapper
 import social.firefly.core.model.paging.MastodonPagedResponse
 import social.firefly.core.network.mastodon.BlocksApi
 import social.firefly.core.network.mastodon.utils.toMastodonPagedResponse
-import social.firefly.core.repository.mastodon.model.block.toAccountsList
 import social.firefly.core.repository.mastodon.model.block.toBlockedUser
-import social.firefly.core.repository.mastodon.model.block.toPagingLinks
 import social.firefly.core.repository.mastodon.model.status.toExternalModel
 
 class BlocksRepository(private val api: BlocksApi, private val dao: BlocksDao) {
