@@ -9,6 +9,7 @@ import social.firefly.common.utils.StringFactory
 import social.firefly.core.model.ImageState
 import social.firefly.core.model.MediaUpdate
 import social.firefly.core.model.StatusVisibility
+import social.firefly.core.model.request.MediaAttributes
 import social.firefly.core.model.request.PollCreate
 import social.firefly.core.model.request.StatusCreate
 import social.firefly.core.navigation.usecases.ShowSnackbar
@@ -37,30 +38,21 @@ class EditStatus(
         inReplyToId: String?
     ) = externalScope.async(dispatcherIo) {
         try {
-            imageStates.map { imageState ->
-                if (imageState.attachmentId != null && imageState.description.isNotBlank()) {
-                    async {
-                        mediaApi.updateMedia(
-                            mediaId = imageState.attachmentId!!,
-                            description = imageState.description,
-                        )
-                    }
-                } else {
-                    null
-                }
-            }.forEach {
-                it?.await()
-            }
             val status =
                 statusRepository.editStatus(
                     statusId = statusId,
                     StatusCreate(
                         status = statusText,
-                        mediaIds =
-                        if (imageStates.isEmpty()) {
+                        mediaIds = if (imageStates.isEmpty()) {
                             null
                         } else {
                             imageStates.mapNotNull { it.attachmentId }
+                        },
+                        mediaAttributes = imageStates.map {
+                            MediaAttributes(
+                                id = it.attachmentId!!,
+                                description = it.description,
+                            )
                         },
                         visibility = visibility,
                         poll = pollCreate,

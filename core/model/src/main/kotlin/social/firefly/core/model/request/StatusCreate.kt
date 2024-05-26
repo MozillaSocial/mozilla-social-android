@@ -20,6 +20,7 @@ data class StatusCreate(
      * If provided, [status] becomes optional, and [poll] cannot be used.
      */
     val mediaIds: List<String>? = null,
+    val mediaAttributes: List<MediaAttributes>? = null,
     val poll: PollCreate? = null,
     /**
      * ID of the status being replied to, if status is a reply.

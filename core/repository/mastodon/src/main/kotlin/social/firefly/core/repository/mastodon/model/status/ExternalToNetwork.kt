@@ -2,9 +2,11 @@ package social.firefly.core.repository.mastodon.model.status
 
 import social.firefly.core.model.PollVote
 import social.firefly.core.model.StatusVisibility
+import social.firefly.core.model.request.MediaAttributes
 import social.firefly.core.model.request.PollCreate
 import social.firefly.core.model.request.ReportCreate
 import social.firefly.core.model.request.StatusCreate
+import social.firefly.core.network.mastodon.model.request.NetworkMediaAttributes
 import social.firefly.core.network.mastodon.model.responseBody.NetworkStatusVisibility
 import social.firefly.core.network.mastodon.model.request.NetworkPollCreate
 import social.firefly.core.network.mastodon.model.request.NetworkPollVote
@@ -33,6 +35,7 @@ internal fun StatusCreate.toNetworkModel(): NetworkStatusCreate =
     NetworkStatusCreate(
         status = status,
         mediaIds = mediaIds,
+        mediaAttributes = mediaAttributes?.map { it.toNetworkModel() },
         poll = poll?.toNetworkModel(),
         inReplyToId = inReplyToId,
         isSensitive = isSensitive,
@@ -49,4 +52,10 @@ internal fun ReportCreate.toNetworkModel(): NetworkReportCreate =
         forward = forward,
         category = category,
         ruleViolations = ruleViolations,
+    )
+
+internal fun MediaAttributes.toNetworkModel(): NetworkMediaAttributes =
+    NetworkMediaAttributes(
+        id = id,
+        description = description,
     )
