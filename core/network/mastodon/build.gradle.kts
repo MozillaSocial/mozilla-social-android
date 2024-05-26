@@ -15,8 +15,6 @@ dependencies {
     implementation(project(":core:common"))
     implementation(project(":core:model"))
 
-    api(libs.retrofit)
-
     implementation(libs.square.okhttp)
     implementation(libs.square.okhttp.logging)
 

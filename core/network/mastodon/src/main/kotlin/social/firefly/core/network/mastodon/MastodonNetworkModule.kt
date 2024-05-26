@@ -1,6 +1,5 @@
 package social.firefly.core.network.mastodon
 
-import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import io.ktor.client.HttpClient
 import io.ktor.client.HttpClientConfig
 import io.ktor.client.engine.HttpClientEngine
@@ -11,12 +10,9 @@ import io.ktor.client.engine.okhttp.OkHttpConfig
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
-import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
-import retrofit2.Retrofit
 import social.firefly.core.network.mastodon.interceptors.AuthCredentialInterceptor
 import social.firefly.core.network.mastodon.ktor.AccountApiImpl
 import social.firefly.core.network.mastodon.ktor.AppApiImpl
@@ -36,44 +32,12 @@ import social.firefly.core.network.mastodon.ktor.SearchApiImpl
 import social.firefly.core.network.mastodon.ktor.StatusApiImpl
 import social.firefly.core.network.mastodon.ktor.TagsApiImpl
 import social.firefly.core.network.mastodon.ktor.TimelineApiImpl
+import social.firefly.core.network.mastodon.ktor.TrendsApiImpl
 import java.util.concurrent.TimeUnit
 
 val mastodonNetworkModule =
     module {
         single { AuthCredentialInterceptor() }
-        single(
-            named(AUTHORIZED_CLIENT),
-        ) {
-            OkHttpClient.Builder()
-                .readTimeout(OKHTTP_TIMEOUT, TimeUnit.SECONDS)
-                .connectTimeout(OKHTTP_TIMEOUT, TimeUnit.SECONDS)
-                .addNetworkInterceptor(
-                    HttpLoggingInterceptor().apply {
-                        level = if (BuildConfig.DEBUG) {
-                            HttpLoggingInterceptor.Level.BASIC
-                        } else {
-                            HttpLoggingInterceptor.Level.NONE
-                        }
-                    },
-                )
-                .addInterceptor(get<AuthCredentialInterceptor>())
-                .build()
-        }
-        single(
-            named(AUTHORIZED_CLIENT)
-        ) {
-            Retrofit.Builder()
-                .baseUrl("https://mozilla.social/")
-                .client(get(qualifier = named(AUTHORIZED_CLIENT)))
-                .addConverterFactory(
-                    json.asConverterFactory(
-                        contentType = "application/json".toMediaType()
-                    )
-                )
-                .build()
-        }
-
-        single { get<Retrofit>(qualifier = named(AUTHORIZED_CLIENT)).create(TrendsApi::class.java) }
 
         single<HttpClientEngineFactory<OkHttpConfig>> {
             OkHttp
@@ -172,9 +136,9 @@ val mastodonNetworkModule =
         single<StatusApi> { StatusApiImpl(get(qualifier = named(AUTHORIZED_CLIENT))) }
         single<TagsApi> { TagsApiImpl(get(qualifier = named(AUTHORIZED_CLIENT))) }
         single<TimelineApi> { TimelineApiImpl(get(qualifier = named(AUTHORIZED_CLIENT))) }
+        single<TrendsApi> { TrendsApiImpl(get(qualifier = named(AUTHORIZED_CLIENT))) }
     }
 
-private var json: Json = Json { ignoreUnknownKeys = true }
 private const val AUTHORIZED_CLIENT = "authorizedClient"
 private const val UNAUTHORIZED_CLIENT = "unauthorizedClient"
 private const val OKHTTP_TIMEOUT = 30L
