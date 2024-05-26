@@ -17,7 +17,7 @@ dependencies {
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.kotlinx.datetime)
 
-    implementation(libs.retrofit)
+    implementation(libs.square.okhttp)
 
     implementation(libs.androidx.navigation.compose)
     implementation(libs.koin.core)
