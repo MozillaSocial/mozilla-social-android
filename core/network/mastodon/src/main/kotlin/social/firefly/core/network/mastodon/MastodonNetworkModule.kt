@@ -27,6 +27,7 @@ import social.firefly.core.network.mastodon.ktor.FavoritesApiImpl
 import social.firefly.core.network.mastodon.ktor.FollowRequestApiImpl
 import social.firefly.core.network.mastodon.ktor.FollowedTagsApiImpl
 import social.firefly.core.network.mastodon.ktor.InstanceApiImpl
+import social.firefly.core.network.mastodon.ktor.MediaApiImpl
 import java.util.concurrent.TimeUnit
 
 val mastodonNetworkModule =
@@ -64,7 +65,6 @@ val mastodonNetworkModule =
                 .build()
         }
 
-        single { get<Retrofit>(qualifier = named(AUTHORIZED_CLIENT)).create(MediaApi::class.java) }
         single { get<Retrofit>(qualifier = named(AUTHORIZED_CLIENT)).create(MutesApi::class.java) }
         single { get<Retrofit>(qualifier = named(AUTHORIZED_CLIENT)).create(ReportApi::class.java) }
         single { get<Retrofit>(qualifier = named(AUTHORIZED_CLIENT)).create(SearchApi::class.java) }
@@ -163,6 +163,7 @@ val mastodonNetworkModule =
         single<FollowedTagsApi> { FollowedTagsApiImpl(get(qualifier = named(AUTHORIZED_CLIENT))) }
         single<FollowRequestApi> { FollowRequestApiImpl(get(qualifier = named(AUTHORIZED_CLIENT))) }
         single<InstanceApi> { InstanceApiImpl(get(qualifier = named(AUTHORIZED_CLIENT))) }
+        single<MediaApi> { MediaApiImpl(get(qualifier = named(AUTHORIZED_CLIENT))) }
     }
 
 private var json: Json = Json { ignoreUnknownKeys = true }
