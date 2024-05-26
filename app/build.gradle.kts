@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.about.libraries.plugin)
     id("social.firefly.android.application.secrets")
     alias(libs.plugins.sentry)
+    alias(libs.plugins.baselineprofile)
 }
 
 android {
@@ -115,6 +116,7 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
 
     implementation(libs.jakewharton.timber)
+    implementation(libs.androidx.profileinstaller)
 
     testImplementation(libs.koin.test)
 
@@ -123,6 +125,7 @@ dependencies {
     androidTestImplementation(libs.androidx.navigation.testing)
     androidTestImplementation(libs.androidx.espresso.intents)
     androidTestImplementation(libs.androidx.test.ext.junit)
+    "baselineProfile"(project(":baselineprofile"))
 
     debugImplementation(libs.androidx.compose.ui.test.manifest)
     debugImplementation(libs.androidx.compose.ui.tooling)
