@@ -14,6 +14,4 @@ val mozillaUsecaseModule =
             analyticsModule,
             navigationModule,
         )
-
-        single { GetRecommendations(get()) }
     }
