@@ -41,10 +41,8 @@ class EditStatus(
                 if (imageState.attachmentId != null && imageState.description.isNotBlank()) {
                     async {
                         mediaApi.updateMedia(
-                            imageState.attachmentId!!,
-                            MediaUpdate(
-                                imageState.description,
-                            ),
+                            mediaId = imageState.attachmentId!!,
+                            description = imageState.description,
                         )
                     }
                 } else {

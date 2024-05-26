@@ -1,7 +1,6 @@
 package social.firefly.core.network.mastodon
 
 import social.firefly.core.network.mastodon.model.responseBody.NetworkAttachment
-import social.firefly.core.network.mastodon.model.request.NetworkMediaUpdate
 import java.io.File
 
 interface MediaApi {
@@ -12,6 +11,6 @@ interface MediaApi {
 
     suspend fun updateMedia(
         mediaId: String,
-        requestBody: NetworkMediaUpdate,
+        description: String?,
     )
 }

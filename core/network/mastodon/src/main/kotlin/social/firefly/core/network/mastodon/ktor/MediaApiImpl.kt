@@ -7,14 +7,11 @@ import io.ktor.client.request.forms.formData
 import io.ktor.client.request.post
 import io.ktor.client.request.put
 import io.ktor.client.request.setBody
-import io.ktor.http.ContentType
 import io.ktor.http.Headers
 import io.ktor.http.HttpHeaders
 import io.ktor.http.URLProtocol
-import io.ktor.http.contentType
 import io.ktor.http.path
 import social.firefly.core.network.mastodon.MediaApi
-import social.firefly.core.network.mastodon.model.request.NetworkMediaUpdate
 import social.firefly.core.network.mastodon.model.responseBody.NetworkAttachment
 import java.io.File
 
@@ -43,15 +40,16 @@ class MediaApiImpl(
 
     override suspend fun updateMedia(
         mediaId: String,
-        requestBody: NetworkMediaUpdate
+        description: String?,
     ) {
         client.put {
             url {
                 protocol = URLProtocol.HTTPS
                 path("api/v1/media/$mediaId")
+                parameters.apply {
+                    description?.let { append("description", description) }
+                }
             }
-            contentType(ContentType.Application.Json)
-            setBody(requestBody)
         }
     }
 }

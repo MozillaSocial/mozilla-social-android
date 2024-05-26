@@ -20,6 +20,9 @@ class MediaRepository internal constructor(
 
     suspend fun updateMedia(
         mediaId: String,
-        mediaUpdate: MediaUpdate,
-    ) = mediaApi.updateMedia(mediaId, mediaUpdate.toNetworkModel())
+        description: String?,
+    ) = mediaApi.updateMedia(
+        mediaId = mediaId,
+        description = description
+    )
 }
