@@ -29,6 +29,7 @@ import social.firefly.core.network.mastodon.ktor.FollowedTagsApiImpl
 import social.firefly.core.network.mastodon.ktor.InstanceApiImpl
 import social.firefly.core.network.mastodon.ktor.MediaApiImpl
 import social.firefly.core.network.mastodon.ktor.MutesApiImpl
+import social.firefly.core.network.mastodon.ktor.NotificationsApiImpl
 import java.util.concurrent.TimeUnit
 
 val mastodonNetworkModule =
@@ -71,7 +72,6 @@ val mastodonNetworkModule =
         single { get<Retrofit>(qualifier = named(AUTHORIZED_CLIENT)).create(StatusApi::class.java) }
         single { get<Retrofit>(qualifier = named(AUTHORIZED_CLIENT)).create(TimelineApi::class.java) }
         single { get<Retrofit>(qualifier = named(AUTHORIZED_CLIENT)).create(TagsApi::class.java) }
-        single { get<Retrofit>(qualifier = named(AUTHORIZED_CLIENT)).create(NotificationsApi::class.java) }
         single { get<Retrofit>(qualifier = named(AUTHORIZED_CLIENT)).create(TrendsApi::class.java) }
         single { get<Retrofit>(qualifier = named(AUTHORIZED_CLIENT)).create(PushApi::class.java) }
 
@@ -165,6 +165,7 @@ val mastodonNetworkModule =
         single<InstanceApi> { InstanceApiImpl(get(qualifier = named(AUTHORIZED_CLIENT))) }
         single<MediaApi> { MediaApiImpl(get(qualifier = named(AUTHORIZED_CLIENT))) }
         single<MutesApi> { MutesApiImpl(get(qualifier = named(AUTHORIZED_CLIENT))) }
+        single<NotificationsApi> { NotificationsApiImpl(get(qualifier = named(AUTHORIZED_CLIENT))) }
     }
 
 private var json: Json = Json { ignoreUnknownKeys = true }
