@@ -25,6 +25,8 @@ data class NetworkStatusCreate(
      */
     @SerialName("media_ids")
     val mediaIds: List<String>? = null,
+    @SerialName("media_attributes")
+    val mediaAttributes: List<NetworkMediaAttributes>? = null,
     @SerialName("poll")
     val poll: NetworkPollCreate? = null,
     /**

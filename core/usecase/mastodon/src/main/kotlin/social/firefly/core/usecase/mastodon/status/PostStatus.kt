@@ -10,6 +10,7 @@ import social.firefly.common.utils.StringFactory
 import social.firefly.core.model.ImageState
 import social.firefly.core.model.MediaUpdate
 import social.firefly.core.model.StatusVisibility
+import social.firefly.core.model.request.MediaAttributes
 import social.firefly.core.model.request.PollCreate
 import social.firefly.core.model.request.StatusCreate
 import social.firefly.core.navigation.usecases.ShowSnackbar
@@ -41,14 +42,13 @@ class PostStatus internal constructor(
     ) = externalScope.async(dispatcherIo) {
         try {
             // asynchronously update all attachment descriptions before sending post
+            // for some reason when posting, adding media attachment fields doesn't work
             imageStates.map { imageState ->
                 if (imageState.attachmentId != null && imageState.description.isNotBlank()) {
                     async {
                         mediaApi.updateMedia(
-                            imageState.attachmentId!!,
-                            MediaUpdate(
-                                imageState.description,
-                            ),
+                            mediaId = imageState.attachmentId!!,
+                            description = imageState.description,
                         )
                     }
                 } else {
@@ -62,16 +62,14 @@ class PostStatus internal constructor(
                 statusRepository.postStatus(
                     StatusCreate(
                         status = statusText,
-                        mediaIds =
-                        if (imageStates.isEmpty()) {
+                        mediaIds = if (imageStates.isEmpty()) {
                             null
                         } else {
                             imageStates.mapNotNull { it.attachmentId }
                         },
                         visibility = visibility,
                         poll = pollCreate,
-                        contentWarningText =
-                        if (contentWarningText.isNullOrBlank()) {
+                        contentWarningText = if (contentWarningText.isNullOrBlank()) {
                             null
                         } else {
                             contentWarningText

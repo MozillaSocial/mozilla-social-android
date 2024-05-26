@@ -166,7 +166,6 @@ val mastodonUsecaseModule =
         single {
             EditStatus(
                 externalScope = get<AppScope>(),
-                mediaApi = get(),
                 statusRepository = get(),
                 saveStatusToDatabase = get(),
                 timelineRepository = get(),
