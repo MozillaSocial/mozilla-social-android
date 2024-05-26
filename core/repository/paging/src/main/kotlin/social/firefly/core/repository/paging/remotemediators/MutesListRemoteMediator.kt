@@ -5,6 +5,9 @@ import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import kotlinx.coroutines.delay
+import social.firefly.common.getMaxIdValue
+import social.firefly.common.getNext
+import social.firefly.common.getPrev
 import social.firefly.core.database.model.entities.accountCollections.MuteWrapper
 import social.firefly.core.repository.mastodon.AccountRepository
 import social.firefly.core.repository.mastodon.DatabaseDelegate
@@ -56,7 +59,7 @@ class MutesListRemoteMediator(
                 }
 
             val relationships =
-                accountRepository.getAccountRelationships(response.accounts.map { it.accountId })
+                accountRepository.getAccountRelationships(response.items.map { it.accountId })
 
             databaseDelegate.withTransaction {
                 if (loadType == LoadType.REFRESH) {
@@ -64,17 +67,17 @@ class MutesListRemoteMediator(
                     nextPositionIndex = 0
                 }
 
-                accountRepository.insertAll(response.accounts)
+                accountRepository.insertAll(response.items)
                 relationshipRepository.insertAll(relationships)
                 mutesRepository.insertAll(
-                    response.accounts.mapIndexed { index, account ->
+                    response.items.mapIndexed { index, account ->
                         account.toDatabaseMute(position = nextPositionIndex + index)
                     },
                 )
             }
 
-            nextKey = response.nextPage?.maxId
-            nextPositionIndex += response.accounts.size
+            nextKey = response.pagingLinks?.getMaxIdValue()
+            nextPositionIndex += response.items.size
 
             // There seems to be some race condition for refreshes.  Subsequent pages do
             // not get loaded because once we return a mediator result, the next append
@@ -90,9 +93,9 @@ class MutesListRemoteMediator(
             @Suppress("KotlinConstantConditions")
             (MediatorResult.Success(
                 endOfPaginationReached = when (loadType) {
-                    LoadType.PREPEND -> response.prevPage == null
+                    LoadType.PREPEND -> response.pagingLinks?.getPrev() == null
                     LoadType.REFRESH,
-                    LoadType.APPEND -> response.nextPage == null
+                    LoadType.APPEND -> response.pagingLinks?.getNext() == null
                 },
             ))
         } catch (e: Exception) {

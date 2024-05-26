@@ -1,7 +1,5 @@
 package social.firefly.common
 
-import android.net.Uri
-
 /**
  * Parses the links header from a mastodon paging response
  * [More info here](<https://docs.joinmastodon.org/api/guidelines/#pagination>)
@@ -62,25 +60,6 @@ private fun MastodonPagingLink.getMaxIdValue(): String =
         .first()
         .split("&")
         .first()
-
-private fun MastodonPagingLink.getLimitValue(): Int {
-    val uri = Uri.parse(link)
-    return uri.getQueryParameter("limit")?.toInt()!!
-}
-
-data class HeaderLink(
-    val maxId: String?,
-    val sinceId: String?,
-    val minId: String?,
-    val limit: Int?
-)
-
-fun MastodonPagingLink.toHeaderLink() = HeaderLink(
-    maxId = getMaxIdValue(),
-    sinceId = getSinceIdValue(),
-    minId = getMaxIdValue(),
-    limit = getLimitValue()
-)
 
 fun List<MastodonPagingLink>.getNext() =
     firstOrNull { it.rel == Rel.NEXT }

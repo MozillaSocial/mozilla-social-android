@@ -5,6 +5,7 @@ import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import kotlinx.coroutines.delay
+import social.firefly.common.getMaxIdValue
 import social.firefly.common.getNext
 import social.firefly.common.getPrev
 import social.firefly.core.database.model.entities.accountCollections.BlockWrapper
@@ -77,7 +78,7 @@ class BlocksListRemoteMediator(
                 )
             }
 
-            nextKey = response.pagingLinks?.getNext()?.link
+            nextKey = response.pagingLinks?.getMaxIdValue()
             nextPositionIndex += response.items.size
 
             // There seems to be some race condition for refreshes.  Subsequent pages do
