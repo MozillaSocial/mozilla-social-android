@@ -12,7 +12,6 @@ import social.firefly.core.repository.paging.pagers.TrendingStatusPager
 import social.firefly.core.repository.paging.remotemediators.notifications.AllNotificationsRemoteMediator
 import social.firefly.core.repository.paging.remotemediators.notifications.FollowNotificationsRemoteMediator
 import social.firefly.core.repository.paging.remotemediators.notifications.MentionNotificationsRemoteMediator
-import social.firefly.core.repository.paging.remotemediators.AccountTimelineRemoteMediator
 import social.firefly.core.repository.paging.remotemediators.BlocksListRemoteMediator
 import social.firefly.core.repository.paging.remotemediators.FavoritesRemoteMediator
 import social.firefly.core.repository.paging.remotemediators.FederatedTimelineRemoteMediator
@@ -101,18 +100,6 @@ val pagingModule = module {
             searchRepository = get(),
             hashtagRepository = get(),
             query = parametersHolder[0],
-        )
-    }
-
-    factory { parametersHolder ->
-        AccountTimelineRemoteMediator(
-            accountRepository = get(),
-            saveStatusToDatabase = get(),
-            databaseDelegate = get(),
-            timelineRepository = get(),
-            getInReplyToAccountNames = get(),
-            accountId = parametersHolder[0],
-            timelineType = parametersHolder[1],
         )
     }
 

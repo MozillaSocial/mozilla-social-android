@@ -20,9 +20,7 @@ import social.firefly.core.analytics.FeedLocation
 import social.firefly.core.model.AccountTimelineType
 import social.firefly.core.navigation.NavigationDestination
 import social.firefly.core.navigation.usecases.NavigateTo
-import social.firefly.core.repository.mastodon.TimelineRepository
 import social.firefly.core.repository.paging.pagers.AccountTimelinePager
-import social.firefly.core.repository.paging.remotemediators.AccountTimelineRemoteMediator
 import social.firefly.core.ui.postcard.PostCardDelegate
 import social.firefly.core.ui.postcard.toPostCardUiState
 import social.firefly.core.usecase.mastodon.account.BlockAccount
