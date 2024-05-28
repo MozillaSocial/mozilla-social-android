@@ -15,8 +15,8 @@ import social.firefly.core.analytics.DiscoverAnalytics
 import social.firefly.core.analytics.FeedLocation
 import social.firefly.core.navigation.NavigationDestination
 import social.firefly.core.navigation.usecases.NavigateTo
-import social.firefly.core.repository.paging.pagers.TrendingHashTagPager
-import social.firefly.core.repository.paging.pagers.TrendingStatusPager
+import social.firefly.core.repository.paging.pagers.hashTags.TrendingHashTagPager
+import social.firefly.core.repository.paging.pagers.status.TrendingStatusPager
 import social.firefly.core.ui.hashtagcard.HashTagCardDelegate
 import social.firefly.core.ui.hashtagcard.quickview.toHashTagQuickViewUiState
 import social.firefly.core.ui.postcard.PostCardDelegate

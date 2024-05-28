@@ -21,7 +21,7 @@ import social.firefly.core.datastore.UserPreferencesDatastoreManager
 import social.firefly.core.navigation.BottomBarNavigationDestination
 import social.firefly.core.navigation.usecases.NavigateTo
 import social.firefly.core.repository.mastodon.TimelineRepository
-import social.firefly.core.repository.paging.pagers.FederatedTimelinePager
+import social.firefly.core.repository.paging.pagers.status.FederatedTimelinePager
 import social.firefly.core.repository.paging.remotemediators.HomeTimelineRemoteMediator
 import social.firefly.core.repository.paging.remotemediators.LocalTimelineRemoteMediator
 import social.firefly.core.ui.postcard.PostCardDelegate
