@@ -22,8 +22,8 @@ import social.firefly.core.navigation.BottomBarNavigationDestination
 import social.firefly.core.navigation.usecases.NavigateTo
 import social.firefly.core.repository.mastodon.TimelineRepository
 import social.firefly.core.repository.paging.pagers.status.FederatedTimelinePager
+import social.firefly.core.repository.paging.pagers.status.LocalTimelinePager
 import social.firefly.core.repository.paging.remotemediators.HomeTimelineRemoteMediator
-import social.firefly.core.repository.paging.remotemediators.LocalTimelineRemoteMediator
 import social.firefly.core.ui.postcard.PostCardDelegate
 import social.firefly.core.ui.postcard.toPostCardUiState
 import social.firefly.core.usecase.mastodon.account.GetLoggedInUserAccountId
@@ -33,7 +33,7 @@ class FeedViewModel(
     private val analytics: FeedAnalytics,
     private val userPreferencesDatastoreManager: UserPreferencesDatastoreManager,
     homeTimelineRemoteMediator: HomeTimelineRemoteMediator,
-    localTimelineRemoteMediator: LocalTimelineRemoteMediator,
+    localTimelinePager: LocalTimelinePager,
     federatedTimelinePager: FederatedTimelinePager,
     private val timelineRepository: TimelineRepository,
     getLoggedInUserAccountId: GetLoggedInUserAccountId,
@@ -59,9 +59,7 @@ class FeedViewModel(
     }.cachedIn(viewModelScope)
 
     @OptIn(ExperimentalPagingApi::class)
-    val localFeed = timelineRepository.getLocalTimelinePager(
-        remoteMediator = localTimelineRemoteMediator,
-    ).map { pagingData ->
+    val localFeed = localTimelinePager.build().map { pagingData ->
         pagingData.map {
             it.toPostCardUiState(userAccountId)
         }

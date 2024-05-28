@@ -70,26 +70,8 @@ class TimelineRepository internal constructor(
         }
 
     //region Local timeline
-    @ExperimentalPagingApi
-    fun getLocalTimelinePager(
-        remoteMediator: RemoteMediator<Int, LocalTimelineStatusWrapper>,
-        pageSize: Int = 20,
-        initialLoadSize: Int = 40,
-    ): Flow<PagingData<Status>> =
-        Pager(
-            config =
-            PagingConfig(
-                pageSize = pageSize,
-                initialLoadSize = initialLoadSize,
-            ),
-            remoteMediator = remoteMediator,
-        ) {
-            localTimelineStatusDao.localTimelinePagingSource()
-        }.flow.map { pagingData ->
-            pagingData.map {
-                it.status.toExternalModel()
-            }
-        }
+    fun getLocalTimelinePagingSource(): PagingSource<Int, LocalTimelineStatusWrapper> =
+        localTimelineStatusDao.localTimelinePagingSource()
 
     suspend fun insertAllIntoLocalTimeline(statuses: List<Status>) =
         localTimelineStatusDao.upsertAll(statuses.map { it.toLocalTimelineStatus() })

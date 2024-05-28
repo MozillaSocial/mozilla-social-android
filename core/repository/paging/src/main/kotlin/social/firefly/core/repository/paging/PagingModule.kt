@@ -12,6 +12,7 @@ import social.firefly.core.repository.paging.pagers.status.FederatedTimelinePage
 import social.firefly.core.repository.paging.pagers.hashTags.FollowedHashTagsPager
 import social.firefly.core.repository.paging.pagers.accounts.MutesPager
 import social.firefly.core.repository.paging.pagers.hashTags.TrendingHashTagPager
+import social.firefly.core.repository.paging.pagers.status.LocalTimelinePager
 import social.firefly.core.repository.paging.pagers.status.TrendingStatusPager
 import social.firefly.core.repository.paging.remotemediators.notifications.AllNotificationsRemoteMediator
 import social.firefly.core.repository.paging.remotemediators.notifications.FollowNotificationsRemoteMediator
@@ -20,7 +21,6 @@ import social.firefly.core.repository.paging.remotemediators.FollowersRemoteMedi
 import social.firefly.core.repository.paging.remotemediators.FollowingsRemoteMediator
 import social.firefly.core.repository.paging.remotemediators.HashTagTimelineRemoteMediator
 import social.firefly.core.repository.paging.remotemediators.HomeTimelineRemoteMediator
-import social.firefly.core.repository.paging.remotemediators.LocalTimelineRemoteMediator
 import social.firefly.core.repository.paging.remotemediators.SearchAccountsRemoteMediator
 import social.firefly.core.repository.paging.remotemediators.SearchStatusesRemoteMediator
 import social.firefly.core.repository.paging.remotemediators.SearchedHashTagsRemoteMediator
@@ -35,7 +35,6 @@ val pagingModule = module {
     )
 
     factoryOf(::HomeTimelineRemoteMediator)
-    factoryOf(::LocalTimelineRemoteMediator)
     factoryOf(::AllNotificationsRemoteMediator)
     factoryOf(::MentionNotificationsRemoteMediator)
     factoryOf(::FollowNotificationsRemoteMediator)
@@ -105,6 +104,7 @@ val pagingModule = module {
     factoryOf(::FavoritesPager)
     factoryOf(::FederatedTimelinePager)
     factoryOf(::FollowedHashTagsPager)
+    factoryOf(::LocalTimelinePager)
     factoryOf(::MutesPager)
     factoryOf(::TrendingStatusPager)
     factoryOf(::TrendingHashTagPager)
