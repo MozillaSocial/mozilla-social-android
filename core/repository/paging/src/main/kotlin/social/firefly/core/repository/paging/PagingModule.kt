@@ -13,7 +13,6 @@ import social.firefly.core.repository.paging.pagers.TrendingStatusPager
 import social.firefly.core.repository.paging.remotemediators.notifications.AllNotificationsRemoteMediator
 import social.firefly.core.repository.paging.remotemediators.notifications.FollowNotificationsRemoteMediator
 import social.firefly.core.repository.paging.remotemediators.notifications.MentionNotificationsRemoteMediator
-import social.firefly.core.repository.paging.remotemediators.BlocksListRemoteMediator
 import social.firefly.core.repository.paging.remotemediators.FavoritesRemoteMediator
 import social.firefly.core.repository.paging.remotemediators.FederatedTimelineRemoteMediator
 import social.firefly.core.repository.paging.remotemediators.FollowersRemoteMediator
@@ -39,7 +38,6 @@ val pagingModule = module {
     factoryOf(::LocalTimelineRemoteMediator)
     factoryOf(::FederatedTimelineRemoteMediator)
     factoryOf(::FavoritesRemoteMediator)
-    factoryOf(::BlocksListRemoteMediator)
     factoryOf(::MutesListRemoteMediator)
     factoryOf(::AllNotificationsRemoteMediator)
     factoryOf(::MentionNotificationsRemoteMediator)
