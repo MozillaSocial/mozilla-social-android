@@ -34,9 +34,9 @@ class LocalTimelineRemoteMediator(
                         pageSize = state.config.initialLoadSize
                         timelineRepository.getPublicTimeline(
                             localOnly = true,
-                            olderThanId = null,
-                            immediatelyNewerThanId = null,
-                            loadSize = pageSize,
+                            maxId = null,
+                            minId = null,
+                            limit = pageSize,
                         )
                     }
 
@@ -48,9 +48,9 @@ class LocalTimelineRemoteMediator(
                                 )
                         timelineRepository.getPublicTimeline(
                             localOnly = true,
-                            olderThanId = null,
-                            immediatelyNewerThanId = firstItem.localTimelineStatus.statusId,
-                            loadSize = pageSize,
+                            maxId = null,
+                            minId = firstItem.localTimelineStatus.statusId,
+                            limit = pageSize,
                         )
                     }
 
@@ -62,9 +62,9 @@ class LocalTimelineRemoteMediator(
                                 )
                         timelineRepository.getPublicTimeline(
                             localOnly = true,
-                            olderThanId = lastItem.localTimelineStatus.statusId,
-                            immediatelyNewerThanId = null,
-                            loadSize = pageSize,
+                            maxId = lastItem.localTimelineStatus.statusId,
+                            minId = null,
+                            limit = pageSize,
                         )
                     }
                 }

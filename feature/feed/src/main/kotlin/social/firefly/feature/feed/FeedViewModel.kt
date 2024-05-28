@@ -10,7 +10,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import org.koin.core.parameter.parametersOf
@@ -22,7 +21,7 @@ import social.firefly.core.datastore.UserPreferencesDatastoreManager
 import social.firefly.core.navigation.BottomBarNavigationDestination
 import social.firefly.core.navigation.usecases.NavigateTo
 import social.firefly.core.repository.mastodon.TimelineRepository
-import social.firefly.core.repository.paging.remotemediators.FederatedTimelineRemoteMediator
+import social.firefly.core.repository.paging.pagers.FederatedTimelinePager
 import social.firefly.core.repository.paging.remotemediators.HomeTimelineRemoteMediator
 import social.firefly.core.repository.paging.remotemediators.LocalTimelineRemoteMediator
 import social.firefly.core.ui.postcard.PostCardDelegate
@@ -35,7 +34,7 @@ class FeedViewModel(
     private val userPreferencesDatastoreManager: UserPreferencesDatastoreManager,
     homeTimelineRemoteMediator: HomeTimelineRemoteMediator,
     localTimelineRemoteMediator: LocalTimelineRemoteMediator,
-    federatedTimelineRemoteMediator: FederatedTimelineRemoteMediator,
+    federatedTimelinePager: FederatedTimelinePager,
     private val timelineRepository: TimelineRepository,
     getLoggedInUserAccountId: GetLoggedInUserAccountId,
     private val navigateTo: NavigateTo,
@@ -69,9 +68,7 @@ class FeedViewModel(
     }.cachedIn(viewModelScope)
 
     @OptIn(ExperimentalPagingApi::class)
-    val federatedFeed = timelineRepository.getFederatedTimelinePager(
-        remoteMediator = federatedTimelineRemoteMediator,
-    ).map { pagingData ->
+    val federatedFeed = federatedTimelinePager.build().map { pagingData ->
         pagingData.map {
             it.toPostCardUiState(userAccountId)
         }
