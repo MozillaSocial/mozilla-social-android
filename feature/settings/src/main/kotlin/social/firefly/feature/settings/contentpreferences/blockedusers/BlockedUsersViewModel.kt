@@ -14,6 +14,7 @@ import social.firefly.core.analytics.SettingsAnalytics
 import social.firefly.core.model.BlockedUser
 import social.firefly.core.navigation.usecases.NavigateToAccount
 import social.firefly.core.repository.mastodon.BlocksRepository
+import social.firefly.core.repository.paging.pagers.BlocksPager
 import social.firefly.core.repository.paging.remotemediators.BlocksListRemoteMediator
 import social.firefly.core.ui.common.account.quickview.toQuickViewUiState
 import social.firefly.core.ui.common.account.toggleablelist.ToggleableAccountListItemState
@@ -23,8 +24,7 @@ import social.firefly.feature.settings.R
 import timber.log.Timber
 
 class BlockedUsersViewModel(
-    repository: BlocksRepository,
-    remoteMediator: BlocksListRemoteMediator,
+    blocksPager: BlocksPager,
     private val analytics: SettingsAnalytics,
     private val blockAccount: BlockAccount,
     private val unblockAccount: UnblockAccount,
@@ -33,8 +33,11 @@ class BlockedUsersViewModel(
 
     @OptIn(ExperimentalPagingApi::class)
     val blocks: Flow<PagingData<ToggleableAccountListItemState<BlockedButtonState>>> =
-        repository.getBlocksPager(remoteMediator = remoteMediator)
-            .map { pagingData -> pagingData.map { blockedUser -> blockedUser.toToggleableState() } }
+        blocksPager.build().map { pagingData ->
+            pagingData.map {
+                    blockedUser -> blockedUser.toToggleableState()
+            }
+        }
 
     override fun onButtonClicked(accountId: String, buttonState: BlockedButtonState) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -71,7 +74,7 @@ class BlockedUsersViewModel(
 
 fun BlockedUser.toToggleableState() =
     ToggleableAccountListItemState(
-        buttonState = if (isBlocked) BlockedButtonState.Blocked else BlockedButtonState.Unblocked(
+        buttonState = if (relationship.isBlocking) BlockedButtonState.Blocked else BlockedButtonState.Unblocked(
             confirmationText = StringFactory.resource(
                 R.string.are_you_sure_you_want_to_block, account.acct
             )
