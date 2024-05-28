@@ -1,13 +1,6 @@
 package social.firefly.core.repository.mastodon
 
-import androidx.paging.ExperimentalPagingApi
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
-import androidx.paging.PagingData
-import androidx.paging.RemoteMediator
-import androidx.paging.map
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
+import androidx.paging.PagingSource
 import social.firefly.core.database.dao.FavoritesTimelineStatusDao
 import social.firefly.core.database.model.entities.statusCollections.FavoritesTimelineStatus
 import social.firefly.core.database.model.entities.statusCollections.FavoritesTimelineStatusWrapper
@@ -33,24 +26,8 @@ class FavoritesRepository(
         limit = limit,
     ).toMastodonPagedResponse { it.toExternalModel() }
 
-    @ExperimentalPagingApi
-    fun getFavoritesPager(
-        remoteMediator: RemoteMediator<Int, FavoritesTimelineStatusWrapper>,
-        pageSize: Int = 20,
-        initialLoadSize: Int = 40,
-    ): Flow<PagingData<Status>> = Pager(
-        config = PagingConfig(
-            pageSize = pageSize,
-            initialLoadSize = initialLoadSize,
-        ),
-        remoteMediator = remoteMediator,
-    ) {
+    fun getPagingSource(): PagingSource<Int, FavoritesTimelineStatusWrapper> =
         dao.favoritesTimelinePagingSource()
-    }.flow.map { pagingData ->
-        pagingData.map {
-            it.status.toExternalModel()
-        }
-    }
 
     suspend fun deleteFavoritesTimeline() {
         dao.deleteFavoritesTimelines()
