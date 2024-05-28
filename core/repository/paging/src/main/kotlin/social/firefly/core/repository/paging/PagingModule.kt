@@ -8,6 +8,7 @@ import social.firefly.core.repository.paging.pagers.AccountTimelinePager
 import social.firefly.core.repository.paging.pagers.BlocksPager
 import social.firefly.core.repository.paging.pagers.BookmarksPager
 import social.firefly.core.repository.paging.pagers.FollowedHashTagsPager
+import social.firefly.core.repository.paging.pagers.MutesPager
 import social.firefly.core.repository.paging.pagers.TrendingHashTagPager
 import social.firefly.core.repository.paging.pagers.TrendingStatusPager
 import social.firefly.core.repository.paging.remotemediators.notifications.AllNotificationsRemoteMediator
@@ -20,7 +21,6 @@ import social.firefly.core.repository.paging.remotemediators.FollowingsRemoteMed
 import social.firefly.core.repository.paging.remotemediators.HashTagTimelineRemoteMediator
 import social.firefly.core.repository.paging.remotemediators.HomeTimelineRemoteMediator
 import social.firefly.core.repository.paging.remotemediators.LocalTimelineRemoteMediator
-import social.firefly.core.repository.paging.remotemediators.MutesListRemoteMediator
 import social.firefly.core.repository.paging.remotemediators.SearchAccountsRemoteMediator
 import social.firefly.core.repository.paging.remotemediators.SearchStatusesRemoteMediator
 import social.firefly.core.repository.paging.remotemediators.SearchedHashTagsRemoteMediator
@@ -38,7 +38,6 @@ val pagingModule = module {
     factoryOf(::LocalTimelineRemoteMediator)
     factoryOf(::FederatedTimelineRemoteMediator)
     factoryOf(::FavoritesRemoteMediator)
-    factoryOf(::MutesListRemoteMediator)
     factoryOf(::AllNotificationsRemoteMediator)
     factoryOf(::MentionNotificationsRemoteMediator)
     factoryOf(::FollowNotificationsRemoteMediator)
@@ -106,6 +105,7 @@ val pagingModule = module {
     factoryOf(::BookmarksPager)
     factoryOf(::DomainBlocksPagingSource)
     factoryOf(::FollowedHashTagsPager)
+    factoryOf(::MutesPager)
     factoryOf(::TrendingStatusPager)
     factoryOf(::TrendingHashTagPager)
 
