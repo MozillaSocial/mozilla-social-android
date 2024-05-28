@@ -17,25 +17,25 @@ interface AccountApi {
 
     suspend fun getAccountFollowers(
         accountId: String,
-        olderThanId: String? = null,
-        newerThanId: String? = null,
-        immediatelyNewerThanId: String? = null,
+        maxId: String? = null,
+        sinceId: String? = null,
+        minId: String? = null,
         limit: Int? = null,
     ): Response<List<NetworkAccount>>
 
     suspend fun getAccountFollowing(
         accountId: String,
-        olderThanId: String? = null,
-        newerThanId: String? = null,
-        immediatelyNewerThanId: String? = null,
+        maxId: String? = null,
+        sinceId: String? = null,
+        minId: String? = null,
         limit: Int? = null,
     ): Response<List<NetworkAccount>>
 
     suspend fun getAccountStatuses(
         accountId: String,
-        olderThanId: String? = null,
-        newerThanId: String? = null,
-        immediatelyNewerThanId: String? = null,
+        maxId: String? = null,
+        sinceId: String? = null,
+        minId: String? = null,
         limit: Int? = null,
         onlyMedia: Boolean = false,
         excludeReplies: Boolean = false,

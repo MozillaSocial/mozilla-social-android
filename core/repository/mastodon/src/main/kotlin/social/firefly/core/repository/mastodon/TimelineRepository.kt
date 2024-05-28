@@ -264,6 +264,11 @@ class TimelineRepository internal constructor(
         }
     }
 
+    fun accountTimelinePagingSource(
+        accountId: String,
+        timelineType: AccountTimelineType,
+    ) = accountTimelineStatusDao.accountTimelinePagingSource(accountId, timelineType)
+
     suspend fun deleteAccountTimeline(
         accountId: String,
         timelineType: AccountTimelineType,

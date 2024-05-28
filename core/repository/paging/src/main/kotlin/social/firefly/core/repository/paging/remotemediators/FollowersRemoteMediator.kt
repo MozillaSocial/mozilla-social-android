@@ -40,7 +40,7 @@ class FollowersRemoteMediator(
                         pageSize = state.config.initialLoadSize
                         accountRepository.getAccountFollowers(
                             accountId = accountId,
-                            olderThanId = null,
+                            maxId = null,
                             loadSize = pageSize,
                         )
                     }
@@ -55,7 +55,7 @@ class FollowersRemoteMediator(
                         }
                         accountRepository.getAccountFollowers(
                             accountId = accountId,
-                            olderThanId = nextKey,
+                            maxId = nextKey,
                             loadSize = pageSize,
                         )
                     }

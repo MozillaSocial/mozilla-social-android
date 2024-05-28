@@ -21,6 +21,7 @@ import social.firefly.core.model.AccountTimelineType
 import social.firefly.core.navigation.NavigationDestination
 import social.firefly.core.navigation.usecases.NavigateTo
 import social.firefly.core.repository.mastodon.TimelineRepository
+import social.firefly.core.repository.paging.pagers.AccountTimelinePager
 import social.firefly.core.repository.paging.remotemediators.AccountTimelineRemoteMediator
 import social.firefly.core.ui.postcard.PostCardDelegate
 import social.firefly.core.ui.postcard.toPostCardUiState
@@ -82,7 +83,7 @@ class AccountViewModel(
 
     private var getAccountJob: Job? = null
 
-    private val postsRemoteMediator: AccountTimelineRemoteMediator by inject {
+    private val postsAccountTimelinePager: AccountTimelinePager by inject {
         parametersOf(
             accountId,
             AccountTimelineType.POSTS,
@@ -104,11 +105,7 @@ class AccountViewModel(
     }
 
     @OptIn(ExperimentalPagingApi::class)
-    val postsFeed = timelineRepository.getAccountTimelinePager(
-        accountId = accountId,
-        timelineType = AccountTimelineType.POSTS,
-        remoteMediator = postsRemoteMediator,
-    ).map { pagingData ->
+    val postsFeed = postsAccountTimelinePager.build().map { pagingData ->
         pagingData.map {
             it.toPostCardUiState(usersAccountId)
         }

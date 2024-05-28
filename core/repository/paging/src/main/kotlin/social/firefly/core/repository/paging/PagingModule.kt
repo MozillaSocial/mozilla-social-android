@@ -4,6 +4,7 @@ import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.module
 import social.firefly.core.datastore.dataStoreModule
 import social.firefly.core.repository.mastodon.mastodonRepositoryModule
+import social.firefly.core.repository.paging.pagers.AccountTimelinePager
 import social.firefly.core.repository.paging.pagers.BookmarksPager
 import social.firefly.core.repository.paging.pagers.FollowedHashTagsPager
 import social.firefly.core.repository.paging.pagers.TrendingHashTagPager
@@ -120,4 +121,16 @@ val pagingModule = module {
     factoryOf(::FollowedHashTagsPager)
     factoryOf(::BookmarksPager)
     factoryOf(::DomainBlocksPagingSource)
+
+    factory { parametersHolder ->
+        AccountTimelinePager(
+            accountRepository = get(),
+            saveStatusToDatabase = get(),
+            databaseDelegate = get(),
+            timelineRepository = get(),
+            getInReplyToAccountNames = get(),
+            accountId = parametersHolder[0],
+            timelineType = parametersHolder[1],
+        )
+    }
 }

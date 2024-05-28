@@ -38,8 +38,8 @@ class AccountTimelineRemoteMediator(
                         pageSize = state.config.initialLoadSize
                         accountRepository.getAccountStatuses(
                             accountId = accountId,
-                            olderThanId = null,
-                            immediatelyNewerThanId = null,
+                            maxId = null,
+                            minId = null,
                             loadSize = pageSize,
                             onlyMedia = timelineType == AccountTimelineType.MEDIA,
                             excludeReplies = timelineType == AccountTimelineType.POSTS,
@@ -54,8 +54,8 @@ class AccountTimelineRemoteMediator(
                                 )
                         accountRepository.getAccountStatuses(
                             accountId = accountId,
-                            olderThanId = null,
-                            immediatelyNewerThanId = firstItem.accountTimelineStatus.statusId,
+                            maxId = null,
+                            minId = firstItem.accountTimelineStatus.statusId,
                             loadSize = pageSize,
                             onlyMedia = timelineType == AccountTimelineType.MEDIA,
                             excludeReplies = timelineType == AccountTimelineType.POSTS,
@@ -70,8 +70,8 @@ class AccountTimelineRemoteMediator(
                                 )
                         accountRepository.getAccountStatuses(
                             accountId = accountId,
-                            olderThanId = lastItem.accountTimelineStatus.statusId,
-                            immediatelyNewerThanId = null,
+                            maxId = lastItem.accountTimelineStatus.statusId,
+                            minId = null,
                             loadSize = pageSize,
                             onlyMedia = timelineType == AccountTimelineType.MEDIA,
                             excludeReplies = timelineType == AccountTimelineType.POSTS,
