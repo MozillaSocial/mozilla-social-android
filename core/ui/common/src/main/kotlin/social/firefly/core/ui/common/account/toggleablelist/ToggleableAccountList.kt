@@ -98,26 +98,11 @@ private fun <B : ToggleableButtonState> UserRow(
     onAccountClicked: (accountId: String) -> Unit,
     onButtonClicked: (accountId: String, buttonState: B) -> Unit
 ) {
-    var openConfirmationDialog: String? by remember { mutableStateOf(null) }
-
-    openConfirmationDialog?.let { dialogTitleText ->
-        ConfirmationDialog(title = dialogTitleText,
-            onDismissRequest = {
-                openConfirmationDialog = null
-            },
-            onConfirmed = {
-                openConfirmationDialog = null
-                onButtonClicked(account.accountId, buttonState)
-            })
-
-    }
-
     Row(
         Modifier
             .fillMaxWidth()
             .wrapContentHeight(),
     ) {
-        val context = LocalContext.current
         AccountQuickView(
             uiState = account,
             modifier = Modifier
@@ -127,11 +112,7 @@ private fun <B : ToggleableButtonState> UserRow(
             buttonSlot = {
                 FfButton(
                     onClick = {
-                        buttonState.confirmationText?.let {
-                            openConfirmationDialog = it.build(
-                                context
-                            )
-                        } ?: onButtonClicked(account.accountId, buttonState)
+                        onButtonClicked(account.accountId, buttonState)
                     },
                     theme = buttonState.theme,
                     contentPadding = FfButtonContentPadding.small,
@@ -141,36 +122,6 @@ private fun <B : ToggleableButtonState> UserRow(
             },
         )
     }
-}
-
-@Composable
-private fun ConfirmationDialog(
-    title: String,
-    onDismissRequest: () -> Unit,
-    onConfirmed: () -> Unit
-) {
-    AlertDialog(
-        title = {
-            Text(
-                text = title,
-            )
-        },
-        onDismissRequest = onDismissRequest,
-        confirmButton = {
-            FfButton(
-                onClick = onConfirmed,
-            ) {
-                Text("Confirm")
-            }
-        },
-        dismissButton = {
-            FfButtonSecondary(
-                onClick = onDismissRequest
-            ) {
-                Text("Cancel")
-            }
-        }
-    )
 }
 
 data class ToggleableAccountListItemState<T : ToggleableButtonState>(
