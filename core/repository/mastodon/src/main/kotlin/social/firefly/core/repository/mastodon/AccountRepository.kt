@@ -35,40 +35,40 @@ class AccountRepository internal constructor(
 
     suspend fun getAccountFollowers(
         accountId: String,
-        olderThanId: String? = null,
-        newerThanId: String? = null,
+        maxId: String? = null,
+        sinceId: String? = null,
         loadSize: Int? = null,
     ): MastodonPagedResponse<Account> = api.getAccountFollowers(
         accountId = accountId,
-        olderThanId = olderThanId,
-        newerThanId = newerThanId,
+        maxId = maxId,
+        sinceId = sinceId,
         limit = loadSize,
     ).toMastodonPagedResponse { it.toExternalModel() }
 
     suspend fun getAccountFollowing(
         accountId: String,
-        olderThanId: String? = null,
-        newerThanId: String? = null,
+        maxId: String? = null,
+        sinceId: String? = null,
         loadSize: Int? = null,
     ): MastodonPagedResponse<Account> = api.getAccountFollowing(
         accountId = accountId,
-        olderThanId = olderThanId,
-        newerThanId = newerThanId,
+        maxId = maxId,
+        sinceId = sinceId,
         limit = loadSize,
     ).toMastodonPagedResponse { it.toExternalModel() }
 
     suspend fun getAccountStatuses(
         accountId: String,
-        olderThanId: String? = null,
-        immediatelyNewerThanId: String? = null,
+        maxId: String? = null,
+        minId: String? = null,
         loadSize: Int? = null,
         onlyMedia: Boolean = false,
         excludeReplies: Boolean = false,
         excludeBoosts: Boolean = false,
     ): MastodonPagedResponse<Status> = api.getAccountStatuses(
         accountId = accountId,
-        olderThanId = olderThanId,
-        immediatelyNewerThanId = immediatelyNewerThanId,
+        maxId = maxId,
+        minId = minId,
         limit = loadSize,
         onlyMedia = onlyMedia,
         excludeReplies = excludeReplies,

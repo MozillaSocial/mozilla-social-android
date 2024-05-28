@@ -14,20 +14,20 @@ import social.firefly.core.model.paging.MastodonPagedResponse
 import social.firefly.core.repository.paging.remotemediators.generic.IdBasedRemoteMediator
 import social.firefly.core.repository.paging.remotemediators.generic.IndexBasedRemoteMediator
 
-interface FfPager<T : Any, KEY: Any, DBO: Any> {
+interface FfPager<PAGED_ITEM_TYPE : Any, KEY: Any, DATABASE_OBJECT: Any> {
 
-    fun mapDbObjectToExternalModel(dbo: DBO): T
+    fun mapDbObjectToExternalModel(dbo: DATABASE_OBJECT): PAGED_ITEM_TYPE
 
     @OptIn(ExperimentalPagingApi::class)
-    fun getRemoteMediator(): RemoteMediator<KEY, DBO>
+    fun getRemoteMediator(): RemoteMediator<KEY, DATABASE_OBJECT>
 
-    fun pagingSource(): PagingSource<KEY, DBO>
+    fun pagingSource(): PagingSource<KEY, DATABASE_OBJECT>
 
     @ExperimentalPagingApi
     fun build(
         pageSize: Int = 40,
         initialLoadSize: Int = 40,
-    ): Flow<PagingData<T>> = Pager(
+    ): Flow<PagingData<PAGED_ITEM_TYPE>> = Pager(
         config = PagingConfig(
             pageSize = pageSize,
             initialLoadSize = initialLoadSize,
@@ -38,23 +38,27 @@ interface FfPager<T : Any, KEY: Any, DBO: Any> {
     }.flow.map { pagingData -> pagingData.map { mapDbObjectToExternalModel(it) } }
 }
 
-interface IndexBasedPager<T : Any, DBO: Any> : FfPager<T, Int, DBO> {
-    suspend fun saveLocally(items: List<PageItem<T>>, isRefresh: Boolean)
-    suspend fun getRemotely(limit: Int, offset: Int): List<T>
+interface IndexBasedPager<PAGED_ITEM_TYPE : Any, DATABASE_OBJECT: Any> :
+    FfPager<PAGED_ITEM_TYPE, Int, DATABASE_OBJECT> {
+
+    suspend fun saveLocally(items: List<PageItem<PAGED_ITEM_TYPE>>, isRefresh: Boolean)
+    suspend fun getRemotely(limit: Int, offset: Int): List<PAGED_ITEM_TYPE>
 
     @OptIn(ExperimentalPagingApi::class)
-    override fun getRemoteMediator(): RemoteMediator<Int, DBO> = IndexBasedRemoteMediator(
+    override fun getRemoteMediator(): RemoteMediator<Int, DATABASE_OBJECT> = IndexBasedRemoteMediator(
         saveLocally = ::saveLocally,
         getRemotely = ::getRemotely,
     )
 }
 
-interface IdBasedPager<T : Any, DBO: Any> : FfPager<T, Int, DBO> {
-    suspend fun saveLocally(items: List<PageItem<T>>, isRefresh: Boolean)
-    suspend fun getRemotely(limit: Int, nextKey: String?): MastodonPagedResponse<T>
+interface IdBasedPager<PAGED_ITEM_TYPE : Any, DATABASE_OBJECT: Any> :
+    FfPager<PAGED_ITEM_TYPE, Int, DATABASE_OBJECT> {
+
+    suspend fun saveLocally(items: List<PageItem<PAGED_ITEM_TYPE>>, isRefresh: Boolean)
+    suspend fun getRemotely(limit: Int, nextKey: String?): MastodonPagedResponse<PAGED_ITEM_TYPE>
 
     @OptIn(ExperimentalPagingApi::class)
-    override fun getRemoteMediator(): RemoteMediator<Int, DBO> = IdBasedRemoteMediator(
+    override fun getRemoteMediator(): RemoteMediator<Int, DATABASE_OBJECT> = IdBasedRemoteMediator(
         saveLocally = ::saveLocally,
         getRemotely = ::getRemotely,
     )

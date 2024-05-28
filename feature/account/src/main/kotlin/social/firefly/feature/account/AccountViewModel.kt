@@ -20,8 +20,7 @@ import social.firefly.core.analytics.FeedLocation
 import social.firefly.core.model.AccountTimelineType
 import social.firefly.core.navigation.NavigationDestination
 import social.firefly.core.navigation.usecases.NavigateTo
-import social.firefly.core.repository.mastodon.TimelineRepository
-import social.firefly.core.repository.paging.remotemediators.AccountTimelineRemoteMediator
+import social.firefly.core.repository.paging.pagers.AccountTimelinePager
 import social.firefly.core.ui.postcard.PostCardDelegate
 import social.firefly.core.ui.postcard.toPostCardUiState
 import social.firefly.core.usecase.mastodon.account.BlockAccount
@@ -39,7 +38,6 @@ import timber.log.Timber
 class AccountViewModel(
     private val analytics: AccountAnalytics,
     getLoggedInUserAccountId: GetLoggedInUserAccountId,
-    timelineRepository: TimelineRepository,
     private val getDetailedAccount: GetDetailedAccount,
     private val navigateTo: NavigateTo,
     private val followAccount: FollowAccount,
@@ -82,21 +80,21 @@ class AccountViewModel(
 
     private var getAccountJob: Job? = null
 
-    private val postsRemoteMediator: AccountTimelineRemoteMediator by inject {
+    private val postsPager: AccountTimelinePager by inject {
         parametersOf(
             accountId,
             AccountTimelineType.POSTS,
         )
     }
 
-    private val postsAndRepliesRemoteMediator: AccountTimelineRemoteMediator by inject {
+    private val postsAndRepliesPager: AccountTimelinePager by inject {
         parametersOf(
             accountId,
             AccountTimelineType.POSTS_AND_REPLIES,
         )
     }
 
-    private val mediaRemoteMediator: AccountTimelineRemoteMediator by inject {
+    private val mediaPager: AccountTimelinePager by inject {
         parametersOf(
             accountId,
             AccountTimelineType.MEDIA,
@@ -104,33 +102,21 @@ class AccountViewModel(
     }
 
     @OptIn(ExperimentalPagingApi::class)
-    val postsFeed = timelineRepository.getAccountTimelinePager(
-        accountId = accountId,
-        timelineType = AccountTimelineType.POSTS,
-        remoteMediator = postsRemoteMediator,
-    ).map { pagingData ->
+    val postsFeed = postsPager.build().map { pagingData ->
         pagingData.map {
             it.toPostCardUiState(usersAccountId)
         }
     }.cachedIn(viewModelScope)
 
     @OptIn(ExperimentalPagingApi::class)
-    val postsAndRepliesFeed = timelineRepository.getAccountTimelinePager(
-        accountId = accountId,
-        timelineType = AccountTimelineType.POSTS_AND_REPLIES,
-        remoteMediator = postsAndRepliesRemoteMediator,
-    ).map { pagingData ->
+    val postsAndRepliesFeed = postsAndRepliesPager.build().map { pagingData ->
         pagingData.map {
             it.toPostCardUiState(usersAccountId)
         }
     }.cachedIn(viewModelScope)
 
     @OptIn(ExperimentalPagingApi::class)
-    val mediaFeed = timelineRepository.getAccountTimelinePager(
-        accountId = accountId,
-        timelineType = AccountTimelineType.MEDIA,
-        remoteMediator = mediaRemoteMediator,
-    ).map { pagingData ->
+    val mediaFeed = mediaPager.build().map { pagingData ->
         pagingData.map {
             it.toPostCardUiState(usersAccountId)
         }

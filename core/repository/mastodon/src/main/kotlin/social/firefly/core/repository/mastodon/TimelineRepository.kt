@@ -16,7 +16,6 @@ import social.firefly.core.database.dao.FederatedTimelineStatusDao
 import social.firefly.core.database.dao.HashTagTimelineStatusDao
 import social.firefly.core.database.dao.HomeTimelineStatusDao
 import social.firefly.core.database.dao.LocalTimelineStatusDao
-import social.firefly.core.database.model.entities.statusCollections.AccountTimelineStatusWrapper
 import social.firefly.core.database.model.entities.statusCollections.FederatedTimelineStatusWrapper
 import social.firefly.core.database.model.entities.statusCollections.HashTagTimelineStatusWrapper
 import social.firefly.core.database.model.entities.statusCollections.HomeTimelineStatusWrapper
@@ -243,26 +242,10 @@ class TimelineRepository internal constructor(
     ) =
         accountTimelineStatusDao.upsertAll(statuses.map { it.toAccountTimelineStatus(timelineType) })
 
-    @ExperimentalPagingApi
-    fun getAccountTimelinePager(
+    fun accountTimelinePagingSource(
         accountId: String,
         timelineType: AccountTimelineType,
-        remoteMediator: RemoteMediator<Int, AccountTimelineStatusWrapper>,
-        pageSize: Int = 20,
-        initialLoadSize: Int = 40,
-    ): Flow<PagingData<Status>> = Pager(
-        config = PagingConfig(
-            pageSize = pageSize,
-            initialLoadSize = initialLoadSize,
-        ),
-        remoteMediator = remoteMediator,
-    ) {
-        accountTimelineStatusDao.accountTimelinePagingSource(accountId, timelineType)
-    }.flow.map { pagingData ->
-        pagingData.map {
-            it.status.toExternalModel()
-        }
-    }
+    ) = accountTimelineStatusDao.accountTimelinePagingSource(accountId, timelineType)
 
     suspend fun deleteAccountTimeline(
         accountId: String,

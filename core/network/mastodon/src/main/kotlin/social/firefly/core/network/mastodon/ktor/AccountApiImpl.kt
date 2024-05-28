@@ -2,18 +2,15 @@ package social.firefly.core.network.mastodon.ktor
 
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
-import io.ktor.client.plugins.ClientRequestException
 import io.ktor.client.request.forms.FormDataContent
 import io.ktor.client.request.forms.MultiPartFormDataContent
 import io.ktor.client.request.forms.formData
-import io.ktor.client.request.forms.submitForm
 import io.ktor.client.request.get
 import io.ktor.client.request.patch
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.http.Headers
 import io.ktor.http.HttpHeaders
-import io.ktor.http.HttpMethod
 import io.ktor.http.URLProtocol
 import io.ktor.http.parameters
 import io.ktor.http.path
@@ -49,18 +46,18 @@ class AccountApiImpl(
 
     override suspend fun getAccountFollowers(
         accountId: String,
-        olderThanId: String?,
-        newerThanId: String?,
-        immediatelyNewerThanId: String?,
+        maxId: String?,
+        sinceId: String?,
+        minId: String?,
         limit: Int?
     ): Response<List<NetworkAccount>> = client.get {
         url { _ ->
             protocol = URLProtocol.HTTPS
             path("api/v1/accounts/$accountId/followers")
             parameters.apply {
-                olderThanId?.let { append("max_id", it) }
-                newerThanId?.let { append("since_id", it) }
-                immediatelyNewerThanId?.let { append("min_id", it) }
+                maxId?.let { append("max_id", it) }
+                sinceId?.let { append("since_id", it) }
+                minId?.let { append("min_id", it) }
                 limit?.let { append("limit", it.toString()) }
             }
         }
@@ -68,18 +65,18 @@ class AccountApiImpl(
 
     override suspend fun getAccountFollowing(
         accountId: String,
-        olderThanId: String?,
-        newerThanId: String?,
-        immediatelyNewerThanId: String?,
+        maxId: String?,
+        sinceId: String?,
+        minId: String?,
         limit: Int?
     ): Response<List<NetworkAccount>> = client.get {
         url { _ ->
             protocol = URLProtocol.HTTPS
             path("api/v1/accounts/$accountId/following")
             parameters.apply {
-                olderThanId?.let { append("max_id", it) }
-                newerThanId?.let { append("since_id", it) }
-                immediatelyNewerThanId?.let { append("min_id", it) }
+                maxId?.let { append("max_id", it) }
+                sinceId?.let { append("since_id", it) }
+                minId?.let { append("min_id", it) }
                 limit?.let { append("limit", it.toString()) }
             }
         }
@@ -87,9 +84,9 @@ class AccountApiImpl(
 
     override suspend fun getAccountStatuses(
         accountId: String,
-        olderThanId: String?,
-        newerThanId: String?,
-        immediatelyNewerThanId: String?,
+        maxId: String?,
+        sinceId: String?,
+        minId: String?,
         limit: Int?,
         onlyMedia: Boolean,
         excludeReplies: Boolean,
@@ -99,9 +96,9 @@ class AccountApiImpl(
             protocol = URLProtocol.HTTPS
             path("api/v1/accounts/$accountId/statuses")
             parameters.apply {
-                olderThanId?.let { append("max_id", it) }
-                newerThanId?.let { append("since_id", it) }
-                immediatelyNewerThanId?.let { append("min_id", it) }
+                maxId?.let { append("max_id", it) }
+                sinceId?.let { append("since_id", it) }
+                minId?.let { append("min_id", it) }
                 limit?.let { append("limit", it.toString()) }
                 append("only_media", onlyMedia.toString())
                 append("exclude_replies", excludeReplies.toString())
