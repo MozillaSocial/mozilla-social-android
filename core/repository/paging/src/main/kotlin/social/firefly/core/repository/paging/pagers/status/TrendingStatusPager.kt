@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalPagingApi::class)
 
-package social.firefly.core.repository.paging.pagers
+package social.firefly.core.repository.paging.pagers.status
 
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.PagingSource

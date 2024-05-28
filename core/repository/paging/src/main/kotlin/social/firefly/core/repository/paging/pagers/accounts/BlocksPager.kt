@@ -1,4 +1,4 @@
-package social.firefly.core.repository.paging.pagers
+package social.firefly.core.repository.paging.pagers.accounts
 
 import androidx.paging.PagingSource
 import social.firefly.core.database.model.entities.accountCollections.BlockWrapper

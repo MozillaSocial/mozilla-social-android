@@ -4,6 +4,7 @@ import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import androidx.paging.PagingSource
 import androidx.paging.RemoteMediator
 import androidx.paging.map
 import kotlinx.coroutines.CoroutineDispatcher
@@ -47,16 +48,16 @@ class TimelineRepository internal constructor(
         localOnly: Boolean? = null,
         federatedOnly: Boolean? = null,
         mediaOnly: Boolean? = null,
-        olderThanId: String? = null,
-        immediatelyNewerThanId: String? = null,
-        loadSize: Int? = null,
+        maxId: String? = null,
+        minId: String? = null,
+        limit: Int? = null,
     ): MastodonPagedResponse<Status> = timelineApi.getPublicTimeline(
         localOnly = localOnly,
         federatedOnly = federatedOnly,
         mediaOnly = mediaOnly,
-        maxId = olderThanId,
-        sinceId = immediatelyNewerThanId,
-        limit = loadSize,
+        maxId = maxId,
+        minId = minId,
+        limit = limit,
     ).toMastodonPagedResponse { it.toExternalModel() }
 
     suspend fun insertStatusIntoTimelines(status: Status) =
@@ -69,26 +70,8 @@ class TimelineRepository internal constructor(
         }
 
     //region Local timeline
-    @ExperimentalPagingApi
-    fun getLocalTimelinePager(
-        remoteMediator: RemoteMediator<Int, LocalTimelineStatusWrapper>,
-        pageSize: Int = 20,
-        initialLoadSize: Int = 40,
-    ): Flow<PagingData<Status>> =
-        Pager(
-            config =
-            PagingConfig(
-                pageSize = pageSize,
-                initialLoadSize = initialLoadSize,
-            ),
-            remoteMediator = remoteMediator,
-        ) {
-            localTimelineStatusDao.localTimelinePagingSource()
-        }.flow.map { pagingData ->
-            pagingData.map {
-                it.status.toExternalModel()
-            }
-        }
+    fun getLocalTimelinePagingSource(): PagingSource<Int, LocalTimelineStatusWrapper> =
+        localTimelineStatusDao.localTimelinePagingSource()
 
     suspend fun insertAllIntoLocalTimeline(statuses: List<Status>) =
         localTimelineStatusDao.upsertAll(statuses.map { it.toLocalTimelineStatus() })
@@ -103,26 +86,8 @@ class TimelineRepository internal constructor(
     //endregion
 
     //region Federated timeline
-    @ExperimentalPagingApi
-    fun getFederatedTimelinePager(
-        remoteMediator: RemoteMediator<Int, FederatedTimelineStatusWrapper>,
-        pageSize: Int = 20,
-        initialLoadSize: Int = 40,
-    ): Flow<PagingData<Status>> =
-        Pager(
-            config =
-            PagingConfig(
-                pageSize = pageSize,
-                initialLoadSize = initialLoadSize,
-            ),
-            remoteMediator = remoteMediator,
-        ) {
-            federatedTimelineStatusDao.federatedTimelinePagingSource()
-        }.flow.map { pagingData ->
-            pagingData.map {
-                it.status.toExternalModel()
-            }
-        }
+    fun getFederatedTimelinePagingSource(): PagingSource<Int, FederatedTimelineStatusWrapper> =
+        federatedTimelineStatusDao.federatedTimelinePagingSource()
 
     suspend fun insertAllIntoFederatedTimeline(statuses: List<Status>) =
         federatedTimelineStatusDao.upsertAll(statuses.map { it.toFederatedTimelineStatus() })
@@ -138,13 +103,13 @@ class TimelineRepository internal constructor(
 
     //region Home timeline
     suspend fun getHomeTimeline(
-        olderThanId: String? = null,
-        immediatelyNewerThanId: String? = null,
-        loadSize: Int? = null,
+        maxId: String? = null,
+        minId: String? = null,
+        limit: Int? = null,
     ): MastodonPagedResponse<Status> = timelineApi.getHomeTimeline(
-        maxId = olderThanId,
-        minId = immediatelyNewerThanId,
-        limit = loadSize,
+        maxId = maxId,
+        minId = minId,
+        limit = limit,
     ).toMastodonPagedResponse { it.toExternalModel() }
 
     @ExperimentalPagingApi
@@ -192,14 +157,14 @@ class TimelineRepository internal constructor(
     //region Hashtag timeline
     suspend fun getHashtagTimeline(
         hashTag: String,
-        olderThanId: String? = null,
-        immediatelyNewerThanId: String? = null,
-        loadSize: Int? = null,
+        maxId: String? = null,
+        minId: String? = null,
+        limit: Int? = null,
     ): MastodonPagedResponse<Status> = timelineApi.getHashTagTimeline(
         hashTag = hashTag,
-        maxId = olderThanId,
-        minId = immediatelyNewerThanId,
-        limit = loadSize,
+        maxId = maxId,
+        minId = minId,
+        limit = limit,
     ).toMastodonPagedResponse { it.toExternalModel() }
 
     @ExperimentalPagingApi

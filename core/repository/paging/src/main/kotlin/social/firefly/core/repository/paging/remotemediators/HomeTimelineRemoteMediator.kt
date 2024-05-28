@@ -55,9 +55,9 @@ class HomeTimelineRemoteMediator(
                                     endOfPaginationReached = true
                                 )
                         timelineRepository.getHomeTimeline(
-                            olderThanId = null,
-                            immediatelyNewerThanId = firstItem.homeTimelineStatus.statusId,
-                            loadSize = pageSize,
+                            maxId = null,
+                            minId = firstItem.homeTimelineStatus.statusId,
+                            limit = pageSize,
                         )
                     }
 
@@ -68,9 +68,9 @@ class HomeTimelineRemoteMediator(
                                     endOfPaginationReached = true
                                 )
                         timelineRepository.getHomeTimeline(
-                            olderThanId = lastItem.homeTimelineStatus.statusId,
-                            immediatelyNewerThanId = null,
-                            loadSize = pageSize,
+                            maxId = lastItem.homeTimelineStatus.statusId,
+                            minId = null,
+                            limit = pageSize,
                         )
                     }
                 }
@@ -135,9 +135,9 @@ class HomeTimelineRemoteMediator(
         }
 
         val mainResponse = timelineRepository.getHomeTimeline(
-            olderThanId = olderThanId,
-            immediatelyNewerThanId = null,
-            loadSize = if (olderThanId != null) {
+            maxId = olderThanId,
+            minId = null,
+            limit = if (olderThanId != null) {
                 // if we are going to fetch the first status separately, we need to decrease this
                 // call's page size by 1
                 pageSize - 1
@@ -151,9 +151,9 @@ class HomeTimelineRemoteMediator(
 
         val topStatusResponse = if (olderThanId != null) {
             timelineRepository.getHomeTimeline(
-                olderThanId = null,
-                immediatelyNewerThanId = firstIdInMainList,
-                loadSize = 1,
+                maxId = null,
+                minId = firstIdInMainList,
+                limit = 1,
             )
         } else {
             null

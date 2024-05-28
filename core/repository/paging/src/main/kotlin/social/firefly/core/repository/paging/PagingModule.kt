@@ -4,23 +4,23 @@ import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.module
 import social.firefly.core.datastore.dataStoreModule
 import social.firefly.core.repository.mastodon.mastodonRepositoryModule
-import social.firefly.core.repository.paging.pagers.AccountTimelinePager
-import social.firefly.core.repository.paging.pagers.BlocksPager
-import social.firefly.core.repository.paging.pagers.BookmarksPager
-import social.firefly.core.repository.paging.pagers.FavoritesPager
-import social.firefly.core.repository.paging.pagers.FollowedHashTagsPager
-import social.firefly.core.repository.paging.pagers.MutesPager
-import social.firefly.core.repository.paging.pagers.TrendingHashTagPager
-import social.firefly.core.repository.paging.pagers.TrendingStatusPager
+import social.firefly.core.repository.paging.pagers.status.AccountTimelinePager
+import social.firefly.core.repository.paging.pagers.accounts.BlocksPager
+import social.firefly.core.repository.paging.pagers.status.BookmarksPager
+import social.firefly.core.repository.paging.pagers.status.FavoritesPager
+import social.firefly.core.repository.paging.pagers.status.FederatedTimelinePager
+import social.firefly.core.repository.paging.pagers.hashTags.FollowedHashTagsPager
+import social.firefly.core.repository.paging.pagers.accounts.MutesPager
+import social.firefly.core.repository.paging.pagers.hashTags.TrendingHashTagPager
+import social.firefly.core.repository.paging.pagers.status.LocalTimelinePager
+import social.firefly.core.repository.paging.pagers.status.TrendingStatusPager
 import social.firefly.core.repository.paging.remotemediators.notifications.AllNotificationsRemoteMediator
 import social.firefly.core.repository.paging.remotemediators.notifications.FollowNotificationsRemoteMediator
 import social.firefly.core.repository.paging.remotemediators.notifications.MentionNotificationsRemoteMediator
-import social.firefly.core.repository.paging.remotemediators.FederatedTimelineRemoteMediator
 import social.firefly.core.repository.paging.remotemediators.FollowersRemoteMediator
 import social.firefly.core.repository.paging.remotemediators.FollowingsRemoteMediator
 import social.firefly.core.repository.paging.remotemediators.HashTagTimelineRemoteMediator
 import social.firefly.core.repository.paging.remotemediators.HomeTimelineRemoteMediator
-import social.firefly.core.repository.paging.remotemediators.LocalTimelineRemoteMediator
 import social.firefly.core.repository.paging.remotemediators.SearchAccountsRemoteMediator
 import social.firefly.core.repository.paging.remotemediators.SearchStatusesRemoteMediator
 import social.firefly.core.repository.paging.remotemediators.SearchedHashTagsRemoteMediator
@@ -35,8 +35,6 @@ val pagingModule = module {
     )
 
     factoryOf(::HomeTimelineRemoteMediator)
-    factoryOf(::LocalTimelineRemoteMediator)
-    factoryOf(::FederatedTimelineRemoteMediator)
     factoryOf(::AllNotificationsRemoteMediator)
     factoryOf(::MentionNotificationsRemoteMediator)
     factoryOf(::FollowNotificationsRemoteMediator)
@@ -104,7 +102,9 @@ val pagingModule = module {
     factoryOf(::BookmarksPager)
     factoryOf(::DomainBlocksPagingSource)
     factoryOf(::FavoritesPager)
+    factoryOf(::FederatedTimelinePager)
     factoryOf(::FollowedHashTagsPager)
+    factoryOf(::LocalTimelinePager)
     factoryOf(::MutesPager)
     factoryOf(::TrendingStatusPager)
     factoryOf(::TrendingHashTagPager)

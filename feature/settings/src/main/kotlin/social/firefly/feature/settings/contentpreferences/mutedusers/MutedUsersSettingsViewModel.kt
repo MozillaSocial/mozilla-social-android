@@ -13,7 +13,7 @@ import social.firefly.common.utils.StringFactory
 import social.firefly.core.analytics.SettingsAnalytics
 import social.firefly.core.model.wrappers.AccountAndRelationship
 import social.firefly.core.navigation.usecases.NavigateToAccount
-import social.firefly.core.repository.paging.pagers.MutesPager
+import social.firefly.core.repository.paging.pagers.accounts.MutesPager
 import social.firefly.core.ui.common.account.quickview.toQuickViewUiState
 import social.firefly.core.ui.common.account.toggleablelist.ToggleableAccountListItemState
 import social.firefly.core.usecase.mastodon.account.MuteAccount

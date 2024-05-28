@@ -33,9 +33,9 @@ class HashTagTimelineRemoteMediator(
                         pageSize = state.config.initialLoadSize
                         timelineRepository.getHashtagTimeline(
                             hashTag = hashTag,
-                            olderThanId = null,
-                            immediatelyNewerThanId = null,
-                            loadSize = pageSize,
+                            maxId = null,
+                            minId = null,
+                            limit = pageSize,
                         )
                     }
 
@@ -45,9 +45,9 @@ class HashTagTimelineRemoteMediator(
                                 ?: return MediatorResult.Success(endOfPaginationReached = true)
                         timelineRepository.getHashtagTimeline(
                             hashTag = hashTag,
-                            olderThanId = null,
-                            immediatelyNewerThanId = firstItem.hashTagTimelineStatus.statusId,
-                            loadSize = pageSize,
+                            maxId = null,
+                            minId = firstItem.hashTagTimelineStatus.statusId,
+                            limit = pageSize,
                         )
                     }
 
@@ -57,9 +57,9 @@ class HashTagTimelineRemoteMediator(
                                 ?: return MediatorResult.Success(endOfPaginationReached = true)
                         timelineRepository.getHashtagTimeline(
                             hashTag = hashTag,
-                            olderThanId = lastItem.hashTagTimelineStatus.statusId,
-                            immediatelyNewerThanId = null,
-                            loadSize = pageSize,
+                            maxId = lastItem.hashTagTimelineStatus.statusId,
+                            minId = null,
+                            limit = pageSize,
                         )
                     }
                 }

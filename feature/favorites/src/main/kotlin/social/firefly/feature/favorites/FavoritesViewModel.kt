@@ -10,7 +10,7 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.koin.core.parameter.parametersOf
 import social.firefly.core.analytics.FeedLocation
-import social.firefly.core.repository.paging.pagers.FavoritesPager
+import social.firefly.core.repository.paging.pagers.status.FavoritesPager
 import social.firefly.core.ui.postcard.PostCardDelegate
 import social.firefly.core.ui.postcard.toPostCardUiState
 import social.firefly.core.usecase.mastodon.account.GetLoggedInUserAccountId
