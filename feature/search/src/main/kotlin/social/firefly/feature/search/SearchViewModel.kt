@@ -18,7 +18,6 @@ import social.firefly.core.analytics.FeedLocation
 import social.firefly.core.analytics.SearchAnalytics
 import social.firefly.core.navigation.NavigationDestination
 import social.firefly.core.navigation.usecases.NavigateTo
-import social.firefly.core.repository.mastodon.SearchRepository
 import social.firefly.core.repository.paging.pagers.accounts.SearchAccountsPager
 import social.firefly.core.repository.paging.pagers.hashTags.SearchHashTagPager
 import social.firefly.core.repository.paging.pagers.status.SearchStatusesPager
@@ -41,7 +40,6 @@ class SearchViewModel(
     private val followAccount: FollowAccount,
     private val unfollowAccount: UnfollowAccount,
     private val navigateTo: NavigateTo,
-    private val searchRepository: SearchRepository,
     private val analytics: SearchAnalytics,
 ) : ViewModel(), SearchInteractions, KoinComponent {
 
