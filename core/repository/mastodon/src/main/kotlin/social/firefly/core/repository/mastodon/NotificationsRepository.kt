@@ -71,26 +71,8 @@ class NotificationsRepository(
             }
         }
 
-    @ExperimentalPagingApi
-    fun getFollowListNotificationsPager(
-        remoteMediator: RemoteMediator<Int, FollowListNotificationWrapper>,
-        pageSize: Int = 20,
-        initialLoadSize: Int = 40,
-    ): Flow<PagingData<Notification>> =
-        Pager(
-            config =
-            PagingConfig(
-                pageSize = pageSize,
-                initialLoadSize = initialLoadSize,
-            ),
-            remoteMediator = remoteMediator,
-        ) {
-            dao.followListNotificationsPagingSource()
-        }.flow.map { pagingData ->
-            pagingData.map {
-                it.notificationWrapper.toExternal()
-            }
-        }
+    fun getFollowListPagingSource(): PagingSource<Int, FollowListNotificationWrapper> =
+        dao.followListNotificationsPagingSource()
 
     @PreferUseCase
     suspend fun insertAll(
