@@ -14,6 +14,7 @@ import social.firefly.core.repository.paging.pagers.status.FederatedTimelinePage
 import social.firefly.core.repository.paging.pagers.hashTags.FollowedHashTagsPager
 import social.firefly.core.repository.paging.pagers.accounts.MutesPager
 import social.firefly.core.repository.paging.pagers.accounts.SearchAccountsPager
+import social.firefly.core.repository.paging.pagers.hashTags.SearchHashTagPager
 import social.firefly.core.repository.paging.pagers.hashTags.TrendingHashTagPager
 import social.firefly.core.repository.paging.pagers.status.HashTagTimelinePager
 import social.firefly.core.repository.paging.pagers.status.LocalTimelinePager
@@ -23,7 +24,6 @@ import social.firefly.core.repository.paging.remotemediators.notifications.Follo
 import social.firefly.core.repository.paging.remotemediators.notifications.MentionNotificationsRemoteMediator
 import social.firefly.core.repository.paging.remotemediators.HomeTimelineRemoteMediator
 import social.firefly.core.repository.paging.remotemediators.SearchStatusesRemoteMediator
-import social.firefly.core.repository.paging.remotemediators.SearchedHashTagsRemoteMediator
 import social.firefly.core.repository.paging.sources.DomainBlocksPagingSource
 import social.firefly.core.usecase.mastodon.mastodonUsecaseModule
 
@@ -45,15 +45,6 @@ val pagingModule = module {
             databaseDelegate = get(),
             getInReplyToAccountNames = get(),
             saveStatusToDatabase = get(),
-            query = parametersHolder[0],
-        )
-    }
-
-    factory { parametersHolder ->
-        SearchedHashTagsRemoteMediator(
-            databaseDelegate = get(),
-            searchRepository = get(),
-            hashtagRepository = get(),
             query = parametersHolder[0],
         )
     }
@@ -117,6 +108,15 @@ val pagingModule = module {
             databaseDelegate = get(),
             accountRepository = get(),
             relationshipRepository = get(),
+            query = parametersHolder[0],
+        )
+    }
+
+    factory { parametersHolder ->
+        SearchHashTagPager(
+            databaseDelegate = get(),
+            searchRepository = get(),
+            hashtagRepository = get(),
             query = parametersHolder[0],
         )
     }

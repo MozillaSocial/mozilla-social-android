@@ -128,24 +128,6 @@ class SearchRepository internal constructor(
             }
         }
 
-    @ExperimentalPagingApi
-    fun getHashTagsPager(
-        remoteMediator: RemoteMediator<Int, SearchedHashTagWrapper>,
-        pageSize: Int = 40,
-        initialLoadSize: Int = 40,
-    ): Flow<PagingData<HashTag>> =
-        Pager(
-            config =
-            PagingConfig(
-                pageSize = pageSize,
-                initialLoadSize = initialLoadSize,
-            ),
-            remoteMediator = remoteMediator,
-        ) {
-            searchDao.hashTagsPagingSource()
-        }.flow.map { pagingData ->
-            pagingData.map {
-                it.hashTag.toExternalModel()
-            }
-        }
+    fun getHashTagPagingSource(): PagingSource<Int, SearchedHashTagWrapper> =
+        searchDao.hashTagsPagingSource()
 }

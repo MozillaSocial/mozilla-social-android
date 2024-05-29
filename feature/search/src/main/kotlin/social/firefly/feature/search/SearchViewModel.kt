@@ -20,8 +20,8 @@ import social.firefly.core.navigation.NavigationDestination
 import social.firefly.core.navigation.usecases.NavigateTo
 import social.firefly.core.repository.mastodon.SearchRepository
 import social.firefly.core.repository.paging.pagers.accounts.SearchAccountsPager
+import social.firefly.core.repository.paging.pagers.hashTags.SearchHashTagPager
 import social.firefly.core.repository.paging.remotemediators.SearchStatusesRemoteMediator
-import social.firefly.core.repository.paging.remotemediators.SearchedHashTagsRemoteMediator
 import social.firefly.core.ui.accountfollower.toAccountFollowerUiState
 import social.firefly.core.ui.common.following.FollowStatus
 import social.firefly.core.ui.hashtagcard.HashTagCardDelegate
@@ -101,7 +101,7 @@ class SearchViewModel(
     }
 
     private fun updateHashTagFeed() {
-        val hashTagRemoteMediator = getKoin().inject<SearchedHashTagsRemoteMediator> {
+        val hashTagPager = getKoin().inject<SearchHashTagPager> {
             parametersOf(
                 _uiState.value.query
             )
@@ -109,9 +109,7 @@ class SearchViewModel(
 
         _uiState.edit {
             copy(
-                hashTagFeed = searchRepository.getHashTagsPager(
-                    remoteMediator = hashTagRemoteMediator,
-                ).map { pagingData ->
+                hashTagFeed = hashTagPager.build().map { pagingData ->
                     pagingData.map {
                         it.toHashTagQuickViewUiState()
                     }
