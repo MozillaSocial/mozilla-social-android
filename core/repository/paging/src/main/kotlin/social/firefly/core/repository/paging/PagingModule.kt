@@ -18,12 +18,12 @@ import social.firefly.core.repository.paging.pagers.hashTags.SearchHashTagPager
 import social.firefly.core.repository.paging.pagers.hashTags.TrendingHashTagPager
 import social.firefly.core.repository.paging.pagers.status.HashTagTimelinePager
 import social.firefly.core.repository.paging.pagers.status.LocalTimelinePager
+import social.firefly.core.repository.paging.pagers.status.SearchStatusesPager
 import social.firefly.core.repository.paging.pagers.status.TrendingStatusPager
 import social.firefly.core.repository.paging.remotemediators.notifications.AllNotificationsRemoteMediator
 import social.firefly.core.repository.paging.remotemediators.notifications.FollowNotificationsRemoteMediator
 import social.firefly.core.repository.paging.remotemediators.notifications.MentionNotificationsRemoteMediator
 import social.firefly.core.repository.paging.remotemediators.HomeTimelineRemoteMediator
-import social.firefly.core.repository.paging.remotemediators.SearchStatusesRemoteMediator
 import social.firefly.core.repository.paging.sources.DomainBlocksPagingSource
 import social.firefly.core.usecase.mastodon.mastodonUsecaseModule
 
@@ -38,16 +38,6 @@ val pagingModule = module {
     factoryOf(::AllNotificationsRemoteMediator)
     factoryOf(::MentionNotificationsRemoteMediator)
     factoryOf(::FollowNotificationsRemoteMediator)
-
-    factory { parametersHolder ->
-        SearchStatusesRemoteMediator(
-            searchRepository = get(),
-            databaseDelegate = get(),
-            getInReplyToAccountNames = get(),
-            saveStatusToDatabase = get(),
-            query = parametersHolder[0],
-        )
-    }
 
     factoryOf(::BlocksPager)
     factoryOf(::BookmarksPager)
@@ -117,6 +107,16 @@ val pagingModule = module {
             databaseDelegate = get(),
             searchRepository = get(),
             hashtagRepository = get(),
+            query = parametersHolder[0],
+        )
+    }
+
+    factory { parametersHolder ->
+        SearchStatusesPager(
+            searchRepository = get(),
+            databaseDelegate = get(),
+            getInReplyToAccountNames = get(),
+            saveStatusToDatabase = get(),
             query = parametersHolder[0],
         )
     }

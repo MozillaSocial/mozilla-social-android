@@ -21,7 +21,7 @@ import social.firefly.core.navigation.usecases.NavigateTo
 import social.firefly.core.repository.mastodon.SearchRepository
 import social.firefly.core.repository.paging.pagers.accounts.SearchAccountsPager
 import social.firefly.core.repository.paging.pagers.hashTags.SearchHashTagPager
-import social.firefly.core.repository.paging.remotemediators.SearchStatusesRemoteMediator
+import social.firefly.core.repository.paging.pagers.status.SearchStatusesPager
 import social.firefly.core.ui.accountfollower.toAccountFollowerUiState
 import social.firefly.core.ui.common.following.FollowStatus
 import social.firefly.core.ui.hashtagcard.HashTagCardDelegate
@@ -81,7 +81,7 @@ class SearchViewModel(
     }
 
     private fun updateStatusFeed() {
-        val statusesRemoteMediator = getKoin().inject<SearchStatusesRemoteMediator> {
+        val statusesPager = getKoin().inject<SearchStatusesPager> {
             parametersOf(
                 _uiState.value.query
             )
@@ -89,9 +89,7 @@ class SearchViewModel(
 
         _uiState.edit {
             copy(
-                statusFeed = searchRepository.getStatusesPager(
-                    remoteMediator = statusesRemoteMediator,
-                ).map { pagingData ->
+                statusFeed = statusesPager.build().map { pagingData ->
                     pagingData.map {
                         it.toPostCardUiState(usersAccountId)
                     }
