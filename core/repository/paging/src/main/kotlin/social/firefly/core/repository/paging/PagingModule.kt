@@ -14,12 +14,12 @@ import social.firefly.core.repository.paging.pagers.status.FederatedTimelinePage
 import social.firefly.core.repository.paging.pagers.hashTags.FollowedHashTagsPager
 import social.firefly.core.repository.paging.pagers.accounts.MutesPager
 import social.firefly.core.repository.paging.pagers.hashTags.TrendingHashTagPager
+import social.firefly.core.repository.paging.pagers.status.HashTagTimelinePager
 import social.firefly.core.repository.paging.pagers.status.LocalTimelinePager
 import social.firefly.core.repository.paging.pagers.status.TrendingStatusPager
 import social.firefly.core.repository.paging.remotemediators.notifications.AllNotificationsRemoteMediator
 import social.firefly.core.repository.paging.remotemediators.notifications.FollowNotificationsRemoteMediator
 import social.firefly.core.repository.paging.remotemediators.notifications.MentionNotificationsRemoteMediator
-import social.firefly.core.repository.paging.remotemediators.HashTagTimelineRemoteMediator
 import social.firefly.core.repository.paging.remotemediators.HomeTimelineRemoteMediator
 import social.firefly.core.repository.paging.remotemediators.SearchAccountsRemoteMediator
 import social.firefly.core.repository.paging.remotemediators.SearchStatusesRemoteMediator
@@ -38,16 +38,6 @@ val pagingModule = module {
     factoryOf(::AllNotificationsRemoteMediator)
     factoryOf(::MentionNotificationsRemoteMediator)
     factoryOf(::FollowNotificationsRemoteMediator)
-
-    factory { parametersHolder ->
-        HashTagTimelineRemoteMediator(
-            get(),
-            get(),
-            get(),
-            get(),
-            parametersHolder[0],
-        )
-    }
 
     factory { parametersHolder ->
         SearchAccountsRemoteMediator(
@@ -118,6 +108,16 @@ val pagingModule = module {
             followingsRepository = get(),
             relationshipRepository = get(),
             accountId = parametersHolder[0],
+        )
+    }
+
+    factory { parametersHolder ->
+        HashTagTimelinePager(
+            timelineRepository = get(),
+            saveStatusToDatabase = get(),
+            databaseDelegate = get(),
+            getInReplyToAccountNames = get(),
+            hashTag = parametersHolder[0],
         )
     }
 }

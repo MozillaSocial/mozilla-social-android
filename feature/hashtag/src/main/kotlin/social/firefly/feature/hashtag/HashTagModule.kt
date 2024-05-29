@@ -26,8 +26,7 @@ val hashTagModule =
             HashTagViewModel(
                 hashTag = parametersHolder[0],
                 analytics = get(),
-                userAccountId = get(),
-                timelineRepository = get(),
+                getLoggedInUserAccountId = get(),
                 unfollowHashTag = get(),
                 followHashTag = get(),
                 getHashTag = get(),

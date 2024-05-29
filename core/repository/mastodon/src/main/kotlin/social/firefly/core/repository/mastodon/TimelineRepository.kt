@@ -167,27 +167,8 @@ class TimelineRepository internal constructor(
         limit = limit,
     ).toMastodonPagedResponse { it.toExternalModel() }
 
-    @ExperimentalPagingApi
-    fun getHashtagTimelinePager(
-        hashTag: String,
-        remoteMediator: RemoteMediator<Int, HashTagTimelineStatusWrapper>,
-        pageSize: Int = 20,
-        initialLoadSize: Int = 40,
-    ): Flow<PagingData<Status>> =
-        Pager(
-            config =
-            PagingConfig(
-                pageSize = pageSize,
-                initialLoadSize = initialLoadSize,
-            ),
-            remoteMediator = remoteMediator,
-        ) {
-            hashTagTimelineStatusDao.hashTagTimelinePagingSource(hashTag)
-        }.flow.map { pagingData ->
-            pagingData.map {
-                it.status.toExternalModel()
-            }
-        }
+    fun getHashTagPagingSource(hashTag: String): PagingSource<Int, HashTagTimelineStatusWrapper> =
+        hashTagTimelineStatusDao.hashTagTimelinePagingSource(hashTag)
 
     suspend fun deleteHashTagTimeline(hashTag: String) =
         hashTagTimelineStatusDao.deleteHashTagTimeline(hashTag)

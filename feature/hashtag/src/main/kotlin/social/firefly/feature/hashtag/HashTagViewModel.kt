@@ -18,8 +18,7 @@ import social.firefly.common.Resource
 import social.firefly.core.analytics.FeedLocation
 import social.firefly.core.analytics.HashtagAnalytics
 import social.firefly.core.model.HashTag
-import social.firefly.core.repository.mastodon.TimelineRepository
-import social.firefly.core.repository.paging.remotemediators.HashTagTimelineRemoteMediator
+import social.firefly.core.repository.paging.pagers.status.HashTagTimelinePager
 import social.firefly.core.ui.postcard.PostCardDelegate
 import social.firefly.core.ui.postcard.toPostCardUiState
 import social.firefly.core.usecase.mastodon.account.GetLoggedInUserAccountId
@@ -30,15 +29,14 @@ import timber.log.Timber
 
 class HashTagViewModel(
     private val analytics: HashtagAnalytics,
-    timelineRepository: TimelineRepository,
     private val hashTag: String,
-    userAccountId: GetLoggedInUserAccountId,
+    getLoggedInUserAccountId: GetLoggedInUserAccountId,
     private val unfollowHashTag: UnfollowHashTag,
     private val followHashTag: FollowHashTag,
     private val getHashTag: GetHashTag,
 ) : ViewModel(), HashTagInteractions, KoinComponent {
 
-    private val hashTagTimelineRemoteMediator: HashTagTimelineRemoteMediator by inject {
+    private val hashTagTimelinePager: HashTagTimelinePager by inject {
         parametersOf(hashTag)
     }
 
@@ -46,18 +44,17 @@ class HashTagViewModel(
         parametersOf(FeedLocation.HASHTAG)
     }
 
+    private val userAccountId: String = getLoggedInUserAccountId()
+
     private var getHashTagJob: Job? = null
 
     private val _uiState = MutableStateFlow<Resource<HashTag>>(Resource.Loading())
     val uiState = _uiState.asStateFlow()
 
     @OptIn(ExperimentalPagingApi::class)
-    val feed = timelineRepository.getHashtagTimelinePager(
-        hashTag = hashTag,
-        remoteMediator = hashTagTimelineRemoteMediator,
-    ).map { pagingData ->
+    val feed = hashTagTimelinePager.build().map { pagingData ->
         pagingData.map {
-            it.toPostCardUiState(userAccountId())
+            it.toPostCardUiState(userAccountId)
         }
     }.cachedIn(viewModelScope)
 
