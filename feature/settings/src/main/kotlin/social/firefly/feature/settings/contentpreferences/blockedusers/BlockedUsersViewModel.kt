@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import social.firefly.common.utils.StringFactory
 import social.firefly.core.analytics.SettingsAnalytics
-import social.firefly.core.model.wrappers.AccountAndRelationship
+import social.firefly.core.model.wrappers.DetailedAccountWrapper
 import social.firefly.core.navigation.usecases.NavigateToAccount
 import social.firefly.core.repository.paging.pagers.accounts.BlocksPager
 import social.firefly.core.ui.common.account.quickview.toQuickViewUiState
@@ -70,7 +70,7 @@ class BlockedUsersViewModel(
     }
 }
 
-fun AccountAndRelationship.toToggleableState() =
+fun DetailedAccountWrapper.toToggleableState() =
     ToggleableAccountListItemState(
         buttonState = if (relationship.isBlocking) BlockedButtonState.Blocked else BlockedButtonState.Unblocked(
             confirmationText = StringFactory.resource(

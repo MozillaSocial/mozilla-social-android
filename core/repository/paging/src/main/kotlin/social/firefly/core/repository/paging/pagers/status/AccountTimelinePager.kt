@@ -44,7 +44,7 @@ class AccountTimelinePager(
             accountId = accountId,
             maxId = nextKey,
             minId = null,
-            loadSize = limit,
+            limit = limit,
             onlyMedia = timelineType == AccountTimelineType.MEDIA,
             excludeReplies = timelineType == AccountTimelineType.POSTS,
         )

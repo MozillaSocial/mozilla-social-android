@@ -36,32 +36,28 @@ class AccountRepository internal constructor(
     suspend fun getAccountFollowers(
         accountId: String,
         maxId: String? = null,
-        sinceId: String? = null,
-        loadSize: Int? = null,
+        limit: Int? = null,
     ): MastodonPagedResponse<Account> = api.getAccountFollowers(
         accountId = accountId,
         maxId = maxId,
-        sinceId = sinceId,
-        limit = loadSize,
+        limit = limit,
     ).toMastodonPagedResponse { it.toExternalModel() }
 
     suspend fun getAccountFollowing(
         accountId: String,
         maxId: String? = null,
-        sinceId: String? = null,
-        loadSize: Int? = null,
+        limit: Int? = null,
     ): MastodonPagedResponse<Account> = api.getAccountFollowing(
         accountId = accountId,
         maxId = maxId,
-        sinceId = sinceId,
-        limit = loadSize,
+        limit = limit,
     ).toMastodonPagedResponse { it.toExternalModel() }
 
     suspend fun getAccountStatuses(
         accountId: String,
         maxId: String? = null,
         minId: String? = null,
-        loadSize: Int? = null,
+        limit: Int? = null,
         onlyMedia: Boolean = false,
         excludeReplies: Boolean = false,
         excludeBoosts: Boolean = false,
@@ -69,7 +65,7 @@ class AccountRepository internal constructor(
         accountId = accountId,
         maxId = maxId,
         minId = minId,
-        limit = loadSize,
+        limit = limit,
         onlyMedia = onlyMedia,
         excludeReplies = excludeReplies,
         excludeBoosts = excludeBoosts,

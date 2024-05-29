@@ -21,8 +21,6 @@ val followersModule =
         viewModel { parameters ->
             FollowersViewModel(
                 accountId = parameters[0],
-                followingsRepository = get(),
-                followersRepository = get(),
                 navigateTo = get(),
                 analytics = get(),
                 followAccount = get(),
