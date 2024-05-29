@@ -16,7 +16,7 @@ import social.firefly.common.utils.edit
 import social.firefly.core.analytics.FeedLocation
 import social.firefly.core.repository.mastodon.AccountRepository
 import social.firefly.core.repository.mastodon.NotificationsRepository
-import social.firefly.core.repository.paging.remotemediators.notifications.AllNotificationsRemoteMediator
+import social.firefly.core.repository.paging.pagers.notifications.AllNotificationsPager
 import social.firefly.core.repository.paging.remotemediators.notifications.FollowNotificationsRemoteMediator
 import social.firefly.core.repository.paging.remotemediators.notifications.MentionNotificationsRemoteMediator
 import social.firefly.core.ui.notifications.NotificationCardDelegate
@@ -27,7 +27,7 @@ import timber.log.Timber
 
 class NotificationsViewModel(
     notificationsRepository: NotificationsRepository,
-    allNotificationsRemoteMediator: AllNotificationsRemoteMediator,
+    allNotificationsPager: AllNotificationsPager,
     mentionNotificationsRemoteMediator: MentionNotificationsRemoteMediator,
     followNotificationsRemoteMediator: FollowNotificationsRemoteMediator,
     getLoggedInUserAccountId: GetLoggedInUserAccountId,
@@ -48,9 +48,7 @@ class NotificationsViewModel(
     val uiState = _uiState.asStateFlow()
 
     @OptIn(ExperimentalPagingApi::class)
-    val feed = notificationsRepository.getMainNotificationsPager(
-        remoteMediator = allNotificationsRemoteMediator,
-    ).map { pagingData ->
+    val feed = allNotificationsPager.build().map { pagingData ->
         pagingData.map {
             it.toUiState(loggedInUserAccountId)
         }

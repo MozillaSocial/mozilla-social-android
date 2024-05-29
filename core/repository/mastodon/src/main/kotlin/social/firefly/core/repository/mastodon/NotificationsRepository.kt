@@ -4,6 +4,7 @@ import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import androidx.paging.PagingSource
 import androidx.paging.RemoteMediator
 import androidx.paging.map
 import kotlinx.coroutines.flow.Flow
@@ -47,26 +48,7 @@ class NotificationsRepository(
         accountId = accountId
     ).toMastodonPagedResponse { it.toExternal() }
 
-    @ExperimentalPagingApi
-    fun getMainNotificationsPager(
-        remoteMediator: RemoteMediator<Int, MainNotificationWrapper>,
-        pageSize: Int = 20,
-        initialLoadSize: Int = 40,
-    ): Flow<PagingData<Notification>> =
-        Pager(
-            config =
-            PagingConfig(
-                pageSize = pageSize,
-                initialLoadSize = initialLoadSize,
-            ),
-            remoteMediator = remoteMediator,
-        ) {
-            dao.mainNotificationsPagingSource()
-        }.flow.map { pagingData ->
-            pagingData.map {
-                it.notificationWrapper.toExternal()
-            }
-        }
+    fun getMainPagingSource(): PagingSource<Int, MainNotificationWrapper> = dao.mainNotificationsPagingSource()
 
     @ExperimentalPagingApi
     fun getMentionListNotificationsPager(

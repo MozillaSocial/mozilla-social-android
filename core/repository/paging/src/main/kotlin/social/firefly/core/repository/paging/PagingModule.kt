@@ -16,11 +16,11 @@ import social.firefly.core.repository.paging.pagers.accounts.MutesPager
 import social.firefly.core.repository.paging.pagers.accounts.SearchAccountsPager
 import social.firefly.core.repository.paging.pagers.hashTags.SearchHashTagPager
 import social.firefly.core.repository.paging.pagers.hashTags.TrendingHashTagPager
+import social.firefly.core.repository.paging.pagers.notifications.AllNotificationsPager
 import social.firefly.core.repository.paging.pagers.status.HashTagTimelinePager
 import social.firefly.core.repository.paging.pagers.status.LocalTimelinePager
 import social.firefly.core.repository.paging.pagers.status.SearchStatusesPager
 import social.firefly.core.repository.paging.pagers.status.TrendingStatusPager
-import social.firefly.core.repository.paging.remotemediators.notifications.AllNotificationsRemoteMediator
 import social.firefly.core.repository.paging.remotemediators.notifications.FollowNotificationsRemoteMediator
 import social.firefly.core.repository.paging.remotemediators.notifications.MentionNotificationsRemoteMediator
 import social.firefly.core.repository.paging.remotemediators.HomeTimelineRemoteMediator
@@ -35,10 +35,10 @@ val pagingModule = module {
     )
 
     factoryOf(::HomeTimelineRemoteMediator)
-    factoryOf(::AllNotificationsRemoteMediator)
     factoryOf(::MentionNotificationsRemoteMediator)
     factoryOf(::FollowNotificationsRemoteMediator)
 
+    factoryOf(::AllNotificationsPager)
     factoryOf(::BlocksPager)
     factoryOf(::BookmarksPager)
     factoryOf(::DomainBlocksPagingSource)
