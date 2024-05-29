@@ -10,13 +10,11 @@ import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.koin.core.parameter.parametersOf
-import org.koin.java.KoinJavaComponent
 import social.firefly.core.analytics.FollowersAnalytics
 import social.firefly.core.navigation.NavigationDestination
 import social.firefly.core.navigation.usecases.NavigateTo
-import social.firefly.core.repository.mastodon.FollowingsRepository
 import social.firefly.core.repository.paging.pagers.accounts.FollowersPager
-import social.firefly.core.repository.paging.remotemediators.FollowingsRemoteMediator
+import social.firefly.core.repository.paging.pagers.accounts.FollowingsPager
 import social.firefly.core.ui.accountfollower.toAccountFollowerUiState
 import social.firefly.core.ui.common.following.FollowStatus
 import social.firefly.core.usecase.mastodon.account.FollowAccount
@@ -27,7 +25,6 @@ import timber.log.Timber
 @OptIn(ExperimentalPagingApi::class)
 class FollowersViewModel(
     private val accountId: String,
-    followingsRepository: FollowingsRepository,
     private val navigateTo: NavigateTo,
     private val analytics: FollowersAnalytics,
     private val followAccount: FollowAccount,
@@ -41,9 +38,9 @@ class FollowersViewModel(
         parametersOf(accountId)
     }
 
-    private val followingsRemoteMediator: FollowingsRemoteMediator by KoinJavaComponent.inject(
-        FollowingsRemoteMediator::class.java,
-    ) { parametersOf(accountId) }
+    private val followingsPager: FollowingsPager by inject {
+        parametersOf(accountId)
+    }
 
     val followers = followersPager.build().map { pagingData ->
         pagingData.map {
@@ -51,15 +48,11 @@ class FollowersViewModel(
         }
     }.cachedIn(viewModelScope)
 
-    val following =
-        followingsRepository.getFollowingsPager(
-            accountId = accountId,
-            remoteMediator = followingsRemoteMediator,
-        ).map { pagingData ->
-            pagingData.map {
-                it.toAccountFollowerUiState(loggedInUserAccountId)
-            }
-        }.cachedIn(viewModelScope)
+    val following = followingsPager.build().map { pagingData ->
+        pagingData.map {
+            it.toAccountFollowerUiState(loggedInUserAccountId)
+        }
+    }.cachedIn(viewModelScope)
 
     override fun onAccountClicked(accountId: String) {
         navigateTo(NavigationDestination.Account(accountId))
