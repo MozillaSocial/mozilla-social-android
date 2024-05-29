@@ -6,7 +6,6 @@ import social.firefly.common.commonModule
 import social.firefly.core.analytics.analyticsModule
 import social.firefly.core.navigation.navigationModule
 import social.firefly.core.repository.mastodon.mastodonRepositoryModule
-import social.firefly.core.repository.paging.pagingModule
 import social.firefly.core.usecase.mastodon.mastodonUsecaseModule
 
 val followersModule =
@@ -17,7 +16,6 @@ val followersModule =
             mastodonRepositoryModule,
             navigationModule,
             analyticsModule,
-            pagingModule,
         )
 
         viewModel { parameters ->
