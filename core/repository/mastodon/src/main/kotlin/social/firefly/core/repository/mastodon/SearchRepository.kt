@@ -4,6 +4,7 @@ import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import androidx.paging.PagingSource
 import androidx.paging.RemoteMediator
 import androidx.paging.map
 import kotlinx.coroutines.flow.Flow
@@ -22,7 +23,6 @@ import social.firefly.core.model.SearchResult
 import social.firefly.core.model.SearchResultDetailed
 import social.firefly.core.model.SearchType
 import social.firefly.core.model.Status
-import social.firefly.core.model.wrappers.DetailedAccountWrapper
 import social.firefly.core.network.mastodon.SearchApi
 import social.firefly.core.repository.mastodon.model.account.toDetailedAccount
 import social.firefly.core.repository.mastodon.model.hashtag.toExternalModel
@@ -104,26 +104,8 @@ class SearchRepository internal constructor(
         }
     }
 
-    @ExperimentalPagingApi
-    fun getAccountsPager(
-        remoteMediator: RemoteMediator<Int, SearchedAccountWrapper>,
-        pageSize: Int = 40,
-        initialLoadSize: Int = 40,
-    ): Flow<PagingData<DetailedAccountWrapper>> =
-        Pager(
-            config =
-            PagingConfig(
-                pageSize = pageSize,
-                initialLoadSize = initialLoadSize,
-            ),
-            remoteMediator = remoteMediator,
-        ) {
-            searchDao.accountsPagingSource()
-        }.flow.map { pagingData ->
-            pagingData.map {
-                it.toDetailedAccount()
-            }
-        }
+    fun getAccountsPagingSource(): PagingSource<Int, SearchedAccountWrapper> =
+        searchDao.accountsPagingSource()
 
     @ExperimentalPagingApi
     fun getStatusesPager(

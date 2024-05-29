@@ -13,6 +13,7 @@ import social.firefly.core.repository.paging.pagers.status.FavoritesPager
 import social.firefly.core.repository.paging.pagers.status.FederatedTimelinePager
 import social.firefly.core.repository.paging.pagers.hashTags.FollowedHashTagsPager
 import social.firefly.core.repository.paging.pagers.accounts.MutesPager
+import social.firefly.core.repository.paging.pagers.accounts.SearchAccountsPager
 import social.firefly.core.repository.paging.pagers.hashTags.TrendingHashTagPager
 import social.firefly.core.repository.paging.pagers.status.HashTagTimelinePager
 import social.firefly.core.repository.paging.pagers.status.LocalTimelinePager
@@ -21,7 +22,6 @@ import social.firefly.core.repository.paging.remotemediators.notifications.AllNo
 import social.firefly.core.repository.paging.remotemediators.notifications.FollowNotificationsRemoteMediator
 import social.firefly.core.repository.paging.remotemediators.notifications.MentionNotificationsRemoteMediator
 import social.firefly.core.repository.paging.remotemediators.HomeTimelineRemoteMediator
-import social.firefly.core.repository.paging.remotemediators.SearchAccountsRemoteMediator
 import social.firefly.core.repository.paging.remotemediators.SearchStatusesRemoteMediator
 import social.firefly.core.repository.paging.remotemediators.SearchedHashTagsRemoteMediator
 import social.firefly.core.repository.paging.sources.DomainBlocksPagingSource
@@ -38,16 +38,6 @@ val pagingModule = module {
     factoryOf(::AllNotificationsRemoteMediator)
     factoryOf(::MentionNotificationsRemoteMediator)
     factoryOf(::FollowNotificationsRemoteMediator)
-
-    factory { parametersHolder ->
-        SearchAccountsRemoteMediator(
-            searchRepository = get(),
-            databaseDelegate = get(),
-            accountRepository = get(),
-            relationshipRepository = get(),
-            query = parametersHolder[0],
-        )
-    }
 
     factory { parametersHolder ->
         SearchStatusesRemoteMediator(
@@ -118,6 +108,16 @@ val pagingModule = module {
             databaseDelegate = get(),
             getInReplyToAccountNames = get(),
             hashTag = parametersHolder[0],
+        )
+    }
+
+    factory { parametersHolder ->
+        SearchAccountsPager(
+            searchRepository = get(),
+            databaseDelegate = get(),
+            accountRepository = get(),
+            relationshipRepository = get(),
+            query = parametersHolder[0],
         )
     }
 }
