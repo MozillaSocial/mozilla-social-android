@@ -45,7 +45,7 @@ class ReportScreen2ViewModel(
                 val uiStateList =
                     accountRepository.getAccountStatuses(
                         accountId = reportAccountId,
-                        loadSize = 40,
+                        limit = 40,
                         excludeBoosts = true,
                     ).items.map {
                         it.toReportStatusUiState()

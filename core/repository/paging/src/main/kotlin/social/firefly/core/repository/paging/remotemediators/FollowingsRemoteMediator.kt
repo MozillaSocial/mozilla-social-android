@@ -41,7 +41,7 @@ class FollowingsRemoteMediator(
                         accountRepository.getAccountFollowing(
                             accountId = accountId,
                             maxId = null,
-                            loadSize = pageSize,
+                            limit = pageSize,
                         )
                     }
 
@@ -56,7 +56,7 @@ class FollowingsRemoteMediator(
                         accountRepository.getAccountFollowing(
                             accountId = accountId,
                             maxId = nextKey,
-                            loadSize = pageSize,
+                            limit = pageSize,
                         )
                     }
                 }

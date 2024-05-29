@@ -6,6 +6,7 @@ import social.firefly.core.datastore.dataStoreModule
 import social.firefly.core.repository.mastodon.mastodonRepositoryModule
 import social.firefly.core.repository.paging.pagers.status.AccountTimelinePager
 import social.firefly.core.repository.paging.pagers.accounts.BlocksPager
+import social.firefly.core.repository.paging.pagers.accounts.FollowersPager
 import social.firefly.core.repository.paging.pagers.status.BookmarksPager
 import social.firefly.core.repository.paging.pagers.status.FavoritesPager
 import social.firefly.core.repository.paging.pagers.status.FederatedTimelinePager
@@ -17,7 +18,6 @@ import social.firefly.core.repository.paging.pagers.status.TrendingStatusPager
 import social.firefly.core.repository.paging.remotemediators.notifications.AllNotificationsRemoteMediator
 import social.firefly.core.repository.paging.remotemediators.notifications.FollowNotificationsRemoteMediator
 import social.firefly.core.repository.paging.remotemediators.notifications.MentionNotificationsRemoteMediator
-import social.firefly.core.repository.paging.remotemediators.FollowersRemoteMediator
 import social.firefly.core.repository.paging.remotemediators.FollowingsRemoteMediator
 import social.firefly.core.repository.paging.remotemediators.HashTagTimelineRemoteMediator
 import social.firefly.core.repository.paging.remotemediators.HomeTimelineRemoteMediator
@@ -38,16 +38,6 @@ val pagingModule = module {
     factoryOf(::AllNotificationsRemoteMediator)
     factoryOf(::MentionNotificationsRemoteMediator)
     factoryOf(::FollowNotificationsRemoteMediator)
-
-    factory {
-        FollowersRemoteMediator(
-            accountRepository = get(),
-            databaseDelegate = get(),
-            followersRepository = get(),
-            relationshipRepository = get(),
-            accountId = it[0],
-        )
-    }
 
     factory {
         FollowingsRemoteMediator(
@@ -118,6 +108,16 @@ val pagingModule = module {
             getInReplyToAccountNames = get(),
             accountId = parametersHolder[0],
             timelineType = parametersHolder[1],
+        )
+    }
+
+    factory { parametersHolder ->
+        FollowersPager(
+            accountRepository = get(),
+            databaseDelegate = get(),
+            followersRepository = get(),
+            relationshipRepository = get(),
+            accountId = parametersHolder[0],
         )
     }
 }
