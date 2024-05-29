@@ -15,10 +15,9 @@ import org.koin.core.parameter.parametersOf
 import social.firefly.common.utils.edit
 import social.firefly.core.analytics.FeedLocation
 import social.firefly.core.repository.mastodon.AccountRepository
-import social.firefly.core.repository.mastodon.NotificationsRepository
-import social.firefly.core.repository.paging.remotemediators.notifications.AllNotificationsRemoteMediator
-import social.firefly.core.repository.paging.remotemediators.notifications.FollowNotificationsRemoteMediator
-import social.firefly.core.repository.paging.remotemediators.notifications.MentionNotificationsRemoteMediator
+import social.firefly.core.repository.paging.pagers.notifications.AllNotificationsPager
+import social.firefly.core.repository.paging.pagers.notifications.FollowNotificationsPager
+import social.firefly.core.repository.paging.pagers.notifications.MentionNotificationsPager
 import social.firefly.core.ui.notifications.NotificationCardDelegate
 import social.firefly.core.ui.notifications.toUiState
 import social.firefly.core.ui.postcard.PostCardDelegate
@@ -26,10 +25,9 @@ import social.firefly.core.usecase.mastodon.account.GetLoggedInUserAccountId
 import timber.log.Timber
 
 class NotificationsViewModel(
-    notificationsRepository: NotificationsRepository,
-    allNotificationsRemoteMediator: AllNotificationsRemoteMediator,
-    mentionNotificationsRemoteMediator: MentionNotificationsRemoteMediator,
-    followNotificationsRemoteMediator: FollowNotificationsRemoteMediator,
+    allNotificationsPager: AllNotificationsPager,
+    mentionNotificationsPager: MentionNotificationsPager,
+    followNotificationsPager: FollowNotificationsPager,
     getLoggedInUserAccountId: GetLoggedInUserAccountId,
     accountRepository: AccountRepository,
 ) : ViewModel(), NotificationsInteractions, KoinComponent {
@@ -48,27 +46,21 @@ class NotificationsViewModel(
     val uiState = _uiState.asStateFlow()
 
     @OptIn(ExperimentalPagingApi::class)
-    val feed = notificationsRepository.getMainNotificationsPager(
-        remoteMediator = allNotificationsRemoteMediator,
-    ).map { pagingData ->
+    val feed = allNotificationsPager.build().map { pagingData ->
         pagingData.map {
             it.toUiState(loggedInUserAccountId)
         }
     }.cachedIn(viewModelScope)
 
     @OptIn(ExperimentalPagingApi::class)
-    val mentionsFeed = notificationsRepository.getMentionListNotificationsPager(
-        remoteMediator = mentionNotificationsRemoteMediator,
-    ).map { pagingData ->
+    val mentionsFeed = mentionNotificationsPager.build().map { pagingData ->
         pagingData.map {
             it.toUiState(loggedInUserAccountId)
         }
     }.cachedIn(viewModelScope)
 
     @OptIn(ExperimentalPagingApi::class)
-    val followsFeed = notificationsRepository.getFollowListNotificationsPager(
-        remoteMediator = followNotificationsRemoteMediator,
-    ).map { pagingData ->
+    val followsFeed = followNotificationsPager.build().map { pagingData ->
         pagingData.map {
             it.toUiState(loggedInUserAccountId)
         }
