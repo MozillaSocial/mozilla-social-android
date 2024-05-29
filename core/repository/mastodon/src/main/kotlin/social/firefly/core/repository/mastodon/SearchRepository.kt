@@ -1,14 +1,8 @@
 package social.firefly.core.repository.mastodon
 
-import androidx.paging.ExperimentalPagingApi
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
-import androidx.paging.PagingData
-import androidx.paging.RemoteMediator
-import androidx.paging.map
+import androidx.paging.PagingSource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.map
 import social.firefly.core.database.dao.SearchDao
 import social.firefly.core.database.model.entities.accountCollections.SearchedAccount
 import social.firefly.core.database.model.entities.accountCollections.SearchedAccountWrapper
@@ -21,8 +15,6 @@ import social.firefly.core.model.HashTag
 import social.firefly.core.model.SearchResult
 import social.firefly.core.model.SearchResultDetailed
 import social.firefly.core.model.SearchType
-import social.firefly.core.model.Status
-import social.firefly.core.model.wrappers.DetailedAccountWrapper
 import social.firefly.core.network.mastodon.SearchApi
 import social.firefly.core.repository.mastodon.model.account.toDetailedAccount
 import social.firefly.core.repository.mastodon.model.hashtag.toExternalModel
@@ -104,66 +96,12 @@ class SearchRepository internal constructor(
         }
     }
 
-    @ExperimentalPagingApi
-    fun getAccountsPager(
-        remoteMediator: RemoteMediator<Int, SearchedAccountWrapper>,
-        pageSize: Int = 40,
-        initialLoadSize: Int = 40,
-    ): Flow<PagingData<DetailedAccountWrapper>> =
-        Pager(
-            config =
-            PagingConfig(
-                pageSize = pageSize,
-                initialLoadSize = initialLoadSize,
-            ),
-            remoteMediator = remoteMediator,
-        ) {
-            searchDao.accountsPagingSource()
-        }.flow.map { pagingData ->
-            pagingData.map {
-                it.toDetailedAccount()
-            }
-        }
+    fun getAccountsPagingSource(): PagingSource<Int, SearchedAccountWrapper> =
+        searchDao.accountsPagingSource()
 
-    @ExperimentalPagingApi
-    fun getStatusesPager(
-        remoteMediator: RemoteMediator<Int, SearchedStatusWrapper>,
-        pageSize: Int = 40,
-        initialLoadSize: Int = 40,
-    ): Flow<PagingData<Status>> =
-        Pager(
-            config =
-            PagingConfig(
-                pageSize = pageSize,
-                initialLoadSize = initialLoadSize,
-            ),
-            remoteMediator = remoteMediator,
-        ) {
-            searchDao.statusesPagingSource()
-        }.flow.map { pagingData ->
-            pagingData.map {
-                it.status.toExternalModel()
-            }
-        }
+    fun getStatusesPagingSource(): PagingSource<Int, SearchedStatusWrapper> =
+        searchDao.statusesPagingSource()
 
-    @ExperimentalPagingApi
-    fun getHashTagsPager(
-        remoteMediator: RemoteMediator<Int, SearchedHashTagWrapper>,
-        pageSize: Int = 40,
-        initialLoadSize: Int = 40,
-    ): Flow<PagingData<HashTag>> =
-        Pager(
-            config =
-            PagingConfig(
-                pageSize = pageSize,
-                initialLoadSize = initialLoadSize,
-            ),
-            remoteMediator = remoteMediator,
-        ) {
-            searchDao.hashTagsPagingSource()
-        }.flow.map { pagingData ->
-            pagingData.map {
-                it.hashTag.toExternalModel()
-            }
-        }
+    fun getHashTagPagingSource(): PagingSource<Int, SearchedHashTagWrapper> =
+        searchDao.hashTagsPagingSource()
 }

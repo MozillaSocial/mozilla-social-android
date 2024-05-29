@@ -13,17 +13,17 @@ import social.firefly.core.repository.paging.pagers.status.FavoritesPager
 import social.firefly.core.repository.paging.pagers.status.FederatedTimelinePager
 import social.firefly.core.repository.paging.pagers.hashTags.FollowedHashTagsPager
 import social.firefly.core.repository.paging.pagers.accounts.MutesPager
+import social.firefly.core.repository.paging.pagers.accounts.SearchAccountsPager
+import social.firefly.core.repository.paging.pagers.hashTags.SearchHashTagPager
 import social.firefly.core.repository.paging.pagers.hashTags.TrendingHashTagPager
+import social.firefly.core.repository.paging.pagers.status.HashTagTimelinePager
 import social.firefly.core.repository.paging.pagers.status.LocalTimelinePager
+import social.firefly.core.repository.paging.pagers.status.SearchStatusesPager
 import social.firefly.core.repository.paging.pagers.status.TrendingStatusPager
 import social.firefly.core.repository.paging.remotemediators.notifications.AllNotificationsRemoteMediator
 import social.firefly.core.repository.paging.remotemediators.notifications.FollowNotificationsRemoteMediator
 import social.firefly.core.repository.paging.remotemediators.notifications.MentionNotificationsRemoteMediator
-import social.firefly.core.repository.paging.remotemediators.HashTagTimelineRemoteMediator
 import social.firefly.core.repository.paging.remotemediators.HomeTimelineRemoteMediator
-import social.firefly.core.repository.paging.remotemediators.SearchAccountsRemoteMediator
-import social.firefly.core.repository.paging.remotemediators.SearchStatusesRemoteMediator
-import social.firefly.core.repository.paging.remotemediators.SearchedHashTagsRemoteMediator
 import social.firefly.core.repository.paging.sources.DomainBlocksPagingSource
 import social.firefly.core.usecase.mastodon.mastodonUsecaseModule
 
@@ -38,45 +38,6 @@ val pagingModule = module {
     factoryOf(::AllNotificationsRemoteMediator)
     factoryOf(::MentionNotificationsRemoteMediator)
     factoryOf(::FollowNotificationsRemoteMediator)
-
-    factory { parametersHolder ->
-        HashTagTimelineRemoteMediator(
-            get(),
-            get(),
-            get(),
-            get(),
-            parametersHolder[0],
-        )
-    }
-
-    factory { parametersHolder ->
-        SearchAccountsRemoteMediator(
-            searchRepository = get(),
-            databaseDelegate = get(),
-            accountRepository = get(),
-            relationshipRepository = get(),
-            query = parametersHolder[0],
-        )
-    }
-
-    factory { parametersHolder ->
-        SearchStatusesRemoteMediator(
-            searchRepository = get(),
-            databaseDelegate = get(),
-            getInReplyToAccountNames = get(),
-            saveStatusToDatabase = get(),
-            query = parametersHolder[0],
-        )
-    }
-
-    factory { parametersHolder ->
-        SearchedHashTagsRemoteMediator(
-            databaseDelegate = get(),
-            searchRepository = get(),
-            hashtagRepository = get(),
-            query = parametersHolder[0],
-        )
-    }
 
     factoryOf(::BlocksPager)
     factoryOf(::BookmarksPager)
@@ -118,6 +79,45 @@ val pagingModule = module {
             followingsRepository = get(),
             relationshipRepository = get(),
             accountId = parametersHolder[0],
+        )
+    }
+
+    factory { parametersHolder ->
+        HashTagTimelinePager(
+            timelineRepository = get(),
+            saveStatusToDatabase = get(),
+            databaseDelegate = get(),
+            getInReplyToAccountNames = get(),
+            hashTag = parametersHolder[0],
+        )
+    }
+
+    factory { parametersHolder ->
+        SearchAccountsPager(
+            searchRepository = get(),
+            databaseDelegate = get(),
+            accountRepository = get(),
+            relationshipRepository = get(),
+            query = parametersHolder[0],
+        )
+    }
+
+    factory { parametersHolder ->
+        SearchHashTagPager(
+            databaseDelegate = get(),
+            searchRepository = get(),
+            hashtagRepository = get(),
+            query = parametersHolder[0],
+        )
+    }
+
+    factory { parametersHolder ->
+        SearchStatusesPager(
+            searchRepository = get(),
+            databaseDelegate = get(),
+            getInReplyToAccountNames = get(),
+            saveStatusToDatabase = get(),
+            query = parametersHolder[0],
         )
     }
 }

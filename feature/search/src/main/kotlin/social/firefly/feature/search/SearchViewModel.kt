@@ -18,10 +18,9 @@ import social.firefly.core.analytics.FeedLocation
 import social.firefly.core.analytics.SearchAnalytics
 import social.firefly.core.navigation.NavigationDestination
 import social.firefly.core.navigation.usecases.NavigateTo
-import social.firefly.core.repository.mastodon.SearchRepository
-import social.firefly.core.repository.paging.remotemediators.SearchAccountsRemoteMediator
-import social.firefly.core.repository.paging.remotemediators.SearchStatusesRemoteMediator
-import social.firefly.core.repository.paging.remotemediators.SearchedHashTagsRemoteMediator
+import social.firefly.core.repository.paging.pagers.accounts.SearchAccountsPager
+import social.firefly.core.repository.paging.pagers.hashTags.SearchHashTagPager
+import social.firefly.core.repository.paging.pagers.status.SearchStatusesPager
 import social.firefly.core.ui.accountfollower.toAccountFollowerUiState
 import social.firefly.core.ui.common.following.FollowStatus
 import social.firefly.core.ui.hashtagcard.HashTagCardDelegate
@@ -41,7 +40,6 @@ class SearchViewModel(
     private val followAccount: FollowAccount,
     private val unfollowAccount: UnfollowAccount,
     private val navigateTo: NavigateTo,
-    private val searchRepository: SearchRepository,
     private val analytics: SearchAnalytics,
 ) : ViewModel(), SearchInteractions, KoinComponent {
 
@@ -63,7 +61,7 @@ class SearchViewModel(
     }
 
     private fun updateAccountFeed() {
-        val accountsRemoteMediator = getKoin().inject<SearchAccountsRemoteMediator> {
+        val accountsPager = getKoin().inject<SearchAccountsPager> {
             parametersOf(
                 _uiState.value.query
             )
@@ -71,9 +69,7 @@ class SearchViewModel(
 
         _uiState.edit {
             copy(
-                accountsFeed = searchRepository.getAccountsPager(
-                    remoteMediator = accountsRemoteMediator,
-                ).map { pagingData ->
+                accountsFeed = accountsPager.build().map { pagingData ->
                     pagingData.map {
                         it.toAccountFollowerUiState(usersAccountId)
                     }
@@ -83,7 +79,7 @@ class SearchViewModel(
     }
 
     private fun updateStatusFeed() {
-        val statusesRemoteMediator = getKoin().inject<SearchStatusesRemoteMediator> {
+        val statusesPager = getKoin().inject<SearchStatusesPager> {
             parametersOf(
                 _uiState.value.query
             )
@@ -91,9 +87,7 @@ class SearchViewModel(
 
         _uiState.edit {
             copy(
-                statusFeed = searchRepository.getStatusesPager(
-                    remoteMediator = statusesRemoteMediator,
-                ).map { pagingData ->
+                statusFeed = statusesPager.build().map { pagingData ->
                     pagingData.map {
                         it.toPostCardUiState(usersAccountId)
                     }
@@ -103,7 +97,7 @@ class SearchViewModel(
     }
 
     private fun updateHashTagFeed() {
-        val hashTagRemoteMediator = getKoin().inject<SearchedHashTagsRemoteMediator> {
+        val hashTagPager = getKoin().inject<SearchHashTagPager> {
             parametersOf(
                 _uiState.value.query
             )
@@ -111,9 +105,7 @@ class SearchViewModel(
 
         _uiState.edit {
             copy(
-                hashTagFeed = searchRepository.getHashTagsPager(
-                    remoteMediator = hashTagRemoteMediator,
-                ).map { pagingData ->
+                hashTagFeed = hashTagPager.build().map { pagingData ->
                     pagingData.map {
                         it.toHashTagQuickViewUiState()
                     }
