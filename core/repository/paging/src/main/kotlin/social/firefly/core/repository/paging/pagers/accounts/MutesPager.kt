@@ -2,9 +2,9 @@ package social.firefly.core.repository.paging.pagers.accounts
 
 import androidx.paging.PagingSource
 import social.firefly.core.database.model.entities.accountCollections.MuteWrapper
-import social.firefly.core.model.wrappers.AccountAndRelationship
 import social.firefly.core.model.PageItem
 import social.firefly.core.model.paging.MastodonPagedResponse
+import social.firefly.core.model.wrappers.DetailedAccountWrapper
 import social.firefly.core.repository.mastodon.AccountRepository
 import social.firefly.core.repository.mastodon.DatabaseDelegate
 import social.firefly.core.repository.mastodon.MutesRepository
@@ -18,11 +18,11 @@ class MutesPager(
     private val databaseDelegate: DatabaseDelegate,
     private val relationshipRepository: RelationshipRepository,
     private val mutesRepository: MutesRepository,
-) : IdBasedPager<AccountAndRelationship, MuteWrapper> {
-    override fun mapDbObjectToExternalModel(dbo: MuteWrapper): AccountAndRelationship =
+) : IdBasedPager<DetailedAccountWrapper, MuteWrapper> {
+    override fun mapDbObjectToExternalModel(dbo: MuteWrapper): DetailedAccountWrapper =
         dbo.toExternal()
 
-    override suspend fun saveLocally(items: List<PageItem<AccountAndRelationship>>, isRefresh: Boolean) {
+    override suspend fun saveLocally(items: List<PageItem<DetailedAccountWrapper>>, isRefresh: Boolean) {
         databaseDelegate.withTransaction {
             if (isRefresh) {
                 mutesRepository.deleteAll()
@@ -38,7 +38,7 @@ class MutesPager(
         }
     }
 
-    override suspend fun getRemotely(limit: Int, nextKey: String?): MastodonPagedResponse<AccountAndRelationship> {
+    override suspend fun getRemotely(limit: Int, nextKey: String?): MastodonPagedResponse<DetailedAccountWrapper> {
         val response = mutesRepository.getMutes(
             maxId = nextKey,
             limit = limit,
@@ -48,7 +48,7 @@ class MutesPager(
 
         val blockedUsers = response.items.mapNotNull { account ->
             relationships.find { account.accountId == it.accountId }?.let { relationship ->
-                AccountAndRelationship(
+                DetailedAccountWrapper(
                     account = account,
                     relationship = relationship
                 )
