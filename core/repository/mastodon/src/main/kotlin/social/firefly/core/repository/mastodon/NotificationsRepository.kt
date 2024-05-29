@@ -1,14 +1,6 @@
 package social.firefly.core.repository.mastodon
 
-import androidx.paging.ExperimentalPagingApi
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
-import androidx.paging.PagingData
 import androidx.paging.PagingSource
-import androidx.paging.RemoteMediator
-import androidx.paging.map
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 import social.firefly.common.annotations.PreferUseCase
 import social.firefly.core.database.dao.NotificationsDao
 import social.firefly.core.database.model.entities.DatabaseNotification
@@ -50,26 +42,8 @@ class NotificationsRepository(
 
     fun getMainPagingSource(): PagingSource<Int, MainNotificationWrapper> = dao.mainNotificationsPagingSource()
 
-    @ExperimentalPagingApi
-    fun getMentionListNotificationsPager(
-        remoteMediator: RemoteMediator<Int, MentionListNotificationWrapper>,
-        pageSize: Int = 20,
-        initialLoadSize: Int = 40,
-    ): Flow<PagingData<Notification>> =
-        Pager(
-            config =
-            PagingConfig(
-                pageSize = pageSize,
-                initialLoadSize = initialLoadSize,
-            ),
-            remoteMediator = remoteMediator,
-        ) {
-            dao.mentionListNotificationsPagingSource()
-        }.flow.map { pagingData ->
-            pagingData.map {
-                it.notificationWrapper.toExternal()
-            }
-        }
+    fun getMentionListPagingSource(): PagingSource<Int, MentionListNotificationWrapper> =
+        dao.mentionListNotificationsPagingSource()
 
     fun getFollowListPagingSource(): PagingSource<Int, FollowListNotificationWrapper> =
         dao.followListNotificationsPagingSource()

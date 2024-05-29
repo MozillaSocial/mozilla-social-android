@@ -15,10 +15,9 @@ import org.koin.core.parameter.parametersOf
 import social.firefly.common.utils.edit
 import social.firefly.core.analytics.FeedLocation
 import social.firefly.core.repository.mastodon.AccountRepository
-import social.firefly.core.repository.mastodon.NotificationsRepository
 import social.firefly.core.repository.paging.pagers.notifications.AllNotificationsPager
 import social.firefly.core.repository.paging.pagers.notifications.FollowNotificationsPager
-import social.firefly.core.repository.paging.remotemediators.notifications.MentionNotificationsRemoteMediator
+import social.firefly.core.repository.paging.pagers.notifications.MentionNotificationsPager
 import social.firefly.core.ui.notifications.NotificationCardDelegate
 import social.firefly.core.ui.notifications.toUiState
 import social.firefly.core.ui.postcard.PostCardDelegate
@@ -26,9 +25,8 @@ import social.firefly.core.usecase.mastodon.account.GetLoggedInUserAccountId
 import timber.log.Timber
 
 class NotificationsViewModel(
-    notificationsRepository: NotificationsRepository,
     allNotificationsPager: AllNotificationsPager,
-    mentionNotificationsRemoteMediator: MentionNotificationsRemoteMediator,
+    mentionNotificationsPager: MentionNotificationsPager,
     followNotificationsPager: FollowNotificationsPager,
     getLoggedInUserAccountId: GetLoggedInUserAccountId,
     accountRepository: AccountRepository,
@@ -55,9 +53,7 @@ class NotificationsViewModel(
     }.cachedIn(viewModelScope)
 
     @OptIn(ExperimentalPagingApi::class)
-    val mentionsFeed = notificationsRepository.getMentionListNotificationsPager(
-        remoteMediator = mentionNotificationsRemoteMediator,
-    ).map { pagingData ->
+    val mentionsFeed = mentionNotificationsPager.build().map { pagingData ->
         pagingData.map {
             it.toUiState(loggedInUserAccountId)
         }
