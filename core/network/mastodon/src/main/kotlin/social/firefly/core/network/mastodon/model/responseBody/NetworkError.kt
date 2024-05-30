@@ -1,15 +1,10 @@
 package social.firefly.core.network.mastodon.model.responseBody
 
-/**
- * Represents an API error.
- */
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class NetworkError(
-    /**
-     * The error message.
-     */
+    @SerialName("error")
     val error: String,
-    /**
-     * A longer description of the error.
-     */
-    val errorDescription: String? = null,
 )

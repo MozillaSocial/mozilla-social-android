@@ -8,6 +8,7 @@ import social.firefly.common.annotations.PreferUseCase
 import social.firefly.common.utils.StringFactory
 import social.firefly.core.model.ImageState
 import social.firefly.core.model.StatusVisibility
+import social.firefly.core.model.exceptions.HttpException
 import social.firefly.core.model.request.PollCreate
 import social.firefly.core.model.request.StatusCreate
 import social.firefly.core.navigation.usecases.ShowSnackbar
@@ -78,6 +79,12 @@ class PostStatus internal constructor(
             saveStatusToDatabase(status)
             getThread.pushNewStatus(status.statusId)
             timelineRepository.insertStatusIntoTimelines(status)
+        } catch (e: HttpException) {
+            showSnackbar(
+                text = StringFactory.literal(e.errorMessage),
+                isError = true,
+            )
+            throw PostStatusFailedException(e)
         } catch (e: Exception) {
             showSnackbar(
                 text = StringFactory.resource(R.string.error_sending_post_toast),

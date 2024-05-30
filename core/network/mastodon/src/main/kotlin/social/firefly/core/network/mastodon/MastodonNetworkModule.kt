@@ -2,17 +2,21 @@ package social.firefly.core.network.mastodon
 
 import io.ktor.client.HttpClient
 import io.ktor.client.HttpClientConfig
+import io.ktor.client.call.body
 import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.engine.HttpClientEngineConfig
 import io.ktor.client.engine.HttpClientEngineFactory
 import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.engine.okhttp.OkHttpConfig
+import io.ktor.client.plugins.ClientRequestException
+import io.ktor.client.plugins.HttpResponseValidator
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
+import social.firefly.core.model.exceptions.HttpException
 import social.firefly.core.network.mastodon.interceptors.AuthCredentialInterceptor
 import social.firefly.core.network.mastodon.ktor.AccountApiImpl
 import social.firefly.core.network.mastodon.ktor.AppApiImpl
@@ -33,6 +37,7 @@ import social.firefly.core.network.mastodon.ktor.StatusApiImpl
 import social.firefly.core.network.mastodon.ktor.TagsApiImpl
 import social.firefly.core.network.mastodon.ktor.TimelineApiImpl
 import social.firefly.core.network.mastodon.ktor.TrendsApiImpl
+import social.firefly.core.network.mastodon.model.responseBody.NetworkError
 import java.util.concurrent.TimeUnit
 
 val mastodonNetworkModule =
@@ -51,6 +56,18 @@ val mastodonNetworkModule =
                     })
                 }
                 expectSuccess = true
+                HttpResponseValidator {
+                    handleResponseExceptionWithRequest { cause, _ ->
+                        if (cause !is ClientRequestException) return@handleResponseExceptionWithRequest
+
+                        val errorMessage: NetworkError = cause.response.body()
+
+                        throw HttpException(
+                            code = cause.response.status.value,
+                            errorMessage = errorMessage.error,
+                        )
+                    }
+                }
             }
         }
 
