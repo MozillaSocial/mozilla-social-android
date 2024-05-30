@@ -164,6 +164,9 @@ object FfIcons {
     fun play() = painterResource(id = R.drawable.play)
 
     @Composable
+    fun playCircle() = painterResource(id = R.drawable.play_circle)
+
+    @Composable
     fun plus() = painterResource(id = R.drawable.plus)
 
     @Composable
@@ -222,9 +225,6 @@ object FfIcons {
     fun caret() = rememberVectorPainter(image = Icons.Rounded.KeyboardArrowUp)
 
     @Composable
-    fun bookmarkBorder() = rememberVectorPainter(image = Icons.Rounded.BookmarkBorder)
-
-    @Composable
     fun public() = rememberVectorPainter(image = Icons.Rounded.Public)
 
     @Composable
@@ -246,22 +246,10 @@ object FfIcons {
     fun volumeUp() = rememberVectorPainter(image = Icons.Rounded.VolumeUp)
 
     @Composable
-    fun send() = rememberVectorPainter(image = Icons.Rounded.Send)
-
-    @Composable
-    fun addPhotoAlternate() = rememberVectorPainter(image = Icons.Rounded.AddPhotoAlternate)
-
-    @Composable
     fun poll() = rememberVectorPainter(image = Icons.Rounded.Poll)
 
     @Composable
     fun delete() = rememberVectorPainter(image = Icons.Rounded.Delete)
-
-    @Composable
-    fun deleteOutline() = rememberVectorPainter(image = Icons.Rounded.DeleteOutline)
-
-    @Composable
-    fun addCircleOutline() = rememberVectorPainter(image = Icons.Rounded.AddCircleOutline)
 
     // This isn't part of the design system
     object Sizes {

@@ -53,7 +53,6 @@ import org.koin.core.parameter.parametersOf
 import social.firefly.core.designsystem.icon.FfIcons
 import social.firefly.core.designsystem.theme.FfTheme
 import social.firefly.core.model.Attachment
-import social.firefly.core.navigation.NavigationDestination
 import social.firefly.core.navigation.navigationModule
 import social.firefly.core.ui.common.FfSurface
 import social.firefly.core.ui.common.appbar.FfCloseableTopAppBar
