@@ -72,31 +72,6 @@ internal interface Analytics {
     ) = Unit
 
     /**
-     * @param adjustDeviceId The Adjust device ID for this user
-     */
-    fun setAdjustDeviceId(adjustDeviceId: String) = Unit
-
-    /**
-     * @param fxaAccountId The user's FxA account ID, if available.
-     */
-    fun setFxaAccountId(fxaAccountId: String) = Unit
-
-    /**
-     * @param mastodonAccountId The user's numeric account ID from Mastodon.
-     */
-    fun setMastodonAccountId(mastodonAccountId: String) = Unit
-
-    /**
-     * @param userAgent The device user agent string.
-     */
-    fun setUserAgent(userAgent: String) = Unit
-
-    /**
-     * Clear the set identifiers.  Call this on logout.
-     */
-    fun clearLoggedInIdentifiers() = Unit
-
-    /**
      * Event triggered when a user moves the mobile app to foreground by starting the app or
      * returning from the home screen/another app.
      */

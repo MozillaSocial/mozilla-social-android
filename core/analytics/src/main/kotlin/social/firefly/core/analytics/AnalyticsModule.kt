@@ -4,7 +4,6 @@ import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 import social.firefly.core.analytics.core.Analytics
 import social.firefly.core.analytics.core.DummyAnalytics
-import social.firefly.core.analytics.glean.GleanAnalytics
 import social.firefly.core.datastore.dataStoreModule
 
 val analyticsModule =
@@ -13,11 +12,7 @@ val analyticsModule =
             dataStoreModule,
         )
         single<Analytics> {
-            if (BuildConfig.DEBUG) {
-                DummyAnalytics()
-            } else {
-                GleanAnalytics(get())
-            }
+            DummyAnalytics()
         }
 
         singleOf(::AppAnalytics)

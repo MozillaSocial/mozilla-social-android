@@ -36,26 +36,6 @@ internal class DummyAnalytics : Analytics {
         Timber.tag(tag).d("uiIdentifier: $uiIdentifier")
     }
 
-    override fun setAdjustDeviceId(adjustDeviceId: String) {
-        Timber.tag(tag).d("adjustDeviceId: $adjustDeviceId")
-    }
-
-    override fun setFxaAccountId(fxaAccountId: String) {
-        Timber.tag(tag).d("fxaAccountId: $fxaAccountId")
-    }
-
-    override fun setMastodonAccountId(mastodonAccountId: String) {
-        Timber.tag(tag).d("mastodonAccountId: $mastodonAccountId")
-    }
-
-    override fun setUserAgent(userAgent: String) {
-        Timber.tag(tag).d("userAgent: $userAgent")
-    }
-
-    override fun clearLoggedInIdentifiers() {
-        Timber.tag(tag).d("clear")
-    }
-
     override fun appOpened() {
         Timber.tag(tag).d("app opened")
     }
