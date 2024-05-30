@@ -65,6 +65,7 @@ val mastodonNetworkModule =
                         throw HttpException(
                             code = cause.response.status.value,
                             errorMessage = errorMessage.error,
+                            cause = cause,
                         )
                     }
                 }

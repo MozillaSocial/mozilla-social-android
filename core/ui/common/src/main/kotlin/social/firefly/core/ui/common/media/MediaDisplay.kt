@@ -1,23 +1,32 @@
 package social.firefly.core.ui.common.media
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import coil.compose.AsyncImage
+import social.firefly.core.designsystem.icon.FfIcons
 import social.firefly.core.designsystem.theme.FfRadius
+import social.firefly.core.designsystem.theme.FfTheme
 import social.firefly.core.model.Attachment
 import social.firefly.core.ui.common.utils.media
 import kotlin.math.roundToInt
@@ -96,14 +105,23 @@ private fun SingleAttachment(
             val aspectRatio by remember {
                 mutableFloatStateOf(attachment.meta?.calculateAspectRatio() ?: 1f)
             }
-            attachment.url?.toUri()?.let {
-                VideoPlayer(
+            Box {
+                Attachment(
                     modifier = Modifier
                         .fillMaxWidth()
                         .aspectRatio(aspectRatio),
-                    uri = it,
-                    onVideoClicked = { onAttachmentClicked(attachment) },
-                    showMuteButton = false,
+                    attachment = attachment,
+                    onAttachmentClicked = onAttachmentClicked,
+                )
+
+                Icon(
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                        .size(100.dp)
+                        .clip(CircleShape)
+                        .background(FfTheme.colors.playerControlsBackground),
+                    painter = FfIcons.playCircle(),
+                    contentDescription = null
                 )
             }
         }
@@ -112,13 +130,23 @@ private fun SingleAttachment(
             val aspectRatio by remember {
                 mutableFloatStateOf(attachment.meta?.calculateAspectRatio() ?: 1f)
             }
-            attachment.url?.toUri()?.let {
-                VideoPlayer(
+            Box {
+                Attachment(
                     modifier = Modifier
                         .fillMaxWidth()
                         .aspectRatio(aspectRatio),
-                    uri = it,
-                    onVideoClicked = { onAttachmentClicked(attachment) },
+                    attachment = attachment,
+                    onAttachmentClicked = onAttachmentClicked,
+                )
+
+                Icon(
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                        .size(100.dp)
+                        .clip(CircleShape)
+                        .background(FfTheme.colors.playerControlsBackground),
+                    painter = FfIcons.playCircle(),
+                    contentDescription = null
                 )
             }
         }
