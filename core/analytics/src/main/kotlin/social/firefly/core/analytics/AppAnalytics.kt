@@ -10,9 +10,4 @@ class AppAnalytics internal constructor(private val analytics: Analytics) {
     fun appBackgrounded() = analytics.appBackgrounded()
 
     fun initialize(context: Context) = analytics.initialize(context)
-
-    fun clearLoggedInIdentifiers() = analytics.clearLoggedInIdentifiers()
-
-    fun setMastodonAccountId(mastodonAccountId: String) =
-        analytics.setMastodonAccountId(mastodonAccountId)
 }
