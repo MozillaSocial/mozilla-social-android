@@ -35,10 +35,7 @@ fun AttachmentMedia(
         val context = LocalContext.current
 
         when (fileType) {
-            FileType.VIDEO -> {
-                VideoPlayer(uri = uri, loadState = loadState)
-            }
-
+            FileType.VIDEO -> Image(imageUri = uri)
             FileType.IMAGE -> Image(imageUri = uri)
             FileType.UNKNOWN -> {}
         }
@@ -98,8 +95,7 @@ fun AttachmentMedia(
 @Composable
 private fun Image(imageUri: Uri) {
     AsyncImage(
-        modifier =
-        Modifier
+        modifier = Modifier
             .fillMaxWidth(),
         model = imageUri,
         contentDescription = "",
