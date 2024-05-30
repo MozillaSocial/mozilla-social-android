@@ -32,13 +32,11 @@ class IndexBasedRemoteMediator<T : Any, DBO : Any>(
             val currentPage: List<PageItem<T>> =
                 when (loadType) {
                     LoadType.REFRESH -> {
-                        nextPositionIndex = 0
-
                         pageSize = state.config.initialLoadSize
 
                         getRemotely(
                             pageSize,
-                            nextPositionIndex,
+                            0,
                         ).mapIndexed { index, dbo ->
                             PageItem(position = index + nextPositionIndex, item = dbo)
                         }

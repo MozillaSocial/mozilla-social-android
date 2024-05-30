@@ -35,13 +35,11 @@ class IdBasedRemoteMediator<T : Any, DBO : Any>(
             var pageSize: Int = state.config.pageSize
             val response = when (loadType) {
                 LoadType.REFRESH -> {
-                    nextPositionIndex = 0
-
                     pageSize = state.config.initialLoadSize
 
                     getRemotely(
                         pageSize,
-                        nextKey,
+                        null,
                     )
                 }
 
@@ -56,12 +54,12 @@ class IdBasedRemoteMediator<T : Any, DBO : Any>(
                     )
                 }
             }
-            val currentPage: List<PageItem<T>> = response.items.mapIndexed { index, dbo ->
-                PageItem(position = index + nextPositionIndex, item = dbo)
-            }
-
             if (loadType == LoadType.REFRESH) {
                 nextPositionIndex = 0
+            }
+
+            val currentPage: List<PageItem<T>> = response.items.mapIndexed { index, dbo ->
+                PageItem(position = index + nextPositionIndex, item = dbo)
             }
 
             saveLocally(currentPage, loadType == LoadType.REFRESH)
