@@ -29,7 +29,7 @@
 
     <string name="data_collection_and_use">Data collection and use</string>
     <string name="data_collection_title">Help improve Mozilla Social</string>
-    <string name="data_collection_description">Allow technical, interaction, campaign and referral data to be sent to Mozilla. With this data you will have a personalized experience.</string>
+    <string name="data_collection_description">Allow automatic crash reporting.  Crash reports include stack traces, device information, breadcrumbs, and other information that helps us determine the cause of the crash.</string>
 
     <string name="sign_out">Sign out of all accounts</string>
     <string name="add_account">Add account</string>
