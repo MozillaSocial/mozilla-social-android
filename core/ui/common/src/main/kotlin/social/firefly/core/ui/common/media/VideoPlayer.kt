@@ -5,7 +5,6 @@ import android.net.Uri
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
@@ -41,6 +40,7 @@ fun VideoPlayer(
     uri: Uri,
     modifier: Modifier = Modifier,
     loadState: LoadState = LoadState.LOADED,
+    showMuteButton: Boolean = true,
     onVideoClicked: (() -> Unit)? = null,
 ) {
     Box(
@@ -96,7 +96,7 @@ fun VideoPlayer(
         }
 
         // Mute button
-        if (loadState == LoadState.LOADED) {
+        if (loadState == LoadState.LOADED && showMuteButton) {
             MuteButton(exoPlayer = exoPlayer)
         }
     }

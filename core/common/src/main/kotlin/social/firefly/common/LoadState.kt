@@ -1,9 +1,9 @@
 package social.firefly.common
 
 sealed class LoadState {
-    object LOADING : social.firefly.common.LoadState()
+    data object LOADING : LoadState()
 
-    object LOADED : social.firefly.common.LoadState()
+    data object LOADED : LoadState()
 
-    object ERROR : social.firefly.common.LoadState()
+    data object ERROR : LoadState()
 }

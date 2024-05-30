@@ -103,6 +103,7 @@ private fun SingleAttachment(
                         .aspectRatio(aspectRatio),
                     uri = it,
                     onVideoClicked = { onAttachmentClicked(attachment) },
+                    showMuteButton = false,
                 )
             }
         }
