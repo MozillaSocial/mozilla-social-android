@@ -103,7 +103,6 @@ class UserPreferencesDatastore internal constructor(
     }
 
     companion object {
-        @Suppress("MaxLineLength")
         const val HOST_NAME_REGEX = "[a-zA-Z0-9]+(\\.[a-zA-Z0-9]+)+"
     }
 }

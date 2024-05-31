@@ -67,8 +67,12 @@ class UserPreferencesDatastoreManager(
         defaultLanguage: String,
     ) {
         require(UserPreferencesDatastore.HOST_NAME_REGEX.toRegex().matches(domain))
-        val fileName = "$domain-$accountId-$counter-prefs.pb"
+        val filePrefix = "$domain-$accountId"
+        val fileName = "$filePrefix-$counter-prefs.pb"
         counter++
+
+        if (dataStores.value.find { it.fileName.startsWith(filePrefix) } != null)
+            throw AlreadySignedInException()
 
         if (dataStores.value.find { it.fileName == fileName } != null)
             throw Exception("prefs file already exists")
