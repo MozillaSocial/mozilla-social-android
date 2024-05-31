@@ -117,11 +117,12 @@ private fun SingleAttachment(
                 Icon(
                     modifier = Modifier
                         .align(Alignment.Center)
-                        .size(100.dp)
+                        .size(75.dp)
                         .clip(CircleShape)
                         .background(FfTheme.colors.playerControlsBackground),
                     painter = FfIcons.playCircle(),
-                    contentDescription = null
+                    contentDescription = null,
+                    tint = FfTheme.colors.playerControlsForeground,
                 )
             }
         }
@@ -142,11 +143,12 @@ private fun SingleAttachment(
                 Icon(
                     modifier = Modifier
                         .align(Alignment.Center)
-                        .size(100.dp)
+                        .size(75.dp)
                         .clip(CircleShape)
                         .background(FfTheme.colors.playerControlsBackground),
                     painter = FfIcons.playCircle(),
-                    contentDescription = null
+                    contentDescription = null,
+                    tint = FfTheme.colors.playerControlsForeground,
                 )
             }
         }
