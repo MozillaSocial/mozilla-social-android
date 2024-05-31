@@ -1,13 +1,17 @@
 package social.firefly
 
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
@@ -25,6 +29,10 @@ import social.firefly.ui.MainActivityScreen
 class MainActivity : ComponentActivity() {
     private val viewModel: MainViewModel by viewModel()
     private val analytics: AppAnalytics by inject()
+
+    private val notificationsRequestPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission(),
+    ) { }
 
     @OptIn(KoinExperimentalAPI::class)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,6 +62,7 @@ class MainActivity : ComponentActivity() {
         }
 
         DatabasePurgeWorker.setupPurgeWork(this, lifecycleScope)
+        askNotificationPermission()
     }
 
     override fun onResume() {
@@ -69,5 +78,17 @@ class MainActivity : ComponentActivity() {
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         viewModel.handleIntent(intent)
+    }
+
+    private fun askNotificationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS) ==
+                PackageManager.PERMISSION_GRANTED
+            ) {
+                // already granted
+            } else {
+                notificationsRequestPermissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
+            }
+        }
     }
 }

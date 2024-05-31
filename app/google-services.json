@@ -1,0 +1,67 @@
+{
+  "project_info": {
+    "project_number": "29750132939",
+    "project_id": "moz-fb-moztodon-prod",
+    "storage_bucket": "moz-fb-moztodon-prod.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:29750132939:android:ef619cf06e05ceafc0db4e",
+        "android_client_info": {
+          "package_name": "org.mozilla.social"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDl4NCJVYHtcY1Tu5K4vggbmHje9LGgvlk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:29750132939:android:c543aef9e66da938c0db4e",
+        "android_client_info": {
+          "package_name": "org.mozilla.social.debug"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDl4NCJVYHtcY1Tu5K4vggbmHje9LGgvlk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:29750132939:android:f0673eaa465d168dc0db4e",
+        "android_client_info": {
+          "package_name": "org.mozilla.social.nightly"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDl4NCJVYHtcY1Tu5K4vggbmHje9LGgvlk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -13,6 +13,9 @@ dependencies {
     implementation(project(":core:common"))
     implementation(project(":core:model"))
 
+    implementation(platform(libs.firebase))
+    implementation(libs.firebase.messaging)
+
     implementation(libs.unifiedPush.androidConnector)
     implementation(libs.jakewharton.timber)
     implementation(libs.koin.core)

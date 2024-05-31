@@ -64,6 +64,15 @@
                 tools:node="remove" />
         </provider>
 
+        <!-- > Firebase push notifications <-->
+        <service
+            android:name=".core.push.firebase.FcmService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
         <meta-data android:name="io.sentry.auto-init" android:value="false"/>
     </application>
 </manifest>

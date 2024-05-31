@@ -35,7 +35,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
@@ -60,7 +59,6 @@ import social.firefly.core.designsystem.font.FfFonts
 import social.firefly.core.designsystem.icon.FfIcons
 import social.firefly.core.designsystem.theme.FfTheme
 import social.firefly.core.designsystem.theme.ThemeOption
-import social.firefly.core.push.PushRegistration
 import social.firefly.core.ui.common.FfSurface
 import social.firefly.core.ui.common.UiConstants
 import social.firefly.core.ui.common.appbar.FfTopBar
@@ -98,7 +96,6 @@ internal fun FeedScreen(viewModel: FeedViewModel = koinViewModel()) {
 
     LaunchedEffect(Unit) {
         viewModel.onScreenViewed()
-        PushRegistration.register(context)
     }
 }
 

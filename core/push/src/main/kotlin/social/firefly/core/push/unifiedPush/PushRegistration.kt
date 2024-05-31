@@ -1,4 +1,4 @@
-package social.firefly.core.push
+package social.firefly.core.push.unifiedPush
 
 import android.content.Context
 import org.unifiedpush.android.connector.UnifiedPush
