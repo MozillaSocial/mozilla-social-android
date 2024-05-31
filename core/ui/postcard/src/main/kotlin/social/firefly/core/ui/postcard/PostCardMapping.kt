@@ -115,6 +115,10 @@ private fun Card.toPreviewCard(): PreviewCard? =
             url = url,
             title = title,
             imageUrl = it,
-            providerName = providerName,
+            providerName = if (!providerName.isNullOrBlank()) {
+                providerName
+            } else {
+                null
+            },
         )
     }
