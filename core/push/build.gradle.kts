@@ -1,7 +1,6 @@
 plugins {
     id("social.firefly.android.library")
     alias(libs.plugins.kotlinx.serialization)
-    alias(libs.plugins.googleServices)
 }
 
 android {

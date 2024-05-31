@@ -5,6 +5,7 @@ plugins {
     id("social.firefly.android.application.secrets")
     alias(libs.plugins.sentry)
     alias(libs.plugins.baselineprofile)
+    alias(libs.plugins.googleServices)
 }
 
 android {
