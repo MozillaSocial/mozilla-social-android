@@ -1,40 +1,12 @@
 package social.firefly.core.push
 
 import android.util.Base64
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.mapLatest
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
-import social.firefly.core.datastore.UserPreferencesDatastoreManager
 import java.security.KeyPair
 import java.security.KeyPairGenerator
 import java.security.SecureRandom
 import java.security.spec.ECGenParameterSpec
 
-class KeyManager(
-    private val userPreferencesDatastoreManager: UserPreferencesDatastoreManager,
-) {
-
-    @OptIn(ExperimentalCoroutinesApi::class)
-    val encodedPushKeys: Flow<EncodedPushKeys> = userPreferencesDatastoreManager.activeUserDatastore
-        .flatMapLatest {
-            it.serializedPushKeys
-        }.mapLatest {
-            if (it.isNotBlank()) {
-                Json.decodeFromString(it)
-            } else {
-                val generatedValue = generatePushKeys()
-                userPreferencesDatastoreManager
-                    .activeUserDatastore
-                    .first()
-                    .saveSerializedPushKeyPair(Json.encodeToString(generatedValue))
-                generatedValue
-            }
-        }
-
+class KeyManager {
     private fun generateAuthSecret(): String = ByteArray(AUTH_SECRET_BYTE_SIZE).apply {
         SecureRandom().nextBytes(this)
     }.encode()
@@ -50,7 +22,7 @@ class KeyManager(
         Base64.URL_SAFE or Base64.NO_WRAP or Base64.NO_PADDING
     )
 
-    private fun generatePushKeys(): EncodedPushKeys {
+    fun generatePushKeys(): EncodedPushKeys {
         val keyPair = generateKeyPair()
         return EncodedPushKeys(
             privateKey = keyPair.private.encoded.encode(),
