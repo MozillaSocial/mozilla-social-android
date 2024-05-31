@@ -1,6 +1,7 @@
 plugins {
     id("social.firefly.android.library")
     alias(libs.plugins.kotlinx.serialization)
+    alias(libs.plugins.googleServices)
 }
 
 android {
@@ -12,6 +13,8 @@ dependencies {
     implementation(project(":core:datastore"))
     implementation(project(":core:common"))
     implementation(project(":core:model"))
+
+    implementation(platform(libs.firebase))
 
     implementation(libs.unifiedPush.androidConnector)
     implementation(libs.jakewharton.timber)
