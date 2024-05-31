@@ -7,13 +7,17 @@ import okhttp3.HttpUrl.Companion.toHttpUrl
 import org.koin.core.component.KoinComponent
 import org.koin.core.parameter.parametersOf
 import social.firefly.common.annotations.PreferUseCase
+import social.firefly.common.utils.StringFactory
+import social.firefly.core.datastore.AlreadySignedInException
 import social.firefly.core.datastore.UserPreferencesDatastoreManager
 import social.firefly.core.model.Account
 import social.firefly.core.navigation.NavigationDestination
 import social.firefly.core.navigation.usecases.NavigateTo
 import social.firefly.core.navigation.usecases.OpenLink
+import social.firefly.core.navigation.usecases.ShowSnackbar
 import social.firefly.core.repository.mastodon.DatabaseDelegate
 import social.firefly.core.repository.mastodon.VerificationRepository
+import social.firefly.core.usecase.mastodon.R
 import timber.log.Timber
 
 /**
@@ -24,6 +28,7 @@ class Login(
     private val openLink: OpenLink,
     private val navigateTo: NavigateTo,
     private val databaseDelegate: DatabaseDelegate,
+    private val showSnackbar: ShowSnackbar,
 ): KoinComponent {
     private lateinit var clientId: String
     private lateinit var clientSecret: String
@@ -97,7 +102,17 @@ class Login(
                 databaseDelegate.clearAllTables()
             }
             navigateTo(NavigationDestination.Tabs)
+        } catch (e: AlreadySignedInException) {
+            showSnackbar(
+                text = StringFactory.resource(R.string.already_signed_in_to_account_error),
+                isError = true,
+            )
+            Timber.e(e)
         } catch (exception: Exception) {
+            showSnackbar(
+                text = StringFactory.resource(R.string.error_signing_in),
+                isError = true,
+            )
             Timber.e(exception)
         }
     }

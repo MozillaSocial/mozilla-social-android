@@ -25,4 +25,7 @@
     <string name="error_rejcting_follow_request">Error rejecting request</string>
 
     <string name="edit_account_save_failed">Failed to save changes</string>
+
+    <string name="already_signed_in_to_account_error">You are already signed in to this account</string>
+    <string name="error_signing_in">Error signing in</string>
 </resources>
