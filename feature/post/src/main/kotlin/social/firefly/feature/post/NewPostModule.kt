@@ -35,6 +35,7 @@ val newPostModule = module {
             getLoggedInUserAccountId = get(),
             accountRepository = get(),
             userPreferencesDatastoreManager = get(),
+            statusRepository = get(),
         )
     }
 

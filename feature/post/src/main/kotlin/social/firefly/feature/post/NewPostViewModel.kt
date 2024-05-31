@@ -25,6 +25,7 @@ import social.firefly.core.model.request.PollCreate
 import social.firefly.core.navigation.usecases.PopNavBackstack
 import social.firefly.core.navigation.usecases.ShowSnackbar
 import social.firefly.core.repository.mastodon.AccountRepository
+import social.firefly.core.repository.mastodon.StatusRepository
 import social.firefly.core.usecase.mastodon.account.GetLoggedInUserAccountId
 import social.firefly.core.usecase.mastodon.status.EditStatus
 import social.firefly.core.usecase.mastodon.status.PostStatus
@@ -48,6 +49,7 @@ class NewPostViewModel(
     private val popNavBackstack: PopNavBackstack,
     private val showSnackbar: ShowSnackbar,
     private val userPreferencesDatastoreManager: UserPreferencesDatastoreManager,
+    private val statusRepository: StatusRepository,
 ) : ViewModel(), NewPostInteractions, KoinComponent {
 
     val statusDelegate: StatusDelegate by inject {
@@ -145,7 +147,11 @@ class NewPostViewModel(
         }
 
         viewModelScope.launch {
-            val defaultLanguageCode = userPreferencesDatastoreManager
+            val status = editStatusId?.let { statusRepository.getStatusLocal(it) }
+
+            val visibility = status?.visibility ?: StatusVisibility.Public
+
+            val defaultLanguageCode = status?.language ?: userPreferencesDatastoreManager
                 .activeUserDatastore
                 .flatMapLatest { it.defaultLanguage }
                 .first()
@@ -169,6 +175,7 @@ class NewPostViewModel(
 
             _newPostUiState.edit {
                 copy(
+                    visibility = visibility,
                     bottomBarState = newPostUiState.value.bottomBarState.copy(
                         language = defaultLanguageCode,
                         availableLocales = availableLocales,
