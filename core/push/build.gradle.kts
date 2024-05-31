@@ -15,6 +15,7 @@ dependencies {
     implementation(project(":core:model"))
 
     implementation(platform(libs.firebase))
+    implementation(libs.firebase.messaging)
 
     implementation(libs.unifiedPush.androidConnector)
     implementation(libs.jakewharton.timber)

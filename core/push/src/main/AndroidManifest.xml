@@ -5,7 +5,7 @@
         <receiver
             android:exported="true"
             android:enabled="true"
-            android:name=".PushReceiver">
+            android:name=".unifiedPush.PushReceiver">
             <intent-filter>
                 <action android:name="org.unifiedpush.android.connector.MESSAGE"/>
                 <action android:name="org.unifiedpush.android.connector.UNREGISTERED"/>

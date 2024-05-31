@@ -1,4 +1,4 @@
-package social.firefly.core.push
+package social.firefly.core.push.unifiedPush
 
 import android.content.Context
 import android.content.Intent
@@ -9,6 +9,8 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.unifiedpush.android.connector.MessagingReceiver
 import social.firefly.common.appscope.AppScope
+import social.firefly.core.push.EncodedPushKeys
+import social.firefly.core.push.KeyManager
 import social.firefly.core.repository.mastodon.PushRepository
 import timber.log.Timber
 
