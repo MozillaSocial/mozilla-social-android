@@ -1,5 +1,8 @@
 package social.firefly.feature.post
 
+import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.text.input.TextFieldValue
+import androidx.core.text.trimmedLength
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -25,6 +28,8 @@ import social.firefly.core.model.request.PollCreate
 import social.firefly.core.navigation.usecases.PopNavBackstack
 import social.firefly.core.navigation.usecases.ShowSnackbar
 import social.firefly.core.repository.mastodon.AccountRepository
+import social.firefly.core.repository.mastodon.StatusRepository
+import social.firefly.core.ui.htmlcontent.htmlToStringWithExpandedMentions
 import social.firefly.core.usecase.mastodon.account.GetLoggedInUserAccountId
 import social.firefly.core.usecase.mastodon.status.EditStatus
 import social.firefly.core.usecase.mastodon.status.PostStatus
@@ -48,6 +53,7 @@ class NewPostViewModel(
     private val popNavBackstack: PopNavBackstack,
     private val showSnackbar: ShowSnackbar,
     private val userPreferencesDatastoreManager: UserPreferencesDatastoreManager,
+    private val statusRepository: StatusRepository,
 ) : ViewModel(), NewPostInteractions, KoinComponent {
 
     val statusDelegate: StatusDelegate by inject {
@@ -174,6 +180,16 @@ class NewPostViewModel(
                         availableLocales = availableLocales,
                     )
                 )
+            }
+        }
+
+        editStatusId?.let {
+            viewModelScope.launch {
+                statusRepository.getStatusLocal(editStatusId)?.let { status ->
+                    _newPostUiState.edit { copy(
+                        visibility = status.visibility
+                    ) }
+                }
             }
         }
     }
