@@ -3,6 +3,7 @@ package social.firefly.feature.discover
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.ExperimentalPagingApi
+import androidx.paging.cachedIn
 import androidx.paging.map
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -44,30 +45,26 @@ class DiscoverViewModel(
 
     private val usersAccountId: String = getLoggedInUserAccountId()
 
-    private val hashtags: DiscoverTab.Hashtags = DiscoverTab.Hashtags(
-        pagingDataFlow = trendingHashTagPager.build()
-            .map { pagingData ->
-                pagingData.map { hashtag ->
-                    hashtag.toHashTagQuickViewUiState()
-                }
+    val hashTagFeed = trendingHashTagPager.build()
+        .map { pagingData ->
+            pagingData.map { hashtag ->
+                hashtag.toHashTagQuickViewUiState()
             }
-    )
+        }.cachedIn(viewModelScope)
 
-    private val posts: DiscoverTab.Posts = DiscoverTab.Posts(
-        pagingDataFlow = trendingStatusPager.build()
-            .map { pagingData ->
-                pagingData.map { status ->
-                    status.toPostCardUiState(
-                        currentUserAccountId = usersAccountId,
-                    )
-                }
+    val postsFeed = trendingStatusPager.build()
+        .map { pagingData ->
+            pagingData.map { status ->
+                status.toPostCardUiState(
+                    currentUserAccountId = usersAccountId,
+                )
             }
-    )
+        }.cachedIn(viewModelScope)
 
     private val _uiState = MutableStateFlow(
         DiscoverUiState(
-            selectedTab = posts,
-            tabs = listOf(posts, hashtags)
+            selectedTab = DiscoverTab.Posts,
+            tabs = listOf(DiscoverTab.Posts, DiscoverTab.Hashtags)
         )
     )
     val uiState = _uiState.asStateFlow()
