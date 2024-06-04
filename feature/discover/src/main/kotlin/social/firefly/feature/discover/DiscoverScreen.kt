@@ -25,8 +25,10 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import kotlinx.coroutines.flow.Flow
 import org.koin.androidx.compose.koinViewModel
 import social.firefly.core.designsystem.theme.FfSpacing
 import social.firefly.core.designsystem.utils.NoRipple
@@ -49,8 +51,11 @@ import social.firefly.core.ui.postcard.postListContent
 @Composable
 internal fun DiscoverScreen(viewModel: DiscoverViewModel = koinViewModel()) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
     DiscoverScreen(
         uiState = uiState,
+        hashTagFeed = viewModel.hashTagFeed,
+        postsFeed = viewModel.postsFeed,
         discoverInteractions = viewModel,
         postCardInteractions = viewModel.postCardDelegate,
         hashtagInteractions = viewModel.hashTagCardDelegate,
@@ -65,6 +70,8 @@ internal fun DiscoverScreen(viewModel: DiscoverViewModel = koinViewModel()) {
 @Composable
 private fun DiscoverScreen(
     uiState: DiscoverUiState,
+    hashTagFeed: Flow<PagingData<HashTagQuickViewUiState>>,
+    postsFeed: Flow<PagingData<PostCardUiState>>,
     discoverInteractions: DiscoverInteractions,
     postCardInteractions: PostCardInteractions,
     hashtagInteractions: HashTagInteractions,
@@ -113,6 +120,8 @@ private fun DiscoverScreen(
             }
             MainContent(
                 uiState = uiState,
+                hashTagFeed = hashTagFeed,
+                postsFeed = postsFeed,
                 discoverInteractions = discoverInteractions,
                 postCardInteractions = postCardInteractions,
                 hashtagInteractions = hashtagInteractions,
@@ -124,6 +133,8 @@ private fun DiscoverScreen(
 @Composable
 private fun MainContent(
     uiState: DiscoverUiState,
+    hashTagFeed: Flow<PagingData<HashTagQuickViewUiState>>,
+    postsFeed: Flow<PagingData<PostCardUiState>>,
     discoverInteractions: DiscoverInteractions,
     postCardInteractions: PostCardInteractions,
     hashtagInteractions: HashTagInteractions,
@@ -141,14 +152,10 @@ private fun MainContent(
                 discoverInteractions = discoverInteractions,
             )
 
-            val hashTagLazyPagingItems = (uiState.tabs.find { it is DiscoverTab.Hashtags } as DiscoverTab.Hashtags)
-                .pagingDataFlow
-                .collectAsLazyPagingItems()
+            val hashTagLazyPagingItems = hashTagFeed.collectAsLazyPagingItems()
             val hashTagListState = rememberLazyListState()
 
-            val postsLazyPagingItems = (uiState.tabs.find { it is DiscoverTab.Posts } as DiscoverTab.Posts)
-                .pagingDataFlow
-                .collectAsLazyPagingItems()
+            val postsLazyPagingItems = postsFeed.collectAsLazyPagingItems()
             val postListState = rememberLazyListState()
 
             when (uiState.selectedTab) {
