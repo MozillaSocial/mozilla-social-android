@@ -316,6 +316,7 @@ private fun TopBar(
         actions = {
             VisibilityDropDownButton(
                 visibility = visibility,
+                canModify = statusUiState.editStatusId.isNullOrBlank(),
                 onVisibilitySelected = newPostInteractions::onVisibilitySelected,
             )
             Spacer(modifier = Modifier.width(8.dp))

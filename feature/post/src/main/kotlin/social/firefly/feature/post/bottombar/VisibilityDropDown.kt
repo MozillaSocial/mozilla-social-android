@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -29,68 +30,83 @@ import social.firefly.feature.post.R
 internal fun VisibilityDropDownButton(
     modifier: Modifier = Modifier,
     visibility: StatusVisibility,
+    canModify: Boolean,
     onVisibilitySelected: (StatusVisibility) -> Unit,
 ) {
-    val expanded = remember { mutableStateOf(false) }
-    FfDropDownMenu(
-        modifier = modifier,
-        expanded = expanded,
-        dropDownMenuContent = {
-            VisibilityDropDownItem(
-                type = StatusVisibility.Public,
-                icon = FfIcons.public(),
-                text = stringResource(id = R.string.visibility_public),
-                expanded = expanded,
-                onVisibilitySelected = onVisibilitySelected,
-            )
-            VisibilityDropDownItem(
-                type = StatusVisibility.Unlisted,
-                icon = FfIcons.lockOpen(),
-                text = stringResource(id = R.string.visibility_unlisted),
-                expanded = expanded,
-                onVisibilitySelected = onVisibilitySelected,
-            )
-            VisibilityDropDownItem(
-                type = StatusVisibility.Private,
-                icon = FfIcons.materialLock(),
-                text = stringResource(id = R.string.visibility_private),
-                expanded = expanded,
-                onVisibilitySelected = onVisibilitySelected,
-            )
-            VisibilityDropDownItem(
-                type = StatusVisibility.Direct,
-                icon = FfIcons.message(),
-                text = stringResource(id = R.string.visibility_direct),
-                expanded = expanded,
-                onVisibilitySelected = onVisibilitySelected,
-            )
-        }
-    ) {
-        when (visibility) {
-            StatusVisibility.Public ->
-                ButtonContent(
+    if (canModify) {
+        val expanded = remember { mutableStateOf(false) }
+        FfDropDownMenu(
+            modifier = modifier,
+            expanded = expanded,
+            dropDownMenuContent = {
+                VisibilityDropDownItem(
+                    type = StatusVisibility.Public,
                     icon = FfIcons.public(),
                     text = stringResource(id = R.string.visibility_public),
+                    expanded = expanded,
+                    onVisibilitySelected = onVisibilitySelected,
                 )
-
-            StatusVisibility.Unlisted ->
-                ButtonContent(
+                VisibilityDropDownItem(
+                    type = StatusVisibility.Unlisted,
                     icon = FfIcons.lockOpen(),
                     text = stringResource(id = R.string.visibility_unlisted),
+                    expanded = expanded,
+                    onVisibilitySelected = onVisibilitySelected,
                 )
-
-            StatusVisibility.Private ->
-                ButtonContent(
+                VisibilityDropDownItem(
+                    type = StatusVisibility.Private,
                     icon = FfIcons.materialLock(),
                     text = stringResource(id = R.string.visibility_private),
+                    expanded = expanded,
+                    onVisibilitySelected = onVisibilitySelected,
                 )
-
-            StatusVisibility.Direct ->
-                ButtonContent(
+                VisibilityDropDownItem(
+                    type = StatusVisibility.Direct,
                     icon = FfIcons.message(),
                     text = stringResource(id = R.string.visibility_direct),
+                    expanded = expanded,
+                    onVisibilitySelected = onVisibilitySelected,
                 )
+            }
+        ) {
+            ButtonContentRow(visibility = visibility)
         }
+    } else {
+        Row {
+            ButtonContentRow(visibility = visibility)
+            Spacer(modifier = Modifier.width(12.dp))
+        }
+    }
+}
+
+@Composable
+private fun RowScope.ButtonContentRow(
+    visibility: StatusVisibility,
+) {
+    when (visibility) {
+        StatusVisibility.Public ->
+            ButtonContent(
+                icon = FfIcons.public(),
+                text = stringResource(id = R.string.visibility_public),
+            )
+
+        StatusVisibility.Unlisted ->
+            ButtonContent(
+                icon = FfIcons.lockOpen(),
+                text = stringResource(id = R.string.visibility_unlisted),
+            )
+
+        StatusVisibility.Private ->
+            ButtonContent(
+                icon = FfIcons.materialLock(),
+                text = stringResource(id = R.string.visibility_private),
+            )
+
+        StatusVisibility.Direct ->
+            ButtonContent(
+                icon = FfIcons.message(),
+                text = stringResource(id = R.string.visibility_direct),
+            )
     }
 }
 
@@ -148,6 +164,7 @@ private fun VisibilityDropDownPreview() {
     ) {
         VisibilityDropDownButton(
             visibility = StatusVisibility.Private,
+            canModify = true,
             onVisibilitySelected = {},
         )
     }
