@@ -10,6 +10,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
@@ -54,10 +55,12 @@ fun VideoPlayer(
     uri: Uri,
     modifier: Modifier = Modifier,
     controlsVisible: Boolean,
+    aspectRatio: Float = 1f,
     onClick: () -> Unit = {},
 ) {
     Box(
-        modifier = modifier,
+        modifier = modifier
+            .fillMaxSize(),
     ) {
         val context = LocalContext.current
 
@@ -77,7 +80,10 @@ fun VideoPlayer(
         }
 
         AndroidView(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .aspectRatio(aspectRatio)
+                .align(Alignment.Center),
             factory = {
                 Timber.tag(TAG).d("PlayerView created")
                 PlayerView(it).apply {
