@@ -363,11 +363,9 @@ private fun VideoContent(
         modifier = modifier.fillMaxSize()
     ) {
         VideoPlayer(
-            modifier = Modifier
-                .align(Alignment.Center)
-                .aspectRatio(attachment.meta?.calculateAspectRatio() ?: 1f),
             uri = Uri.parse(attachment.url),
             onClick = onClick,
+            aspectRatio = attachment.meta?.calculateAspectRatio() ?: 1f,
             controlsVisible = controlsVisible,
         )
     }
@@ -384,11 +382,9 @@ private fun VideoContent(
         modifier = modifier.fillMaxSize()
     ) {
         VideoPlayer(
-            modifier = Modifier
-                .align(Alignment.Center)
-                .aspectRatio(attachment.meta?.calculateAspectRatio() ?: 1f),
             uri = Uri.parse(attachment.url),
             onClick = onClick,
+            aspectRatio = attachment.meta?.calculateAspectRatio() ?: 1f,
             controlsVisible = controlsVisible,
         )
     }
