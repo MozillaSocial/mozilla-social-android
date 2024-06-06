@@ -117,7 +117,7 @@ private fun SingleAttachment(
                 Icon(
                     modifier = Modifier
                         .align(Alignment.Center)
-                        .size(75.dp)
+                        .size(50.dp)
                         .clip(CircleShape)
                         .background(FfTheme.colors.playerControlsBackground),
                     painter = FfIcons.playCircle(),
@@ -143,7 +143,7 @@ private fun SingleAttachment(
                 Icon(
                     modifier = Modifier
                         .align(Alignment.Center)
-                        .size(75.dp)
+                        .size(50.dp)
                         .clip(CircleShape)
                         .background(FfTheme.colors.playerControlsBackground),
                     painter = FfIcons.playCircle(),
