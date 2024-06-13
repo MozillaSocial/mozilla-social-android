@@ -8,7 +8,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.core.content.ContextCompat
@@ -21,7 +20,6 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.annotation.KoinExperimentalAPI
 import social.firefly.core.analytics.AppAnalytics
 import social.firefly.core.designsystem.theme.FfTheme
-import social.firefly.core.designsystem.theme.ThemeOption
 import social.firefly.core.ui.common.FfSurface
 import social.firefly.core.workmanager.DatabasePurgeWorker
 import social.firefly.ui.MainActivityScreen
@@ -29,6 +27,7 @@ import social.firefly.ui.MainActivityScreen
 class MainActivity : ComponentActivity() {
     private val viewModel: MainViewModel by viewModel()
     private val analytics: AppAnalytics by inject()
+    private val intentHandler: IntentHandler by inject()
 
     private val notificationsRequestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission(),
@@ -40,9 +39,7 @@ class MainActivity : ComponentActivity() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
         setContent {
-            val themeOption by viewModel.themeOption.collectAsStateWithLifecycle(
-                initialValue = ThemeOption.SYSTEM
-            )
+            val themeOption by viewModel.themeOption.collectAsStateWithLifecycle()
 
             FfTheme(
                 themeOption = themeOption,
@@ -52,12 +49,6 @@ class MainActivity : ComponentActivity() {
                         MainActivityScreen()
                     }
                 }
-            }
-
-            // initialize the view model in the setContent block so that initialize is called
-            // again when the layout inspector starts
-            LaunchedEffect(Unit) {
-                viewModel.initialize(intent)
             }
         }
 
@@ -77,7 +68,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
-        viewModel.handleIntent(intent)
+        intentHandler.handleIntent(intent)
     }
 
     private fun askNotificationPermission() {
