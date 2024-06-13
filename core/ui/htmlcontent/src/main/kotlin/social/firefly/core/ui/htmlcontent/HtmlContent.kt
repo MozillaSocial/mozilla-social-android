@@ -1,7 +1,6 @@
 package social.firefly.core.ui.htmlcontent
 
 import android.graphics.Typeface
-import android.os.Build
 import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.widget.TextView
@@ -53,16 +52,14 @@ fun HtmlContent(
             TextView(context).apply {
                 textSize = textStyle.fontSize.value
                 setTextColor(textColor.toArgb())
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                    typeface =
-                        textStyle.fontWeight?.let { fontWeight ->
-                            Typeface.create(
-                                typeface,
-                                fontWeight.weight,
-                                false,
-                            )
-                        }
-                }
+                typeface =
+                    textStyle.fontWeight?.let { fontWeight ->
+                        Typeface.create(
+                            typeface,
+                            fontWeight.weight,
+                            false,
+                        )
+                    }
 
                 if (clickableLinks) {
                     movementMethod = HtmlContentMovementMethod

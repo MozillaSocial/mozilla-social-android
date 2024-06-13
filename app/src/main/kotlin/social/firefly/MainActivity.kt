@@ -20,7 +20,6 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.annotation.KoinExperimentalAPI
 import social.firefly.core.analytics.AppAnalytics
 import social.firefly.core.designsystem.theme.FfTheme
-import social.firefly.core.designsystem.theme.ThemeOption
 import social.firefly.core.ui.common.FfSurface
 import social.firefly.core.workmanager.DatabasePurgeWorker
 import social.firefly.ui.MainActivityScreen
@@ -40,9 +39,7 @@ class MainActivity : ComponentActivity() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
         setContent {
-            val themeOption by viewModel.themeOption.collectAsStateWithLifecycle(
-                initialValue = ThemeOption.SYSTEM
-            )
+            val themeOption by viewModel.themeOption.collectAsStateWithLifecycle()
 
             FfTheme(
                 themeOption = themeOption,
