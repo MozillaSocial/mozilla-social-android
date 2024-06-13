@@ -2,9 +2,7 @@ package social.firefly.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import social.firefly.common.utils.ffFadeIn
 import social.firefly.common.utils.ffFadeOut
 import social.firefly.feature.account.accountScreen
@@ -21,6 +19,7 @@ import social.firefly.feature.settings.settingsFlow
 import social.firefly.feature.thread.threadScreen
 import social.firefly.feature.post.newPostScreen
 import social.firefly.feature.search.searchScreen
+import social.firefly.splash.splashScreen
 import social.firefly.ui.AppState
 import social.firefly.ui.bottombar.Routes
 import social.firefly.ui.bottombar.bottomTabScreen
@@ -58,6 +57,4 @@ fun MainNavHost(
     }
 }
 
-fun NavGraphBuilder.splashScreen() {
-    composable(route = Routes.SPLASH) {}
-}
+

@@ -8,7 +8,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.core.content.ContextCompat
@@ -29,6 +28,7 @@ import social.firefly.ui.MainActivityScreen
 class MainActivity : ComponentActivity() {
     private val viewModel: MainViewModel by viewModel()
     private val analytics: AppAnalytics by inject()
+    private val intentHandler: IntentHandler by inject()
 
     private val notificationsRequestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission(),
@@ -53,12 +53,6 @@ class MainActivity : ComponentActivity() {
                     }
                 }
             }
-
-            // initialize the view model in the setContent block so that initialize is called
-            // again when the layout inspector starts
-            LaunchedEffect(Unit) {
-                viewModel.initialize(intent)
-            }
         }
 
         DatabasePurgeWorker.setupPurgeWork(this, lifecycleScope)
@@ -77,7 +71,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
-        viewModel.handleIntent(intent)
+        intentHandler.handleIntent(intent)
     }
 
     private fun askNotificationPermission() {
