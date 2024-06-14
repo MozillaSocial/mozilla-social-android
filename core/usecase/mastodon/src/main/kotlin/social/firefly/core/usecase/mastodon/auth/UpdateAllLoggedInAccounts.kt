@@ -5,6 +5,7 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.first
 import social.firefly.core.datastore.UserPreferencesDatastoreManager
 import social.firefly.core.repository.mastodon.VerificationRepository
+import timber.log.Timber
 
 class UpdateAllLoggedInAccounts(
     private val verificationRepository: VerificationRepository,
@@ -16,12 +17,17 @@ class UpdateAllLoggedInAccounts(
             async {
                 val accessToken = dataStore.accessToken.first()
                 val domain = dataStore.domain.first()
-                verificationRepository.verifyUserCredentials(
-                    accessToken,
-                    domain,
-                )
+                try {
+                    verificationRepository.verifyUserCredentials(
+                        accessToken,
+                        domain,
+                    )
+                } catch (e: Exception) {
+                    Timber.e(e)
+                    null
+                }
             }
-        }.map {
+        }.mapNotNull {
             it.await()
         }.forEach { account ->
             userPreferencesDatastoreManager.dataStores.value.find {
