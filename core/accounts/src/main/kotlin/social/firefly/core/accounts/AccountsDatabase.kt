@@ -17,6 +17,6 @@ import social.firefly.core.accounts.model.MastodonAccount
     ],
     exportSchema = true
 )
-abstract class AccountsDatabase : RoomDatabase() {
+internal abstract class AccountsDatabase : RoomDatabase() {
     abstract fun mastodonAccountsDao(): MastodonAccountsDao
 }

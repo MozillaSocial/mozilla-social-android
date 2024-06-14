@@ -37,5 +37,5 @@ interface MastodonAccountsDao : BaseDao<MastodonAccount> {
             "SELECT domain FROM activeAccount" +
         ") "
     )
-    suspend fun getActiveAccountFlow(): Flow<MastodonAccount>
+    fun getActiveAccountFlow(): Flow<MastodonAccount>
 }
