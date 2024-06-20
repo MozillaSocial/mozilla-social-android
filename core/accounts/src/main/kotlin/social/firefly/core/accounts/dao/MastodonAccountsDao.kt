@@ -47,7 +47,7 @@ interface MastodonAccountsDao : BaseDao<MastodonAccount> {
     @Query(
         "SELECT * from mastodonAccounts"
     )
-    fun getAllAccountsFlow(): Flow<MastodonAccount>
+    fun getAllAccountsFlow(): Flow<List<MastodonAccount>>
 
     @Query(
         "DELETE from mastodonAccounts " +

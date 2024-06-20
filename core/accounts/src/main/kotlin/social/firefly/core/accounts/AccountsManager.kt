@@ -18,7 +18,7 @@ class AccountsManager(
 
     suspend fun getAllAccounts(): List<MastodonAccount> = mastodonAccountsDao.getAllAccounts()
 
-    fun getAllAccountsFlow(): Flow<MastodonAccount> =
+    fun getAllAccountsFlow(): Flow<List<MastodonAccount>> =
         mastodonAccountsDao.getAllAccountsFlow()
 
     suspend fun createNewMastodonUser(
