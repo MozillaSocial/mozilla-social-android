@@ -9,7 +9,6 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import social.firefly.core.accounts.AccountsManager
-import social.firefly.core.datastore.UserPreferencesDatastoreManager
 import social.firefly.core.navigation.Event
 import social.firefly.core.navigation.EventRelay
 import social.firefly.core.navigation.NavigationDestination
@@ -17,7 +16,6 @@ import social.firefly.core.navigation.usecases.NavigateTo
 import social.firefly.core.usecase.mastodon.auth.SwitchActiveAccount
 
 class ChooseAccountDialogViewModel(
-    private val userPreferencesDatastoreManager: UserPreferencesDatastoreManager,
     eventRelay: EventRelay,
     private val navigateTo: NavigateTo,
     private val switchActiveAccount: SwitchActiveAccount,

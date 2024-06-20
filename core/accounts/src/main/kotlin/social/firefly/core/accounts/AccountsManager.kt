@@ -90,4 +90,15 @@ class AccountsManager(
             defaultLanguage = defaultLanguage,
         )
     )
+
+    suspend fun updatePushKeys(
+        mastodonAccount: MastodonAccount,
+        serializedPushKeys: String,
+    ) {
+        mastodonAccountsDao.upsert(
+            mastodonAccount.copy(
+                serializedPushKeys = serializedPushKeys
+            )
+        )
+    }
 }
