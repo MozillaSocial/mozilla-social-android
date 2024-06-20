@@ -9,15 +9,14 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import org.koin.core.parameter.parametersOf
 import org.koin.java.KoinJavaComponent
 import social.firefly.common.utils.edit
+import social.firefly.core.accounts.AccountsManager
 import social.firefly.core.analytics.FeedAnalytics
 import social.firefly.core.analytics.FeedLocation
-import social.firefly.core.datastore.UserPreferencesDatastoreManager
 import social.firefly.core.navigation.BottomBarNavigationDestination
 import social.firefly.core.navigation.usecases.NavigateTo
 import social.firefly.core.repository.mastodon.TimelineRepository
@@ -31,13 +30,13 @@ import social.firefly.core.usecase.mastodon.account.GetLoggedInUserAccountId
 @OptIn(ExperimentalPagingApi::class)
 class FeedViewModel(
     private val analytics: FeedAnalytics,
-    private val userPreferencesDatastoreManager: UserPreferencesDatastoreManager,
     homeTimelineRemoteMediator: HomeTimelineRemoteMediator,
     localTimelinePager: LocalTimelinePager,
     federatedTimelinePager: FederatedTimelinePager,
     private val timelineRepository: TimelineRepository,
     getLoggedInUserAccountId: GetLoggedInUserAccountId,
     private val navigateTo: NavigateTo,
+    private val accountsManager: AccountsManager,
 ) : ViewModel(), FeedInteractions {
     private val userAccountId: String = getLoggedInUserAccountId()
 
@@ -114,7 +113,10 @@ class FeedViewModel(
         // save the last seen status no more than once per x seconds (SAVE_RATE)
         if (statusViewedJob == null) {
             statusViewedJob = viewModelScope.launch {
-                userPreferencesDatastoreManager.activeUserDatastore.first().saveLastSeenHomeStatusId(statusId)
+                accountsManager.updateLastSeenHomeStatusId(
+                    mastodonAccount = accountsManager.getActiveAccount(),
+                    lastSeenStatusId = statusId,
+                )
                 delay(SAVE_RATE)
                 statusViewedJob = null
             }

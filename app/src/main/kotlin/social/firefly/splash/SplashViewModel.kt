@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import social.firefly.IntentHandler
-import social.firefly.core.datastore.UserPreferencesDatastoreManager
+import social.firefly.core.accounts.AccountsManager
 import social.firefly.core.navigation.NavigationDestination
 import social.firefly.core.navigation.usecases.NavigateTo
 import social.firefly.core.repository.mastodon.TimelineRepository
@@ -14,10 +14,10 @@ import social.firefly.ui.AppState
 
 class SplashViewModel(
     private val navigateTo: NavigateTo,
-    private val userPreferencesDatastoreManager: UserPreferencesDatastoreManager,
     private val timelineRepository: TimelineRepository,
     private val updateAllLoggedInAccounts: UpdateAllLoggedInAccounts,
     private val intentHandler: IntentHandler,
+    private val accountsManager: AccountsManager,
 ) : ViewModel() {
 
     fun initialize(intent: Intent?) {
@@ -27,7 +27,7 @@ class SplashViewModel(
 
             AppState.navigationCollectionCompletable.await()
 
-            if (userPreferencesDatastoreManager.isLoggedInToAtLeastOneAccount) {
+            if (accountsManager.getAllAccounts().isNotEmpty()) {
                 navigateTo(NavigationDestination.Tabs)
                 intent?.let { intentHandler.handleIntent(intent) }
                 updateAllLoggedInAccounts()

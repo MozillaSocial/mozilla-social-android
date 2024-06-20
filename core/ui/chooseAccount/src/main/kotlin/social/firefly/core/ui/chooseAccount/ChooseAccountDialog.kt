@@ -24,7 +24,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
-import kotlinx.coroutines.flow.flowOf
 import org.koin.androidx.compose.koinViewModel
 import social.firefly.core.designsystem.theme.FfTheme
 import social.firefly.core.ui.common.dialog.FfDialog
@@ -81,25 +80,20 @@ private fun Account(
     uiState: ChooseAccountUiState,
     chooseAccountInteractions: ChooseAccountInteractions,
 ) {
-    val avatarUrl by uiState.avatarUrl.collectAsStateWithLifecycle(initialValue = "")
-    val accountId by uiState.accountId.collectAsStateWithLifecycle(initialValue = "")
-    val domain by uiState.domain.collectAsStateWithLifecycle(initialValue = "")
-    val userName by uiState.userName.collectAsStateWithLifecycle(initialValue = "")
-
     Row(
         modifier = modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(8.dp))
             .clickable {
-                chooseAccountInteractions.onAccountClicked(accountId, domain)
+                chooseAccountInteractions.onAccountClicked(uiState.accountId, uiState.domain)
             }
             .padding(8.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Avatar(avatarUrl)
+        Avatar(uiState.avatarUrl)
         Spacer(modifier = Modifier.width(8.dp))
         Text(
-            text = "${userName}@${domain}",
+            text = "${uiState.userName}@${uiState.domain}",
             style = FfTheme.typography.labelSmall,
         )
     }
@@ -126,16 +120,16 @@ private fun ChooseAccountDialogPreview() {
         DialogContent(
             accounts = listOf(
                 ChooseAccountUiState(
-                    accountId = flowOf(),
-                    userName = flowOf("john"),
-                    domain = flowOf("mozilla.social"),
-                    avatarUrl = flowOf()
+                    accountId = "",
+                    userName = "john",
+                    domain = "mozilla.social",
+                    avatarUrl = ""
                 ),
                 ChooseAccountUiState(
-                    accountId = flowOf(),
-                    userName = flowOf("john"),
-                    domain = flowOf("moz.soc"),
-                    avatarUrl = flowOf()
+                    accountId = "",
+                    userName = "john",
+                    domain = "moz.soc",
+                    avatarUrl = ""
                 )
             ),
             chooseAccountInteractions = ChooseAccountInteractionsNoOp

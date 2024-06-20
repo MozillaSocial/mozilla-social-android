@@ -2,12 +2,9 @@ package social.firefly.feature.post
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
@@ -18,8 +15,8 @@ import social.firefly.common.loadResource
 import social.firefly.common.utils.FileType
 import social.firefly.common.utils.StringFactory
 import social.firefly.common.utils.edit
+import social.firefly.core.accounts.AccountsManager
 import social.firefly.core.analytics.NewPostAnalytics
-import social.firefly.core.datastore.UserPreferencesDatastoreManager
 import social.firefly.core.model.StatusVisibility
 import social.firefly.core.model.request.PollCreate
 import social.firefly.core.navigation.usecases.PopNavBackstack
@@ -37,7 +34,6 @@ import social.firefly.feature.post.status.StatusDelegate
 import timber.log.Timber
 import java.util.Locale
 
-@OptIn(ExperimentalCoroutinesApi::class)
 class NewPostViewModel(
     private val analytics: NewPostAnalytics,
     private val replyStatusId: String?,
@@ -48,8 +44,8 @@ class NewPostViewModel(
     private val editStatus: EditStatus,
     private val popNavBackstack: PopNavBackstack,
     private val showSnackbar: ShowSnackbar,
-    private val userPreferencesDatastoreManager: UserPreferencesDatastoreManager,
     private val statusRepository: StatusRepository,
+    private val accountsManager: AccountsManager,
 ) : ViewModel(), NewPostInteractions, KoinComponent {
 
     val statusDelegate: StatusDelegate by inject {
@@ -151,10 +147,9 @@ class NewPostViewModel(
 
             val visibility = status?.visibility ?: StatusVisibility.Public
 
-            val defaultLanguageCode = status?.language ?: userPreferencesDatastoreManager
-                .activeUserDatastore
-                .flatMapLatest { it.defaultLanguage }
-                .first()
+            val defaultLanguageCode = status?.language ?: accountsManager
+                .getActiveAccount()
+                .defaultLanguage
                 .ifBlank {
                     Locale.getDefault().language
                 }

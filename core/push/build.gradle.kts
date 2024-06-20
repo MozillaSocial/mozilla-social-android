@@ -9,9 +9,9 @@ android {
 
 dependencies {
     implementation(project(":core:repository:mastodon"))
-    implementation(project(":core:datastore"))
     implementation(project(":core:common"))
     implementation(project(":core:model"))
+    implementation(project(":core:accounts"))
 
     implementation(platform(libs.firebase))
     implementation(libs.firebase.messaging)

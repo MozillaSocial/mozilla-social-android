@@ -12,7 +12,7 @@ dependencies {
     implementation(project(":core:usecase:mastodon"))
     implementation(project(":core:common"))
     implementation(project(":core:model"))
-    implementation(project(":core:datastore"))
+    implementation(project(":core:accounts"))
 
     implementation(libs.androidx.paging.runtime)
     implementation(libs.jakewharton.timber)

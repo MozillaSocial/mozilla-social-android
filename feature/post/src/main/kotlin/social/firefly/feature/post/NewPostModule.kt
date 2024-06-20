@@ -4,6 +4,7 @@ import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 import social.firefly.common.commonModule
+import social.firefly.core.accounts.accountsModule
 import social.firefly.core.analytics.analyticsModule
 import social.firefly.core.datastore.dataStoreModule
 import social.firefly.core.navigation.navigationModule
@@ -21,6 +22,7 @@ val newPostModule = module {
         mastodonUsecaseModule,
         navigationModule,
         analyticsModule,
+        accountsModule,
     )
 
     viewModel { parametersHolder ->
@@ -34,8 +36,8 @@ val newPostModule = module {
             showSnackbar = get(),
             getLoggedInUserAccountId = get(),
             accountRepository = get(),
-            userPreferencesDatastoreManager = get(),
             statusRepository = get(),
+            accountsManager = get(),
         )
     }
 

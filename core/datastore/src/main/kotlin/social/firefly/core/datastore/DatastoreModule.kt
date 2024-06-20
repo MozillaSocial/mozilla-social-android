@@ -6,10 +6,4 @@ import org.koin.dsl.module
 val dataStoreModule =
     module {
         single { AppPreferencesDatastore(androidContext()) }
-        single {
-            UserPreferencesDatastoreManager(
-                androidContext(),
-                get(),
-            )
-        }
     }

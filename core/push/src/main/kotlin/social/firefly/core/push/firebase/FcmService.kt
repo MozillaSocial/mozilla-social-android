@@ -8,7 +8,7 @@ import kotlinx.serialization.json.Json
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import social.firefly.common.appscope.AppScope
-import social.firefly.core.datastore.UserPreferencesDatastoreManager
+import social.firefly.core.accounts.AccountsManager
 import social.firefly.core.push.KeyManager
 import timber.log.Timber
 
@@ -17,7 +17,7 @@ class FcmService : FirebaseMessagingService(), KoinComponent {
     private val keyManager: KeyManager by inject()
 //    private val pushRepository: PushRepository by inject()
     private val coroutineScope: AppScope by inject()
-    private val userPreferencesDatastoreManager: UserPreferencesDatastoreManager by inject()
+    private val accountsManager: AccountsManager by inject()
 
     private val tag = FcmService::class.simpleName!!
 
@@ -28,11 +28,14 @@ class FcmService : FirebaseMessagingService(), KoinComponent {
 
     override fun onNewToken(token: String) {
         Timber.tag(tag).d("new token: $token")
-
-        userPreferencesDatastoreManager.dataStores.value.forEach { userPrefsDatastore ->
-            coroutineScope.launch {
+        coroutineScope.launch {
+            accountsManager.getAllAccounts().forEach {
                 val keys = keyManager.generatePushKeys()
-                userPrefsDatastore.saveSerializedPushKeyPair(Json.encodeToString(keys))
+
+                accountsManager.updatePushKeys(
+                    mastodonAccount = it,
+                    serializedPushKeys = Json.encodeToString(keys)
+                )
 
                 Timber.tag(tag).d("keys: $keys")
 

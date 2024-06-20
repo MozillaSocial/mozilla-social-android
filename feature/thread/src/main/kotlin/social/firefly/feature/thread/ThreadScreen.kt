@@ -21,8 +21,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -31,7 +29,6 @@ import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.paging.LoadState
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 import social.firefly.common.Resource
@@ -40,10 +37,7 @@ import social.firefly.core.designsystem.theme.FfTheme
 import social.firefly.core.ui.common.FfSurface
 import social.firefly.core.ui.common.UiConstants
 import social.firefly.core.ui.common.appbar.FfCloseableTopAppBar
-import social.firefly.core.ui.common.dropdown.FfDropDownItem
-import social.firefly.core.ui.common.dropdown.FfIconButtonDropDownMenu
 import social.firefly.core.ui.common.error.GenericError
-import social.firefly.core.ui.common.loading.MaxSizeLoading
 import social.firefly.core.ui.common.pullrefresh.PullRefreshIndicator
 import social.firefly.core.ui.common.pullrefresh.pullRefresh
 import social.firefly.core.ui.common.pullrefresh.rememberPullRefreshState
@@ -58,12 +52,8 @@ internal fun ThreadScreen(
     viewModel: ThreadViewModel = koinViewModel(parameters = { parametersOf(threadStatusId) }),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val threadType by viewModel.threadType.collectAsStateWithLifecycle(
-        initialValue = ThreadType.TREE
-    )
 
     ThreadScreen(
-        threadType = threadType,
         uiState = uiState,
         postCardDelegate = viewModel.postCardDelegate,
         threadInteractions = viewModel,
@@ -77,7 +67,6 @@ internal fun ThreadScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ThreadScreen(
-    threadType: ThreadType,
     uiState: Resource<ThreadPostCardCollection>,
     postCardDelegate: PostCardInteractions,
     threadInteractions: ThreadInteractions,
@@ -86,12 +75,6 @@ private fun ThreadScreen(
         Column(Modifier.systemBarsPadding()) {
             FfCloseableTopAppBar(
                 title = stringResource(id = R.string.thread_screen_title),
-                actions = {
-                    ThreadTypeButton(
-                        threadType = threadType,
-                        threadInteractions = threadInteractions,
-                    )
-                }
             )
 
             val refreshState = rememberPullRefreshState(
@@ -115,7 +98,6 @@ private fun ThreadScreen(
                         modifier = Modifier
                             .widthIn(max = UiConstants.MAX_WIDTH)
                             .align(Alignment.TopCenter),
-                        threadType = threadType,
                         statuses = it,
                         postCardDelegate = postCardDelegate,
                         threadInteractions = threadInteractions,
@@ -134,7 +116,6 @@ private fun ThreadScreen(
 
 @Composable
 private fun ThreadList(
-    threadType: ThreadType,
     statuses: ThreadPostCardCollection,
     postCardDelegate: PostCardInteractions,
     threadInteractions: ThreadInteractions,
@@ -201,7 +182,6 @@ private fun ThreadList(
         }
 
         descendants(
-            threadType = threadType,
             statuses = statuses,
             postCardDelegate = postCardDelegate,
             threadInteractions = threadInteractions
@@ -210,7 +190,6 @@ private fun ThreadList(
 }
 
 private fun LazyListScope.descendants(
-    threadType: ThreadType,
     statuses: ThreadPostCardCollection,
     postCardDelegate: PostCardInteractions,
     threadInteractions: ThreadInteractions,
@@ -224,7 +203,7 @@ private fun LazyListScope.descendants(
                 PostCardListItem(
                     uiState = item.uiState,
                     postCardInteractions = postCardDelegate,
-                    showDivider = threadType != ThreadType.TREE,
+                    showDivider = false,
                 )
             }
             is ThreadDescendant.ViewMore -> {
@@ -265,71 +244,5 @@ private fun LazyListScope.descendants(
             }
         }
 
-    }
-}
-
-@Composable
-private fun ThreadTypeButton(
-    threadType: ThreadType,
-    threadInteractions: ThreadInteractions,
-) {
-    val overflowMenuExpanded = remember { mutableStateOf(false) }
-
-    FfIconButtonDropDownMenu(
-        expanded = overflowMenuExpanded,
-        dropDownMenuContent = {
-            for (dropDownOption in ThreadType.entries) {
-                FfDropDownItem(
-                    text = when (dropDownOption) {
-                        ThreadType.LIST -> {
-                            stringResource(id = R.string.list_view)
-                        }
-                        ThreadType.DIRECT_REPLIES -> {
-                            stringResource(id = R.string.direct_replies_list_view)
-                        }
-                        ThreadType.TREE -> {
-                            stringResource(id = R.string.tree_view)
-                        }
-                    },
-                    icon = {
-                        Icon(
-                            modifier = Modifier
-                                .size(FfIcons.Sizes.small),
-                            painter = when (dropDownOption) {
-                                ThreadType.LIST -> {
-                                    FfIcons.listPlus()
-                                }
-                                ThreadType.DIRECT_REPLIES -> {
-                                    FfIcons.list()
-                                }
-                                ThreadType.TREE -> {
-                                    FfIcons.treeView()
-                                }
-                            },
-                            contentDescription = null
-                        )
-                    },
-                    expanded = overflowMenuExpanded,
-                    onClick = { threadInteractions.onThreadTypeSelected(dropDownOption) },
-                )
-            }
-        }
-    ) {
-        Icon(
-            modifier = Modifier
-                .size(FfIcons.Sizes.normal),
-            painter = when (threadType) {
-                ThreadType.LIST -> {
-                    FfIcons.listPlus()
-                }
-                ThreadType.DIRECT_REPLIES -> {
-                    FfIcons.list()
-                }
-                ThreadType.TREE -> {
-                    FfIcons.treeView()
-                }
-            },
-            contentDescription = stringResource(id = R.string.view_type)
-        )
     }
 }

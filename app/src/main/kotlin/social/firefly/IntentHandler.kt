@@ -3,29 +3,34 @@ package social.firefly
 import android.content.Intent
 import android.net.Uri
 import android.os.Parcelable
-import social.firefly.core.datastore.UserPreferencesDatastoreManager
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import social.firefly.core.accounts.AccountsManager
 import social.firefly.core.navigation.Event
 import social.firefly.core.navigation.EventRelay
 import social.firefly.core.share.ShareInfo
 
 class IntentHandler(
     private val eventRelay: EventRelay,
-    private val userPreferencesDatastoreManager: UserPreferencesDatastoreManager,
+    private val accountsManager: AccountsManager,
 ) {
 
     fun handleIntent(intent: Intent) {
-        if (!userPreferencesDatastoreManager.isLoggedInToAtLeastOneAccount) return
-        when {
-            intent.action == Intent.ACTION_SEND -> {
-                when {
-                    intent.type == "text/plain" -> {
-                        handleSendTextIntentReceived(intent)
-                    }
-                    intent.type?.contains("image") == true -> {
-                        handleSendImageIntentReceived(intent)
-                    }
-                    intent.type?.contains("video") == true -> {
-                        handleSendVideoIntentReceived(intent)
+        CoroutineScope(Dispatchers.Default).launch {
+            if (accountsManager.getAllAccounts().isEmpty()) return@launch
+            when {
+                intent.action == Intent.ACTION_SEND -> {
+                    when {
+                        intent.type == "text/plain" -> {
+                            handleSendTextIntentReceived(intent)
+                        }
+                        intent.type?.contains("image") == true -> {
+                            handleSendImageIntentReceived(intent)
+                        }
+                        intent.type?.contains("video") == true -> {
+                            handleSendVideoIntentReceived(intent)
+                        }
                     }
                 }
             }

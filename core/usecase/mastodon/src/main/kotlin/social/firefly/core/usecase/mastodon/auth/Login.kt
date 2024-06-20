@@ -8,8 +8,7 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.parameter.parametersOf
 import social.firefly.common.annotations.PreferUseCase
 import social.firefly.common.utils.StringFactory
-import social.firefly.core.datastore.AlreadySignedInException
-import social.firefly.core.datastore.UserPreferencesDatastoreManager
+import social.firefly.core.accounts.AccountsManager
 import social.firefly.core.model.Account
 import social.firefly.core.navigation.NavigationDestination
 import social.firefly.core.navigation.usecases.NavigateTo
@@ -24,11 +23,11 @@ import timber.log.Timber
  * This use case handles all logic related to logging in
  */
 class Login(
-    private val userPreferencesDatastoreManager: UserPreferencesDatastoreManager,
     private val openLink: OpenLink,
     private val navigateTo: NavigateTo,
     private val databaseDelegate: DatabaseDelegate,
     private val showSnackbar: ShowSnackbar,
+    private val accountsManager: AccountsManager,
 ): KoinComponent {
     private lateinit var clientId: String
     private lateinit var clientSecret: String
@@ -90,7 +89,7 @@ class Login(
                 baseUrl = host,
             )
             val defaultLanguage = account.source?.defaultLanguage ?: ""
-            userPreferencesDatastoreManager.createNewUserDatastore(
+            accountsManager.createNewMastodonUser(
                 domain = host,
                 accessToken = accessToken,
                 accountId = account.accountId,
@@ -102,12 +101,6 @@ class Login(
                 databaseDelegate.clearAllTables()
             }
             navigateTo(NavigationDestination.Tabs)
-        } catch (e: AlreadySignedInException) {
-            showSnackbar(
-                text = StringFactory.resource(R.string.already_signed_in_to_account_error),
-                isError = true,
-            )
-            Timber.e(e)
         } catch (exception: Exception) {
             showSnackbar(
                 text = StringFactory.resource(R.string.error_signing_in),
