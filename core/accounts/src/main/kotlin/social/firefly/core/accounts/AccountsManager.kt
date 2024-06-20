@@ -1,6 +1,7 @@
 package social.firefly.core.accounts
 
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.filterNotNull
 import social.firefly.core.accounts.dao.ActiveAccountDao
 import social.firefly.core.accounts.dao.MastodonAccountsDao
 import social.firefly.core.accounts.model.AccountType
@@ -14,7 +15,7 @@ class AccountsManager(
 
     suspend fun getActiveAccount(): MastodonAccount = mastodonAccountsDao.getActiveAccount()
 
-    fun getActiveAccountFlow(): Flow<MastodonAccount> = mastodonAccountsDao.getActiveAccountFlow()
+    fun getActiveAccountFlow(): Flow<MastodonAccount> = mastodonAccountsDao.getActiveAccountFlow().filterNotNull()
 
     suspend fun getAllAccounts(): List<MastodonAccount> = mastodonAccountsDao.getAllAccounts()
 
