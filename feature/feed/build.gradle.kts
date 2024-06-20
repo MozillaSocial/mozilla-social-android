@@ -21,6 +21,7 @@ dependencies {
     implementation(project(":core:ui:common"))
     implementation(project(":core:ui:postcard"))
     implementation(project(":core:usecase:mastodon"))
+    implementation(project(":core:accounts"))
 
     implementation(libs.androidx.paging.runtime)
 

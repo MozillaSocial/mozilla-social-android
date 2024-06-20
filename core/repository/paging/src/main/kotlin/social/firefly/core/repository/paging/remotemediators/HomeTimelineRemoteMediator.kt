@@ -4,17 +4,10 @@ import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
-import kotlinx.coroutines.CompletableDeferred
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.launch
 import social.firefly.common.Rel
+import social.firefly.core.accounts.AccountsManager
 import social.firefly.core.database.model.entities.statusCollections.HomeTimelineStatusWrapper
-import social.firefly.core.datastore.UserPreferencesDatastoreManager
 import social.firefly.core.model.Status
 import social.firefly.core.model.paging.MastodonPagedResponse
 import social.firefly.core.repository.mastodon.DatabaseDelegate
@@ -30,7 +23,7 @@ class HomeTimelineRemoteMediator(
     private val saveStatusToDatabase: SaveStatusToDatabase,
     private val databaseDelegate: DatabaseDelegate,
     private val getInReplyToAccountNames: GetInReplyToAccountNames,
-    private val userPreferencesDatastoreManager: UserPreferencesDatastoreManager,
+    private val accountsManager: AccountsManager,
 ) : RemoteMediator<Int, HomeTimelineStatusWrapper>() {
 
     private var firstRefreshHasHappened = false
@@ -110,7 +103,6 @@ class HomeTimelineRemoteMediator(
         }
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     private suspend fun fetchRefresh(
         state: PagingState<Int, HomeTimelineStatusWrapper>,
     ): MastodonPagedResponse<Status> {
@@ -120,18 +112,7 @@ class HomeTimelineRemoteMediator(
         // If this is the first time we are loading the page, we need to start where
         // the user last left off.  Grab the lastSeenHomeStatusId
         if (!firstRefreshHasHappened) {
-            val lastSeenId = CompletableDeferred<String>()
-            with(CoroutineScope(coroutineContext)) {
-                launch {
-                    userPreferencesDatastoreManager.activeUserDatastore.flatMapLatest {
-                        it.lastSeenHomeStatusId
-                    }.collectLatest {
-                        lastSeenId.complete(it)
-                        cancel()
-                    }
-                }
-            }
-            olderThanId = lastSeenId.await()
+            olderThanId = accountsManager.getActiveAccount().lastSeenHomeStatusId
         }
 
         val mainResponse = timelineRepository.getHomeTimeline(

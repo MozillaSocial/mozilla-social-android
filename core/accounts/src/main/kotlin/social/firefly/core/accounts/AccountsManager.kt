@@ -101,4 +101,27 @@ class AccountsManager(
             )
         )
     }
+
+    suspend fun setActiveAccount(
+        mastodonAccount: MastodonAccount,
+    ) {
+        activeAccountDao.upsert(
+            ActiveAccount(
+                accountType = AccountType.MASTODON,
+                accountId = mastodonAccount.accountId,
+                domain = mastodonAccount.domain,
+            )
+        )
+    }
+
+    suspend fun updateLastSeenHomeStatusId(
+        mastodonAccount: MastodonAccount,
+        lastSeenStatusId: String,
+    ) {
+        mastodonAccountsDao.upsert(
+            mastodonAccount.copy(
+                lastSeenHomeStatusId = lastSeenStatusId,
+            )
+        )
+    }
 }

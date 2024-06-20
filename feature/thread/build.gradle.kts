@@ -19,6 +19,7 @@ dependencies {
     implementation(project(":core:common"))
     implementation(project(":core:navigation"))
     implementation(project(":core:analytics"))
+    implementation(project(":core:accounts"))
 
     implementation(libs.androidx.paging.runtime)
 

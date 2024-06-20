@@ -3,11 +3,10 @@ package social.firefly.feature.settings.account
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import social.firefly.core.accounts.AccountsManager
 import social.firefly.core.analytics.SettingsAnalytics
-import social.firefly.core.datastore.UserPreferencesDatastoreManager
 import social.firefly.core.navigation.AuthNavigationDestination
 import social.firefly.core.navigation.usecases.NavigateTo
 import social.firefly.core.navigation.usecases.OpenLink
@@ -24,31 +23,31 @@ class AccountSettingsViewModel(
     private val navigateTo: NavigateTo,
     private val switchActiveAccount: SwitchActiveAccount,
     private val logoutOfAllAccounts: LogoutOfAllAccounts,
-    userPreferencesDatastoreManager: UserPreferencesDatastoreManager,
     updateAllLoggedInAccounts: UpdateAllLoggedInAccounts,
+    private val accountsManager: AccountsManager,
 ) : ViewModel(), AccountSettingsInteractions {
 
-    val otherAccounts = userPreferencesDatastoreManager.dataStores.combine(
-        userPreferencesDatastoreManager.activeUserDatastore
-    ) { dataStores, activeDataStore ->
-        dataStores.filterNot {
-            it == activeDataStore
-        }.map { dataStore ->
+    val otherAccounts = accountsManager.getAllAccountsFlow().combine(
+        accountsManager.getActiveAccountFlow()
+    ) { otherAccounts, activeAccount ->
+        otherAccounts.filterNot {
+            it == activeAccount
+        }.map { account ->
             LoggedInAccount(
-                accountId = dataStore.accountId,
-                userName = dataStore.userName,
-                domain = dataStore.domain,
-                avatarUrl = dataStore.avatarUrl,
+                accountId = account.accountId,
+                userName = account.userName,
+                domain = account.domain,
+                avatarUrl = account.avatarUrl,
             )
         }
     }
 
-    val activeAccount = userPreferencesDatastoreManager.activeUserDatastore.map { dataStore ->
+    val activeAccount = accountsManager.getActiveAccountFlow().map { account ->
         LoggedInAccount(
-            accountId = dataStore.accountId,
-            userName = dataStore.userName,
-            domain = dataStore.domain,
-            avatarUrl = dataStore.avatarUrl,
+            accountId = account.accountId,
+            userName = account.userName,
+            domain = account.domain,
+            avatarUrl = account.avatarUrl,
         )
     }
 
