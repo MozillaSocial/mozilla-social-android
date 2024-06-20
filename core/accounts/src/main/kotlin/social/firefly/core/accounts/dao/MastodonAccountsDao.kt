@@ -38,4 +38,29 @@ interface MastodonAccountsDao : BaseDao<MastodonAccount> {
         ") "
     )
     fun getActiveAccountFlow(): Flow<MastodonAccount>
+
+    @Query(
+        "SELECT * from mastodonAccounts"
+    )
+    suspend fun getAllAccounts(): List<MastodonAccount>
+
+    @Query(
+        "SELECT * from mastodonAccounts"
+    )
+    fun getAllAccountsFlow(): Flow<MastodonAccount>
+
+    @Query(
+        "DELETE from mastodonAccounts " +
+        "WHERE accountId = :accountId " +
+        "AND domain = :domain"
+    )
+    suspend fun deleteAccount(
+        accountId: String,
+        domain: String,
+    )
+
+    @Query(
+        "DELETE FROM mastodonAccounts"
+    )
+    suspend fun deleteAllAccounts()
 }
