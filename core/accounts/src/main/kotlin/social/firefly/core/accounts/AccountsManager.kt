@@ -77,4 +77,17 @@ class AccountsManager(
     suspend fun deleteAllAccounts() {
         mastodonAccountsDao.deleteAllAccounts()
     }
+
+    suspend fun updateAccountInfo(
+        mastodonAccount: MastodonAccount,
+        avatarUrl: String,
+        username: String,
+        defaultLanguage: String,
+    ) = mastodonAccountsDao.upsert(
+        mastodonAccount.copy(
+            avatarUrl = avatarUrl,
+            userName = username,
+            defaultLanguage = defaultLanguage,
+        )
+    )
 }

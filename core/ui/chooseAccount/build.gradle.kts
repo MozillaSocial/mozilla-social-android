@@ -13,6 +13,7 @@ dependencies {
     implementation(project(":core:datastore"))
     implementation(project(":core:navigation"))
     implementation(project(":core:usecase:mastodon"))
+    implementation(project(":core:accounts"))
 
     implementation(libs.coil)
     implementation(libs.koin.core)

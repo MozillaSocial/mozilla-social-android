@@ -21,6 +21,7 @@ import org.koin.androidx.workmanager.koin.workManagerFactory
 import org.koin.core.context.startKoin
 import org.koin.dsl.module
 import social.firefly.common.Version
+import social.firefly.core.accounts.accountsModule
 import social.firefly.core.analytics.AppAnalytics
 import social.firefly.core.repository.mastodon.AuthCredentialObserver
 import social.firefly.core.workmanager.workManagerModule
@@ -102,6 +103,7 @@ class MainApplication : Application(), ImageLoaderFactory {
                 workManagerModule,
                 pushModule,
                 chooseAccountModule,
+                accountsModule,
             )
         }
     }

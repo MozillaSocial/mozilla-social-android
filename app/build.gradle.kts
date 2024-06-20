@@ -91,6 +91,7 @@ dependencies {
     implementation(project(":feature:followedHashTags"))
     implementation(project(":feature:bookmarks"))
     implementation(project(":core:ui:chooseAccount"))
+    implementation(project(":core:accounts"))
 
     implementation(kotlin("reflect"))
 

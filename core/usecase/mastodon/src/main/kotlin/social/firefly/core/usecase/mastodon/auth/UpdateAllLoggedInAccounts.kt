@@ -2,25 +2,29 @@ package social.firefly.core.usecase.mastodon.auth
 
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.flow.first
-import social.firefly.core.datastore.UserPreferencesDatastoreManager
+import social.firefly.core.accounts.AccountsManager
+import social.firefly.core.accounts.model.MastodonAccount
+import social.firefly.core.model.Account
 import social.firefly.core.repository.mastodon.VerificationRepository
 import timber.log.Timber
 
 class UpdateAllLoggedInAccounts(
     private val verificationRepository: VerificationRepository,
-    private val userPreferencesDatastoreManager: UserPreferencesDatastoreManager,
+    private val accountsManager: AccountsManager,
 ) {
 
     suspend operator fun invoke() = coroutineScope {
-        userPreferencesDatastoreManager.dataStores.value.map { dataStore ->
+        accountsManager.getAllAccounts().map { account ->
             async {
-                val accessToken = dataStore.accessToken.first()
-                val domain = dataStore.domain.first()
+                val accessToken = account.accessToken
+                val domain = account.domain
                 try {
-                    verificationRepository.verifyUserCredentials(
-                        accessToken,
-                        domain,
+                    AccountWrapper(
+                        mastodonAccount = account,
+                        account = verificationRepository.verifyUserCredentials(
+                            accessToken,
+                            domain,
+                        )
                     )
                 } catch (e: Exception) {
                     Timber.e(e)
@@ -29,15 +33,18 @@ class UpdateAllLoggedInAccounts(
             }
         }.mapNotNull {
             it.await()
-        }.forEach { account ->
-            userPreferencesDatastoreManager.dataStores.value.find {
-                it.accountId.first() == account.accountId
-            }?.apply {
-                saveAvatarUrl(account.avatarUrl)
-                saveUserName(account.username)
-                val defaultLanguage = account.source?.defaultLanguage ?: ""
-                saveDefaultLanguage(defaultLanguage)
-            }
+        }.forEach { accountWrapper ->
+            accountsManager.updateAccountInfo(
+                mastodonAccount = accountWrapper.mastodonAccount,
+                avatarUrl = accountWrapper.account.avatarUrl,
+                username = accountWrapper.account.username,
+                defaultLanguage = accountWrapper.account.source?.defaultLanguage ?: ""
+            )
         }
     }
+
+    data class AccountWrapper(
+        val mastodonAccount: MastodonAccount,
+        val account: Account,
+    )
 }
