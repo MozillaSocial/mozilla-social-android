@@ -3,6 +3,7 @@ package social.firefly.feature.thread
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 import social.firefly.common.commonModule
+import social.firefly.core.accounts.accountsModule
 import social.firefly.core.analytics.analyticsModule
 import social.firefly.core.datastore.dataStoreModule
 import social.firefly.core.navigation.navigationModule
@@ -20,6 +21,7 @@ val threadModule =
             postCardModule,
             navigationModule,
             analyticsModule,
+            accountsModule,
         )
 
         viewModel { parametersHolder ->

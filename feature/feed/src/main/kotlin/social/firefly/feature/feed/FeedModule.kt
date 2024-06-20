@@ -3,6 +3,7 @@ package social.firefly.feature.feed
 import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.dsl.module
 import social.firefly.common.commonModule
+import social.firefly.core.accounts.accountsModule
 import social.firefly.core.analytics.analyticsModule
 import social.firefly.core.datastore.dataStoreModule
 import social.firefly.core.navigation.navigationModule
@@ -19,6 +20,7 @@ val feedModule = module {
         postCardModule,
         navigationModule,
         analyticsModule,
+        accountsModule,
     )
 
     viewModelOf(::FeedViewModel)

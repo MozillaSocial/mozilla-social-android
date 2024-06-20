@@ -4,6 +4,7 @@ import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 import social.firefly.common.appscope.AppScope
+import social.firefly.core.accounts.accountsModule
 import social.firefly.core.analytics.analyticsModule
 import social.firefly.core.navigation.navigationModule
 import social.firefly.core.repository.mastodon.mastodonRepositoryModule
@@ -52,6 +53,7 @@ val mastodonUsecaseModule =
             mastodonRepositoryModule,
             analyticsModule,
             navigationModule,
+            accountsModule,
         )
 
         // factory because it holds global variables

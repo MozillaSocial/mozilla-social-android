@@ -2,6 +2,7 @@ package social.firefly.core.repository.paging
 
 import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.module
+import social.firefly.core.accounts.accountsModule
 import social.firefly.core.repository.mastodon.mastodonRepositoryModule
 import social.firefly.core.repository.paging.pagers.status.AccountTimelinePager
 import social.firefly.core.repository.paging.pagers.accounts.BlocksPager
@@ -30,6 +31,7 @@ val pagingModule = module {
     includes(
         mastodonRepositoryModule,
         mastodonUsecaseModule,
+        accountsModule,
     )
 
     factoryOf(::HomeTimelineRemoteMediator)
