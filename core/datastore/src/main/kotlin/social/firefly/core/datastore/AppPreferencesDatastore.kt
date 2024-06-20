@@ -36,17 +36,4 @@ class AppPreferencesDatastore(context: Context) {
                 .build()
         }
     }
-
-    val activeUserDatastoreFilename: Flow<String> =
-        dataStore.data.mapLatest {
-            it.activeUserDatastoreFilename
-        }.distinctUntilChanged()
-
-    suspend fun saveActiveUserDatastoreFilename(filename: String) {
-        dataStore.updateData {
-            it.toBuilder()
-                .setActiveUserDatastoreFilename(filename)
-                .build()
-        }
-    }
 }

@@ -9,7 +9,6 @@ import org.koin.core.parameter.parametersOf
 import social.firefly.common.annotations.PreferUseCase
 import social.firefly.common.utils.StringFactory
 import social.firefly.core.accounts.AccountsManager
-import social.firefly.core.datastore.AlreadySignedInException
 import social.firefly.core.model.Account
 import social.firefly.core.navigation.NavigationDestination
 import social.firefly.core.navigation.usecases.NavigateTo
@@ -102,12 +101,6 @@ class Login(
                 databaseDelegate.clearAllTables()
             }
             navigateTo(NavigationDestination.Tabs)
-        } catch (e: AlreadySignedInException) {
-            showSnackbar(
-                text = StringFactory.resource(R.string.already_signed_in_to_account_error),
-                isError = true,
-            )
-            Timber.e(e)
         } catch (exception: Exception) {
             showSnackbar(
                 text = StringFactory.resource(R.string.error_signing_in),

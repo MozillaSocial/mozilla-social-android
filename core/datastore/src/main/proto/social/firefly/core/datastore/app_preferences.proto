@@ -10,7 +10,9 @@ message AppPreferences {
     DARK = 2;
   }
 
+  reserved 3;
+  reserved "active_user_datastore_filename";
+
   bool track_analytics = 1;
   ThemeType theme_type = 2;
-  string active_user_datastore_filename = 3;
 }
