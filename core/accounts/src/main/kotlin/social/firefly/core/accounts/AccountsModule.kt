@@ -10,7 +10,7 @@ val accountsModule = module {
         Room.databaseBuilder(
             androidContext(),
             AccountsDatabase::class.java,
-            "database-social",
+            "database-accounts",
         )
             .fallbackToDestructiveMigration()
             .fallbackToDestructiveMigrationOnDowngrade()
