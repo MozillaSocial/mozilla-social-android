@@ -15,6 +15,6 @@ data class MastodonAccount(
     val avatarUrl: String,
     val userName: String,
     val defaultLanguage: String,
-    val serializedPushKeys: String?,
-    val lastSeenHomeStatusId: String?,
+    val serializedPushKeys: String? = null,
+    val lastSeenHomeStatusId: String? = null,
 )

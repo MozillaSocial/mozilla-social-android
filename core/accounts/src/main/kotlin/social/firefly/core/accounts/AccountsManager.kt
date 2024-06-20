@@ -11,4 +11,25 @@ class AccountsManager(
     suspend fun getActiveAccount(): MastodonAccount = mastodonAccountsDao.getActiveAccount()
 
     fun getActiveAccountFlow(): Flow<MastodonAccount> = mastodonAccountsDao.getActiveAccountFlow()
+
+    suspend fun createNewMastodonUser(
+        domain: String,
+        accessToken: String,
+        accountId: String,
+        userName: String,
+        avatarUrl: String,
+        defaultLanguage: String,
+    ) {
+        mastodonAccountsDao.upsert(
+            MastodonAccount(
+                accessToken = accessToken,
+                accountId = accountId,
+                userName = userName,
+                avatarUrl = avatarUrl,
+                domain = domain,
+                defaultLanguage = defaultLanguage,
+            )
+        )
+
+    }
 }

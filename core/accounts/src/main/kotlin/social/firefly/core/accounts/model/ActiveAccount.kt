@@ -27,7 +27,7 @@ import kotlinx.serialization.Serializable
 )
 data class ActiveAccount(
     @PrimaryKey
-    val key: Unit,
+    val key: Unit = Unit,
     val accountType: AccountType,
     val accountId: String,
     val domain: String,
