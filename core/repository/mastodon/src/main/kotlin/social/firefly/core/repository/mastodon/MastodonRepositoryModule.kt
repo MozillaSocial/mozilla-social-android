@@ -3,14 +3,12 @@ package social.firefly.core.repository.mastodon
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 import social.firefly.core.database.databaseModule
-import social.firefly.core.datastore.dataStoreModule
 import social.firefly.core.network.mastodon.mastodonNetworkModule
 
 val mastodonRepositoryModule =
     module {
         includes(
             mastodonNetworkModule,
-            dataStoreModule,
             databaseModule,
         )
 

@@ -16,21 +16,13 @@ import kotlinx.serialization.Serializable
             onDelete = ForeignKey.CASCADE,
             onUpdate = ForeignKey.CASCADE,
         ),
-        ForeignKey(
-            entity = MastodonAccount::class,
-            parentColumns = ["domain"],
-            childColumns = ["domain"],
-            onDelete = ForeignKey.CASCADE,
-            onUpdate = ForeignKey.CASCADE,
-        ),
     ]
 )
 data class ActiveAccount(
     @PrimaryKey
-    val key: Unit = Unit,
+    val key: Int = 0,
     val accountType: AccountType,
     val accountId: String,
-    val domain: String,
 )
 
 enum class AccountType {

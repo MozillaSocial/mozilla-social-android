@@ -43,7 +43,6 @@ class AccountsManager(
             ActiveAccount(
                 accountType = AccountType.MASTODON,
                 accountId = accountId,
-                domain = domain,
             )
         )
     }
@@ -61,7 +60,6 @@ class AccountsManager(
                     ActiveAccount(
                         accountType = AccountType.MASTODON,
                         accountId = newActiveAccount.accountId,
-                        domain = newActiveAccount.domain,
                     )
                 )
             } else {
@@ -109,7 +107,6 @@ class AccountsManager(
             ActiveAccount(
                 accountType = AccountType.MASTODON,
                 accountId = mastodonAccount.accountId,
-                domain = mastodonAccount.domain,
             )
         )
     }

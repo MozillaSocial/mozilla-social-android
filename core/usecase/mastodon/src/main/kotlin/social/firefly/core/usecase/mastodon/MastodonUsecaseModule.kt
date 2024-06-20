@@ -70,18 +70,18 @@ val mastodonUsecaseModule =
 
         single {
             Logout(
-                userPreferencesDatastoreManager = get(),
                 appScope = get(),
                 databaseDelegate = get(),
                 navigateTo = get(),
+                accountsManager = get(),
             )
         }
         single {
             LogoutOfAllAccounts(
-                userPreferencesDatastoreManager = get(),
                 appScope = get(),
                 databaseDelegate = get(),
                 navigateTo = get(),
+                accountsManager = get(),
             )
         }
 

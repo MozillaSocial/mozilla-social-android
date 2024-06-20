@@ -34,8 +34,8 @@ val newPostModule = module {
             showSnackbar = get(),
             getLoggedInUserAccountId = get(),
             accountRepository = get(),
-            userPreferencesDatastoreManager = get(),
             statusRepository = get(),
+            accountsManager = get(),
         )
     }
 

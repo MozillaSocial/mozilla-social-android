@@ -145,19 +145,15 @@ private fun UserHeader(
     isTheActiveAccount: Boolean,
     accountSettingsInteractions: AccountSettingsInteractions,
 ) {
-    val avatarUrl by account.avatarUrl.collectAsStateWithLifecycle(initialValue = "")
-    val accountId by account.accountId.collectAsStateWithLifecycle(initialValue = "")
-    val domain by account.domain.collectAsStateWithLifecycle(initialValue = "")
-    val userName by account.userName.collectAsStateWithLifecycle(initialValue = "")
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Avatar(avatarUrl)
+        Avatar(account.avatarUrl)
         Spacer(modifier = Modifier.width(8.dp))
         Text(
             modifier = Modifier.weight(1f),
-            text = "${userName}@${domain}",
+            text = "${account.userName}@${account.domain}",
             style = FfTheme.typography.labelSmall,
         )
         if (isTheActiveAccount) {
@@ -174,8 +170,8 @@ private fun UserHeader(
                 modifier = Modifier.padding(start = FfSpacing.md),
                 onClick = {
                     accountSettingsInteractions.onSetAccountAsActiveClicked(
-                        accountId = accountId,
-                        domain = domain,
+                        accountId = account.accountId,
+                        domain = account.domain,
                     )
                 }
             ) {
@@ -186,11 +182,11 @@ private fun UserHeader(
         val overflowMenuExpanded = remember { mutableStateOf(false) }
 
         val logoutDialog = logoutConfirmationDialog(
-            accountName = "${userName}@${domain}"
+            accountName = "${account.userName}@${account.domain}"
         ) {
             accountSettingsInteractions.onLogoutClicked(
-                accountId = accountId,
-                domain = domain,
+                accountId = account.accountId,
+                domain = account.domain,
             )
         }
 
@@ -200,7 +196,7 @@ private fun UserHeader(
                 FfDropDownItem(
                     text = stringResource(id = R.string.manage_account_option),
                     expanded = overflowMenuExpanded,
-                    onClick = { accountSettingsInteractions.onManageAccountClicked(domain) }
+                    onClick = { accountSettingsInteractions.onManageAccountClicked(account.domain) }
                 )
                 FfDropDownItem(
                     text = stringResource(id = R.string.remove_account),
@@ -271,17 +267,17 @@ private fun AccountSettingsScreenPreview() {
     ) {
         AccountSettingsScreen(
             activeAccount = LoggedInAccount(
-                userName = flowOf("John"),
-                domain = flowOf("mozilla.social"),
-                avatarUrl = flowOf(),
-                accountId = flowOf(),
+                userName = "John",
+                domain = "mozilla.social",
+                avatarUrl = "",
+                accountId = "",
             ),
             otherAccounts = listOf(
                 LoggedInAccount(
-                    userName = flowOf("Birdman"),
-                    domain = flowOf("mozilla.social"),
-                    avatarUrl = flowOf(),
-                    accountId = flowOf(),
+                    userName = "Birdman",
+                    domain = "mozilla.social",
+                    avatarUrl = "",
+                    accountId = "",
                 )
             ),
             accountSettingsInteractions = AccountSettingsInteractionsNoOp

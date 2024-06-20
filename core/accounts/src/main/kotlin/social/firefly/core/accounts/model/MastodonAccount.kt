@@ -1,15 +1,16 @@
 package social.firefly.core.accounts.model
 
 import androidx.room.Entity
+import androidx.room.PrimaryKey
 import kotlinx.serialization.Serializable
 
 @Serializable
 @Entity(
     tableName = "mastodonAccounts",
-    primaryKeys = ["accountId", "domain"]
 )
 data class MastodonAccount(
     val accessToken: String,
+    @PrimaryKey
     val accountId: String,
     val domain: String,
     val avatarUrl: String,
