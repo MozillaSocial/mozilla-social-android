@@ -21,8 +21,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,8 +37,6 @@ import social.firefly.core.designsystem.theme.FfTheme
 import social.firefly.core.ui.common.FfSurface
 import social.firefly.core.ui.common.UiConstants
 import social.firefly.core.ui.common.appbar.FfCloseableTopAppBar
-import social.firefly.core.ui.common.dropdown.FfDropDownItem
-import social.firefly.core.ui.common.dropdown.FfIconButtonDropDownMenu
 import social.firefly.core.ui.common.error.GenericError
 import social.firefly.core.ui.common.pullrefresh.PullRefreshIndicator
 import social.firefly.core.ui.common.pullrefresh.pullRefresh
@@ -248,71 +244,5 @@ private fun LazyListScope.descendants(
             }
         }
 
-    }
-}
-
-@Composable
-private fun ThreadTypeButton(
-    threadType: ThreadType,
-    threadInteractions: ThreadInteractions,
-) {
-    val overflowMenuExpanded = remember { mutableStateOf(false) }
-
-    FfIconButtonDropDownMenu(
-        expanded = overflowMenuExpanded,
-        dropDownMenuContent = {
-            for (dropDownOption in ThreadType.entries) {
-                FfDropDownItem(
-                    text = when (dropDownOption) {
-                        ThreadType.LIST -> {
-                            stringResource(id = R.string.list_view)
-                        }
-                        ThreadType.DIRECT_REPLIES -> {
-                            stringResource(id = R.string.direct_replies_list_view)
-                        }
-                        ThreadType.TREE -> {
-                            stringResource(id = R.string.tree_view)
-                        }
-                    },
-                    icon = {
-                        Icon(
-                            modifier = Modifier
-                                .size(FfIcons.Sizes.small),
-                            painter = when (dropDownOption) {
-                                ThreadType.LIST -> {
-                                    FfIcons.listPlus()
-                                }
-                                ThreadType.DIRECT_REPLIES -> {
-                                    FfIcons.list()
-                                }
-                                ThreadType.TREE -> {
-                                    FfIcons.treeView()
-                                }
-                            },
-                            contentDescription = null
-                        )
-                    },
-                    expanded = overflowMenuExpanded,
-                    onClick = { threadInteractions.onThreadTypeSelected(dropDownOption) },
-                )
-            }
-        }
-    ) {
-        Icon(
-            modifier = Modifier
-                .size(FfIcons.Sizes.normal),
-            painter = when (threadType) {
-                ThreadType.LIST -> {
-                    FfIcons.listPlus()
-                }
-                ThreadType.DIRECT_REPLIES -> {
-                    FfIcons.list()
-                }
-                ThreadType.TREE -> {
-                    FfIcons.treeView()
-                }
-            },
-            contentDescription = stringResource(id = R.string.view_type)
-        )
     }
 }

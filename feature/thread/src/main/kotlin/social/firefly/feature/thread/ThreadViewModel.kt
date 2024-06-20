@@ -196,10 +196,6 @@ class ThreadViewModel(
         loadThread()
     }
 
-    override fun onThreadTypeSelected(threadType: ThreadType) {
-
-    }
-
     override fun onShowAllRepliesClicked(statusId: String) {
         postIdsIgnoringMaxReplyCount.update {
             postIdsIgnoringMaxReplyCount.value.toMutableList().apply {
